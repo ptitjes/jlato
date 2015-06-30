@@ -1,0 +1,58 @@
+package org.jlato.tree.stmt;
+
+import org.jlato.internal.bu.SNode;
+import org.jlato.tree.*;
+
+public class ForStmt extends Stmt {
+
+	public final static Tree.Kind kind = new Tree.Kind() {
+		public ForStmt instantiate(SLocation location) {
+			return new ForStmt(location);
+		}
+	};
+
+	private ForStmt(SLocation location) {
+		super(location);
+	}
+
+	public ForStmt(NodeList<Expr> init, Expr compare, NodeList<Expr> update, Stmt body) {
+		super(new SLocation(new SNode(kind, runOf(init, compare, update, body))));
+	}
+
+	public NodeList<Expr> init() {
+		return location.nodeChild(INIT);
+	}
+
+	public ForStmt withInit(NodeList<Expr> init) {
+		return location.nodeWithChild(INIT, init);
+	}
+
+	public Expr compare() {
+		return location.nodeChild(COMPARE);
+	}
+
+	public ForStmt withCompare(Expr compare) {
+		return location.nodeWithChild(COMPARE, compare);
+	}
+
+	public NodeList<Expr> update() {
+		return location.nodeChild(UPDATE);
+	}
+
+	public ForStmt withUpdate(NodeList<Expr> update) {
+		return location.nodeWithChild(UPDATE, update);
+	}
+
+	public Stmt body() {
+		return location.nodeChild(BODY);
+	}
+
+	public ForStmt withBody(Stmt body) {
+		return location.nodeWithChild(BODY, body);
+	}
+
+	private static final int INIT = 0;
+	private static final int COMPARE = 1;
+	private static final int UPDATE = 2;
+	private static final int BODY = 3;
+}

@@ -1,27 +1,20 @@
 package org.jlato.internal.bu;
 
-import org.jlato.tree.Node;
+import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
  */
-public abstract class STree<N extends Node> {
+public abstract class STree extends LElement {
 
-	public final SType<? super N, N> type;
+	public final Tree.Kind kind;
 
-	public STree(SType<? super N, N> type) {
-		this.type = type;
+	public STree(Tree.Kind kind) {
+		this.kind = kind;
 	}
 
-	public abstract LElement lexicalElement();
-
-	public abstract boolean isNode();
-
-	public N asNode(SContext<?> context) {
-		return type.instantiateNode(context, this);
-	}
-
-	public N asNode() {
-		return asNode(null);
+	@Override
+	public boolean isToken() {
+		return false;
 	}
 }

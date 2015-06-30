@@ -1,35 +1,209 @@
 package org.jlato.internal.bu;
 
-import org.jlato.internal.pc.Folder;
-import org.jlato.internal.pc.IndexedSeq;
+import com.github.andrewoma.dexx.collection.ArrayList;
+import com.github.andrewoma.dexx.collection.Builder;
+import com.github.andrewoma.dexx.collection.IndexedList;
+import com.github.andrewoma.dexx.collection.Vector;
+
+import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
  */
-public class LRun extends LElement {
+public class LRun implements Iterable<LElement> {
 
-	public IndexedSeq<LElement> elements;
+	public final IndexedList<LToken> tokensBefore;
+	public final IndexedList<TreeAndTokensAfter> treesAndTokensAfter;
 	public final int width;
 
-	public LRun(IndexedSeq<LElement> elements) {
-		this.elements = elements;
-		this.width = elements.mapFoldLeft(WIDTH, Folder.PLUS, 0);
+	public LRun(IndexedList<LToken> tokensBefore, IndexedList<TreeAndTokensAfter> treesAndTokensAfter) {
+		this.tokensBefore = tokensBefore;
+		this.treesAndTokensAfter = treesAndTokensAfter;
+		this.width = computeWidth();
 	}
 
-	@Override
-	public boolean isToken() {
-		return false;
-	}
-
-	public IndexedSeq<? extends LElement> elements() {
-		return elements;
+	private int computeWidth() {
+		int width = 0;
+		for (LToken token : tokensBefore) {
+			width += token.width();
+		}
+		for (TreeAndTokensAfter element : treesAndTokensAfter) {
+			width += element.tree.width();
+			for (LToken token : element.tokensAfter) {
+				width += token.width();
+			}
+		}
+		return width;
 	}
 
 	public int width() {
 		return width;
 	}
 
-	public LRun copyWith(int index, LElement element) {
-		return new LRun(elements.set(index, element));
+	public boolean hasOnlyOneToken() {
+		return tokensBefore.size() == 1 && treesAndTokensAfter.isEmpty();
+	}
+
+	public int treeCount() {
+		return treesAndTokensAfter.size();
+	}
+
+	public STree tree(int index) {
+		if (index >= treesAndTokensAfter.size()) return null;
+		return treesAndTokensAfter.get(index).tree;
+	}
+
+	public LElement element(int index) {
+		for (LToken token : tokensBefore) {
+			if (index == 0) return token;
+			index--;
+		}
+		for (TreeAndTokensAfter element : treesAndTokensAfter) {
+			if (index == 0) return element.tree;
+			index--;
+			for (LToken token : element.tokensAfter) {
+				if (index == 0) return token;
+				index--;
+			}
+		}
+		return null;
+	}
+
+	public LRun set(int index, STree tree) {
+		return new LRun(tokensBefore,
+				treesAndTokensAfter.set(index, treesAndTokensAfter.get(index).withTree(tree)));
+	}
+
+	public LRun append(STree tree) {
+		return new LRun(tokensBefore, treesAndTokensAfter.append(new TreeAndTokensAfter(tree)));
+	}
+
+	public Iterator<LElement> iterator() {
+		return new ElementIterator();
+	}
+
+	public Iterator<STree> treeIterator() {
+		return new TreeIterator();
+	}
+
+	private class ElementIterator implements Iterator<LElement> {
+		private Iterator<TreeAndTokensAfter> trees = treesAndTokensAfter.iterator();
+		private STree currentTree = null;
+		private Iterator<LToken> currentTokens = tokensBefore.iterator();
+
+		public boolean hasNext() {
+			while (!currentTokens.hasNext() && trees.hasNext()) {
+				TreeAndTokensAfter treeAndTokensAfter = trees.next();
+				currentTree = treeAndTokensAfter.tree;
+				currentTokens = treeAndTokensAfter.tokensAfter.iterator();
+			}
+			return currentTree != null || currentTokens.hasNext();
+		}
+
+		public LElement next() {
+			if (currentTree == null || !currentTokens.hasNext()) {
+				while (!currentTokens.hasNext() && trees.hasNext()) {
+					TreeAndTokensAfter treeAndTokensAfter = trees.next();
+					currentTree = treeAndTokensAfter.tree;
+					currentTokens = treeAndTokensAfter.tokensAfter.iterator();
+				}
+			}
+
+			if (currentTree == null) {
+				STree tree = currentTree;
+				currentTree = null;
+				return tree;
+			} else {
+				return currentTokens.next();
+			}
+		}
+
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	private class TreeIterator implements Iterator<STree> {
+		private Iterator<TreeAndTokensAfter> trees = treesAndTokensAfter.iterator();
+
+		public boolean hasNext() {
+			return trees.hasNext();
+		}
+
+		public STree next() {
+			return trees.next().tree;
+		}
+
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	private static class TreeAndTokensAfter {
+		public final STree tree;
+		public final IndexedList<LToken> tokensAfter;
+
+		public TreeAndTokensAfter(STree tree) {
+			this(tree, Vector.<LToken>empty());
+		}
+
+		public TreeAndTokensAfter(STree tree, IndexedList<LToken> tokensAfter) {
+			this.tree = tree;
+			this.tokensAfter = tokensAfter;
+		}
+
+		public TreeAndTokensAfter withTree(STree tree) {
+			return new TreeAndTokensAfter(tree, tokensAfter);
+		}
+
+		public TreeAndTokensAfter withTokensAfter(IndexedList<LToken> tokensAfter) {
+			return new TreeAndTokensAfter(tree, tokensAfter);
+		}
+	}
+
+	public static class RunBuilder {
+
+		public Builder<LToken, ? extends IndexedList<LToken>> tokensBefore;
+		public Builder<TreeAndTokensAfter, ? extends IndexedList<TreeAndTokensAfter>> treesAndTokensAfter;
+		public Builder<LToken, ? extends IndexedList<LToken>> lastTokens;
+		public STree lastTree = null;
+
+		public static RunBuilder withFixedArity() {
+			return new RunBuilder(
+					ArrayList.<TreeAndTokensAfter>factory().newBuilder()
+			);
+		}
+
+		public static RunBuilder withVariableArity() {
+			return new RunBuilder(
+					Vector.<TreeAndTokensAfter>factory().newBuilder()
+			);
+		}
+
+		public RunBuilder(Builder<TreeAndTokensAfter, ? extends IndexedList<TreeAndTokensAfter>> treesAndTokensAfter) {
+			this.treesAndTokensAfter = treesAndTokensAfter;
+			this.tokensBefore = lastTokens = Vector.<LToken>factory().newBuilder();
+		}
+
+		public void addTree(STree tree) {
+			addLastTreeAndTokensAfter();
+			lastTree = tree;
+			lastTokens = Vector.<LToken>factory().newBuilder();
+		}
+
+		private void addLastTreeAndTokensAfter() {
+			if (lastTree != null) {
+				treesAndTokensAfter.add(new TreeAndTokensAfter(lastTree, lastTokens.build()));
+			}
+		}
+
+		public void addToken(LToken token) {
+			lastTokens.add(token);
+		}
+
+		public LRun build() {
+			addLastTreeAndTokensAfter();
+			return new LRun(tokensBefore.build(), treesAndTokensAfter.build());
+		}
 	}
 }

@@ -1,0 +1,52 @@
+package org.jlato.tree.expr;
+
+import org.jlato.internal.bu.SNode;
+import org.jlato.tree.Expr;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
+import org.jlato.tree.type.Type;
+
+public class ReferenceExpr extends Expr {
+
+	public final static Tree.Kind kind = new Tree.Kind() {
+		public ReferenceExpr instantiate(SLocation location) {
+			return new ReferenceExpr(location);
+		}
+	};
+
+	private ReferenceExpr(SLocation location) {
+		super(location);
+	}
+
+	public ReferenceExpr(Expr scope, NodeList<Type> typeArguments, NameExpr identifier) {
+		super(new SLocation(new SNode(kind, runOf(scope, typeArguments, identifier))));
+	}
+
+	public Expr scope() {
+		return location.nodeChild(SCOPE);
+	}
+
+	public ReferenceExpr withScope(Expr scope) {
+		return location.nodeWithChild(SCOPE, scope);
+	}
+
+	public NodeList<Type> typeArguments() {
+		return location.nodeChild(TYPE_ARGUMENTS);
+	}
+
+	public ReferenceExpr withTypeArguments(NodeList<Type> typeArguments) {
+		return location.nodeWithChild(TYPE_ARGUMENTS, typeArguments);
+	}
+
+	public NameExpr identifier() {
+		return location.nodeChild(IDENTIFIER);
+	}
+
+	public ReferenceExpr withIdentifier(NameExpr identifier) {
+		return location.nodeWithChild(IDENTIFIER, identifier);
+	}
+
+	private static final int SCOPE = 0;
+	private static final int TYPE_ARGUMENTS = 1;
+	private static final int IDENTIFIER = 2;
+}

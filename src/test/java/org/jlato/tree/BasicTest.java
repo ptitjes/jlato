@@ -1,10 +1,7 @@
 package org.jlato.tree;
 
-import org.jlato.internal.TreeBuilder;
 import org.jlato.internal.bu.LLiteral;
-import org.jlato.tree.testexpr.BinaryExpr;
-import org.jlato.tree.testexpr.BinaryOp;
-import org.jlato.tree.testexpr.LiteralExpr;
+import org.jlato.testexpr.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,12 +24,12 @@ public class BasicTest {
 		Assert.assertSame(expr1, expr1.right().parent());
 
 		BinaryExpr expr2 = expr1.withLeft(new LiteralExpr("1"));
-		Assert.assertNotSame(expr1.left().tree, expr2.left().tree);
-		Assert.assertSame(expr1.right().tree, expr2.right().tree);
+//		Assert.assertNotSame(expr1.left().tree, expr2.left().tree);
+//		Assert.assertSame(expr1.right().tree, expr2.right().tree);
 
 		BinaryExpr expr3 = expr2.withRight(new LiteralExpr("2"));
-		Assert.assertNotSame(expr1.left().tree, expr3.left().tree);
-		Assert.assertNotSame(expr1.right().tree, expr3.right().tree);
+//		Assert.assertNotSame(expr1.left().tree, expr3.left().tree);
+//		Assert.assertNotSame(expr1.right().tree, expr3.right().tree);
 	}
 
 	@Test
@@ -54,31 +51,30 @@ public class BasicTest {
 		builder.start();
 
 		builder.start();
-		builder.addToken(new LLiteral("3"));
-		builder.stopAs(LiteralExpr.TYPE);
+		builder.addToken(new LLiteral<Integer>(Integer.class, "3"));
+		builder.stopAs(LiteralExpr.kind);
 
-		builder.addToken(new LLiteral("+"));
-		builder.lastTokenAs(BinaryOp.TYPE);
-
-		builder.start();
+		builder.tokenAs(new LLiteral<Integer>(Integer.class, "+"), BinaryOp.kind);
 
 		builder.start();
-		builder.addToken(new LLiteral("2"));
-		builder.stopAs(LiteralExpr.TYPE);
 
 		builder.start();
-		builder.addToken(new LLiteral("+"));
-		builder.stopAs(BinaryOp.TYPE);
+		builder.addToken(new LLiteral<Integer>(Integer.class, "2"));
+		builder.stopAs(LiteralExpr.kind);
 
 		builder.start();
-		builder.addToken(new LLiteral("4"));
-		builder.stopAs(LiteralExpr.TYPE);
+		builder.addToken(new LLiteral<Integer>(Integer.class, "+"));
+		builder.stopAs(BinaryOp.kind);
 
-		builder.stopAs(BinaryExpr.type);
+		builder.start();
+		builder.addToken(new LLiteral<Integer>(Integer.class, "4"));
+		builder.stopAs(LiteralExpr.kind);
 
-		builder.stopAs(BinaryExpr.type);
+		builder.stopAs(BinaryExpr.kind);
 
-		BinaryExpr expr = builder.build(BinaryExpr.type);
+		builder.stopAs(BinaryExpr.kind);
+
+		BinaryExpr expr = builder.build(BinaryExpr.kind);
 	}
 
 	@Test
@@ -87,25 +83,59 @@ public class BasicTest {
 
 		builder.start();
 
-		builder.addToken(new LLiteral("3"));
-		builder.lastTokenAs(LiteralExpr.TYPE);
+		builder.tokenAs(new LLiteral<Integer>(Integer.class, "3"), LiteralExpr.kind);
 
-		builder.addToken(new LLiteral("+"));
-		builder.lastTokenAs(BinaryOp.TYPE);
+		builder.tokenAs(new LLiteral<Integer>(Integer.class, "+"), BinaryOp.kind);
 
-		builder.addToken(new LLiteral("2"));
-		builder.lastTokenAs(LiteralExpr.TYPE);
+		builder.tokenAs(new LLiteral<Integer>(Integer.class, "2"), LiteralExpr.kind);
 
-		builder.stopAsAndWrap(BinaryExpr.type);
+		builder.stopAsAndWrap(BinaryExpr.kind);
 
-		builder.addToken(new LLiteral("+"));
-		builder.lastTokenAs(BinaryOp.TYPE);
+		builder.tokenAs(new LLiteral<Integer>(Integer.class, "+"), BinaryOp.kind);
 
-		builder.addToken(new LLiteral("4"));
-		builder.lastTokenAs(LiteralExpr.TYPE);
+		builder.tokenAs(new LLiteral<Integer>(Integer.class, "4"), LiteralExpr.kind);
 
-		builder.stopAs(BinaryExpr.type);
+		builder.stopAs(BinaryExpr.kind);
 
-		BinaryExpr expr = builder.build(BinaryExpr.type);
+		BinaryExpr expr = builder.build(BinaryExpr.kind);
+
+		Expr expr2 = expr.right().replace(new LiteralExpr("8"));
+		Tree expr3 = expr2.root();
+
+//		Operator expr4 = expr.operator().replace(UnaryOp.Minus);
+//		Tree expr5 = expr4.root();
+	}
+
+	@Test
+	public void test5() {
+		TreeBuilder builder = new TreeBuilder();
+
+		builder.start();
+
+		builder.start();
+
+		builder.start();
+
+		builder.tokenAs(new LLiteral<Integer>(Integer.class, "3"), LiteralExpr.kind);
+
+		builder.tokenAs(new LLiteral<Integer>(Integer.class, "+"), BinaryOp.kind);
+
+		builder.tokenAs(new LLiteral<Integer>(Integer.class, "2"), LiteralExpr.kind);
+
+		builder.stopAs(BinaryExpr.kind);
+
+		builder.tokenAs(new LLiteral<Integer>(Integer.class, "1"), LiteralExpr.kind);
+
+		builder.tokenAs(new LLiteral<Integer>(Integer.class, "2"), LiteralExpr.kind);
+
+		builder.tokenAs(new LLiteral<Integer>(Integer.class, "3"), LiteralExpr.kind);
+
+		builder.stopAs(NodeList.<Expr>kind());
+
+		builder.stopAs(TupleExpr.kind);
+
+		TupleExpr expr = builder.build(TupleExpr.kind);
+
+		final TupleExpr newExpr = expr.withExpressions(expr.expressions().append(new LiteralExpr("42")));
 	}
 }

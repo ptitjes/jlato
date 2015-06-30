@@ -1,26 +1,25 @@
 package org.jlato.internal.bu;
 
-import org.jlato.tree.Node;
+import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
  */
-public class SLeaf<N extends Node> extends STree<N> {
+public class SLeaf extends STree {
 
-	public final LToken lexicalElement;
+	public final LToken token;
 
-	public SLeaf(SType<? super N, N> type, LToken lexicalElement) {
-		super(type);
-		this.lexicalElement = lexicalElement;
+	public SLeaf(Tree.Kind kind, LToken token) {
+		super(kind);
+		this.token = token;
 	}
 
 	@Override
-	public LToken lexicalElement() {
-		return lexicalElement;
+	public int width() {
+		return token.width();
 	}
 
-	@Override
-	public boolean isNode() {
-		return false;
+	public SLeaf with(LToken token) {
+		return new SLeaf(kind, token);
 	}
 }

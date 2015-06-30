@@ -1,22 +1,15 @@
 package org.jlato.tree;
 
-import org.jlato.internal.bu.LElement;
-import org.jlato.internal.bu.SContext;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.SType;
-
 /**
  * @author Didier Villevalois
  */
-public interface Expr<N extends Expr<N>> extends Node<N> {
+public abstract class Expr extends Tree implements Modifiable<Expr> {
 
-	protected Expr(SContext context, STree<N> content) {
-		super(context, content);
+	protected Expr(SLocation location) {
+		super(location);
 	}
 
-	protected static abstract class Type<N extends Expr<N>> extends SType<Expr<N>, N> {
-		protected STree<Expr<N>> parse(LElement content) {
-			return null;
-		}
+	public <S extends Expr> Expr replace(S replacement) {
+		return location.replace(replacement);
 	}
 }
