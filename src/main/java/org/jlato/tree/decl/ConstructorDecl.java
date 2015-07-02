@@ -5,8 +5,9 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.NameExpr;
 import org.jlato.tree.stmt.BlockStmt;
+import org.jlato.tree.type.ClassOrInterfaceType;
 
-public class ConstructorDecl extends BodyDecl {
+public class ConstructorDecl extends Decl implements Member {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public ConstructorDecl instantiate(SLocation location) {
@@ -18,15 +19,15 @@ public class ConstructorDecl extends BodyDecl {
 		super(location);
 	}
 
-	public ConstructorDecl(int modifiers, NodeList<TypeParameter> typeParameters, NameExpr name, NodeList<Parameter> parameters, NodeList<NameExpr> throws_, BlockStmt block, JavadocComment javadocComment) {
-		super(new SLocation(new SNode(kind, runOf(modifiers, typeParameters, name, parameters, throws_, block, javadocComment))));
+	public ConstructorDecl(Modifiers modifiers, NodeList<TypeParameter> typeParameters, NameExpr name, NodeList<Parameter> parameters, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt block/*, JavadocComment javadocComment*/) {
+		super(new SLocation(new SNode(kind, runOf(modifiers, typeParameters, name, parameters, throwsClause, block/*, javadocComment*/))));
 	}
 
-	public int modifiers() {
+	public Modifiers modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public ConstructorDecl withModifiers(int modifiers) {
+	public ConstructorDecl withModifiers(Modifiers modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -54,12 +55,12 @@ public class ConstructorDecl extends BodyDecl {
 		return location.nodeWithChild(PARAMETERS, parameters);
 	}
 
-	public NodeList<NameExpr> throws_() {
-		return location.nodeChild(THROWS_);
+	public NodeList<ClassOrInterfaceType> throwsClause() {
+		return location.nodeChild(THROWS_CLAUSE);
 	}
 
-	public ConstructorDecl withThrows_(NodeList<NameExpr> throws_) {
-		return location.nodeWithChild(THROWS_, throws_);
+	public ConstructorDecl withThrowsClause(NodeList<ClassOrInterfaceType> throwsClause) {
+		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
 	}
 
 	public BlockStmt block() {
@@ -69,6 +70,7 @@ public class ConstructorDecl extends BodyDecl {
 	public ConstructorDecl withBlock(BlockStmt block) {
 		return location.nodeWithChild(BLOCK, block);
 	}
+/*
 
 	public JavadocComment javadocComment() {
 		return location.nodeChild(JAVADOC_COMMENT);
@@ -77,12 +79,13 @@ public class ConstructorDecl extends BodyDecl {
 	public ConstructorDecl withJavadocComment(JavadocComment javadocComment) {
 		return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
 	}
+*/
 
-	private static final int MODIFIERS = 1;
-	private static final int TYPE_PARAMETERS = 2;
-	private static final int NAME = 3;
-	private static final int PARAMETERS = 4;
-	private static final int THROWS_ = 5;
-	private static final int BLOCK = 6;
-	private static final int JAVADOC_COMMENT = 7;
+	private static final int MODIFIERS = 0;
+	private static final int TYPE_PARAMETERS = 1;
+	private static final int NAME = 2;
+	private static final int PARAMETERS = 3;
+	private static final int THROWS_CLAUSE = 4;
+	private static final int BLOCK = 5;
+//	private static final int JAVADOC_COMMENT = 7;
 }

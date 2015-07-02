@@ -3,9 +3,10 @@ package org.jlato.tree.decl;
 import org.jlato.internal.bu.SNode;
 import org.jlato.tree.Expr;
 import org.jlato.tree.Tree;
+import org.jlato.tree.expr.NameExpr;
 import org.jlato.tree.type.Type;
 
-public class AnnotationMemberDecl extends BodyDecl {
+public class AnnotationMemberDecl extends Decl implements Member {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public AnnotationMemberDecl instantiate(SLocation location) {
@@ -17,15 +18,15 @@ public class AnnotationMemberDecl extends BodyDecl {
 		super(location);
 	}
 
-	public AnnotationMemberDecl(int modifiers, Type type, String name, Expr defaultValue, JavadocComment javadocComment) {
-		super(new SLocation(new SNode(kind, runOf(modifiers, type, name, defaultValue, javadocComment))));
+	public AnnotationMemberDecl(Modifiers modifiers, Type type, NameExpr name, Expr defaultValue/*, JavadocComment javadocComment*/) {
+		super(new SLocation(new SNode(kind, runOf(modifiers, type, name, defaultValue/*, javadocComment*/))));
 	}
 
-	public int modifiers() {
+	public Modifiers modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public AnnotationMemberDecl withModifiers(int modifiers) {
+	public AnnotationMemberDecl withModifiers(Modifiers modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -37,11 +38,11 @@ public class AnnotationMemberDecl extends BodyDecl {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public String name() {
+	public NameExpr name() {
 		return location.nodeChild(NAME);
 	}
 
-	public AnnotationMemberDecl withName(String name) {
+	public AnnotationMemberDecl withName(NameExpr name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -52,6 +53,7 @@ public class AnnotationMemberDecl extends BodyDecl {
 	public AnnotationMemberDecl withDefaultValue(Expr defaultValue) {
 		return location.nodeWithChild(DEFAULT_VALUE, defaultValue);
 	}
+/*
 
 	public JavadocComment javadocComment() {
 		return location.nodeChild(JAVADOC_COMMENT);
@@ -60,10 +62,11 @@ public class AnnotationMemberDecl extends BodyDecl {
 	public AnnotationMemberDecl withJavadocComment(JavadocComment javadocComment) {
 		return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
 	}
+*/
 
-	private static final int MODIFIERS = 1;
-	private static final int TYPE = 2;
-	private static final int NAME = 3;
-	private static final int DEFAULT_VALUE = 4;
-	private static final int JAVADOC_COMMENT = 5;
+	private static final int MODIFIERS = 0;
+	private static final int TYPE = 1;
+	private static final int NAME = 2;
+	private static final int DEFAULT_VALUE = 3;
+//	private static final int JAVADOC_COMMENT = 5;
 }

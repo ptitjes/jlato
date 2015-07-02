@@ -16,8 +16,8 @@ public class LambdaExpr extends Expr {
 		super(location);
 	}
 
-	public LambdaExpr(NodeList<Parameter> parameters, boolean parametersEnclosed, Stmt body) {
-		super(new SLocation(new SNode(kind, runOf(parameters, parametersEnclosed, body))));
+	public LambdaExpr(NodeList<Parameter> parameters, Stmt body) {
+		super(new SLocation(new SNode(kind, runOf(parameters, body))));
 	}
 
 	public NodeList<Parameter> parameters() {
@@ -26,14 +26,6 @@ public class LambdaExpr extends Expr {
 
 	public LambdaExpr withParameters(NodeList<Parameter> parameters) {
 		return location.nodeWithChild(PARAMETERS, parameters);
-	}
-
-	public boolean parametersEnclosed() {
-		return location.nodeChild(PARAMETERS_ENCLOSED);
-	}
-
-	public LambdaExpr withParametersEnclosed(boolean parametersEnclosed) {
-		return location.nodeWithChild(PARAMETERS_ENCLOSED, parametersEnclosed);
 	}
 
 	public Stmt body() {
@@ -45,6 +37,5 @@ public class LambdaExpr extends Expr {
 	}
 
 	private static final int PARAMETERS = 0;
-	private static final int PARAMETERS_ENCLOSED = 1;
-	private static final int BODY = 2;
+	private static final int BODY = 1;
 }

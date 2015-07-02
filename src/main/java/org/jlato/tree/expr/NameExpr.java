@@ -1,6 +1,7 @@
 package org.jlato.tree.expr;
 
-import org.jlato.internal.bu.LIdentifier;
+import com.github.javaparser.ASTParserConstants;
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
 import org.jlato.tree.Expr;
 import org.jlato.tree.Tree;
@@ -17,12 +18,12 @@ public class NameExpr extends Expr {
 		super(location);
 	}
 
-	public NameExpr(LIdentifier identifier) {
+	public NameExpr(LToken identifier) {
 		super(new SLocation(new SLeaf(kind, identifier)));
 	}
 
 	public NameExpr(String name) {
-		this(new LIdentifier(name));
+		this(new LToken(ASTParserConstants.IDENTIFIER, name));
 	}
 
 	public String name() {
@@ -30,6 +31,6 @@ public class NameExpr extends Expr {
 	}
 
 	public NameExpr withName(String name) {
-		return location.leafWithToken(new LIdentifier(name));
+		return location.leafWithToken(new LToken(ASTParserConstants.IDENTIFIER, name));
 	}
 }

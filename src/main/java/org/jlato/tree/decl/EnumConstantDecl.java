@@ -6,7 +6,7 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.NameExpr;
 
-public class EnumConstantDecl extends BodyDecl {
+public class EnumConstantDecl extends Decl {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public EnumConstantDecl instantiate(SLocation location) {
@@ -18,7 +18,7 @@ public class EnumConstantDecl extends BodyDecl {
 		super(location);
 	}
 
-	public EnumConstantDecl(NameExpr name, NodeList<Expr> args, NodeList<BodyDecl> classBody/*, JavadocComment javadocComment*/) {
+	public EnumConstantDecl(NameExpr name, NodeList<Expr> args, NodeList<Decl> classBody/*, JavadocComment javadocComment*/) {
 		super(new SLocation(new SNode(kind, runOf(name, args, classBody/*, javadocComment*/))));
 	}
 
@@ -38,11 +38,11 @@ public class EnumConstantDecl extends BodyDecl {
 		return location.nodeWithChild(ARGS, args);
 	}
 
-	public NodeList<BodyDecl> classBody() {
+	public NodeList<Decl> classBody() {
 		return location.nodeChild(CLASS_BODY);
 	}
 
-	public EnumConstantDecl withClassBody(NodeList<BodyDecl> classBody) {
+	public EnumConstantDecl withClassBody(NodeList<Decl> classBody) {
 		return location.nodeWithChild(CLASS_BODY, classBody);
 	}
 /*

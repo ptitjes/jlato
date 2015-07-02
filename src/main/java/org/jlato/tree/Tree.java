@@ -22,7 +22,7 @@ public abstract class Tree {
 	}
 
 	protected static STree treeOf(Tree facade) {
-		return facade.location.tree;
+		return facade == null ? null : facade.location.tree;
 	}
 
 	protected static LRun runOf(Tree... facades) {
@@ -126,6 +126,8 @@ public abstract class Tree {
 		@SuppressWarnings("unchecked")
 		public <C extends Tree> C nodeChild(final int index) {
 			STree childTree = ((SNode) tree).run.tree(index);
+			if (childTree == null) return null;
+
 			SContext childContext = new SContext.Child(this, index);
 			SLocation childLocation = new SLocation(childContext, childTree);
 			return (C) childLocation.facade;

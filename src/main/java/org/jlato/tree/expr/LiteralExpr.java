@@ -1,6 +1,7 @@
 package org.jlato.tree.expr;
 
-import org.jlato.internal.bu.LLiteral;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.Literals;
 import org.jlato.internal.bu.SLeaf;
 import org.jlato.tree.Expr;
 import org.jlato.tree.Tree;
@@ -24,22 +25,22 @@ public class LiteralExpr<T> extends Expr {
 		super(location);
 	}
 
-	public LiteralExpr(LLiteral<T> literal) {
+	public LiteralExpr(LToken literal) {
 		super(new SLocation(new SLeaf(kind, literal)));
 	}
 
 	public LiteralExpr(Class<T> literalClass, T literalValue) {
-		super(new SLocation(new SLeaf(kind, LLiteral.from(literalClass, literalValue))));
+		super(new SLocation(new SLeaf(kind, Literals.from(literalClass, literalValue))));
 	}
 
 	@SuppressWarnings("unchecked")
 	public T value() {
-		return ((LLiteral<T>) location.leafToken()).value();
+		return Literals.valueFor(location.leafToken());
 	}
 
 	@SuppressWarnings("unchecked")
-	public LiteralExpr withValue(T value) {
-		final Class<T> literalClass = ((LLiteral<T>) location.leafToken()).literalClass();
-		return location.leafWithToken(LLiteral.from(literalClass, value));
+	public LiteralExpr<T> withValue(T value) {
+		final Class<T> literalClass = Literals.literalClassFor(location.leafToken().kind);
+		return location.leafWithToken(Literals.from(literalClass, value));
 	}
 }

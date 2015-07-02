@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNode;
 import org.jlato.tree.Expr;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
-import org.jlato.tree.decl.BodyDecl;
+import org.jlato.tree.decl.Decl;
 import org.jlato.tree.type.ClassOrInterfaceType;
 import org.jlato.tree.type.Type;
 
@@ -20,7 +20,7 @@ public class ObjectCreationExpr extends Expr {
 		super(location);
 	}
 
-	public ObjectCreationExpr(Expr scope, ClassOrInterfaceType type, NodeList<Type> typeArgs, NodeList<Expr> args, NodeList<BodyDecl> anonymousClassBody) {
+	public ObjectCreationExpr(Expr scope, ClassOrInterfaceType type, NodeList<Type> typeArgs, NodeList<Expr> args, NodeList<Decl> anonymousClassBody) {
 		super(new SLocation(new SNode(kind, runOf(scope, type, typeArgs, args, anonymousClassBody))));
 	}
 
@@ -56,11 +56,11 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(ARGS, args);
 	}
 
-	public NodeList<BodyDecl> anonymousClassBody() {
+	public NodeList<Decl> anonymousClassBody() {
 		return location.nodeChild(ANONYMOUS_CLASS_BODY);
 	}
 
-	public ObjectCreationExpr withAnonymousClassBody(NodeList<BodyDecl> anonymousClassBody) {
+	public ObjectCreationExpr withAnonymousClassBody(NodeList<Decl> anonymousClassBody) {
 		return location.nodeWithChild(ANONYMOUS_CLASS_BODY, anonymousClassBody);
 	}
 

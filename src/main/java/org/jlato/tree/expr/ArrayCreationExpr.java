@@ -4,6 +4,7 @@ import org.jlato.internal.bu.SNode;
 import org.jlato.tree.Expr;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
+import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.type.Type;
 
 public class ArrayCreationExpr extends Expr {
@@ -18,8 +19,8 @@ public class ArrayCreationExpr extends Expr {
 		super(location);
 	}
 
-	public ArrayCreationExpr(Type type, int arrayCount, ArrayInitializerExpr initializer, NodeList<Expr> dimensions, NodeList<NodeList<AnnotationExpr>> arraysAnnotations) {
-		super(new SLocation(new SNode(kind, runOf(type, arrayCount, initializer, dimensions, arraysAnnotations))));
+	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimensionExpressions, NodeList<Expr> dimensions, ArrayInitializerExpr initializer) {
+		super(new SLocation(new SNode(kind, runOf(type, dimensionExpressions, dimensions, initializer))));
 	}
 
 	public Type type() {
@@ -30,20 +31,12 @@ public class ArrayCreationExpr extends Expr {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public int arrayCount() {
-		return location.nodeChild(ARRAY_COUNT);
+	public NodeList<ArrayDimExpr> dimensionExpressions() {
+		return location.nodeChild(DIMENSION_EXPRESSIONS);
 	}
 
-	public ArrayCreationExpr withArrayCount(int arrayCount) {
-		return location.nodeWithChild(ARRAY_COUNT, arrayCount);
-	}
-
-	public ArrayInitializerExpr initializer() {
-		return location.nodeChild(INITIALIZER);
-	}
-
-	public ArrayCreationExpr withInitializer(ArrayInitializerExpr initializer) {
-		return location.nodeWithChild(INITIALIZER, initializer);
+	public ArrayCreationExpr withDimensionExpressions(NodeList<ArrayDimExpr> dimensionExpressions) {
+		return location.nodeWithChild(DIMENSION_EXPRESSIONS, dimensionExpressions);
 	}
 
 	public NodeList<Expr> dimensions() {
@@ -54,17 +47,16 @@ public class ArrayCreationExpr extends Expr {
 		return location.nodeWithChild(DIMENSIONS, dimensions);
 	}
 
-	public NodeList<NodeList<AnnotationExpr>> arraysAnnotations() {
-		return location.nodeChild(ARRAYS_ANNOTATIONS);
+	public ArrayInitializerExpr initializer() {
+		return location.nodeChild(INITIALIZER);
 	}
 
-	public ArrayCreationExpr withArraysAnnotations(NodeList<NodeList<AnnotationExpr>> arraysAnnotations) {
-		return location.nodeWithChild(ARRAYS_ANNOTATIONS, arraysAnnotations);
+	public ArrayCreationExpr withInitializer(ArrayInitializerExpr initializer) {
+		return location.nodeWithChild(INITIALIZER, initializer);
 	}
 
 	private static final int TYPE = 0;
-	private static final int ARRAY_COUNT = 1;
-	private static final int INITIALIZER = 2;
-	private static final int DIMENSIONS = 3;
-	private static final int ARRAYS_ANNOTATIONS = 4;
+	private static final int DIMENSION_EXPRESSIONS = 1;
+	private static final int DIMENSIONS = 2;
+	private static final int INITIALIZER = 3;
 }

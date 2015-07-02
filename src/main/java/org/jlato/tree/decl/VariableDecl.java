@@ -5,27 +5,27 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
-public class FieldDecl extends BodyDecl {
+public class VariableDecl extends Decl implements Member {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
-		public FieldDecl instantiate(SLocation location) {
-			return new FieldDecl(location);
+		public VariableDecl instantiate(SLocation location) {
+			return new VariableDecl(location);
 		}
 	};
 
-	private FieldDecl(SLocation location) {
+	private VariableDecl(SLocation location) {
 		super(location);
 	}
 
-	public FieldDecl(int modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
+	public VariableDecl(Modifiers modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
 		super(new SLocation(new SNode(kind, runOf(modifiers, type, variables/*, javadocComment*/))));
 	}
 
-	public int modifiers() {
+	public Modifiers modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public FieldDecl withModifiers(int modifiers) {
+	public VariableDecl withModifiers(Modifiers modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -33,7 +33,7 @@ public class FieldDecl extends BodyDecl {
 		return location.nodeChild(TYPE);
 	}
 
-	public FieldDecl withType(Type type) {
+	public VariableDecl withType(Type type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 
@@ -41,7 +41,7 @@ public class FieldDecl extends BodyDecl {
 		return location.nodeChild(VARIABLES);
 	}
 
-	public FieldDecl withVariables(NodeList<VariableDeclarator> variables) {
+	public VariableDecl withVariables(NodeList<VariableDeclarator> variables) {
 		return location.nodeWithChild(VARIABLES, variables);
 	}
 /*

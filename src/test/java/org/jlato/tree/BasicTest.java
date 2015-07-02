@@ -1,7 +1,9 @@
 package org.jlato.tree;
 
 import org.jlato.internal.bu.LLiteral;
-import org.jlato.testexpr.*;
+import org.jlato.tree.*;
+import org.jlato.tree.expr.*;
+import org.jlato.tree.expr.BinaryExpr.BinaryOp;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,18 +18,18 @@ public class BasicTest {
 	@Test
 	public void test1() {
 		BinaryExpr expr1 = new BinaryExpr(
-				new LiteralExpr("1"),
+				new LiteralExpr<Integer>(Integer.class, 2),
 				BinaryOp.Plus,
-				new LiteralExpr("2")
+				new LiteralExpr<Integer>(Integer.class, 3)
 		);
 		Assert.assertSame(expr1, expr1.left().parent());
 		Assert.assertSame(expr1, expr1.right().parent());
 
-		BinaryExpr expr2 = expr1.withLeft(new LiteralExpr("1"));
+		BinaryExpr expr2 = expr1.withLeft(new LiteralExpr<Integer>(Integer.class, 1));
 //		Assert.assertNotSame(expr1.left().tree, expr2.left().tree);
 //		Assert.assertSame(expr1.right().tree, expr2.right().tree);
 
-		BinaryExpr expr3 = expr2.withRight(new LiteralExpr("2"));
+		BinaryExpr expr3 = expr2.withRight(new LiteralExpr<Integer>(Integer.class, 2));
 //		Assert.assertNotSame(expr1.left().tree, expr3.left().tree);
 //		Assert.assertNotSame(expr1.right().tree, expr3.right().tree);
 	}
@@ -35,9 +37,9 @@ public class BasicTest {
 	@Test
 	public void test2() {
 		BinaryExpr expr1 = new BinaryExpr(
-				new LiteralExpr("1"),
+				new LiteralExpr<Integer>(Integer.class, 1),
 				BinaryOp.Plus,
-				new LiteralExpr("2")
+				new LiteralExpr<Integer>(Integer.class, 2)
 		);
 
 		BinaryExpr expr2 = expr1.withRight(expr1);
@@ -99,7 +101,7 @@ public class BasicTest {
 
 		BinaryExpr expr = builder.build(BinaryExpr.kind);
 
-		Expr expr2 = expr.right().replace(new LiteralExpr("8"));
+		Expr expr2 = expr.right().replace(new LiteralExpr<Integer>(Integer.class, 8));
 		Tree expr3 = expr2.root();
 
 //		Operator expr4 = expr.operator().replace(UnaryOp.Minus);
@@ -109,8 +111,6 @@ public class BasicTest {
 	@Test
 	public void test5() {
 		TreeBuilder builder = new TreeBuilder();
-
-		builder.start();
 
 		builder.start();
 
@@ -132,10 +132,8 @@ public class BasicTest {
 
 		builder.stopAs(NodeList.<Expr>kind());
 
-		builder.stopAs(TupleExpr.kind);
+		NodeList<Expr> exprs = builder.build(NodeList.<Expr>kind());
 
-		TupleExpr expr = builder.build(TupleExpr.kind);
-
-		final TupleExpr newExpr = expr.withExpressions(expr.expressions().append(new LiteralExpr("42")));
+		NodeList<Expr> newExprs = exprs.append(new LiteralExpr<Integer>(Integer.class, 42));
 	}
 }

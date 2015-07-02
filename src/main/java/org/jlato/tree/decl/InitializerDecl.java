@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNode;
 import org.jlato.tree.Tree;
 import org.jlato.tree.stmt.BlockStmt;
 
-public class InitializerDecl extends BodyDecl {
+public class InitializerDecl extends Decl {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public InitializerDecl instantiate(SLocation location) {
@@ -16,16 +16,16 @@ public class InitializerDecl extends BodyDecl {
 		super(location);
 	}
 
-	public InitializerDecl(boolean isStatic, BlockStmt block/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, runOf(isStatic, block/*, javadocComment*/))));
+	public InitializerDecl(Modifiers modifiers, BlockStmt block/*, JavadocComment javadocComment*/) {
+		super(new SLocation(new SNode(kind, runOf(modifiers, block/*, javadocComment*/))));
 	}
 
-	public boolean isStatic() {
-		return location.nodeChild(IS_STATIC);
+	public Modifiers modifiers() {
+		return location.nodeChild(MODIFIERS);
 	}
 
-	public InitializerDecl withIsStatic(boolean isStatic) {
-		return location.nodeWithChild(IS_STATIC, isStatic);
+	public InitializerDecl withModifiers(Modifiers modifiers) {
+		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
 	public BlockStmt block() {
@@ -44,7 +44,7 @@ public class InitializerDecl extends BodyDecl {
 		return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
 	}
 */
-	private static final int IS_STATIC = 1;
+	private static final int MODIFIERS = 1;
 	private static final int BLOCK = 2;
-	private static final int JAVADOC_COMMENT = 3;
+//	private static final int JAVADOC_COMMENT = 3;
 }

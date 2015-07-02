@@ -29,15 +29,16 @@ public class TreeBuilder {
 		allRuns.peek().addToken(token);
 	}
 
-	public void stopAs(Tree.Kind type) {
+	public STree stopAs(Tree.Kind type) {
 		STree tree = stopTree(type);
 		addTree(tree);
+		return tree;
 	}
 
-	public void tokenAs(LToken token, Tree.Kind type) {
+	public STree tokenAs(LToken token, Tree.Kind type) {
 		start();
 		addToken(token);
-		stopAs(type);
+		return stopAs(type);
 	}
 
 	public void stopAsAndWrap(Tree.Kind type) {
@@ -60,7 +61,7 @@ public class TreeBuilder {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void addTree(STree tree) {
+	public void addTree(STree tree) {
 		RunBuilder builder = allRuns.peek();
 		builder.addTree(tree);
 	}

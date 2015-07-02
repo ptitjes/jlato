@@ -5,9 +5,10 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.NameExpr;
 import org.jlato.tree.stmt.BlockStmt;
+import org.jlato.tree.type.ClassOrInterfaceType;
 import org.jlato.tree.type.Type;
 
-public class MethodDecl extends BodyDecl {
+public class MethodDecl extends Decl implements Member {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public MethodDecl instantiate(SLocation location) {
@@ -19,15 +20,15 @@ public class MethodDecl extends BodyDecl {
 		super(location);
 	}
 
-	public MethodDecl(int modifiers, NodeList<TypeParameter> typeParameters, Type type, NameExpr name, NodeList<Parameter> parameters, int arrayCount, NodeList<NameExpr> throws_, BlockStmt body, boolean isDefault/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, runOf(modifiers, typeParameters, type, name, parameters, arrayCount, throws_, body, isDefault/*, javadocComment*/))));
+	public MethodDecl(Modifiers modifiers, NodeList<TypeParameter> typeParameters, Type type, NameExpr name, NodeList<Parameter> parameters, NodeList<ArrayDim> dimensions, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
+		super(new SLocation(new SNode(kind, runOf(modifiers, typeParameters, type, name, parameters, dimensions, throwsClause, body/*, javadocComment*/))));
 	}
 
-	public int modifiers() {
+	public Modifiers modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public MethodDecl withModifiers(int modifiers) {
+	public VariableDecl withModifiers(Modifiers modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -63,20 +64,20 @@ public class MethodDecl extends BodyDecl {
 		return location.nodeWithChild(PARAMETERS, parameters);
 	}
 
-	public int arrayCount() {
-		return location.nodeChild(ARRAY_COUNT);
+	public NodeList<ArrayDim> dimensions() {
+		return location.nodeChild(DIMENSIONS);
 	}
 
-	public MethodDecl withArrayCount(int arrayCount) {
-		return location.nodeWithChild(ARRAY_COUNT, arrayCount);
+	public VariableDeclaratorId withDimensions(NodeList<ArrayDim> dimensions) {
+		return location.nodeWithChild(DIMENSIONS, dimensions);
 	}
 
-	public NodeList<NameExpr> throws_() {
-		return location.nodeChild(THROWS_);
+	public NodeList<ClassOrInterfaceType> throwsClause() {
+		return location.nodeChild(THROWS_CLAUSE);
 	}
 
-	public MethodDecl withThrows_(NodeList<NameExpr> throws_) {
-		return location.nodeWithChild(THROWS_, throws_);
+	public ConstructorDecl withThrowsClause(NodeList<ClassOrInterfaceType> throwsClause) {
+		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
 	}
 
 	public BlockStmt body() {
@@ -85,14 +86,6 @@ public class MethodDecl extends BodyDecl {
 
 	public MethodDecl withBody(BlockStmt body) {
 		return location.nodeWithChild(BODY, body);
-	}
-
-	public boolean isDefault() {
-		return location.nodeChild(IS_DEFAULT);
-	}
-
-	public MethodDecl withIsDefault(boolean isDefault) {
-		return location.nodeWithChild(IS_DEFAULT, isDefault);
 	}
 /*
 
@@ -105,14 +98,13 @@ public class MethodDecl extends BodyDecl {
 	}
 */
 
-	private static final int MODIFIERS = 1;
-	private static final int TYPE_PARAMETERS = 2;
-	private static final int TYPE = 3;
-	private static final int NAME = 4;
+	private static final int MODIFIERS = 0;
+	private static final int TYPE_PARAMETERS = 1;
+	private static final int TYPE = 2;
+	private static final int NAME = 3;
 	private static final int PARAMETERS = 5;
-	private static final int ARRAY_COUNT = 6;
-	private static final int THROWS_ = 7;
+	private static final int DIMENSIONS = 6;
+	private static final int THROWS_CLAUSE = 7;
 	private static final int BODY = 8;
-	private static final int IS_DEFAULT = 9;
-	private static final int JAVADOC_COMMENT = 10;
+//	private static final int JAVADOC_COMMENT = 10;
 }
