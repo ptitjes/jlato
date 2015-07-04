@@ -1,9 +1,12 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
+import org.jlato.tree.Decl;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.expr.NameExpr;
+import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.ClassOrInterfaceType;
 
@@ -19,8 +22,8 @@ public class ConstructorDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public ConstructorDecl(Modifiers modifiers, NodeList<TypeParameter> typeParameters, NameExpr name, NodeList<Parameter> parameters, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt block/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, runOf(modifiers, typeParameters, name, parameters, throwsClause, block/*, javadocComment*/))));
+	public ConstructorDecl(Modifiers modifiers, NodeList<TypeParameter> typeParameters, Name name, NodeList<Parameter> parameters, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt block/*, JavadocComment javadocComment*/) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, typeParameters, name, parameters, throwsClause, block/*, javadocComment*/)))));
 	}
 
 	public Modifiers modifiers() {
@@ -39,11 +42,11 @@ public class ConstructorDecl extends Decl implements Member {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParameters);
 	}
 
-	public NameExpr name() {
+	public Name name() {
 		return location.nodeChild(NAME);
 	}
 
-	public ConstructorDecl withName(NameExpr name) {
+	public ConstructorDecl withName(Name name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

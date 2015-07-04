@@ -1,12 +1,16 @@
 package org.jlato.tree.type;
 
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.SLocation;
+import org.jlato.tree.Type;
 import org.jlato.tree.expr.AnnotationExpr;
 
-public abstract class Type extends Tree {
+/**
+ * @author Didier Villevalois
+ */
+public abstract class AnnotatedType extends Type {
 
-	protected Type(SLocation location) {
+	protected AnnotatedType(SLocation location) {
 		super(location);
 	}
 

@@ -1,11 +1,11 @@
 package org.jlato.tree.decl;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SLeaf;
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
-import org.jlato.tree.NodeOption;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+import org.jlato.tree.name.QName;
 
 public class ImportDecl extends Tree {
 
@@ -19,57 +19,36 @@ public class ImportDecl extends Tree {
 		super(location);
 	}
 
-	public ImportDecl(Expr name, boolean isStatic, boolean isOnDemand) {
-		super(new SLocation(new SNode(kind, runOf(modifiers, type, new NodeOption<VarArgMarker>(isVarArgs ? new VarArgMarker() : null), id))));
+	public ImportDecl(QName name, boolean isStatic, boolean isOnDemand) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(name), attributesOf(isStatic, isOnDemand)))));
 	}
 
-	public Expr name() {
+	public QName name() {
 		return location.nodeChild(NAME);
 	}
 
-	public ImportDecl withName(Expr name) {
-		return location.nodeWithChild(NAME, type);
+	public ImportDecl withName(QName name) {
+		return location.nodeWithChild(NAME, name);
 	}
 
 	public boolean isStatic() {
-		return ((NodeOption<VarArgMarker>) location.nodeChild(VAR_ARG_MARKER)).isDefined();
+		return location.nodeAttribute(STATIC);
 	}
 
 	public ImportDecl setStatic(boolean isStatic) {
-		return location.nodeWithChild(VAR_ARG_MARKER, new NodeOption<VarArgMarker>(isVarArgs ? new VarArgMarker() : null));
+		return location.nodeWithAttribute(STATIC, isStatic);
 	}
 
-	public VariableDeclaratorId id() {
-		return location.nodeChild(ID);
+	public boolean isOnDemand() {
+		return location.nodeAttribute(ON_DEMAND);
 	}
 
-	public ImportDecl withId(VariableDeclaratorId id) {
-		return location.nodeWithChild(ID, id);
+	public ImportDecl setOnDemand(boolean isOnDemand) {
+		return location.nodeWithAttribute(ON_DEMAND, isOnDemand);
 	}
 
-	private static final int MODIFIERS = 0;
-	private static final int NAME = 1;
-	private static final int VAR_ARG_MARKER = 2;
-	private static final int ID = 3;
+	private static final int NAME = 0;
 
-	private static class VarArgMarker extends Tree {
-
-		public final static Kind kind = new Kind() {
-			public Tree instantiate(SLocation location) {
-				return new VarArgMarker(location);
-			}
-		};
-
-		protected VarArgMarker(SLocation location) {
-			super(location);
-		}
-
-		private VarArgMarker() {
-			super(new SLocation(new SLeaf(kind, LToken.Ellipsis)));
-		}
-
-		public String toString() {
-			return location.leafToken().toString();
-		}
-	}
+	private static final int STATIC = 0;
+	private static final int ON_DEMAND = 1;
 }

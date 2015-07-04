@@ -1,7 +1,12 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+import org.jlato.tree.Type;
+import org.jlato.tree.expr.AnnotationExpr;
 
 public class ArrayType extends ReferenceType {
 
@@ -15,8 +20,8 @@ public class ArrayType extends ReferenceType {
 		super(location);
 	}
 
-	public ArrayType(Type componentType) {
-		super(new SLocation(new SNode(kind, runOf(componentType))));
+	public ArrayType(NodeList<AnnotationExpr> annotations, Type componentType) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(annotations, componentType)))));
 	}
 
 	public Type componentType() {

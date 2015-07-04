@@ -1,6 +1,9 @@
 package org.jlato.tree.expr;
 
 import org.jlato.tree.Expr;
+import org.jlato.tree.SLocation;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.name.QName;
 
 public abstract class AnnotationExpr extends Expr {
 
@@ -8,11 +11,11 @@ public abstract class AnnotationExpr extends Expr {
 		super(location);
 	}
 
-	public NameExpr name() {
+	public QName name() {
 		return location.nodeChild(NAME);
 	}
 
-	public AnnotationExpr withName(NameExpr name) {
+	public AnnotationExpr withName(QName name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

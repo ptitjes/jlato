@@ -2,6 +2,7 @@ package org.jlato.tree;
 
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.LRun.RunBuilder;
+import org.jlato.internal.td.SContext;
 
 import java.util.Stack;
 
@@ -51,12 +52,12 @@ public class TreeBuilder {
 	private STree stopTree(Tree.Kind type) {
 		LRun run = allRuns.pop().build();
 
-		STree tree;
-		if (run.hasOnlyOneToken()) {
-			tree = new SLeaf(type, (LToken) run.element(0));
-		} else {
-			tree = new SNode(type, run);
-		}
+		STree tree = null;
+//		if (run.hasOnlyOneToken()) {
+//			tree = new SLeaf(type, (LToken) run.element(0));
+//		} else {
+//			tree = new SNode(type, run);
+//		}
 		return tree;
 	}
 
@@ -68,14 +69,14 @@ public class TreeBuilder {
 
 	@SuppressWarnings("unchecked")
 	public <T extends Tree> T build(Tree.Kind type) {
-		return buildIn(type, new Tree.SContext.Root());
+		return buildIn(type, new SContext.Root());
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Tree> T buildIn(Tree.Kind type, Tree.SContext context) {
+	public <T extends Tree> T buildIn(Tree.Kind type, SContext context) {
 		LRun run = allRuns.peek().build();
 		STree tree = run.tree(0);
 		if (tree.kind != type) throw new IllegalStateException();
-		return (T) new Tree.SLocation(context, tree).facade;
+		return (T) new SLocation(context, tree).facade;
 	}
 }

@@ -1,12 +1,15 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
+import org.jlato.tree.Decl;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.expr.NameExpr;
+import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.ClassOrInterfaceType;
-import org.jlato.tree.type.Type;
+import org.jlato.tree.Type;
 
 public class MethodDecl extends Decl implements Member {
 
@@ -20,8 +23,8 @@ public class MethodDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public MethodDecl(Modifiers modifiers, NodeList<TypeParameter> typeParameters, Type type, NameExpr name, NodeList<Parameter> parameters, NodeList<ArrayDim> dimensions, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, runOf(modifiers, typeParameters, type, name, parameters, dimensions, throwsClause, body/*, javadocComment*/))));
+	public MethodDecl(Modifiers modifiers, NodeList<TypeParameter> typeParameters, Type type, Name name, NodeList<Parameter> parameters, NodeList<ArrayDim> dimensions, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, typeParameters, type, name, parameters, dimensions, throwsClause, body/*, javadocComment*/)))));
 	}
 
 	public Modifiers modifiers() {
@@ -48,11 +51,11 @@ public class MethodDecl extends Decl implements Member {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public NameExpr name() {
+	public Name name() {
 		return location.nodeChild(NAME);
 	}
 
-	public MethodDecl withName(NameExpr name) {
+	public MethodDecl withName(Name name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -102,9 +105,9 @@ public class MethodDecl extends Decl implements Member {
 	private static final int TYPE_PARAMETERS = 1;
 	private static final int TYPE = 2;
 	private static final int NAME = 3;
-	private static final int PARAMETERS = 5;
-	private static final int DIMENSIONS = 6;
-	private static final int THROWS_CLAUSE = 7;
-	private static final int BODY = 8;
+	private static final int PARAMETERS = 4;
+	private static final int DIMENSIONS = 5;
+	private static final int THROWS_CLAUSE = 6;
+	private static final int BODY = 7;
 //	private static final int JAVADOC_COMMENT = 10;
 }

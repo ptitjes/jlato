@@ -1,13 +1,11 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
-import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.decl.Modifiers;
 import org.jlato.tree.decl.VariableDecl;
-import org.jlato.tree.decl.VariableDeclarator;
-import org.jlato.tree.type.Type;
 
 public class VariableDeclarationExpr extends Expr {
 
@@ -22,7 +20,7 @@ public class VariableDeclarationExpr extends Expr {
 	}
 
 	public VariableDeclarationExpr(VariableDecl declaration) {
-		super(new SLocation(new SNode(kind, runOf(declaration))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(declaration)))));
 	}
 
 	public VariableDecl declaration() {

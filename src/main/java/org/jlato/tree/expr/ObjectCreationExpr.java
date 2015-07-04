@@ -1,12 +1,14 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.decl.Decl;
+import org.jlato.tree.Decl;
 import org.jlato.tree.type.ClassOrInterfaceType;
-import org.jlato.tree.type.Type;
+import org.jlato.tree.Type;
 
 public class ObjectCreationExpr extends Expr {
 
@@ -21,7 +23,7 @@ public class ObjectCreationExpr extends Expr {
 	}
 
 	public ObjectCreationExpr(Expr scope, ClassOrInterfaceType type, NodeList<Type> typeArgs, NodeList<Expr> args, NodeList<Decl> anonymousClassBody) {
-		super(new SLocation(new SNode(kind, runOf(scope, type, typeArgs, args, anonymousClassBody))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(scope, type, typeArgs, args, anonymousClassBody)))));
 	}
 
 	public Expr scope() {

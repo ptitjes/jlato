@@ -1,7 +1,10 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+import org.jlato.tree.Type;
 
 public class UnknownType extends Type {
 
@@ -16,7 +19,7 @@ public class UnknownType extends Type {
 	}
 
 	public UnknownType() {
-		super(new SLocation(new SNode(kind, runOf())));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf()))));
 	}
 
 }

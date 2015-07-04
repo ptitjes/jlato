@@ -3,11 +3,10 @@ package org.jlato.tree.stmt;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
 import org.jlato.internal.bu.SNode;
-import org.jlato.tree.Expr;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.Stmt;
-import org.jlato.tree.Tree;
-import org.jlato.tree.type.Type;
+import org.jlato.internal.bu.SNodeData;
+import org.jlato.tree.SLocation;
+import org.jlato.tree.*;
+import org.jlato.tree.Type;
 
 public class ExplicitConstructorInvocationStmt extends Stmt {
 
@@ -22,7 +21,7 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 	}
 
 	public ExplicitConstructorInvocationStmt(NodeList<Type> typeArgs, boolean isThis, Expr expr, NodeList<Expr> args) {
-		super(new SLocation(new SNode(kind, runOf(typeArgs, isThis ? ConstructorKind.This : ConstructorKind.Super, expr, args))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(typeArgs, isThis ? ConstructorKind.This : ConstructorKind.Super, expr, args)))));
 	}
 
 	public NodeList<Type> typeArgs() {

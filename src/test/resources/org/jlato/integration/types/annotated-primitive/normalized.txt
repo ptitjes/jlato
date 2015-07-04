@@ -1,0 +1,10 @@
+{
+  class: org.jlato.tree.type.PrimitiveType,
+  annotations: [
+    {
+      class: org.jlato.tree.expr.MarkerAnnotationExpr,
+      name: Meter,
+    },
+  ],
+  type: int,
+}

@@ -1,8 +1,10 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 
 public class ArrayDimExpr extends Tree {
@@ -18,7 +20,7 @@ public class ArrayDimExpr extends Tree {
 	}
 
 	public ArrayDimExpr(NodeList<AnnotationExpr> annotations, Expr expression) {
-		super(new SLocation(new SNode(kind, runOf(annotations, expression))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(annotations, expression)))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

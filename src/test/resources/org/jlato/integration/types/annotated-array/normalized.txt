@@ -1,0 +1,27 @@
+{
+  class: org.jlato.tree.type.ArrayType,
+  annotations: [
+  ],
+  componentType: {
+    class: org.jlato.tree.type.ArrayType,
+    annotations: [
+    ],
+    componentType: {
+      class: org.jlato.tree.type.ArrayType,
+      annotations: [
+      ],
+      componentType: {
+        class: org.jlato.tree.type.ClassOrInterfaceType,
+        annotations: [
+          {
+            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            name: Ann,
+          },
+        ],
+        name: String,
+        scope: null,
+        typeArgs: null,
+      },
+    },
+  },
+}

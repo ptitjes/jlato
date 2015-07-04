@@ -1,6 +1,4 @@
-package org.jlato.tree.decl;
-
-import org.jlato.tree.Tree;
+package org.jlato.tree;
 
 public abstract class Decl extends Tree {
 

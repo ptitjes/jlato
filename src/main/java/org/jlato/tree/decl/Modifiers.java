@@ -1,11 +1,11 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.tree.Expr;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
-import org.jlato.tree.type.Type;
 
 public class Modifiers extends Tree {
 
@@ -20,7 +20,7 @@ public class Modifiers extends Tree {
 	}
 
 	public Modifiers(NodeList<Modifier> modifiers, NodeList<AnnotationExpr> annotations) {
-		super(new SLocation(new SNode(kind, runOf(modifiers, annotations))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, annotations)))));
 	}
 
 	public NodeList<Modifier> modifiers() {
@@ -29,6 +29,10 @@ public class Modifiers extends Tree {
 
 	public Modifiers withModifiers(NodeList<Modifier> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
+	}
+
+	public boolean contains(Modifier modifier) {
+		return modifiers().contains(modifier);
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

@@ -1,6 +1,8 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.TypeDecl;
@@ -18,7 +20,7 @@ public class TypeDeclarationStmt extends Stmt {
 	}
 
 	public TypeDeclarationStmt(TypeDecl typeDecl) {
-		super(new SLocation(new SNode(kind, runOf(typeDecl))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(typeDecl)))));
 	}
 
 	public TypeDecl typeDecl() {

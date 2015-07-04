@@ -1,6 +1,7 @@
 package org.jlato.tree;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 
 /**
  * @author Didier Villevalois
@@ -25,11 +26,11 @@ public class NodeOption<T extends Tree> extends Tree {
 	}
 
 	public NodeOption() {
-		super(new SLocation(new SNode(kind, runOf(new Tree[]{null}))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(new Tree[]{null})))));
 	}
 
 	public NodeOption(T element) {
-		super(new SLocation(new SNode(kind, runOf(element))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(element)))));
 	}
 
 	public boolean isDefined() {
@@ -37,7 +38,7 @@ public class NodeOption<T extends Tree> extends Tree {
 	}
 
 	public boolean isNone() {
-		return location.nodeRun().tree(0) == null;
+		return location.nodeListRun().tree(0) == null;
 	}
 
 	public T get() {

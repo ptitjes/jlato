@@ -1,9 +1,13 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.expr.NameExpr;
+import org.jlato.tree.Type;
+import org.jlato.tree.expr.AnnotationExpr;
+import org.jlato.tree.name.Name;
 
 public class ClassOrInterfaceType extends ReferenceType {
 
@@ -17,8 +21,8 @@ public class ClassOrInterfaceType extends ReferenceType {
 		super(location);
 	}
 
-	public ClassOrInterfaceType(ClassOrInterfaceType scope, NameExpr name, NodeList<Type> typeArgs) {
-		super(new SLocation(new SNode(kind, runOf(scope, name, typeArgs))));
+	public ClassOrInterfaceType(NodeList<AnnotationExpr> annotations, ClassOrInterfaceType scope, Name name, NodeList<Type> typeArgs) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(annotations, scope, name, typeArgs)))));
 	}
 
 	public ClassOrInterfaceType scope() {
@@ -29,11 +33,11 @@ public class ClassOrInterfaceType extends ReferenceType {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public NameExpr name() {
+	public Name name() {
 		return location.nodeChild(NAME);
 	}
 
-	public ClassOrInterfaceType withName(NameExpr name) {
+	public ClassOrInterfaceType withName(Name name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

@@ -1,10 +1,10 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SLeaf;
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 
 public class UnaryExpr extends Expr {
@@ -20,15 +20,15 @@ public class UnaryExpr extends Expr {
 	}
 
 	public UnaryExpr(UnaryOp operator, Expr expr) {
-		super(new SLocation(new SNode(kind, runOf(operator, expr))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(expr), attributesOf(operator)))));
 	}
 
 	public UnaryOp op() {
-		return location.nodeChild(OPERATOR);
+		return location.nodeAttribute(OPERATOR);
 	}
 
 	public UnaryExpr withOp(UnaryOp operator) {
-		return location.nodeWithChild(OPERATOR, operator);
+		return location.nodeWithAttribute(OPERATOR, operator);
 	}
 
 	public Expr expr() {
@@ -39,37 +39,31 @@ public class UnaryExpr extends Expr {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
+	private static final int EXPR = 0;
+
 	private static final int OPERATOR = 0;
-	private static final int EXPR = 1;
 
-	public static class UnaryOp extends Tree {
+	public enum UnaryOp {
+		Positive(LToken.Plus),
+		Negative(LToken.Minus),
+		PreIncrement(LToken.Increment),
+		PreDecrement(LToken.Decrement),
+		Not(LToken.Not),
+		Inverse(LToken.Inverse),
+		PostIncrement(LToken.Increment),
+		PostDecrement(LToken.Decrement),
+		// Keep last comma
+		;
 
-		public final static Tree.Kind kind = new Tree.Kind() {
-			public UnaryOp instantiate(SLocation location) {
-				return new UnaryOp(location);
-			}
-		};
 
-		public static final UnaryOp Positive = new UnaryOp(LToken.Plus);
-		public static final UnaryOp Negative = new UnaryOp(LToken.Minus);
-		public static final UnaryOp PreIncrement = new UnaryOp(LToken.Increment);
-		public static final UnaryOp PreDecrement = new UnaryOp(LToken.Decrement);
-		public static final UnaryOp Not = new UnaryOp(LToken.Not);
-		public static final UnaryOp Inverse = new UnaryOp(LToken.Inverse);
-		public static final UnaryOp PostIncrement = new UnaryOp(LToken.Increment);
-		public static final UnaryOp PostDecrement = new UnaryOp(LToken.Decrement);
+		protected final LToken token;
 
-		private UnaryOp(SLocation location) {
-			super(location);
-		}
-
-		private UnaryOp(LToken token) {
-			super(new SLocation(new SLeaf(kind, token)));
+		UnaryOp(LToken token) {
+			this.token = token;
 		}
 
 		public String toString() {
-			return location.leafToken().toString();
+			return token.toString();
 		}
-
 	}
 }

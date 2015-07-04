@@ -1,28 +1,29 @@
-package org.jlato.tree.expr;
+package org.jlato.tree.name;
 
 import com.github.javaparser.ASTParserConstants;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
 import org.jlato.tree.Expr;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 
-public class NameExpr extends Expr {
+public class Name extends Expr {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
-		public NameExpr instantiate(SLocation location) {
-			return new NameExpr(location);
+		public Name instantiate(SLocation location) {
+			return new Name(location);
 		}
 	};
 
-	private NameExpr(SLocation location) {
+	private Name(SLocation location) {
 		super(location);
 	}
 
-	public NameExpr(LToken identifier) {
+	public Name(LToken identifier) {
 		super(new SLocation(new SLeaf(kind, identifier)));
 	}
 
-	public NameExpr(String name) {
+	public Name(String name) {
 		this(new LToken(ASTParserConstants.IDENTIFIER, name));
 	}
 
@@ -30,7 +31,12 @@ public class NameExpr extends Expr {
 		return location.leafToken().toString();
 	}
 
-	public NameExpr withName(String name) {
+	public Name withName(String name) {
 		return location.leafWithToken(new LToken(ASTParserConstants.IDENTIFIER, name));
+	}
+
+	@Override
+	public String toString() {
+		return name();
 	}
 }

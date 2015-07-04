@@ -1,6 +1,6 @@
 package org.jlato.internal.bu;
 
-import com.github.javaparser.ASTParserConstants;
+import org.jlato.parser.ASTParserConstants;
 
 /**
  * @author Didier Villevalois
@@ -8,30 +8,30 @@ import com.github.javaparser.ASTParserConstants;
 public class Literals {
 	// TODO rework parsing and rendering
 
-	public static <T> LToken from(Class<T> literalClass, T literalValue) {
+	public static <T> String from(Class<T> literalClass, T literalValue) {
 		if (Void.class.isAssignableFrom(literalClass)) {
 			if (literalValue != null) {
 				throw new IllegalArgumentException();
 			}
-			return LToken.Null;
+			return LToken.Null.string;
 		} else if (Boolean.class.isAssignableFrom(literalClass)) {
 			if (Boolean.TRUE.equals(literalValue))
-				return LToken.True;
+				return LToken.True.string;
 			else if (Boolean.FALSE.equals(literalValue))
-				return LToken.False;
+				return LToken.False.string;
 			else throw new IllegalStateException();
 		} else if (Character.class.isAssignableFrom(literalClass)) {
-			return new LToken(ASTParserConstants.CHARACTER_LITERAL, "'" + literalValue.toString().charAt(0) + "'");
+			return "'" + literalValue.toString().charAt(0) + "'";
 		} else if (Integer.class.isAssignableFrom(literalClass)) {
-			return new LToken(ASTParserConstants.INTEGER_LITERAL, literalValue.toString());
+			return literalValue.toString();
 		} else if (Long.class.isAssignableFrom(literalClass)) {
-			return new LToken(ASTParserConstants.LONG_LITERAL, literalValue.toString() + "L");
+			return literalValue.toString() + "L";
 		} else if (Float.class.isAssignableFrom(literalClass)) {
-			return new LToken(ASTParserConstants.FLOAT_LITERAL, literalValue.toString() + "F");
+			return literalValue.toString() + "F";
 		} else if (Double.class.isAssignableFrom(literalClass)) {
-			return new LToken(ASTParserConstants.DOUBLE_LITERAL, literalValue.toString() + "D");
+			return literalValue.toString() + "D";
 		} else if (String.class.isAssignableFrom(literalClass)) {
-			return new LToken(ASTParserConstants.STRING_LITERAL, "\"" + literalValue.toString() + "\"");
+			return "\"" + literalValue.toString() + "\"";
 		} else {
 			throw new IllegalArgumentException();
 		}
@@ -63,9 +63,7 @@ public class Literals {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T valueFor(LToken token) {
-		final String literalString = token.string;
-		final Class<?> literalClass = literalClassFor(token.kind);
+	public static <T> T valueFor(Class<T> literalClass, String literalString) {
 		if (Void.class.isAssignableFrom(literalClass)) {
 			return null;
 		} else if (Boolean.class.isAssignableFrom(literalClass)) {

@@ -80,6 +80,8 @@ public class LToken extends LElement {
 	public static final LToken True = new LToken(ASTParserConstants.TRUE, "true");
 	public static final LToken False = new LToken(ASTParserConstants.FALSE, "false");
 
+	public static final LToken SemiColon = new LToken(ASTParserConstants.SEMICOLON, ";");
+
 
 	public final int kind;
 	public final String string;
@@ -97,5 +99,10 @@ public class LToken extends LElement {
 	@Override
 	public final int width() {
 		return string.length();
+	}
+
+	@Override
+	public String toString() {
+		return string;
 	}
 }

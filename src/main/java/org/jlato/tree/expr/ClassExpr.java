@@ -1,9 +1,11 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.type.Type;
+import org.jlato.tree.Type;
 
 public class ClassExpr extends Expr {
 
@@ -18,7 +20,7 @@ public class ClassExpr extends Expr {
 	}
 
 	public ClassExpr(Type type) {
-		super(new SLocation(new SNode(kind, runOf(type))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(type)))));
 	}
 
 	public Type type() {

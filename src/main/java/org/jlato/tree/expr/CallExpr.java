@@ -1,10 +1,13 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.type.Type;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.Type;
 
 public class CallExpr extends Expr {
 
@@ -18,8 +21,8 @@ public class CallExpr extends Expr {
 		super(location);
 	}
 
-	public CallExpr(Expr scope, NodeList<Type> typeArgs, NameExpr name, NodeList<Expr> args) {
-		super(new SLocation(new SNode(kind, runOf(scope, typeArgs, name, args))));
+	public CallExpr(Expr scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(scope, typeArgs, name, args)))));
 	}
 
 	public Expr scope() {
@@ -38,11 +41,11 @@ public class CallExpr extends Expr {
 		return location.nodeWithChild(TYPE_ARGS, typeArgs);
 	}
 
-	public NameExpr name() {
+	public Name name() {
 		return location.nodeChild(NAME);
 	}
 
-	public CallExpr withName(NameExpr name) {
+	public CallExpr withName(Name name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

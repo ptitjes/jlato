@@ -1,11 +1,13 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ArrayDim;
-import org.jlato.tree.type.Type;
+import org.jlato.tree.Type;
 
 public class ArrayCreationExpr extends Expr {
 
@@ -19,8 +21,8 @@ public class ArrayCreationExpr extends Expr {
 		super(location);
 	}
 
-	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimensionExpressions, NodeList<Expr> dimensions, ArrayInitializerExpr initializer) {
-		super(new SLocation(new SNode(kind, runOf(type, dimensionExpressions, dimensions, initializer))));
+	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimensionExpressions, NodeList<ArrayDim> dimensions, ArrayInitializerExpr initializer) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(type, dimensionExpressions, dimensions, initializer)))));
 	}
 
 	public Type type() {
@@ -39,11 +41,11 @@ public class ArrayCreationExpr extends Expr {
 		return location.nodeWithChild(DIMENSION_EXPRESSIONS, dimensionExpressions);
 	}
 
-	public NodeList<Expr> dimensions() {
+	public NodeList<ArrayDim> dimensions() {
 		return location.nodeChild(DIMENSIONS);
 	}
 
-	public ArrayCreationExpr withDimensions(NodeList<Expr> dimensions) {
+	public ArrayCreationExpr withDimensions(NodeList<ArrayDim> dimensions) {
 		return location.nodeWithChild(DIMENSIONS, dimensions);
 	}
 

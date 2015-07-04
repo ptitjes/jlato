@@ -1,8 +1,11 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+import org.jlato.tree.name.QName;
 
 public class SingleMemberAnnotationExpr extends AnnotationExpr {
 
@@ -16,8 +19,8 @@ public class SingleMemberAnnotationExpr extends AnnotationExpr {
 		super(location);
 	}
 
-	public SingleMemberAnnotationExpr(Expr memberValue) {
-		super(new SLocation(new SNode(kind, runOf(memberValue))));
+	public SingleMemberAnnotationExpr(QName name, Expr memberValue) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(name, memberValue)))));
 	}
 
 	public Expr memberValue() {

@@ -1,7 +1,9 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 
 public class ConditionalExpr extends Expr {
@@ -17,7 +19,7 @@ public class ConditionalExpr extends Expr {
 	}
 
 	public ConditionalExpr(Expr condition, Expr thenExpr, Expr elseExpr) {
-		super(new SLocation(new SNode(kind, runOf(condition, thenExpr, elseExpr))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(condition, thenExpr, elseExpr)))));
 	}
 
 	public Expr condition() {

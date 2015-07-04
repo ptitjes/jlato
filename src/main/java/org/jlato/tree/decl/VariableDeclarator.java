@@ -1,7 +1,9 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 
 public class VariableDeclarator extends Tree {
@@ -17,7 +19,7 @@ public class VariableDeclarator extends Tree {
 	}
 
 	public VariableDeclarator(VariableDeclaratorId id, Expr init) {
-		super(new SLocation(new SNode(kind, runOf(id, init))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(id, init)))));
 	}
 
 	public VariableDeclaratorId id() {

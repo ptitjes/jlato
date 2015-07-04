@@ -1,10 +1,9 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.tree.Expr;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
-import org.jlato.tree.expr.NameExpr;
+import org.jlato.internal.bu.SNodeData;
+import org.jlato.tree.*;
+import org.jlato.tree.name.Name;
 
 public class EnumConstantDecl extends Decl {
 
@@ -18,15 +17,23 @@ public class EnumConstantDecl extends Decl {
 		super(location);
 	}
 
-	public EnumConstantDecl(NameExpr name, NodeList<Expr> args, NodeList<Decl> classBody/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, runOf(name, args, classBody/*, javadocComment*/))));
+	public EnumConstantDecl(Modifiers modifiers, Name name, NodeList<Expr> args, NodeList<Decl> classBody/*, JavadocComment javadocComment*/) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, name, args, classBody/*, javadocComment*/)))));
 	}
 
-	public NameExpr name() {
+	public Modifiers modifiers() {
+		return location.nodeChild(MODIFIERS);
+	}
+
+	public VariableDecl withModifiers(Modifiers modifiers) {
+		return location.nodeWithChild(MODIFIERS, modifiers);
+	}
+
+	public Name name() {
 		return location.nodeChild(NAME);
 	}
 
-	public EnumConstantDecl withName(NameExpr name) {
+	public EnumConstantDecl withName(Name name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -56,8 +63,9 @@ public class EnumConstantDecl extends Decl {
 	}
 */
 
+	private static final int MODIFIERS = 0;
 	private static final int NAME = 1;
 	private static final int ARGS = 2;
 	private static final int CLASS_BODY = 3;
-	private static final int JAVADOC_COMMENT = 4;
+//	private static final int JAVADOC_COMMENT = 4;
 }

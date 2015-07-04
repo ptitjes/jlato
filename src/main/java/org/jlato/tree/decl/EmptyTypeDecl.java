@@ -1,9 +1,11 @@
 package org.jlato.tree.decl;
 
-import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SLeaf;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 
-public class EmptyTypeDecl extends Decl implements TopLevel, Member {
+public class EmptyTypeDecl extends TypeDecl implements TopLevel, Member {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public EmptyTypeDecl instantiate(SLocation location) {
@@ -16,7 +18,6 @@ public class EmptyTypeDecl extends Decl implements TopLevel, Member {
 	}
 
 	public EmptyTypeDecl() {
-		super(new SLocation(new SNode(kind, runOf())));
+		super(new SLocation(new SLeaf(kind, LToken.SemiColon)));
 	}
-
 }

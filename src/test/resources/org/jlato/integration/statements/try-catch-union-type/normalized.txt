@@ -1,0 +1,57 @@
+{
+  class: org.jlato.tree.stmt.TryStmt,
+  catchs: [
+    {
+      class: org.jlato.tree.stmt.CatchClause,
+      catchBlock: {
+        class: org.jlato.tree.stmt.BlockStmt,
+        stmts: [
+        ],
+      },
+      except: {
+        class: org.jlato.tree.decl.Parameter,
+        id: {
+          class: org.jlato.tree.decl.VariableDeclaratorId,
+          dimensions: [
+          ],
+          name: ex,
+        },
+        isVarArgs: false,
+        modifiers: {
+          class: org.jlato.tree.decl.Modifiers,
+          annotations: [
+          ],
+          modifiers: [
+          ],
+        },
+        type: {
+          class: org.jlato.tree.type.UnionType,
+          types: [
+            {
+              class: org.jlato.tree.type.ClassOrInterfaceType,
+              annotations: null,
+              name: Exception1,
+              scope: null,
+              typeArgs: null,
+            },
+            {
+              class: org.jlato.tree.type.ClassOrInterfaceType,
+              annotations: null,
+              name: Exception2,
+              scope: null,
+              typeArgs: null,
+            },
+          ],
+        },
+      },
+    },
+  ],
+  finallyBlock: null,
+  resources: [
+  ],
+  tryBlock: {
+    class: org.jlato.tree.stmt.BlockStmt,
+    stmts: [
+    ],
+  },
+}

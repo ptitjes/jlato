@@ -1,11 +1,5 @@
 package org.jlato.tree;
 
-import org.jlato.internal.bu.LLiteral;
-import org.jlato.tree.*;
-import org.jlato.tree.expr.*;
-import org.jlato.tree.expr.BinaryExpr.BinaryOp;
-import org.junit.Assert;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -14,7 +8,7 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class BasicTest {
-
+/*
 	@Test
 	public void test1() {
 		BinaryExpr expr1 = new BinaryExpr(
@@ -135,5 +129,5 @@ public class BasicTest {
 		NodeList<Expr> exprs = builder.build(NodeList.<Expr>kind());
 
 		NodeList<Expr> newExprs = exprs.append(new LiteralExpr<Integer>(Integer.class, 42));
-	}
+	}*/
 }

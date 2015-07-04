@@ -1,11 +1,13 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
-import org.jlato.tree.expr.NameExpr;
-import org.jlato.tree.type.Type;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.Type;
 
 public class TypeParameter extends Tree {
 
@@ -19,8 +21,8 @@ public class TypeParameter extends Tree {
 		super(location);
 	}
 
-	public TypeParameter(NodeList<AnnotationExpr> annotations, NameExpr name, NodeList<Type> bounds) {
-		super(new SLocation(new SNode(kind, runOf(annotations, name, bounds))));
+	public TypeParameter(NodeList<AnnotationExpr> annotations, Name name, NodeList<Type> bounds) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(annotations, name, bounds)))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
@@ -31,11 +33,11 @@ public class TypeParameter extends Tree {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
-	public NameExpr name() {
+	public Name name() {
 		return location.nodeChild(NAME);
 	}
 
-	public TypeParameter withName(NameExpr name) {
+	public TypeParameter withName(Name name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

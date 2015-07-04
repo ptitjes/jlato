@@ -1,0 +1,44 @@
+{
+  class: org.jlato.tree.expr.CastExpr,
+  expr: {
+    class: org.jlato.tree.name.Name,
+    name: v,
+  },
+  type: {
+    class: org.jlato.tree.type.IntersectionType,
+    types: [
+      {
+        class: org.jlato.tree.type.ClassOrInterfaceType,
+        annotations: [
+          {
+            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            name: Ann1,
+          },
+          {
+            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            name: Ann2,
+          },
+        ],
+        name: A,
+        scope: null,
+        typeArgs: null,
+      },
+      {
+        class: org.jlato.tree.type.ClassOrInterfaceType,
+        annotations: [
+          {
+            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            name: Ann3,
+          },
+          {
+            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            name: Ann4,
+          },
+        ],
+        name: B,
+        scope: null,
+        typeArgs: null,
+      },
+    ],
+  },
+}

@@ -1,6 +1,8 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.*;
 
 public class SwitchEntryStmt extends Stmt {
@@ -16,7 +18,7 @@ public class SwitchEntryStmt extends Stmt {
 	}
 
 	public SwitchEntryStmt(Expr label, NodeList<Stmt> stmts) {
-		super(new SLocation(new SNode(kind, runOf(label, stmts))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(label, stmts)))));
 	}
 
 	public Expr label() {

@@ -1,0 +1,23 @@
+{
+  class: org.jlato.tree.type.ArrayType,
+  annotations: [
+  ],
+  componentType: {
+    class: org.jlato.tree.type.ArrayType,
+    annotations: [
+    ],
+    componentType: {
+      class: org.jlato.tree.type.ArrayType,
+      annotations: [
+      ],
+      componentType: {
+        class: org.jlato.tree.type.ClassOrInterfaceType,
+        annotations: [
+        ],
+        name: String,
+        scope: null,
+        typeArgs: null,
+      },
+    },
+  },
+}

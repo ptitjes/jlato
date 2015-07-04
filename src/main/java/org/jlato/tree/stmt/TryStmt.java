@@ -1,7 +1,9 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.VariableDeclarationExpr;
@@ -19,7 +21,7 @@ public class TryStmt extends Stmt {
 	}
 
 	public TryStmt(NodeList<VariableDeclarationExpr> resources, BlockStmt tryBlock, NodeList<CatchClause> catchs, BlockStmt finallyBlock) {
-		super(new SLocation(new SNode(kind, runOf(resources, tryBlock, catchs, finallyBlock))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(resources, tryBlock, catchs, finallyBlock)))));
 	}
 
 	public NodeList<VariableDeclarationExpr> resources() {

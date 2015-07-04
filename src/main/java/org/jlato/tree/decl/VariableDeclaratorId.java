@@ -1,9 +1,11 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.expr.NameExpr;
+import org.jlato.tree.name.Name;
 
 public class VariableDeclaratorId extends Tree {
 
@@ -17,15 +19,15 @@ public class VariableDeclaratorId extends Tree {
 		super(location);
 	}
 
-	public VariableDeclaratorId(NameExpr name, NodeList<ArrayDim> dimensions) {
-		super(new SLocation(new SNode(kind, runOf(name, dimensions))));
+	public VariableDeclaratorId(Name name, NodeList<ArrayDim> dimensions) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(name, dimensions)))));
 	}
 
-	public NameExpr name() {
+	public Name name() {
 		return location.nodeChild(NAME);
 	}
 
-	public VariableDeclaratorId withName(NameExpr name) {
+	public VariableDeclaratorId withName(Name name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

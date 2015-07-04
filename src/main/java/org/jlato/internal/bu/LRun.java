@@ -48,6 +48,13 @@ public class LRun implements Iterable<LElement> {
 		return treesAndTokensAfter.size();
 	}
 
+	public boolean contains(STree tree) {
+		for (TreeAndTokensAfter treeAndTokensAfter : treesAndTokensAfter) {
+			if (treeAndTokensAfter.tree == tree) return true;
+		}
+		return false;
+	}
+
 	public STree tree(int index) {
 		if (index >= treesAndTokensAfter.size()) return null;
 		return treesAndTokensAfter.get(index).tree;
@@ -76,6 +83,10 @@ public class LRun implements Iterable<LElement> {
 
 	public LRun append(STree tree) {
 		return new LRun(tokensBefore, treesAndTokensAfter.append(new TreeAndTokensAfter(tree)));
+	}
+
+	public LRun prepend(STree tree) {
+		return new LRun(Vector.<LToken>empty(), treesAndTokensAfter.prepend(new TreeAndTokensAfter(tree, tokensBefore)));
 	}
 
 	public Iterator<LElement> iterator() {

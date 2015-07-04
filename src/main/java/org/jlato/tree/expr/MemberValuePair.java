@@ -1,8 +1,11 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+import org.jlato.tree.name.Name;
 
 public class MemberValuePair extends Tree {
 
@@ -16,19 +19,19 @@ public class MemberValuePair extends Tree {
 		super(location);
 	}
 
-	public MemberValuePair(NameExpr name, Expr value) {
-		super(new SLocation(new SNode(kind, runOf(name, value))));
+	public MemberValuePair(Name name, Expr value) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(name, value)))));
 	}
 
-	public NameExpr name() {
+	public Name name() {
 		return location.nodeChild(NAME);
 	}
 
-	public MemberValuePair withName(NameExpr name) {
+	public MemberValuePair withName(Name name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public NameExpr value() {
+	public Name value() {
 		return location.nodeChild(VALUE);
 	}
 

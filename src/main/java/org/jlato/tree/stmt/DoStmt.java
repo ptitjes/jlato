@@ -1,7 +1,9 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
 
@@ -18,7 +20,7 @@ public class DoStmt extends Stmt {
 	}
 
 	public DoStmt(Stmt body, Expr condition) {
-		super(new SLocation(new SNode(kind, runOf(body, condition))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(body, condition)))));
 	}
 
 	public Stmt body() {

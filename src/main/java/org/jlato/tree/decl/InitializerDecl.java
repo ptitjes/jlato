@@ -1,6 +1,9 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
+import org.jlato.tree.Decl;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.stmt.BlockStmt;
 
@@ -17,7 +20,7 @@ public class InitializerDecl extends Decl {
 	}
 
 	public InitializerDecl(Modifiers modifiers, BlockStmt block/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, runOf(modifiers, block/*, javadocComment*/))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, block/*, javadocComment*/)))));
 	}
 
 	public Modifiers modifiers() {
@@ -35,15 +38,16 @@ public class InitializerDecl extends Decl {
 	public InitializerDecl withBlock(BlockStmt block) {
 		return location.nodeWithChild(BLOCK, block);
 	}
-/*
-	public JavadocComment javadocComment() {
-		return location.nodeChild(JAVADOC_COMMENT);
-	}
 
-	public InitializerDecl withJavadocComment(JavadocComment javadocComment) {
-		return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
-	}
-*/
+	/*
+		public JavadocComment javadocComment() {
+			return location.nodeChild(JAVADOC_COMMENT);
+		}
+
+		public InitializerDecl withJavadocComment(JavadocComment javadocComment) {
+			return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
+		}
+	*/
 	private static final int MODIFIERS = 1;
 	private static final int BLOCK = 2;
 //	private static final int JAVADOC_COMMENT = 3;

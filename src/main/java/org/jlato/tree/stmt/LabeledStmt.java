@@ -1,9 +1,11 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
-import org.jlato.tree.expr.NameExpr;
+import org.jlato.tree.name.Name;
 
 public class LabeledStmt extends Stmt {
 
@@ -17,15 +19,15 @@ public class LabeledStmt extends Stmt {
 		super(location);
 	}
 
-	public LabeledStmt(NameExpr label, Stmt stmt) {
-		super(new SLocation(new SNode(kind, runOf(label, stmt))));
+	public LabeledStmt(Name label, Stmt stmt) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(label, stmt)))));
 	}
 
-	public NameExpr label() {
+	public Name label() {
 		return location.nodeChild(LABEL);
 	}
 
-	public LabeledStmt withLabel(NameExpr label) {
+	public LabeledStmt withLabel(Name label) {
 		return location.nodeWithChild(LABEL, label);
 	}
 

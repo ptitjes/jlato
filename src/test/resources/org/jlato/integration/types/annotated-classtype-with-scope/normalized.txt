@@ -1,0 +1,23 @@
+{
+  class: org.jlato.tree.type.ClassOrInterfaceType,
+  annotations: [
+    {
+      class: org.jlato.tree.expr.MarkerAnnotationExpr,
+      name: Ann2,
+    },
+  ],
+  name: T2,
+  scope: {
+    class: org.jlato.tree.type.ClassOrInterfaceType,
+    annotations: [
+      {
+        class: org.jlato.tree.expr.MarkerAnnotationExpr,
+        name: Ann1,
+      },
+    ],
+    name: T1,
+    scope: null,
+    typeArgs: null,
+  },
+  typeArgs: null,
+}

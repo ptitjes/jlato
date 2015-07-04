@@ -1,10 +1,13 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
+import org.jlato.tree.Decl;
 import org.jlato.tree.Expr;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.expr.NameExpr;
-import org.jlato.tree.type.Type;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.Type;
 
 public class AnnotationMemberDecl extends Decl implements Member {
 
@@ -18,8 +21,8 @@ public class AnnotationMemberDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public AnnotationMemberDecl(Modifiers modifiers, Type type, NameExpr name, Expr defaultValue/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, runOf(modifiers, type, name, defaultValue/*, javadocComment*/))));
+	public AnnotationMemberDecl(Modifiers modifiers, Type type, Name name, Expr defaultValue/*, JavadocComment javadocComment*/) {
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, type, name, defaultValue/*, javadocComment*/)))));
 	}
 
 	public Modifiers modifiers() {
@@ -38,11 +41,11 @@ public class AnnotationMemberDecl extends Decl implements Member {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public NameExpr name() {
+	public Name name() {
 		return location.nodeChild(NAME);
 	}
 
-	public AnnotationMemberDecl withName(NameExpr name) {
+	public AnnotationMemberDecl withName(Name name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

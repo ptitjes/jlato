@@ -1,0 +1,36 @@
+{
+  class: org.jlato.tree.expr.CastExpr,
+  expr: {
+    class: org.jlato.tree.name.Name,
+    name: v,
+  },
+  type: {
+    class: org.jlato.tree.type.IntersectionType,
+    types: [
+      {
+        class: org.jlato.tree.type.ClassOrInterfaceType,
+        annotations: [
+        ],
+        name: A,
+        scope: null,
+        typeArgs: null,
+      },
+      {
+        class: org.jlato.tree.type.ClassOrInterfaceType,
+        annotations: [
+        ],
+        name: B,
+        scope: null,
+        typeArgs: null,
+      },
+      {
+        class: org.jlato.tree.type.ClassOrInterfaceType,
+        annotations: [
+        ],
+        name: C,
+        scope: null,
+        typeArgs: null,
+      },
+    ],
+  },
+}

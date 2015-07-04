@@ -2,6 +2,7 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 
 public class Modifier extends Tree {

@@ -3,7 +3,9 @@ package org.jlato.tree.expr;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
 import org.jlato.tree.Expr;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 
 public class AssignExpr extends Expr {
@@ -19,7 +21,7 @@ public class AssignExpr extends Expr {
 	}
 
 	public AssignExpr(Expr target, AssignOp operator, Expr value) {
-		super(new SLocation(new SNode(kind, runOf(target, operator, value))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(target, value), attributesOf(operator)))));
 	}
 
 	public Expr target() {
@@ -31,11 +33,11 @@ public class AssignExpr extends Expr {
 	}
 
 	public AssignOp op() {
-		return location.nodeChild(OPERATOR);
+		return location.nodeAttribute(OPERATOR);
 	}
 
 	public AssignExpr withOp(AssignOp operator) {
-		return location.nodeWithChild(OPERATOR, operator);
+		return location.nodeWithAttribute(OPERATOR, operator);
 	}
 
 	public Expr value() {
@@ -47,41 +49,30 @@ public class AssignExpr extends Expr {
 	}
 
 	private static final int TARGET = 0;
-	private static final int OPERATOR = 1;
-	private static final int VALUE = 2;
+	private static final int VALUE = 1;
 
-	public static class AssignOp extends Tree {
+	private static final int OPERATOR = 0;
 
-		public final static Tree.Kind kind = new Tree.Kind() {
-			public AssignOp instantiate(SLocation location) {
-				return new AssignOp(location);
-			}
-		};
+	public enum AssignOp {
+		Normal(LToken.Assign),
+		Plus(LToken.AssignPlus),
+		Minus(LToken.AssignMinus),
+		Times(LToken.AssignTimes),
+		Divide(LToken.AssignDivide),
+		And(LToken.AssignAnd),
+		Or(LToken.AssignOr),
+		XOr(LToken.AssignXOr),
+		Remainder(LToken.AssignRemainder),
+		LeftShift(LToken.AssignLShift),
+		RightSignedShift(LToken.AssignRSignedShift),
+		RightUnsignedShift(LToken.AssignRUnsignedShift),
+		// Keep last comma
+		;
 
-		public static final AssignOp Normal = new AssignOp(LToken.Assign);
-		public static final AssignOp Plus = new AssignOp(LToken.AssignPlus);
-		public static final AssignOp Minus = new AssignOp(LToken.AssignMinus);
-		public static final AssignOp Times = new AssignOp(LToken.AssignTimes);
-		public static final AssignOp Divide = new AssignOp(LToken.AssignDivide);
-		public static final AssignOp And = new AssignOp(LToken.AssignAnd);
-		public static final AssignOp Or = new AssignOp(LToken.AssignOr);
-		public static final AssignOp XOr = new AssignOp(LToken.AssignXOr);
-		public static final AssignOp Remainder = new AssignOp(LToken.AssignRemainder);
-		public static final AssignOp LShift = new AssignOp(LToken.AssignLShift);
-		public static final AssignOp RSignedShift = new AssignOp(LToken.AssignRSignedShift);
-		public static final AssignOp RUnsignedShift = new AssignOp(LToken.AssignRUnsignedShift);
+		protected final LToken token;
 
-		private AssignOp(SLocation location) {
-			super(location);
+		AssignOp(LToken token) {
+			this.token = token;
 		}
-
-		private AssignOp(LToken token) {
-			super(new SLocation(new SLeaf(kind, token)));
-		}
-
-		public String toString() {
-			return location.leafToken().toString();
-		}
-
 	}
 }

@@ -1,9 +1,12 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeData;
+import org.jlato.tree.Decl;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.type.Type;
+import org.jlato.tree.Type;
 
 public class VariableDecl extends Decl implements Member {
 
@@ -18,7 +21,7 @@ public class VariableDecl extends Decl implements Member {
 	}
 
 	public VariableDecl(Modifiers modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, runOf(modifiers, type, variables/*, javadocComment*/))));
+		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, type, variables/*, javadocComment*/)))));
 	}
 
 	public Modifiers modifiers() {
@@ -55,8 +58,8 @@ public class VariableDecl extends Decl implements Member {
 	}
 */
 
-	private static final int MODIFIERS = 1;
-	private static final int TYPE = 2;
-	private static final int VARIABLES = 3;
-	private static final int JAVADOC_COMMENT = 4;
+	private static final int MODIFIERS = 0;
+	private static final int TYPE = 1;
+	private static final int VARIABLES = 2;
+//	private static final int JAVADOC_COMMENT = 4;
 }

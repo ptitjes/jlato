@@ -1,0 +1,49 @@
+{
+  class: org.jlato.tree.type.ClassOrInterfaceType,
+  annotations: [
+  ],
+  name: T1,
+  scope: null,
+  typeArgs: [
+    {
+      class: org.jlato.tree.type.WildcardType,
+      annotations: [
+        {
+          class: org.jlato.tree.expr.MarkerAnnotationExpr,
+          name: Ann1,
+        },
+      ],
+      ext: {
+        class: org.jlato.tree.type.ClassOrInterfaceType,
+        annotations: [
+          {
+            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            name: Ann2,
+          },
+        ],
+        name: T2,
+        scope: null,
+        typeArgs: null,
+      },
+      sup: null,
+    },
+    {
+      class: org.jlato.tree.type.WildcardType,
+      annotations: [
+      ],
+      ext: null,
+      sup: {
+        class: org.jlato.tree.type.ClassOrInterfaceType,
+        annotations: [
+          {
+            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            name: Ann3,
+          },
+        ],
+        name: T3,
+        scope: null,
+        typeArgs: null,
+      },
+    },
+  ],
+}
