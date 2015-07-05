@@ -35,7 +35,7 @@ public abstract class Tree {
 		return builder.build();
 	}
 
-	protected static ArrayList<Object> attributesOf(Object... attributes) {
+	protected static ArrayList<Object> dataOf(Object... attributes) {
 		final Builder<Object, ArrayList<Object>> builder = ArrayList.factory().newBuilder();
 		for (Object attribute : attributes) {
 			builder.add(attribute);

@@ -1,9 +1,8 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SLeaf;
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -21,7 +20,7 @@ public class AssignExpr extends Expr {
 	}
 
 	public AssignExpr(Expr target, AssignOp operator, Expr value) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(target, value), attributesOf(operator)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(target, value), dataOf(operator)))));
 	}
 
 	public Expr target() {
@@ -33,11 +32,11 @@ public class AssignExpr extends Expr {
 	}
 
 	public AssignOp op() {
-		return location.nodeAttribute(OPERATOR);
+		return location.nodeData(OPERATOR);
 	}
 
 	public AssignExpr withOp(AssignOp operator) {
-		return location.nodeWithAttribute(OPERATOR, operator);
+		return location.nodeWithData(OPERATOR, operator);
 	}
 
 	public Expr value() {

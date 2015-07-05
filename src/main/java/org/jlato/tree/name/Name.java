@@ -1,8 +1,7 @@
 package org.jlato.tree.name;
 
-import com.github.javaparser.ASTParserConstants;
-import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
+import org.jlato.internal.bu.SLeafState;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -19,24 +18,22 @@ public class Name extends Expr {
 		super(location);
 	}
 
-	public Name(LToken identifier) {
-		super(new SLocation(new SLeaf(kind, identifier)));
-	}
-
-	public Name(String name) {
-		this(new LToken(ASTParserConstants.IDENTIFIER, name));
+	public Name(String identifier) {
+		super(new SLocation(new SLeaf(kind, new SLeafState(dataOf(identifier)))));
 	}
 
 	public String name() {
-		return location.leafToken().toString();
+		return location.leafData(IDENTIFIER).toString();
 	}
 
 	public Name withName(String name) {
-		return location.leafWithToken(new LToken(ASTParserConstants.IDENTIFIER, name));
+		return location.leafWithData(IDENTIFIER, name);
 	}
 
 	@Override
 	public String toString() {
 		return name();
 	}
+
+	public static final int IDENTIFIER = 0;
 }

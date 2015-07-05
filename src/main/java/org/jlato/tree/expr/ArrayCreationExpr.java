@@ -1,7 +1,7 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Expr;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
@@ -22,7 +22,7 @@ public class ArrayCreationExpr extends Expr {
 	}
 
 	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimensionExpressions, NodeList<ArrayDim> dimensions, ArrayInitializerExpr initializer) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(type, dimensionExpressions, dimensions, initializer)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(type, dimensionExpressions, dimensions, initializer)))));
 	}
 
 	public Type type() {

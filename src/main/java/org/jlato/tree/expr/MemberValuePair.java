@@ -1,7 +1,7 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -20,7 +20,7 @@ public class MemberValuePair extends Tree {
 	}
 
 	public MemberValuePair(Name name, Expr value) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(name, value)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(name, value)))));
 	}
 
 	public Name name() {

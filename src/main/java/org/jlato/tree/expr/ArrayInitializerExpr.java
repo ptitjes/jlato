@@ -1,7 +1,7 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Expr;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
@@ -20,7 +20,7 @@ public class ArrayInitializerExpr extends Expr {
 	}
 
 	public ArrayInitializerExpr(NodeList<Expr> values) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(values)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(values)))));
 	}
 
 	public NodeList<Expr> values() {

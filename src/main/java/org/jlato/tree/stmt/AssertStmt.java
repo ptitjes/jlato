@@ -1,7 +1,7 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
@@ -20,7 +20,7 @@ public class AssertStmt extends Stmt {
 	}
 
 	public AssertStmt(Expr check, Expr msg) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(check, msg)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(check, msg)))));
 	}
 
 	public Expr check() {

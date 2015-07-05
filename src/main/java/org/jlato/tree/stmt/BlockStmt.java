@@ -1,7 +1,7 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
@@ -20,7 +20,7 @@ public class BlockStmt extends Stmt {
 	}
 
 	public BlockStmt(NodeList<Stmt> stmts) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(stmts)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(stmts)))));
 	}
 
 	public NodeList<Stmt> stmts() {

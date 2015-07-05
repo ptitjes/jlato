@@ -1,7 +1,7 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Expr;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
@@ -22,7 +22,7 @@ public class SelectExpr extends Expr {
 	}
 
 	public SelectExpr(Expr scope, NodeList<Type> typeArgs, Name field) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(scope, typeArgs, field)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(scope, typeArgs, field)))));
 	}
 
 	public Expr scope() {

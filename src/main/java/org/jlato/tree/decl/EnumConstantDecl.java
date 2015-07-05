@@ -1,7 +1,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.*;
 import org.jlato.tree.name.Name;
 
@@ -18,7 +18,7 @@ public class EnumConstantDecl extends Decl {
 	}
 
 	public EnumConstantDecl(Modifiers modifiers, Name name, NodeList<Expr> args, NodeList<Decl> classBody/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, name, args, classBody/*, javadocComment*/)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, name, args, classBody/*, javadocComment*/)))));
 	}
 
 	public Modifiers modifiers() {

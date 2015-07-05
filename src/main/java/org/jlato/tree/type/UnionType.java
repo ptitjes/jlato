@@ -1,7 +1,7 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -20,7 +20,7 @@ public class UnionType extends Type {
 	}
 
 	public UnionType(NodeList<Type> types) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(types)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(types)))));
 	}
 
 	public NodeList<Type> types() {

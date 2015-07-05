@@ -1,8 +1,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
-import org.jlato.tree.Expr;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -22,7 +21,7 @@ public class PackageDecl extends Tree {
 	}
 
 	public PackageDecl(NodeList<AnnotationExpr> annotations, QName name) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(annotations, name)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(annotations, name)))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

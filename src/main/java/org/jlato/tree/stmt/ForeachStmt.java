@@ -1,7 +1,7 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
@@ -21,7 +21,7 @@ public class ForeachStmt extends Stmt {
 	}
 
 	public ForeachStmt(VariableDeclarationExpr var, Expr iterable, Stmt body) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(var, iterable, body)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(var, iterable, body)))));
 	}
 
 	public VariableDeclarationExpr var() {

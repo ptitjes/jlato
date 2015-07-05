@@ -1,7 +1,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Decl;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
@@ -24,7 +24,7 @@ public class MethodDecl extends Decl implements Member {
 	}
 
 	public MethodDecl(Modifiers modifiers, NodeList<TypeParameter> typeParameters, Type type, Name name, NodeList<Parameter> parameters, NodeList<ArrayDim> dimensions, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, typeParameters, type, name, parameters, dimensions, throwsClause, body/*, javadocComment*/)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, typeParameters, type, name, parameters, dimensions, throwsClause, body/*, javadocComment*/)))));
 	}
 
 	public Modifiers modifiers() {

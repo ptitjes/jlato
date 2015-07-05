@@ -1,7 +1,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Decl;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
@@ -22,7 +22,7 @@ public class TypeDecl extends Decl implements TopLevel, Member {
 	}
 
 	public <M extends Decl & Member> TypeDecl(Modifiers modifiers, TypeKind typeKind, Name name, NodeList<TypeParameter> typeParameters, NodeList<ClassOrInterfaceType> extendsClause, NodeList<ClassOrInterfaceType> implementsClause, NodeList<M> members/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, name, typeParameters, extendsClause, implementsClause, members/*, javadocComment*/), attributesOf(typeKind)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, name, typeParameters, extendsClause, implementsClause, members/*, javadocComment*/), dataOf(typeKind)))));
 	}
 
 	public Modifiers modifiers() {
@@ -34,11 +34,11 @@ public class TypeDecl extends Decl implements TopLevel, Member {
 	}
 
 	public TypeKind typeKind() {
-		return location.nodeAttribute(TYPE_KIND);
+		return location.nodeData(TYPE_KIND);
 	}
 
 	public TypeDecl withTypeKind(TypeKind typeKind) {
-		return location.nodeWithAttribute(TYPE_KIND, typeKind);
+		return location.nodeWithData(TYPE_KIND, typeKind);
 	}
 
 	public Name name() {

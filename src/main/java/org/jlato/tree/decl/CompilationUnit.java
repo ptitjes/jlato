@@ -1,8 +1,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
-import org.jlato.tree.Expr;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -20,7 +19,7 @@ public class CompilationUnit extends Tree {
 	}
 
 	public CompilationUnit(PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(packageDecl, imports, types)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(packageDecl, imports, types)))));
 	}
 
 	public PackageDecl packageDecl() {

@@ -1,7 +1,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Decl;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
@@ -21,7 +21,7 @@ public class VariableDecl extends Decl implements Member {
 	}
 
 	public VariableDecl(Modifiers modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, type, variables/*, javadocComment*/)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, type, variables/*, javadocComment*/)))));
 	}
 
 	public Modifiers modifiers() {

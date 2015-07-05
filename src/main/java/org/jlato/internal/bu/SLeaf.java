@@ -7,19 +7,19 @@ import org.jlato.tree.Tree;
  */
 public class SLeaf extends STree {
 
-	public final LToken token;
+	public final SLeafState state;
 
-	public SLeaf(Tree.Kind kind, LToken token) {
+	public SLeaf(Tree.Kind kind, SLeafState state) {
 		super(kind);
-		this.token = token;
+		this.state = state;
 	}
 
 	@Override
 	public int width() {
-		return token.width();
+		return 0;
 	}
 
-	public SLeaf with(LToken token) {
-		return new SLeaf(kind, token);
+	public SLeaf withState(SLeafState state) {
+		return new SLeaf(kind, state);
 	}
 }

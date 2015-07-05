@@ -2,7 +2,7 @@ package org.jlato.tree.type;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -21,15 +21,15 @@ public class PrimitiveType extends AnnotatedType {
 	}
 
 	public PrimitiveType(NodeList<AnnotationExpr> annotations, Primitive type) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(annotations), attributesOf(type)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(annotations), dataOf(type)))));
 	}
 
 	public Primitive type() {
-		return location.nodeAttribute(TYPE);
+		return location.nodeData(TYPE);
 	}
 
 	public PrimitiveType withType(Primitive type) {
-		return location.nodeWithAttribute(TYPE, type);
+		return location.nodeWithData(TYPE, type);
 	}
 
 	private static final int TYPE = 0;

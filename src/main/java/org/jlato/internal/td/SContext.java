@@ -44,7 +44,7 @@ public abstract class SContext {
 		@Override
 		public SLocation rebuiltWith(STree content) {
 			SNode node = (SNode) parent.tree;
-			SNode newNode = node.withData(node.data.withChild(index, content));
+			SNode newNode = node.withState(node.state.withChild(index, content));
 			return parent.withTree(newNode);
 		}
 	}

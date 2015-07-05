@@ -2,7 +2,7 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -20,15 +20,15 @@ public class UnaryExpr extends Expr {
 	}
 
 	public UnaryExpr(UnaryOp operator, Expr expr) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(expr), attributesOf(operator)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(expr), dataOf(operator)))));
 	}
 
 	public UnaryOp op() {
-		return location.nodeAttribute(OPERATOR);
+		return location.nodeData(OPERATOR);
 	}
 
 	public UnaryExpr withOp(UnaryOp operator) {
-		return location.nodeWithAttribute(OPERATOR, operator);
+		return location.nodeWithData(OPERATOR, operator);
 	}
 
 	public Expr expr() {

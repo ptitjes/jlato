@@ -1,7 +1,7 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.*;
 
@@ -18,7 +18,7 @@ public class SwitchStmt extends Stmt {
 	}
 
 	public SwitchStmt(Expr selector, NodeList<SwitchEntryStmt> entries) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(selector, entries)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(selector, entries)))));
 	}
 
 	public Expr selector() {

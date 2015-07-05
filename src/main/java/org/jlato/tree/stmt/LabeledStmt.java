@@ -1,7 +1,7 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
@@ -20,7 +20,7 @@ public class LabeledStmt extends Stmt {
 	}
 
 	public LabeledStmt(Name label, Stmt stmt) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(label, stmt)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(label, stmt)))));
 	}
 
 	public Name label() {

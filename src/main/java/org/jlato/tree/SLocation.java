@@ -33,18 +33,18 @@ public class SLocation {
 	}
 
 	public Tree parent() {
-		SLocation parentLocation = changed ? context.rebuiltWith(tree) : context.original();
+		final SLocation parentLocation = changed ? context.rebuiltWith(tree) : context.original();
 		return parentLocation == null ? null : parentLocation.facade;
 	}
 
 	public Tree root() {
-		Tree parent = parent();
+		final Tree parent = parent();
 		return parent == null ? facade : parent.root();
 	}
 
 	@SuppressWarnings("unchecked")
 	public <S extends Tree, T extends S> T replace(T replacement) {
-		STree newTree = Tree.treeOf(replacement);
+		final STree newTree = Tree.treeOf(replacement);
 		return (T) withTree(newTree).facade;
 	}
 
@@ -52,77 +52,79 @@ public class SLocation {
 
 	@SuppressWarnings("unchecked")
 	public <C extends Tree> C nodeChild(final int index) {
-		STree childTree = ((SNode) tree).data.child(index);
+		final SNode node = (SNode) this.tree;
+		final STree childTree = node.state.child(index);
 		if (childTree == null) return null;
 
-		SContext childContext = new SContext.Child(this, index);
-		SLocation childLocation = new SLocation(childContext, childTree);
+		final SContext childContext = new SContext.Child(this, index);
+		final SLocation childLocation = new SLocation(childContext, childTree);
 		return (C) childLocation.facade;
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, C extends Tree> T nodeWithChild(int index, C child) {
-		SNode node = (SNode) this.tree;
-		SNode newNode = node.withData(node.data.withChild(index, Tree.treeOf(child)));
+		final SNode node = (SNode) this.tree;
+		final SNode newNode = node.withState(node.state.withChild(index, Tree.treeOf(child)));
 		return (T) withTree(newNode).facade;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <A> A nodeAttribute(final int index) {
-		return (A) ((SNode) tree).data.attribute(index);
+	public <A> A nodeData(final int index) {
+		final SNode node = (SNode) this.tree;
+		return (A) node.state.data(index);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Tree, A> T nodeWithAttribute(int index, A attribute) {
-		SNode node = (SNode) this.tree;
-		SNode newNode = node.withData(node.data.withAttribute(index, attribute));
+	public <T extends Tree, A> T nodeWithData(int index, A attribute) {
+		final SNode node = (SNode) this.tree;
+		final SNode newNode = node.withState(node.state.withData(index, attribute));
 		return (T) withTree(newNode).facade;
 	}
 
 	/* Leaf methods */
 
-	public LToken leafToken() {
-		SLeaf leaf = (SLeaf) this.tree;
-		return leaf.token;
+	@SuppressWarnings("unchecked")
+	public <A> A leafData(final int index) {
+		final SLeaf leaf = (SLeaf) this.tree;
+		return (A) leaf.state.data(index);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Tree> T leafWithToken(LToken newToken) {
-		SLeaf leaf = (SLeaf) this.tree;
-		SLeaf newLeaf = leaf.with(newToken);
+	public <T extends Tree, A> T leafWithData(int index, A attribute) {
+		final SLeaf leaf = (SLeaf) this.tree;
+		final SLeaf newLeaf = leaf.withState(leaf.state.withData(index, attribute));
 		return (T) withTree(newLeaf).facade;
 	}
-
 
 	/* NodeList methods */
 
 	@SuppressWarnings("unchecked")
 	public <C extends Tree> C nodeListChild(final int index) {
 		final SNodeList nodeList = (SNodeList) this.tree;
-		STree childTree = nodeList.run.tree(index);
+		final STree childTree = nodeList.run.tree(index);
 		if (childTree == null) return null;
 
-		SContext childContext = new SContext.Child(this, index);
-		SLocation childLocation = new SLocation(childContext, childTree);
+		final SContext childContext = new SContext.Child(this, index);
+		final SLocation childLocation = new SLocation(childContext, childTree);
 		return (C) childLocation.facade;
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, C extends Tree> T nodeListWithChild(int index, C newChild) {
-		SNodeList nodeList = (SNodeList) this.tree;
-		SNodeList newNode = nodeList.with(nodeList.run.set(index, Tree.treeOf(newChild)));
-		return (T) withTree(newNode).facade;
+		final SNodeList nodeList = (SNodeList) this.tree;
+		final SNodeList newNodeList = nodeList.with(nodeList.run.set(index, Tree.treeOf(newChild)));
+		return (T) withTree(newNodeList).facade;
 	}
 
 	public LRun nodeListRun() {
-		SNodeList node = (SNodeList) this.tree;
-		return node.run;
+		final SNodeList nodeList = (SNodeList) this.tree;
+		return nodeList.run;
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, C extends Tree> T nodeListWithRun(LRun newRun) {
-		SNodeList node = (SNodeList) this.tree;
-		SNodeList newNode = node.with(newRun);
-		return (T) withTree(newNode).facade;
+		final SNodeList nodeList = (SNodeList) this.tree;
+		final SNodeList newNodeList = nodeList.with(newRun);
+		return (T) withTree(newNodeList).facade;
 	}
 }

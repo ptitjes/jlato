@@ -1,8 +1,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
-import org.jlato.tree.Expr;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.QName;
@@ -20,7 +19,7 @@ public class ImportDecl extends Tree {
 	}
 
 	public ImportDecl(QName name, boolean isStatic, boolean isOnDemand) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(name), attributesOf(isStatic, isOnDemand)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(name), dataOf(isStatic, isOnDemand)))));
 	}
 
 	public QName name() {
@@ -32,19 +31,19 @@ public class ImportDecl extends Tree {
 	}
 
 	public boolean isStatic() {
-		return location.nodeAttribute(STATIC);
+		return location.nodeData(STATIC);
 	}
 
 	public ImportDecl setStatic(boolean isStatic) {
-		return location.nodeWithAttribute(STATIC, isStatic);
+		return location.nodeWithData(STATIC, isStatic);
 	}
 
 	public boolean isOnDemand() {
-		return location.nodeAttribute(ON_DEMAND);
+		return location.nodeData(ON_DEMAND);
 	}
 
 	public ImportDecl setOnDemand(boolean isOnDemand) {
-		return location.nodeWithAttribute(ON_DEMAND, isOnDemand);
+		return location.nodeWithData(ON_DEMAND, isOnDemand);
 	}
 
 	private static final int NAME = 0;

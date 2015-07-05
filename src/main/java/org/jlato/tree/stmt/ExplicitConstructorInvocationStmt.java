@@ -3,7 +3,7 @@ package org.jlato.tree.stmt;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.*;
 import org.jlato.tree.Type;
@@ -21,7 +21,7 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 	}
 
 	public ExplicitConstructorInvocationStmt(NodeList<Type> typeArgs, boolean isThis, Expr expr, NodeList<Expr> args) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(typeArgs, isThis ? ConstructorKind.This : ConstructorKind.Super, expr, args)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(typeArgs, expr, args), dataOf(constructorKind(isThis))))));
 	}
 
 	public NodeList<Type> typeArgs() {
@@ -33,11 +33,11 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 	}
 
 	public boolean isThis() {
-		return location.nodeChild(CONSTRUCTOR_KIND) == ConstructorKind.This;
+		return location.nodeData(CONSTRUCTOR_KIND) == ConstructorKind.This;
 	}
 
 	public ExplicitConstructorInvocationStmt setThis(boolean isThis) {
-		return location.nodeWithChild(CONSTRUCTOR_KIND, isThis ? ConstructorKind.This : ConstructorKind.Super);
+		return location.nodeWithData(CONSTRUCTOR_KIND, constructorKind(isThis));
 	}
 
 	public Expr expr() {
@@ -57,31 +57,29 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 	}
 
 	private static final int TYPE_ARGS = 0;
-	private static final int CONSTRUCTOR_KIND = 1;
-	private static final int EXPR = 2;
-	private static final int ARGS = 3;
+	private static final int EXPR = 1;
+	private static final int ARGS = 2;
 
-	private static class ConstructorKind extends Tree {
+	private static final int CONSTRUCTOR_KIND = 0;
 
-		public final static Kind kind = new Kind() {
-			public Tree instantiate(SLocation location) {
-				return new ConstructorKind(location);
-			}
-		};
+	private static ConstructorKind constructorKind(boolean isThis) {
+		return isThis ? ConstructorKind.This : ConstructorKind.Super;
+	}
 
-		public static final ConstructorKind This = new ConstructorKind(LToken.This);
-		public static final ConstructorKind Super = new ConstructorKind(LToken.Super);
+	public enum ConstructorKind {
+		This(LToken.This),
+		Super(LToken.Super),
+		// Keep last comma
+		;
 
-		protected ConstructorKind(SLocation location) {
-			super(location);
-		}
+		protected final LToken token;
 
-		private ConstructorKind(LToken keyword) {
-			super(new SLocation(new SLeaf(kind, keyword)));
+		ConstructorKind(LToken token) {
+			this.token = token;
 		}
 
 		public String toString() {
-			return location.leafToken().toString();
+			return token.toString();
 		}
 	}
 }

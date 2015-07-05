@@ -1,7 +1,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.Type;
@@ -19,7 +19,7 @@ public class Parameter extends Tree {
 	}
 
 	public Parameter(Modifiers modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, type, id), attributesOf(isVarArgs)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, type, id), dataOf(isVarArgs)))));
 	}
 
 	public Modifiers modifiers() {
@@ -39,11 +39,11 @@ public class Parameter extends Tree {
 	}
 
 	public boolean isVarArgs() {
-		return location.nodeAttribute(VAR_ARG);
+		return location.nodeData(VAR_ARG);
 	}
 
 	public Parameter setVarArgs(boolean isVarArgs) {
-		return location.nodeWithAttribute(VAR_ARG, isVarArgs);
+		return location.nodeWithData(VAR_ARG, isVarArgs);
 	}
 
 	public VariableDeclaratorId id() {

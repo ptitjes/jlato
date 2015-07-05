@@ -1,7 +1,7 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -22,7 +22,7 @@ public class ClassOrInterfaceType extends ReferenceType {
 	}
 
 	public ClassOrInterfaceType(NodeList<AnnotationExpr> annotations, ClassOrInterfaceType scope, Name name, NodeList<Type> typeArgs) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(annotations, scope, name, typeArgs)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(annotations, scope, name, typeArgs)))));
 	}
 
 	public ClassOrInterfaceType scope() {

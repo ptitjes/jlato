@@ -1,7 +1,7 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Expr;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
@@ -23,7 +23,7 @@ public class ObjectCreationExpr extends Expr {
 	}
 
 	public ObjectCreationExpr(Expr scope, ClassOrInterfaceType type, NodeList<Type> typeArgs, NodeList<Expr> args, NodeList<Decl> anonymousClassBody) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(scope, type, typeArgs, args, anonymousClassBody)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(scope, type, typeArgs, args, anonymousClassBody)))));
 	}
 
 	public Expr scope() {

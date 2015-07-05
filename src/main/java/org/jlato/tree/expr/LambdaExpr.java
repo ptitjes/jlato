@@ -1,7 +1,7 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.*;
 import org.jlato.tree.decl.Parameter;
@@ -20,11 +20,11 @@ public class LambdaExpr extends Expr {
 	}
 
 	public LambdaExpr(NodeList<Parameter> parameters, Expr expr) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(parameters, expr, null)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(parameters, expr, null)))));
 	}
 
 	public LambdaExpr(NodeList<Parameter> parameters, BlockStmt body) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(parameters, null, body)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(parameters, null, body)))));
 	}
 
 	public NodeList<Parameter> parameters() {

@@ -1,7 +1,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Decl;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
@@ -22,7 +22,7 @@ public class AnnotationMemberDecl extends Decl implements Member {
 	}
 
 	public AnnotationMemberDecl(Modifiers modifiers, Type type, Name name, Expr defaultValue/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, type, name, defaultValue/*, javadocComment*/)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, type, name, defaultValue/*, javadocComment*/)))));
 	}
 
 	public Modifiers modifiers() {

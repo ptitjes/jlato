@@ -2,7 +2,7 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.Literals;
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -63,20 +63,20 @@ public class LiteralExpr<T> extends Expr {
 	}
 
 	public LiteralExpr(Class<T> literalClass, String literalString) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(), attributesOf(literalClass, literalString)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(), dataOf(literalClass, literalString)))));
 	}
 
 	@SuppressWarnings("unchecked")
 	public T value() {
-		final Class<T> literalClass = location.nodeAttribute(CLASS);
-		final String literalString = location.nodeAttribute(STRING);
+		final Class<T> literalClass = location.nodeData(CLASS);
+		final String literalString = location.nodeData(STRING);
 		return Literals.valueFor(literalClass, literalString);
 	}
 
 	@SuppressWarnings("unchecked")
 	public LiteralExpr<T> withValue(T value) {
-		final Class<T> literalClass = location.nodeAttribute(CLASS);
-		return location.nodeWithAttribute(STRING, Literals.from(literalClass, value));
+		final Class<T> literalClass = location.nodeData(CLASS);
+		return location.nodeWithData(STRING, Literals.from(literalClass, value));
 	}
 
 	private static final int CLASS = 0;

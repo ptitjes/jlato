@@ -1,7 +1,9 @@
 package org.jlato.tree.stmt;
 
+import org.jlato.internal.bu.SLeaf;
+import org.jlato.internal.bu.SLeafState;
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
@@ -19,7 +21,7 @@ public class EmptyStmt extends Stmt {
 	}
 
 	public EmptyStmt() {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf()))));
+		super(new SLocation(new SLeaf(kind, new SLeafState(dataOf()))));
 	}
 
 }

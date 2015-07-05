@@ -1,7 +1,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Decl;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -20,7 +20,7 @@ public class InitializerDecl extends Decl {
 	}
 
 	public InitializerDecl(Modifiers modifiers, BlockStmt block/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(modifiers, block/*, javadocComment*/)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, block/*, javadocComment*/)))));
 	}
 
 	public Modifiers modifiers() {

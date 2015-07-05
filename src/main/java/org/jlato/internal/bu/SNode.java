@@ -7,25 +7,25 @@ import org.jlato.tree.Tree;
  */
 public class SNode extends STree {
 
-	public final SNodeData data;
+	public final SNodeState state;
 	public final LRun run;
 
-	public SNode(Tree.Kind kind, SNodeData data) {
-		this(kind, data, null);
+	public SNode(Tree.Kind kind, SNodeState state) {
+		this(kind, state, null);
 	}
 
-	public SNode(Tree.Kind kind, SNodeData data, LRun run) {
+	public SNode(Tree.Kind kind, SNodeState state, LRun run) {
 		super(kind);
-		this.data = data;
+		this.state = state;
 		this.run = run;
 	}
 
 	@Override
 	public int width() {
-		return run == null ? 0 : run.width();
+		return 0;
 	}
 
-	public SNode withData(SNodeData data) {
-		return new SNode(kind, data, run);
+	public SNode withState(SNodeState state) {
+		return new SNode(kind, state, run);
 	}
 }

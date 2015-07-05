@@ -1,7 +1,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -22,7 +22,7 @@ public class TypeParameter extends Tree {
 	}
 
 	public TypeParameter(NodeList<AnnotationExpr> annotations, Name name, NodeList<Type> bounds) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(annotations, name, bounds)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(annotations, name, bounds)))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

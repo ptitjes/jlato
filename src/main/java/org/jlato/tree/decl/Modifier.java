@@ -2,6 +2,7 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
+import org.jlato.internal.bu.SLeafState;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 
@@ -31,10 +32,12 @@ public class Modifier extends Tree {
 	}
 
 	private Modifier(LToken keyword) {
-		super(new SLocation(new SLeaf(kind, keyword)));
+		super(new SLocation(new SLeaf(kind, new SLeafState(dataOf(keyword)))));
 	}
 
 	public String toString() {
-		return location.leafToken().toString();
+		return location.leafData(KEYWORD);
 	}
+
+	public static final int KEYWORD = 0;
 }

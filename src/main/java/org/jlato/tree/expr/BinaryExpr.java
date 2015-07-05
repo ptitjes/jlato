@@ -2,7 +2,7 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -20,7 +20,7 @@ public class BinaryExpr extends Expr {
 	}
 
 	public BinaryExpr(Expr left, BinaryOp operator, Expr right) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(left, right), attributesOf(operator)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(left, right), dataOf(operator)))));
 	}
 
 	public Expr left() {
@@ -32,11 +32,11 @@ public class BinaryExpr extends Expr {
 	}
 
 	public BinaryOp op() {
-		return location.nodeAttribute(OPERATOR);
+		return location.nodeData(OPERATOR);
 	}
 
 	public BinaryExpr withOp(BinaryOp operator) {
-		return location.nodeWithAttribute(OPERATOR, operator);
+		return location.nodeWithData(OPERATOR, operator);
 	}
 
 	public Expr right() {

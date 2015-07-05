@@ -1,7 +1,7 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeData;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.*;
 
@@ -18,7 +18,7 @@ public class ForStmt extends Stmt {
 	}
 
 	public ForStmt(NodeList<Expr> init, Expr compare, NodeList<Expr> update, Stmt body) {
-		super(new SLocation(new SNode(kind, new SNodeData(treesOf(init, compare, update, body)))));
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(init, compare, update, body)))));
 	}
 
 	public NodeList<Expr> init() {
