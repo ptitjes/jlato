@@ -3,9 +3,7 @@ package org.jlato.parser;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.CompilationUnit;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 
 /**
  * @author Didier Villevalois
@@ -35,5 +33,9 @@ public class Parser {
 
 	public CompilationUnit parse(InputStream inputStream, String encoding) throws ParseException {
 		return parse(ParseContext.CompilationUnit, inputStream, encoding);
+	}
+
+	public CompilationUnit parse(File file, String encoding) throws ParseException, FileNotFoundException {
+		return parse(ParseContext.CompilationUnit, new FileInputStream(file), encoding);
 	}
 }
