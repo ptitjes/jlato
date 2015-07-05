@@ -1,6 +1,7 @@
 package org.jlato.internal.td;
 
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.tree.SLocation;
 
@@ -43,8 +44,9 @@ public abstract class SContext {
 
 		@Override
 		public SLocation rebuiltWith(STree content) {
-			SNode node = (SNode) parent.tree;
-			SNode newNode = node.withState(node.state.withChild(index, content));
+			final SNode node = (SNode) parent.tree;
+			final SNodeState state = (SNodeState) node.state;
+			final SNode newNode = node.withState(state.withChild(index, content));
 			return parent.withTree(newNode);
 		}
 	}

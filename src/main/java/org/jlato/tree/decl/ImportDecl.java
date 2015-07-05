@@ -1,16 +1,24 @@
 package org.jlato.tree.decl;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.QName;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
 public class ImportDecl extends Tree {
 
 	public final static Kind kind = new Kind() {
 		public ImportDecl instantiate(SLocation location) {
 			return new ImportDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	};
 
@@ -50,4 +58,14 @@ public class ImportDecl extends Tree {
 
 	private static final int STATIC = 0;
 	private static final int ON_DEMAND = 1;
+
+	public final static LexicalShape shape = composite(
+			token(LToken.Import),
+			dataOption(STATIC, composite(spacing(" "), token(LToken.Static))),
+			spacing(" "),
+			child(NAME),
+			dataOption(ON_DEMAND, composite(spacing(""), token(LToken.Dot), spacing(""), token(LToken.Times))),
+			spacing(""),
+			token(LToken.SemiColon)
+	);
 }

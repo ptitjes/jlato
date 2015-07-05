@@ -2,6 +2,7 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
@@ -12,6 +13,10 @@ public class ArrayDimExpr extends Tree {
 	public final static Kind kind = new Kind() {
 		public ArrayDimExpr instantiate(SLocation location) {
 			return new ArrayDimExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return null;
 		}
 	};
 

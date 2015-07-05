@@ -81,7 +81,9 @@ public class LToken extends LElement {
 	public static final LToken False = new LToken(ASTParserConstants.FALSE, "false");
 
 	public static final LToken SemiColon = new LToken(ASTParserConstants.SEMICOLON, ";");
+	public static final LToken Dot = new LToken(ASTParserConstants.DOT, ".");
 
+	public static final LToken Import = new LToken(ASTParserConstants.IMPORT, "import");
 
 	public final int kind;
 	public final String string;

@@ -4,6 +4,7 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.*;
 import org.jlato.tree.Type;
@@ -13,6 +14,10 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public ExplicitConstructorInvocationStmt instantiate(SLocation location) {
 			return new ExplicitConstructorInvocationStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return null;
 		}
 	};
 

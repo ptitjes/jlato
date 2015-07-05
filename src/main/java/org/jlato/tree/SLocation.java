@@ -53,7 +53,8 @@ public class SLocation {
 	@SuppressWarnings("unchecked")
 	public <C extends Tree> C nodeChild(final int index) {
 		final SNode node = (SNode) this.tree;
-		final STree childTree = node.state.child(index);
+		final SNodeState state = (SNodeState) node.state;
+		final STree childTree = state.child(index);
 		if (childTree == null) return null;
 
 		final SContext childContext = new SContext.Child(this, index);
@@ -64,7 +65,8 @@ public class SLocation {
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, C extends Tree> T nodeWithChild(int index, C child) {
 		final SNode node = (SNode) this.tree;
-		final SNode newNode = node.withState(node.state.withChild(index, Tree.treeOf(child)));
+		final SNodeState state = (SNodeState) node.state;
+		final SNode newNode = node.withState(state.withChild(index, Tree.treeOf(child)));
 		return (T) withTree(newNode).facade;
 	}
 
@@ -77,7 +79,8 @@ public class SLocation {
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, A> T nodeWithData(int index, A attribute) {
 		final SNode node = (SNode) this.tree;
-		final SNode newNode = node.withState(node.state.withData(index, attribute));
+		final SNodeState state = (SNodeState) node.state;
+		final SNode newNode = node.withState(state.withData(index, attribute));
 		return (T) withTree(newNode).facade;
 	}
 
@@ -92,7 +95,8 @@ public class SLocation {
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, A> T leafWithData(int index, A attribute) {
 		final SLeaf leaf = (SLeaf) this.tree;
-		final SLeaf newLeaf = leaf.withState(leaf.state.withData(index, attribute));
+		final SLeafState state = (SLeafState) leaf.state;
+		final SLeaf newLeaf = leaf.withState(state.withData(index, attribute));
 		return (T) withTree(newLeaf).facade;
 	}
 

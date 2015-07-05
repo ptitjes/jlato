@@ -2,6 +2,7 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Decl;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
@@ -14,6 +15,10 @@ public class TypeDecl extends Decl implements TopLevel, Member {
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public TypeDecl instantiate(SLocation location) {
 			return new TypeDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return null;
 		}
 	};
 

@@ -10,7 +10,7 @@ public class SNodeList extends STree {
 	public final LRun run;
 
 	public SNodeList(Tree.Kind kind, LRun run) {
-		super(kind);
+		super(kind, null);
 		this.run = run;
 	}
 

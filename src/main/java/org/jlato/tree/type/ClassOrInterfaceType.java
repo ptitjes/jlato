@@ -2,6 +2,7 @@ package org.jlato.tree.type;
 
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -14,6 +15,10 @@ public class ClassOrInterfaceType extends ReferenceType {
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public ClassOrInterfaceType instantiate(SLocation location) {
 			return new ClassOrInterfaceType(location);
+		}
+
+		public LexicalShape shape() {
+			return null;
 		}
 	};
 

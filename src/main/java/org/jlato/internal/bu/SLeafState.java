@@ -5,16 +5,10 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 /**
  * @author Didier Villevalois
  */
-public class SLeafState {
-
-	public final ArrayList<Object> data;
+public class SLeafState extends STreeState {
 
 	public SLeafState(ArrayList<Object> data) {
-		this.data = data;
-	}
-
-	public Object data(int index) {
-		return data.get(index);
+		super(data);
 	}
 
 	public SLeafState withData(int index, Object value) {

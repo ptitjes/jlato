@@ -1,9 +1,13 @@
 package org.jlato.tree.name;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
 public class QName extends Tree {
 
@@ -11,7 +15,20 @@ public class QName extends Tree {
 		public QName instantiate(SLocation location) {
 			return new QName(location);
 		}
+
+		public LexicalShape shape() {
+			return shape;
+		}
 	};
+
+	public static QName of(String nameString) {
+		final String[] split = nameString.split("\\.");
+		QName name = null;
+		for (String part : split) {
+			name = new QName(name, new Name(part));
+		}
+		return name;
+	}
 
 	private QName(SLocation location) {
 		super(location);
@@ -50,4 +67,10 @@ public class QName extends Tree {
 
 	private static final int QUALIFIER = 0;
 	private static final int NAME = 1;
+
+	public final static LexicalShape shape = composite(
+			nonNullChild(QUALIFIER, composite(child(QUALIFIER), spacing(""), token(LToken.Dot))),
+			spacing(""),
+			child(NAME)
+	);
 }

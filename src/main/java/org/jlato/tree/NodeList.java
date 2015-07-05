@@ -3,6 +3,7 @@ package org.jlato.tree;
 import org.jlato.internal.bu.LRun;
 import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.decl.Modifier;
 import org.jlato.tree.stmt.ExplicitConstructorInvocationStmt;
 
@@ -23,6 +24,10 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 	public static class Kind<T extends Tree> implements Tree.Kind {
 		public Tree instantiate(SLocation location) {
 			return new NodeList<T>(location);
+		}
+
+		public LexicalShape shape() {
+			throw new UnsupportedOperationException();
 		}
 	}
 
@@ -72,14 +77,12 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		StringBuilder builder = new StringBuilder();
 		builder.append(start);
 
-		Iterator<STree> iterator = location.nodeListRun().treeIterator();
-
 		boolean first = true;
-		while (iterator.hasNext()) {
+		for (STree tree : location.nodeListRun()) {
 			if (!first) builder.append(sep);
 			else first = false;
 
-			Tree next = new SLocation(iterator.next()).facade;
+			Tree next = new SLocation(tree).facade;
 			builder.append(next.toString());
 		}
 

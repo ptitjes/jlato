@@ -2,6 +2,7 @@ package org.jlato.tree.type;
 
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -13,6 +14,10 @@ public class ArrayType extends ReferenceType {
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public ArrayType instantiate(SLocation location) {
 			return new ArrayType(location);
+		}
+
+		public LexicalShape shape() {
+			return null;
 		}
 	};
 

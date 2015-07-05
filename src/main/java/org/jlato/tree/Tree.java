@@ -3,6 +3,7 @@ package org.jlato.tree;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.shapes.LexicalShape;
 
 /**
  * @author Didier Villevalois
@@ -23,7 +24,7 @@ public abstract class Tree {
 		return location.root();
 	}
 
-	protected static STree treeOf(Tree facade) {
+	public static STree treeOf(Tree facade) {
 		return facade == null ? null : facade.location.tree;
 	}
 
@@ -54,5 +55,7 @@ public abstract class Tree {
 	public interface Kind {
 
 		Tree instantiate(SLocation location);
+
+		LexicalShape shape();
 	}
 }

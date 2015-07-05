@@ -1,7 +1,12 @@
 package org.jlato.tree.name;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
 import org.jlato.internal.bu.SLeafState;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSToken;
+import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.parser.ASTParserConstants;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -11,6 +16,10 @@ public class Name extends Expr {
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public Name instantiate(SLocation location) {
 			return new Name(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	};
 
@@ -36,4 +45,11 @@ public class Name extends Expr {
 	}
 
 	public static final int IDENTIFIER = 0;
+
+	public final static LexicalShape shape = new LSToken() {
+		@Override
+		protected LToken token(STree tree) {
+			return new LToken(ASTParserConstants.IDENTIFIER, (String) tree.state.data(IDENTIFIER));
+		}
+	};
 }

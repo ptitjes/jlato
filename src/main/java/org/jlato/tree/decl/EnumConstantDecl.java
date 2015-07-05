@@ -2,6 +2,7 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.*;
 import org.jlato.tree.name.Name;
 
@@ -10,6 +11,10 @@ public class EnumConstantDecl extends Decl {
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public EnumConstantDecl instantiate(SLocation location) {
 			return new EnumConstantDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return null;
 		}
 	};
 

@@ -8,9 +8,11 @@ import org.jlato.tree.Tree;
 public abstract class STree extends LElement {
 
 	public final Tree.Kind kind;
+	public final STreeState state;
 
-	public STree(Tree.Kind kind) {
+	public STree(Tree.Kind kind, STreeState state) {
 		this.kind = kind;
+		this.state = state;
 	}
 
 	@Override

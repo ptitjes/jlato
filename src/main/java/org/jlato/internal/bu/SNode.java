@@ -7,7 +7,6 @@ import org.jlato.tree.Tree;
  */
 public class SNode extends STree {
 
-	public final SNodeState state;
 	public final LRun run;
 
 	public SNode(Tree.Kind kind, SNodeState state) {
@@ -15,8 +14,7 @@ public class SNode extends STree {
 	}
 
 	public SNode(Tree.Kind kind, SNodeState state, LRun run) {
-		super(kind);
-		this.state = state;
+		super(kind, state);
 		this.run = run;
 	}
 

@@ -10,7 +10,7 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public class LRun implements Iterable<LElement> {
+public class LRun implements Iterable<STree> {
 
 	public final IndexedList<LToken> tokensBefore;
 	public final IndexedList<TreeAndTokensAfter> treesAndTokensAfter;
@@ -89,11 +89,11 @@ public class LRun implements Iterable<LElement> {
 		return new LRun(Vector.<LToken>empty(), treesAndTokensAfter.prepend(new TreeAndTokensAfter(tree, tokensBefore)));
 	}
 
-	public Iterator<LElement> iterator() {
+	public Iterator<LElement> elementIterator() {
 		return new ElementIterator();
 	}
 
-	public Iterator<STree> treeIterator() {
+	public Iterator<STree> iterator() {
 		return new TreeIterator();
 	}
 

@@ -2,6 +2,7 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
@@ -13,6 +14,10 @@ public class ForeachStmt extends Stmt {
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public ForeachStmt instantiate(SLocation location) {
 			return new ForeachStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return null;
 		}
 	};
 

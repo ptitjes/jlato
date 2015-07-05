@@ -7,11 +7,8 @@ import org.jlato.tree.Tree;
  */
 public class SLeaf extends STree {
 
-	public final SLeafState state;
-
 	public SLeaf(Tree.Kind kind, SLeafState state) {
-		super(kind);
-		this.state = state;
+		super(kind, state);
 	}
 
 	@Override

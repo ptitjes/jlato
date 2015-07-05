@@ -2,6 +2,7 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Decl;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
@@ -13,6 +14,10 @@ public class VariableDecl extends Decl implements Member {
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public VariableDecl instantiate(SLocation location) {
 			return new VariableDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return null;
 		}
 	};
 

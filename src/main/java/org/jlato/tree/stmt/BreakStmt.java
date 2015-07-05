@@ -2,6 +2,7 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
@@ -12,6 +13,10 @@ public class BreakStmt extends Stmt {
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public BreakStmt instantiate(SLocation location) {
 			return new BreakStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return null;
 		}
 	};
 

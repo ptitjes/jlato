@@ -2,6 +2,7 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.*;
 
@@ -10,6 +11,10 @@ public class SwitchStmt extends Stmt {
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public SwitchStmt instantiate(SLocation location) {
 			return new SwitchStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return null;
 		}
 	};
 

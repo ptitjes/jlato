@@ -2,6 +2,7 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
@@ -12,6 +13,10 @@ public class AssertStmt extends Stmt {
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public AssertStmt instantiate(SLocation location) {
 			return new AssertStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return null;
 		}
 	};
 

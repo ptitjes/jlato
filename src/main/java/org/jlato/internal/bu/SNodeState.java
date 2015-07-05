@@ -5,18 +5,17 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 /**
  * @author Didier Villevalois
  */
-public class SNodeState {
+public class SNodeState extends STreeState {
 
 	public final ArrayList<STree> children;
-	public final ArrayList<Object> data;
 
 	public SNodeState(ArrayList<STree> children) {
 		this(children, ArrayList.empty());
 	}
 
 	public SNodeState(ArrayList<STree> children, ArrayList<Object> data) {
+		super(data);
 		this.children = children;
-		this.data = data;
 	}
 
 	public STree child(int index) {
@@ -25,10 +24,6 @@ public class SNodeState {
 
 	public SNodeState withChild(int index, STree value) {
 		return new SNodeState(children.set(index, value), data);
-	}
-
-	public Object data(int index) {
-		return data.get(index);
 	}
 
 	public SNodeState withData(int index, Object value) {

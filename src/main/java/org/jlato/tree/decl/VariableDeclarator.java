@@ -2,6 +2,7 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
@@ -11,6 +12,10 @@ public class VariableDeclarator extends Tree {
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public VariableDeclarator instantiate(SLocation location) {
 			return new VariableDeclarator(location);
+		}
+
+		public LexicalShape shape() {
+			return null;
 		}
 	};
 
