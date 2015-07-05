@@ -1,5 +1,6 @@
 package org.jlato.tree.type;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -9,6 +10,8 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.Type;
 import org.jlato.tree.expr.AnnotationExpr;
 
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+
 public class ArrayType extends ReferenceType {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
@@ -17,7 +20,7 @@ public class ArrayType extends ReferenceType {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -38,4 +41,10 @@ public class ArrayType extends ReferenceType {
 	}
 
 	private static final int COMPONENT_TYPE = 1;
+
+	public final static LexicalShape shape = composite(
+			children(ANNOTATIONS),
+			child(COMPONENT_TYPE),
+			token(LToken.BracketLeft), token(LToken.BracketRight)
+	);
 }

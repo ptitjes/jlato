@@ -1,14 +1,13 @@
 package org.jlato.tree.expr;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Expr;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.*;
 import org.jlato.tree.name.Name;
-import org.jlato.tree.Type;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
 public class CallExpr extends Expr {
 
@@ -18,7 +17,7 @@ public class CallExpr extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -38,12 +37,12 @@ public class CallExpr extends Expr {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public NodeList<Type> typeArgs() {
-		return location.nodeChild(TYPE_ARGS);
+	public NodeList<Type> typeArguments() {
+		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
-	public CallExpr withTypeArgs(NodeList<Type> typeArgs) {
-		return location.nodeWithChild(TYPE_ARGS, typeArgs);
+	public CallExpr withTypeArguments(NodeList<Type> typeArguments) {
+		return location.nodeWithChild(TYPE_ARGUMENTS, typeArguments);
 	}
 
 	public Name name() {
@@ -54,16 +53,25 @@ public class CallExpr extends Expr {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public NodeList<Expr> args() {
-		return location.nodeChild(ARGS);
+	public NodeList<Expr> arguments() {
+		return location.nodeChild(ARGUMENTS);
 	}
 
-	public CallExpr withArgs(NodeList<Expr> args) {
-		return location.nodeWithChild(ARGS, args);
+	public CallExpr withArguments(NodeList<Expr> arguments) {
+		return location.nodeWithChild(ARGUMENTS, arguments);
 	}
 
 	private static final int SCOPE = 0;
-	private static final int TYPE_ARGS = 1;
+	private static final int TYPE_ARGUMENTS = 1;
 	private static final int NAME = 2;
-	private static final int ARGS = 3;
+	private static final int ARGUMENTS = 3;
+
+	public final static LexicalShape shape = composite(
+			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
+			children(TYPE_ARGUMENTS, token(LToken.Less), token(LToken.Comma), token(LToken.Greater)),
+			child(NAME),
+			token(LToken.ParenthesisLeft),
+			children(ARGUMENTS, token(LToken.Comma)),
+			token(LToken.ParenthesisRight)
+	);
 }

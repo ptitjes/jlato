@@ -1,5 +1,6 @@
 package org.jlato.tree.decl;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -9,6 +10,8 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.QName;
 
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+
 public class PackageDecl extends Tree {
 
 	public final static Kind kind = new Kind() {
@@ -17,7 +20,7 @@ public class PackageDecl extends Tree {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -47,4 +50,11 @@ public class PackageDecl extends Tree {
 
 	private static final int ANNOTATIONS = 0;
 	private static final int NAME = 1;
+
+	public final static LexicalShape shape = composite(
+			children(ANNOTATIONS),
+			token(LToken.Package),
+			child(NAME),
+			token(LToken.SemiColon)
+	);
 }

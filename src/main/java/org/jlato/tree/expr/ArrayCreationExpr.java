@@ -1,14 +1,14 @@
 package org.jlato.tree.expr;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Expr;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.*;
 import org.jlato.tree.decl.ArrayDim;
-import org.jlato.tree.Type;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
 
 public class ArrayCreationExpr extends Expr {
 
@@ -18,7 +18,7 @@ public class ArrayCreationExpr extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -66,4 +66,17 @@ public class ArrayCreationExpr extends Expr {
 	private static final int DIMENSION_EXPRESSIONS = 1;
 	private static final int DIMENSIONS = 2;
 	private static final int INITIALIZER = 3;
+
+	public final static LexicalShape shape = composite(
+			token(LToken.New),
+			child(TYPE),
+			children(DIMENSION_EXPRESSIONS),
+			children(DIMENSIONS),
+			nonNullChild(INITIALIZER,
+					composite(
+							none().withSpacing(space()),
+							child(INITIALIZER)
+					)
+			)
+	);
 }

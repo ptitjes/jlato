@@ -3,9 +3,13 @@ package org.jlato.tree.decl;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
 import org.jlato.internal.bu.SLeafState;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.token;
 
 public class Modifier extends Tree {
 
@@ -15,7 +19,7 @@ public class Modifier extends Tree {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -41,8 +45,14 @@ public class Modifier extends Tree {
 	}
 
 	public String toString() {
-		return location.leafData(KEYWORD);
+		return location.leafData(KEYWORD).toString();
 	}
 
 	public static final int KEYWORD = 0;
+
+	public final static LexicalShape shape = token(new LSToken.Provider() {
+		public LToken tokenFor(STree tree) {
+			return (LToken) tree.state.data(KEYWORD);
+		}
+	});
 }

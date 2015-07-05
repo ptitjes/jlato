@@ -1,12 +1,17 @@
 package org.jlato.tree.expr;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.tree.Expr;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
-import org.jlato.tree.*;
+import org.jlato.tree.Tree;
 import org.jlato.tree.decl.Parameter;
 import org.jlato.tree.stmt.BlockStmt;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
 public class LambdaExpr extends Expr {
 
@@ -16,7 +21,7 @@ public class LambdaExpr extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -59,4 +64,12 @@ public class LambdaExpr extends Expr {
 	private static final int PARAMETERS = 0;
 	private static final int EXPR = 1;
 	private static final int BLOCK = 2;
+
+	public final static LexicalShape shape = composite(
+			token(LToken.ParenthesisLeft),
+			nonNullChild(PARAMETERS, composite(children(PARAMETERS, token(LToken.Comma)))),
+			token(LToken.ParenthesisRight),
+			token(LToken.Arrow),
+			nonNullChild(EXPR, child(EXPR), child(BLOCK))
+	);
 }

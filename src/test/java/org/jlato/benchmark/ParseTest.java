@@ -73,7 +73,7 @@ public class ParseTest {
 		Assert.assertNotNull(cu);
 
 		System.out.println("Memory test on " + name);
-		System.out.println("  Average memory: " + memory / TOTAL + " MB");
+		System.out.println("  Average memory: " + memory / (1024 * 1024) + " MB");
 	}
 
 	private long freeMemory() {

@@ -22,5 +22,5 @@ public abstract class AnnotatedType extends Type {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
-	private static final int ANNOTATIONS = 0;
+	protected static final int ANNOTATIONS = 0;
 }

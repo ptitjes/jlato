@@ -1,10 +1,13 @@
 package org.jlato.tree.stmt;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.SLocation;
 import org.jlato.tree.*;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
 
 public class ForStmt extends Stmt {
 
@@ -14,7 +17,7 @@ public class ForStmt extends Stmt {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -62,4 +65,15 @@ public class ForStmt extends Stmt {
 	private static final int COMPARE = 1;
 	private static final int UPDATE = 2;
 	private static final int BODY = 3;
+
+	public final static LexicalShape shape = composite(
+			token(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
+			children(INIT, token(LToken.Comma)),
+			token(LToken.SemiColon).withSpacingAfter(space()),
+			child(COMPARE),
+			token(LToken.SemiColon).withSpacingAfter(space()),
+			children(UPDATE, token(LToken.Comma)),
+			token(LToken.ParenthesisRight).withSpacingAfter(space()),
+			child(BODY)
+	);
 }

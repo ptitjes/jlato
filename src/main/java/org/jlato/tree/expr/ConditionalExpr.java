@@ -1,11 +1,15 @@
 package org.jlato.tree.expr;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
 
 public class ConditionalExpr extends Expr {
 
@@ -15,7 +19,7 @@ public class ConditionalExpr extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -54,4 +58,12 @@ public class ConditionalExpr extends Expr {
 	private static final int CONDITION = 0;
 	private static final int THEN_EXPR = 1;
 	private static final int ELSE_EXPR = 2;
+
+	public final static LexicalShape shape = composite(
+			child(CONDITION),
+			token(LToken.QuestionMark).withSpacing(space(), space()),
+			child(THEN_EXPR),
+			token(LToken.Colon).withSpacing(space(), space()),
+			child(ELSE_EXPR)
+	);
 }

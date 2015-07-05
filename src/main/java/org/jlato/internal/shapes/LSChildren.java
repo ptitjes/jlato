@@ -8,32 +8,57 @@ import org.jlato.printer.Printer;
 /**
  * @author Didier Villevalois
  */
-public abstract class LSChildren implements LexicalShape {
+public final class LSChildren extends LexicalShape {
 
-	public abstract LexicalShape shape();
+	private final ChildrenSelector selector;
+	private final ShapeProvider shapeProvider;
+	private final LexicalShape before, separator, after;
 
-	public abstract LexicalShape before();
-
-	public abstract LexicalShape after();
-
-	public abstract LexicalShape separator();
-
-	public abstract SNodeList select(SNode node);
+	public LSChildren(ChildrenSelector selector, ShapeProvider shapeProvider,
+	                  LexicalShape before, LexicalShape separator, LexicalShape after) {
+		this.selector = selector;
+		this.shapeProvider = shapeProvider;
+		this.before = before;
+		this.separator = separator;
+		this.after = after;
+	}
 
 	public void render(STree tree, Printer printer) {
 		final SNode node = (SNode) tree;
-		final SNodeList nodeList = select(node);
+		final SNodeList nodeList = selector.select(node);
 
-		before().render(tree, printer);
+		if (nodeList == null || nodeList.run.treeCount() == 0) return;
 
-		boolean first = true;
+		boolean firstElement = true;
 		for (STree child : nodeList.run) {
-			if (first) first = false;
-			else separator().render(child, printer);
+			if (!selector.filter(child)) continue;
 
-			shape().render(nodeList, printer);
+			if (firstElement) {
+				if (before != null) {
+					before.render(tree, printer);
+				}
+				firstElement = false;
+			} else if (separator != null) {
+				separator.render(child, printer);
+			}
+
+			final LexicalShape shape = shapeProvider.shapeFor(child);
+			if (shape == null) throw new IllegalArgumentException();
+
+			shape.render(child, printer);
 		}
 
-		after().render(tree, printer);
+		if (!firstElement) {
+			if (after != null) {
+				after.render(tree, printer);
+			}
+		}
+	}
+
+	public interface ChildrenSelector {
+
+		SNodeList select(SNode node);
+
+		boolean filter(STree tree);
 	}
 }

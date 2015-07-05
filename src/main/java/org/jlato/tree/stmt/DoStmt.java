@@ -1,5 +1,6 @@
 package org.jlato.tree.stmt;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -7,6 +8,9 @@ import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
 
 public class DoStmt extends Stmt {
 
@@ -16,7 +20,7 @@ public class DoStmt extends Stmt {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -46,4 +50,14 @@ public class DoStmt extends Stmt {
 
 	private static final int BODY = 0;
 	private static final int CONDITION = 1;
+
+	public final static LexicalShape shape = composite(
+			token(LToken.Do).withSpacingAfter(space()),
+			child(BODY),
+			token(LToken.While).withSpacingBefore(space()),
+			token(LToken.ParenthesisLeft).withSpacingBefore(space()),
+			child(CONDITION),
+			token(LToken.ParenthesisRight),
+			token(LToken.SemiColon)
+	);
 }

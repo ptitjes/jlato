@@ -3,10 +3,15 @@ package org.jlato.tree.expr;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
 
 public class AssignExpr extends Expr {
 
@@ -16,7 +21,7 @@ public class AssignExpr extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -56,6 +61,16 @@ public class AssignExpr extends Expr {
 	private static final int VALUE = 1;
 
 	private static final int OPERATOR = 0;
+
+	public final static LexicalShape shape = composite(
+			child(TARGET),
+			token(new LSToken.Provider() {
+				public LToken tokenFor(STree tree) {
+					return ((AssignOp) tree.state.data(OPERATOR)).token;
+				}
+			}).withSpacing(space(), space()),
+			child(VALUE)
+	);
 
 	public enum AssignOp {
 		Normal(LToken.Assign),

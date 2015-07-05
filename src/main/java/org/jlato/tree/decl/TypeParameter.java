@@ -1,14 +1,18 @@
 package org.jlato.tree.decl;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+import org.jlato.tree.Type;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
-import org.jlato.tree.Type;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
 
 public class TypeParameter extends Tree {
 
@@ -18,7 +22,7 @@ public class TypeParameter extends Tree {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -57,4 +61,14 @@ public class TypeParameter extends Tree {
 	private static final int ANNOTATIONS = 0;
 	private static final int NAME = 1;
 	private static final int BOUNDS = 2;
+
+	public final static LexicalShape shape = composite(
+			children(ANNOTATIONS),
+			child(NAME),
+			children(BOUNDS,
+					token(LToken.Extends).withSpacingBefore(space()),
+					token(LToken.BinAnd).withSpacing(space(), space()),
+					none()
+			)
+	);
 }

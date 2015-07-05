@@ -8,6 +8,9 @@ import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.TypeDecl;
 
+import static org.jlato.internal.shapes.LexicalShape.Factory.child;
+import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
+
 public class TypeDeclarationStmt extends Stmt {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
@@ -16,7 +19,7 @@ public class TypeDeclarationStmt extends Stmt {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -37,4 +40,8 @@ public class TypeDeclarationStmt extends Stmt {
 	}
 
 	private static final int TYPE_DECL = 0;
+
+	public final static LexicalShape shape = composite(
+			child(TYPE_DECL)
+	);
 }

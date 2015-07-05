@@ -8,6 +8,8 @@ import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.Type;
 
+import static org.jlato.internal.shapes.LexicalShape.Factory.child;
+
 public class TypeExpr extends Expr {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
@@ -16,7 +18,7 @@ public class TypeExpr extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -37,4 +39,6 @@ public class TypeExpr extends Expr {
 	}
 
 	private static final int TYPE = 0;
+
+	public final static LexicalShape shape = child(TYPE);
 }

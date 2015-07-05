@@ -11,6 +11,8 @@ import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 
+import static org.jlato.internal.shapes.LexicalShape.Factory.token;
+
 public class Name extends Expr {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
@@ -46,10 +48,9 @@ public class Name extends Expr {
 
 	public static final int IDENTIFIER = 0;
 
-	public final static LexicalShape shape = new LSToken() {
-		@Override
-		protected LToken token(STree tree) {
+	public final static LexicalShape shape = token(new LSToken.Provider() {
+		public LToken tokenFor(STree tree) {
 			return new LToken(ASTParserConstants.IDENTIFIER, (String) tree.state.data(IDENTIFIER));
 		}
-	};
+	});
 }

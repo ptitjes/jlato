@@ -1,5 +1,6 @@
 package org.jlato.tree.stmt;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -9,6 +10,11 @@ import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.VariableDeclarationExpr;
 
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.newLine;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.printer.FormattingSettings.IndentationContext.TRY_RESOURCES;
+
 public class TryStmt extends Stmt {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
@@ -17,7 +23,7 @@ public class TryStmt extends Stmt {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -65,4 +71,23 @@ public class TryStmt extends Stmt {
 	private static final int TRY_BLOCK = 1;
 	private static final int CATCHS = 2;
 	private static final int FINALLY_BLOCK = 3;
+
+	public final static LexicalShape shape = composite(
+			token(LToken.Try).withSpacingAfter(space()),
+			nonNullChild(RESOURCES,
+					children(RESOURCES,
+							composite(token(LToken.ParenthesisLeft), indent(TRY_RESOURCES)),
+							token(LToken.SemiColon).withSpacingAfter(newLine()),
+							composite(unIndent(TRY_RESOURCES), token(LToken.ParenthesisRight).withSpacingAfter(space()))
+					)
+			),
+			child(TRY_BLOCK),
+			children(CATCHS),
+			nonNullChild(FINALLY_BLOCK,
+					composite(
+							token(LToken.Finally).withSpacing(space(), space()),
+							child(FINALLY_BLOCK)
+					)
+			)
+	);
 }

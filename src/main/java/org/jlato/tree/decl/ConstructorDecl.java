@@ -1,5 +1,6 @@
 package org.jlato.tree.decl;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -11,6 +12,9 @@ import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.ClassOrInterfaceType;
 
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+
 public class ConstructorDecl extends Decl implements Member {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
@@ -19,7 +23,7 @@ public class ConstructorDecl extends Decl implements Member {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -27,8 +31,8 @@ public class ConstructorDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public ConstructorDecl(Modifiers modifiers, NodeList<TypeParameter> typeParameters, Name name, NodeList<Parameter> parameters, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt block/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, typeParameters, name, parameters, throwsClause, block/*, javadocComment*/)))));
+	public ConstructorDecl(Modifiers modifiers, NodeList<TypeParameter> typeParameters, Name name, NodeList<Parameter> parameters, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, typeParameters, name, parameters, throwsClause, body/*, javadocComment*/)))));
 	}
 
 	public Modifiers modifiers() {
@@ -71,12 +75,12 @@ public class ConstructorDecl extends Decl implements Member {
 		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
 	}
 
-	public BlockStmt block() {
-		return location.nodeChild(BLOCK);
+	public BlockStmt body() {
+		return location.nodeChild(BODY);
 	}
 
-	public ConstructorDecl withBlock(BlockStmt block) {
-		return location.nodeWithChild(BLOCK, block);
+	public ConstructorDecl withBody(BlockStmt body) {
+		return location.nodeWithChild(BODY, body);
 	}
 /*
 
@@ -94,6 +98,17 @@ public class ConstructorDecl extends Decl implements Member {
 	private static final int NAME = 2;
 	private static final int PARAMETERS = 3;
 	private static final int THROWS_CLAUSE = 4;
-	private static final int BLOCK = 5;
+	private static final int BODY = 5;
 //	private static final int JAVADOC_COMMENT = 7;
+
+	public final static LexicalShape shape = composite(
+			child(MODIFIERS),
+			children(TYPE_PARAMETERS, token(LToken.Less), token(LToken.Comma), token(LToken.Greater).withSpacingAfter(space())),
+			child(NAME),
+			token(LToken.ParenthesisLeft),
+			children(PARAMETERS, token(LToken.Comma)),
+			token(LToken.ParenthesisRight),
+			children(THROWS_CLAUSE, token(LToken.Throws).withSpacingBefore(space()), token(LToken.Comma), none()),
+			none().withSpacing(space()), child(BODY)
+	);
 }

@@ -1,5 +1,6 @@
 package org.jlato.tree.expr;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -7,6 +8,8 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.QName;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
 public class NormalAnnotationExpr extends AnnotationExpr {
 
@@ -16,7 +19,7 @@ public class NormalAnnotationExpr extends AnnotationExpr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -37,4 +40,11 @@ public class NormalAnnotationExpr extends AnnotationExpr {
 	}
 
 	private static final int PAIRS = 1;
+
+	public final static LexicalShape shape = composite(
+			token(LToken.At), child(NAME),
+			token(LToken.ParenthesisLeft),
+			children(PAIRS, token(LToken.Comma)),
+			token(LToken.ParenthesisRight)
+	);
 }

@@ -125,20 +125,21 @@ PARSER_END(ASTParser)
 
 /* WHITE SPACE */
 
-SKIP :
+SPECIAL_TOKEN :
 {
-  " "
-| "\t"
-| "\n"
-| "\r"
-| "\f"
+  <WHITESPACE: (" " | "\t")+ >
+}
+
+SPECIAL_TOKEN :
+{
+  <NEWLINE: ("\n" | "\r" | "\f" | "\r\n") >
 }
 
 /* COMMENTS */
 
 SPECIAL_TOKEN :
 {
-  <SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")? >
+  <SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* >
 }
 
 MORE :
@@ -1202,10 +1203,7 @@ Modifiers Modifiers():
    ann = Annotation() { annotations = annotations.append(ann); }
   )
  )*
-
- {
-    return new Modifiers(modifiers, annotations);
- }
+ { return modifiers.isEmpty() && annotations.isEmpty() ? null : new Modifiers(modifiers, annotations); }
 }
 
 /*
@@ -1251,7 +1249,7 @@ TypeDecl ClassOrInterfaceDecl(Modifiers modifiers):
   [ implementsClause = ImplementsList(typeKind) ]
   members = ClassOrInterfaceBody(typeKind)
 
-  { return new TypeDecl(modifiers, typeKind, name, typePar, extList, implementsClause, members); }
+  { return new TypeDecl(typeKind, modifiers, name, typePar, extList, implementsClause, members); }
 }
 
 NodeList ExtendsList(TypeDecl.TypeKind typeKind):
@@ -1292,7 +1290,6 @@ TypeDecl EnumDecl(Modifiers modifiers):
 	Name name;
 	NodeList implementsClause = new NodeList();
 	EnumConstantDecl entry;
-	NodeList entries = new NodeList();
 	Decl member;
 	NodeList members = new NodeList();
 }
@@ -1300,15 +1297,14 @@ TypeDecl EnumDecl(Modifiers modifiers):
   "enum" name = Name() [ implementsClause = ImplementsList(TypeDecl.TypeKind.Enum) ]
   "{"
   	[
-    	{ entries = new NodeList(); }
-    	entry = EnumConstantDecl() { entries = entries.append(entry); } ( LOOKAHEAD(2) "," entry = EnumConstantDecl() { entries = entries.append(entry); } )*
+    	entry = EnumConstantDecl() { members = members.append(entry); } ( LOOKAHEAD(2) "," entry = EnumConstantDecl() { members = members.append(entry); } )*
   	]
   	[ "," ]
  	[
  	 	( ";" ( member = ClassOrInterfaceBodyDecl(TypeDecl.TypeKind.Enum) { members = members.append(member); } )* )
  	]
   "}"
-  { return new TypeDecl(modifiers, TypeDecl.TypeKind.Enum, name, new NodeList(), implementsClause, entries, members); }
+  { return TypeDecl.ofEnum(modifiers, name, implementsClause, members); }
 }
 
 
@@ -1391,7 +1387,7 @@ Decl ClassOrInterfaceBodyDecl(TypeDecl.TypeKind typeKind):
 	|
 	  modifiers = Modifiers()
 	  {
-	    if (modifiers.modifiers().contains(Modifier.Default) && typeKind != TypeDecl.TypeKind.Interface)
+	    if (modifiers != null && modifiers.modifiers().contains(Modifier.Default) && typeKind != TypeDecl.TypeKind.Interface)
 	      throwParseException(token, "Only interfaces can have default members");
 	  }
 	  (
@@ -1405,7 +1401,7 @@ Decl ClassOrInterfaceBodyDecl(TypeDecl.TypeKind typeKind):
 	      ret = ConstructorDecl(modifiers)
 	    |
 	      LOOKAHEAD( Type() <IDENTIFIER> ( "[" "]" )* ( "," | "=" | ";" ) )
-	      ret = VariableDecl(modifiers) ";"
+	      ret = FieldDecl(modifiers)
 	    |
 	      ret = MethodDecl(modifiers)
 	  )
@@ -1415,7 +1411,24 @@ Decl ClassOrInterfaceBodyDecl(TypeDecl.TypeKind typeKind):
   { return ret; }
 }
 
-VariableDecl VariableDecl(Modifiers modifiers):
+FieldDecl FieldDecl(Modifiers modifiers):
+{
+	Type type;
+	NodeList variables = new NodeList();
+	VariableDeclarator val;
+}
+{
+  // Modifiers are already matched in the caller
+  type = Type(null)
+        val = VariableDeclarator() { variables = variables.append(val); }
+  ( "," val = VariableDeclarator() { variables = variables.append(val); } )*
+  ";"
+  {
+  	return new FieldDecl(modifiers, type, variables);
+  }
+}
+
+LocalVariableDecl VariableDecl(Modifiers modifiers):
 {
 	Type type;
 	NodeList variables = new NodeList();
@@ -1428,7 +1441,7 @@ VariableDecl VariableDecl(Modifiers modifiers):
   ( "," val = VariableDeclarator() { variables = variables.append(val); } )*
 
   {
-  	return new VariableDecl(modifiers, type, variables);
+  	return new LocalVariableDecl(modifiers, type, variables);
   }
 }
 
@@ -1503,7 +1516,7 @@ MethodDecl MethodDecl(Modifiers modifiers):
   (
     block = Block()
     {
-      if(modifiers.modifiers().contains(Modifier.Default))
+      if(modifiers != null && modifiers.modifiers().contains(Modifier.Default))
 	    throwParseException(token, "\"default\" methods must have a body");
 	}
   |
@@ -2514,7 +2527,7 @@ Stmt BlockStatement():
 VariableDeclarationExpr VariableDeclExpression():
 {
 	Modifiers modifiers;
-	VariableDecl variableDecl;
+	LocalVariableDecl variableDecl;
 }
 {
   modifiers = Modifiers() variableDecl = VariableDecl(modifiers)
@@ -2644,7 +2657,6 @@ DoStmt DoStatement():
   "do" body = Statement() "while" "(" condition = Expression() ")" ";"
   { return new DoStmt(body, condition); }
 }
-
 Stmt ForStatement():
 {
 	String id = null;
@@ -2961,7 +2973,7 @@ TypeDecl AnnotationTypeDecl(Modifiers modifiers):
 }
 {
   "@" "interface" name = Name() members = AnnotationTypeBody()
-  { return new TypeDecl(modifiers, TypeDecl.TypeKind.AnnotationType, name, null, null, null, members); }
+  { return new TypeDecl(TypeDecl.TypeKind.AnnotationType, modifiers, name, null, null, null, members); }
 }
 
 NodeList AnnotationTypeBody():
@@ -2994,7 +3006,7 @@ Decl AnnotationBodyDecl():
     |
       ret = AnnotationTypeDecl(modifiers)
     |
-      ret = VariableDecl(modifiers) ";"
+      ret = FieldDecl(modifiers)
     )
   )
   { return ret; }
@@ -3004,11 +3016,12 @@ AnnotationMemberDecl AnnotationTypeMemberDecl(Modifiers modifiers):
 {
 	Type type;
 	Name name;
+	NodeList dims;
 	Expr defaultVal = null;
 }
 {
-  type = Type(null) name = Name() "(" ")" [ defaultVal = DefaultValue() ] ";"
-  { return new AnnotationMemberDecl(modifiers, type, name, defaultVal); }
+  type = Type(null) name = Name() "(" ")" dims = ArrayDims() [ defaultVal = DefaultValue() ] ";"
+  { return new AnnotationMemberDecl(modifiers, type, name, dims, defaultVal); }
 }
 
 Expr DefaultValue():

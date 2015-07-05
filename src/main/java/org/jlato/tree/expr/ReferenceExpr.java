@@ -1,14 +1,13 @@
 package org.jlato.tree.expr;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Expr;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.*;
 import org.jlato.tree.name.Name;
-import org.jlato.tree.Type;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
 public class ReferenceExpr extends Expr {
 
@@ -18,7 +17,7 @@ public class ReferenceExpr extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -57,4 +56,11 @@ public class ReferenceExpr extends Expr {
 	private static final int SCOPE = 0;
 	private static final int TYPE_ARGUMENTS = 1;
 	private static final int IDENTIFIER = 2;
+
+	public final static LexicalShape shape = composite(
+			child(SCOPE),
+			token(LToken.DoubleColon),
+			children(TYPE_ARGUMENTS, token(LToken.Less), token(LToken.Comma), token(LToken.Greater)),
+			child(IDENTIFIER)
+	);
 }

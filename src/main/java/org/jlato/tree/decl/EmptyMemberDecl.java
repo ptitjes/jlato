@@ -1,11 +1,14 @@
 package org.jlato.tree.decl;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
 import org.jlato.internal.bu.SLeafState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Decl;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.token;
 
 public class EmptyMemberDecl extends Decl implements Member {
 
@@ -15,7 +18,7 @@ public class EmptyMemberDecl extends Decl implements Member {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -26,4 +29,6 @@ public class EmptyMemberDecl extends Decl implements Member {
 	public EmptyMemberDecl() {
 		super(new SLocation(new SLeaf(kind, new SLeafState(dataOf()))));
 	}
+
+	public final static LexicalShape shape = token(LToken.SemiColon);
 }

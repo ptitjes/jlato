@@ -20,12 +20,16 @@
 
 package org.jlato.printer;
 
+import com.github.andrewoma.dexx.collection.TreeMap;
+
+import static org.jlato.printer.FormattingSettings.Spacing.*;
+import static org.jlato.printer.FormattingSettings.Spacing.Unit.Line;
+import static org.jlato.printer.FormattingSettings.Spacing.Unit.Space;
+
 /**
  * @author Didier Villevalois
  */
 public class FormattingSettings {
-
-	public static FormattingSettings DEFAULT = new FormattingSettings();
 
 	public enum IndentationContext {
 		TYPE_BODY,
@@ -36,68 +40,151 @@ public class FormattingSettings {
 		SWITCH_CASE,
 		IF_ELSE,
 		TRY_RESOURCES,
+		LABEL,
 		// Keep the last comma
 		;
 	}
 
-	public enum EmptyLineLocation {
-		AFTER_PACKAGE_DECLARATION,
-		AFTER_IMPORT_DECLARATIONS,
-		BETWEEN_TOP_LEVEL_DECLARATIONS,
-		BEFORE_MEMBERS,
-		BETWEEN_MEMBERS,
-		AFTER_MEMBERS,
+	public enum SpacingLocation {
+		DefaultNewLine(Line),
+		CompilationUnit_AfterPackageDecl(Line),
+		CompilationUnit_AfterImports(Line),
+		CompilationUnit_BetweenTopLevelDecl(Line),
+		ClassBody_Empty(Line),
+		ClassBody_BeforeMembers(Line),
+		ClassBody_BetweenMembers(Line),
+		ClassBody_AfterMembers(Line),
+		EnumBody_BeforeConstants(Line),
+		EnumBody_BetweenConstants(Line),
+		EnumBody_AfterConstants(Line),
+		EnumConstant_AfterBody(Line),
+
+		DefaultSpace(Space),
+		LabeledStmt_AfterLabel(Space),
+		SwitchStmt_AfterSwitchKeyword(Space),
+
 		// Keep the last comma
 		;
-	}
 
-	public int indentation(IndentationContext context) {
-		switch (context) {
-			case TYPE_BODY:
-				return 1;
-			case BLOCK:
-				return 1;
-			case PARAMETERS:
-				return 2;
-			case STATEMENT:
-				return 2;
-			case SWITCH:
-				return 1;
-			case SWITCH_CASE:
-				return 1;
-			case IF_ELSE:
-				return 1;
-			case TRY_RESOURCES:
-				return 2;
-			default:
-				return 1;
+		public final Spacing.Unit defaultUnit;
+
+		SpacingLocation(Spacing.Unit defaultUnit) {
+			this.defaultUnit = defaultUnit;
 		}
 	}
 
-	public int emptyLineCount(EmptyLineLocation location) {
-		switch (location) {
-			case AFTER_PACKAGE_DECLARATION:
-				return 1;
-			case AFTER_IMPORT_DECLARATIONS:
-				return 1;
-			case BETWEEN_TOP_LEVEL_DECLARATIONS:
-				return 1;
-			case BEFORE_MEMBERS:
-				return 1;
-			case BETWEEN_MEMBERS:
-				return 1;
-			case AFTER_MEMBERS:
-				return 1;
-			default:
-				return 1;
-		}
+	public static FormattingSettings Default = new FormattingSettings()
+			.withIndentationLevel(IndentationContext.PARAMETERS, 2)
+			.withIndentationLevel(IndentationContext.STATEMENT, 2)
+			.withIndentationLevel(IndentationContext.TRY_RESOURCES, 2)
+			.withIndentationLevel(IndentationContext.LABEL, 0)
+
+			.withSpacing(SpacingLocation.DefaultSpace, spaces(1))
+			.withSpacing(SpacingLocation.DefaultNewLine, lines(1))
+
+			.withSpacing(SpacingLocation.CompilationUnit_AfterPackageDecl, lines(2))
+			.withSpacing(SpacingLocation.CompilationUnit_AfterPackageDecl, lines(2))
+			.withSpacing(SpacingLocation.CompilationUnit_AfterImports, lines(2))
+			.withSpacing(SpacingLocation.CompilationUnit_BetweenTopLevelDecl, lines(2))
+			.withSpacing(SpacingLocation.ClassBody_BeforeMembers, lines(2))
+			.withSpacing(SpacingLocation.ClassBody_BetweenMembers, lines(2))
+			.withSpacing(SpacingLocation.EnumConstant_AfterBody, lines(0))
+
+			// Keep semi-colon separated
+			;
+
+	public static FormattingSettings JavaParser = Default
+			.withIndentation("    ")
+
+			.withIndentationLevel(IndentationContext.TRY_RESOURCES, 1)
+
+			.withSpacing(SpacingLocation.EnumBody_BeforeConstants, lines(2))
+			.withSpacing(SpacingLocation.EnumBody_BetweenConstants, oneSpace)
+			.withSpacing(SpacingLocation.EnumConstant_AfterBody, oneLine)
+
+			.withSpacing(SpacingLocation.LabeledStmt_AfterLabel, oneSpace)
+			.withSpacing(SpacingLocation.SwitchStmt_AfterSwitchKeyword, noSpace)
+
+			// Keep semi-colon separated
+			;
+
+	private final String indentationImage;
+	private final String newLineImage;
+	private final TreeMap<IndentationContext, Integer> indentationLevels;
+	private final TreeMap<SpacingLocation, Spacing> spacingCounts;
+
+	public FormattingSettings() {
+		this("\t", "\n", new TreeMap<IndentationContext, Integer>(), new TreeMap<SpacingLocation, Spacing>());
 	}
 
-	public String indent() {
-		return "\t";
+	public FormattingSettings(String indentationImage, String newLineImage,
+	                          TreeMap<IndentationContext, Integer> indentationLevels,
+	                          TreeMap<SpacingLocation, Spacing> spacingCounts) {
+		this.indentationImage = indentationImage;
+		this.newLineImage = newLineImage;
+		this.indentationLevels = indentationLevels;
+		this.spacingCounts = spacingCounts;
+	}
+
+	public String indentation() {
+		return indentationImage;
+	}
+
+	public FormattingSettings withIndentation(String indentationImage) {
+		return new FormattingSettings(indentationImage, newLineImage, indentationLevels, spacingCounts);
 	}
 
 	public String newLine() {
-		return "\n";
+		return newLineImage;
+	}
+
+	public FormattingSettings withNewLine(String newLineImage) {
+		return new FormattingSettings(indentationImage, newLineImage, indentationLevels, spacingCounts);
+	}
+
+	public FormattingSettings withIndentationLevel(IndentationContext context, int level) {
+		return new FormattingSettings(indentationImage, newLineImage, indentationLevels.put(context, level), spacingCounts);
+	}
+
+	public FormattingSettings withSpacing(SpacingLocation location, Spacing spacing) {
+		return new FormattingSettings(indentationImage, newLineImage, indentationLevels, spacingCounts.put(location, spacing));
+	}
+
+	public int indentation(IndentationContext context) {
+		if (indentationLevels.containsKey(context)) return indentationLevels.get(context);
+		else return 1;
+	}
+
+	public Spacing spacing(SpacingLocation location) {
+		if (spacingCounts.containsKey(location)) return spacingCounts.get(location);
+		else return new Spacing(1, location.defaultUnit);
+	}
+
+	public static class Spacing {
+
+		public static Spacing spaces(int count) {
+			return new Spacing(count, Space);
+		}
+
+		public static Spacing lines(int count) {
+			return new Spacing(count, Unit.Line);
+		}
+
+		public static final Spacing oneLine = lines(1);
+
+		public static final Spacing noSpace = spaces(0);
+		public static final Spacing oneSpace = spaces(1);
+
+		public final int count;
+		public final Unit unit;
+
+		public Spacing(int count, Unit unit) {
+			this.count = count;
+			this.unit = unit;
+		}
+
+		public enum Unit {
+			Space, Line
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package org.jlato.tree.stmt;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -9,6 +10,9 @@ import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.VariableDeclarationExpr;
 
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+
 public class ForeachStmt extends Stmt {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
@@ -17,7 +21,7 @@ public class ForeachStmt extends Stmt {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -56,4 +60,13 @@ public class ForeachStmt extends Stmt {
 	private static final int VAR = 0;
 	private static final int ITERABLE = 1;
 	private static final int BODY = 2;
+
+	public final static LexicalShape shape = composite(
+			token(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
+			child(VAR),
+			token(LToken.Colon).withSpacing(space(), space()),
+			child(ITERABLE),
+			token(LToken.ParenthesisRight).withSpacingAfter(space()),
+			child(BODY)
+	);
 }

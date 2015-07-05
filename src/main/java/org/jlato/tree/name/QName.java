@@ -69,8 +69,6 @@ public class QName extends Tree {
 	private static final int NAME = 1;
 
 	public final static LexicalShape shape = composite(
-			nonNullChild(QUALIFIER, composite(child(QUALIFIER), spacing(""), token(LToken.Dot))),
-			spacing(""),
-			child(NAME)
+			nonNullChild(QUALIFIER, composite(child(QUALIFIER), token(LToken.Dot))), child(NAME)
 	);
 }

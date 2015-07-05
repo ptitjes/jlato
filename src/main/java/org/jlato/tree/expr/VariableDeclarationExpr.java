@@ -6,7 +6,9 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.decl.VariableDecl;
+import org.jlato.tree.decl.LocalVariableDecl;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.child;
 
 public class VariableDeclarationExpr extends Expr {
 
@@ -16,7 +18,7 @@ public class VariableDeclarationExpr extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -24,17 +26,19 @@ public class VariableDeclarationExpr extends Expr {
 		super(location);
 	}
 
-	public VariableDeclarationExpr(VariableDecl declaration) {
+	public VariableDeclarationExpr(LocalVariableDecl declaration) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(declaration)))));
 	}
 
-	public VariableDecl declaration() {
+	public LocalVariableDecl declaration() {
 		return location.nodeChild(DECLARATION);
 	}
 
-	public VariableDeclarationExpr withDeclaration(VariableDecl declaration) {
+	public VariableDeclarationExpr withDeclaration(LocalVariableDecl declaration) {
 		return location.nodeWithChild(DECLARATION, declaration);
 	}
 
 	private static final int DECLARATION = 0;
+
+	public final static LexicalShape shape = child(DECLARATION);
 }

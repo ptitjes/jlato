@@ -1,12 +1,13 @@
 package org.jlato.tree.expr;
 
-import org.jlato.internal.bu.Literals;
-import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.token;
 
 public class LiteralExpr<T> extends Expr {
 
@@ -23,7 +24,7 @@ public class LiteralExpr<T> extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	}
 
@@ -86,4 +87,12 @@ public class LiteralExpr<T> extends Expr {
 
 	private static final int CLASS = 0;
 	private static final int STRING = 1;
+
+	public final static LexicalShape shape = token(new LSToken.Provider() {
+		public LToken tokenFor(STree tree) {
+			final Class<?> literalClass = (Class<?>) tree.state.data(CLASS);
+			final String literalString = (String) tree.state.data(STRING);
+			return new LToken(0, literalString); // TODO Fix
+		}
+	});
 }

@@ -1,11 +1,14 @@
 package org.jlato.tree.expr;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
 public class ArrayAccessExpr extends Expr {
 
@@ -15,7 +18,7 @@ public class ArrayAccessExpr extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -45,4 +48,9 @@ public class ArrayAccessExpr extends Expr {
 
 	private static final int NAME = 0;
 	private static final int INDEX = 1;
+
+	public final static LexicalShape shape = composite(
+			child(NAME),
+			token(LToken.BracketLeft), child(INDEX), token(LToken.BracketRight)
+	);
 }

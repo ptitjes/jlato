@@ -6,11 +6,11 @@ import org.jlato.printer.Printer;
 /**
  * @author Didier Villevalois
  */
-public class LSComposite implements LexicalShape {
+public final class LSComposite extends LexicalShape {
 
 	private final LexicalShape[] shapes;
 
-	public LSComposite(LexicalShape[] shapes) {
+	public LSComposite(LexicalShape... shapes) {
 		this.shapes = shapes;
 	}
 

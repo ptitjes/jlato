@@ -1,15 +1,17 @@
 package org.jlato.tree.expr;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Expr;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.SLocation;
-import org.jlato.tree.Tree;
-import org.jlato.tree.Decl;
+import org.jlato.tree.*;
 import org.jlato.tree.type.ClassOrInterfaceType;
-import org.jlato.tree.Type;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.spacing;
+import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
 public class ObjectCreationExpr extends Expr {
 
@@ -19,7 +21,7 @@ public class ObjectCreationExpr extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -47,20 +49,20 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public NodeList<Type> typeArgs() {
-		return location.nodeChild(TYPE_ARGS);
+	public NodeList<Type> typeArguments() {
+		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
-	public ObjectCreationExpr withTypeArgs(NodeList<Type> typeArgs) {
-		return location.nodeWithChild(TYPE_ARGS, typeArgs);
+	public ObjectCreationExpr withTypeArguments(NodeList<Type> typeArguments) {
+		return location.nodeWithChild(TYPE_ARGUMENTS, typeArguments);
 	}
 
-	public NodeList<Expr> args() {
-		return location.nodeChild(ARGS);
+	public NodeList<Expr> arguments() {
+		return location.nodeChild(ARGUMENTS);
 	}
 
-	public ObjectCreationExpr withArgs(NodeList<Expr> args) {
-		return location.nodeWithChild(ARGS, args);
+	public ObjectCreationExpr withArguments(NodeList<Expr> arguments) {
+		return location.nodeWithChild(ARGUMENTS, arguments);
 	}
 
 	public NodeList<Decl> anonymousClassBody() {
@@ -73,7 +75,32 @@ public class ObjectCreationExpr extends Expr {
 
 	private static final int SCOPE = 0;
 	private static final int TYPE = 1;
-	private static final int TYPE_ARGS = 2;
-	private static final int ARGS = 3;
+	private static final int TYPE_ARGUMENTS = 2;
+	private static final int ARGUMENTS = 3;
 	private static final int ANONYMOUS_CLASS_BODY = 4;
+
+	public final static LexicalShape shape = composite(
+			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
+			token(LToken.New),
+			children(TYPE_ARGUMENTS,
+					token(LToken.Less).withSpacingBefore(space()),
+					token(LToken.Comma),
+					token(LToken.Greater)
+			),
+			child(TYPE),
+			token(LToken.ParenthesisLeft), children(ARGUMENTS, token(LToken.Comma)), token(LToken.ParenthesisRight),
+			nonNullChild(ANONYMOUS_CLASS_BODY,
+					nonEmptyChildren(ANONYMOUS_CLASS_BODY,
+							children(ANONYMOUS_CLASS_BODY,
+									composite(token(LToken.BraceLeft).withSpacing(space(), spacing(ClassBody_BeforeMembers)), indent(TYPE_BODY)),
+									none().withSpacing(spacing(ClassBody_BetweenMembers)),
+									composite(unIndent(TYPE_BODY), token(LToken.BraceRight).withSpacingBefore(spacing(ClassBody_AfterMembers)))
+							),
+							composite(
+									token(LToken.BraceLeft).withSpacing(space(), spacing(ClassBody_Empty)), indent(TYPE_BODY),
+									unIndent(TYPE_BODY), token(LToken.BraceRight)
+							)
+					)
+			)
+	);
 }

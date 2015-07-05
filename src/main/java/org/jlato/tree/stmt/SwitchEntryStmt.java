@@ -1,10 +1,14 @@
 package org.jlato.tree.stmt;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.SLocation;
 import org.jlato.tree.*;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.newLine;
+import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 
 public class SwitchEntryStmt extends Stmt {
 
@@ -14,7 +18,7 @@ public class SwitchEntryStmt extends Stmt {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -44,4 +48,16 @@ public class SwitchEntryStmt extends Stmt {
 
 	private static final int LABEL = 0;
 	private static final int STMTS = 1;
+
+	public final static LexicalShape shape = composite(
+			nonNullChild(LABEL,
+					composite(token(LToken.Case), child(LABEL)),
+					token(LToken.Default)
+			), token(LToken.Colon).withSpacingAfter(newLine()),
+			nonNullChild(STMTS, composite(
+					indent(BLOCK),
+					children(STMTS, none().withSpacing(newLine())),
+					unIndent(BLOCK)
+			))
+	);
 }

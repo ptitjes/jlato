@@ -1,13 +1,14 @@
 package org.jlato.tree.stmt;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
 import org.jlato.internal.bu.SLeafState;
-import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.token;
 
 public class EmptyStmt extends Stmt {
 
@@ -17,7 +18,7 @@ public class EmptyStmt extends Stmt {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -29,4 +30,5 @@ public class EmptyStmt extends Stmt {
 		super(new SLocation(new SLeaf(kind, new SLeafState(dataOf()))));
 	}
 
+	public final static LexicalShape shape = token(LToken.SemiColon);
 }

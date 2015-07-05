@@ -8,6 +8,12 @@ import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
+import static org.jlato.internal.shapes.LexicalShape.Factory.children;
+import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
+import static org.jlato.internal.shapes.LexicalShape.Factory.none;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.newLine;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+
 public class Modifiers extends Tree {
 
 	public final static Kind kind = new Kind() {
@@ -16,7 +22,7 @@ public class Modifiers extends Tree {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -50,4 +56,14 @@ public class Modifiers extends Tree {
 
 	private static final int MODIFIERS = 0;
 	private static final int ANNOTATIONS = 1;
+
+	public final static LexicalShape shape = composite(
+			children(ANNOTATIONS, none(), none().withSpacing(newLine()), none().withSpacing(newLine())),
+			children(MODIFIERS, none(), none().withSpacing(space()), none().withSpacing(space()))
+	);
+
+	public final static LexicalShape oneLinerShape = composite(
+			children(ANNOTATIONS, none(), none().withSpacing(space()), none().withSpacing(space())),
+			children(MODIFIERS, none(), none().withSpacing(space()), none().withSpacing(space()))
+	);
 }

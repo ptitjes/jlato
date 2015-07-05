@@ -1,5 +1,6 @@
 package org.jlato.tree.stmt;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -7,6 +8,8 @@ import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
 public class ExpressionStmt extends Stmt {
 
@@ -16,7 +19,7 @@ public class ExpressionStmt extends Stmt {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -37,4 +40,8 @@ public class ExpressionStmt extends Stmt {
 	}
 
 	private static final int EXPR = 0;
+
+	public final static LexicalShape shape = composite(
+			child(EXPR), token(LToken.SemiColon)
+	);
 }

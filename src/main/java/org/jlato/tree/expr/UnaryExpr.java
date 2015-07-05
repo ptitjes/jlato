@@ -3,10 +3,15 @@ package org.jlato.tree.expr;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSOption;
+import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
 public class UnaryExpr extends Expr {
 
@@ -16,7 +21,7 @@ public class UnaryExpr extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -44,9 +49,30 @@ public class UnaryExpr extends Expr {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
+	public static boolean isPrefix(UnaryOp op) {
+		return !isPostfix(op);
+	}
+
+	public static boolean isPostfix(UnaryOp op) {
+		return op == UnaryOp.PostIncrement || op == UnaryOp.PostDecrement;
+	}
+
 	private static final int EXPR = 0;
 
 	private static final int OPERATOR = 0;
+
+	private final static LexicalShape opShape = token(new LSToken.Provider() {
+		public LToken tokenFor(STree tree) {
+			return ((UnaryOp) tree.state.data(OPERATOR)).token;
+		}
+	});
+
+	public final static LexicalShape shape = option(new LexicalShape.ShapeProvider() {
+		public LexicalShape shapeFor(STree tree) {
+			final UnaryOp op = (UnaryOp) tree.state.data(OPERATOR);
+			return isPrefix(op) ? composite(opShape, child(EXPR)) : composite(child(EXPR), opShape);
+		}
+	});
 
 	public enum UnaryOp {
 		Positive(LToken.Plus),

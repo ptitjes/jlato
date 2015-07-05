@@ -7,15 +7,26 @@ import org.jlato.printer.Printer;
 /**
  * @author Didier Villevalois
  */
-public abstract class LSChild implements LexicalShape {
+public final class LSChild extends LexicalShape {
 
-	public abstract LexicalShape shape(STree tree);
+	private final ChildSelector selector;
+	private final ShapeProvider shapeProvider;
 
-	public abstract STree select(SNode node);
+	public LSChild(ChildSelector selector, ShapeProvider shapeProvider) {
+		this.selector = selector;
+		this.shapeProvider = shapeProvider;
+	}
 
 	public void render(STree tree, Printer printer) {
 		final SNode node = (SNode) tree;
-		final STree child = select(node);
-		shape(child).render(child, printer);
+		final STree child = selector.select(node);
+		if (child == null) return;
+
+		final LexicalShape shape = shapeProvider.shapeFor(child);
+		if (shape != null) shape.render(child, printer);
+	}
+
+	public interface ChildSelector {
+		STree select(SNode node);
 	}
 }

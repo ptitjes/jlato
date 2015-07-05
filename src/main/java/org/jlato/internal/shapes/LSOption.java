@@ -6,19 +6,16 @@ import org.jlato.printer.Printer;
 /**
  * @author Didier Villevalois
  */
-public abstract class LSOption implements LexicalShape {
+public final class LSOption extends LexicalShape {
 
-	private final LexicalShape shape;
+	private final ShapeProvider shapeProvider;
 
-	public LSOption(LexicalShape shape) {
-		this.shape = shape;
+	public LSOption(ShapeProvider shapeProvider) {
+		this.shapeProvider = shapeProvider;
 	}
 
-	public abstract boolean decide(STree tree);
-
 	public void render(STree tree, Printer printer) {
-		if (decide(tree)) {
-			shape.render(tree, printer);
-		}
+		final LexicalShape shape = shapeProvider.shapeFor(tree);
+		if (shape != null) shape.render(tree, printer);
 	}
 }

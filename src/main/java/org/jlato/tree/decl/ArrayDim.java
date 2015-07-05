@@ -1,5 +1,6 @@
 package org.jlato.tree.decl;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -7,6 +8,10 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.children;
+import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
+import static org.jlato.internal.shapes.LexicalShape.Factory.token;
 
 public class ArrayDim extends Tree {
 
@@ -16,7 +21,7 @@ public class ArrayDim extends Tree {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -37,4 +42,9 @@ public class ArrayDim extends Tree {
 	}
 
 	private static final int ANNOTATIONS = 0;
+
+	public final static LexicalShape shape = composite(
+			children(ANNOTATIONS),
+			token(LToken.BracketLeft), token(LToken.BracketRight)
+	);
 }

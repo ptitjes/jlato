@@ -7,6 +7,11 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.newLine;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.spacing;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
+
 public class CompilationUnit extends Tree {
 
 	public final static Kind kind = new Kind() {
@@ -15,7 +20,7 @@ public class CompilationUnit extends Tree {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -54,4 +59,19 @@ public class CompilationUnit extends Tree {
 	private static final int PACKAGE_DECL = 0;
 	private static final int IMPORTS = 1;
 	private static final int TYPES = 2;
+
+	public final static LexicalShape shape = composite(
+			child(PACKAGE_DECL),
+			none().withSpacing(spacing(CompilationUnit_AfterPackageDecl)),
+			children(IMPORTS,
+					none(),
+					none().withSpacing(newLine()),
+					none().withSpacing(spacing(CompilationUnit_AfterImports))
+			),
+			children(TYPES,
+					none(),
+					none().withSpacing(spacing(CompilationUnit_BetweenTopLevelDecl)),
+					none().withSpacing(newLine())
+			)
+	);
 }

@@ -1,5 +1,6 @@
 package org.jlato.tree.stmt;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -7,6 +8,10 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.newLine;
+import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 
 public class BlockStmt extends Stmt {
 
@@ -16,7 +21,7 @@ public class BlockStmt extends Stmt {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -37,4 +42,15 @@ public class BlockStmt extends Stmt {
 	}
 
 	private static final int STMTS = 0;
+
+	public final static LexicalShape shape = composite(
+			nonEmptyChildren(STMTS,
+					composite(
+							token(LToken.BraceLeft).withSpacingAfter(newLine()), indent(BLOCK),
+							children(STMTS, none().withSpacing(newLine())),
+							unIndent(BLOCK), token(LToken.BraceRight).withSpacingBefore(newLine())
+					),
+					composite(token(LToken.BraceLeft).withSpacingAfter(newLine()), token(LToken.BraceRight))
+			)
+	);
 }

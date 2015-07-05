@@ -1,5 +1,6 @@
 package org.jlato.tree.expr;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -7,6 +8,8 @@ import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.Type;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
 public class ClassExpr extends Expr {
 
@@ -16,7 +19,7 @@ public class ClassExpr extends Expr {
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
@@ -37,4 +40,9 @@ public class ClassExpr extends Expr {
 	}
 
 	private static final int TYPE = 0;
+
+	public final static LexicalShape shape = composite(
+			child(TYPE),
+			token(LToken.Dot), token(LToken.Class)
+	);
 }

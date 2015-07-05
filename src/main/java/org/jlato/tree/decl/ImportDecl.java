@@ -9,6 +9,7 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.QName;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
 
 public class ImportDecl extends Tree {
 
@@ -61,11 +62,9 @@ public class ImportDecl extends Tree {
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Import),
-			dataOption(STATIC, composite(spacing(" "), token(LToken.Static))),
-			spacing(" "),
+			dataOption(STATIC, token(LToken.Static)),
 			child(NAME),
-			dataOption(ON_DEMAND, composite(spacing(""), token(LToken.Dot), spacing(""), token(LToken.Times))),
-			spacing(""),
+			dataOption(ON_DEMAND, composite(token(LToken.Dot), token(LToken.Times))),
 			token(LToken.SemiColon)
 	);
 }

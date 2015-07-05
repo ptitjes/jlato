@@ -1,31 +1,36 @@
 package org.jlato.tree.decl;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Decl;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
-import org.jlato.tree.Tree;
 import org.jlato.tree.Type;
 
-public class VariableDecl extends Decl implements Member {
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.Factory.children;
+import static org.jlato.internal.shapes.LexicalShape.Factory.none;
+import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
 
-	public final static Tree.Kind kind = new Tree.Kind() {
-		public VariableDecl instantiate(SLocation location) {
-			return new VariableDecl(location);
+public class FieldDecl extends Decl implements Member {
+
+	public final static Kind kind = new Kind() {
+		public FieldDecl instantiate(SLocation location) {
+			return new FieldDecl(location);
 		}
 
 		public LexicalShape shape() {
-			return null;
+			return shape;
 		}
 	};
 
-	private VariableDecl(SLocation location) {
+	private FieldDecl(SLocation location) {
 		super(location);
 	}
 
-	public VariableDecl(Modifiers modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
+	public FieldDecl(Modifiers modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, type, variables/*, javadocComment*/)))));
 	}
 
@@ -33,7 +38,7 @@ public class VariableDecl extends Decl implements Member {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public VariableDecl withModifiers(Modifiers modifiers) {
+	public FieldDecl withModifiers(Modifiers modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -41,7 +46,7 @@ public class VariableDecl extends Decl implements Member {
 		return location.nodeChild(TYPE);
 	}
 
-	public VariableDecl withType(Type type) {
+	public FieldDecl withType(Type type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 
@@ -49,7 +54,7 @@ public class VariableDecl extends Decl implements Member {
 		return location.nodeChild(VARIABLES);
 	}
 
-	public VariableDecl withVariables(NodeList<VariableDeclarator> variables) {
+	public FieldDecl withVariables(NodeList<VariableDeclarator> variables) {
 		return location.nodeWithChild(VARIABLES, variables);
 	}
 /*
@@ -67,4 +72,12 @@ public class VariableDecl extends Decl implements Member {
 	private static final int TYPE = 1;
 	private static final int VARIABLES = 2;
 //	private static final int JAVADOC_COMMENT = 4;
+
+	public final static LexicalShape shape = composite(
+			child(MODIFIERS),
+			child(TYPE),
+			none().withSpacing(space()),
+			children(VARIABLES, token(LToken.Comma)),
+			token(LToken.SemiColon)
+	);
 }
