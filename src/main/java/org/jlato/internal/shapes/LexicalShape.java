@@ -22,6 +22,7 @@ package org.jlato.internal.shapes;
 import org.jlato.internal.bu.*;
 import org.jlato.printer.FormattingSettings.IndentationContext;
 import org.jlato.printer.Printer;
+import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
@@ -63,6 +64,16 @@ public abstract class LexicalShape {
 
 		public static LexicalShape option(ShapeProvider provider) {
 			return new LSOption(provider);
+		}
+
+		public static LexicalShape childKindAlternative(final int index, final Tree.Kind kind, final LexicalShape shape, final LexicalShape alternative) {
+			return option(new ShapeProvider() {
+				public LexicalShape shapeFor(STree tree) {
+					final SNodeState state = (SNodeState) tree.state;
+					final Tree.Kind childKind = state.child(index).kind;
+					return childKind == kind ? shape : alternative;
+				}
+			});
 		}
 
 		public static LexicalShape dataOption(final int index, final LexicalShape shape) {

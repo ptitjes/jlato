@@ -109,7 +109,7 @@ public class EnumConstantDecl extends Decl implements Member {
 					none().withSpacing(spacing(ClassBody_BetweenMembers)),
 					composite(
 							unIndent(TYPE_BODY),
-							token(LToken.BraceRight).withSpacing(spacing(EnumConstant_AfterBody), spacing(ClassBody_AfterMembers))
+							token(LToken.BraceRight).withSpacing(spacing(ClassBody_AfterMembers), spacing(EnumConstant_AfterBody))
 					)
 			)
 	);

@@ -62,6 +62,12 @@ public class FormattingSettings {
 		LabeledStmt_AfterLabel(Space),
 		SwitchStmt_AfterSwitchKeyword(Space),
 
+		IfStmt_ThenExpressionStmt(Space),
+		IfStmt_ThenOtherStmt(Line),
+		IfStmt_ElseIfStmt(Space),
+		IfStmt_ElseExpressionStmt(Space),
+		IfStmt_ElseOtherStmt(Line)
+
 		// Keep the last comma
 		;
 
@@ -103,6 +109,8 @@ public class FormattingSettings {
 
 			.withSpacing(SpacingLocation.LabeledStmt_AfterLabel, oneSpace)
 			.withSpacing(SpacingLocation.SwitchStmt_AfterSwitchKeyword, noSpace)
+			.withSpacing(SpacingLocation.IfStmt_ThenExpressionStmt, oneLine)
+			.withSpacing(SpacingLocation.IfStmt_ElseExpressionStmt, oneLine)
 
 			// Keep semi-colon separated
 			;
