@@ -20,16 +20,21 @@
  */
 
 options {
-  LOOKAHEAD=1;
-  STATIC=false;
-  JAVA_UNICODE_ESCAPE=true;
-  //COMMON_TOKEN_ACTION=true; // Will not use CommonTokenAction to handle JavaDoc and comments
-  //SUPPORT_CLASS_VISIBILITY_PUBLIC=false;
+  LOOKAHEAD = 1;
+  JAVA_UNICODE_ESCAPE = true;
+
   JDK_VERSION = "1.6";
-  TOKEN_FACTORY = "ASTParser.GTToken";
+
+  //SUPPORT_CLASS_VISIBILITY_PUBLIC = false;
+  STATIC = false;
+
+  COMMON_TOKEN_ACTION = true;
+  TOKEN_MANAGER_USES_PARSER = true;
+
+  TOKEN_FACTORY = "ParserImpl.GTToken";
 }
 
-PARSER_BEGIN(ASTParser)
+PARSER_BEGIN(ParserImpl)
 /*
  * Copyright (C) 2015 Didier Villevalois.
  *
@@ -64,7 +69,7 @@ import org.jlato.internal.bu.*;
 /**
  * <p>This class was generated automatically by javacc, do not edit.</p>
  */
-final class ASTParser {
+final class ParserImpl extends ParserBase {
 
     void reset(InputStream inputStream, String encoding) {
         ReInit(inputStream, encoding);
@@ -115,7 +120,7 @@ final class ASTParser {
     
     static final class GTToken extends Token {
 
-        int realKind = ASTParserConstants.GT;
+        int realKind = ParserImplConstants.GT;
 
         GTToken(int kind, String image) {
             this.kind = kind;
@@ -126,12 +131,16 @@ final class ASTParser {
             return new GTToken(kind, image);
         }
     }
-
-    private Token last_special_token = null;
-
 }
 
-PARSER_END(ASTParser)
+PARSER_END(ParserImpl)
+
+TOKEN_MGR_DECLS:{
+
+	void CommonTokenAction(Token token) {
+		parser.postProcessToken(token);
+	}
+}
 
 /* WHITE SPACE */
 
@@ -1111,13 +1120,13 @@ TOKEN :
   < RUNSIGNEDSHIFT: ">>>" >
   {
      matchedToken.kind = GT;
-     ((ASTParser.GTToken)matchedToken).realKind = RUNSIGNEDSHIFT;
+     ((ParserImpl.GTToken)matchedToken).realKind = RUNSIGNEDSHIFT;
      input_stream.backup(2);
   }
 | < RSIGNEDSHIFT: ">>" >
   {
      matchedToken.kind = GT;
-     ((ASTParser.GTToken)matchedToken).realKind = RSIGNEDSHIFT;
+     ((ParserImpl.GTToken)matchedToken).realKind = RSIGNEDSHIFT;
      input_stream.backup(1);
   }
 | < GT: ">" >
@@ -1127,6 +1136,10 @@ TOKEN :
 /*****************************************
  * THE JAVA LANGUAGE GRAMMAR STARTS HERE *
  *****************************************/
+
+void Run():
+{}
+{ { run(); } }
 
 /*
  * Program structuring syntax follows.
@@ -1141,6 +1154,7 @@ CompilationUnit CompilationUnit():
 	TypeDecl typeDecl = null;
 }
 {
+  Run()
   [ LOOKAHEAD(PackageDecl()) packageDecl = PackageDecl() ]
   ( importDecl = ImportDecl() { imports = imports.append(importDecl); } )*
   ( typeDecl = TypeDecl() { types = types.append(typeDecl); } )*

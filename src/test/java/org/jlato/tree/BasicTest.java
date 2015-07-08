@@ -22,6 +22,7 @@ package org.jlato.tree;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
+import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
 import org.jlato.tree.decl.CompilationUnit;
@@ -53,7 +54,8 @@ public class BasicTest {
 	public void javaConcepts() throws IOException, ParseException {
 		final InputStream inputStream = ClassLoader.getSystemResourceAsStream("org/jlato/samples/JavaConcepts.java");
 		final String original = new String(readFully(inputStream), "UTF-8");
-		final CompilationUnit cu = new Parser().parse(ParseContext.CompilationUnit, original);
+		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
+		final CompilationUnit cu = parser.parse(ParseContext.CompilationUnit, original);
 		Assert.assertEquals(original, Printer.printToString(cu, FormattingSettings.JavaParser));
 	}
 

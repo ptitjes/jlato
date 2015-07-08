@@ -88,11 +88,7 @@ public class CompilationUnit extends Tree {
 					none().withSpacing(newLine()),
 					none().withSpacing(spacing(CompilationUnit_AfterImports))
 			),
-			children(TYPES,
-					none(),
-					none().withSpacing(spacing(CompilationUnit_BetweenTopLevelDecl)),
-					none().withSpacing(newLine())
-			),
+			children(TYPES, none().withSpacing(spacing(CompilationUnit_BetweenTopLevelDecl))),
 			token(LToken.EOF).withSpacingBefore(newLine())
 	);
 }

@@ -21,7 +21,7 @@ package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
 import org.jlato.internal.bu.LToken;
-import org.jlato.parser.ASTParserConstants;
+import org.jlato.parser.ParserImplConstants;
 import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.printer.Printer;
 import org.jlato.printer.Spacing;
@@ -107,16 +107,16 @@ public abstract class SpacingConstraint {
 		boolean emptyLine = true;
 		for (LToken token : tokens) {
 			switch (token.kind) {
-				case ASTParserConstants.SINGLE_LINE_COMMENT:
-				case ASTParserConstants.MULTI_LINE_COMMENT:
-				case ASTParserConstants.JAVA_DOC_COMMENT:
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case ParserImplConstants.JAVA_DOC_COMMENT:
 					emptyLine = false;
 					break;
-				case ASTParserConstants.NEWLINE:
+				case ParserImplConstants.NEWLINE:
 					if (emptyLine) count++;
 					emptyLine = true;
 					break;
-				case ASTParserConstants.WHITESPACE:
+				case ParserImplConstants.WHITESPACE:
 					break;
 				default:
 					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
@@ -128,12 +128,12 @@ public abstract class SpacingConstraint {
 	private static boolean containsComments(IndexedList<LToken> tokens) {
 		for (LToken token : tokens) {
 			switch (token.kind) {
-				case ASTParserConstants.SINGLE_LINE_COMMENT:
-				case ASTParserConstants.MULTI_LINE_COMMENT:
-				case ASTParserConstants.JAVA_DOC_COMMENT:
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case ParserImplConstants.JAVA_DOC_COMMENT:
 					return true;
-				case ASTParserConstants.NEWLINE:
-				case ASTParserConstants.WHITESPACE:
+				case ParserImplConstants.NEWLINE:
+				case ParserImplConstants.WHITESPACE:
 					break;
 				default:
 					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
@@ -145,18 +145,18 @@ public abstract class SpacingConstraint {
 	private static void dump(IndexedList<LToken> tokens, Printer printer, boolean requiresFormatting) {
 		for (LToken token : tokens) {
 			switch (token.kind) {
-				case ASTParserConstants.JAVA_DOC_COMMENT:
+				case ParserImplConstants.JAVA_DOC_COMMENT:
 					// TODO format javadoc comment
 					printer.append(token, requiresFormatting);
 					break;
-				case ASTParserConstants.SINGLE_LINE_COMMENT:
-				case ASTParserConstants.MULTI_LINE_COMMENT:
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.MULTI_LINE_COMMENT:
 					printer.append(token, requiresFormatting);
 					break;
-				case ASTParserConstants.NEWLINE:
+				case ParserImplConstants.NEWLINE:
 					printer.appendNewLine(token.string);
 					break;
-				case ASTParserConstants.WHITESPACE:
+				case ParserImplConstants.WHITESPACE:
 					printer.appendWhiteSpace(token.string);
 					break;
 				default:

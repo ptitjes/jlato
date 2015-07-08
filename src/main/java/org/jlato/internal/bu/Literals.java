@@ -19,7 +19,7 @@
 
 package org.jlato.internal.bu;
 
-import org.jlato.parser.ASTParserConstants;
+import org.jlato.parser.ParserImplConstants;
 
 /**
  * @author Didier Villevalois
@@ -59,22 +59,22 @@ public class Literals {
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> literalClassFor(int tokenKind) {
 		switch (tokenKind) {
-			case ASTParserConstants.NULL:
+			case ParserImplConstants.NULL:
 				return (Class<T>) Void.class;
-			case ASTParserConstants.TRUE:
-			case ASTParserConstants.FALSE:
+			case ParserImplConstants.TRUE:
+			case ParserImplConstants.FALSE:
 				return (Class<T>) Boolean.class;
-			case ASTParserConstants.CHARACTER_LITERAL:
+			case ParserImplConstants.CHARACTER_LITERAL:
 				return (Class<T>) Character.class;
-			case ASTParserConstants.INTEGER_LITERAL:
+			case ParserImplConstants.INTEGER_LITERAL:
 				return (Class<T>) Integer.class;
-			case ASTParserConstants.LONG_LITERAL:
+			case ParserImplConstants.LONG_LITERAL:
 				return (Class<T>) Long.class;
-			case ASTParserConstants.FLOAT_LITERAL:
+			case ParserImplConstants.FLOAT_LITERAL:
 				return (Class<T>) Float.class;
-			case ASTParserConstants.DOUBLE_LITERAL:
+			case ParserImplConstants.DOUBLE_LITERAL:
 				return (Class<T>) Double.class;
-			case ASTParserConstants.STRING_LITERAL:
+			case ParserImplConstants.STRING_LITERAL:
 				return (Class<T>) String.class;
 			default:
 				throw new IllegalArgumentException();

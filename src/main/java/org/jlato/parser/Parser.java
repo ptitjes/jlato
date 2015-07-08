@@ -29,25 +29,32 @@ import java.io.*;
  */
 public class Parser {
 
-	public ASTParser parserInstance = null;
+	private final ParserConfiguration configuration;
+	private ParserImpl parserInstance = null;
+
+	public Parser() {
+		this(ParserConfiguration.Default);
+	}
+
+	public Parser(ParserConfiguration configuration) {
+		this.configuration = configuration;
+	}
 
 	public <T extends Tree> T parse(ParseContext<T> context, InputStream inputStream, String encoding) throws ParseException {
-		if (parserInstance == null) parserInstance = new ASTParser(inputStream, encoding);
+		if (parserInstance == null) parserInstance = ParserImpl.newInstance(inputStream, encoding, configuration);
 		else parserInstance.reset(inputStream, encoding);
 		return context.callProduction(parserInstance);
 	}
 
 	public <T extends Tree> T parse(ParseContext<T> context, Reader reader) throws ParseException {
-		if (parserInstance == null) parserInstance = new ASTParser(reader);
+		if (parserInstance == null) parserInstance = ParserImpl.newInstance(reader, configuration);
 		else parserInstance.reset(reader);
 		return context.callProduction(parserInstance);
 	}
 
 	public <T extends Tree> T parse(ParseContext<T> context, String content) throws ParseException {
 		final StringReader reader = new StringReader(content);
-		if (parserInstance == null) parserInstance = new ASTParser(reader);
-		else parserInstance.reset(reader);
-		return context.callProduction(parserInstance);
+		return parse(context, reader);
 	}
 
 	public CompilationUnit parse(InputStream inputStream, String encoding) throws ParseException {
