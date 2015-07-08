@@ -60,6 +60,7 @@ import java.io.*;
 import java.util.*;
 import org.jlato.tree.*;
 import org.jlato.tree.decl.*;
+import org.jlato.tree.decl.TypeDecl.TypeKind;
 import org.jlato.tree.expr.*;
 import org.jlato.tree.name.*;
 import org.jlato.tree.stmt.*;
@@ -128,7 +129,7 @@ final class ParserImpl extends ParserBase {
         }
 
         public static Token newToken(int kind, String image) {
-            return new GTToken(kind, image);
+            return enRun(new GTToken(kind, image));
         }
     }
 }
@@ -1137,10 +1138,6 @@ TOKEN :
  * THE JAVA LANGUAGE GRAMMAR STARTS HERE *
  *****************************************/
 
-void Run():
-{}
-{ { run(); } }
-
 /*
  * Program structuring syntax follows.
  */
@@ -1154,12 +1151,14 @@ CompilationUnit CompilationUnit():
 	TypeDecl typeDecl = null;
 }
 {
-  Run()
+  { run(); }
+
   [ LOOKAHEAD(PackageDecl()) packageDecl = PackageDecl() ]
   ( importDecl = ImportDecl() { imports = imports.append(importDecl); } )*
   ( typeDecl = TypeDecl() { types = types.append(typeDecl); } )*
   (<EOF> | "\u001A" /** ctrl+z char **/)
-  { return new CompilationUnit(packageDecl, imports, types); }
+
+  { return enRun(new CompilationUnit(packageDecl, imports, types)); }
 }
 
 PackageDecl PackageDecl():
@@ -1168,9 +1167,11 @@ PackageDecl PackageDecl():
 	QName name;
 }
 {
-  annotations = Annotations()
-  "package"  name = QName() ";"
-  { return new PackageDecl(annotations, name); }
+  { run(); }
+
+  annotations = Annotations() "package" name = QName() ";"
+
+  { return enRun(new PackageDecl(annotations, name)); }
 }
 
 ImportDecl ImportDecl():
@@ -1180,8 +1181,11 @@ ImportDecl ImportDecl():
 	boolean isAsterisk = false;
 }
 {
+  { run(); }
+
   "import" [ "static" { isStatic = true; } ] name = QName() [ "." "*" { isAsterisk = true; } ] ";"
-  { return new ImportDecl(name, isStatic, isAsterisk); }
+
+  { return enRun(new ImportDecl(name, isStatic, isAsterisk)); }
 }
 
 /*
@@ -1197,37 +1201,40 @@ Modifiers Modifiers():
     AnnotationExpr ann;
 }
 {
- (
-  LOOKAHEAD(2)
+  { run(); }
+
   (
-   "public" { modifiers = modifiers.append(Modifier.Public); }
-  |
-   "protected" { modifiers = modifiers.append(Modifier.Protected); }
-  |
-   "private" { modifiers = modifiers.append(Modifier.Private); }
-  |
-   "abstract" { modifiers = modifiers.append(Modifier.Abstract); }
-  |
-   "default" { modifiers = modifiers.append(Modifier.Default); }
-  |
-   "static" { modifiers = modifiers.append(Modifier.Static); }
-  |
-   "final" { modifiers = modifiers.append(Modifier.Final); }
-  |
-   "transient" { modifiers = modifiers.append(Modifier.Transient); }
-  |
-   "volatile" { modifiers = modifiers.append(Modifier.Volatile); }
-  |
-   "synchronized" { modifiers = modifiers.append(Modifier.Synchronized); }
-  |
-   "native" { modifiers = modifiers.append(Modifier.Native); }
-  |
-   "strictfp" { modifiers = modifiers.append(Modifier.StrictFP); }
-  |
-   ann = Annotation() { annotations = annotations.append(ann); }
-  )
- )*
- { return modifiers.isEmpty() && annotations.isEmpty() ? null : new Modifiers(modifiers, annotations); }
+    LOOKAHEAD(2)
+    (
+      "public" { modifiers = modifiers.append(Modifier.Public); }
+    |
+      "protected" { modifiers = modifiers.append(Modifier.Protected); }
+    |
+      "private" { modifiers = modifiers.append(Modifier.Private); }
+    |
+      "abstract" { modifiers = modifiers.append(Modifier.Abstract); }
+    |
+      "default" { modifiers = modifiers.append(Modifier.Default); }
+    |
+      "static" { modifiers = modifiers.append(Modifier.Static); }
+    |
+      "final" { modifiers = modifiers.append(Modifier.Final); }
+    |
+      "transient" { modifiers = modifiers.append(Modifier.Transient); }
+    |
+      "volatile" { modifiers = modifiers.append(Modifier.Volatile); }
+    |
+      "synchronized" { modifiers = modifiers.append(Modifier.Synchronized); }
+    |
+      "native" { modifiers = modifiers.append(Modifier.Native); }
+    |
+      "strictfp" { modifiers = modifiers.append(Modifier.StrictFP); }
+    |
+      ann = Annotation() { annotations = annotations.append(ann); }
+    )
+  )*
+
+  { return enRun(modifiers.isEmpty() && annotations.isEmpty() ? null : new Modifiers(modifiers, annotations)); }
 }
 
 /*
@@ -1239,26 +1246,28 @@ TypeDecl TypeDecl():
    TypeDecl ret;
 }
 {
-  {  }
+  { run(); }
+
   (
-    ";" { ret = new EmptyTypeDecl(); }
+    ";" { ret = enRun(new EmptyTypeDecl()); }
   |
     modifiers = Modifiers()
     (
-       ret = ClassOrInterfaceDecl(modifiers)
-     |
-       ret = EnumDecl(modifiers)
-     |
-       ret = AnnotationTypeDecl(modifiers)
+      ret = ClassOrInterfaceDecl(modifiers)
+    |
+      ret = EnumDecl(modifiers)
+    |
+      ret = AnnotationTypeDecl(modifiers)
     )
   )
+
   { return ret; }
 }
 
 
 TypeDecl ClassOrInterfaceDecl(Modifiers modifiers):
 {
-   TypeDecl.TypeKind typeKind;
+   TypeKind typeKind;
    Name name;
    NodeList typePar = null;
    NodeList extendsClause = null;
@@ -1266,47 +1275,58 @@ TypeDecl ClassOrInterfaceDecl(Modifiers modifiers):
    NodeList members;
 }
 {
-  ( "class" { typeKind = TypeDecl.TypeKind.Class; } | "interface" { typeKind = TypeDecl.TypeKind.Interface; } )
+  // Run is started before modifiers
+
+  (
+    "class" { typeKind = TypeKind.Class; }
+  |
+    "interface" { typeKind = TypeKind.Interface; }
+  )
   name = Name()
   [ typePar = TypeParameters() ]
   [ extendsClause = ExtendsList(typeKind) ]
   [ implementsClause = ImplementsList(typeKind) ]
   members = ClassOrInterfaceBody(typeKind)
 
-  { return new TypeDecl(typeKind, modifiers, name, typePar, extendsClause, implementsClause, null, members); }
+  { return enRun(new TypeDecl(typeKind, modifiers, name, typePar, extendsClause, implementsClause, null, members)); }
 }
 
-NodeList ExtendsList(TypeDecl.TypeKind typeKind):
-{
-   boolean extendsMoreThanOne = false;
-   NodeList ret = new NodeList();
-   ClassOrInterfaceType cit;
-   NodeList<AnnotationExpr> annotations = null;
-}
-{
-   "extends" annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); }
-   ( "," annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); } )*
-   {
-      if (ret.size() > 1 && typeKind == TypeDecl.TypeKind.Class)
-         throwParseException(token, "A class cannot extend more than one other class");
-   }
-   { return ret; }
-}
-
-NodeList ImplementsList(TypeDecl.TypeKind typeKind):
+NodeList ExtendsList(TypeKind typeKind):
 {
    NodeList ret = new NodeList();
    ClassOrInterfaceType cit;
    NodeList<AnnotationExpr> annotations = null;
 }
 {
-   "implements" annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); }
-   ( "," annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); } )*
-   {
-      if (typeKind == TypeDecl.TypeKind.Interface)
-         throwParseException(token, "An interface cannot implement other interfaces");
-   }
-   { return ret; }
+  { run(); }
+
+  "extends" annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); }
+  ( "," annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); } )*
+  {
+    if (ret.size() > 1 && typeKind == TypeKind.Class)
+      throwParseException(token, "A class cannot extend more than one other class");
+  }
+
+  { return enRun(ret); }
+}
+
+NodeList ImplementsList(TypeKind typeKind):
+{
+   NodeList ret = new NodeList();
+   ClassOrInterfaceType cit;
+   NodeList<AnnotationExpr> annotations = null;
+}
+{
+  { run(); }
+
+  "implements" annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); }
+  ( "," annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); } )*
+  {
+    if (typeKind == TypeKind.Interface)
+      throwParseException(token, "An interface cannot implement other interfaces");
+  }
+
+  { return enRun(ret); }
 }
 
 TypeDecl EnumDecl(Modifiers modifiers):
@@ -1319,18 +1339,22 @@ TypeDecl EnumDecl(Modifiers modifiers):
 	NodeList members = new NodeList();
 }
 {
-  "enum" name = Name() [ implementsClause = ImplementsList(TypeDecl.TypeKind.Enum) ]
+  // Run is started before modifiers
+
+  "enum" name = Name() [ implementsClause = ImplementsList(TypeKind.Enum) ]
   "{"
-  	[
-    	entry = EnumConstantDecl() { constants = constants.append(entry); }
-    	( LOOKAHEAD(2) "," entry = EnumConstantDecl() { constants = constants.append(entry); } )*
-  	]
-  	[ "," ]
- 	[
- 	 	( ";" ( member = ClassOrInterfaceBodyDecl(TypeDecl.TypeKind.Enum) { members = members.append(member); } )* )
- 	]
+  [
+    entry = EnumConstantDecl() { constants = constants.append(entry); }
+    ( LOOKAHEAD(2) "," entry = EnumConstantDecl() { constants = constants.append(entry); } )*
+  ]
+  [ "," ]
+  [
+    ";"
+    ( member = ClassOrInterfaceBodyDecl(TypeKind.Enum) { members = members.append(member); } )*
+  ]
   "}"
-  { return TypeDecl.ofEnum(modifiers, name, implementsClause, constants, members); }
+
+  { return enRun(TypeDecl.ofEnum(modifiers, name, implementsClause, constants, members)); }
 }
 
 
@@ -1342,11 +1366,84 @@ EnumConstantDecl EnumConstantDecl():
 	NodeList classBody = null;
 }
 {
+  { run(); }
+
   modifiers = Modifiers() name = Name()
-  [ args = Arguments() ] [ classBody = ClassOrInterfaceBody(TypeDecl.TypeKind.Class) ]
-  {
-      return new EnumConstantDecl(modifiers, name, args, classBody);
-  }
+  [ args = Arguments() ] [ classBody = ClassOrInterfaceBody(TypeKind.Class) ]
+
+  { return enRun(new EnumConstantDecl(modifiers, name, args, classBody)); }
+}
+
+TypeDecl AnnotationTypeDecl(Modifiers modifiers):
+{
+	Name name;
+	NodeList members;
+}
+{
+  // Run is started before modifiers
+
+  "@" "interface" name = Name() members = AnnotationTypeBody()
+
+  { return enRun(TypeDecl.ofAnnotationType(modifiers, name, members)); }
+}
+
+NodeList AnnotationTypeBody():
+{
+	NodeList ret = null;
+	Decl member;
+}
+{
+  { run(); }
+
+  "{"
+  ( member = AnnotationBodyDecl() { ret = ret.append(member); } )*
+  "}"
+
+  { return ret; }
+}
+
+Decl AnnotationBodyDecl():
+{
+   Modifiers modifiers;
+   Decl ret;
+}
+{
+  { run(); }
+
+  (
+	";" { ret = enRun(new EmptyTypeDecl()); }
+  |
+    modifiers = Modifiers()
+    (
+      LOOKAHEAD(Type() <IDENTIFIER> "(")
+      ret = AnnotationTypeMemberDecl(modifiers)
+    |
+      ret = ClassOrInterfaceDecl(modifiers)
+    |
+      ret = EnumDecl(modifiers)
+    |
+      ret = AnnotationTypeDecl(modifiers)
+    |
+      ret = FieldDecl(modifiers)
+    )
+  )
+
+  { return ret; }
+}
+
+AnnotationMemberDecl AnnotationTypeMemberDecl(Modifiers modifiers):
+{
+	Type type;
+	Name name;
+	NodeList dims;
+	Expr defaultVal = null;
+}
+{
+  // Run is started before modifiers
+
+  type = Type(null) name = Name() "(" ")" dims = ArrayDims() [ "default" defaultVal = MemberValue() ] ";"
+
+  { return enRun(new AnnotationMemberDecl(modifiers, type, name, dims, defaultVal)); }
 }
 
 NodeList TypeParameters():
@@ -1356,11 +1453,14 @@ NodeList TypeParameters():
 	NodeList<AnnotationExpr> annotations = null;
 }
 {
+  { run(); }
+
    "<"
-   annotations = Annotations() tp = TypeParameter(annotations) { ret = ret.append(tp); }
-   ( "," annotations = Annotations() tp = TypeParameter(annotations) { ret = ret.append(tp); } )*
+   { run(); } annotations = Annotations() tp = TypeParameter(annotations) { ret = ret.append(tp); }
+   ( "," { run(); } annotations = Annotations() tp = TypeParameter(annotations) { ret = ret.append(tp); } )*
    ">"
-   { return ret; }
+
+   { return enRun(ret); }
 }
 
 TypeParameter TypeParameter(NodeList<AnnotationExpr> annotations):
@@ -1369,8 +1469,11 @@ TypeParameter TypeParameter(NodeList<AnnotationExpr> annotations):
 	NodeList typeBounds = null;
 }
 {
-   name = Name() [ typeBounds = TypeBounds() ]
-   { return new TypeParameter(annotations, name, typeBounds); }
+  // Run is started before annotations
+
+  name = Name() [ typeBounds = TypeBounds() ]
+
+  { return enRun(new TypeParameter(annotations, name, typeBounds)); }
 }
 
 NodeList TypeBounds():
@@ -1380,60 +1483,68 @@ NodeList TypeBounds():
 	NodeList<AnnotationExpr> annotations = null;
 }
 {
-   "extends" annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); }
-   ( "&" annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); } )*
-   { return ret; }
+  { run(); }
+
+  "extends" { run(); } annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); }
+  ( "&" { run(); } annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); } )*
+
+  { return enRun(ret); }
 }
 
-NodeList ClassOrInterfaceBody(TypeDecl.TypeKind typeKind):
+NodeList ClassOrInterfaceBody(TypeKind typeKind):
 {
 	NodeList ret = new NodeList();
 	Decl member;
 }
 {
-  "{" ( member = ClassOrInterfaceBodyDecl(typeKind) { ret = ret.append(member); }  )* "}"
-  { return ret; }
+  { run(); }
+
+  "{"
+  ( member = ClassOrInterfaceBodyDecl(typeKind) { ret = ret.append(member); }  )*
+  "}"
+
+  { return enRun(ret); }
 }
 
-Decl ClassOrInterfaceBodyDecl(TypeDecl.TypeKind typeKind):
+Decl ClassOrInterfaceBodyDecl(TypeKind typeKind):
 {
-   boolean isNestedInterface = false;
    Modifiers modifiers;
-   int aux = 0;
    Decl ret;
-   boolean isDefault = false;
 }
 {
+  { run(); }
+
   (
-	  LOOKAHEAD( Modifiers() Block() ) ret = InitializerDecl()
-	  {
-	     if (typeKind == TypeDecl.TypeKind.Interface)
-	        throwParseException(token, "An interface cannot have initializers");
+    ";" { ret = enRun(new EmptyMemberDecl()); }
+  |
+    modifiers = Modifiers()
+    {
+      if (modifiers != null && modifiers.modifiers().contains(Modifier.Default) && typeKind != TypeKind.Interface)
+        throwParseException(token, "Only interfaces can have default members");
+    }
+    (
+      LOOKAHEAD( Block() ) ret = InitializerDecl(modifiers)
+      {
+        if (typeKind == TypeKind.Interface)
+	      throwParseException(token, "An interface cannot have initializers");
 	  }
-	|
-	  modifiers = Modifiers()
-	  {
-	    if (modifiers != null && modifiers.modifiers().contains(Modifier.Default) && typeKind != TypeDecl.TypeKind.Interface)
-	      throwParseException(token, "Only interfaces can have default members");
-	  }
-	  (
-	      ret = ClassOrInterfaceDecl(modifiers)
-	    |
-	      ret = EnumDecl(modifiers)
-	    |
-	      ret = AnnotationTypeDecl(modifiers)
-	    |
-	      LOOKAHEAD( [ TypeParameters() ] <IDENTIFIER> "(" )
-	      ret = ConstructorDecl(modifiers)
-	    |
-	      LOOKAHEAD( Type() <IDENTIFIER> ( "[" "]" )* ( "," | "=" | ";" ) )
-	      ret = FieldDecl(modifiers)
-	    |
-	      ret = MethodDecl(modifiers)
-	  )
-	|
-	  ";" { ret = new EmptyMemberDecl(); }
+    |
+      ret = ClassOrInterfaceDecl(modifiers)
+    |
+      ret = EnumDecl(modifiers)
+    |
+      ret = AnnotationTypeDecl(modifiers)
+    |
+      LOOKAHEAD( [ TypeParameters() ] <IDENTIFIER> "(" )
+      ret = ConstructorDecl(modifiers)
+    |
+      LOOKAHEAD( Type() <IDENTIFIER> ( "[" "]" )* ( "," | "=" | ";" ) )
+      ret = FieldDecl(modifiers)
+    |
+      ret = MethodDecl(modifiers)
+    )
   )
+
   { return ret; }
 }
 
@@ -1444,14 +1555,11 @@ FieldDecl FieldDecl(Modifiers modifiers):
 	VariableDeclarator val;
 }
 {
-  // Modifiers are already matched in the caller
-  type = Type(null)
-        val = VariableDeclarator() { variables = variables.append(val); }
-  ( "," val = VariableDeclarator() { variables = variables.append(val); } )*
-  ";"
-  {
-  	return new FieldDecl(modifiers, type, variables);
-  }
+  // Run is started before modifiers
+
+  type = Type(null) variables = VariableDeclarators() ";"
+
+  { return enRun(new FieldDecl(modifiers, type, variables)); }
 }
 
 LocalVariableDecl VariableDecl(Modifiers modifiers):
@@ -1461,14 +1569,24 @@ LocalVariableDecl VariableDecl(Modifiers modifiers):
 	VariableDeclarator val;
 }
 {
-  // Modifiers are already matched in the caller
-  type = Type(null)
+  // Run is started before modifiers
+
+  type = Type(null) variables = VariableDeclarators()
+
+  { return enRun(new LocalVariableDecl(modifiers, type, variables)); }
+}
+
+NodeList VariableDeclarators():
+{
+	NodeList variables = new NodeList();
+}
+{
+  { run(); }
+
         val = VariableDeclarator() { variables = variables.append(val); }
   ( "," val = VariableDeclarator() { variables = variables.append(val); } )*
 
-  {
-  	return new LocalVariableDecl(modifiers, type, variables);
-  }
+  { return enRun(variables); }
 }
 
 VariableDeclarator VariableDeclarator():
@@ -1477,8 +1595,11 @@ VariableDeclarator VariableDeclarator():
 	Expr init = null;
 }
 {
+  { run(); }
+
   id = VariableDeclaratorId() [ "=" init = VariableInitializer() ]
-  { return new  VariableDeclarator(id, init); }
+
+  { return enRun(new VariableDeclarator(id, init)); }
 }
 
 VariableDeclaratorId VariableDeclaratorId():
@@ -1487,8 +1608,11 @@ VariableDeclaratorId VariableDeclaratorId():
 	NodeList arrayDims;
 }
 {
+  { run(); }
+
   name = Name() arrayDims = ArrayDims()
-  { return new VariableDeclaratorId(name, arrayDims); }
+
+  { return enRun(new VariableDeclaratorId(name, arrayDims)); }
 }
 
 NodeList ArrayDims():
@@ -1497,8 +1621,11 @@ NodeList ArrayDims():
 	NodeList<AnnotationExpr> annotations = null;
 }
 {
-  ( annotations = Annotations() "[" "]" { arrayDims = arrayDims.append(new ArrayDim(annotations)); } )*
-  { return arrayDims; }
+  { run(); }
+
+  ( { run(); } annotations = Annotations() "[" "]" { arrayDims = arrayDims.append(enRun(new ArrayDim(annotations))); } )*
+
+  { return enRun(arrayDims); }
 }
 
 Expr VariableInitializer():
@@ -1507,11 +1634,12 @@ Expr VariableInitializer():
 }
 {
   (
-	  ret = ArrayInitializer()
-	|
-	  ret = Expression()
+    ret = ArrayInitializer()
+  |
+    ret = Expression()
   )
-  { return ret;}
+
+  { return ret; }
 }
 
 ArrayInitializerExpr ArrayInitializer():
@@ -1520,8 +1648,19 @@ ArrayInitializerExpr ArrayInitializer():
 	Expr val;
 }
 {
-  "{" [ val = VariableInitializer() { values = values.append(val); } ( LOOKAHEAD(2) "," val = VariableInitializer() { values = values.append(val); } )* ] [ "," ] "}"
-  { return new ArrayInitializerExpr(values); }
+  { run(); }
+
+  "{"
+  [
+    { run(); }
+    val = VariableInitializer() { values = values.append(val); }
+    ( LOOKAHEAD(2) "," val = VariableInitializer() { values = values.append(val); } )*
+    { values = enRun(values); }
+  ]
+  [ "," ]
+  "}"
+
+  { return enRun(new ArrayInitializerExpr(values)); }
 }
 
 MethodDecl MethodDecl(Modifiers modifiers):
@@ -1535,6 +1674,8 @@ MethodDecl MethodDecl(Modifiers modifiers):
 	BlockStmt block = null;
 }
 {
+  // Run is started before modifiers
+
   [ typeParameters = TypeParameters() ]
   type = ResultType()
   name = Name() "(" parameters = FormalParameterList() ")" arrayDims = ArrayDims()
@@ -1548,7 +1689,8 @@ MethodDecl MethodDecl(Modifiers modifiers):
   |
     ";"
   )
-  { return new MethodDecl(modifiers, typeParameters, type, name, parameters, arrayDims, throwsClause, block); }
+
+  { return enRun(new MethodDecl(modifiers, typeParameters, type, name, parameters, arrayDims, throwsClause, block)); }
 }
 
 NodeList FormalParameterList():
@@ -1557,8 +1699,11 @@ NodeList FormalParameterList():
 	Parameter par;
 }
 {
+  { run(); }
+
   [ par = FormalParameter() { ret = ret.append(par); } ( "," par = FormalParameter() { ret = ret.append(par); } )* ]
-  { return ret; }
+
+  { return enRun(ret); }
 }
 
 Parameter FormalParameter():
@@ -1569,10 +1714,11 @@ Parameter FormalParameter():
 	VariableDeclaratorId id;
 }
 {
-  modifiers = Modifiers() type = Type(null) [ "..." { isVarArg = true;} ] id = VariableDeclaratorId()
-  {
-    return new Parameter(modifiers, type, isVarArg, id);
-  }
+  { run(); }
+
+  modifiers = Modifiers() type = Type(null) [ "..." { isVarArg = true; } ] id = VariableDeclaratorId()
+
+  { return enRun(new Parameter(modifiers, type, isVarArg, id)); }
 }
 
 ConstructorDecl ConstructorDecl(Modifiers modifiers):
@@ -1582,20 +1728,23 @@ ConstructorDecl ConstructorDecl(Modifiers modifiers):
 	NodeList parameters;
 	NodeList throwsClause = null;
 	ExplicitConstructorInvocationStmt exConsInv = null;
+	BlockStmt block;
 	NodeList stmts;
 }
 {
+  // Run is started before modifiers
+
   [ typeParameters = TypeParameters() ]
-  // Modifiers matched in the caller
   name = Name() "(" parameters = FormalParameterList() ")" [ "throws" throwsClause = ClassOrInterfaceTypeList() ]
+
+  { run(); }
   "{"
-    [ LOOKAHEAD(ExplicitConstructorInvocation()) exConsInv = ExplicitConstructorInvocation() ]
-    stmts = Statements()
+  [ LOOKAHEAD(ExplicitConstructorInvocation()) exConsInv = ExplicitConstructorInvocation() ]
+  stmts = Statements()
   "}"
-  {
-  	if (exConsInv != null) stmts = stmts.prepend(exConsInv);
-  	return new ConstructorDecl(modifiers, typeParameters, name, parameters, throwsClause, new BlockStmt(stmts));
-  }
+  { block = enRun(new BlockStmt(exConsInv == null ? stmts : stmts.prepend(exConsInv))); }
+
+  { return enRun(new ConstructorDecl(modifiers, typeParameters, name, parameters, throwsClause, block)); }
 }
 
 ExplicitConstructorInvocationStmt ExplicitConstructorInvocation():
@@ -1606,6 +1755,7 @@ ExplicitConstructorInvocationStmt ExplicitConstructorInvocation():
 	NodeList typeArgs = null;
 }
 {
+  { run(); }
   (
 	  LOOKAHEAD([ TypeArguments() ] <THIS> "(")
 	  [ typeArgs = TypeArguments() ]
@@ -1620,7 +1770,8 @@ ExplicitConstructorInvocationStmt ExplicitConstructorInvocation():
 	  <SUPER>
 	  args = Arguments() ";"
   )
-  { return new ExplicitConstructorInvocationStmt(typeArgs, isThis, expr, args); }
+
+  { return enRun(new ExplicitConstructorInvocationStmt(typeArgs, isThis, expr, args)); }
 }
 
 NodeList Statements():
@@ -1629,6 +1780,7 @@ NodeList Statements():
 	Stmt stmt;
 }
 {
+  { run(); }
 	( LOOKAHEAD(2) stmt = BlockStatement() { ret = ret.append(stmt); } )*
 	{ return ret; }
 }
@@ -1639,8 +1791,9 @@ InitializerDecl InitializerDecl():
 	BlockStmt block;
 }
 {
+  { run(); }
   modifiers = Modifiers() block = Block()
-  { return new InitializerDecl(modifiers, block); }
+  { return enRun(new InitializerDecl(modifiers, block)); }
 }
 
 
@@ -1653,6 +1806,7 @@ Type Type(NodeList<AnnotationExpr> annotations):
 	Type ret;
 }
 {
+  { run(); }
  (
    LOOKAHEAD(2) ret = ReferenceType(annotations)
  |
@@ -1666,6 +1820,7 @@ ReferenceType ReferenceType(NodeList<AnnotationExpr> annotations):
 	ReferenceType type;
 }
 {
+  { run(); }
   ( LOOKAHEAD( ( PrimitiveType() | ClassOrInterfaceType() ) ArrayTypeDims() ) type = ArrayType(annotations) | type = ClassOrInterfaceType(annotations) )
   { return type; }
 }
@@ -1675,6 +1830,7 @@ ArrayType ArrayType(NodeList<AnnotationExpr> annotations):
 	Type type;
 }
 {
+  { run(); }
   ( type = PrimitiveType(annotations) | type = ClassOrInterfaceType(annotations) ) type = ArrayTypeDims(type)
   { return (ArrayType) type; }
 }
@@ -1685,8 +1841,9 @@ ArrayType ArrayTypeDims(Type componentType):
 	NodeList<AnnotationExpr> annotations = null;
 }
 {
+  { run(); }
   annotations = Annotations() "[" "]" ( LOOKAHEAD( Annotations() "[" "]" ) type = ArrayTypeDims(componentType) )?
-  { return new ArrayType(annotations, type == null ? componentType : type); }
+  { return enRun(new ArrayType(annotations, type == null ? componentType : type)); }
 }
 
 ClassOrInterfaceType ClassOrInterfaceType(NodeList<AnnotationExpr> annotations):
@@ -1696,6 +1853,7 @@ ClassOrInterfaceType ClassOrInterfaceType(NodeList<AnnotationExpr> annotations):
 	NodeList typeArgs = null;
 }
 {
+  { run(); }
   name = Name()
   [ LOOKAHEAD(2) typeArgs = TypeArguments() ]
   { ret = new ClassOrInterfaceType(annotations, null, name, typeArgs); }
@@ -1712,6 +1870,7 @@ NodeList TypeArguments():
 	Type type;
 }
 {
+  { run(); }
    (
      "<"
      type = TypeArgument() { ret = ret.append(type); } ( "," type = TypeArgument() { ret = ret.append(type); } )*
@@ -1729,6 +1888,7 @@ Type TypeArgument():
 	NodeList<AnnotationExpr> annotations = null;
 }
 {
+  { run(); }
   annotations = Annotations()
  (
    ret = ReferenceType(annotations)
@@ -1745,6 +1905,7 @@ WildcardType Wildcard(NodeList<AnnotationExpr> annotations):
 	NodeList boundAnnotations = null;
 }
 {
+  { run(); }
    "?"
    [
 		"extends" boundAnnotations = Annotations() ext = ReferenceType(boundAnnotations)
@@ -1752,7 +1913,7 @@ WildcardType Wildcard(NodeList<AnnotationExpr> annotations):
 		"super" boundAnnotations = Annotations() sup = ReferenceType(boundAnnotations)
    ]
    { 
-     return new WildcardType(annotations, ext, sup);
+     return enRun(new WildcardType(annotations, ext, sup));
    }
 }
 
@@ -1761,6 +1922,7 @@ PrimitiveType PrimitiveType(NodeList<AnnotationExpr> annotations):
 	PrimitiveType.Primitive primitive;
 }
 {
+  { run(); }
   (
     "boolean" { primitive = PrimitiveType.Primitive.Boolean; }
   |
@@ -1780,7 +1942,7 @@ PrimitiveType PrimitiveType(NodeList<AnnotationExpr> annotations):
   )
   {
   }
-  { return new PrimitiveType(annotations, primitive); }
+  { return enRun(new PrimitiveType(annotations, primitive)); }
 }
 
 Type ResultType():
@@ -1788,6 +1950,7 @@ Type ResultType():
 	Type ret;
 }
 {
+  { run(); }
   (
 	  "void" { ret = new VoidType(); }
 	|
@@ -1803,6 +1966,7 @@ NodeList ClassOrInterfaceTypeList():
 	NodeList<AnnotationExpr> annotations= null;
 }
 {
+  { run(); }
   annotations = Annotations() type = ClassOrInterfaceType(annotations) { ret = ret.append(type); }  ( "," annotations = Annotations() type = ClassOrInterfaceType(annotations) { ret = ret.append(type); } )*
 
   { return ret; }
@@ -1814,6 +1978,7 @@ QName QName():
 	Name name;
 }
 {
+  { run(); }
   name = Name() { ret = new QName(ret, name); }
   ( LOOKAHEAD("." Name()) "." name = Name() { ret = new QName(ret, name); } )*
   { return ret; }
@@ -1821,8 +1986,9 @@ QName QName():
 
 Name Name(): {}
 {
+  { run(); }
   <IDENTIFIER>
-  { return new Name(token.image); }
+  { return enRun(new Name(token.image)); }
 }
 
 /*
@@ -1850,6 +2016,7 @@ Expr Expression():
 	Expr inner = null;
 }
 {
+  { run(); }
   (
     LOOKAHEAD( LambdaExpression() ) ret = LambdaExpression()
   |
@@ -1867,6 +2034,7 @@ LambdaExpr LambdaExpression():
   LambdaExpr ret;
 }
 {
+  { run(); }
   parameters = LambdaParameters()
   "->"
   (
@@ -1883,6 +2051,7 @@ NodeList LambdaParameters():
   Name name;
 }
 {
+  { run(); }
   (
     name = Name() { ret = new NodeList(new Parameter(null, new UnknownType(), false, new VariableDeclaratorId(name, null))); }
   |
@@ -1903,6 +2072,7 @@ NodeList InferredFormalParameterList():
   Name name;
 }
 {
+  { run(); }
   name = Name() { ret = ret.append(new Parameter(null, new UnknownType(), false, new VariableDeclaratorId(name, null))); }
   (
     "," name = Name() { ret = ret.append(new Parameter(null, new UnknownType(), false, new VariableDeclaratorId(name, null))); }
@@ -1915,6 +2085,7 @@ AssignExpr.AssignOp AssignmentOperator():
 	AssignExpr.AssignOp ret;
 }
 {
+  { run(); }
   (
       "="    { ret = AssignExpr.AssignOp.Normal; }
     | "*="   { ret = AssignExpr.AssignOp.Times; }
@@ -1939,6 +2110,7 @@ Expr ConditionalExpression():
 	Expr right;
 }
 {
+  { run(); }
   ret = ConditionalOrExpression()
   [ "?" left = Expression() ":" right = ConditionalExpression() { ret = new ConditionalExpr(ret, left, right); } ]
   { return ret; }
@@ -1950,6 +2122,7 @@ Expr ConditionalOrExpression():
 	Expr right;
 }
 {
+  { run(); }
   ret = ConditionalAndExpression() ( "||" right = ConditionalAndExpression() { ret = new BinaryExpr(ret, BinaryExpr.BinaryOp.Or, right); } )*
   { return ret; }
 }
@@ -1960,6 +2133,7 @@ Expr ConditionalAndExpression():
 	Expr right;
 }
 {
+  { run(); }
   ret = InclusiveOrExpression() ( "&&" right = InclusiveOrExpression() { ret = new BinaryExpr(ret, BinaryExpr.BinaryOp.And, right); } )*
   { return ret; }
 }
@@ -1970,6 +2144,7 @@ Expr InclusiveOrExpression():
 	Expr right;
 }
 {
+  { run(); }
   ret = ExclusiveOrExpression() ( "|" right = ExclusiveOrExpression() { ret = new BinaryExpr(ret, BinaryExpr.BinaryOp.BinOr, right); } )*
   { return ret; }
 }
@@ -1980,6 +2155,7 @@ Expr ExclusiveOrExpression():
 	Expr right;
 }
 {
+  { run(); }
   ret = AndExpression() ( "^" right = AndExpression() { ret = new BinaryExpr(ret, BinaryExpr.BinaryOp.XOr, right); } )*
   { return ret; }
 }
@@ -1990,6 +2166,7 @@ Expr AndExpression():
 	Expr right;
 }
 {
+  { run(); }
   ret = EqualityExpression() ( "&" right = EqualityExpression() { ret = new BinaryExpr(ret, BinaryExpr.BinaryOp.BinAnd, right); } )*
   { return ret; }
 }
@@ -2001,6 +2178,7 @@ Expr EqualityExpression():
 	BinaryExpr.BinaryOp op;
 }
 {
+  { run(); }
   ret = InstanceOfExpression()
   (
     ( "==" { op = BinaryExpr.BinaryOp.Equal; } |
@@ -2017,6 +2195,7 @@ Expr InstanceOfExpression():
 	Type type;
 }
 {
+  { run(); }
   ret = RelationalExpression() [ "instanceof" annotations = Annotations() type = Type(annotations) { ret = new InstanceOfExpr(ret, type); } ]
   { return ret; }
 }
@@ -2028,6 +2207,7 @@ Expr RelationalExpression():
 	BinaryExpr.BinaryOp op;
 }
 {
+  { run(); }
   ret = ShiftExpression()
   (
   	( "<"  { op = BinaryExpr.BinaryOp.Less; } |
@@ -2046,6 +2226,7 @@ Expr ShiftExpression():
 	BinaryExpr.BinaryOp op;
 }
 {
+  { run(); }
   ret = AdditiveExpression()
   (
   	( "<<"             { op = BinaryExpr.BinaryOp.LeftShift; } |
@@ -2063,6 +2244,7 @@ Expr AdditiveExpression():
 	BinaryExpr.BinaryOp op;
 }
 {
+  { run(); }
   ret = MultiplicativeExpression()
   (
   	( "+" { op = BinaryExpr.BinaryOp.Plus; } |
@@ -2079,6 +2261,7 @@ Expr MultiplicativeExpression():
 	BinaryExpr.BinaryOp op;
 }
 {
+  { run(); }
   ret = UnaryExpression()
   (
   	( "*" { op = BinaryExpr.BinaryOp.Times; } |
@@ -2095,6 +2278,7 @@ Expr UnaryExpression():
 	UnaryExpr.UnaryOp op;
 }
 {
+  { run(); }
   (
 	  ret = PreIncrementExpression()
 	|
@@ -2115,6 +2299,7 @@ Expr PreIncrementExpression():
 	Expr ret;
 }
 {
+  { run(); }
   "++" ret = UnaryExpression() { ret = new UnaryExpr(UnaryExpr.UnaryOp.PreIncrement, ret); }
   { return ret; }
 }
@@ -2124,6 +2309,7 @@ Expr PreDecrementExpression():
 	Expr ret;
 }
 {
+  { run(); }
   "--" ret = UnaryExpression() { ret = new UnaryExpr(UnaryExpr.UnaryOp.PreDecrement, ret); }
   { return ret; }
 }
@@ -2134,6 +2320,7 @@ Expr UnaryExpressionNotPlusMinus():
 	UnaryExpr.UnaryOp op;
 }
 {
+  { run(); }
   (
 	  ( "~" { op = UnaryExpr.UnaryOp.Inverse; } |
 	    "!" { op = UnaryExpr.UnaryOp.Not;     }
@@ -2153,6 +2340,7 @@ Expr PostfixExpression():
 	UnaryExpr.UnaryOp op;
 }
 {
+  { run(); }
   ret = PrimaryExpression()
   [
   	LOOKAHEAD(2)
@@ -2171,6 +2359,7 @@ Expr CastExpression():
 	NodeList<AnnotationExpr> annotations = null;
 }
 {
+  { run(); }
   "(" 
   annotations = Annotations()
   (
@@ -2194,6 +2383,7 @@ Expr PrimaryExpression():
 	Expr inner;
 }
 {
+  { run(); }
   ret = PrimaryPrefix() ( LOOKAHEAD(2) ret = PrimarySuffix(ret) )*
   { return ret; }
 }
@@ -2204,6 +2394,7 @@ Expr PrimaryExpressionWithoutSuperSuffix():
 	Expr inner;
 }
 {
+  { run(); }
   ret = PrimaryPrefix() ( LOOKAHEAD( PrimarySuffixWithoutSuper(null) ) ret = PrimarySuffixWithoutSuper(ret) )*
   { return ret; }
 }
@@ -2221,6 +2412,7 @@ Expr PrimaryPrefix():
 	VariableDeclaratorId id = null;
 }
 {
+  { run(); }
   (
     ret = Literal()
   |
@@ -2282,6 +2474,7 @@ Expr PrimarySuffix(Expr scope):
 	Expr ret;
 }
 {
+  { run(); }
   (
   	LOOKAHEAD(2)
 	ret = PrimarySuffixWithoutSuper(scope)
@@ -2300,6 +2493,7 @@ Expr PrimarySuffixWithoutSuper(Expr scope):
 	Name name;
 }
 {
+  { run(); }
   (
   	"."
   	(
@@ -2330,6 +2524,7 @@ Expr Literal():
 	Expr ret;
 }
 {
+  { run(); }
   (
     <INTEGER_LITERAL> { ret = new LiteralExpr<Integer>(Integer.class, token.image); }
   |
@@ -2355,6 +2550,7 @@ Expr BooleanLiteral():
 	Expr ret;
 }
 {
+  { run(); }
   (
     "true" { ret = new LiteralExpr<Boolean>(Boolean.class, token.image); }
   |
@@ -2366,6 +2562,7 @@ Expr BooleanLiteral():
 Expr NullLiteral():
 {}
 {
+  { run(); }
   "null"
   { return new LiteralExpr<Void>(Void.class, token.image); }
 }
@@ -2375,6 +2572,7 @@ NodeList Arguments():
 	NodeList ret = null;
 }
 {
+  { run(); }
   "(" [ ret = ArgumentList() ] ")"
   { return ret; }
 }
@@ -2385,6 +2583,7 @@ NodeList ArgumentList():
 	Expr expr;
 }
 {
+  { run(); }
   expr = Expression() { ret = ret.append(expr); } ( "," expr = Expression() { ret = ret.append(expr); } )*
   { return ret; }
 }
@@ -2399,6 +2598,7 @@ Expr AllocationExpression(Expr scope):
 	NodeList<AnnotationExpr> annotations = null;
 }
 {
+  { run(); }
   "new" annotations = Annotations()
   (
     type = PrimitiveType(annotations)
@@ -2409,7 +2609,7 @@ Expr AllocationExpression(Expr scope):
     (
 	  ret = ArrayCreationExpr(type)
 	|
-	  args = Arguments() [ LOOKAHEAD(2) anonymousBody = ClassOrInterfaceBody(TypeDecl.TypeKind.Class) ]
+	  args = Arguments() [ LOOKAHEAD(2) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
       { ret = new ObjectCreationExpr(scope, (ClassOrInterfaceType) type, typeArgs, args, anonymousBody); }
     )
   )
@@ -2425,6 +2625,7 @@ Expr ArrayCreationExpr(Type componentType):
 	ArrayInitializerExpr initializer;
 }
 {
+  { run(); }
   (
     LOOKAHEAD(3)
     (
@@ -2437,7 +2638,7 @@ Expr ArrayCreationExpr(Type componentType):
       annotations = Annotations() "[" "]"
       { arrayDims = arrayDims.append(new ArrayDim(annotations)); }
     )*
-    { return new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, null); }
+    { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, null)); }
   |
     (
       LOOKAHEAD( Annotations() "[" "]" )
@@ -2445,7 +2646,7 @@ Expr ArrayCreationExpr(Type componentType):
       { arrayDims = arrayDims.append(new ArrayDim(annotations)); }
     )+
     initializer = ArrayInitializer()
-    { return new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, initializer); }
+    { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, initializer)); }
   )
 }
 
@@ -2459,6 +2660,7 @@ Stmt Statement():
 	Stmt ret;
 }
 {
+  { run(); }
   (
 	  LOOKAHEAD(2)
 	  ret = LabeledStatement()
@@ -2502,8 +2704,9 @@ AssertStmt AssertStatement():
 	Expr msg = null;
 }
 {
+  { run(); }
   "assert" check = Expression() [ ":" msg = Expression() ] ";"
-  { return new AssertStmt(check, msg);  }
+  { return enRun(new AssertStmt(check, msg));  }
 }
 
 LabeledStmt LabeledStatement():
@@ -2512,8 +2715,9 @@ LabeledStmt LabeledStatement():
 	Stmt stmt;
 }
 {
+  { run(); }
   label = Name() ":" stmt = Statement()
-  { return new LabeledStmt(label, stmt); }
+  { return enRun(new LabeledStmt(label, stmt)); }
 }
 
 BlockStmt Block():
@@ -2521,8 +2725,9 @@ BlockStmt Block():
 	NodeList stmts;
 }
 {
+  { run(); }
   "{" stmts = Statements() "}"
-  { return new BlockStmt(stmts); }
+  { return enRun(new BlockStmt(stmts)); }
 }
 
 /*
@@ -2536,6 +2741,7 @@ Stmt BlockStatement():
 	Modifiers modifiers;
 }
 {
+  { run(); }
   (
 	  LOOKAHEAD( Modifiers() ("class" | "interface") )
 	  modifiers = Modifiers()
@@ -2556,15 +2762,17 @@ VariableDeclarationExpr VariableDeclExpression():
 	LocalVariableDecl variableDecl;
 }
 {
+  { run(); }
   modifiers = Modifiers() variableDecl = VariableDecl(modifiers)
-  { return new VariableDeclarationExpr(variableDecl); }
+  { return enRun(new VariableDeclarationExpr(variableDecl)); }
 }
 
 EmptyStmt EmptyStatement():
 {}
 {
+  { run(); }
   ";"
-  { return new EmptyStmt(); }
+  { return enRun(new EmptyStmt()); }
 }
 
 Stmt LambdaBody():
@@ -2573,6 +2781,7 @@ Stmt LambdaBody():
   Stmt n = null;
 }
 {
+  { run(); }
   (
   	expr = Expression()
   	{
@@ -2600,6 +2809,7 @@ ExpressionStmt StatementExpression():
 	Expr inner = null;
 }
 {
+  { run(); }
   (
     LOOKAHEAD(2) expr = PreIncrementExpression()
   |
@@ -2615,7 +2825,7 @@ ExpressionStmt StatementExpression():
 	]
   )
   ";"
-  { return new ExpressionStmt(expr); }
+  { return enRun(new ExpressionStmt(expr)); }
 }
 
 SwitchStmt SwitchStatement():
@@ -2625,11 +2835,12 @@ SwitchStmt SwitchStatement():
 	NodeList entries = new NodeList();
 }
 {
+  { run(); }
   "switch" "(" selector = Expression() ")" "{"
     ( entry = SwitchEntry() { entries = entries.append(entry); } )*
   "}"
 
-  { return new SwitchStmt(selector, entries); }
+  { return enRun(new SwitchStmt(selector, entries)); }
 }
 
 SwitchEntryStmt SwitchEntry():
@@ -2638,6 +2849,7 @@ SwitchEntryStmt SwitchEntry():
 	NodeList stmts;
 }
 {
+  { run(); }
   (
 	  "case" label = Expression()
 	|
@@ -2645,7 +2857,7 @@ SwitchEntryStmt SwitchEntry():
   )
   ":" stmts = Statements()
 
-  { return new SwitchEntryStmt(label, stmts); }
+  { return enRun(new SwitchEntryStmt(label, stmts)); }
 }
 
 IfStmt IfStatement():
@@ -2660,8 +2872,9 @@ IfStmt IfStatement():
 	Stmt elseStmt = null;
 }
 {
+  { run(); }
   "if" "(" condition = Expression() ")" thenStmt = Statement() [ LOOKAHEAD(1) "else" elseStmt = Statement() ]
-  { return new IfStmt(condition, thenStmt, elseStmt); }
+  { return enRun(new IfStmt(condition, thenStmt, elseStmt)); }
 }
 
 WhileStmt WhileStatement():
@@ -2670,8 +2883,9 @@ WhileStmt WhileStatement():
 	Stmt body;
 }
 {
+  { run(); }
   "while" "(" condition = Expression() ")" body = Statement()
-  { return new WhileStmt(condition, body); }
+  { return enRun(new WhileStmt(condition, body)); }
 }
 
 DoStmt DoStatement():
@@ -2680,8 +2894,9 @@ DoStmt DoStatement():
 	Stmt body;
 }
 {
+  { run(); }
   "do" body = Statement() "while" "(" condition = Expression() ")" ";"
-  { return new DoStmt(body, condition); }
+  { return enRun(new DoStmt(body, condition)); }
 }
 Stmt ForStatement():
 {
@@ -2693,6 +2908,7 @@ Stmt ForStatement():
 	Stmt body;
 }
 {
+  { run(); }
   "for" "("
 
   (
@@ -2706,9 +2922,9 @@ Stmt ForStatement():
 
   {
   	if (varExpr != null) {
-  		return new ForeachStmt(varExpr, expr, body);
+  		return enRun(new ForeachStmt(varExpr, expr, body));
   	}
-	return new ForStmt(init, expr, update, body);
+	return enRun(new ForStmt(init, expr, update, body));
   }
 }
 
@@ -2718,6 +2934,7 @@ NodeList ForInit():
 	Expr expr;
 }
 {
+  { run(); }
   (
 	  LOOKAHEAD( Modifiers() Type() <IDENTIFIER> )
 	  expr = VariableDeclExpression() { ret = new NodeList(); ret = ret.append(expr); }
@@ -2733,6 +2950,7 @@ NodeList ExpressionList():
 	Expr expr;
 }
 {
+  { run(); }
   expr = Expression() { ret = ret.append(expr); } ( "," expr = Expression()  { ret = ret.append(expr); } )*
 
   { return ret; }
@@ -2743,6 +2961,7 @@ NodeList ForUpdate():
 	NodeList ret;
 }
 {
+  { run(); }
   ret = ExpressionList()
 
   { return ret; }
@@ -2753,8 +2972,9 @@ BreakStmt BreakStatement():
 	Name id = null;
 }
 {
+  { run(); }
   "break" [ id = Name() ] ";"
-  { return new BreakStmt(id); }
+  { return enRun(new BreakStmt(id)); }
 }
 
 ContinueStmt ContinueStatement():
@@ -2762,8 +2982,9 @@ ContinueStmt ContinueStatement():
 	Name id = null;
 }
 {
+  { run(); }
   "continue" [ id = Name() ] ";"
-  { return new ContinueStmt(id); }
+  { return enRun(new ContinueStmt(id)); }
 }
 
 ReturnStmt ReturnStatement():
@@ -2771,8 +2992,9 @@ ReturnStmt ReturnStatement():
 	Expr expr = null;
 }
 {
+  { run(); }
   "return" [ expr = Expression() ] ";"
-  { return new ReturnStmt(expr); }
+  { return enRun(new ReturnStmt(expr)); }
 }
 
 ThrowStmt ThrowStatement():
@@ -2780,8 +3002,9 @@ ThrowStmt ThrowStatement():
 	Expr expr;
 }
 {
+  { run(); }
   "throw" expr = Expression() ";"
-  { return new ThrowStmt(expr); }
+  { return enRun(new ThrowStmt(expr)); }
 }
 
 SynchronizedStmt SynchronizedStatement():
@@ -2790,8 +3013,9 @@ SynchronizedStmt SynchronizedStatement():
 	BlockStmt block;
 }
 {
+  { run(); }
   "synchronized" "(" expr = Expression() ")" block = Block()
-  { return new SynchronizedStmt(expr, block); }
+  { return enRun(new SynchronizedStmt(expr, block)); }
 }
 
 TryStmt TryStatement():
@@ -2812,6 +3036,7 @@ TryStmt TryStatement():
 	VariableDeclaratorId exceptId;
 }
 {
+  { run(); }
   "try" 
   (resources = ResourceSpecification())?
   tryBlock = Block()
@@ -2834,7 +3059,7 @@ TryStmt TryStatement():
   |
     "finally" finallyBlock = Block()
   )
-  { return new TryStmt(resources, tryBlock, catchs, finallyBlock); }
+  { return enRun(new TryStmt(resources, tryBlock, catchs, finallyBlock)); }
 }
 
 NodeList ResourceSpecification() :
@@ -2842,6 +3067,7 @@ NodeList ResourceSpecification() :
 NodeList vars;
 }
 {
+  { run(); }
   "("
   vars = Resources()
   (LOOKAHEAD(2) ";")?
@@ -2869,6 +3095,7 @@ NodeList Resources() :
 void RUNSIGNEDSHIFT():
 {}
 {
+  { run(); }
   ( LOOKAHEAD({ getToken(1).kind == GT &&
                 ((GTToken)getToken(1)).realKind == RUNSIGNEDSHIFT} )
    ">" ">" ">"
@@ -2878,6 +3105,7 @@ void RUNSIGNEDSHIFT():
 void RSIGNEDSHIFT():
 {}
 {
+  { run(); }
   ( LOOKAHEAD({ getToken(1).kind == GT &&
                 ((GTToken)getToken(1)).realKind == RSIGNEDSHIFT} )
   ">" ">"
@@ -2892,6 +3120,7 @@ NodeList<AnnotationExpr> Annotations():
 	AnnotationExpr annotation;
 }
 {
+  { run(); }
   ( annotation = Annotation() { annotations = annotations.append(annotation); } )*
   { return annotations; }
 }
@@ -2901,6 +3130,7 @@ AnnotationExpr Annotation():
 	AnnotationExpr ret;
 }
 {
+  { run(); }
   (
 	   LOOKAHEAD( "@" QName() "(" ( <IDENTIFIER> "=" | ")" ))
 	   ret = NormalAnnotation()
@@ -2919,8 +3149,9 @@ NormalAnnotationExpr NormalAnnotation():
 	NodeList pairs = null;
 }
 {
+  { run(); }
    "@" name = QName() "(" [ pairs = MemberValuePairs() ] ")"
-   { return new NormalAnnotationExpr(name, pairs); }
+   { return enRun(new NormalAnnotationExpr(name, pairs)); }
 }
 
 MarkerAnnotationExpr MarkerAnnotation():
@@ -2928,8 +3159,9 @@ MarkerAnnotationExpr MarkerAnnotation():
 	QName name;
 }
 {
+  { run(); }
   "@" name = QName()
-  { return new MarkerAnnotationExpr(name); }
+  { return enRun(new MarkerAnnotationExpr(name)); }
 }
 
 SingleMemberAnnotationExpr SingleMemberAnnotation():
@@ -2938,8 +3170,9 @@ SingleMemberAnnotationExpr SingleMemberAnnotation():
 	Expr memberVal;
 }
 {
+  { run(); }
   "@" name = QName() "(" memberVal = MemberValue() ")"
-  { return new SingleMemberAnnotationExpr(name, memberVal); }
+  { return enRun(new SingleMemberAnnotationExpr(name, memberVal)); }
 }
 
 NodeList MemberValuePairs():
@@ -2948,6 +3181,7 @@ NodeList MemberValuePairs():
 	MemberValuePair pair;
 }
 {
+  { run(); }
    pair = MemberValuePair() { ret = ret.append(pair); } ( "," pair = MemberValuePair() { ret = ret.append(pair); } )*
    { return ret; }
 }
@@ -2958,8 +3192,9 @@ MemberValuePair MemberValuePair():
 	Expr value;
 }
 {
-    name = Name() "=" value = MemberValue()
-    { return new MemberValuePair(name, value); }
+  { run(); }
+  name = Name() "=" value = MemberValue()
+  { return enRun(new MemberValuePair(name, value)); }
 }
 
 Expr MemberValue():
@@ -2967,6 +3202,7 @@ Expr MemberValue():
 	Expr ret;
 }
 {
+  { run(); }
   (
 	   ret = Annotation()
 	 |
@@ -2983,78 +3219,9 @@ Expr  MemberValueArrayInitializer():
 	Expr member;
 }
 {
+  { run(); }
   "{" 
   (	member = MemberValue() { ret = ret.append(member); } ( LOOKAHEAD(2) "," member = MemberValue() { ret = ret.append(member); } )*  )? [ "," ]
   "}"
-  { return new ArrayInitializerExpr(ret); }
-}
-
-
-/* Annotation Types. */
-
-TypeDecl AnnotationTypeDecl(Modifiers modifiers):
-{
-	Name name;
-	NodeList members;
-}
-{
-  "@" "interface" name = Name() members = AnnotationTypeBody()
-  { return TypeDecl.ofAnnotationType(modifiers, name, members); }
-}
-
-NodeList AnnotationTypeBody():
-{
-	NodeList ret = null;
-	Decl member;
-}
-{
-  "{" ( member = AnnotationBodyDecl() { ret = ret.append(member); } )* "}"
-  { return ret; }
-}
-
-Decl AnnotationBodyDecl():
-{
-   Modifiers modifiers;
-   Decl ret;
-}
-{
-  (
-	";" { ret = new EmptyTypeDecl(); }
-  |
-    modifiers = Modifiers()
-    (
-      LOOKAHEAD(Type() <IDENTIFIER> "(")
-      ret = AnnotationTypeMemberDecl(modifiers)
-    |
-      ret = ClassOrInterfaceDecl(modifiers)
-    |
-      ret = EnumDecl(modifiers)
-    |
-      ret = AnnotationTypeDecl(modifiers)
-    |
-      ret = FieldDecl(modifiers)
-    )
-  )
-  { return ret; }
-}
-
-AnnotationMemberDecl AnnotationTypeMemberDecl(Modifiers modifiers):
-{
-	Type type;
-	Name name;
-	NodeList dims;
-	Expr defaultVal = null;
-}
-{
-  type = Type(null) name = Name() "(" ")" dims = ArrayDims() [ defaultVal = DefaultValue() ] ";"
-  { return new AnnotationMemberDecl(modifiers, type, name, dims, defaultVal); }
-}
-
-Expr DefaultValue():
-{
-	Expr ret;
-}
-{
-  "default" ret = MemberValue()
-  { return ret; }
+  { return enRun(new ArrayInitializerExpr(ret)); }
 }
