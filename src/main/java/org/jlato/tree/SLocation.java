@@ -19,6 +19,7 @@
 
 package org.jlato.tree;
 
+import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.SContext;
 
@@ -72,11 +73,11 @@ public class SLocation {
 	@SuppressWarnings("unchecked")
 	public <C extends Tree> C nodeChild(final int index) {
 		final SNode node = (SNode) this.tree;
-		final SNodeState state = (SNodeState) node.state;
+		final SNodeState state = node.state();
 		final STree childTree = state.child(index);
 		if (childTree == null) return null;
 
-		final SContext childContext = new SContext.Child(this, index);
+		final SContext childContext = new SContext.NodeChild(this, index);
 		final SLocation childLocation = new SLocation(childContext, childTree);
 		return (C) childLocation.facade;
 	}
@@ -84,7 +85,7 @@ public class SLocation {
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, C extends Tree> T nodeWithChild(int index, C child) {
 		final SNode node = (SNode) this.tree;
-		final SNodeState state = (SNodeState) node.state;
+		final SNodeState state = node.state();
 		final SNode newNode = node.withState(state.withChild(index, Tree.treeOf(child)));
 		return (T) withTree(newNode).facade;
 	}
@@ -98,7 +99,7 @@ public class SLocation {
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, A> T nodeWithData(int index, A attribute) {
 		final SNode node = (SNode) this.tree;
-		final SNodeState state = (SNodeState) node.state;
+		final SNodeState state = node.state();
 		final SNode newNode = node.withState(state.withData(index, attribute));
 		return (T) withTree(newNode).facade;
 	}
@@ -114,7 +115,7 @@ public class SLocation {
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, A> T leafWithData(int index, A attribute) {
 		final SLeaf leaf = (SLeaf) this.tree;
-		final SLeafState state = (SLeafState) leaf.state;
+		final SLeafState state = leaf.state();
 		final SLeaf newLeaf = leaf.withState(state.withData(index, attribute));
 		return (T) withTree(newLeaf).facade;
 	}
@@ -124,10 +125,11 @@ public class SLocation {
 	@SuppressWarnings("unchecked")
 	public <C extends Tree> C nodeListChild(final int index) {
 		final SNodeList nodeList = (SNodeList) this.tree;
-		final STree childTree = nodeList.run.tree(index);
+		final SNodeListState state = nodeList.state();
+		final STree childTree = state.child(index);
 		if (childTree == null) return null;
 
-		final SContext childContext = new SContext.Child(this, index);
+		final SContext childContext = new SContext.NodeListChild(this, index);
 		final SLocation childLocation = new SLocation(childContext, childTree);
 		return (C) childLocation.facade;
 	}
@@ -135,19 +137,22 @@ public class SLocation {
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, C extends Tree> T nodeListWithChild(int index, C newChild) {
 		final SNodeList nodeList = (SNodeList) this.tree;
-		final SNodeList newNodeList = nodeList.with(nodeList.run.set(index, Tree.treeOf(newChild)));
+		final SNodeListState state = nodeList.state();
+		final SNodeList newNodeList = nodeList.withState(state.withChild(index, Tree.treeOf(newChild)));
 		return (T) withTree(newNodeList).facade;
 	}
 
-	public LRun nodeListRun() {
+	public Vector<STree> nodeListChildren() {
 		final SNodeList nodeList = (SNodeList) this.tree;
-		return nodeList.run;
+		final SNodeListState state = nodeList.state();
+		return state.children;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Tree, C extends Tree> T nodeListWithRun(LRun newRun) {
+	public <T extends Tree, C extends Tree> T nodeListWithChildren(Vector<STree> children) {
 		final SNodeList nodeList = (SNodeList) this.tree;
-		final SNodeList newNodeList = nodeList.with(newRun);
+		final SNodeListState state = nodeList.state();
+		final SNodeList newNodeList = nodeList.withState(state.withChildren(children));
 		return (T) withTree(newNodeList).facade;
 	}
 }

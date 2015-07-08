@@ -29,7 +29,7 @@ import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class ArrayInitializerExpr extends Expr {
 
@@ -65,7 +65,7 @@ public class ArrayInitializerExpr extends Expr {
 			nonEmptyChildren(VALUES,
 					composite(
 							token(LToken.BraceLeft).withSpacingAfter(space()),
-							children(VALUES, token(LToken.Comma)),
+							children(VALUES, token(LToken.Comma).withSpacingAfter(space())),
 							token(LToken.BraceRight).withSpacingBefore(space())
 					),
 					composite(token(LToken.BraceLeft), token(LToken.BraceRight))

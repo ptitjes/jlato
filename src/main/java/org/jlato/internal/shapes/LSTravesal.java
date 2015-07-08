@@ -19,55 +19,60 @@
 
 package org.jlato.internal.shapes;
 
+import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.STree;
 import org.jlato.printer.Printer;
 
 /**
  * @author Didier Villevalois
  */
-public final class LSNone extends LexicalShape {
+public final class LSTravesal extends LexicalShape {
 
-	private final SpacingConstraint spacing;
-	private final IndentationConstraint indentation;
+	private final int index;
+	private final LexicalShape shape;
 
-	public LSNone() {
-		this(null, null);
+	public LSTravesal(int index, LexicalShape shape) {
+		this.index = index;
+		this.shape = shape;
 	}
 
-	private LSNone(SpacingConstraint spacing, IndentationConstraint indentation) {
-		this.spacing = spacing;
-		this.indentation = indentation;
-	}
-
-	public LSNone withSpacing(SpacingConstraint spacing) {
-		return new LSNone(spacing, indentation);
-	}
-
-	public LSNone withIndentation(IndentationConstraint indentation) {
-		return new LSNone(spacing, indentation);
+	private STree traverse(STree tree) {
+		final SNode node = (SNode) tree;
+		return node.state().child(index);
 	}
 
 	@Override
 	public boolean isDefined(STree tree) {
-		return true;
+		final STree child = traverse(tree);
+		return child != null && shape.isDefined(child);
 	}
 
 	@Override
 	public boolean isWhitespaceOnly(STree tree) {
-		return true;
+		final STree child = traverse(tree);
+		return child != null && shape.isWhitespaceOnly(child);
 	}
 
 	public void render(STree tree, Printer printer) {
-		if (indentation != null) printer.indent(indentation.resolve(printer));
+		final STree child = traverse(tree);
+		if (child == null) return;
+
+		shape.render(child, printer);
 	}
 
 	@Override
 	public SpacingConstraint spacingBefore(STree tree) {
-		return spacing;
+		final STree child = traverse(tree);
+		if (child == null) return null;
+
+		return shape.spacingBefore(child);
 	}
 
 	@Override
 	public SpacingConstraint spacingAfter(STree tree) {
-		return spacing;
+		final STree child = traverse(tree);
+		if (child == null) return null;
+
+		return shape.spacingAfter(child);
 	}
 }

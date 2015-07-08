@@ -25,8 +25,10 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.*;
 
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 
 public class SwitchEntryStmt extends Stmt {
@@ -74,9 +76,9 @@ public class SwitchEntryStmt extends Stmt {
 					token(LToken.Default)
 			), token(LToken.Colon).withSpacingAfter(newLine()),
 			nonNullChild(STMTS, composite(
-					indent(BLOCK),
+					none().withIndentation(indent(BLOCK)),
 					children(STMTS, none().withSpacing(newLine())),
-					unIndent(BLOCK)
+					none().withIndentation(unIndent(BLOCK))
 			))
 	);
 }

@@ -21,7 +21,7 @@ package org.jlato.tree;
 
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
-import org.jlato.internal.bu.LRun;
+import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 
@@ -64,10 +64,10 @@ public abstract class Tree {
 		return builder.build();
 	}
 
-	protected static LRun runOf(Tree... facades) {
-		final LRun.RunBuilder builder = LRun.RunBuilder.withVariableArity();
+	protected static Vector<STree> treeListOf(Tree... facades) {
+		final Builder<STree, Vector<STree>> builder = Vector.<STree>factory().newBuilder();
 		for (Tree facade : facades) {
-			builder.addTree(treeOf(facade));
+			builder.add(treeOf(facade));
 		}
 		return builder.build();
 	}

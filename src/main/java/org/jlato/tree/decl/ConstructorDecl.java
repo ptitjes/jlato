@@ -32,7 +32,7 @@ import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.ClassOrInterfaceType;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class ConstructorDecl extends Decl implements Member {
 
@@ -122,12 +122,12 @@ public class ConstructorDecl extends Decl implements Member {
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS),
-			children(TYPE_PARAMETERS, token(LToken.Less), token(LToken.Comma), token(LToken.Greater).withSpacingAfter(space())),
+			children(TYPE_PARAMETERS, token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater).withSpacingAfter(space())),
 			child(NAME),
 			token(LToken.ParenthesisLeft),
-			children(PARAMETERS, token(LToken.Comma)),
+			children(PARAMETERS, token(LToken.Comma).withSpacingAfter(space())),
 			token(LToken.ParenthesisRight),
-			children(THROWS_CLAUSE, token(LToken.Throws).withSpacingBefore(space()), token(LToken.Comma), none()),
+			children(THROWS_CLAUSE, token(LToken.Throws).withSpacingBefore(space()), token(LToken.Comma).withSpacingAfter(space()), none()),
 			none().withSpacing(space()), child(BODY)
 	);
 }

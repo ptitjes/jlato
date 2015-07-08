@@ -19,33 +19,46 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.STree;
 import org.jlato.printer.Printer;
 
 /**
  * @author Didier Villevalois
  */
-public final class LSChild extends LexicalShape {
+public final class LSDynamicShape extends LexicalShape {
 
-	private final ChildSelector selector;
 	private final ShapeProvider shapeProvider;
 
-	public LSChild(ChildSelector selector, ShapeProvider shapeProvider) {
-		this.selector = selector;
+	public LSDynamicShape(ShapeProvider shapeProvider) {
 		this.shapeProvider = shapeProvider;
 	}
 
-	public void render(STree tree, Printer printer) {
-		final SNode node = (SNode) tree;
-		final STree child = selector.select(node);
-		if (child == null) return;
-
-		final LexicalShape shape = shapeProvider.shapeFor(child);
-		if (shape != null) shape.render(child, printer);
+	@Override
+	public boolean isDefined(STree tree) {
+		final LexicalShape shape = shapeProvider.shapeFor(tree);
+		return shape != null && shape.isDefined(tree);
 	}
 
-	public interface ChildSelector {
-		STree select(SNode node);
+	@Override
+	public boolean isWhitespaceOnly(STree tree) {
+		final LexicalShape shape = shapeProvider.shapeFor(tree);
+		return shape != null && shape.isWhitespaceOnly(tree);
+	}
+
+	public void render(STree tree, Printer printer) {
+		final LexicalShape shape = shapeProvider.shapeFor(tree);
+		if (shape != null) shape.render(tree, printer);
+	}
+
+	@Override
+	public SpacingConstraint spacingBefore(STree tree) {
+		final LexicalShape shape = shapeProvider.shapeFor(tree);
+		return shape == null ? null : shape.spacingBefore(tree);
+	}
+
+	@Override
+	public SpacingConstraint spacingAfter(STree tree) {
+		final LexicalShape shape = shapeProvider.shapeFor(tree);
+		return shape == null ? null : shape.spacingAfter(tree);
 	}
 }

@@ -28,7 +28,6 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.QName;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
 
 public class ImportDecl extends Tree {
 

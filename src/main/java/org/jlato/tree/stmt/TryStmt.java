@@ -29,9 +29,11 @@ import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.VariableDeclarationExpr;
 
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.newLine;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TRY_RESOURCES;
 
 public class TryStmt extends Stmt {
@@ -95,9 +97,9 @@ public class TryStmt extends Stmt {
 			token(LToken.Try).withSpacingAfter(space()),
 			nonNullChild(RESOURCES,
 					children(RESOURCES,
-							composite(token(LToken.ParenthesisLeft), indent(TRY_RESOURCES)),
+							composite(token(LToken.ParenthesisLeft).withIndentationAfter(indent(TRY_RESOURCES))),
 							token(LToken.SemiColon).withSpacingAfter(newLine()),
-							composite(unIndent(TRY_RESOURCES), token(LToken.ParenthesisRight).withSpacingAfter(space()))
+							composite(token(LToken.ParenthesisRight).withIndentationBefore(unIndent(TRY_RESOURCES)).withSpacingAfter(space()))
 					)
 			),
 			child(TRY_BLOCK),

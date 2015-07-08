@@ -142,6 +142,8 @@ public class LToken extends LElement {
 	public static final LToken ParenthesisLeft = new LToken(ASTParserConstants.LPAREN, "(");
 	public static final LToken ParenthesisRight = new LToken(ASTParserConstants.RPAREN, ")");
 
+	public static final LToken EOF = new LToken(ASTParserConstants.EOF, "");
+
 	public final int kind;
 	public final String string;
 

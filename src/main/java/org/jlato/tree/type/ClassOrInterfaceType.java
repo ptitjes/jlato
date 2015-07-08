@@ -31,7 +31,7 @@ import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class ClassOrInterfaceType extends ReferenceType {
 
@@ -87,7 +87,7 @@ public class ClassOrInterfaceType extends ReferenceType {
 			child(NAME),
 			nonNullChild(TYPE_ARGUMENTS,
 					nonEmptyChildren(TYPE_ARGUMENTS,
-							children(TYPE_ARGUMENTS, token(LToken.Less), token(LToken.Comma), token(LToken.Greater)),
+							children(TYPE_ARGUMENTS, token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater)),
 							composite(token(LToken.Less), token(LToken.Greater))
 					)
 			)

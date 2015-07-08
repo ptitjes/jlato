@@ -26,7 +26,7 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.*;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class ForStmt extends Stmt {
 
@@ -87,11 +87,11 @@ public class ForStmt extends Stmt {
 
 	public final static LexicalShape shape = composite(
 			token(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
-			children(INIT, token(LToken.Comma)),
+			children(INIT, token(LToken.Comma).withSpacingAfter(space())),
 			token(LToken.SemiColon).withSpacingAfter(space()),
 			child(COMPARE),
 			token(LToken.SemiColon).withSpacingAfter(space()),
-			children(UPDATE, token(LToken.Comma)),
+			children(UPDATE, token(LToken.Comma).withSpacingAfter(space())),
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			child(BODY)
 	);

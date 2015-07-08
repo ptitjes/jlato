@@ -27,6 +27,7 @@ import org.jlato.tree.*;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class CallExpr extends Expr {
 
@@ -87,10 +88,10 @@ public class CallExpr extends Expr {
 
 	public final static LexicalShape shape = composite(
 			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
-			children(TYPE_ARGUMENTS, token(LToken.Less), token(LToken.Comma), token(LToken.Greater)),
+			children(TYPE_ARGUMENTS, token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater)),
 			child(NAME),
 			token(LToken.ParenthesisLeft),
-			children(ARGUMENTS, token(LToken.Comma)),
+			children(ARGUMENTS, token(LToken.Comma).withSpacingAfter(space())),
 			token(LToken.ParenthesisRight)
 	);
 }

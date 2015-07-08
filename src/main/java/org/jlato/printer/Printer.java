@@ -22,15 +22,15 @@ package org.jlato.printer;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.shapes.LexicalSpacing;
+import org.jlato.internal.shapes.SpacingConstraint;
 import org.jlato.parser.ASTParserConstants;
 import org.jlato.tree.Tree;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.empty;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.empty;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 /**
  * @author Didier Villevalois
@@ -52,8 +52,8 @@ public class Printer {
 	/**
 	 * Prints the specified tree to a string with the default formatting settings.
 	 *
-	 * @param tree               the tree to print
-	 * @param format             whether to format printed trees
+	 * @param tree   the tree to print
+	 * @param format whether to format printed trees
 	 * @return the tree printed to a string
 	 */
 	public static String printToString(Tree tree, boolean format) {
@@ -103,9 +103,9 @@ public class Printer {
 	/**
 	 * Prints the specified tree to the specified writer with the default formatting settings.
 	 *
-	 * @param tree               the tree to print
-	 * @param writer             the writer to print to
-	 * @param format             whether to format printed trees
+	 * @param tree   the tree to print
+	 * @param writer the writer to print to
+	 * @param format whether to format printed trees
 	 */
 	public static void printTo(Tree tree, PrintWriter writer, boolean format) {
 		Printer printer = new Printer(writer, format);
@@ -252,26 +252,5 @@ public class Printer {
 			writer.append(formattingSettings.indentation());
 		}
 		needsIndentation = false;
-	}
-
-	public LexicalSpacing defaultSpacingBefore(LToken token) {
-		switch (token.kind) {
-			case ASTParserConstants.ARROW:
-				return space();
-
-			default:
-		}
-		return empty();
-	}
-
-	public LexicalSpacing defaultSpacingAfter(LToken token) {
-		switch (token.kind) {
-			case ASTParserConstants.COMMA:
-			case ASTParserConstants.ARROW:
-				return space();
-
-			default:
-		}
-		return empty();
 	}
 }

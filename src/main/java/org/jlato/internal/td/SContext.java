@@ -19,9 +19,7 @@
 
 package org.jlato.internal.td;
 
-import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.tree.SLocation;
 
 /**
@@ -46,12 +44,12 @@ public abstract class SContext {
 		}
 	}
 
-	public static class Child extends SContext {
+	public static class NodeChild extends SContext {
 
 		private final SLocation parent;
 		private final int index;
 
-		public Child(SLocation parent, int index) {
+		public NodeChild(SLocation parent, int index) {
 			this.parent = parent;
 			this.index = index;
 		}
@@ -64,9 +62,33 @@ public abstract class SContext {
 		@Override
 		public SLocation rebuiltWith(STree content) {
 			final SNode node = (SNode) parent.tree;
-			final SNodeState state = (SNodeState) node.state;
+			final SNodeState state = node.state();
 			final SNode newNode = node.withState(state.withChild(index, content));
 			return parent.withTree(newNode);
+		}
+	}
+
+	public static class NodeListChild extends SContext {
+
+		private final SLocation parent;
+		private final int index;
+
+		public NodeListChild(SLocation parent, int index) {
+			this.parent = parent;
+			this.index = index;
+		}
+
+		@Override
+		public SLocation original() {
+			return parent;
+		}
+
+		@Override
+		public SLocation rebuiltWith(STree content) {
+			final SNodeList nodeList = (SNodeList) parent.tree;
+			final SNodeListState state = nodeList.state();
+			final SNodeList newNodeList = nodeList.withState(state.withChild(index, content));
+			return parent.withTree(newNodeList);
 		}
 	}
 }

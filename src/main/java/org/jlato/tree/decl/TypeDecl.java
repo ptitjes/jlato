@@ -23,7 +23,6 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.shapes.Function1;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Decl;
@@ -33,8 +32,10 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.ClassOrInterfaceType;
 
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.*;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
@@ -51,27 +52,27 @@ public class TypeDecl extends Decl implements TopLevel, Member {
 	};
 
 	public static <M extends Decl & Member> TypeDecl ofClass(Modifiers modifiers, Name name, NodeList<TypeParameter> typeParameters, NodeList<ClassOrInterfaceType> extendsClause, NodeList<ClassOrInterfaceType> implementsClause, NodeList<M> members) {
-		return new TypeDecl(TypeKind.Class, modifiers, name, typeParameters, extendsClause, implementsClause, members);
+		return new TypeDecl(TypeKind.Class, modifiers, name, typeParameters, extendsClause, implementsClause, null, members);
 	}
 
 	public static <M extends Decl & Member> TypeDecl ofInterface(Modifiers modifiers, Name name, NodeList<TypeParameter> typeParameters, NodeList<ClassOrInterfaceType> extendsClause, NodeList<M> members) {
-		return new TypeDecl(TypeKind.Interface, modifiers, name, typeParameters, extendsClause, null, members);
+		return new TypeDecl(TypeKind.Interface, modifiers, name, typeParameters, extendsClause, null, null, members);
 	}
 
-	public static <M extends Decl & Member> TypeDecl ofEnum(Modifiers modifiers, Name name, NodeList<ClassOrInterfaceType> implementsClause, NodeList<M> members) {
-		return new TypeDecl(TypeKind.Enum, modifiers, name, null, null, implementsClause, members);
+	public static <M extends Decl & Member> TypeDecl ofEnum(Modifiers modifiers, Name name, NodeList<ClassOrInterfaceType> implementsClause, NodeList<EnumConstantDecl> enumConstants, NodeList<M> members) {
+		return new TypeDecl(TypeKind.Enum, modifiers, name, null, null, implementsClause, enumConstants, members);
 	}
 
 	public static <M extends Decl & Member> TypeDecl ofAnnotationType(Modifiers modifiers, Name name, NodeList<M> members) {
-		return new TypeDecl(TypeKind.AnnotationType, modifiers, name, null, null, null, members);
+		return new TypeDecl(TypeKind.AnnotationType, modifiers, name, null, null, null, null, members);
 	}
 
 	protected TypeDecl(SLocation location) {
 		super(location);
 	}
 
-	public <M extends Decl & Member> TypeDecl(TypeKind typeKind, Modifiers modifiers, Name name, NodeList<TypeParameter> typeParameters, NodeList<ClassOrInterfaceType> extendsClause, NodeList<ClassOrInterfaceType> implementsClause, NodeList<M> members/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, name, typeParameters, extendsClause, implementsClause, members), dataOf(typeKind)))));
+	public <M extends Decl & Member> TypeDecl(TypeKind typeKind, Modifiers modifiers, Name name, NodeList<TypeParameter> typeParameters, NodeList<ClassOrInterfaceType> extendsClause, NodeList<ClassOrInterfaceType> implementsClause, NodeList<EnumConstantDecl> enumConstants, NodeList<M> members/*, JavadocComment javadocComment*/) {
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, name, typeParameters, extendsClause, implementsClause, enumConstants, members), dataOf(typeKind)))));
 	}
 
 	public Modifiers modifiers() {
@@ -122,6 +123,14 @@ public class TypeDecl extends Decl implements TopLevel, Member {
 		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
+	public NodeList<EnumConstantDecl> enumConstants() {
+		return location.nodeChild(ENUM_CONSTANTS);
+	}
+
+	public TypeDecl withEnumConstants(NodeList<EnumConstantDecl> enumConstants) {
+		return location.nodeWithChild(ENUM_CONSTANTS, enumConstants);
+	}
+
 	public <M extends Decl & Member> NodeList<M> members() {
 		return location.nodeChild(MEMBERS);
 	}
@@ -135,21 +144,10 @@ public class TypeDecl extends Decl implements TopLevel, Member {
 	private static final int TYPE_PARAMETERS = 2;
 	private static final int EXTENDS_CLAUSE = 3;
 	private static final int IMPLEMENTS_CLAUSE = 4;
-	private static final int MEMBERS = 5;
+	private static final int ENUM_CONSTANTS = 5;
+	private static final int MEMBERS = 6;
 
 	private static final int TYPE_KIND = 0;
-
-	public static final Function1<STree, Boolean> ENUM_CONSTANT_FILTER = new Function1<STree, Boolean>() {
-		public Boolean apply(STree tree) {
-			return tree.kind == EnumConstantDecl.kind;
-		}
-	};
-
-	public static final Function1<STree, Boolean> NON_ENUM_CONSTANT_FILTER = new Function1<STree, Boolean>() {
-		public Boolean apply(STree tree) {
-			return tree.kind != EnumConstantDecl.kind;
-		}
-	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS),
@@ -159,33 +157,37 @@ public class TypeDecl extends Decl implements TopLevel, Member {
 				}
 			}),
 			child(NAME),
-			children(TYPE_PARAMETERS, token(LToken.Less), token(LToken.Comma), token(LToken.Greater).withSpacingAfter(space())),
-			children(EXTENDS_CLAUSE, token(LToken.Extends), token(LToken.Comma), null),
-			children(IMPLEMENTS_CLAUSE, token(LToken.Implements), token(LToken.Comma), null),
-			nonEmptyChildren(MEMBERS,
+			children(TYPE_PARAMETERS, token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater).withSpacingAfter(space())),
+			children(EXTENDS_CLAUSE, token(LToken.Extends), token(LToken.Comma).withSpacingAfter(space()), null),
+			children(IMPLEMENTS_CLAUSE, token(LToken.Implements), token(LToken.Comma).withSpacingAfter(space()), null),
+			token(LToken.BraceLeft)
+					.withSpacingBefore(space())
+					.withIndentationAfter(indent(TYPE_BODY)),
+			nonEmptyChildren(ENUM_CONSTANTS,
 					composite(
-							token(LToken.BraceLeft).withSpacingBefore(space()), indent(TYPE_BODY),
-							children(MEMBERS, ENUM_CONSTANT_FILTER,
+							children(ENUM_CONSTANTS,
 									none().withSpacing(spacing(EnumBody_BeforeConstants)),
 									token(LToken.Comma).withSpacingAfter(spacing(EnumBody_BetweenConstants)),
-									nonEmptyChildren(MEMBERS, NON_ENUM_CONSTANT_FILTER,
-											token(LToken.SemiColon),
-											none().withSpacing(spacing(EnumBody_AfterConstants))
-									)
+									null
 							),
-							children(MEMBERS, NON_ENUM_CONSTANT_FILTER,
-									none().withSpacing(spacing(ClassBody_BeforeMembers)),
-									none().withSpacing(spacing(ClassBody_BetweenMembers)),
-									none().withSpacing(spacing(ClassBody_AfterMembers))
-							),
-							composite(unIndent(TYPE_BODY), token(LToken.BraceRight))
-					),
-					composite(
-							token(LToken.BraceLeft).withSpacingBefore(space()), indent(TYPE_BODY),
-							none().withSpacing(newLine()),
-							composite(unIndent(TYPE_BODY), token(LToken.BraceRight))
+							nonEmptyChildren(MEMBERS,
+									token(LToken.SemiColon).withSpacingAfter(spacing(EnumBody_AfterConstants)),
+									none().withSpacing(spacing(EnumBody_AfterConstants))
+							)
 					)
-			)
+			),
+			nonEmptyChildren(MEMBERS,
+					children(MEMBERS,
+							none().withSpacing(spacing(ClassBody_BeforeMembers)),
+							none().withSpacing(spacing(ClassBody_BetweenMembers)),
+							none().withSpacing(spacing(ClassBody_AfterMembers))
+					),
+					emptyChildren(ENUM_CONSTANTS,
+							none().withSpacing(newLine())
+					)
+			),
+			token(LToken.BraceRight)
+					.withIndentationBefore(unIndent(TYPE_BODY))
 	);
 
 	public enum TypeKind {

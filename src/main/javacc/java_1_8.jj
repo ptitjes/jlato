@@ -1247,7 +1247,7 @@ TypeDecl ClassOrInterfaceDecl(Modifiers modifiers):
    TypeDecl.TypeKind typeKind;
    Name name;
    NodeList typePar = null;
-   NodeList extList = null;
+   NodeList extendsClause = null;
    NodeList implementsClause = null;
    NodeList members;
 }
@@ -1255,11 +1255,11 @@ TypeDecl ClassOrInterfaceDecl(Modifiers modifiers):
   ( "class" { typeKind = TypeDecl.TypeKind.Class; } | "interface" { typeKind = TypeDecl.TypeKind.Interface; } )
   name = Name()
   [ typePar = TypeParameters() ]
-  [ extList = ExtendsList(typeKind) ]
+  [ extendsClause = ExtendsList(typeKind) ]
   [ implementsClause = ImplementsList(typeKind) ]
   members = ClassOrInterfaceBody(typeKind)
 
-  { return new TypeDecl(typeKind, modifiers, name, typePar, extList, implementsClause, members); }
+  { return new TypeDecl(typeKind, modifiers, name, typePar, extendsClause, implementsClause, null, members); }
 }
 
 NodeList ExtendsList(TypeDecl.TypeKind typeKind):
@@ -1300,6 +1300,7 @@ TypeDecl EnumDecl(Modifiers modifiers):
 	Name name;
 	NodeList implementsClause = new NodeList();
 	EnumConstantDecl entry;
+	NodeList<EnumConstantDecl> constants = new NodeList<EnumConstantDecl>();
 	Decl member;
 	NodeList members = new NodeList();
 }
@@ -1307,14 +1308,15 @@ TypeDecl EnumDecl(Modifiers modifiers):
   "enum" name = Name() [ implementsClause = ImplementsList(TypeDecl.TypeKind.Enum) ]
   "{"
   	[
-    	entry = EnumConstantDecl() { members = members.append(entry); } ( LOOKAHEAD(2) "," entry = EnumConstantDecl() { members = members.append(entry); } )*
+    	entry = EnumConstantDecl() { constants = constants.append(entry); }
+    	( LOOKAHEAD(2) "," entry = EnumConstantDecl() { constants = constants.append(entry); } )*
   	]
   	[ "," ]
  	[
  	 	( ";" ( member = ClassOrInterfaceBodyDecl(TypeDecl.TypeKind.Enum) { members = members.append(member); } )* )
  	]
   "}"
-  { return TypeDecl.ofEnum(modifiers, name, implementsClause, members); }
+  { return TypeDecl.ofEnum(modifiers, name, implementsClause, constants, members); }
 }
 
 
@@ -2983,7 +2985,7 @@ TypeDecl AnnotationTypeDecl(Modifiers modifiers):
 }
 {
   "@" "interface" name = Name() members = AnnotationTypeBody()
-  { return new TypeDecl(TypeDecl.TypeKind.AnnotationType, modifiers, name, null, null, null, members); }
+  { return TypeDecl.ofAnnotationType(modifiers, name, members); }
 }
 
 NodeList AnnotationTypeBody():

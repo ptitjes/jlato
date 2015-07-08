@@ -29,7 +29,7 @@ import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class AssertStmt extends Stmt {
 

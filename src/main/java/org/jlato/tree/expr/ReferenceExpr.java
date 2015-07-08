@@ -27,6 +27,7 @@ import org.jlato.tree.*;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class ReferenceExpr extends Expr {
 
@@ -79,7 +80,7 @@ public class ReferenceExpr extends Expr {
 	public final static LexicalShape shape = composite(
 			child(SCOPE),
 			token(LToken.DoubleColon),
-			children(TYPE_ARGUMENTS, token(LToken.Less), token(LToken.Comma), token(LToken.Greater)),
+			children(TYPE_ARGUMENTS, token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater)),
 			child(IDENTIFIER)
 	);
 }

@@ -19,8 +19,8 @@
 
 package org.jlato.internal.shapes;
 
+import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
-import org.jlato.printer.FormattingSettings.IndentationContext;
 import org.jlato.printer.Printer;
 import org.jlato.tree.Tree;
 
@@ -31,23 +31,18 @@ public abstract class LexicalShape {
 
 	// TODO Add argument to follow lexical runs
 
+	public abstract boolean isDefined(STree tree);
+
+	public abstract boolean isWhitespaceOnly(STree tree);
+
 	public abstract void render(STree tree, Printer printer);
+
+	public abstract SpacingConstraint spacingBefore(STree tree);
+
+	public abstract SpacingConstraint spacingAfter(STree tree);
 
 	public interface ShapeProvider {
 		LexicalShape shapeFor(STree tree);
-	}
-
-	private static class FixedShapeProvider implements ShapeProvider {
-
-		private final LexicalShape shape;
-
-		public FixedShapeProvider(LexicalShape shape) {
-			this.shape = shape;
-		}
-
-		public LexicalShape shapeFor(STree tree) {
-			return shape;
-		}
 	}
 
 	private static class DefaultShapeProvider implements ShapeProvider {
@@ -63,13 +58,13 @@ public abstract class LexicalShape {
 		}
 
 		public static LexicalShape option(ShapeProvider provider) {
-			return new LSOption(provider);
+			return new LSDynamicShape(provider);
 		}
 
 		public static LexicalShape childKindAlternative(final int index, final Tree.Kind kind, final LexicalShape shape, final LexicalShape alternative) {
 			return option(new ShapeProvider() {
 				public LexicalShape shapeFor(STree tree) {
-					final SNodeState state = (SNodeState) tree.state;
+					final SNodeState state = ((SNode) tree).state();
 					final Tree.Kind childKind = state.child(index).kind;
 					return childKind == kind ? shape : alternative;
 				}
@@ -77,23 +72,10 @@ public abstract class LexicalShape {
 		}
 
 		public static LexicalShape dataOption(final int index, final LexicalShape shape) {
-			return new LSOption(new ShapeProvider() {
+			return new LSDynamicShape(new ShapeProvider() {
 				public LexicalShape shapeFor(STree tree) {
 					final STreeState state = tree.state;
 					return state != null && (Boolean) state.data(index) ? shape : null;
-				}
-			});
-		}
-
-		public static LexicalShape nonNullData(final int index, LexicalShape shape) {
-			return nonNullData(index, shape, null);
-		}
-
-		public static LexicalShape nonNullData(final int index, final LexicalShape shape, final LexicalShape alternative) {
-			return new LSOption(new ShapeProvider() {
-				public LexicalShape shapeFor(STree tree) {
-					final STreeState state = tree.state;
-					return state != null && state.data(index) != null ? shape : alternative;
 				}
 			});
 		}
@@ -103,9 +85,9 @@ public abstract class LexicalShape {
 		}
 
 		public static LexicalShape nonNullChild(final int index, final LexicalShape shape, final LexicalShape alternative) {
-			return new LSOption(new ShapeProvider() {
+			return new LSDynamicShape(new ShapeProvider() {
 				public LexicalShape shapeFor(STree tree) {
-					final SNodeState state = (SNodeState) tree.state;
+					final SNodeState state = ((SNode) tree).state();
 					return state != null && state.child(index) != null ? shape : alternative;
 				}
 			});
@@ -116,48 +98,20 @@ public abstract class LexicalShape {
 		}
 
 		public static LexicalShape nonEmptyChildren(final int index, final LexicalShape shape, final LexicalShape alternative) {
-			return new LSOption(new ShapeProvider() {
+			return new LSDynamicShape(new ShapeProvider() {
 				public LexicalShape shapeFor(STree tree) {
-					final SNodeList nodeList = (SNodeList) ((SNodeState) tree.state).child(index);
+					final SNodeState state = ((SNode) tree).state();
+					final SNodeList nodeList = (SNodeList) state.child(index);
 					if (nodeList == null) return alternative;
 
-					final LRun run = nodeList.run;
-					return run != null && run.treeCount() > 0 ? shape : alternative;
+					final Vector<STree> children = nodeList.state().children;
+					return !(children == null || children.isEmpty()) ? shape : alternative;
 				}
 			});
 		}
 
-		public static LexicalShape nonEmptyChildren(final int index, final Function1<STree, Boolean> filter, final LexicalShape shape, final LexicalShape alternative) {
-			return new LSOption(new ShapeProvider() {
-				public LexicalShape shapeFor(STree tree) {
-					final SNodeList nodeList = (SNodeList) ((SNodeState) tree.state).child(index);
-					if (nodeList == null) return alternative;
-
-					final LRun run = nodeList.run;
-					if (run == null || run.treeCount() == 0) return alternative;
-
-					for (STree child : run) {
-						if (filter.apply(child)) return shape;
-					}
-					return alternative;
-				}
-			});
-		}
-
-		public static LexicalShape indent(final IndentationContext context) {
-			return new LexicalShape() {
-				public void render(STree tree, Printer printer) {
-					printer.indent(printer.formattingSettings.indentation(context));
-				}
-			};
-		}
-
-		public static LexicalShape unIndent(final IndentationContext context) {
-			return new LexicalShape() {
-				public void render(STree tree, Printer printer) {
-					printer.unIndent(printer.formattingSettings.indentation(context));
-				}
-			};
+		public static LexicalShape emptyChildren(final int index, final LexicalShape shape) {
+			return nonEmptyChildren(index, null, shape);
 		}
 
 		public static LexicalShape composite(LexicalShape... shapes) {
@@ -172,74 +126,36 @@ public abstract class LexicalShape {
 			return new LSToken(tokenProvider);
 		}
 
-		public static LexicalShape child(final int index) {
-			return new LSChild(new LSChild.ChildSelector() {
-				public STree select(SNode node) {
-					return ((SNodeState) node.state).child(index);
-				}
-			}, new DefaultShapeProvider());
+		public static LexicalShape child(int index) {
+			return child(index, defaultShape());
 		}
 
-		public static LexicalShape child(final int index, final LexicalShape shape) {
-			return new LSChild(new LSChild.ChildSelector() {
-				public STree select(SNode node) {
-					return ((SNodeState) node.state).child(index);
-				}
-			}, new FixedShapeProvider(shape));
+		public static LexicalShape child(int index, LexicalShape shape) {
+			return new LSTravesal(index, shape);
 		}
 
 		public static LexicalShape children(int index) {
-			return children(index, Function1.Std.<STree>alwaysTrue(), null, null, null);
+			return children(index, null, null, null);
 		}
 
 		public static LexicalShape children(int index, LexicalShape separator) {
-			return children(index, Function1.Std.<STree>alwaysTrue(), null, separator, null);
-		}
-
-		public static LexicalShape children(int index, Function1<STree, Boolean> filter, LexicalShape separator) {
-			return children(index, filter, null, separator, null);
-		}
-
-		public static LexicalShape children(int index,
-		                                    LexicalShape before, LexicalShape separator, LexicalShape after) {
-			return children(index, Function1.Std.<STree>alwaysTrue(), before, separator, after);
-		}
-
-		public static LexicalShape children(int index, Function1<STree, Boolean> filter,
-		                                    LexicalShape before, LexicalShape separator, LexicalShape after) {
-			return children(index, filter, new DefaultShapeProvider(), before, separator, after);
+			return children(index, null, separator, null);
 		}
 
 		public static LexicalShape children(int index, LexicalShape shape, LexicalShape separator) {
-			return children(index, Function1.Std.<STree>alwaysTrue(), shape, null, separator, null);
+			return children(index, shape, null, separator, null);
 		}
 
-		public static LexicalShape children(int index, Function1<STree, Boolean> filter,
-		                                    LexicalShape shape, LexicalShape separator) {
-			return children(index, filter, shape, null, separator, null);
+		public static LexicalShape children(int index, LexicalShape before, LexicalShape separator, LexicalShape after) {
+			return children(index, defaultShape(), before, separator, after);
 		}
 
-		public static LexicalShape children(int index, LexicalShape shape,
-		                                    LexicalShape before, LexicalShape separator, LexicalShape after) {
-			return children(index, Function1.Std.<STree>alwaysTrue(), shape, before, separator, after);
+		public static LexicalShape children(int index, LexicalShape shape, LexicalShape before, LexicalShape separator, LexicalShape after) {
+			return child(index, new LSListShape(shape, before, separator, after));
 		}
 
-		public static LexicalShape children(int index, Function1<STree, Boolean> filter, LexicalShape shape,
-		                                    LexicalShape before, LexicalShape separator, LexicalShape after) {
-			return children(index, filter, new FixedShapeProvider(shape), before, separator, after);
-		}
-
-		public static LexicalShape children(final int index, final Function1<STree, Boolean> filter, ShapeProvider shapeProvider,
-		                                    final LexicalShape before, final LexicalShape separator, final LexicalShape after) {
-			return new LSChildren(new LSChildren.ChildrenSelector() {
-				public SNodeList select(SNode node) {
-					return (SNodeList) ((SNodeState) node.state).child(index);
-				}
-
-				public boolean filter(STree tree) {
-					return filter.apply(tree);
-				}
-			}, shapeProvider, before, separator, after);
+		private static LexicalShape defaultShape() {
+			return new LSDynamicShape(new DefaultShapeProvider());
 		}
 	}
 }

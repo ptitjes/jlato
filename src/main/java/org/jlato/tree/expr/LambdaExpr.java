@@ -31,6 +31,7 @@ import org.jlato.tree.decl.Parameter;
 import org.jlato.tree.stmt.BlockStmt;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class LambdaExpr extends Expr {
 
@@ -86,9 +87,9 @@ public class LambdaExpr extends Expr {
 
 	public final static LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft),
-			nonNullChild(PARAMETERS, composite(children(PARAMETERS, token(LToken.Comma)))),
+			nonNullChild(PARAMETERS, composite(children(PARAMETERS, token(LToken.Comma).withSpacingAfter(space())))),
 			token(LToken.ParenthesisRight),
-			token(LToken.Arrow),
+			token(LToken.Arrow).withSpacing(space(), space()),
 			nonNullChild(EXPR, child(EXPR), child(BLOCK))
 	);
 }

@@ -21,16 +21,17 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.printer.FormattingSettings;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Stmt;
 import org.jlato.tree.Tree;
 
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.newLine;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.spacing;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
@@ -90,18 +91,14 @@ public class IfStmt extends Stmt {
 					composite(none().withSpacing(space()), child(THEN_STMT)),
 					childKindAlternative(THEN_STMT, ExpressionStmt.kind,
 							composite(
-									none().withSpacing(spacing(IfStmt_ThenExpressionStmt)),
-									indent(BLOCK),
+									none().withSpacing(spacing(IfStmt_ThenExpressionStmt)).withIndentation(indent(BLOCK)),
 									child(THEN_STMT),
-									unIndent(BLOCK),
-									none().withSpacing(newLine())
+									none().withIndentation(unIndent(BLOCK)).withSpacing(newLine())
 							),
 							composite(
-									none().withSpacing(spacing(IfStmt_ThenOtherStmt)),
-									indent(BLOCK),
+									none().withSpacing(spacing(IfStmt_ThenOtherStmt)).withIndentation(indent(BLOCK)),
 									child(THEN_STMT),
-									unIndent(BLOCK),
-									none().withSpacing(newLine())
+									none().withIndentation(unIndent(BLOCK)).withSpacing(newLine())
 							)
 					)
 			),
@@ -116,17 +113,14 @@ public class IfStmt extends Stmt {
 									),
 									childKindAlternative(ELSE_STMT, ExpressionStmt.kind,
 											composite(
-													none().withSpacing(spacing(IfStmt_ElseExpressionStmt)),
-													indent(BLOCK),
+													none().withSpacing(spacing(IfStmt_ElseExpressionStmt)).withIndentation(indent(BLOCK)),
 													child(ELSE_STMT),
-													unIndent(BLOCK)
+													none().withIndentation(unIndent(BLOCK))
 											),
 											composite(
-													none().withSpacing(spacing(IfStmt_ElseOtherStmt)),
-													indent(BLOCK),
+													none().withSpacing(spacing(IfStmt_ElseOtherStmt)).withIndentation(indent(BLOCK)),
 													child(ELSE_STMT),
-													unIndent(BLOCK),
-													none().withSpacing(newLine())
+													none().withIndentation(unIndent(BLOCK)).withSpacing(newLine())
 											)
 									)
 							)

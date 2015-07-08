@@ -29,6 +29,7 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.QName;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class NormalAnnotationExpr extends AnnotationExpr {
 
@@ -63,7 +64,7 @@ public class NormalAnnotationExpr extends AnnotationExpr {
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME),
 			token(LToken.ParenthesisLeft),
-			children(PAIRS, token(LToken.Comma)),
+			children(PAIRS, token(LToken.Comma).withSpacingAfter(space())),
 			token(LToken.ParenthesisRight)
 	);
 }

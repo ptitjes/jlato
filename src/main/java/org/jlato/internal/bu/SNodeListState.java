@@ -19,31 +19,38 @@
 
 package org.jlato.internal.bu;
 
-import org.jlato.tree.Tree;
+import com.github.andrewoma.dexx.collection.ArrayList;
+import com.github.andrewoma.dexx.collection.Vector;
 
 /**
  * @author Didier Villevalois
  */
-public class SNodeList extends STree {
+public class SNodeListState extends STreeState {
 
-	public SNodeList(Tree.Kind kind, SNodeListState state) {
-		this(kind, state, null);
+	public final Vector<STree> children;
+
+	public SNodeListState(Vector<STree> children) {
+		this(children, ArrayList.empty());
 	}
 
-	public SNodeList(Tree.Kind kind, SNodeListState state, LRun run) {
-		super(kind, state, run);
+	public SNodeListState(Vector<STree> children, ArrayList<Object> data) {
+		super(data);
+		this.children = children;
 	}
 
-	public SNodeListState state() {
-		return (SNodeListState) state;
+	public STree child(int index) {
+		return children.get(index);
 	}
 
-	@Override
-	public int width() {
-		return 0;/*run.width();*/
+	public SNodeListState withChild(int index, STree value) {
+		return new SNodeListState(children.set(index, value), data);
 	}
 
-	public SNodeList withState(SNodeListState state) {
-		return new SNodeList(kind, state, run);
+	public SNodeListState withChildren(Vector<STree> children) {
+		return new SNodeListState(children, data);
+	}
+
+	public SNodeListState withData(int index, Object value) {
+		return new SNodeListState(children, data.set(index, value));
 	}
 }

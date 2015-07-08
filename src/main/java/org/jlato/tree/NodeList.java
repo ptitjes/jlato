@@ -19,8 +19,9 @@
 
 package org.jlato.tree;
 
-import org.jlato.internal.bu.LRun;
+import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 
@@ -53,19 +54,19 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 	}
 
 	public NodeList(T... elements) {
-		super(new SLocation(new SNodeList(kind, runOf(elements))));
+		super(new SLocation(new SNodeList(kind, new SNodeListState(treeListOf(elements)))));
 	}
 
 	public boolean isEmpty() {
-		return size() == 0;
+		return location.nodeListChildren().isEmpty();
 	}
 
 	public int size() {
-		return location.nodeListRun().treeCount();
+		return location.nodeListChildren().size();
 	}
 
 	public boolean contains(T element) {
-		return location.nodeListRun().contains(treeOf(element));
+		return location.nodeListChildren().indexOf(treeOf(element)) != -1;
 	}
 
 	public T get(final int index) {
@@ -77,13 +78,13 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 	}
 
 	public NodeList<T> prepend(T element) {
-		LRun newRun = location.nodeListRun().prepend(treeOf(element));
-		return location.nodeListWithRun(newRun);
+		final Vector<STree> newChildren = location.nodeListChildren().prepend(treeOf(element));
+		return location.nodeListWithChildren(newChildren);
 	}
 
 	public NodeList<T> append(T element) {
-		LRun newRun = location.nodeListRun().append(treeOf(element));
-		return location.nodeListWithRun(newRun);
+		final Vector<STree> newChildren = location.nodeListChildren().append(treeOf(element));
+		return location.nodeListWithChildren(newChildren);
 	}
 
 	public Iterator<T> iterator() {
@@ -95,7 +96,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		builder.append(start);
 
 		boolean first = true;
-		for (STree tree : location.nodeListRun()) {
+		for (STree tree : location.nodeListChildren()) {
 			if (!first) builder.append(sep);
 			else first = false;
 

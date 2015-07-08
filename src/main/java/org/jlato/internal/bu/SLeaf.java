@@ -27,7 +27,15 @@ import org.jlato.tree.Tree;
 public class SLeaf extends STree {
 
 	public SLeaf(Tree.Kind kind, SLeafState state) {
-		super(kind, state);
+		this(kind, state, null);
+	}
+
+	public SLeaf(Tree.Kind kind, SLeafState state, LRun run) {
+		super(kind, state, run);
+	}
+
+	public SLeafState state() {
+		return (SLeafState) state;
 	}
 
 	@Override
@@ -36,6 +44,6 @@ public class SLeaf extends STree {
 	}
 
 	public SLeaf withState(SLeafState state) {
-		return new SLeaf(kind, state);
+		return new SLeaf(kind, state, run);
 	}
 }

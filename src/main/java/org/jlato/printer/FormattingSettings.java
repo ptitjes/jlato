@@ -21,9 +21,9 @@ package org.jlato.printer;
 
 import com.github.andrewoma.dexx.collection.TreeMap;
 
-import static org.jlato.printer.FormattingSettings.Spacing.*;
-import static org.jlato.printer.FormattingSettings.Spacing.Unit.Line;
-import static org.jlato.printer.FormattingSettings.Spacing.Unit.Space;
+import static org.jlato.printer.Spacing.*;
+import static org.jlato.printer.Spacing.Unit.Line;
+import static org.jlato.printer.Spacing.Unit.Space;
 
 /**
  * @author Didier Villevalois
@@ -165,33 +165,5 @@ public class FormattingSettings {
 	public Spacing spacing(SpacingLocation location) {
 		if (spacingCounts.containsKey(location)) return spacingCounts.get(location);
 		else return new Spacing(1, location.defaultUnit);
-	}
-
-	public static class Spacing {
-
-		public static Spacing spaces(int count) {
-			return new Spacing(count, Space);
-		}
-
-		public static Spacing lines(int count) {
-			return new Spacing(count, Unit.Line);
-		}
-
-		public static final Spacing oneLine = lines(1);
-
-		public static final Spacing noSpace = spaces(0);
-		public static final Spacing oneSpace = spaces(1);
-
-		public final int count;
-		public final Unit unit;
-
-		public Spacing(int count, Unit unit) {
-			this.count = count;
-			this.unit = unit;
-		}
-
-		public enum Unit {
-			Space, Line
-		}
 	}
 }

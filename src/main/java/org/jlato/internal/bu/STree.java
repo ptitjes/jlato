@@ -28,10 +28,12 @@ public abstract class STree extends LElement {
 
 	public final Tree.Kind kind;
 	public final STreeState state;
+	public final LRun run;
 
-	public STree(Tree.Kind kind, STreeState state) {
+	public STree(Tree.Kind kind, STreeState state, LRun run) {
 		this.kind = kind;
 		this.state = state;
+		this.run = run;
 	}
 
 	@Override

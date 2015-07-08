@@ -21,6 +21,7 @@ package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.STree;
 import org.jlato.printer.Printer;
+import org.jlato.printer.Spacing;
 
 /**
  * @author Didier Villevalois
@@ -33,9 +34,38 @@ public final class LSComposite extends LexicalShape {
 		this.shapes = shapes;
 	}
 
-	public void render(STree tree, Printer printer) {
+	@Override
+	public boolean isDefined(STree tree) {
+		return true;
+	}
+
+	@Override
+	public boolean isWhitespaceOnly(STree tree) {
 		for (LexicalShape shape : shapes) {
-			shape.render(tree, printer);
+			if (!shape.isWhitespaceOnly(tree)) return false;
 		}
+		return true;
+	}
+
+	public void render(STree tree, Printer printer) {
+		final RunRenderer renderer = new RunRenderer(tree.run);
+		for (LexicalShape shape : shapes) {
+			renderer.renderNext(shape, tree, printer);
+		}
+	}
+
+	private Spacing maxSpacing(Spacing spacing, SpacingConstraint constraint, Printer printer) {
+		final Spacing otherSpacing = constraint.resolve(printer);
+		return spacing != null && otherSpacing != null ? spacing.max(otherSpacing) : otherSpacing;
+	}
+
+	@Override
+	public SpacingConstraint spacingBefore(STree tree) {
+		return shapes[0].spacingBefore(tree);
+	}
+
+	@Override
+	public SpacingConstraint spacingAfter(STree tree) {
+		return shapes[shapes.length - 1].spacingAfter(tree);
 	}
 }

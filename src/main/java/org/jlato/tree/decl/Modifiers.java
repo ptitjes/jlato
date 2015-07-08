@@ -30,8 +30,8 @@ import org.jlato.tree.expr.AnnotationExpr;
 import static org.jlato.internal.shapes.LexicalShape.Factory.children;
 import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
 import static org.jlato.internal.shapes.LexicalShape.Factory.none;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.newLine;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class Modifiers extends Tree {
 

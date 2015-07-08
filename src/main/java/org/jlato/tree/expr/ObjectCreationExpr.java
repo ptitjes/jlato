@@ -26,9 +26,11 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.*;
 import org.jlato.tree.type.ClassOrInterfaceType;
 
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.spacing;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
@@ -103,21 +105,28 @@ public class ObjectCreationExpr extends Expr {
 			token(LToken.New),
 			children(TYPE_ARGUMENTS,
 					token(LToken.Less).withSpacingBefore(space()),
-					token(LToken.Comma),
+					token(LToken.Comma).withSpacingAfter(space()),
 					token(LToken.Greater)
 			),
 			child(TYPE),
-			token(LToken.ParenthesisLeft), children(ARGUMENTS, token(LToken.Comma)), token(LToken.ParenthesisRight),
+			token(LToken.ParenthesisLeft), children(ARGUMENTS, token(LToken.Comma).withSpacingAfter(space())), token(LToken.ParenthesisRight),
 			nonNullChild(ANONYMOUS_CLASS_BODY,
 					nonEmptyChildren(ANONYMOUS_CLASS_BODY,
 							children(ANONYMOUS_CLASS_BODY,
-									composite(token(LToken.BraceLeft).withSpacing(space(), spacing(ClassBody_BeforeMembers)), indent(TYPE_BODY)),
+									token(LToken.BraceLeft)
+											.withSpacing(space(), spacing(ClassBody_BeforeMembers))
+											.withIndentationAfter(indent(TYPE_BODY)),
 									none().withSpacing(spacing(ClassBody_BetweenMembers)),
-									composite(unIndent(TYPE_BODY), token(LToken.BraceRight).withSpacingBefore(spacing(ClassBody_AfterMembers)))
+									token(LToken.BraceRight)
+											.withIndentationBefore(unIndent(TYPE_BODY))
+											.withSpacingBefore(spacing(ClassBody_AfterMembers))
 							),
 							composite(
-									token(LToken.BraceLeft).withSpacing(space(), spacing(ClassBody_Empty)), indent(TYPE_BODY),
-									unIndent(TYPE_BODY), token(LToken.BraceRight)
+									token(LToken.BraceLeft)
+											.withSpacing(space(), spacing(ClassBody_Empty))
+											.withIndentationAfter(indent(TYPE_BODY)),
+									token(LToken.BraceRight)
+											.withIndentationBefore(unIndent(TYPE_BODY))
 							)
 					)
 			)

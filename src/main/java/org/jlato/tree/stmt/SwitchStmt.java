@@ -23,13 +23,14 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.printer.FormattingSettings;
 import org.jlato.tree.*;
 
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.newLine;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.spacing;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.SwitchStmt_AfterSwitchKeyword;
 
@@ -79,13 +80,13 @@ public class SwitchStmt extends Stmt {
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			nonEmptyChildren(ENTRIES,
 					composite(
-							token(LToken.BraceLeft).withSpacingAfter(newLine()), indent(BLOCK),
+							token(LToken.BraceLeft).withSpacingAfter(newLine()).withIndentationAfter(indent(BLOCK)),
 							children(ENTRIES, none().withSpacing(newLine())),
-							unIndent(BLOCK), token(LToken.BraceRight).withSpacingBefore(newLine())
+							token(LToken.BraceRight).withIndentationBefore(unIndent(BLOCK)).withSpacingBefore(newLine())
 					),
 					composite(
-							token(LToken.BraceLeft).withSpacingAfter(newLine()), indent(BLOCK),
-							unIndent(BLOCK), token(LToken.BraceRight)
+							token(LToken.BraceLeft).withSpacingAfter(newLine()).withIndentationAfter(indent(BLOCK)),
+							token(LToken.BraceRight).withIndentationBefore(unIndent(BLOCK))
 					)
 			)
 	);

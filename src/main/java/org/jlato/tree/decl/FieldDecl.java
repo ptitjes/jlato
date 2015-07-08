@@ -31,7 +31,7 @@ import org.jlato.tree.Type;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.LexicalShape.Factory.children;
 import static org.jlato.internal.shapes.LexicalShape.Factory.none;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class FieldDecl extends Decl implements Member {
 
@@ -96,7 +96,7 @@ public class FieldDecl extends Decl implements Member {
 			child(MODIFIERS),
 			child(TYPE),
 			none().withSpacing(space()),
-			children(VARIABLES, token(LToken.Comma)),
+			children(VARIABLES, token(LToken.Comma).withSpacingAfter(space())),
 			token(LToken.SemiColon)
 	);
 }

@@ -28,6 +28,7 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.*;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class ExplicitConstructorInvocationStmt extends Stmt {
 
@@ -91,7 +92,7 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 			nonNullChild(EXPR, composite(child(EXPR), token(LToken.Dot))),
 			children(TYPE_ARGUMENTS,
 					token(LToken.Less),
-					token(LToken.Comma),
+					token(LToken.Comma).withSpacingAfter(space()),
 					token(LToken.Greater)
 			),
 			token(new LSToken.Provider() {
@@ -100,7 +101,7 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 				}
 			}),
 			token(LToken.ParenthesisLeft),
-			children(ARGUMENTS, token(LToken.Comma)),
+			children(ARGUMENTS, token(LToken.Comma).withSpacingAfter(space())),
 			token(LToken.ParenthesisRight),
 			token(LToken.SemiColon)
 	);

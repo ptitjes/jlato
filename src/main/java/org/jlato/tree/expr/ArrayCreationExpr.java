@@ -27,7 +27,7 @@ import org.jlato.tree.*;
 import org.jlato.tree.decl.ArrayDim;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class ArrayCreationExpr extends Expr {
 

@@ -26,13 +26,15 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.*;
 import org.jlato.tree.name.Name;
 
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.spacing;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 
-public class EnumConstantDecl extends Decl implements Member {
+public class EnumConstantDecl extends Decl {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public EnumConstantDecl instantiate(SLocation location) {
@@ -103,14 +105,15 @@ public class EnumConstantDecl extends Decl implements Member {
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS),
 			child(NAME),
-			children(ARGS, token(LToken.ParenthesisLeft), token(LToken.Comma), token(LToken.ParenthesisRight)),
+			children(ARGS, token(LToken.ParenthesisLeft), token(LToken.Comma).withSpacingAfter(space()), token(LToken.ParenthesisRight)),
 			children(CLASS_BODY,
-					composite(token(LToken.BraceLeft).withSpacing(space(), spacing(ClassBody_BeforeMembers)), indent(TYPE_BODY)),
+					token(LToken.BraceLeft)
+							.withSpacing(space(), spacing(ClassBody_BeforeMembers))
+							.withIndentationAfter(indent(TYPE_BODY)),
 					none().withSpacing(spacing(ClassBody_BetweenMembers)),
-					composite(
-							unIndent(TYPE_BODY),
-							token(LToken.BraceRight).withSpacing(spacing(ClassBody_AfterMembers), spacing(EnumConstant_AfterBody))
-					)
+					token(LToken.BraceRight)
+							.withIndentationBefore(unIndent(TYPE_BODY))
+							.withSpacing(spacing(ClassBody_AfterMembers), spacing(EnumConstant_AfterBody))
 			)
 	);
 }

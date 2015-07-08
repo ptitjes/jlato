@@ -29,52 +29,80 @@ import org.jlato.printer.Printer;
 public final class LSToken extends LexicalShape {
 
 	private final Provider provider;
-	private final LexicalSpacing before;
-	private final LexicalSpacing after;
+	private final SpacingConstraint spacingBefore;
+	private final SpacingConstraint spacingAfter;
+	private final IndentationConstraint indentationBefore;
+	private final IndentationConstraint indentationAfter;
 
 	public LSToken(LToken token) {
 		this(new FixedProvider(token));
 	}
 
 	public LSToken(Provider provider) {
-		this(provider, null, null);
+		this(provider, null, null, null, null);
 	}
 
-	private LSToken(Provider provider, LexicalSpacing before, LexicalSpacing after) {
+	private LSToken(Provider provider,
+	                SpacingConstraint spacingBefore,
+	                SpacingConstraint spacingAfter,
+	                IndentationConstraint indentationBefore,
+	                IndentationConstraint indentationAfter) {
 		this.provider = provider;
-		this.before = before;
-		this.after = after;
+		this.spacingBefore = spacingBefore;
+		this.spacingAfter = spacingAfter;
+		this.indentationBefore = indentationBefore;
+		this.indentationAfter = indentationAfter;
 	}
 
-	public LSToken withSpacing(LexicalSpacing before, LexicalSpacing after) {
-		return new LSToken(provider, before, after);
+	public LSToken withSpacing(SpacingConstraint before, SpacingConstraint after) {
+		return new LSToken(provider, before, after, indentationBefore, indentationAfter);
 	}
 
-	public LSToken withSpacingBefore(LexicalSpacing before) {
-		return new LSToken(provider, before, after);
+	public LSToken withSpacingBefore(SpacingConstraint spacingBefore) {
+		return new LSToken(provider, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
 	}
 
-	public LSToken withSpacingAfter(LexicalSpacing after) {
-		return new LSToken(provider, before, after);
+	public LSToken withSpacingAfter(SpacingConstraint spacingAfter) {
+		return new LSToken(provider, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
+	}
+
+	public LSToken withIndentationBefore(IndentationConstraint indentationBefore) {
+		return new LSToken(provider, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
+	}
+
+	public LSToken withIndentationAfter(IndentationConstraint indentationAfter) {
+		return new LSToken(provider, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
+	}
+
+	@Override
+	public boolean isDefined(STree tree) {
+		return true;
+	}
+
+	@Override
+	public boolean isWhitespaceOnly(STree tree) {
+		return false;
 	}
 
 	public void render(STree tree, Printer printer) {
 		final LToken token = provider.tokenFor(tree);
 		if (token == null) throw new IllegalStateException();
 
-		if (before != null) before.render(null, printer);
-		else {
-			final LexicalSpacing spacing = printer.defaultSpacingBefore(token);
-			if (spacing != null) spacing.render(null, printer);
-		}
+		if (indentationBefore != null) printer.indent(indentationBefore.resolve(printer));
 
 		printer.append(token, true /* TODO Replace by test for whitespace/comment tokens in run */);
 
-		if (after != null) after.render(null, printer);
-		else {
-			final LexicalSpacing spacing = printer.defaultSpacingAfter(token);
-			if (spacing != null) spacing.render(null, printer);
-		}
+		if (indentationAfter != null) printer.indent(indentationAfter.resolve(printer));
+	}
+
+	@Override
+	public SpacingConstraint spacingBefore(STree tree) {
+		return spacingBefore;
+	}
+
+	@Override
+	public SpacingConstraint spacingAfter(STree tree) {
+		return spacingAfter;
 	}
 
 	public interface Provider {

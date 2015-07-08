@@ -30,7 +30,7 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.expr.VariableDeclarationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class ForeachStmt extends Stmt {
 

@@ -17,37 +17,43 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.internal.shapes;
-
-import org.jlato.tree.expr.ObjectCreationExpr;
+package org.jlato.printer;
 
 /**
  * @author Didier Villevalois
  */
-public interface Function1<A, R> {
-	R apply(A arg);
+public class Spacing {
 
-	class Std {
+	public static Spacing spaces(int count) {
+		return new Spacing(count, Unit.Space);
+	}
 
-		public static <A, R> Function1<A, R> constant(final R constant) {
-			return new Function1<A, R>() {
-				public R apply(A arg) {
-					return constant;
-				}
-			};
-		}
+	public static Spacing lines(int count) {
+		return new Spacing(count, Unit.Line);
+	}
 
-		@SuppressWarnings("unchecked")
-		public static <A> Function1<A, Boolean> alwaysTrue() {
-			return (Function1<A, Boolean>) ALWAYS_TRUE;
-		}
+	public static final Spacing noSpace = spaces(0);
+	public static final Spacing oneSpace = spaces(1);
 
-		@SuppressWarnings("unchecked")
-		public static <A> Function1<A, Boolean> alwaysFalse() {
-			return (Function1<A, Boolean>) ALWAYS_FALSE;
-		}
+	public static final Spacing oneLine = lines(1);
 
-		private static final Function1<Object, Boolean> ALWAYS_TRUE = constant(true);
-		private static final Function1<Object, Boolean> ALWAYS_FALSE = constant(false);
+	public final int count;
+	public final Unit unit;
+
+	public Spacing(int count, Unit unit) {
+		this.count = count;
+		this.unit = unit;
+	}
+
+	public Spacing max(Spacing other) {
+		if (this.unit == other.unit)
+			if (this.count >= other.count) return this;
+			else return other;
+		else if (this.unit == Unit.Line) return this;
+		else return other;
+	}
+
+	public enum Unit {
+		Space, Line
 	}
 }

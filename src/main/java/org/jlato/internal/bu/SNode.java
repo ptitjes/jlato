@@ -26,15 +26,16 @@ import org.jlato.tree.Tree;
  */
 public class SNode extends STree {
 
-	public final LRun run;
-
 	public SNode(Tree.Kind kind, SNodeState state) {
 		this(kind, state, null);
 	}
 
 	public SNode(Tree.Kind kind, SNodeState state, LRun run) {
-		super(kind, state);
-		this.run = run;
+		super(kind, state, run);
+	}
+
+	public SNodeState state() {
+		return (SNodeState) state;
 	}
 
 	@Override

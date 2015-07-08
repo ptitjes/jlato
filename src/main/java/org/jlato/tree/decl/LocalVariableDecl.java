@@ -26,7 +26,7 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.*;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalSpacing.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class LocalVariableDecl extends Decl {
 
@@ -91,6 +91,6 @@ public class LocalVariableDecl extends Decl {
 			child(MODIFIERS, Modifiers.oneLinerShape),
 			child(TYPE),
 			none().withSpacing(space()),
-			children(VARIABLES, token(LToken.Comma))
+			children(VARIABLES, token(LToken.Comma).withSpacingAfter(space()))
 	);
 }
