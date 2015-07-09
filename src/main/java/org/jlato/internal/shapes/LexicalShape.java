@@ -119,11 +119,11 @@ public abstract class LexicalShape {
 		}
 
 		public static LexicalShape children(int index, LexicalShape shape, LexicalShape before, LexicalShape separator, LexicalShape after) {
-			return child(index, new LSListShape(shape, before, separator, after));
+			return child(index, new LSList(shape, before, separator, after));
 		}
 
 		private static LexicalShape defaultShape() {
-			return new LSDefaultShape();
+			return new LSDefault();
 		}
 	}
 }

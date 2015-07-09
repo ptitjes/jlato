@@ -29,11 +29,11 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public final class LSListShape extends LexicalShape {
+public final class LSList extends LexicalShape {
 
 	private final LexicalShape shape, before, separator, after;
 
-	public LSListShape(LexicalShape shape, LexicalShape before, LexicalShape separator, LexicalShape after) {
+	public LSList(LexicalShape shape, LexicalShape before, LexicalShape separator, LexicalShape after) {
 		this.shape = shape;
 		this.before = before;
 		this.separator = separator;

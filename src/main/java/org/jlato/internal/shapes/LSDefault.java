@@ -30,9 +30,9 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public final class LSDefaultShape extends LexicalShape {
+public final class LSDefault extends LexicalShape {
 
-	public LSDefaultShape() {
+	public LSDefault() {
 	}
 
 	private LexicalShape shapeFor(STree tree) {
