@@ -32,6 +32,10 @@ public class LRun implements Iterable<IndexedList<LToken>> {
 	public final ArrayList<LRun> subRuns;
 	public final IndexedList<IndexedList<LToken>> whitespaces;
 
+	public LRun() {
+		this(ArrayList.<LRun>empty(), ArrayList.<IndexedList<LToken>>empty());
+	}
+
 	public LRun(ArrayList<LRun> subRuns, IndexedList<IndexedList<LToken>> whitespaces) {
 		this.subRuns = subRuns;
 		this.whitespaces = whitespaces;

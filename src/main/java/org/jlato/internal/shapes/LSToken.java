@@ -91,7 +91,7 @@ public final class LSToken extends LexicalShape {
 
 	@Override
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
-		return new LRun(ArrayList.<LRun>empty(), ArrayList.<IndexedList<LToken>>empty());
+		return new LRun();
 	}
 
 	public void render(STree tree, LRun run, Printer printer) {

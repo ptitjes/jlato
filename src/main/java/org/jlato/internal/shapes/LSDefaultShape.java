@@ -30,17 +30,18 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public final class LSDynamicShape extends LexicalShape {
+public final class LSDefaultShape extends LexicalShape {
 
-	private final ShapeProvider shapeProvider;
+	public LSDefaultShape() {
+	}
 
-	public LSDynamicShape(ShapeProvider shapeProvider) {
-		this.shapeProvider = shapeProvider;
+	private LexicalShape shapeFor(STree tree) {
+		return tree.kind.shape();
 	}
 
 	@Override
 	public boolean isDefined(STree tree) {
-		final LexicalShape shape = shapeProvider.shapeFor(tree);
+		final LexicalShape shape = shapeFor(tree);
 		return shape != null && shape.isDefined(tree);
 	}
 
@@ -55,19 +56,19 @@ public final class LSDynamicShape extends LexicalShape {
 	}
 
 	public void render(STree tree, LRun run, Printer printer) {
-		final LexicalShape shape = shapeProvider.shapeFor(tree);
+		final LexicalShape shape = shapeFor(tree);
 		if (shape != null) shape.render(tree, run, printer);
 	}
 
 	@Override
 	public SpacingConstraint spacingBefore(STree tree) {
-		final LexicalShape shape = shapeProvider.shapeFor(tree);
+		final LexicalShape shape = shapeFor(tree);
 		return shape == null ? null : shape.spacingBefore(tree);
 	}
 
 	@Override
 	public SpacingConstraint spacingAfter(STree tree) {
-		final LexicalShape shape = shapeProvider.shapeFor(tree);
+		final LexicalShape shape = shapeFor(tree);
 		return shape == null ? null : shape.spacingAfter(tree);
 	}
 }

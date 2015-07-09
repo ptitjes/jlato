@@ -65,21 +65,11 @@ public final class LSComposite extends LexicalShape {
 
 	@Override
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
-		Builder<LRun, ArrayList<LRun>> subRuns = ArrayList.<LRun>factory().newBuilder();
-		Builder<IndexedList<LToken>, ArrayList<IndexedList<LToken>>> tokens = ArrayList.<IndexedList<LToken>>factory().newBuilder();
-
-		boolean firstDefinedShape = true;
-		for (LexicalShape subShape : shapes) {
-			if (subShape.isWhitespaceOnly()) continue;
-
-			if (subShape.isDefined(tree)) {
-				if (firstDefinedShape) firstDefinedShape = false;
-				else tokens.add(tokenIterator.next());
-			} else tokens.add(Vector.<LToken>empty());
-
-			subRuns.add(subShape.enRun(tree, tokenIterator));
+		final RunBuilder builder = new RunBuilder(tokenIterator);
+		for (LexicalShape shape : shapes) {
+			builder.handleNext(shape, tree);
 		}
-		return new LRun(subRuns.build(), tokens.build());
+		return builder.build();
 	}
 
 	public void render(STree tree, LRun run, Printer printer) {

@@ -54,7 +54,33 @@ public final class LSListShape extends LexicalShape {
 
 	@Override
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
-		return null;
+		final RunBuilder builder = new RunBuilder(tokenIterator);
+
+		final SNodeList nodeList = (SNodeList) tree;
+		final Vector<STree> children = nodeList.state().children;
+		if (children.isEmpty()) return builder.build();
+
+		boolean firstElement = true;
+		for (STree child : children) {
+			if (firstElement) {
+				if (before != null) {
+					builder.handleNext(before, tree);
+				}
+				firstElement = false;
+			} else if (separator != null) {
+				builder.handleNext(separator, tree);
+			}
+
+			builder.handleNext(shape, child);
+		}
+
+		if (!firstElement) {
+			if (after != null) {
+				builder.handleNext(after, tree);
+			}
+		}
+
+		return builder.build();
 	}
 
 	public void render(STree tree, LRun run, Printer printer) {

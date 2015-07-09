@@ -20,7 +20,6 @@
 package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
-import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.printer.Printer;
 import org.jlato.tree.Tree;
@@ -45,17 +44,6 @@ public abstract class LexicalShape {
 	public abstract SpacingConstraint spacingBefore(STree tree);
 
 	public abstract SpacingConstraint spacingAfter(STree tree);
-
-	public interface ShapeProvider {
-		LexicalShape shapeFor(STree tree);
-	}
-
-	private static class DefaultShapeProvider implements ShapeProvider {
-
-		public LexicalShape shapeFor(STree tree) {
-			return tree.kind.shape();
-		}
-	}
 
 	public static class Factory {
 		public static LSNone none() {
@@ -135,7 +123,7 @@ public abstract class LexicalShape {
 		}
 
 		private static LexicalShape defaultShape() {
-			return new LSDynamicShape(new DefaultShapeProvider());
+			return new LSDefaultShape();
 		}
 	}
 }
