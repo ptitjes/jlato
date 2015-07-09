@@ -26,6 +26,7 @@ import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
 import org.jlato.tree.decl.CompilationUnit;
+import org.jlato.tree.decl.ImportDecl;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -41,7 +42,22 @@ import java.io.*;
 public class BasicTest {
 
 	@Test
+	public void testRun() throws FileNotFoundException, ParseException {
+		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
+		final String content =
+				"import /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/;";
+		final ImportDecl importDecl1 = parser.parse(ParseContext.ImportDecl, content);
+		System.out.println(Printer.printToString(importDecl1, true));
+		final ImportDecl importDecl2 = importDecl1.setStatic(true);
+		System.out.println(Printer.printToString(importDecl2));
+		final ImportDecl importDecl3 = importDecl2.setOnDemand(true);
+		System.out.println(Printer.printToString(importDecl3));
+		final ImportDecl importDecl4 = importDecl3.setStatic(false);
+		System.out.println(Printer.printToString(importDecl4));
+	}
+
 	@Ignore
+	@Test
 	public void testPrinter() throws FileNotFoundException, ParseException {
 		File rootDirectory = new File("src/main/java/org/jlato/tree/");
 
@@ -50,6 +66,7 @@ public class BasicTest {
 		System.out.print(Printer.printToString(cu));
 	}
 
+	@Ignore
 	@Test
 	public void javaConcepts() throws IOException, ParseException {
 		final InputStream inputStream = ClassLoader.getSystemResourceAsStream("org/jlato/samples/JavaConcepts.java");

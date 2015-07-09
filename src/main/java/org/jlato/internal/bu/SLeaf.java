@@ -46,4 +46,8 @@ public class SLeaf extends STree {
 	public SLeaf withState(SLeafState state) {
 		return new SLeaf(kind, state, run);
 	}
+
+	public SLeaf withRun(LRun run) {
+		return new SLeaf(kind, state(), run);
+	}
 }

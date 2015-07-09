@@ -19,12 +19,23 @@
 
 package org.jlato.parser;
 
+import com.github.andrewoma.dexx.collection.ArrayList;
+import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
+import org.jlato.internal.bu.LRun;
 import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSComposite;
+import org.jlato.internal.shapes.LSToken;
+import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SContext;
+import org.jlato.tree.SLocation;
+import org.jlato.tree.Tree;
 
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.Iterator;
 import java.util.Stack;
 
 /**
@@ -47,16 +58,62 @@ public abstract class ParserBase {
 	protected ParserConfiguration configuration;
 
 	private Stack<IndexedList<IndexedList<LToken>>> runStack = new Stack<IndexedList<IndexedList<LToken>>>();
+	private Token lastProcessedToken;
 
 	protected void run() {
+		if (lastProcessedToken == null) {
+			lastProcessedToken = getToken(0);
+		}
+		pushWhitespaceForTokens(getToken(1));
 		runStack.push(Vector.<IndexedList<LToken>>empty());
+	}
+
+	protected void lateRun() {
+		runStack.push(Vector.<IndexedList<LToken>>empty());
+		pushWhitespaceForTokens(getToken(1));
+	}
+
+	private void pushWhitespaceForTokens(Token upToToken) {
+		if (lastProcessedToken != upToToken) {
+			do {
+				lastProcessedToken = lastProcessedToken.next;
+				pushWhitespace(lastProcessedToken.whitespace);
+			} while (lastProcessedToken != upToToken);
+		}
+	}
+
+	private void pushWhitespace(IndexedList<LToken> whitespace) {
+		// TODO Handle root whitespace before first token
+		if (!runStack.isEmpty()) {
+			runStack.push(runStack.pop().append(whitespace));
+		}
+	}
+
+	protected abstract Token getToken(int index);
+
+	@SuppressWarnings("unchecked")
+	protected <T extends Tree> T enRun(T facade) {
+		if (!configuration.preserveWhitespaces) return facade;
+
+		pushWhitespaceForTokens(getToken(0));
+
+		final STree tree = Tree.treeOf(facade);
+
+		final IndexedList<IndexedList<LToken>> tokens = runStack.pop();
+
+		final Iterator<IndexedList<LToken>> tokenIterator = tokens.iterator();
+		final LexicalShape shape = tree.kind.shape();
+		final LRun run = shape.enRun(tree, tokenIterator);
+
+		final STree newTree = tree.withRun(run);
+
+		final SLocation location = new SLocation(new SContext.Root(), newTree);
+		return (T) newTree.kind.instantiate(location);
 	}
 
 	protected void postProcessToken(Token token) {
 		if (configuration.preserveWhitespaces) {
-			if (token.specialToken != null) {
-				runStack.push(runStack.pop().append(buildWhitespaceRunPart(token.specialToken)));
-			}
+			token.whitespace = buildWhitespaceRunPart(token.specialToken);
 		}
 	}
 
@@ -72,4 +129,9 @@ public abstract class ParserBase {
 		else return Vector.empty();
 	}
 
+	static class TokenBase {
+
+		int realKind = ParserImplConstants.GT;
+		IndexedList<LToken> whitespace;
+	}
 }

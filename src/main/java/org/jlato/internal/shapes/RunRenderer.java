@@ -33,22 +33,24 @@ import java.util.Iterator;
  */
 public class RunRenderer {
 
-	private final Iterator<IndexedList<LToken>> spacesIterator;
+	private final Iterator<LRun> subRunIterator;
+	private final Iterator<IndexedList<LToken>> whitespaceIterator;
 
 	private SpacingConstraint constraint;
 	private Spacing spacing = null;
 	private boolean firstNonWhitespaceShape = true;
 
 	public RunRenderer(LRun run) {
-		spacesIterator = run == null ? null : run.iterator();
+		subRunIterator = run == null ? null : run.subRuns.iterator();
+		whitespaceIterator = run == null ? null : run.whitespaces.iterator();
 	}
 
 	public void renderNext(LexicalShape shape, STree tree, Printer printer) {
-		if (shape.isWhitespaceOnly(tree)) {
+		if (shape.isWhitespaceOnly()) {
 			constraint = shape.spacingBefore(tree);
 			spacing = constraint == null ? spacing : maxSpacing(spacing, constraint, printer);
 
-			shape.render(tree, printer);
+			shape.render(tree, null, printer);
 
 			constraint = shape.spacingAfter(tree);
 			spacing = constraint == null ? spacing : maxSpacing(spacing, constraint, printer);
@@ -58,12 +60,15 @@ public class RunRenderer {
 				constraint = shape.spacingBefore(tree);
 				spacing = constraint == null ? spacing : maxSpacing(spacing, constraint, printer);
 
-				if (!shape.isWhitespaceOnly(tree) && spacing != null) {
-					SpacingConstraint.render(spacing, spacesIterator == null ? null : spacesIterator.next(), printer);
+				if (!shape.isWhitespaceOnly()) {
+					final IndexedList<LToken> tokens = whitespaceIterator == null ? null : whitespaceIterator.next();
+					SpacingConstraint.render(
+							spacing == null ? Spacing.noSpace : spacing,
+							tokens, printer);
 				}
 			}
 
-			shape.render(tree, printer);
+			shape.render(tree, subRunIterator == null ? null : subRunIterator.next(), printer);
 
 			constraint = shape.spacingAfter(tree);
 			spacing = constraint == null ? null : constraint.resolve(printer);

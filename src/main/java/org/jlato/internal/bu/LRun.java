@@ -19,6 +19,7 @@
 
 package org.jlato.internal.bu;
 
+import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.IndexedList;
 
 import java.util.Iterator;
@@ -28,13 +29,15 @@ import java.util.Iterator;
  */
 public class LRun implements Iterable<IndexedList<LToken>> {
 
-	public final IndexedList<IndexedList<LToken>> tokens;
+	public final ArrayList<LRun> subRuns;
+	public final IndexedList<IndexedList<LToken>> whitespaces;
 
-	public LRun(IndexedList<IndexedList<LToken>> tokens) {
-		this.tokens = tokens;
+	public LRun(ArrayList<LRun> subRuns, IndexedList<IndexedList<LToken>> whitespaces) {
+		this.subRuns = subRuns;
+		this.whitespaces = whitespaces;
 	}
 
 	public Iterator<IndexedList<LToken>> iterator() {
-		return tokens.iterator();
+		return whitespaces.iterator();
 	}
 }

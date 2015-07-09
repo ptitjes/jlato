@@ -21,6 +21,7 @@ package org.jlato.parser;
 
 import org.jlato.tree.*;
 import org.jlato.tree.decl.CompilationUnit;
+import org.jlato.tree.decl.ImportDecl;
 import org.jlato.tree.decl.TypeDecl;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.Type;
@@ -36,6 +37,13 @@ public abstract class ParseContext<T extends Tree> {
 		@Override
 		protected CompilationUnit callProduction(ParserImpl parser) throws ParseException {
 			return parser.CompilationUnit();
+		}
+	};
+
+	public final static ParseContext<ImportDecl> ImportDecl = new ParseContext<ImportDecl>() {
+		@Override
+		protected ImportDecl callProduction(ParserImpl parser) throws ParseException {
+			return parser.ImportDecl();
 		}
 	};
 

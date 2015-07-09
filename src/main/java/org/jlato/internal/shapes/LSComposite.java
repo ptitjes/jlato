@@ -19,19 +19,35 @@
 
 package org.jlato.internal.shapes;
 
+import com.github.andrewoma.dexx.collection.ArrayList;
+import com.github.andrewoma.dexx.collection.Builder;
+import com.github.andrewoma.dexx.collection.IndexedList;
+import com.github.andrewoma.dexx.collection.Vector;
+import org.jlato.internal.bu.LRun;
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
 import org.jlato.printer.Printer;
 import org.jlato.printer.Spacing;
+
+import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
  */
 public final class LSComposite extends LexicalShape {
 
-	private final LexicalShape[] shapes;
+	public final ArrayList<LexicalShape> shapes;
 
 	public LSComposite(LexicalShape... shapes) {
-		this.shapes = shapes;
+		this.shapes = makeArray(shapes);
+	}
+
+	private static ArrayList<LexicalShape> makeArray(LexicalShape[] shapes) {
+		final Builder<LexicalShape, ArrayList<LexicalShape>> builder = ArrayList.<LexicalShape>factory().newBuilder();
+		for (LexicalShape shape : shapes) {
+			builder.add(shape);
+		}
+		return builder.build();
 	}
 
 	@Override
@@ -40,15 +56,34 @@ public final class LSComposite extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly(STree tree) {
+	public boolean isWhitespaceOnly() {
 		for (LexicalShape shape : shapes) {
-			if (!shape.isWhitespaceOnly(tree)) return false;
+			if (!shape.isWhitespaceOnly()) return false;
 		}
 		return true;
 	}
 
-	public void render(STree tree, Printer printer) {
-		final RunRenderer renderer = new RunRenderer(tree.run);
+	@Override
+	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
+		Builder<LRun, ArrayList<LRun>> subRuns = ArrayList.<LRun>factory().newBuilder();
+		Builder<IndexedList<LToken>, ArrayList<IndexedList<LToken>>> tokens = ArrayList.<IndexedList<LToken>>factory().newBuilder();
+
+		boolean firstDefinedShape = true;
+		for (LexicalShape subShape : shapes) {
+			if (subShape.isWhitespaceOnly()) continue;
+
+			if (subShape.isDefined(tree)) {
+				if (firstDefinedShape) firstDefinedShape = false;
+				else tokens.add(tokenIterator.next());
+			} else tokens.add(Vector.<LToken>empty());
+
+			subRuns.add(subShape.enRun(tree, tokenIterator));
+		}
+		return new LRun(subRuns.build(), tokens.build());
+	}
+
+	public void render(STree tree, LRun run, Printer printer) {
+		final RunRenderer renderer = new RunRenderer(run);
 		for (LexicalShape shape : shapes) {
 			renderer.renderNext(shape, tree, printer);
 		}
@@ -61,11 +96,11 @@ public final class LSComposite extends LexicalShape {
 
 	@Override
 	public SpacingConstraint spacingBefore(STree tree) {
-		return shapes[0].spacingBefore(tree);
+		return shapes.first().spacingBefore(tree);
 	}
 
 	@Override
 	public SpacingConstraint spacingAfter(STree tree) {
-		return shapes[shapes.length - 1].spacingAfter(tree);
+		return shapes.last().spacingAfter(tree);
 	}
 }

@@ -19,9 +19,14 @@
 
 package org.jlato.internal.shapes;
 
+import com.github.andrewoma.dexx.collection.ArrayList;
+import com.github.andrewoma.dexx.collection.IndexedList;
+import org.jlato.internal.bu.LRun;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
 import org.jlato.printer.Printer;
+
+import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
@@ -80,11 +85,16 @@ public final class LSToken extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly(STree tree) {
+	public boolean isWhitespaceOnly() {
 		return false;
 	}
 
-	public void render(STree tree, Printer printer) {
+	@Override
+	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
+		return new LRun(ArrayList.<LRun>empty(), ArrayList.<IndexedList<LToken>>empty());
+	}
+
+	public void render(STree tree, LRun run, Printer printer) {
 		final LToken token = provider.tokenFor(tree);
 		if (token == null) throw new IllegalStateException();
 

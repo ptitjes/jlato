@@ -46,4 +46,8 @@ public class SNodeList extends STree {
 	public SNodeList withState(SNodeListState state) {
 		return new SNodeList(kind, state, run);
 	}
+
+	public SNodeList withRun(LRun run) {
+		return new SNodeList(kind, state(), run);
+	}
 }

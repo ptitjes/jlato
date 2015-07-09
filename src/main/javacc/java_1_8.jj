@@ -31,7 +31,7 @@ options {
   COMMON_TOKEN_ACTION = true;
   TOKEN_MANAGER_USES_PARSER = true;
 
-  TOKEN_FACTORY = "ParserImpl.GTToken";
+  TOKEN_EXTENDS = "org.jlato.parser.ParserBase.TokenBase";
 }
 
 PARSER_BEGIN(ParserImpl)
@@ -117,20 +117,6 @@ final class ParserImpl extends ParserBase {
 	    }
 	    return ret;*/
 	    return null;
-    }
-    
-    static final class GTToken extends Token {
-
-        int realKind = ParserImplConstants.GT;
-
-        GTToken(int kind, String image) {
-            this.kind = kind;
-            this.image = image;
-        }
-
-        public static Token newToken(int kind, String image) {
-            return enRun(new GTToken(kind, image));
-        }
     }
 }
 
@@ -1121,13 +1107,13 @@ TOKEN :
   < RUNSIGNEDSHIFT: ">>>" >
   {
      matchedToken.kind = GT;
-     ((ParserImpl.GTToken)matchedToken).realKind = RUNSIGNEDSHIFT;
+     matchedToken.realKind = RUNSIGNEDSHIFT;
      input_stream.backup(2);
   }
 | < RSIGNEDSHIFT: ">>" >
   {
      matchedToken.kind = GT;
-     ((ParserImpl.GTToken)matchedToken).realKind = RSIGNEDSHIFT;
+     matchedToken.realKind = RSIGNEDSHIFT;
      input_stream.backup(1);
   }
 | < GT: ">" >
@@ -1566,7 +1552,6 @@ LocalVariableDecl VariableDecl(Modifiers modifiers):
 {
 	Type type;
 	NodeList variables = new NodeList();
-	VariableDeclarator val;
 }
 {
   // Run is started before modifiers
@@ -1579,6 +1564,7 @@ LocalVariableDecl VariableDecl(Modifiers modifiers):
 NodeList VariableDeclarators():
 {
 	NodeList variables = new NodeList();
+	VariableDeclarator val;
 }
 {
   { run(); }
@@ -1756,6 +1742,7 @@ ExplicitConstructorInvocationStmt ExplicitConstructorInvocation():
 }
 {
   { run(); }
+
   (
 	  LOOKAHEAD([ TypeArguments() ] <THIS> "(")
 	  [ typeArgs = TypeArguments() ]
@@ -1785,14 +1772,15 @@ NodeList Statements():
 	{ return ret; }
 }
 
-InitializerDecl InitializerDecl():
+InitializerDecl InitializerDecl(Modifiers modifiers):
 {
-	Modifiers modifiers;
 	BlockStmt block;
 }
 {
   { run(); }
-  modifiers = Modifiers() block = Block()
+
+  block = Block()
+
   { return enRun(new InitializerDecl(modifiers, block)); }
 }
 
@@ -1952,9 +1940,9 @@ Type ResultType():
 {
   { run(); }
   (
-	  "void" { ret = new VoidType(); }
-	|
-	  ret = Type(null)
+    "void" { ret = new VoidType(); }
+  |
+    ret = Type(null)
   )
   { return ret; }
 }
@@ -1978,9 +1966,8 @@ QName QName():
 	Name name;
 }
 {
-  { run(); }
-  name = Name() { ret = new QName(ret, name); }
-  ( LOOKAHEAD("." Name()) "." name = Name() { ret = new QName(ret, name); } )*
+  { run(); } name = Name() { ret = enRun(new QName(ret, name)); }
+  ( LOOKAHEAD("." Name()) { lateRun(); } "." name = Name() { ret = enRun(new QName(ret, name)); } )*
   { return ret; }
 }
 
@@ -3097,7 +3084,7 @@ void RUNSIGNEDSHIFT():
 {
   { run(); }
   ( LOOKAHEAD({ getToken(1).kind == GT &&
-                ((GTToken)getToken(1)).realKind == RUNSIGNEDSHIFT} )
+                getToken(1).realKind == RUNSIGNEDSHIFT } )
    ">" ">" ">"
   )
 }
@@ -3107,7 +3094,7 @@ void RSIGNEDSHIFT():
 {
   { run(); }
   ( LOOKAHEAD({ getToken(1).kind == GT &&
-                ((GTToken)getToken(1)).realKind == RSIGNEDSHIFT} )
+                getToken(1).realKind == RSIGNEDSHIFT } )
   ">" ">"
   )
 }

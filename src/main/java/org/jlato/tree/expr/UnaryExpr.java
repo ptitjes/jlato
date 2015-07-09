@@ -23,6 +23,7 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
@@ -85,12 +86,12 @@ public class UnaryExpr extends Expr {
 		}
 	});
 
-	public final static LexicalShape shape = option(new LexicalShape.ShapeProvider() {
-		public LexicalShape shapeFor(STree tree) {
+	public final static LexicalShape shape = alternative(new LSCondition() {
+		public boolean test(STree tree) {
 			final UnaryOp op = (UnaryOp) tree.state.data(OPERATOR);
-			return isPrefix(op) ? composite(opShape, child(EXPR)) : composite(child(EXPR), opShape);
+			return isPrefix(op);
 		}
-	});
+	}, composite(opShape, child(EXPR)), composite(child(EXPR), opShape));
 
 	public enum UnaryOp {
 		Positive(LToken.Plus),

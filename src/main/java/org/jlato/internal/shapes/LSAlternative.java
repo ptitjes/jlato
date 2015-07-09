@@ -22,7 +22,6 @@ package org.jlato.internal.shapes;
 import com.github.andrewoma.dexx.collection.IndexedList;
 import org.jlato.internal.bu.LRun;
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.STree;
 import org.jlato.printer.Printer;
 
@@ -31,57 +30,60 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public final class LSTravesal extends LexicalShape {
+public final class LSAlternative extends LexicalShape {
 
-	private final int index;
-	private final LexicalShape shape;
+	private final LSCondition condition;
+	private final LexicalShape shape, alternative;
 
-	public LSTravesal(int index, LexicalShape shape) {
-		this.index = index;
+	public LSAlternative(LSCondition condition, LexicalShape shape, LexicalShape alternative) {
+		this.condition = condition;
 		this.shape = shape;
-	}
-
-	private STree traverse(STree tree) {
-		final SNode node = (SNode) tree;
-		return node.state().child(index);
+		this.alternative = alternative;
 	}
 
 	@Override
 	public boolean isDefined(STree tree) {
-		final STree child = traverse(tree);
-		return child != null && shape.isDefined(child);
+		return condition.test(tree) ?
+				shape != null && shape.isDefined(tree) :
+				alternative != null && alternative.isDefined(tree);
 	}
 
 	@Override
 	public boolean isWhitespaceOnly() {
-		return shape.isWhitespaceOnly();
+		return (shape == null || shape.isWhitespaceOnly()) &&
+				(alternative == null || alternative.isWhitespaceOnly());
 	}
 
 	@Override
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
-		return null;
+		return condition.test(tree) ?
+				shape == null ? null : shape.enRun(tree, tokenIterator) :
+				alternative == null ? null : alternative.enRun(tree, tokenIterator);
 	}
 
 	public void render(STree tree, LRun run, Printer printer) {
-		final STree child = traverse(tree);
-		if (child == null) return;
-
-		shape.render(child, child.run, printer);
+		if (condition.test(tree)) {
+			if (shape != null) shape.render(tree, run, printer);
+		} else {
+			if (alternative != null) alternative.render(tree, run, printer);
+		}
 	}
 
 	@Override
 	public SpacingConstraint spacingBefore(STree tree) {
-		final STree child = traverse(tree);
-		if (child == null) return null;
-
-		return shape.spacingBefore(child);
+		if (condition.test(tree)) {
+			return shape == null ? null : shape.spacingBefore(tree);
+		} else {
+			return alternative == null ? null : alternative.spacingBefore(tree);
+		}
 	}
 
 	@Override
 	public SpacingConstraint spacingAfter(STree tree) {
-		final STree child = traverse(tree);
-		if (child == null) return null;
-
-		return shape.spacingAfter(child);
+		if (condition.test(tree)) {
+			return shape == null ? null : shape.spacingAfter(tree);
+		} else {
+			return alternative == null ? null : alternative.spacingAfter(tree);
+		}
 	}
 }

@@ -40,4 +40,6 @@ public abstract class STree extends LElement {
 	public boolean isToken() {
 		return false;
 	}
+
+	public abstract STree withRun(LRun run);
 }

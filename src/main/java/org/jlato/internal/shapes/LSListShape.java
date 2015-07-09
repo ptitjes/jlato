@@ -19,9 +19,12 @@
 
 package org.jlato.internal.shapes;
 
+import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.printer.Printer;
+
+import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
@@ -45,16 +48,21 @@ public final class LSListShape extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly(STree tree) {
+	public boolean isWhitespaceOnly() {
 		return false;
 	}
 
-	public void render(STree tree, Printer printer) {
+	@Override
+	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
+		return null;
+	}
+
+	public void render(STree tree, LRun run, Printer printer) {
 		final SNodeList nodeList = (SNodeList) tree;
 		final Vector<STree> children = nodeList.state().children;
 		if (children.isEmpty()) return;
 
-		final RunRenderer renderer = new RunRenderer(tree.run);
+		final RunRenderer renderer = new RunRenderer(run);
 
 		boolean firstElement = true;
 		for (STree child : children) {

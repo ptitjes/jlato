@@ -38,7 +38,8 @@ public abstract class SpacingConstraint {
 	public static void render(Spacing expectedSpacing, IndexedList<LToken> tokens, Printer printer) {
 		switch (expectedSpacing.unit) {
 			case Space:
-				if (tokens != null && containsComments(tokens)) dump(tokens, printer, true);
+				if (tokens != null && (!printer.format || containsComments(tokens)))
+					dump(tokens, printer, printer.format);
 				else {
 					for (int i = 0; i < expectedSpacing.count; i++) {
 						printer.appendWhiteSpace(" ");
@@ -47,9 +48,11 @@ public abstract class SpacingConstraint {
 				break;
 			case Line:
 				if (tokens != null) {
-					final int actualEmptyLines = emptyLineCount(tokens);
-					printer.appendNewLine(expectedSpacing.count - actualEmptyLines);
-					dump(tokens, printer, true);
+					if (printer.format) {
+						final int actualEmptyLines = emptyLineCount(tokens);
+						printer.appendNewLine(expectedSpacing.count - actualEmptyLines);
+					}
+					dump(tokens, printer, printer.format);
 				} else {
 					printer.appendNewLine(expectedSpacing.count);
 				}

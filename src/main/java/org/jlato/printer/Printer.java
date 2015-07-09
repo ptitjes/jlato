@@ -22,15 +22,10 @@ package org.jlato.printer;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.shapes.SpacingConstraint;
-import org.jlato.parser.ParserImplConstants;
 import org.jlato.tree.Tree;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.empty;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 /**
  * @author Didier Villevalois
@@ -192,7 +187,7 @@ public class Printer {
 		reset();
 		final STree sTree = Tree.treeOf(tree);
 		final LexicalShape shape = sTree.kind.shape();
-		shape.render(sTree, this);
+		shape.render(sTree, sTree.run, this);
 	}
 
 	private int indentLevel;

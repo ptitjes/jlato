@@ -19,8 +19,13 @@
 
 package org.jlato.internal.shapes;
 
+import com.github.andrewoma.dexx.collection.IndexedList;
+import org.jlato.internal.bu.LRun;
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
 import org.jlato.printer.Printer;
+
+import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
@@ -40,14 +45,18 @@ public final class LSDynamicShape extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly(STree tree) {
-		final LexicalShape shape = shapeProvider.shapeFor(tree);
-		return shape != null && shape.isWhitespaceOnly(tree);
+	public boolean isWhitespaceOnly() {
+		return false;
 	}
 
-	public void render(STree tree, Printer printer) {
+	@Override
+	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void render(STree tree, LRun run, Printer printer) {
 		final LexicalShape shape = shapeProvider.shapeFor(tree);
-		if (shape != null) shape.render(tree, printer);
+		if (shape != null) shape.render(tree, run, printer);
 	}
 
 	@Override
