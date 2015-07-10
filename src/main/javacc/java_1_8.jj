@@ -1124,10 +1124,6 @@ TOKEN :
  * THE JAVA LANGUAGE GRAMMAR STARTS HERE *
  *****************************************/
 
-/*
- * Program structuring syntax follows.
- */
-
 CompilationUnit CompilationUnit():
 {
 	PackageDecl packageDecl = null;
@@ -1146,6 +1142,10 @@ CompilationUnit CompilationUnit():
 
   { return enRun(new CompilationUnit(packageDecl, imports, types)); }
 }
+
+/**********************************************************************************************************************
+ * Declarations
+ **********************************************************************************************************************/
 
 PackageDecl PackageDecl():
 {
@@ -1286,8 +1286,8 @@ NodeList ExtendsList(TypeKind typeKind):
 {
   { run(); }
 
-  "extends" annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); }
-  ( "," annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); } )*
+  "extends" cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); }
+  ( "," cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); } )*
   {
     if (ret.size() > 1 && typeKind == TypeKind.Class)
       throwParseException(token, "A class cannot extend more than one other class");
@@ -1305,8 +1305,8 @@ NodeList ImplementsList(TypeKind typeKind):
 {
   { run(); }
 
-  "implements" annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); }
-  ( "," annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); } )*
+  "implements" cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); }
+  ( "," cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); } )*
   {
     if (typeKind == TypeKind.Interface)
       throwParseException(token, "An interface cannot implement other interfaces");
@@ -1321,8 +1321,7 @@ TypeDecl EnumDecl(Modifiers modifiers):
 	NodeList implementsClause = new NodeList();
 	EnumConstantDecl entry;
 	NodeList<EnumConstantDecl> constants = new NodeList<EnumConstantDecl>();
-	Decl member;
-	NodeList members = new NodeList();
+	NodeList members = null;
 }
 {
   // Run is started before modifiers
@@ -1330,19 +1329,19 @@ TypeDecl EnumDecl(Modifiers modifiers):
   "enum" name = Name() [ implementsClause = ImplementsList(TypeKind.Enum) ]
   "{"
   [
+    { run(); }
     entry = EnumConstantDecl() { constants = constants.append(entry); }
     ( LOOKAHEAD(2) "," entry = EnumConstantDecl() { constants = constants.append(entry); } )*
+    { constants = enRun(constants); }
   ]
-  [ "," ]
+  [ "," ] // TODO Add syntactic data about comma presence in EnumDecl
   [
-    ";"
-    ( member = ClassOrInterfaceBodyDecl(TypeKind.Enum) { members = members.append(member); } )*
+    ";" members = ClassOrInterfaceBodyDecls(TypeKind.Enum)
   ]
   "}"
 
   { return enRun(TypeDecl.ofEnum(modifiers, name, implementsClause, constants, members)); }
 }
-
 
 EnumConstantDecl EnumConstantDecl():
 {
@@ -1368,27 +1367,28 @@ TypeDecl AnnotationTypeDecl(Modifiers modifiers):
 {
   // Run is started before modifiers
 
-  "@" "interface" name = Name() members = AnnotationTypeBody()
+  "@" "interface" name = Name()
+  "{"
+  members = AnnotationTypeBodyDecls()
+  "}"
 
   { return enRun(TypeDecl.ofAnnotationType(modifiers, name, members)); }
 }
 
-NodeList AnnotationTypeBody():
+// TODO Merge with ClassOrInterfaceDecls production and do later checks programmaticaly
+NodeList AnnotationTypeBodyDecls():
 {
 	NodeList ret = null;
 	Decl member;
 }
 {
   { run(); }
-
-  "{"
-  ( member = AnnotationBodyDecl() { ret = ret.append(member); } )*
-  "}"
-
-  { return ret; }
+  ( member = AnnotationTypeBodyDecl() { ret = ret.append(member); } )*
+  { return enRun(ret); }
 }
 
-Decl AnnotationBodyDecl():
+// TODO Merge with ClassOrInterfaceDecl production and do later checks programmaticaly
+Decl AnnotationTypeBodyDecl():
 {
    Modifiers modifiers;
    Decl ret;
@@ -1417,6 +1417,7 @@ Decl AnnotationBodyDecl():
   { return ret; }
 }
 
+// TODO Merge with MethodDecl production and do later checks programmaticaly
 AnnotationMemberDecl AnnotationTypeMemberDecl(Modifiers modifiers):
 {
 	Type type;
@@ -1436,29 +1437,27 @@ NodeList TypeParameters():
 {
 	NodeList ret = new NodeList();
 	TypeParameter tp;
-	NodeList<AnnotationExpr> annotations = null;
 }
 {
   { run(); }
 
    "<"
-   { run(); } annotations = Annotations() tp = TypeParameter(annotations) { ret = ret.append(tp); }
-   ( "," { run(); } annotations = Annotations() tp = TypeParameter(annotations) { ret = ret.append(tp); } )*
+   tp = TypeParameter() { ret = ret.append(tp); }
+   ( "," tp = TypeParameter() { ret = ret.append(tp); } )*
    ">"
 
    { return enRun(ret); }
 }
 
-TypeParameter TypeParameter(NodeList<AnnotationExpr> annotations):
+TypeParameter TypeParameter():
 {
+	NodeList<AnnotationExpr> annotations = null;
 	Name name;
 	NodeList typeBounds = null;
 }
 {
-  // Run is started before annotations
-
-  name = Name() [ typeBounds = TypeBounds() ]
-
+  { run(); }
+  annotations = Annotations() name = Name() [ typeBounds = TypeBounds() ]
   { return enRun(new TypeParameter(annotations, name, typeBounds)); }
 }
 
@@ -1471,8 +1470,8 @@ NodeList TypeBounds():
 {
   { run(); }
 
-  "extends" { run(); } annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); }
-  ( "&" { run(); } annotations = Annotations() cit = ClassOrInterfaceType(annotations) { ret = ret.append(cit); } )*
+  "extends" cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); }
+  ( "&" cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); } )*
 
   { return enRun(ret); }
 }
@@ -1492,6 +1491,17 @@ NodeList ClassOrInterfaceBody(TypeKind typeKind):
   { return enRun(ret); }
 }
 
+NodeList ClassOrInterfaceBodyDecls(TypeKind typeKind):
+{
+	Decl member;
+	NodeList members = new NodeList();
+}
+{
+    { run(); }
+    ( member = ClassOrInterfaceBodyDecl(typeKind) { members = members.append(member); } )*
+    { return enRun(members); }
+}
+
 Decl ClassOrInterfaceBodyDecl(TypeKind typeKind):
 {
    Modifiers modifiers;
@@ -1509,7 +1519,8 @@ Decl ClassOrInterfaceBodyDecl(TypeKind typeKind):
         throwParseException(token, "Only interfaces can have default members");
     }
     (
-      LOOKAHEAD( Block() ) ret = InitializerDecl(modifiers)
+      LOOKAHEAD( Block() )
+      ret = InitializerDecl(modifiers)
       {
         if (typeKind == TypeKind.Interface)
 	      throwParseException(token, "An interface cannot have initializers");
@@ -1523,6 +1534,10 @@ Decl ClassOrInterfaceBodyDecl(TypeKind typeKind):
     |
       LOOKAHEAD( [ TypeParameters() ] <IDENTIFIER> "(" )
       ret = ConstructorDecl(modifiers)
+      {
+        if (typeKind == TypeKind.Interface)
+	      throwParseException(token, "An interface cannot have constructors");
+	  }
     |
       LOOKAHEAD( Type() <IDENTIFIER> ( "[" "]" )* ( "," | "=" | ";" ) )
       ret = FieldDecl(modifiers)
@@ -1604,13 +1619,16 @@ VariableDeclaratorId VariableDeclaratorId():
 NodeList ArrayDims():
 {
 	NodeList arrayDims = new NodeList();
-	NodeList<AnnotationExpr> annotations = null;
+	NodeList<AnnotationExpr> annotations;
 }
 {
   { run(); }
-
-  ( { run(); } annotations = Annotations() "[" "]" { arrayDims = arrayDims.append(enRun(new ArrayDim(annotations))); } )*
-
+  (
+    LOOKAHEAD( Annotations() "[" "]" )
+    { run(); }
+    annotations = Annotations() "[" "]"
+    { arrayDims = arrayDims.append(enRun(new ArrayDim(annotations))); }
+  )*
   { return enRun(arrayDims); }
 }
 
@@ -1619,12 +1637,7 @@ Expr VariableInitializer():
 	Expr ret;
 }
 {
-  (
-    ret = ArrayInitializer()
-  |
-    ret = Expression()
-  )
-
+  ( ret = ArrayInitializer() | ret = Expression() )
   { return ret; }
 }
 
@@ -1643,7 +1656,7 @@ ArrayInitializerExpr ArrayInitializer():
     ( LOOKAHEAD(2) "," val = VariableInitializer() { values = values.append(val); } )*
     { values = enRun(values); }
   ]
-  [ "," ]
+  [ "," ] // TODO Add syntactic data about comma presence in ArrayInitializerExpr
   "}"
 
   { return enRun(new ArrayInitializerExpr(values)); }
@@ -1725,6 +1738,7 @@ ConstructorDecl ConstructorDecl(Modifiers modifiers):
 
   { run(); }
   "{"
+  // TODO That may be a problem for enRun()
   [ LOOKAHEAD(ExplicitConstructorInvocation()) exConsInv = ExplicitConstructorInvocation() ]
   stmts = Statements()
   "}"
@@ -1744,18 +1758,18 @@ ExplicitConstructorInvocationStmt ExplicitConstructorInvocation():
   { run(); }
 
   (
-	  LOOKAHEAD([ TypeArguments() ] <THIS> "(")
-	  [ typeArgs = TypeArguments() ]
-	  <THIS> { isThis = true; }
-	  args = Arguments() ";"
-	|
-	  [
-	    LOOKAHEAD( PrimaryExpressionWithoutSuperSuffix() "." )
-	  	expr = PrimaryExpressionWithoutSuperSuffix() "."
-	  ]
-	  [ typeArgs = TypeArguments() ]
-	  <SUPER>
-	  args = Arguments() ";"
+    LOOKAHEAD([ TypeArguments() ] <THIS> "(")
+    [ typeArgs = TypeArguments() ]
+    <THIS> { isThis = true; }
+    args = Arguments() ";"
+  |
+    [
+      LOOKAHEAD( PrimaryExpressionWithoutSuperSuffix() "." )
+      expr = PrimaryExpressionWithoutSuperSuffix() "."
+    ]
+    [ typeArgs = TypeArguments() ]
+    <SUPER>
+    args = Arguments() ";"
   )
 
   { return enRun(new ExplicitConstructorInvocationStmt(typeArgs, isThis, expr, args)); }
@@ -1768,8 +1782,8 @@ NodeList Statements():
 }
 {
   { run(); }
-	( LOOKAHEAD(2) stmt = BlockStatement() { ret = ret.append(stmt); } )*
-	{ return ret; }
+  ( LOOKAHEAD(2) stmt = BlockStatement() { ret = ret.append(stmt); } )*
+  { return enRun(ret); }
 }
 
 InitializerDecl InitializerDecl(Modifiers modifiers):
@@ -1777,7 +1791,7 @@ InitializerDecl InitializerDecl(Modifiers modifiers):
 	BlockStmt block;
 }
 {
-  { run(); }
+  // Run is started before modifiers
 
   block = Block()
 
@@ -1785,22 +1799,23 @@ InitializerDecl InitializerDecl(Modifiers modifiers):
 }
 
 
-/*
- * Type, name and Expr syntax follows.
- */
+/**********************************************************************************************************************
+ * Types
+ **********************************************************************************************************************/
 
 Type Type(NodeList<AnnotationExpr> annotations):
 {
 	Type ret;
 }
 {
-  { run(); }
- (
-   LOOKAHEAD(2) ret = ReferenceType(annotations)
- |
-   ret = PrimitiveType(annotations)
- )
- { return ret; }
+  // Run may be started before annotations
+
+  (
+    LOOKAHEAD(2) ret = ReferenceType(annotations)
+  |
+    ret = PrimitiveType(annotations)
+  )
+  { return ret; }
 }
 
 ReferenceType ReferenceType(NodeList<AnnotationExpr> annotations):
@@ -1808,30 +1823,27 @@ ReferenceType ReferenceType(NodeList<AnnotationExpr> annotations):
 	ReferenceType type;
 }
 {
-  { run(); }
-  ( LOOKAHEAD( ( PrimitiveType() | ClassOrInterfaceType() ) ArrayTypeDims() ) type = ArrayType(annotations) | type = ClassOrInterfaceType(annotations) )
+  // Run may be started before annotations
+
+  LOOKAHEAD( ( PrimitiveType() | ClassOrInterfaceType() ) ArrayDims() )
+  type = ArrayType(annotations) | type = ClassOrInterfaceType(annotations)
+
   { return type; }
 }
 
 ArrayType ArrayType(NodeList<AnnotationExpr> annotations):
 {
 	Type type;
+	NodeList arrayDims;
 }
 {
-  { run(); }
-  ( type = PrimitiveType(annotations) | type = ClassOrInterfaceType(annotations) ) type = ArrayTypeDims(type)
-  { return (ArrayType) type; }
-}
+  // Run may be started before annotations
+  { if (annotations == null) run(); }
 
-ArrayType ArrayTypeDims(Type componentType):
-{
-    Type type = null;
-	NodeList<AnnotationExpr> annotations = null;
-}
-{
-  { run(); }
-  annotations = Annotations() "[" "]" ( LOOKAHEAD( Annotations() "[" "]" ) type = ArrayTypeDims(componentType) )?
-  { return enRun(new ArrayType(annotations, type == null ? componentType : type)); }
+  ( type = PrimitiveType(annotations) | type = ClassOrInterfaceType(annotations) )
+  arrayDims = ArrayDims()
+
+  { return enRun(new ArrayType(annotations, type, arrayDims)); }
 }
 
 ClassOrInterfaceType ClassOrInterfaceType(NodeList<AnnotationExpr> annotations):
@@ -1841,14 +1853,20 @@ ClassOrInterfaceType ClassOrInterfaceType(NodeList<AnnotationExpr> annotations):
 	NodeList typeArgs = null;
 }
 {
-  { run(); }
+  // Run may be started before annotations
+  { if (annotations == null) run(); }
+
   name = Name()
   [ LOOKAHEAD(2) typeArgs = TypeArguments() ]
-  { ret = new ClassOrInterfaceType(annotations, null, name, typeArgs); }
+  { ret = enRun(new ClassOrInterfaceType(annotations, null, name, typeArgs)); }
   (
-	  LOOKAHEAD(2) "." annotations = Annotations() name = Name()
-	  [ LOOKAHEAD(2) typeArgs = TypeArguments() ] { ret = new ClassOrInterfaceType(annotations, ret, name, typeArgs); }
+    LOOKAHEAD(2)
+    { lateRun(); }
+    "." annotations = Annotations() name = Name()
+    [ LOOKAHEAD(2) typeArgs = TypeArguments() ]
+    { ret = enRun(new ClassOrInterfaceType(annotations, ret, name, typeArgs)); }
   )*
+
   { return ret; }
 }
 
@@ -1858,16 +1876,17 @@ NodeList TypeArguments():
 	Type type;
 }
 {
-  { run(); }
-   (
-     "<"
-     type = TypeArgument() { ret = ret.append(type); } ( "," type = TypeArgument() { ret = ret.append(type); } )*
-     ">"
-   )
-   { return ret; }
- |
-   "<>"
-   { return ret; }
+  (
+    "<>"
+    { return null; }
+  |
+    { run(); }
+    "<"
+    type = TypeArgument() { ret = ret.append(type); }
+    ( "," type = TypeArgument() { ret = ret.append(type); } )*
+    ">"
+    { return enRun(ret); }
+  )
 }
 
 Type TypeArgument():
@@ -1878,12 +1897,12 @@ Type TypeArgument():
 {
   { run(); }
   annotations = Annotations()
- (
-   ret = ReferenceType(annotations)
- |
-   ret = Wildcard(annotations)
- )
- { return ret; }
+  (
+    ret = ReferenceType(annotations)
+  |
+    ret = Wildcard(annotations)
+  )
+  { return ret; }
 }
 
 WildcardType Wildcard(NodeList<AnnotationExpr> annotations):
@@ -1894,15 +1913,10 @@ WildcardType Wildcard(NodeList<AnnotationExpr> annotations):
 }
 {
   { run(); }
-   "?"
-   [
-		"extends" boundAnnotations = Annotations() ext = ReferenceType(boundAnnotations)
-	|
-		"super" boundAnnotations = Annotations() sup = ReferenceType(boundAnnotations)
-   ]
-   { 
-     return enRun(new WildcardType(annotations, ext, sup));
-   }
+  "?"
+  [ "extends" { run(); } boundAnnotations = Annotations() ext = ReferenceType(boundAnnotations)
+  | "super" { run(); } boundAnnotations = Annotations() sup = ReferenceType(boundAnnotations) ]
+  { return enRun(new WildcardType(annotations, ext, sup)); }
 }
 
 PrimitiveType PrimitiveType(NodeList<AnnotationExpr> annotations):
@@ -1911,25 +1925,14 @@ PrimitiveType PrimitiveType(NodeList<AnnotationExpr> annotations):
 }
 {
   { run(); }
-  (
-    "boolean" { primitive = PrimitiveType.Primitive.Boolean; }
-  |
-    "char" { primitive = PrimitiveType.Primitive.Char; }
-  |
-    "byte" { primitive = PrimitiveType.Primitive.Byte; }
-  |
-    "short" { primitive = PrimitiveType.Primitive.Short; }
-  |
-    "int" { primitive = PrimitiveType.Primitive.Int; }
-  |
-    "long" { primitive = PrimitiveType.Primitive.Long; }
-  |
-    "float" { primitive = PrimitiveType.Primitive.Float; }
-  |
-    "double" { primitive = PrimitiveType.Primitive.Double; }
-  )
-  {
-  }
+  ( "boolean" { primitive = PrimitiveType.Primitive.Boolean; }
+  | "char"    { primitive = PrimitiveType.Primitive.Char; }
+  | "byte"    { primitive = PrimitiveType.Primitive.Byte; }
+  | "short"   { primitive = PrimitiveType.Primitive.Short; }
+  | "int"     { primitive = PrimitiveType.Primitive.Int; }
+  | "long"    { primitive = PrimitiveType.Primitive.Long; }
+  | "float"   { primitive = PrimitiveType.Primitive.Float; }
+  | "double"  { primitive = PrimitiveType.Primitive.Double; } )
   { return enRun(new PrimitiveType(annotations, primitive)); }
 }
 
@@ -1938,9 +1941,8 @@ Type ResultType():
 	Type ret;
 }
 {
-  { run(); }
   (
-    "void" { ret = new VoidType(); }
+    { run(); } "void" { ret = enRun(new VoidType()); }
   |
     ret = Type(null)
   )
@@ -1955,10 +1957,27 @@ NodeList ClassOrInterfaceTypeList():
 }
 {
   { run(); }
-  annotations = Annotations() type = ClassOrInterfaceType(annotations) { ret = ret.append(type); }  ( "," annotations = Annotations() type = ClassOrInterfaceType(annotations) { ret = ret.append(type); } )*
 
+  type = AnnotatedClassOrInterfaceType() { ret = ret.append(type); }
+  ( "," type = AnnotatedClassOrInterfaceType() { ret = ret.append(type); } )*
+
+  { return enRun(ret); }
+}
+
+ClassOrInterfaceType AnnotatedClassOrInterfaceType():
+{
+    NodeList<AnnotationExpr> annotations;
+	ClassOrInterfaceType ret;
+}
+{
+  { run(); }
+  annotations = Annotations() ret = ClassOrInterfaceType(annotations)
   { return ret; }
 }
+
+/**********************************************************************************************************************
+ * Names
+ **********************************************************************************************************************/
 
 QName QName():
 {
@@ -1978,20 +1997,19 @@ Name Name(): {}
   { return enRun(new Name(token.image)); }
 }
 
-/*
- * Expr syntax follows.
- */
+/**********************************************************************************************************************
+ * Expressions
+ **********************************************************************************************************************/
 
 Expr Expression():
-/*
- * This expansion has been written this way instead of:
- *   Assignment() | ConditionalExpression()
- * for performance reasons.
- * However, it is a weakening of the grammar for it allows the LHS of
- * assignments to be any conditional Expr whereas it can only be
- * a primary Expr.  Consider adding a semantic predicate to work
- * around this.
- */
+// FIXME
+// This expansion has been written this way instead of :
+//   Assignment() | ConditionalExpression()
+// for performance reasons.
+// However, it is a weakening of the grammar for it allows the LHS of
+// assignments to be any conditional Expr whereas it can only be
+// a primary Expr.  Consider adding a semantic predicate to work
+// around this.
 {
 	Expr ret;
 	AssignExpr.AssignOp op;
@@ -2003,12 +2021,14 @@ Expr Expression():
 	Expr inner = null;
 }
 {
-  { run(); }
   (
     LOOKAHEAD( LambdaExpression() ) ret = LambdaExpression()
   |
     ret = ConditionalExpression()
-    [ LOOKAHEAD(2) op = AssignmentOperator() value = Expression() { ret = new AssignExpr(ret, op, value); } ]
+    [
+      LOOKAHEAD(2) { lateRun(); } op = AssignmentOperator() value = Expression()
+      { ret = enRun(new AssignExpr(ret, op, value)); }
+    ]
   )
   { return ret; }
 }
@@ -2025,9 +2045,9 @@ LambdaExpr LambdaExpression():
   parameters = LambdaParameters()
   "->"
   (
-    expr = Expression() { ret = new LambdaExpr(parameters, expr); }
+    expr = Expression() { ret = enRun(new LambdaExpr(parameters, expr)); }
   |
-    block = Block() { ret = new LambdaExpr(parameters, block); }
+    block = Block() { ret = enRun(new LambdaExpr(parameters, block)); }
   )
   { return ret; }
 }
@@ -2035,12 +2055,13 @@ LambdaExpr LambdaExpression():
 NodeList LambdaParameters():
 {
   NodeList ret;
-  Name name;
+  Parameter param;
 }
 {
-  { run(); }
   (
-    name = Name() { ret = new NodeList(new Parameter(null, new UnknownType(), false, new VariableDeclaratorId(name, null))); }
+    { run(); }
+    param = InferredFormalParameter()
+    { ret = enRun(new NodeList(param)); }
   |
     "("
     (
@@ -2056,15 +2077,23 @@ NodeList LambdaParameters():
 NodeList InferredFormalParameterList():
 {
   NodeList ret = new NodeList();
+  Parameter param;
+}
+{
+  { run(); }
+  param = InferredFormalParameter() { ret = ret.append(param); }
+  ( "," param = InferredFormalParameter() { ret = ret.append(param); } )*
+  { return enRun(ret); }
+}
+
+Parameter InferredFormalParameter():
+{
   Name name;
 }
 {
   { run(); }
-  name = Name() { ret = ret.append(new Parameter(null, new UnknownType(), false, new VariableDeclaratorId(name, null))); }
-  (
-    "," name = Name() { ret = ret.append(new Parameter(null, new UnknownType(), false, new VariableDeclaratorId(name, null))); }
-  )*
-  { return ret; }
+  name = Name()
+  { return enRun(new Parameter(null, new UnknownType(), false, new VariableDeclaratorId(name, null))); }
 }
 
 AssignExpr.AssignOp AssignmentOperator():
@@ -2072,21 +2101,18 @@ AssignExpr.AssignOp AssignmentOperator():
 	AssignExpr.AssignOp ret;
 }
 {
-  { run(); }
-  (
-      "="    { ret = AssignExpr.AssignOp.Normal; }
-    | "*="   { ret = AssignExpr.AssignOp.Times; }
-    | "/="   { ret = AssignExpr.AssignOp.Divide; }
-    | "%="   { ret = AssignExpr.AssignOp.Remainder; }
-    | "+="   { ret = AssignExpr.AssignOp.Plus; }
-    | "-="   { ret = AssignExpr.AssignOp.Minus; }
-    | "<<="  { ret = AssignExpr.AssignOp.LeftShift; }
-    | ">>="  { ret = AssignExpr.AssignOp.RightSignedShift; }
-    | ">>>=" { ret = AssignExpr.AssignOp.RightUnsignedShift; }
-    | "&="   { ret = AssignExpr.AssignOp.And; }
-    | "^="   { ret = AssignExpr.AssignOp.XOr; }
-    | "|="   { ret = AssignExpr.AssignOp.Or; }
-  )
+  ( "="    { ret = AssignExpr.AssignOp.Normal; }
+  | "*="   { ret = AssignExpr.AssignOp.Times; }
+  | "/="   { ret = AssignExpr.AssignOp.Divide; }
+  | "%="   { ret = AssignExpr.AssignOp.Remainder; }
+  | "+="   { ret = AssignExpr.AssignOp.Plus; }
+  | "-="   { ret = AssignExpr.AssignOp.Minus; }
+  | "<<="  { ret = AssignExpr.AssignOp.LeftShift; }
+  | ">>="  { ret = AssignExpr.AssignOp.RightSignedShift; }
+  | ">>>=" { ret = AssignExpr.AssignOp.RightUnsignedShift; }
+  | "&="   { ret = AssignExpr.AssignOp.And; }
+  | "^="   { ret = AssignExpr.AssignOp.XOr; }
+  | "|="   { ret = AssignExpr.AssignOp.Or; } )
   { return ret; }
 }
 
@@ -2097,9 +2123,8 @@ Expr ConditionalExpression():
 	Expr right;
 }
 {
-  { run(); }
   ret = ConditionalOrExpression()
-  [ "?" left = Expression() ":" right = ConditionalExpression() { ret = new ConditionalExpr(ret, left, right); } ]
+  [ { lateRun(); } "?" left = Expression() ":" right = ConditionalExpression() { ret = enRun(new ConditionalExpr(ret, left, right)); } ]
   { return ret; }
 }
 
@@ -2109,8 +2134,8 @@ Expr ConditionalOrExpression():
 	Expr right;
 }
 {
-  { run(); }
-  ret = ConditionalAndExpression() ( "||" right = ConditionalAndExpression() { ret = new BinaryExpr(ret, BinaryExpr.BinaryOp.Or, right); } )*
+  ret = ConditionalAndExpression()
+  ( { lateRun(); } "||" right = ConditionalAndExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.Or, right)); } )*
   { return ret; }
 }
 
@@ -2120,8 +2145,8 @@ Expr ConditionalAndExpression():
 	Expr right;
 }
 {
-  { run(); }
-  ret = InclusiveOrExpression() ( "&&" right = InclusiveOrExpression() { ret = new BinaryExpr(ret, BinaryExpr.BinaryOp.And, right); } )*
+  ret = InclusiveOrExpression()
+  ( { lateRun(); } "&&" right = InclusiveOrExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.And, right)); } )*
   { return ret; }
 }
 
@@ -2131,8 +2156,8 @@ Expr InclusiveOrExpression():
 	Expr right;
 }
 {
-  { run(); }
-  ret = ExclusiveOrExpression() ( "|" right = ExclusiveOrExpression() { ret = new BinaryExpr(ret, BinaryExpr.BinaryOp.BinOr, right); } )*
+  ret = ExclusiveOrExpression()
+  ( { lateRun(); } "|" right = ExclusiveOrExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.BinOr, right)); } )*
   { return ret; }
 }
 
@@ -2142,8 +2167,8 @@ Expr ExclusiveOrExpression():
 	Expr right;
 }
 {
-  { run(); }
-  ret = AndExpression() ( "^" right = AndExpression() { ret = new BinaryExpr(ret, BinaryExpr.BinaryOp.XOr, right); } )*
+  ret = AndExpression()
+  ( { lateRun(); } "^" right = AndExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.XOr, right)); } )*
   { return ret; }
 }
 
@@ -2153,8 +2178,8 @@ Expr AndExpression():
 	Expr right;
 }
 {
-  { run(); }
-  ret = EqualityExpression() ( "&" right = EqualityExpression() { ret = new BinaryExpr(ret, BinaryExpr.BinaryOp.BinAnd, right); } )*
+  ret = EqualityExpression()
+  ( { lateRun(); } "&" right = EqualityExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.BinAnd, right)); } )*
   { return ret; }
 }
 
@@ -2168,9 +2193,11 @@ Expr EqualityExpression():
   { run(); }
   ret = InstanceOfExpression()
   (
+    { lateRun(); }
     ( "==" { op = BinaryExpr.BinaryOp.Equal; } |
-      "!=" { op = BinaryExpr.BinaryOp.NotEqual; }
-    ) right = InstanceOfExpression() { ret = new BinaryExpr(ret, op, right); }
+      "!=" { op = BinaryExpr.BinaryOp.NotEqual; } )
+    right = InstanceOfExpression()
+    { ret = enRun(new BinaryExpr(ret, op, right)); }
   )*
   { return ret; }
 }
@@ -2182,8 +2209,8 @@ Expr InstanceOfExpression():
 	Type type;
 }
 {
-  { run(); }
-  ret = RelationalExpression() [ "instanceof" annotations = Annotations() type = Type(annotations) { ret = new InstanceOfExpr(ret, type); } ]
+  ret = RelationalExpression()
+  [ { lateRun(); } "instanceof" annotations = Annotations() type = Type(annotations) { ret = enRun(new InstanceOfExpr(ret, type)); } ]
   { return ret; }
 }
 
@@ -2194,14 +2221,15 @@ Expr RelationalExpression():
 	BinaryExpr.BinaryOp op;
 }
 {
-  { run(); }
   ret = ShiftExpression()
   (
+    { lateRun(); }
   	( "<"  { op = BinaryExpr.BinaryOp.Less; } |
   	  ">"  { op = BinaryExpr.BinaryOp.Greater; } |
   	  "<=" { op = BinaryExpr.BinaryOp.LessOrEqual; } |
-  	  ">=" { op = BinaryExpr.BinaryOp.GreaterOrEqual; }
-  	) right = ShiftExpression() { ret = new BinaryExpr(ret, op, right); }
+  	  ">=" { op = BinaryExpr.BinaryOp.GreaterOrEqual; } )
+  	right = ShiftExpression()
+  	{ ret = enRun(new BinaryExpr(ret, op, right)); }
   )*
   { return ret; }
 }
@@ -2213,13 +2241,14 @@ Expr ShiftExpression():
 	BinaryExpr.BinaryOp op;
 }
 {
-  { run(); }
   ret = AdditiveExpression()
   (
+    { lateRun(); }
   	( "<<"             { op = BinaryExpr.BinaryOp.LeftShift; } |
   	  RSIGNEDSHIFT()   { op = BinaryExpr.BinaryOp.RightSignedShift; } |
-  	  RUNSIGNEDSHIFT() { op = BinaryExpr.BinaryOp.RightUnsignedShift; }
-  	) right = AdditiveExpression() { ret = new BinaryExpr(ret, op, right); }
+  	  RUNSIGNEDSHIFT() { op = BinaryExpr.BinaryOp.RightUnsignedShift; } )
+  	right = AdditiveExpression()
+  	{ ret = enRun(new BinaryExpr(ret, op, right)); }
   )*
   { return ret; }
 }
@@ -2231,12 +2260,13 @@ Expr AdditiveExpression():
 	BinaryExpr.BinaryOp op;
 }
 {
-  { run(); }
   ret = MultiplicativeExpression()
   (
+    { lateRun(); }
   	( "+" { op = BinaryExpr.BinaryOp.Plus; } |
-  	  "-" { op = BinaryExpr.BinaryOp.Minus; }
-  	) right = MultiplicativeExpression() { ret = new BinaryExpr(ret, op, right); }
+  	  "-" { op = BinaryExpr.BinaryOp.Minus; } )
+  	right = MultiplicativeExpression()
+  	{ ret = enRun(new BinaryExpr(ret, op, right)); }
   )*
   { return ret; }
 }
@@ -2248,13 +2278,14 @@ Expr MultiplicativeExpression():
 	BinaryExpr.BinaryOp op;
 }
 {
-  { run(); }
   ret = UnaryExpression()
   (
+    { lateRun(); }
   	( "*" { op = BinaryExpr.BinaryOp.Times; } |
   	  "/" { op = BinaryExpr.BinaryOp.Divide; } |
-  	  "%" { op = BinaryExpr.BinaryOp.Remainder; }
-  	) right = UnaryExpression() { ret = new BinaryExpr(ret, op, right); }
+  	  "%" { op = BinaryExpr.BinaryOp.Remainder; } )
+  	right = UnaryExpression()
+  	{ ret = enRun(new BinaryExpr(ret, op, right)); }
   )*
   { return ret; }
 }
@@ -2265,16 +2296,16 @@ Expr UnaryExpression():
 	UnaryExpr.UnaryOp op;
 }
 {
-  { run(); }
   (
 	  ret = PreIncrementExpression()
 	|
 	  ret = PreDecrementExpression()
 	|
+	  { run(); }
 	  ( "+" { op = UnaryExpr.UnaryOp.Positive; } |
-	    "-" { op = UnaryExpr.UnaryOp.Negative; }
-	  ) ret = UnaryExpression()
-	  { ret = new UnaryExpr(op, ret); }
+	    "-" { op = UnaryExpr.UnaryOp.Negative; } )
+	  ret = UnaryExpression()
+	  { ret = enRun(new UnaryExpr(op, ret)); }
 	|
 	  ret = UnaryExpressionNotPlusMinus()
   )
@@ -2287,8 +2318,8 @@ Expr PreIncrementExpression():
 }
 {
   { run(); }
-  "++" ret = UnaryExpression() { ret = new UnaryExpr(UnaryExpr.UnaryOp.PreIncrement, ret); }
-  { return ret; }
+  "++" ret = UnaryExpression()
+  { return enRun(new UnaryExpr(UnaryExpr.UnaryOp.PreIncrement, ret)); }
 }
 
 Expr PreDecrementExpression():
@@ -2297,8 +2328,8 @@ Expr PreDecrementExpression():
 }
 {
   { run(); }
-  "--" ret = UnaryExpression() { ret = new UnaryExpr(UnaryExpr.UnaryOp.PreDecrement, ret); }
-  { return ret; }
+  "--" ret = UnaryExpression()
+  { return enRun(new UnaryExpr(UnaryExpr.UnaryOp.PreDecrement, ret)); }
 }
 
 Expr UnaryExpressionNotPlusMinus():
@@ -2307,16 +2338,17 @@ Expr UnaryExpressionNotPlusMinus():
 	UnaryExpr.UnaryOp op;
 }
 {
-  { run(); }
   (
-	  ( "~" { op = UnaryExpr.UnaryOp.Inverse; } |
-	    "!" { op = UnaryExpr.UnaryOp.Not;     }
-	  ) ret = UnaryExpression() { ret = new UnaryExpr(op, ret); }
-	|
-	  LOOKAHEAD( CastExpression() )
-	  ret = CastExpression()
-	|
-      ret = PostfixExpression()
+    { run(); }
+	( "~" { op = UnaryExpr.UnaryOp.Inverse; } |
+	  "!" { op = UnaryExpr.UnaryOp.Not; } )
+	ret = UnaryExpression()
+	{ ret = enRun(new UnaryExpr(op, ret)); }
+  |
+    LOOKAHEAD( CastExpression() )
+    ret = CastExpression()
+  |
+    ret = PostfixExpression()
   )
   { return ret; }
 }
@@ -2327,13 +2359,13 @@ Expr PostfixExpression():
 	UnaryExpr.UnaryOp op;
 }
 {
-  { run(); }
   ret = PrimaryExpression()
   [
   	LOOKAHEAD(2)
+    { run(); }
     ( "++" { op = UnaryExpr.UnaryOp.PostIncrement; } |
-      "--" { op = UnaryExpr.UnaryOp.PostDecrement; }
-    ) { ret = new UnaryExpr(op, ret); }
+      "--" { op = UnaryExpr.UnaryOp.PostDecrement; } )
+    { ret = enRun(new UnaryExpr(op, ret)); }
   ]
   { return ret; }
 }
@@ -2347,19 +2379,19 @@ Expr CastExpression():
 }
 {
   { run(); }
-  "(" 
-  annotations = Annotations()
+  "("
+  { run(); } annotations = Annotations()
   (
-  	  LOOKAHEAD(2)
-  	  type = PrimitiveType(annotations) ")" ret = UnaryExpression() { ret = new CastExpr(type, ret); }
-  	|
-  	  type = ReferenceType(annotations) { types = types.append(type); }
-  	  ("&" annotations = Annotations() type = ReferenceType(annotations) { types = types.append(type); } )*
-  	  ")" ret = UnaryExpressionNotPlusMinus()
-  	  {
-  	    if (types.size() > 1) type = new IntersectionType(types);
-  	    ret = new CastExpr(type, ret);
-  	  }
+    LOOKAHEAD(2)
+    type = PrimitiveType(annotations)
+    ")" ret = UnaryExpression()
+    { ret = enRun(new CastExpr(type, ret)); }
+  |
+    type = ReferenceType(annotations) { types = types.append(type); }
+    ( { lateRun(); } "&" annotations = Annotations() type = ReferenceType(annotations) { types = types.append(type); } )*
+    { if (types.size() > 1) type = enRun(new IntersectionType(types)); }
+    ")" ret = UnaryExpressionNotPlusMinus()
+    { ret = enRun(new CastExpr(type, ret)); }
   )
   { return ret; }
 }
@@ -2370,8 +2402,7 @@ Expr PrimaryExpression():
 	Expr inner;
 }
 {
-  { run(); }
-  ret = PrimaryPrefix() ( LOOKAHEAD(2) ret = PrimarySuffix(ret) )*
+  ret = PrimaryPrefix() ( LOOKAHEAD(2) { lateRun(); } ret = PrimarySuffix(ret) )*
   { return ret; }
 }
 
@@ -2381,8 +2412,7 @@ Expr PrimaryExpressionWithoutSuperSuffix():
 	Expr inner;
 }
 {
-  { run(); }
-  ret = PrimaryPrefix() ( LOOKAHEAD( PrimarySuffixWithoutSuper(null) ) ret = PrimarySuffixWithoutSuper(ret) )*
+  ret = PrimaryPrefix() ( LOOKAHEAD( PrimarySuffixWithoutSuper() ) { lateRun(); } ret = PrimarySuffixWithoutSuper(ret) )*
   { return ret; }
 }
 
@@ -2399,29 +2429,30 @@ Expr PrimaryPrefix():
 	VariableDeclaratorId id = null;
 }
 {
-  { run(); }
   (
     ret = Literal()
   |
-    "this" { ret = new ThisExpr(null); }
+    { run(); } "this" { ret = enRun(new ThisExpr(null)); }
   |
-    "super" { ret = new SuperExpr(null); }
+    { run(); } "super" { ret = enRun(new SuperExpr(null)); }
 	(
+	  { lateRun(); }
 	  "."
 	  [ typeArgs = TypeArguments() ]
 	  name = Name()
-	  [ args = Arguments() {hasArgs=true;} ]
+	  [ args = Arguments() { hasArgs = true; } ]
 	  {
 	    if (hasArgs) {
-	  	  ret = new CallExpr(ret, typeArgs, name, args);
+	  	  ret = enRun(new CallExpr(ret, typeArgs, name, args));
 		} else {
-	  	  ret = new SelectExpr(ret, null, name);
+	  	  ret = enRun(new SelectExpr(ret, null, name));
 		}
       }
 	|
+	  { lateRun(); }
 	  "::" [typeArgs = TypeParameters() ]
       ( name = Name() | "new" { name = new Name("new"); } )
-	  { ret = new ReferenceExpr(ret, typeArgs, name); }
+	  { ret = enRun(new ReferenceExpr(ret, typeArgs, name)); }
 
 // WTF!!
 //    |
@@ -2430,26 +2461,26 @@ Expr PrimaryPrefix():
 
 	)
   |
-    "(" ret = Expression() ")"
-    { ret = new EnclosedExpr(ret); }
+    { run(); } "(" ret = Expression() ")" { ret = enRun(new EnclosedExpr(ret)); }
   |
     ret = AllocationExpression(null)
   |
     LOOKAHEAD( ResultType() "." "class" )
-    type = ResultType()  "." "class"
-    { ret = new ClassExpr(type); }
+    { run(); } type = ResultType()  "." "class" { ret = enRun(new ClassExpr(type)); }
   |
     LOOKAHEAD (ResultType() "::" )
+    { run(); }
     type = ResultType() "::" [typeArgs = TypeParameters() ]
     ( name = Name() | "new" { name = new Name("new"); } )
-    { ret = new ReferenceExpr(new TypeExpr(type), typeArgs, name); }
+    { ret = enRun(new ReferenceExpr(new TypeExpr(type), typeArgs, name)); }
   |
+    { run(); }
     name = Name() [ args = Arguments() { hasArgs=true; } ]
     {
       if (hasArgs) {
-        ret = new CallExpr(null, null, name, args);
+        ret = enRun(new CallExpr(null, null, name, args));
       } else {
-        ret = name;
+        ret = enRun(name);
       }
     }
   )
@@ -2461,12 +2492,13 @@ Expr PrimarySuffix(Expr scope):
 	Expr ret;
 }
 {
-  { run(); }
+  // Run is started before scope
+
   (
-  	LOOKAHEAD(2)
-	ret = PrimarySuffixWithoutSuper(scope)
-	|
-  	"." "super" { ret = new SuperExpr(scope); }
+    LOOKAHEAD(2)
+    ret = PrimarySuffixWithoutSuper(scope)
+  |
+    "." "super" { ret = enRun(new SuperExpr(scope)); }
   )
   { return ret; }
 }
@@ -2480,29 +2512,31 @@ Expr PrimarySuffixWithoutSuper(Expr scope):
 	Name name;
 }
 {
-  { run(); }
+  // Run is started before scope
+
   (
-  	"."
-  	(
-		"this" { ret = new ThisExpr(scope); }
-	  |
-	  	ret = AllocationExpression(scope)
-	  |
-	  	LOOKAHEAD( [ TypeArguments() ] <IDENTIFIER> )
-	  	[ typeArgs = TypeArguments() ]
-	  	name = Name()
-	  	[ args = Arguments() {hasArgs=true;} ]
-	  	{
-			if (hasArgs) {
-	  			ret = new CallExpr(scope, typeArgs, name, args);
-			} else {
-	  			ret = new SelectExpr(scope, typeArgs, name);
-			}
-	  	}
-	)
-	|
-	  "["ret = Expression() "]" { ret = new ArrayAccessExpr(scope, ret); }
+    "."
+    (
+      "this" { ret = enRun(new ThisExpr(scope)); }
+    |
+      ret = AllocationExpression(scope)
+    |
+      LOOKAHEAD( [ TypeArguments() ] <IDENTIFIER> )
+      [ typeArgs = TypeArguments() ]
+      name = Name()
+      [ args = Arguments() { hasArgs=true; } ]
+      {
+        if (hasArgs) {
+          ret = enRun(new CallExpr(scope, typeArgs, name, args));
+        } else {
+          ret = enRun(new SelectExpr(scope, typeArgs, name));
+        }
+      }
+    )
+  |
+    "[" ret = Expression() "]" { ret = enRun(new ArrayAccessExpr(scope, ret)); }
   )
+
   { return ret; }
 }
 
@@ -2513,45 +2547,25 @@ Expr Literal():
 {
   { run(); }
   (
-    <INTEGER_LITERAL> { ret = new LiteralExpr<Integer>(Integer.class, token.image); }
+    <INTEGER_LITERAL>   { ret = new LiteralExpr<Integer>(Integer.class, token.image); }
   |
-    <LONG_LITERAL> { ret = new LiteralExpr<Long>(Long.class, token.image); }
+    <LONG_LITERAL>      { ret = new LiteralExpr<Long>(Long.class, token.image); }
   |
-    <FLOAT_LITERAL> { ret = new LiteralExpr<Float>(Float.class, token.image); }
+    <FLOAT_LITERAL>     { ret = new LiteralExpr<Float>(Float.class, token.image); }
   |
-    <DOUBLE_LITERAL> { ret = new LiteralExpr<Double>(Double.class, token.image); }
+    <DOUBLE_LITERAL>    { ret = new LiteralExpr<Double>(Double.class, token.image); }
   |
     <CHARACTER_LITERAL> { ret = new LiteralExpr<Character>(Character.class, token.image); }
   |
-    <STRING_LITERAL> { ret = new LiteralExpr<String>(String.class, token.image); }
+    <STRING_LITERAL>    { ret = new LiteralExpr<String>(String.class, token.image); }
   |
-    ret = BooleanLiteral()
-  |
-    ret = NullLiteral()
-  )
-  { return ret; }
-}
-
-Expr BooleanLiteral():
-{
-	Expr ret;
-}
-{
-  { run(); }
-  (
-    "true" { ret = new LiteralExpr<Boolean>(Boolean.class, token.image); }
+    "true"  { ret = new LiteralExpr<Boolean>(Boolean.class, token.image); }
   |
     "false" { ret = new LiteralExpr<Boolean>(Boolean.class, token.image); }
+  |
+    "null"  { ret = new LiteralExpr<Void>(Void.class, token.image); }
   )
-  { return ret; }
-}
-
-Expr NullLiteral():
-{}
-{
-  { run(); }
-  "null"
-  { return new LiteralExpr<Void>(Void.class, token.image); }
+  { return enRun(ret); }
 }
 
 NodeList Arguments():
@@ -2559,7 +2573,6 @@ NodeList Arguments():
 	NodeList ret = null;
 }
 {
-  { run(); }
   "(" [ ret = ArgumentList() ] ")"
   { return ret; }
 }
@@ -2571,8 +2584,9 @@ NodeList ArgumentList():
 }
 {
   { run(); }
-  expr = Expression() { ret = ret.append(expr); } ( "," expr = Expression() { ret = ret.append(expr); } )*
-  { return ret; }
+  expr = Expression() { ret = ret.append(expr); }
+  ( "," expr = Expression() { ret = ret.append(expr); } )*
+  { return enRun(ret); }
 }
 
 Expr AllocationExpression(Expr scope):
@@ -2585,19 +2599,24 @@ Expr AllocationExpression(Expr scope):
 	NodeList<AnnotationExpr> annotations = null;
 }
 {
+  // Run may be started before scope
+  { if (scope == null) run(); }
+
+  "new"
+  [ typeArgs = TypeArguments() ]
+
   { run(); }
-  "new" annotations = Annotations()
+  annotations = Annotations()
   (
     type = PrimitiveType(annotations)
     ret = ArrayCreationExpr(type)
   |
-    [ typeArgs = TypeArguments() annotations = Annotations() ]
 	type = ClassOrInterfaceType(annotations)
     (
 	  ret = ArrayCreationExpr(type)
 	|
 	  args = Arguments() [ LOOKAHEAD(2) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
-      { ret = new ObjectCreationExpr(scope, (ClassOrInterfaceType) type, typeArgs, args, anonymousBody); }
+      { ret = enRun(new ObjectCreationExpr(scope, (ClassOrInterfaceType) type, typeArgs, args, anonymousBody)); }
     )
   )
   { return ret; }
@@ -2612,42 +2631,59 @@ Expr ArrayCreationExpr(Type componentType):
 	ArrayInitializerExpr initializer;
 }
 {
-  { run(); }
   (
-    LOOKAHEAD(3)
-    (
-      LOOKAHEAD( Annotations() "[" Expression() "]" )
-      annotations = Annotations() "[" expr = Expression() "]"
-      { arrayDimExprs = arrayDimExprs.append(new ArrayDimExpr(annotations, expr)); }
-    )+
-    (
-      LOOKAHEAD( Annotations() "[" "]" )
-      annotations = Annotations() "[" "]"
-      { arrayDims = arrayDims.append(new ArrayDim(annotations)); }
-    )*
+    LOOKAHEAD( Annotations() "[" Expression() )
+    arrayDimExprs = ArrayDimExprsMandatory()
+    arrayDims = ArrayDims()
     { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, null)); }
   |
-    (
-      LOOKAHEAD( Annotations() "[" "]" )
-      annotations = Annotations() "[" "]"
-      { arrayDims = arrayDims.append(new ArrayDim(annotations)); }
-    )+
+    arrayDims = ArrayDimsMandatory()
     initializer = ArrayInitializer()
     { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, initializer)); }
   )
 }
 
+NodeList ArrayDimExprsMandatory():
+{
+	NodeList arrayDimExprs = new NodeList();
+	NodeList<AnnotationExpr> annotations;
+	Expr expr;
+}
+{
+  { run(); }
+  (
+    LOOKAHEAD( Annotations() "[" Expression() "]" )
+    annotations = Annotations() "[" expr = Expression() "]"
+    { arrayDimExprs = arrayDimExprs.append(new ArrayDimExpr(annotations, expr)); }
+  )+
+  { return enRun(arrayDimExprs); }
+}
 
-/*
- * Stmt syntax follows.
- */
+NodeList ArrayDimsMandatory():
+{
+	NodeList arrayDims = new NodeList();
+	NodeList<AnnotationExpr> annotations;
+}
+{
+  { run(); }
+  (
+    LOOKAHEAD( Annotations() "[" "]" )
+    { run(); }
+    annotations = Annotations() "[" "]"
+    { arrayDims = arrayDims.append(enRun(new ArrayDim(annotations))); }
+  )+
+  { return enRun(arrayDims); }
+}
+
+/**********************************************************************************************************************
+ * Statements
+ **********************************************************************************************************************/
 
 Stmt Statement():
 {
 	Stmt ret;
 }
 {
-  { run(); }
   (
 	  LOOKAHEAD(2)
 	  ret = LabeledStatement()
@@ -2728,17 +2764,18 @@ Stmt BlockStatement():
 	Modifiers modifiers;
 }
 {
-  { run(); }
   (
-	  LOOKAHEAD( Modifiers() ("class" | "interface") )
-	  modifiers = Modifiers()
-	  typeDecl = ClassOrInterfaceDecl(modifiers) { ret = new TypeDeclarationStmt(typeDecl); }
-	|
-  	  LOOKAHEAD( VariableDeclExpression() )
-	  expr = VariableDeclExpression() ";"
-	  { ret = new ExpressionStmt(expr); }
-    |
-	  ret = Statement()
+    LOOKAHEAD( Modifiers() ("class" | "interface") )
+    { run(); }
+    { run(); } modifiers = Modifiers() typeDecl = ClassOrInterfaceDecl(modifiers)
+    { ret = enRun(new TypeDeclarationStmt(typeDecl)); }
+  |
+    LOOKAHEAD( VariableDeclExpression() )
+    { run(); }
+    expr = VariableDeclExpression() ";"
+    { ret = enRun(new ExpressionStmt(expr)); }
+  |
+    ret = Statement()
   )
   { return ret; }
 }
@@ -2750,7 +2787,7 @@ VariableDeclarationExpr VariableDeclExpression():
 }
 {
   { run(); }
-  modifiers = Modifiers() variableDecl = VariableDecl(modifiers)
+  { run(); } modifiers = Modifiers() variableDecl = VariableDecl(modifiers)
   { return enRun(new VariableDeclarationExpr(variableDecl)); }
 }
 
@@ -2768,26 +2805,19 @@ Stmt LambdaBody():
   Stmt n = null;
 }
 {
-  { run(); }
   (
-  	expr = Expression()
-  	{
-  	  n = new ExpressionStmt(expr);
-  	}
- 	|  n = Block()
+    { run(); } expr = Expression() { n = enRun(new ExpressionStmt(expr)); }
+  |
+    n = Block()
   )
-  {
-  	return n;
-  }
-
+  { return n; }
 }
 
 ExpressionStmt StatementExpression():
-/*
- * The last expansion of this production accepts more than the legal
- * Java expansions for StatementExpression.  This expansion does not
- * use PostfixExpression for performance reasons.
- */
+// FIXME
+// The last expansion of this production accepts more than the legal
+// Java expansions for StatementExpression.  This expansion does not
+// use PostfixExpression for performance reasons.
 {
 	Expr expr;
 	AssignExpr.AssignOp op;
@@ -2804,11 +2834,11 @@ ExpressionStmt StatementExpression():
   |
     expr = PrimaryExpression()
     [
-      "++" { expr = new UnaryExpr(UnaryExpr.UnaryOp.PostIncrement, expr);  }
+      { lateRun(); } "++" { expr = enRun(new UnaryExpr(UnaryExpr.UnaryOp.PostIncrement, expr));  }
     |
-      "--" { expr = new UnaryExpr(UnaryExpr.UnaryOp.PostDecrement, expr);  }
+      { lateRun(); } "--" { expr = enRun(new UnaryExpr(UnaryExpr.UnaryOp.PostDecrement, expr));  }
     |
-      op = AssignmentOperator() value = Expression() { expr = new AssignExpr(expr, op, value); }
+      { lateRun(); } op = AssignmentOperator() value = Expression() { expr = enRun(new AssignExpr(expr, op, value)); }
 	]
   )
   ";"
@@ -2824,9 +2854,10 @@ SwitchStmt SwitchStatement():
 {
   { run(); }
   "switch" "(" selector = Expression() ")" "{"
-    ( entry = SwitchEntry() { entries = entries.append(entry); } )*
+  { run(); }
+  ( entry = SwitchEntry() { entries = entries.append(entry); } )*
+  { entries = enRun(entries); }
   "}"
-
   { return enRun(new SwitchStmt(selector, entries)); }
 }
 
@@ -2838,12 +2869,11 @@ SwitchEntryStmt SwitchEntry():
 {
   { run(); }
   (
-	  "case" label = Expression()
-	|
-	  "default" 
+    "case" label = Expression()
+  |
+    "default"
   )
   ":" stmts = Statements()
-
   { return enRun(new SwitchEntryStmt(label, stmts)); }
 }
 
@@ -2897,21 +2927,16 @@ Stmt ForStatement():
 {
   { run(); }
   "for" "("
-
   (
-      LOOKAHEAD(VariableDeclExpression() ":")
-      varExpr = VariableDeclExpression() ":" expr = Expression()
-    |
-     [ init = ForInit() ] ";" [ expr = Expression() ] ";" [ update = ForUpdate() ]
+    LOOKAHEAD(VariableDeclExpression() ":")
+    varExpr = VariableDeclExpression() ":" expr = Expression()
+  |
+    [ init = ForInit() ] ";" [ expr = Expression() ] ";" [ update = ForUpdate() ]
   )
-
   ")" body = Statement()
-
   {
-  	if (varExpr != null) {
-  		return enRun(new ForeachStmt(varExpr, expr, body));
-  	}
-	return enRun(new ForStmt(init, expr, update, body));
+  	if (varExpr != null) return enRun(new ForeachStmt(varExpr, expr, body));
+  	else return enRun(new ForStmt(init, expr, update, body));
   }
 }
 
@@ -2921,12 +2946,13 @@ NodeList ForInit():
 	Expr expr;
 }
 {
-  { run(); }
   (
-	  LOOKAHEAD( Modifiers() Type() <IDENTIFIER> )
-	  expr = VariableDeclExpression() { ret = new NodeList(); ret = ret.append(expr); }
-	|
-	  ret = ExpressionList()
+    LOOKAHEAD( Modifiers() Type() <IDENTIFIER> )
+    { run(); }
+    expr = VariableDeclExpression() { ret = new NodeList(); ret = ret.append(expr); }
+    { ret = enRun(ret); }
+  |
+    ret = ExpressionList()
   )
   { return ret; }
 }
@@ -2939,8 +2965,7 @@ NodeList ExpressionList():
 {
   { run(); }
   expr = Expression() { ret = ret.append(expr); } ( "," expr = Expression()  { ret = ret.append(expr); } )*
-
-  { return ret; }
+  { return enRun(ret); }
 }
 
 NodeList ForUpdate():
@@ -2948,9 +2973,7 @@ NodeList ForUpdate():
 	NodeList ret;
 }
 {
-  { run(); }
   ret = ExpressionList()
-
   { return ret; }
 }
 
@@ -3006,21 +3029,14 @@ SynchronizedStmt SynchronizedStatement():
 }
 
 TryStmt TryStatement():
-/*
- * Semantic check required here to make sure that at least one
- * finally/catch is present.
- */
+// FIXME
+// Semantic check required here to make sure that at least one
+// finally/catch is present.
 {
 	NodeList resources = new NodeList();
 	BlockStmt tryBlock;
 	BlockStmt finallyBlock = null;
-	NodeList catchs = new NodeList();
-	Parameter except;
-	BlockStmt catchBlock;
-	Modifiers exceptModifiers;
-	Type exceptType;
-	NodeList<Type> exceptTypes = new NodeList<Type>();
-	VariableDeclaratorId exceptId;
+	NodeList catchClauses = new NodeList();
 }
 {
   { run(); }
@@ -3028,36 +3044,66 @@ TryStmt TryStatement():
   (resources = ResourceSpecification())?
   tryBlock = Block()
   (
-    LOOKAHEAD(2)
-    (
-      "catch" "("
-      exceptModifiers = Modifiers() exceptType = ClassOrInterfaceType(null) { exceptTypes = exceptTypes.append(exceptType); }
-      ( "|" exceptType = ClassOrInterfaceType(null) { exceptTypes = exceptTypes.append(exceptType); } )*
-      exceptId = VariableDeclaratorId()
-      ")" catchBlock = Block()
-      {
-        if (exceptTypes.size() > 1) exceptType = new UnionType(exceptTypes);
-        except = new Parameter(exceptModifiers, exceptType, false, exceptId);
-        catchs = catchs.append(new CatchClause(except, catchBlock));
-        exceptTypes = new NodeList();
-      }
-    )*
+    LOOKAHEAD( "catch" ) catchClauses = CatchClauses()
     [ "finally" finallyBlock = Block() ]
   |
     "finally" finallyBlock = Block()
   )
-  { return enRun(new TryStmt(resources, tryBlock, catchs, finallyBlock)); }
+  { return enRun(new TryStmt(resources, tryBlock, catchClauses, finallyBlock)); }
+}
+
+NodeList CatchClauses():
+{
+	NodeList catchClauses = new NodeList();
+	CatchClause catchClause;
+}
+{
+  { run(); }
+  (
+    catchClause = CatchClause() { catchClauses = catchClauses.append(catchClause); }
+  )*
+  { return enRun(catchClauses); }
+}
+
+CatchClause CatchClause():
+{
+	Parameter param;
+	BlockStmt catchBlock;
+}
+{
+  { run(); }
+  "catch" "(" param = CatchFormalParameter() ")" catchBlock = Block()
+  { return enRun(new CatchClause(param, catchBlock)); }
+}
+
+Parameter CatchFormalParameter():
+{
+	Modifiers exceptModifiers;
+	Type exceptType;
+	NodeList<Type> exceptTypes = new NodeList<Type>();
+	VariableDeclaratorId exceptId;
+}
+{
+  { run(); }
+  exceptModifiers = Modifiers()
+
+  exceptType = ClassOrInterfaceType(null) { exceptTypes = exceptTypes.append(exceptType); }
+  ( { lateRun(); } "|" exceptType = AnnotatedClassOrInterfaceType() { exceptTypes = exceptTypes.append(exceptType); } )*
+  { if (exceptTypes.size() > 1) exceptType = enRun(new UnionType(exceptTypes)); }
+
+  exceptId = VariableDeclaratorId()
+  { return enRun(new Parameter(exceptModifiers, exceptType, false, exceptId)); }
 }
 
 NodeList ResourceSpecification() :
 {
-NodeList vars;
+    NodeList vars;
 }
 {
   { run(); }
   "("
   vars = Resources()
-  (LOOKAHEAD(2) ";")?
+  [ LOOKAHEAD(2) ";" ] // TODO Add syntactic data about semi-colon presence in NodeList
   ")"
   { return vars; }
 }
@@ -3068,9 +3114,10 @@ NodeList Resources() :
 	NodeList vars = new NodeList();
 	VariableDeclarationExpr var;
 }
- {
-  /*this is a bit more lenient than we need to be, eg allowing access modifiers like private*/
-  var = VariableDeclExpression() {vars = vars.append(var);} (LOOKAHEAD(2) ";" var = VariableDeclExpression() {vars = vars.append(var);})*
+{
+  // FIXME this is a bit more lenient than we need to be, eg allowing access modifiers like private
+  var = VariableDeclExpression() { vars = vars.append(var); }
+  ( LOOKAHEAD(2) ";" var = VariableDeclExpression() {vars = vars.append(var);} )*
   { return vars; }
 }
 
@@ -3099,7 +3146,10 @@ void RSIGNEDSHIFT():
   )
 }
 
-/* Annotation syntax follows. */
+
+/**********************************************************************************************************************
+ * Annotations
+ **********************************************************************************************************************/
 
 NodeList<AnnotationExpr> Annotations():
 {
@@ -3109,7 +3159,7 @@ NodeList<AnnotationExpr> Annotations():
 {
   { run(); }
   ( annotation = Annotation() { annotations = annotations.append(annotation); } )*
-  { return annotations; }
+  { return enRun(annotations); }
 }
 
 AnnotationExpr Annotation():
@@ -3117,15 +3167,14 @@ AnnotationExpr Annotation():
 	AnnotationExpr ret;
 }
 {
-  { run(); }
   (
-	   LOOKAHEAD( "@" QName() "(" ( <IDENTIFIER> "=" | ")" ))
-	   ret = NormalAnnotation()
-	 |
-	   LOOKAHEAD( "@" QName() "(" )
-	   ret = SingleMemberAnnotation()
-	 |
-	   ret = MarkerAnnotation()
+    LOOKAHEAD( "@" QName() "(" ( <IDENTIFIER> "=" | ")" ))
+    ret = NormalAnnotation()
+  |
+    LOOKAHEAD( "@" QName() "(" )
+    ret = SingleMemberAnnotation()
+  |
+    ret = MarkerAnnotation()
   )
   { return ret; }
 }
@@ -3137,8 +3186,8 @@ NormalAnnotationExpr NormalAnnotation():
 }
 {
   { run(); }
-   "@" name = QName() "(" [ pairs = MemberValuePairs() ] ")"
-   { return enRun(new NormalAnnotationExpr(name, pairs)); }
+  "@" name = QName() "(" [ pairs = MemberValuePairs() ] ")"
+  { return enRun(new NormalAnnotationExpr(name, pairs)); }
 }
 
 MarkerAnnotationExpr MarkerAnnotation():
@@ -3169,8 +3218,8 @@ NodeList MemberValuePairs():
 }
 {
   { run(); }
-   pair = MemberValuePair() { ret = ret.append(pair); } ( "," pair = MemberValuePair() { ret = ret.append(pair); } )*
-   { return ret; }
+  pair = MemberValuePair() { ret = ret.append(pair); } ( "," pair = MemberValuePair() { ret = ret.append(pair); } )*
+  { return enRun(ret); }
 }
 
 MemberValuePair MemberValuePair():
@@ -3189,18 +3238,17 @@ Expr MemberValue():
 	Expr ret;
 }
 {
-  { run(); }
   (
-	   ret = Annotation()
-	 |
-	   ret = MemberValueArrayInitializer()
-	 |
-	   ret = ConditionalExpression()
+    ret = Annotation()
+  |
+    ret = MemberValueArrayInitializer()
+  |
+    ret = ConditionalExpression()
   )
   { return ret; }
 }
 
-Expr  MemberValueArrayInitializer():
+Expr MemberValueArrayInitializer():
 {
 	NodeList ret = new NodeList();
 	Expr member;
@@ -3208,7 +3256,11 @@ Expr  MemberValueArrayInitializer():
 {
   { run(); }
   "{" 
-  (	member = MemberValue() { ret = ret.append(member); } ( LOOKAHEAD(2) "," member = MemberValue() { ret = ret.append(member); } )*  )? [ "," ]
+  [
+    member = MemberValue() { ret = ret.append(member); }
+    ( LOOKAHEAD(2) "," member = MemberValue() { ret = ret.append(member); } )*
+  ]
+  [ "," ] // TODO Add syntactic data about comma presence in ArrayInitializerExpr
   "}"
   { return enRun(new ArrayInitializerExpr(ret)); }
 }
