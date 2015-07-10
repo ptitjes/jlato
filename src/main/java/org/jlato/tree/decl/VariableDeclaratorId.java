@@ -28,7 +28,7 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.child;
-import static org.jlato.internal.shapes.LexicalShape.Factory.children;
+import static org.jlato.internal.shapes.LexicalShape.Factory.child;import static org.jlato.internal.shapes.LexicalShape.Factory.list;
 import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
 
 public class VariableDeclaratorId extends Tree {
@@ -71,6 +71,7 @@ public class VariableDeclaratorId extends Tree {
 	private static final int DIMENSIONS = 1;
 
 	public final static LexicalShape shape = composite(
-			child(NAME), children(DIMENSIONS)
+			child(NAME),
+			child(DIMENSIONS, list())
 	);
 }

@@ -58,7 +58,7 @@ public final class LSNone extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly() {
+	public boolean isWhitespaceOnly(STree tree) {
 		return true;
 	}
 

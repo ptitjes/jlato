@@ -89,8 +89,8 @@ public class ArrayCreationExpr extends Expr {
 	public final static LexicalShape shape = composite(
 			token(LToken.New),
 			child(TYPE),
-			children(DIMENSION_EXPRESSIONS),
-			children(DIMENSIONS),
+			child(DIMENSION_EXPRESSIONS, list()),
+			child(DIMENSIONS, list()),
 			nonNullChild(INITIALIZER,
 					composite(
 							none().withSpacing(space()),

@@ -22,6 +22,7 @@ package org.jlato.tree.decl;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LSList;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
@@ -83,12 +84,8 @@ public class CompilationUnit extends Tree {
 	public final static LexicalShape shape = composite(
 			child(PACKAGE_DECL),
 			none().withSpacing(spacing(CompilationUnit_AfterPackageDecl)),
-			children(IMPORTS,
-					none(),
-					none().withSpacing(newLine()),
-					none().withSpacing(spacing(CompilationUnit_AfterImports))
-			),
-			children(TYPES, none().withSpacing(spacing(CompilationUnit_BetweenTopLevelDecl))),
+			child(IMPORTS, ImportDecl.listShape),
+			child(TYPES, TypeDecl.listShape),
 			token(LToken.EOF).withSpacingBefore(newLine())
 	);
 }

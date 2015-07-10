@@ -64,7 +64,7 @@ public class NormalAnnotationExpr extends AnnotationExpr {
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME),
 			token(LToken.ParenthesisLeft),
-			children(PAIRS, token(LToken.Comma).withSpacingAfter(space())),
+			child(PAIRS, list(token(LToken.Comma).withSpacingAfter(space()))),
 			token(LToken.ParenthesisRight)
 	);
 }

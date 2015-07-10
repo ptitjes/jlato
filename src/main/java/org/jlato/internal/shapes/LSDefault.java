@@ -46,18 +46,18 @@ public final class LSDefault extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly() {
+	public boolean isWhitespaceOnly(STree tree) {
 		return false;
 	}
 
 	@Override
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	public void render(STree tree, LRun run, Printer printer) {
 		final LexicalShape shape = shapeFor(tree);
-		if (shape != null) shape.render(tree, run, printer);
+		if (shape != null) shape.render(tree, tree.run, printer);
 	}
 
 	@Override

@@ -28,7 +28,8 @@ import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.children;
+import static org.jlato.internal.shapes.LexicalShape.Factory.child;
+import static org.jlato.internal.shapes.LexicalShape.Factory.list;
 import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
 import static org.jlato.internal.shapes.LexicalShape.Factory.token;
 
@@ -63,7 +64,9 @@ public class ArrayDim extends Tree {
 	private static final int ANNOTATIONS = 0;
 
 	public final static LexicalShape shape = composite(
-			children(ANNOTATIONS),
+			child(ANNOTATIONS, list()),
 			token(LToken.BracketLeft), token(LToken.BracketRight)
 	);
+
+	public static final LexicalShape listShape = list();
 }

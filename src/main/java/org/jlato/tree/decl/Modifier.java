@@ -30,7 +30,7 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.token;
 
-public class Modifier extends Tree {
+public class Modifier extends Tree implements ExtendedModifier {
 
 	public final static Kind kind = new Tree.Kind() {
 		public Tree instantiate(SLocation location) {

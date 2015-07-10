@@ -71,7 +71,7 @@ public class PackageDecl extends Tree {
 	private static final int NAME = 1;
 
 	public final static LexicalShape shape = composite(
-			children(ANNOTATIONS),
+			child(ANNOTATIONS, list()),
 			token(LToken.Package),
 			child(NAME),
 			token(LToken.SemiColon)

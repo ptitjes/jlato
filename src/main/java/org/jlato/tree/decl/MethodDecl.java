@@ -47,15 +47,15 @@ public class MethodDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public MethodDecl(Modifiers modifiers, NodeList<TypeParameter> typeParameters, Type type, Name name, NodeList<Parameter> parameters, NodeList<ArrayDim> dimensions, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
+	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParameters, Type type, Name name, NodeList<Parameter> parameters, NodeList<ArrayDim> dimensions, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, typeParameters, type, name, parameters, dimensions, throwsClause, body/*, javadocComment*/)))));
 	}
 
-	public Modifiers modifiers() {
+	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public LocalVariableDecl withModifiers(Modifiers modifiers) {
+	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(NodeList<EM> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -114,16 +114,6 @@ public class MethodDecl extends Decl implements Member {
 	public MethodDecl withBody(BlockStmt body) {
 		return location.nodeWithChild(BODY, body);
 	}
-/*
-
-	public JavadocComment javadocComment() {
-		return location.nodeChild(JAVADOC_COMMENT);
-	}
-
-	public MethodDecl withJavadocComment(JavadocComment javadocComment) {
-		return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
-	}
-*/
 
 	private static final int MODIFIERS = 0;
 	private static final int TYPE_PARAMETERS = 1;
@@ -133,15 +123,16 @@ public class MethodDecl extends Decl implements Member {
 	private static final int DIMENSIONS = 5;
 	private static final int THROWS_CLAUSE = 6;
 	private static final int BODY = 7;
-//	private static final int JAVADOC_COMMENT = 10;
 
 	public final static LexicalShape shape = composite(
-			child(MODIFIERS),
-			children(TYPE_PARAMETERS, token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater).withSpacingAfter(space())),
-			child(TYPE), child(NAME),
-			token(LToken.ParenthesisLeft), children(PARAMETERS, token(LToken.Comma).withSpacingAfter(space())), token(LToken.ParenthesisRight),
-			children(DIMENSIONS),
-			children(THROWS_CLAUSE, token(LToken.Throws).withSpacingBefore(space()), token(LToken.Comma).withSpacingAfter(space()), none()),
+			child(MODIFIERS, ExtendedModifier.multiLineShape),
+			child(TYPE_PARAMETERS, TypeParameter.listShape),
+			child(TYPE),
+			none().withSpacing(space()),
+			child(NAME),
+			child(PARAMETERS, Parameter.listShape),
+			child(DIMENSIONS, ArrayDim.listShape),
+			child(THROWS_CLAUSE, ClassOrInterfaceType.throwsClauseShape),
 			nonNullChild(BODY,
 					composite(none().withSpacing(space()), child(BODY)),
 					token(LToken.SemiColon)

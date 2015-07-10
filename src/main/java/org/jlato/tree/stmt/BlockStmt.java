@@ -70,7 +70,7 @@ public class BlockStmt extends Stmt {
 							token(LToken.BraceLeft)
 									.withSpacingAfter(newLine())
 									.withIndentationAfter(indent(BLOCK)),
-							children(STMTS, none().withSpacing(newLine())),
+							child(STMTS, listShape),
 							token(LToken.BraceRight)
 									.withIndentationBefore(unIndent(BLOCK))
 									.withSpacingBefore(newLine())

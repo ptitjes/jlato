@@ -22,6 +22,7 @@ package org.jlato.tree.decl;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.shapes.LSList;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
@@ -81,13 +82,21 @@ public class TypeParameter extends Tree {
 	private static final int NAME = 1;
 	private static final int BOUNDS = 2;
 
+	public static final LexicalShape boundsShape = list(
+			token(LToken.Extends).withSpacingBefore(space()),
+			token(LToken.BinAnd).withSpacing(space(), space()),
+			none()
+	);
+
 	public final static LexicalShape shape = composite(
-			children(ANNOTATIONS),
+			child(ANNOTATIONS, list()),
 			child(NAME),
-			children(BOUNDS,
-					token(LToken.Extends).withSpacingBefore(space()),
-					token(LToken.BinAnd).withSpacing(space(), space()),
-					none()
-			)
+			child(BOUNDS, boundsShape)
+	);
+
+	public static final LexicalShape listShape = list(
+			token(LToken.Less),
+			token(LToken.Comma).withSpacingAfter(space()),
+			token(LToken.Greater).withSpacingAfter(space())
 	);
 }

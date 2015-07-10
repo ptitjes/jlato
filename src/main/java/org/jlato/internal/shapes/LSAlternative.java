@@ -49,9 +49,9 @@ public final class LSAlternative extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly() {
-		return (shape == null || shape.isWhitespaceOnly()) &&
-				(alternative == null || alternative.isWhitespaceOnly());
+	public boolean isWhitespaceOnly(STree tree) {
+		return (shape == null || shape.isWhitespaceOnly(tree)) &&
+				(alternative == null || alternative.isWhitespaceOnly(tree));
 	}
 
 	@Override

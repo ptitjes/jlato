@@ -19,7 +19,6 @@
 
 package org.jlato.tree.decl;
 
-import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -44,15 +43,15 @@ public class LocalVariableDecl extends Decl {
 		super(location);
 	}
 
-	public LocalVariableDecl(Modifiers modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
+	public <EM extends Tree & ExtendedModifier> LocalVariableDecl(NodeList<EM> modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, type, variables/*, javadocComment*/)))));
 	}
 
-	public Modifiers modifiers() {
+	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public LocalVariableDecl withModifiers(Modifiers modifiers) {
+	public <EM extends Tree & ExtendedModifier> LocalVariableDecl withModifiers(NodeList<EM> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -88,9 +87,9 @@ public class LocalVariableDecl extends Decl {
 //	private static final int JAVADOC_COMMENT = 4;
 
 	public final static LexicalShape shape = composite(
-			child(MODIFIERS, Modifiers.oneLinerShape),
+			child(MODIFIERS, ExtendedModifier.singleLineShape),
 			child(TYPE),
 			none().withSpacing(space()),
-			children(VARIABLES, token(LToken.Comma).withSpacingAfter(space()))
+			child(VARIABLES, VariableDeclarator.listShape)
 	);
 }

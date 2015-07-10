@@ -19,7 +19,6 @@
 
 package org.jlato.tree.type;
 
-import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -28,8 +27,8 @@ import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.Type;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+import static org.jlato.internal.shapes.LexicalShape.Factory.child;
+import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
 
 public class UnionType extends Type {
 
@@ -62,6 +61,6 @@ public class UnionType extends Type {
 	private static final int TYPES = 0;
 
 	public final static LexicalShape shape = composite(
-			children(TYPES, token(LToken.BinOr).withSpacing(space(), space()))
+			child(TYPES, Type.unionShape)
 	);
 }

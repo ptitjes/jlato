@@ -88,10 +88,8 @@ public class CallExpr extends Expr {
 
 	public final static LexicalShape shape = composite(
 			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
-			children(TYPE_ARGUMENTS, token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater)),
+			child(TYPE_ARGUMENTS, Type.typeArgumentsShape),
 			child(NAME),
-			token(LToken.ParenthesisLeft),
-			children(ARGUMENTS, token(LToken.Comma).withSpacingAfter(space())),
-			token(LToken.ParenthesisRight)
+			child(ARGUMENTS, Expr.argumentsShape)
 	);
 }

@@ -50,15 +50,15 @@ public class Refactoring {
 			final CompilationUnit cu = parser.parse(file, "UTF-8");
 
 
-			final TypeDecl typeDecl = cu.types().get(0);
-			final String name = typeDecl.name().name();
-
-			final NodeList<ClassOrInterfaceType> extendsClause = typeDecl.extendsClause();
-			final String superclassName = extendsClause == null ? null : extendsClause.get(0).name().name();
-
-			if (superclassName != null && !TREE_CLASSES.contains(name) && TREE_CLASSES.contains(superclassName)) {
-				System.out.println(file.getAbsolutePath());
-			}
+//			final TypeDecl typeDecl = cu.types().get(0);
+//			final String name = typeDecl.name().name();
+//
+//			final NodeList<ClassOrInterfaceType> extendsClause = typeDecl.extendsClause();
+//			final String superclassName = extendsClause == null ? null : extendsClause.get(0).name().name();
+//
+//			if (superclassName != null && !TREE_CLASSES.contains(name) && TREE_CLASSES.contains(superclassName)) {
+//				System.out.println(file.getAbsolutePath());
+//			}
 		}
 	}
 

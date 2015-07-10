@@ -19,7 +19,6 @@
 
 package org.jlato.tree.decl;
 
-import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -50,15 +49,15 @@ public class ConstructorDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public ConstructorDecl(Modifiers modifiers, NodeList<TypeParameter> typeParameters, Name name, NodeList<Parameter> parameters, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, typeParameters, name, parameters, throwsClause, body/*, javadocComment*/)))));
+	public <EM extends Tree & ExtendedModifier> ConstructorDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParameters, Name name, NodeList<Parameter> parameters, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt body) {
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, typeParameters, name, parameters, throwsClause, body)))));
 	}
 
-	public Modifiers modifiers() {
+	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public ConstructorDecl withModifiers(Modifiers modifiers) {
+	public <EM extends Tree & ExtendedModifier> ConstructorDecl withModifiers(NodeList<EM> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -101,16 +100,6 @@ public class ConstructorDecl extends Decl implements Member {
 	public ConstructorDecl withBody(BlockStmt body) {
 		return location.nodeWithChild(BODY, body);
 	}
-/*
-
-	public JavadocComment javadocComment() {
-		return location.nodeChild(JAVADOC_COMMENT);
-	}
-
-	public ConstructorDecl withJavadocComment(JavadocComment javadocComment) {
-		return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
-	}
-*/
 
 	private static final int MODIFIERS = 0;
 	private static final int TYPE_PARAMETERS = 1;
@@ -118,16 +107,13 @@ public class ConstructorDecl extends Decl implements Member {
 	private static final int PARAMETERS = 3;
 	private static final int THROWS_CLAUSE = 4;
 	private static final int BODY = 5;
-//	private static final int JAVADOC_COMMENT = 7;
 
 	public final static LexicalShape shape = composite(
-			child(MODIFIERS),
-			children(TYPE_PARAMETERS, token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater).withSpacingAfter(space())),
+			child(MODIFIERS, ExtendedModifier.multiLineShape),
+			child(TYPE_PARAMETERS, TypeParameter.listShape),
 			child(NAME),
-			token(LToken.ParenthesisLeft),
-			children(PARAMETERS, token(LToken.Comma).withSpacingAfter(space())),
-			token(LToken.ParenthesisRight),
-			children(THROWS_CLAUSE, token(LToken.Throws).withSpacingBefore(space()), token(LToken.Comma).withSpacingAfter(space()), none()),
+			child(PARAMETERS, Parameter.listShape),
+			child(THROWS_CLAUSE, ClassOrInterfaceType.throwsClauseShape),
 			none().withSpacing(space()), child(BODY)
 	);
 }

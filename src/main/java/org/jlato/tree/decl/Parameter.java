@@ -23,6 +23,7 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.Type;
@@ -46,15 +47,15 @@ public class Parameter extends Tree {
 		super(location);
 	}
 
-	public Parameter(Modifiers modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
+	public <EM extends Tree & ExtendedModifier> Parameter(NodeList<EM> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, type, id), dataOf(isVarArgs)))));
 	}
 
-	public Modifiers modifiers() {
+	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public Parameter withModifiers(Modifiers modifiers) {
+	public <EM extends Tree & ExtendedModifier> Parameter withModifiers(NodeList<EM> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -89,10 +90,16 @@ public class Parameter extends Tree {
 	private static final int VAR_ARG = 0;
 
 	public final static LexicalShape shape = composite(
-			child(MODIFIERS, Modifiers.oneLinerShape),
+			child(MODIFIERS, ExtendedModifier.singleLineShape),
 			child(TYPE),
 			dataOption(VAR_ARG, token(LToken.Ellipsis)),
 			none().withSpacing(space()),
 			child(ID)
+	);
+
+	public static final LexicalShape listShape = list(true,
+			token(LToken.ParenthesisLeft),
+			token(LToken.Comma).withSpacingAfter(space()),
+			token(LToken.ParenthesisRight)
 	);
 }

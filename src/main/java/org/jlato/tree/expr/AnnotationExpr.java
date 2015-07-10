@@ -19,11 +19,18 @@
 
 package org.jlato.tree.expr;
 
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
+import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.name.QName;
 
-public abstract class AnnotationExpr extends Expr {
+import static org.jlato.internal.shapes.LexicalShape.Factory.list;
+import static org.jlato.internal.shapes.LexicalShape.Factory.none;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+
+public abstract class AnnotationExpr extends Expr implements ExtendedModifier {
 
 	protected AnnotationExpr(SLocation location) {
 		super(location);
@@ -38,4 +45,16 @@ public abstract class AnnotationExpr extends Expr {
 	}
 
 	protected static final int NAME = 0;
+
+	public static final LexicalShape singleLineAnnotationsShape = list(
+			none(),
+			none().withSpacing(space()),
+			none().withSpacing(space())
+	);
+
+	public static final LexicalShape multiLineAnnotationsShape = list(
+			none(),
+			none().withSpacing(newLine()),
+			none().withSpacing(newLine())
+	);
 }

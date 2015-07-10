@@ -26,13 +26,9 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.*;
 import org.jlato.tree.name.Name;
 
-import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
-import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 
 public class EnumConstantDecl extends Decl {
 
@@ -50,15 +46,15 @@ public class EnumConstantDecl extends Decl {
 		super(location);
 	}
 
-	public EnumConstantDecl(Modifiers modifiers, Name name, NodeList<Expr> args, NodeList<Decl> classBody/*, JavadocComment javadocComment*/) {
+	public <EM extends Tree & ExtendedModifier> EnumConstantDecl(NodeList<EM> modifiers, Name name, NodeList<Expr> args, NodeList<Decl> classBody/*, JavadocComment javadocComment*/) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, name, args, classBody/*, javadocComment*/)))));
 	}
 
-	public Modifiers modifiers() {
+	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public LocalVariableDecl withModifiers(Modifiers modifiers) {
+	public <EM extends Tree & ExtendedModifier> EnumConstantDecl withModifiers(NodeList<EM> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -103,17 +99,16 @@ public class EnumConstantDecl extends Decl {
 //	private static final int JAVADOC_COMMENT = 4;
 
 	public final static LexicalShape shape = composite(
-			child(MODIFIERS),
+			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(NAME),
-			children(ARGS, token(LToken.ParenthesisLeft), token(LToken.Comma).withSpacingAfter(space()), token(LToken.ParenthesisRight)),
-			children(CLASS_BODY,
-					token(LToken.BraceLeft)
-							.withSpacing(space(), spacing(ClassBody_BeforeMembers))
-							.withIndentationAfter(indent(TYPE_BODY)),
-					none().withSpacing(spacing(ClassBody_BetweenMembers)),
-					token(LToken.BraceRight)
-							.withIndentationBefore(unIndent(TYPE_BODY))
-							.withSpacing(spacing(ClassBody_AfterMembers), spacing(EnumConstant_AfterBody))
-			)
+			child(ARGS, Expr.argumentsShape),
+			child(CLASS_BODY, Decl.bodyShape),
+			nonNullChild(CLASS_BODY, none().withSpacing(spacing(EnumConstant_AfterBody)))
+	);
+
+	public static final LexicalShape listShape = list(
+			none().withSpacing(spacing(EnumBody_BeforeConstants)),
+			token(LToken.Comma).withSpacingAfter(spacing(EnumBody_BetweenConstants)),
+			null
 	);
 }

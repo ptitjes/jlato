@@ -69,11 +69,11 @@ public class ArrayType extends ReferenceType {
 	}
 
 	private static final int COMPONENT_TYPE = 1;
-	private static final int DIMENSIONS = 1;
+	private static final int DIMENSIONS = 2;
 
 	public final static LexicalShape shape = composite(
-			children(ANNOTATIONS),
+			child(ANNOTATIONS, list()),
 			child(COMPONENT_TYPE),
-			children(DIMENSIONS)
+			child(DIMENSIONS, list())
 	);
 }

@@ -87,11 +87,11 @@ public class ForStmt extends Stmt {
 
 	public final static LexicalShape shape = composite(
 			token(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
-			children(INIT, token(LToken.Comma).withSpacingAfter(space())),
+			child(INIT, list(token(LToken.Comma).withSpacingAfter(space()))),
 			token(LToken.SemiColon).withSpacingAfter(space()),
 			child(COMPARE),
 			token(LToken.SemiColon).withSpacingAfter(space()),
-			children(UPDATE, token(LToken.Comma).withSpacingAfter(space())),
+			child(UPDATE, list(token(LToken.Comma).withSpacingAfter(space()))),
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			child(BODY)
 	);

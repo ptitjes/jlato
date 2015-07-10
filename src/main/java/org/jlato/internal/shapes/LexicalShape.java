@@ -35,7 +35,7 @@ public abstract class LexicalShape {
 
 	public abstract boolean isDefined(STree tree);
 
-	public abstract boolean isWhitespaceOnly();
+	public abstract boolean isWhitespaceOnly(STree tree);
 
 	public abstract LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator);
 
@@ -82,6 +82,10 @@ public abstract class LexicalShape {
 			return nonEmptyChildren(index, null, shape);
 		}
 
+		public static LexicalShape emptyChildren(int index, LexicalShape shape, LexicalShape alternative) {
+			return nonEmptyChildren(index, alternative, shape);
+		}
+
 		public static LexicalShape composite(LexicalShape... shapes) {
 			return new LSComposite(shapes);
 		}
@@ -102,27 +106,27 @@ public abstract class LexicalShape {
 			return new LSTravesal(index, shape);
 		}
 
-		public static LexicalShape children(int index) {
-			return children(index, null, null, null);
+		public static LexicalShape list() {
+			return list(false, defaultShape(), null, null, null);
 		}
 
-		public static LexicalShape children(int index, LexicalShape separator) {
-			return children(index, null, separator, null);
+		public static LexicalShape list(LexicalShape separator) {
+			return list(false, defaultShape(), null, separator, null);
 		}
 
-		public static LexicalShape children(int index, LexicalShape shape, LexicalShape separator) {
-			return children(index, shape, null, separator, null);
+		public static LexicalShape list(LexicalShape before, LexicalShape separator, LexicalShape after) {
+			return list(false, defaultShape(), before, separator, after);
 		}
 
-		public static LexicalShape children(int index, LexicalShape before, LexicalShape separator, LexicalShape after) {
-			return children(index, defaultShape(), before, separator, after);
+		public static LexicalShape list(boolean renderIfEmpty, LexicalShape before, LexicalShape separator, LexicalShape after) {
+			return list(renderIfEmpty, defaultShape(), before, separator, after);
 		}
 
-		public static LexicalShape children(int index, LexicalShape shape, LexicalShape before, LexicalShape separator, LexicalShape after) {
-			return child(index, new LSList(shape, before, separator, after));
+		public static LexicalShape list(boolean renderIfEmpty, LexicalShape shape, LexicalShape before, LexicalShape separator, LexicalShape after) {
+			return new LSList(shape, before, separator, after, renderIfEmpty);
 		}
 
-		private static LexicalShape defaultShape() {
+		public static LexicalShape defaultShape() {
 			return new LSDefault();
 		}
 	}

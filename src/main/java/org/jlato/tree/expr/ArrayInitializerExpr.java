@@ -65,7 +65,7 @@ public class ArrayInitializerExpr extends Expr {
 			nonEmptyChildren(VALUES,
 					composite(
 							token(LToken.BraceLeft).withSpacingAfter(space()),
-							children(VALUES, token(LToken.Comma).withSpacingAfter(space())),
+							child(VALUES, Expr.listShape),
 							token(LToken.BraceRight).withSpacingBefore(space())
 					),
 					composite(token(LToken.BraceLeft), token(LToken.BraceRight))

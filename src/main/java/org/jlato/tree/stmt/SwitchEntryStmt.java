@@ -74,11 +74,16 @@ public class SwitchEntryStmt extends Stmt {
 			nonNullChild(LABEL,
 					composite(token(LToken.Case), child(LABEL)),
 					token(LToken.Default)
-			), token(LToken.Colon).withSpacingAfter(newLine()),
-			nonNullChild(STMTS, composite(
-					none().withIndentation(indent(BLOCK)),
-					children(STMTS, none().withSpacing(newLine())),
-					none().withIndentation(unIndent(BLOCK))
-			))
+			),
+			token(LToken.Colon).withSpacingAfter(newLine()),
+			nonNullChild(STMTS,
+					composite(
+							none().withIndentation(indent(BLOCK)),
+							child(STMTS, Stmt.listShape),
+							none().withIndentation(unIndent(BLOCK))
+					)
+			)
 	);
+
+	public static final LexicalShape listShape = list(none().withSpacing(newLine()));
 }

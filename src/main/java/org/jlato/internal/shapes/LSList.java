@@ -22,9 +22,11 @@ package org.jlato.internal.shapes;
 import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
+import org.jlato.parser.ParserImplConstants;
 import org.jlato.printer.Printer;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author Didier Villevalois
@@ -32,23 +34,27 @@ import java.util.Iterator;
 public final class LSList extends LexicalShape {
 
 	private final LexicalShape shape, before, separator, after;
+	private final boolean renderIfEmpty;
 
-	public LSList(LexicalShape shape, LexicalShape before, LexicalShape separator, LexicalShape after) {
+	public LSList(LexicalShape shape, LexicalShape before, LexicalShape separator, LexicalShape after, boolean renderIfEmpty) {
 		this.shape = shape;
 		this.before = before;
 		this.separator = separator;
 		this.after = after;
+		this.renderIfEmpty = renderIfEmpty;
 	}
 
 	@Override
 	public boolean isDefined(STree tree) {
 		final SNodeList nodeList = (SNodeList) tree;
 		final Vector<STree> children = nodeList.state().children;
-		return !children.isEmpty();
+		return !children.isEmpty() || (renderIfEmpty &&
+				((before != null && before.isDefined(tree)) ||
+						(after != null && after.isDefined(tree))));
 	}
 
 	@Override
-	public boolean isWhitespaceOnly() {
+	public boolean isWhitespaceOnly(STree tree) {
 		return false;
 	}
 
@@ -58,26 +64,28 @@ public final class LSList extends LexicalShape {
 
 		final SNodeList nodeList = (SNodeList) tree;
 		final Vector<STree> children = nodeList.state().children;
-		if (children.isEmpty()) return builder.build();
+		final boolean isEmpty = children.isEmpty();
+
+		if (before != null && (!isEmpty || renderIfEmpty)) {
+			builder.handleNext(before, tree);
+		}
 
 		boolean firstElement = true;
+		STree previous = null;
 		for (STree child : children) {
 			if (firstElement) {
-				if (before != null) {
-					builder.handleNext(before, tree);
-				}
 				firstElement = false;
 			} else if (separator != null) {
-				builder.handleNext(separator, tree);
+				builder.handleNext(separator, previous);
 			}
 
 			builder.handleNext(shape, child);
+
+			previous = child;
 		}
 
-		if (!firstElement) {
-			if (after != null) {
-				builder.handleNext(after, tree);
-			}
+		if (after != null && (!isEmpty || renderIfEmpty)) {
+			builder.handleNext(after, tree);
 		}
 
 		return builder.build();
@@ -86,28 +94,30 @@ public final class LSList extends LexicalShape {
 	public void render(STree tree, LRun run, Printer printer) {
 		final SNodeList nodeList = (SNodeList) tree;
 		final Vector<STree> children = nodeList.state().children;
-		if (children.isEmpty()) return;
+		final boolean isEmpty = children.isEmpty();
 
 		final RunRenderer renderer = new RunRenderer(run);
 
+		if (before != null && (!isEmpty || renderIfEmpty)) {
+			renderer.renderNext(before, tree, printer);
+		}
+
 		boolean firstElement = true;
+		STree previous = null;
 		for (STree child : children) {
 			if (firstElement) {
-				if (before != null) {
-					renderer.renderNext(before, tree, printer);
-				}
 				firstElement = false;
 			} else if (separator != null) {
-				renderer.renderNext(separator, tree, printer);
+				renderer.renderNext(separator, previous, printer);
 			}
 
 			renderer.renderNext(shape, child, printer);
+
+			previous = child;
 		}
 
-		if (!firstElement) {
-			if (after != null) {
-				renderer.renderNext(after, tree, printer);
-			}
+		if (after != null && (!isEmpty || renderIfEmpty)) {
+			renderer.renderNext(after, tree, printer);
 		}
 	}
 
@@ -115,7 +125,7 @@ public final class LSList extends LexicalShape {
 	public SpacingConstraint spacingBefore(STree tree) {
 		final SNodeList nodeList = (SNodeList) tree;
 		final Vector<STree> children = nodeList.state().children;
-		if (children.isEmpty()) return null;
+		if (children.isEmpty() && !renderIfEmpty) return null;
 
 		if (before != null) return before.spacingBefore(tree);
 		final STree child = children.first();
@@ -126,7 +136,7 @@ public final class LSList extends LexicalShape {
 	public SpacingConstraint spacingAfter(STree tree) {
 		final SNodeList nodeList = (SNodeList) tree;
 		final Vector<STree> children = nodeList.state().children;
-		if (children.isEmpty()) return null;
+		if (children.isEmpty() && !renderIfEmpty) return null;
 
 		if (after != null) return after.spacingAfter(tree);
 		final STree child = children.last();

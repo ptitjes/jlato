@@ -71,7 +71,7 @@ public class WildcardType extends AnnotatedType {
 	private static final int SUP = 2;
 
 	public final static LexicalShape shape = composite(
-			children(ANNOTATIONS),
+			child(ANNOTATIONS, list()),
 			token(LToken.QuestionMark),
 			nonNullChild(EXT, composite(token(LToken.Extends).withSpacingBefore(space()), child(EXT))),
 			nonNullChild(SUP, composite(token(LToken.Super).withSpacingBefore(space()), child(SUP)))

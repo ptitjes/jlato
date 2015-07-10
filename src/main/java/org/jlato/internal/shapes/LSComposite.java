@@ -22,7 +22,6 @@ package org.jlato.internal.shapes;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.IndexedList;
-import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.LRun;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
@@ -56,9 +55,9 @@ public final class LSComposite extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly() {
+	public boolean isWhitespaceOnly(STree tree) {
 		for (LexicalShape shape : shapes) {
-			if (!shape.isWhitespaceOnly()) return false;
+			if (!shape.isWhitespaceOnly(tree)) return false;
 		}
 		return true;
 	}

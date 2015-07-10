@@ -76,4 +76,6 @@ public class VariableDeclarator extends Tree {
 					child(INIT)
 			))
 	);
+
+	public final static LexicalShape listShape = list(token(LToken.Comma).withSpacingAfter(space()));
 }

@@ -19,6 +19,13 @@
 
 package org.jlato.tree;
 
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.shapes.LexicalShape;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.list;
+import static org.jlato.internal.shapes.LexicalShape.Factory.token;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+
 /**
  * @author Didier Villevalois
  */
@@ -31,4 +38,14 @@ public abstract class Expr extends Tree implements Modifiable<Expr> {
 	public <S extends Expr> Expr replace(S replacement) {
 		return location.replace(replacement);
 	}
+
+	public static final LexicalShape argumentsShape = list(true,
+			token(LToken.ParenthesisLeft),
+			token(LToken.Comma).withSpacingAfter(space()),
+			token(LToken.ParenthesisRight)
+	);
+
+	public static final LexicalShape listShape = list(
+			token(LToken.Comma).withSpacingAfter(space())
+	);
 }

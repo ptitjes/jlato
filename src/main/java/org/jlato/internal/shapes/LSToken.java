@@ -19,7 +19,6 @@
 
 package org.jlato.internal.shapes;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.IndexedList;
 import org.jlato.internal.bu.LRun;
 import org.jlato.internal.bu.LToken;
@@ -85,7 +84,7 @@ public final class LSToken extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly() {
+	public boolean isWhitespaceOnly(STree tree) {
 		return false;
 	}
 

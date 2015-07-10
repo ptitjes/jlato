@@ -28,6 +28,9 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.QName;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterImports;
 
 public class ImportDecl extends Tree {
 
@@ -84,5 +87,11 @@ public class ImportDecl extends Tree {
 			child(NAME),
 			dataOption(ON_DEMAND, composite(token(LToken.Dot), token(LToken.Times))),
 			token(LToken.SemiColon)
+	);
+
+	public static final LexicalShape listShape = list(
+			none(),
+			none().withSpacing(newLine()),
+			none().withSpacing(spacing(CompilationUnit_AfterImports))
 	);
 }

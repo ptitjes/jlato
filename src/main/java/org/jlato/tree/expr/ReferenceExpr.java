@@ -80,7 +80,7 @@ public class ReferenceExpr extends Expr {
 	public final static LexicalShape shape = composite(
 			child(SCOPE),
 			token(LToken.DoubleColon),
-			children(TYPE_ARGUMENTS, token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater)),
+			child(TYPE_ARGUMENTS, list(token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater))),
 			child(IDENTIFIER)
 	);
 }

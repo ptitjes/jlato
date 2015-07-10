@@ -26,6 +26,7 @@ import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.LRun;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
+import org.jlato.parser.ParserBase;
 
 import java.util.Iterator;
 
@@ -39,23 +40,34 @@ public class RunBuilder {
 	private Builder<LRun, ArrayList<LRun>> subRuns = ArrayList.<LRun>factory().newBuilder();
 	private Builder<IndexedList<LToken>, ArrayList<IndexedList<LToken>>> tokens = ArrayList.<IndexedList<LToken>>factory().newBuilder();
 	private boolean firstDefinedShape = true;
+	private int shapeCount = 0;
 
 	public RunBuilder(Iterator<IndexedList<LToken>> tokenIterator) {
 		this.tokenIterator = tokenIterator;
 	}
 
 	public void handleNext(LexicalShape shape, STree tree) {
-		if (shape.isWhitespaceOnly()) return;
+		if (shape.isWhitespaceOnly(tree)) return;
 
 		if (shape.isDefined(tree)) {
 			if (firstDefinedShape) firstDefinedShape = false;
-			else tokens.add(tokenIterator.next());
+			else {
+				final IndexedList<LToken> incomming = tokenIterator.next();
+				tokens.add(incomming);
+			}
 		} else tokens.add(Vector.<LToken>empty());
+
+		shapeCount++;
 
 		subRuns.add(shape.enRun(tree, tokenIterator));
 	}
 
 	public LRun build() {
-		return new LRun(subRuns.build(), tokens.build());
+		final LRun run = new LRun(subRuns.build(), tokens.build());
+		if (run.subRuns.size() != shapeCount ||
+				(shapeCount > 0 && run.whitespaces.size() != shapeCount - 1)) {
+			throw new IllegalStateException();
+		}
+		return run;
 	}
 }

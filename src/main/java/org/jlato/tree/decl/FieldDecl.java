@@ -23,14 +23,9 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Decl;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.SLocation;
-import org.jlato.tree.Type;
+import org.jlato.tree.*;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.LexicalShape.Factory.children;
-import static org.jlato.internal.shapes.LexicalShape.Factory.none;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class FieldDecl extends Decl implements Member {
@@ -49,15 +44,15 @@ public class FieldDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public FieldDecl(Modifiers modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
+	public <EM extends Tree & ExtendedModifier> FieldDecl(NodeList<EM> modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, type, variables/*, javadocComment*/)))));
 	}
 
-	public Modifiers modifiers() {
+	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public FieldDecl withModifiers(Modifiers modifiers) {
+	public <EM extends Tree & ExtendedModifier> FieldDecl withModifiers(NodeList<EM> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -93,10 +88,10 @@ public class FieldDecl extends Decl implements Member {
 //	private static final int JAVADOC_COMMENT = 4;
 
 	public final static LexicalShape shape = composite(
-			child(MODIFIERS),
+			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(TYPE),
 			none().withSpacing(space()),
-			children(VARIABLES, token(LToken.Comma).withSpacingAfter(space())),
+			child(VARIABLES, VariableDeclarator.listShape),
 			token(LToken.SemiColon)
 	);
 }

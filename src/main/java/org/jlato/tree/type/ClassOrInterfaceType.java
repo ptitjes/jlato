@@ -82,14 +82,32 @@ public class ClassOrInterfaceType extends ReferenceType {
 	private static final int TYPE_ARGUMENTS = 3;
 
 	public final static LexicalShape shape = composite(
-			children(ANNOTATIONS),
+			child(ANNOTATIONS, list()),
 			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
 			child(NAME),
 			nonNullChild(TYPE_ARGUMENTS,
 					nonEmptyChildren(TYPE_ARGUMENTS,
-							children(TYPE_ARGUMENTS, token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater)),
+							child(TYPE_ARGUMENTS, list(token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater))),
 							composite(token(LToken.Less), token(LToken.Greater))
 					)
 			)
+	);
+
+	public static final LexicalShape extendsClauseShape = list(
+			token(LToken.Extends),
+			token(LToken.Comma).withSpacingAfter(space()),
+			null
+	);
+
+	public static final LexicalShape implementsClauseShape = list(
+			token(LToken.Implements),
+			token(LToken.Comma).withSpacingAfter(space()),
+			null
+	);
+
+	public static final LexicalShape throwsClauseShape = list(
+			token(LToken.Throws).withSpacingBefore(space()),
+			token(LToken.Comma).withSpacingAfter(space()),
+			null
 	);
 }

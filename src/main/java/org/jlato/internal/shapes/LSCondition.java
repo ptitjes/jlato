@@ -20,10 +20,7 @@
 package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SNodeList;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 
 /**
@@ -60,6 +57,15 @@ public abstract class LSCondition {
 		};
 	}
 
+	public static LSCondition kind(final Tree.Kind kind) {
+		return new LSCondition() {
+			public boolean test(STree tree) {
+				final Tree.Kind actualKind = tree.kind;
+				return actualKind == kind;
+			}
+		};
+	}
+
 	public static LSCondition childKind(final int index, final Tree.Kind kind) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
@@ -70,13 +76,35 @@ public abstract class LSCondition {
 		};
 	}
 
+	public static LSCondition lastChildKind(final Tree.Kind kind) {
+		return new LSCondition() {
+			public boolean test(STree tree) {
+				final SNodeList nodeList = (SNodeList) tree;
+				final Vector<STree> children = nodeList.state().children;
+				final Tree.Kind childKind = children.last().kind;
+				return childKind == kind;
+			}
+		};
+	}
+
+	public static LSCondition emptyList() {
+		return new LSCondition() {
+			@Override
+			public boolean test(STree tree) {
+				final SNodeList nodeList = (SNodeList) tree;
+				final Vector<STree> children = nodeList.state().children;
+				return children == null || children.isEmpty();
+			}
+		};
+	}
+
 	public static LSCondition emptyList(final int index) {
 		return new LSCondition() {
 			@Override
 			public boolean test(STree tree) {
 				final SNodeState state = ((SNode) tree).state();
 				final SNodeList nodeList = (SNodeList) state.child(index);
-				if (nodeList == null) return false;
+				if (nodeList == null) return true;
 
 				final Vector<STree> children = nodeList.state().children;
 				return children == null || children.isEmpty();

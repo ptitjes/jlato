@@ -53,8 +53,9 @@ public final class LSTravesal extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly() {
-		return shape.isWhitespaceOnly();
+	public boolean isWhitespaceOnly(STree tree) {
+		final STree child = traverse(tree);
+		return child != null && shape.isWhitespaceOnly(child);
 	}
 
 	@Override

@@ -102,33 +102,12 @@ public class ObjectCreationExpr extends Expr {
 
 	public final static LexicalShape shape = composite(
 			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
-			token(LToken.New),
-			children(TYPE_ARGUMENTS,
-					token(LToken.Less).withSpacingBefore(space()),
-					token(LToken.Comma).withSpacingAfter(space()),
-					token(LToken.Greater)
-			),
+			token(LToken.New).withSpacingAfter(space()),
+			child(TYPE_ARGUMENTS, Type.typeArgumentsShape),
 			child(TYPE),
-			token(LToken.ParenthesisLeft), children(ARGUMENTS, token(LToken.Comma).withSpacingAfter(space())), token(LToken.ParenthesisRight),
+			child(ARGUMENTS, Expr.argumentsShape),
 			nonNullChild(ANONYMOUS_CLASS_BODY,
-					nonEmptyChildren(ANONYMOUS_CLASS_BODY,
-							children(ANONYMOUS_CLASS_BODY,
-									token(LToken.BraceLeft)
-											.withSpacing(space(), spacing(ClassBody_BeforeMembers))
-											.withIndentationAfter(indent(TYPE_BODY)),
-									none().withSpacing(spacing(ClassBody_BetweenMembers)),
-									token(LToken.BraceRight)
-											.withIndentationBefore(unIndent(TYPE_BODY))
-											.withSpacingBefore(spacing(ClassBody_AfterMembers))
-							),
-							composite(
-									token(LToken.BraceLeft)
-											.withSpacing(space(), spacing(ClassBody_Empty))
-											.withIndentationAfter(indent(TYPE_BODY)),
-									token(LToken.BraceRight)
-											.withIndentationBefore(unIndent(TYPE_BODY))
-							)
-					)
+					child(ANONYMOUS_CLASS_BODY, Decl.bodyShape)
 			)
 	);
 }

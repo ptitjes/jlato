@@ -30,7 +30,7 @@ import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.children;
+import static org.jlato.internal.shapes.LexicalShape.Factory.child;import static org.jlato.internal.shapes.LexicalShape.Factory.list;
 import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
 import static org.jlato.internal.shapes.LexicalShape.Factory.token;
 
@@ -65,7 +65,7 @@ public class PrimitiveType extends AnnotatedType {
 	private static final int TYPE = 0;
 
 	public final static LexicalShape shape = composite(
-			children(ANNOTATIONS),
+			child(ANNOTATIONS, list()),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
 					return ((Primitive) tree.state.data(TYPE)).token;

@@ -19,6 +19,7 @@
 
 package org.jlato.tree.expr;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
@@ -27,7 +28,14 @@ import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.LocalVariableDecl;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.child;
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
+import static org.jlato.internal.shapes.LexicalShape.Factory.token;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+import static org.jlato.printer.FormattingSettings.IndentationContext.TRY_RESOURCES;
 
 public class VariableDeclarationExpr extends Expr {
 
@@ -60,4 +68,14 @@ public class VariableDeclarationExpr extends Expr {
 	private static final int DECLARATION = 0;
 
 	public final static LexicalShape shape = child(DECLARATION);
+
+	public static final LexicalShape resourcesShape = list(
+			token(LToken.ParenthesisLeft)
+					.withIndentationAfter(indent(TRY_RESOURCES)),
+			token(LToken.SemiColon)
+					.withSpacingAfter(newLine()),
+			token(LToken.ParenthesisRight)
+					.withIndentationBefore(unIndent(TRY_RESOURCES))
+					.withSpacingAfter(space())
+	);
 }

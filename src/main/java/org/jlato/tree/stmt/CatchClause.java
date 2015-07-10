@@ -76,4 +76,6 @@ public class CatchClause extends Tree {
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			child(CATCH_BLOCK)
 	);
+
+	public static final LexicalShape listShape = list();
 }

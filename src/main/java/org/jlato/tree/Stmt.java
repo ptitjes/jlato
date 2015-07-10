@@ -19,6 +19,12 @@
 
 package org.jlato.tree;
 
+import org.jlato.internal.shapes.LexicalShape;
+
+import static org.jlato.internal.shapes.LexicalShape.Factory.list;
+import static org.jlato.internal.shapes.LexicalShape.Factory.none;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
+
 /**
  * @author Didier Villevalois
  */
@@ -31,4 +37,6 @@ public abstract class Stmt extends Tree implements Modifiable<Stmt> {
 	public <S extends Stmt> Stmt replace(S replacement) {
 		return location.replace(replacement);
 	}
+
+	public static final LexicalShape listShape = list(none().withSpacing(newLine()));
 }

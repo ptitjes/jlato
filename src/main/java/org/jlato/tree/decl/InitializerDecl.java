@@ -23,11 +23,13 @@ import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Decl;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.stmt.BlockStmt;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.Factory.child;
+import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
 
 public class InitializerDecl extends Decl {
 
@@ -45,15 +47,15 @@ public class InitializerDecl extends Decl {
 		super(location);
 	}
 
-	public InitializerDecl(Modifiers modifiers, BlockStmt body/*, JavadocComment javadocComment*/) {
+	public <EM extends Tree & ExtendedModifier> InitializerDecl(NodeList<EM> modifiers, BlockStmt body/*, JavadocComment javadocComment*/) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, body/*, javadocComment*/)))));
 	}
 
-	public Modifiers modifiers() {
+	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public InitializerDecl withModifiers(Modifiers modifiers) {
+	public <EM extends Tree & ExtendedModifier> InitializerDecl withModifiers(NodeList<EM> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -79,7 +81,7 @@ public class InitializerDecl extends Decl {
 //	private static final int JAVADOC_COMMENT = 3;
 
 	public final static LexicalShape shape = composite(
-			child(MODIFIERS),
+			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(BODY)
 	);
 }

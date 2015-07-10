@@ -105,6 +105,7 @@ public class FormattingSettings {
 
 			.withSpacing(SpacingLocation.EnumBody_BeforeConstants, lines(2))
 			.withSpacing(SpacingLocation.EnumBody_BetweenConstants, oneSpace)
+			.withSpacing(SpacingLocation.EnumBody_AfterConstants, oneLine)
 			.withSpacing(SpacingLocation.EnumConstant_AfterBody, oneLine)
 
 			.withSpacing(SpacingLocation.LabeledStmt_AfterLabel, oneSpace)

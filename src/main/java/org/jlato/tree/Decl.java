@@ -19,9 +19,48 @@
 
 package org.jlato.tree;
 
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.shapes.LSCondition;
+import org.jlato.internal.shapes.LexicalShape;
+
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
+import static org.jlato.internal.shapes.LSCondition.emptyList;
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
+import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
+
 public abstract class Decl extends Tree {
 
 	protected Decl(SLocation location) {
 		super(location);
 	}
+
+	public static final LexicalShape bodyShape = list(true,
+			alternative(emptyList(),
+					token(LToken.BraceLeft)
+							.withSpacing(space(), newLine())
+							.withIndentationAfter(indent(TYPE_BODY)),
+					token(LToken.BraceLeft)
+							.withSpacing(space(), spacing(ClassBody_BeforeMembers))
+							.withIndentationAfter(indent(TYPE_BODY))
+			),
+			none().withSpacing(spacing(ClassBody_BetweenMembers)),
+			alternative(emptyList(),
+					token(LToken.BraceRight)
+							.withIndentationBefore(unIndent(TYPE_BODY)),
+					token(LToken.BraceRight)
+							.withIndentationBefore(unIndent(TYPE_BODY))
+							.withSpacingBefore(spacing(ClassBody_AfterMembers))
+			)
+	);
+
+	public static final LexicalShape membersShape = list(
+			none().withSpacing(spacing(ClassBody_BeforeMembers)),
+			none().withSpacing(spacing(ClassBody_BetweenMembers)),
+			none().withSpacing(spacing(ClassBody_AfterMembers))
+	);
 }

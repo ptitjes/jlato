@@ -48,5 +48,10 @@ public class EmptyTypeDecl extends TypeDecl implements TopLevel, Member {
 		super(new SLocation(new SLeaf(kind, new SLeafState(dataOf()))));
 	}
 
+	@Override
+	public TypeKind typeKind() {
+		return TypeKind.Empty;
+	}
+
 	public final static LexicalShape shape = token(LToken.SemiColon);
 }

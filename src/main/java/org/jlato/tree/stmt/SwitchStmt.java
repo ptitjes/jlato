@@ -80,13 +80,20 @@ public class SwitchStmt extends Stmt {
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			nonEmptyChildren(ENTRIES,
 					composite(
-							token(LToken.BraceLeft).withSpacingAfter(newLine()).withIndentationAfter(indent(BLOCK)),
-							children(ENTRIES, none().withSpacing(newLine())),
-							token(LToken.BraceRight).withIndentationBefore(unIndent(BLOCK)).withSpacingBefore(newLine())
+							token(LToken.BraceLeft)
+									.withSpacingAfter(newLine())
+									.withIndentationAfter(indent(BLOCK)),
+							child(ENTRIES, SwitchEntryStmt.listShape),
+							token(LToken.BraceRight)
+									.withIndentationBefore(unIndent(BLOCK))
+									.withSpacingBefore(newLine())
 					),
 					composite(
-							token(LToken.BraceLeft).withSpacingAfter(newLine()).withIndentationAfter(indent(BLOCK)),
-							token(LToken.BraceRight).withIndentationBefore(unIndent(BLOCK))
+							token(LToken.BraceLeft)
+									.withSpacingAfter(newLine())
+									.withIndentationAfter(indent(BLOCK)),
+							token(LToken.BraceRight)
+									.withIndentationBefore(unIndent(BLOCK))
 					)
 			)
 	);

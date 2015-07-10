@@ -87,7 +87,7 @@ public class LambdaExpr extends Expr {
 
 	public final static LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft),
-			nonNullChild(PARAMETERS, composite(children(PARAMETERS, token(LToken.Comma).withSpacingAfter(space())))),
+			nonNullChild(PARAMETERS, composite(child(PARAMETERS, list(token(LToken.Comma).withSpacingAfter(space()))))),
 			token(LToken.ParenthesisRight),
 			token(LToken.Arrow).withSpacing(space(), space()),
 			nonNullChild(EXPR, child(EXPR), child(BLOCK))

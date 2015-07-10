@@ -90,19 +90,13 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 
 	public final static LexicalShape shape = composite(
 			nonNullChild(EXPR, composite(child(EXPR), token(LToken.Dot))),
-			children(TYPE_ARGUMENTS,
-					token(LToken.Less),
-					token(LToken.Comma).withSpacingAfter(space()),
-					token(LToken.Greater)
-			),
+			child(TYPE_ARGUMENTS, Type.typeArgumentsShape),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
 					return ((ConstructorKind) tree.state.data(CONSTRUCTOR_KIND)).token;
 				}
 			}),
-			token(LToken.ParenthesisLeft),
-			children(ARGUMENTS, token(LToken.Comma).withSpacingAfter(space())),
-			token(LToken.ParenthesisRight),
+			child(ARGUMENTS, Expr.argumentsShape),
 			token(LToken.SemiColon)
 	);
 

@@ -22,6 +22,7 @@ package org.jlato.printer;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
 import java.io.PrintWriter;
@@ -190,6 +191,18 @@ public class Printer {
 		shape.render(sTree, sTree.run, this);
 	}
 
+	/**
+	 * Prints the specified node list.
+	 *
+	 * @param trees the trees to print
+	 */
+	public void print(NodeList<? extends Tree> trees) {
+		reset();
+		final STree sTree = Tree.treeOf(trees);
+		final LexicalShape shape = LexicalShape.Factory.list();
+		shape.render(sTree, sTree.run, this);
+	}
+
 	private int indentLevel;
 	private int delayedIndentation;
 	private boolean needsIndentation;
@@ -210,7 +223,10 @@ public class Printer {
 	}
 
 	public void appendWhiteSpace(String string) {
-		if (!(format && needsIndentation)) writer.append(string);
+		if (!(format && needsIndentation)) {
+			writer.append(string);
+			needsIndentation = false;
+		}
 		afterAlpha = false;
 	}
 

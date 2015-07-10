@@ -27,6 +27,7 @@ import org.jlato.printer.Printer;
 import org.jlato.printer.Spacing;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author Didier Villevalois
@@ -46,7 +47,7 @@ public class RunRenderer {
 	}
 
 	public void renderNext(LexicalShape shape, STree tree, Printer printer) {
-		if (shape.isWhitespaceOnly()) {
+		if (shape.isWhitespaceOnly(tree)) {
 			constraint = shape.spacingBefore(tree);
 			spacing = constraint == null ? spacing : maxSpacing(spacing, constraint, printer);
 
@@ -60,19 +61,21 @@ public class RunRenderer {
 				constraint = shape.spacingBefore(tree);
 				spacing = constraint == null ? spacing : maxSpacing(spacing, constraint, printer);
 
-				if (!shape.isWhitespaceOnly()) {
-					final IndexedList<LToken> tokens = whitespaceIterator == null ? null : whitespaceIterator.next();
-					SpacingConstraint.render(
-							spacing == null ? Spacing.noSpace : spacing,
-							tokens, printer);
-				}
+				final IndexedList<LToken> tokens = safeNext(whitespaceIterator);
+				SpacingConstraint.render(
+						spacing == null ? Spacing.noSpace : spacing,
+						tokens, printer);
 			}
 
-			shape.render(tree, subRunIterator == null ? null : subRunIterator.next(), printer);
+			shape.render(tree, safeNext(subRunIterator), printer);
 
 			constraint = shape.spacingAfter(tree);
 			spacing = constraint == null ? null : constraint.resolve(printer);
 		}
+	}
+
+	private <E> E safeNext(Iterator<E> iterator) {
+		return iterator == null ? null : iterator.next();
 	}
 
 	private Spacing maxSpacing(Spacing spacing, SpacingConstraint constraint, Printer printer) {

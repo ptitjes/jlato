@@ -95,15 +95,9 @@ public class TryStmt extends Stmt {
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Try).withSpacingAfter(space()),
-			nonNullChild(RESOURCES,
-					children(RESOURCES,
-							composite(token(LToken.ParenthesisLeft).withIndentationAfter(indent(TRY_RESOURCES))),
-							token(LToken.SemiColon).withSpacingAfter(newLine()),
-							composite(token(LToken.ParenthesisRight).withIndentationBefore(unIndent(TRY_RESOURCES)).withSpacingAfter(space()))
-					)
-			),
+			child(RESOURCES, VariableDeclarationExpr.resourcesShape),
 			child(TRY_BLOCK),
-			children(CATCHS),
+			child(CATCHS, CatchClause.listShape),
 			nonNullChild(FINALLY_BLOCK,
 					composite(
 							token(LToken.Finally).withSpacing(space(), space()),

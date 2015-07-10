@@ -70,7 +70,9 @@ public class ArrayDimExpr extends Tree {
 	private static final int EXPRESSION = 1;
 
 	public final static LexicalShape shape = composite(
-			children(ANNOTATIONS),
+			child(ANNOTATIONS, list()),
 			token(LToken.BracketLeft), child(EXPRESSION), token(LToken.BracketRight)
 	);
+
+	public static final LexicalShape listShape = list();
 }

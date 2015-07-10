@@ -44,15 +44,15 @@ public class AnnotationMemberDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public AnnotationMemberDecl(Modifiers modifiers, Type type, Name name, NodeList<ArrayDim> dimensions, Expr defaultValue/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, type, name, dimensions, defaultValue/*, javadocComment*/)))));
+	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl(NodeList<EM> modifiers, Type type, Name name, NodeList<ArrayDim> dimensions, Expr defaultValue) {
+		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, type, name, dimensions, defaultValue)))));
 	}
 
-	public Modifiers modifiers() {
+	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public AnnotationMemberDecl withModifiers(Modifiers modifiers) {
+	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl withModifiers(NodeList<EM> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -87,26 +87,15 @@ public class AnnotationMemberDecl extends Decl implements Member {
 	public AnnotationMemberDecl withDefaultValue(Expr defaultValue) {
 		return location.nodeWithChild(DEFAULT_VALUE, defaultValue);
 	}
-/*
-
-	public JavadocComment javadocComment() {
-		return location.nodeChild(JAVADOC_COMMENT);
-	}
-
-	public AnnotationMemberDecl withJavadocComment(JavadocComment javadocComment) {
-		return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
-	}
-*/
 
 	private static final int MODIFIERS = 0;
 	private static final int TYPE = 1;
 	private static final int NAME = 2;
 	private static final int DIMENSIONS = 3;
 	private static final int DEFAULT_VALUE = 4;
-//	private static final int JAVADOC_COMMENT = 5;
 
 	public final static LexicalShape shape = composite(
-			child(MODIFIERS),
+			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(TYPE), child(NAME),
 			token(LToken.ParenthesisLeft), token(LToken.ParenthesisRight),
 			nonNullChild(DEFAULT_VALUE, composite(token(LToken.Default), child(DEFAULT_VALUE))),

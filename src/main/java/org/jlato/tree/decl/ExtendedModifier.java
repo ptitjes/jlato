@@ -17,28 +17,35 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.tree;
+package org.jlato.tree.decl;
 
-import org.jlato.internal.bu.LToken;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.list;
-import static org.jlato.internal.shapes.LexicalShape.Factory.token;
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
-public abstract class Type extends Tree {
+/**
+ * @author Didier Villevalois
+ */
+public interface ExtendedModifier {
 
-	protected Type(SLocation location) {
-		super(location);
-	}
-
-	public static final LexicalShape typeArgumentsShape = list(
-			token(LToken.Less),
-			token(LToken.Comma).withSpacingAfter(space()),
-			token(LToken.Greater)
+	public static final LexicalShape singleLineShape = list(
+			none().withSpacing(space())
 	);
 
-	public static LexicalShape intersectionShape = list(token(LToken.BinAnd).withSpacing(space(), space()));
-
-	public static LexicalShape unionShape = list(token(LToken.BinOr).withSpacing(space(), space()));
+	public static final LexicalShape multiLineShape = list(
+			none(),
+			alternative(
+					LSCondition.kind(Modifier.kind),
+					none().withSpacing(space()),
+					none().withSpacing(newLine())
+			),
+			alternative(
+					LSCondition.lastChildKind(Modifier.kind),
+					none().withSpacing(space()),
+					none().withSpacing(newLine())
+			)
+	);
 }

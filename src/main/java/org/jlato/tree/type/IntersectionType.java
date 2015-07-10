@@ -62,6 +62,6 @@ public class IntersectionType extends Type {
 	private static final int TYPES = 0;
 
 	public final static LexicalShape shape = composite(
-			children(TYPES, token(LToken.BinAnd).withSpacing(space(), space()))
+			child(TYPES, Type.intersectionShape)
 	);
 }
