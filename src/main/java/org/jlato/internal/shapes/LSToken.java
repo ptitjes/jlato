@@ -90,7 +90,7 @@ public final class LSToken extends LexicalShape {
 
 	@Override
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
-		return new LRun();
+		return null;
 	}
 
 	public void render(STree tree, LRun run, Printer printer) {
