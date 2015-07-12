@@ -19,9 +19,11 @@
 
 package org.jlato.tree.decl;
 
+import com.github.andrewoma.dexx.collection.IndexedList;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSDump;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
@@ -48,8 +50,8 @@ public class CompilationUnit extends Tree {
 		super(location);
 	}
 
-	public CompilationUnit(PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(packageDecl, imports, types)))));
+	public CompilationUnit(IndexedList<IndexedList<LToken>> preamble, PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(packageDecl, imports, types), dataOf(preamble)))));
 	}
 
 	public PackageDecl packageDecl() {
@@ -80,7 +82,10 @@ public class CompilationUnit extends Tree {
 	private static final int IMPORTS = 1;
 	private static final int TYPES = 2;
 
+	private static final int PREAMBLE = 0;
+
 	public final static LexicalShape shape = composite(
+			new LSDump(PREAMBLE),
 			child(PACKAGE_DECL),
 			none().withSpacing(spacing(CompilationUnit_AfterPackageDecl)),
 			child(IMPORTS, ImportDecl.listShape),

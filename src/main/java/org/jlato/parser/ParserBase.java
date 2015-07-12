@@ -56,12 +56,18 @@ abstract class ParserBase {
 
 	protected ParserConfiguration configuration;
 
+	protected IndexedList<IndexedList<LToken>> preamble;
 	private Stack<IndexedList<IndexedList<LToken>>> runStack = new Stack<IndexedList<IndexedList<LToken>>>();
 	private Token lastProcessedToken;
+
+	public ParserBase() {
+		reset();
+	}
 
 	protected void reset() {
 		lastProcessedToken = null;
 		runStack.clear();
+		preamble = Vector.empty();
 	}
 
 	protected void run() {
@@ -91,6 +97,8 @@ abstract class ParserBase {
 		// TODO Handle root whitespace before first token
 		if (!runStack.isEmpty()) {
 			runStack.push(runStack.pop().append(whitespace));
+		} else {
+			preamble = preamble.append(whitespace);
 		}
 	}
 

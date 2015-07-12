@@ -1115,7 +1115,7 @@ CompilationUnit CompilationUnit():
   types = TypeDecls()
   (<EOF> | "\u001A" /** ctrl+z char **/)
 
-  { return enRun(new CompilationUnit(packageDecl, imports, types)); }
+  { return enRun(new CompilationUnit(preamble, packageDecl, imports, types)); }
 }
 
 /**********************************************************************************************************************
