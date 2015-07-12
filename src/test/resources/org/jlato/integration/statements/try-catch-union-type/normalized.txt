@@ -5,8 +5,7 @@
       class: org.jlato.tree.stmt.CatchClause,
       catchBlock: {
         class: org.jlato.tree.stmt.BlockStmt,
-        stmts: [
-        ],
+        stmts: null,
       },
       except: {
         class: org.jlato.tree.decl.FormalParameter,
@@ -47,7 +46,6 @@
   ],
   tryBlock: {
     class: org.jlato.tree.stmt.BlockStmt,
-    stmts: [
-    ],
+    stmts: null,
   },
 }
