@@ -6,11 +6,11 @@ import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 
-public abstract class Tree {
+public abstract class TestClass {
 
 	protected final SLocation location;
 
-	protected Tree(SLocation location) {
+	protected TestClass(SLocation location) {
 		this.location = location;
 	}
 
