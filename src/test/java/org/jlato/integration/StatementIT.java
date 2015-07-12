@@ -21,21 +21,21 @@ package org.jlato.integration;
 
 import org.jlato.parser.*;
 import org.jlato.integration.utils.BulkTestRunner;
-import org.jlato.tree.type.Type;
+import org.jlato.tree.stmt.Stmt;
 import org.junit.runner.RunWith;
 
 /**
  * @author Didier Villevalois
  */
 @RunWith(BulkTestRunner.class)
-public class TypeTest extends ChunkIntegrationTest<Type> {
+public class StatementIT extends ChunkIntegrationTest<Stmt> {
 
-	public String testResourcesPath() {
-		return "org/jlato/integration/types";
-	}
+    public String testResourcesPath() {
+        return "org/jlato/integration/statements";
+    }
 
-	@Override
-	protected Type parse(String content) throws ParseException {
-		return new Parser().parse(ParseContext.Type, content);
-	}
+    @Override
+    protected Stmt parse(String content) throws ParseException {
+        return new Parser().parse(ParseContext.Statement, content);
+    }
 }

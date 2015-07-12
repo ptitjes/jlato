@@ -21,21 +21,21 @@ package org.jlato.integration;
 
 import org.jlato.parser.*;
 import org.jlato.integration.utils.BulkTestRunner;
-import org.jlato.tree.expr.Expr;
+import org.jlato.tree.type.Type;
 import org.junit.runner.RunWith;
 
 /**
  * @author Didier Villevalois
  */
 @RunWith(BulkTestRunner.class)
-public class ExpressionTest extends ChunkIntegrationTest<Expr> {
+public class TypeIT extends ChunkIntegrationTest<Type> {
 
 	public String testResourcesPath() {
-		return "org/jlato/integration/expressions";
+		return "org/jlato/integration/types";
 	}
 
 	@Override
-	protected Expr parse(String content) throws ParseException {
-		return new Parser().parse(ParseContext.Expression, content);
+	protected Type parse(String content) throws ParseException {
+		return new Parser().parse(ParseContext.Type, content);
 	}
 }

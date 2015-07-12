@@ -38,7 +38,7 @@ import java.io.InputStream;
  * @author Didier Villevalois
  */
 @RunWith(JUnit4.class)
-public class ParseTest {
+public class ParseBenchmark {
 
 	public static final int WARM_UP = 4;
 	public static final int TOTAL = 10;

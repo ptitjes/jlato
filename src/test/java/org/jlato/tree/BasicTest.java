@@ -71,14 +71,13 @@ public class BasicTest {
 		);
 	}
 
-	//	@Ignore
+	@Ignore
 	@Test
 	public void testPrinter() throws IOException, ParseException {
 		final String original = fileAsString("src/main/java/org/jlato/tree/Tree.java");
 		Assert.assertEquals(original, parseAndPrint(original, true, false, FormattingSettings.Default));
 	}
 
-	//	@Ignore
 	@Test
 	public void testClass() throws IOException, ParseException {
 		final String original = resourceAsString("org/jlato/samples/TestClass.java");
@@ -88,7 +87,6 @@ public class BasicTest {
 		Assert.assertEquals(original, parseAndPrint(original, true, true, FormattingSettings.Default));
 	}
 
-	//	@Ignore
 	@Test
 	public void javaConcepts() throws IOException, ParseException {
 		final String original = resourceAsString("org/jlato/samples/JavaConcepts.java");
