@@ -33,59 +33,18 @@ import java.util.Iterator;
 public final class LSToken extends LexicalShape {
 
 	private final Provider provider;
-	private final SpacingConstraint spacingBefore;
-	private final SpacingConstraint spacingAfter;
-	private final IndentationConstraint indentationBefore;
-	private final IndentationConstraint indentationAfter;
 
 	public LSToken(LToken token) {
 		this(new FixedProvider(token));
 	}
 
 	public LSToken(Provider provider) {
-		this(provider, null, null, null, null);
-	}
-
-	private LSToken(Provider provider,
-	                SpacingConstraint spacingBefore,
-	                SpacingConstraint spacingAfter,
-	                IndentationConstraint indentationBefore,
-	                IndentationConstraint indentationAfter) {
 		this.provider = provider;
-		this.spacingBefore = spacingBefore;
-		this.spacingAfter = spacingAfter;
-		this.indentationBefore = indentationBefore;
-		this.indentationAfter = indentationAfter;
-	}
-
-	public LSToken withSpacing(SpacingConstraint before, SpacingConstraint after) {
-		return new LSToken(provider, before, after, indentationBefore, indentationAfter);
-	}
-
-	public LSToken withSpacingBefore(SpacingConstraint spacingBefore) {
-		return new LSToken(provider, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
-	}
-
-	public LSToken withSpacingAfter(SpacingConstraint spacingAfter) {
-		return new LSToken(provider, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
-	}
-
-	public LSToken withIndentationBefore(IndentationConstraint indentationBefore) {
-		return new LSToken(provider, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
-	}
-
-	public LSToken withIndentationAfter(IndentationConstraint indentationAfter) {
-		return new LSToken(provider, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
 	}
 
 	@Override
 	public boolean isDefined(STree tree) {
 		return true;
-	}
-
-	@Override
-	public boolean isWhitespaceOnly(STree tree) {
-		return false;
 	}
 
 	@Override
@@ -97,21 +56,7 @@ public final class LSToken extends LexicalShape {
 		final LToken token = provider.tokenFor(tree);
 		if (token == null) throw new IllegalStateException();
 
-		if (indentationBefore != null) printer.indent(indentationBefore.resolve(printer));
-
-		printer.append(token, true /* TODO Replace by test for whitespace/comment tokens in run */);
-
-		if (indentationAfter != null) printer.indent(indentationAfter.resolve(printer));
-	}
-
-	@Override
-	public SpacingConstraint spacingBefore(STree tree) {
-		return spacingBefore;
-	}
-
-	@Override
-	public SpacingConstraint spacingAfter(STree tree) {
-		return spacingAfter;
+		printer.append(token, true);
 	}
 
 	public interface Provider {

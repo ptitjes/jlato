@@ -85,7 +85,6 @@ public class FormattingSettings {
 			.withSpacing(SpacingLocation.DefaultNewLine, lines(1))
 
 			.withSpacing(SpacingLocation.CompilationUnit_AfterPackageDecl, lines(2))
-			.withSpacing(SpacingLocation.CompilationUnit_AfterPackageDecl, lines(2))
 			.withSpacing(SpacingLocation.CompilationUnit_AfterImports, lines(2))
 			.withSpacing(SpacingLocation.CompilationUnit_BetweenTopLevelDecl, lines(2))
 			.withSpacing(SpacingLocation.ClassBody_BeforeMembers, lines(2))

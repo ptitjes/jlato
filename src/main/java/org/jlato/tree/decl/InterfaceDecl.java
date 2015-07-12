@@ -29,7 +29,7 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class InterfaceDecl extends TypeDecl {
 

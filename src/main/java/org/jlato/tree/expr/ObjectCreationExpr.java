@@ -31,7 +31,7 @@ import org.jlato.tree.decl.MemberDecl;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class ObjectCreationExpr extends Expr {

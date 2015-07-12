@@ -29,7 +29,7 @@ import org.jlato.parser.ParserImplConstants;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.token;
+import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class Name extends Expr {
 

@@ -28,7 +28,7 @@ import org.jlato.tree.type.QualifiedType;
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LSCondition.emptyList;
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
@@ -48,7 +48,7 @@ public abstract class MemberDecl extends Decl {
 							.withSpacing(space(), spacing(ClassBody_BeforeMembers))
 							.withIndentationAfter(indent(TYPE_BODY))
 			),
-			none().withSpacing(spacing(ClassBody_BetweenMembers)),
+			none().withSpacingAfter(spacing(ClassBody_BetweenMembers)),
 			alternative(emptyList(),
 					token(LToken.BraceRight)
 							.withIndentationBefore(unIndent(TYPE_BODY)),
@@ -59,8 +59,8 @@ public abstract class MemberDecl extends Decl {
 	);
 
 	public static final LexicalShape membersShape = list(
-			none().withSpacing(spacing(ClassBody_BeforeMembers)),
-			none().withSpacing(spacing(ClassBody_BetweenMembers)),
-			none().withSpacing(spacing(ClassBody_AfterMembers))
+			none().withSpacingAfter(spacing(ClassBody_BeforeMembers)),
+			none().withSpacingAfter(spacing(ClassBody_BetweenMembers)),
+			none().withSpacingAfter(spacing(ClassBody_AfterMembers))
 	);
 }

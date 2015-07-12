@@ -29,7 +29,7 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
@@ -106,11 +106,11 @@ public class EnumConstantDecl extends MemberDecl {
 			child(NAME),
 			child(ARGS, Expr.argumentsShape),
 			child(CLASS_BODY, MemberDecl.bodyShape),
-			nonNullChild(CLASS_BODY, none().withSpacing(spacing(EnumConstant_AfterBody)))
+			nonNullChild(CLASS_BODY, none().withSpacingAfter(spacing(EnumConstant_AfterBody)))
 	);
 
 	public static final LexicalShape listShape = list(
-			none().withSpacing(spacing(EnumBody_BeforeConstants)),
+			none().withSpacingAfter(spacing(EnumBody_BeforeConstants)),
 			token(LToken.Comma).withSpacingAfter(spacing(EnumBody_BetweenConstants)),
 			null
 	);

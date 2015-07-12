@@ -19,9 +19,6 @@
 
 package org.jlato.internal.shapes;
 
-import com.github.andrewoma.dexx.collection.IndexedList;
-import org.jlato.internal.bu.LToken;
-import org.jlato.parser.ParserImplConstants;
 import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.printer.Printer;
 import org.jlato.printer.Spacing;
@@ -34,31 +31,6 @@ public abstract class SpacingConstraint {
 	public abstract Spacing resolve(Printer printer);
 
 	// TODO add context argument (Expression, Statement, Block, Declaration, ...) ??
-
-	public static void render(Spacing expectedSpacing, IndexedList<LToken> tokens, Printer printer) {
-		switch (expectedSpacing.unit) {
-			case Space:
-				if (tokens != null && (!printer.format || containsComments(tokens)))
-					dump(tokens, printer, printer.format);
-				else {
-					for (int i = 0; i < expectedSpacing.count; i++) {
-						printer.appendWhiteSpace(" ");
-					}
-				}
-				break;
-			case Line:
-				if (tokens != null) {
-					if (printer.format) {
-						final int actualEmptyLines = emptyLineCount(tokens);
-						printer.appendNewLine(expectedSpacing.count - actualEmptyLines);
-					}
-					dump(tokens, printer, printer.format);
-				} else {
-					printer.appendNewLine(expectedSpacing.count);
-				}
-				break;
-		}
-	}
 
 	public static class Factory {
 
@@ -102,69 +74,6 @@ public abstract class SpacingConstraint {
 
 		public Spacing resolve(Printer printer) {
 			return printer.formattingSettings.spacing(location);
-		}
-	}
-
-	private static int emptyLineCount(IndexedList<LToken> tokens) {
-		int count = 0;
-		boolean emptyLine = true;
-		for (LToken token : tokens) {
-			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-				case ParserImplConstants.JAVA_DOC_COMMENT:
-					emptyLine = false;
-					break;
-				case ParserImplConstants.NEWLINE:
-					if (emptyLine) count++;
-					emptyLine = true;
-					break;
-				case ParserImplConstants.WHITESPACE:
-					break;
-				default:
-					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
-			}
-		}
-		return count;
-	}
-
-	private static boolean containsComments(IndexedList<LToken> tokens) {
-		for (LToken token : tokens) {
-			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-				case ParserImplConstants.JAVA_DOC_COMMENT:
-					return true;
-				case ParserImplConstants.NEWLINE:
-				case ParserImplConstants.WHITESPACE:
-					break;
-				default:
-					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
-			}
-		}
-		return false;
-	}
-
-	private static void dump(IndexedList<LToken> tokens, Printer printer, boolean requiresFormatting) {
-		for (LToken token : tokens) {
-			switch (token.kind) {
-				case ParserImplConstants.JAVA_DOC_COMMENT:
-					// TODO format javadoc comment
-					printer.append(token, requiresFormatting);
-					break;
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-					printer.append(token, requiresFormatting);
-					break;
-				case ParserImplConstants.NEWLINE:
-					printer.appendNewLine(token.string);
-					break;
-				case ParserImplConstants.WHITESPACE:
-					printer.appendWhiteSpace(token.string);
-					break;
-				default:
-					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
-			}
 		}
 	}
 }

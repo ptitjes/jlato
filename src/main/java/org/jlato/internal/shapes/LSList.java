@@ -55,11 +55,6 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly(STree tree) {
-		return false;
-	}
-
-	@Override
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
 		final RunBuilder builder = new RunBuilder(tokenIterator);
 
@@ -67,16 +62,14 @@ public final class LSList extends LexicalShape {
 		final Vector<STree> children = state.children;
 		final boolean isEmpty = children.isEmpty();
 
-		if (before != null && (!isEmpty || renderIfEmpty)) {
-			builder.handleNext(before, tree);
-		}
+		builder.handleNext(isEmpty && !renderIfEmpty ? none() : before, tree);
 
 		boolean firstElement = true;
 		STree previous = null;
 		for (STree child : children) {
 			if (firstElement) {
 				firstElement = false;
-			} else if (separator != null) {
+			} else {
 				builder.handleNext(separator, previous);
 			}
 
@@ -85,9 +78,7 @@ public final class LSList extends LexicalShape {
 			previous = child;
 		}
 
-		if (after != null && (!isEmpty || renderIfEmpty)) {
-			builder.handleNext(after, tree);
-		}
+		builder.handleNext(isEmpty && !renderIfEmpty ? none() : after, tree);
 
 		return builder.build();
 	}
@@ -99,16 +90,14 @@ public final class LSList extends LexicalShape {
 
 		final RunRenderer renderer = new RunRenderer(run);
 
-		if (before != null && (!isEmpty || renderIfEmpty)) {
-			renderer.renderNext(before, tree, printer);
-		}
+		renderer.renderNext(isEmpty && !renderIfEmpty ? none() : before, tree, printer);
 
 		boolean firstElement = true;
 		STree previous = null;
 		for (STree child : children) {
 			if (firstElement) {
 				firstElement = false;
-			} else if (separator != null) {
+			} else {
 				renderer.renderNext(separator, previous, printer);
 			}
 
@@ -117,30 +106,7 @@ public final class LSList extends LexicalShape {
 			previous = child;
 		}
 
-		if (after != null && (!isEmpty || renderIfEmpty)) {
-			renderer.renderNext(after, tree, printer);
-		}
+		renderer.renderNext(isEmpty && !renderIfEmpty ? none() : after, tree, printer);
 	}
 
-	@Override
-	public SpacingConstraint spacingBefore(STree tree) {
-		final SNodeListState state = (SNodeListState) tree.state;
-		final Vector<STree> children = state.children;
-		if (children.isEmpty() && !renderIfEmpty) return null;
-
-		if (before != null) return before.spacingBefore(tree);
-		final STree child = children.first();
-		return shape.spacingBefore(child);
-	}
-
-	@Override
-	public SpacingConstraint spacingAfter(STree tree) {
-		final SNodeListState state = (SNodeListState) tree.state;
-		final Vector<STree> children = state.children;
-		if (children.isEmpty() && !renderIfEmpty) return null;
-
-		if (after != null) return after.spacingAfter(tree);
-		final STree child = children.last();
-		return shape.spacingAfter(child);
-	}
 }

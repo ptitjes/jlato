@@ -29,7 +29,7 @@ import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.decl.VariableDeclaratorId;
 import org.jlato.tree.expr.AnnotationExpr;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class ArrayType extends ReferenceType {
 

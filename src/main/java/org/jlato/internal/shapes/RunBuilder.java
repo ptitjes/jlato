@@ -38,6 +38,7 @@ public class RunBuilder {
 
 	private Builder<LRun, ArrayList<LRun>> subRuns = ArrayList.<LRun>factory().newBuilder();
 	private Builder<IndexedList<LToken>, ArrayList<IndexedList<LToken>>> tokens = ArrayList.<IndexedList<LToken>>factory().newBuilder();
+	private boolean firstShape = true;
 	private boolean firstDefinedShape = true;
 	private int shapeCount = 0;
 
@@ -46,19 +47,26 @@ public class RunBuilder {
 	}
 
 	public void handleNext(LexicalShape shape, STree tree) {
-		if (shape.isWhitespaceOnly(tree)) return;
-
-		if (shape.isDefined(tree)) {
-			if (firstDefinedShape) firstDefinedShape = false;
-			else {
-				final IndexedList<LToken> incomming = tokenIterator.next();
-				tokens.add(incomming);
-			}
-		} else tokens.add(Vector.<LToken>empty());
-
 		shapeCount++;
 
-		subRuns.add(shape.enRun(tree, tokenIterator));
+		final boolean defined = shape != null && shape.isDefined(tree);
+
+		if (!defined) {
+			if (firstShape) firstShape = false;
+			else tokens.add(null);
+
+			subRuns.add(null);
+		} else {
+			if (firstShape) {
+				firstShape = false;
+				if (firstDefinedShape) firstDefinedShape = false;
+			} else if (firstDefinedShape) {
+				firstDefinedShape = false;
+				tokens.add(null);
+			} else tokens.add(tokenIterator.next());
+
+			subRuns.add(shape.enRun(tree, tokenIterator));
+		}
 	}
 
 	public LRun build() {

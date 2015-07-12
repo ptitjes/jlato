@@ -26,7 +26,7 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.token;
+import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class VoidType extends Type {
 

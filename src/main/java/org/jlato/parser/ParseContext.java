@@ -58,7 +58,7 @@ public abstract class ParseContext<T extends Tree> {
 		}
 	};
 
-	public final static ParseContext<Decl> ClassBodyDecl = new ParseContext<Decl>() {
+	public final static ParseContext<Decl> MemberDecl = new ParseContext<Decl>() {
 		@Override
 		protected Decl callProduction(ParserImpl parser) throws ParseException {
 			return parser.ClassOrInterfaceBodyDecl(TypeKind.Class);

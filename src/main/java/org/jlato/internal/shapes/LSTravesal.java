@@ -31,14 +31,13 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public final class LSTravesal extends LexicalShape {
+public final class LSTravesal extends LSDecorated {
 
 	private final int index;
-	private final LexicalShape shape;
 
 	public LSTravesal(int index, LexicalShape shape) {
+		super(shape);
 		this.index = index;
-		this.shape = shape;
 	}
 
 	private STree traverse(STree tree) {
@@ -53,12 +52,6 @@ public final class LSTravesal extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly(STree tree) {
-		final STree child = traverse(tree);
-		return child != null && shape.isWhitespaceOnly(child);
-	}
-
-	@Override
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
 		return null;
 	}
@@ -70,19 +63,4 @@ public final class LSTravesal extends LexicalShape {
 		shape.render(child, child.run, printer);
 	}
 
-	@Override
-	public SpacingConstraint spacingBefore(STree tree) {
-		final STree child = traverse(tree);
-		if (child == null) return null;
-
-		return shape.spacingBefore(child);
-	}
-
-	@Override
-	public SpacingConstraint spacingAfter(STree tree) {
-		final STree child = traverse(tree);
-		if (child == null) return null;
-
-		return shape.spacingAfter(child);
-	}
 }

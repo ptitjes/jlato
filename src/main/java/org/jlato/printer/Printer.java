@@ -19,9 +19,13 @@
 
 package org.jlato.printer;
 
+import com.github.andrewoma.dexx.collection.IndexedList;
+import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.shapes.SpacingConstraint;
+import org.jlato.parser.ParserImplConstants;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
@@ -199,7 +203,7 @@ public class Printer {
 	public void print(NodeList<? extends Tree> trees) {
 		reset();
 		final STree sTree = Tree.treeOf(trees);
-		final LexicalShape shape = LexicalShape.Factory.list();
+		final LexicalShape shape = LexicalShape.list();
 		shape.render(sTree, sTree.run, this);
 	}
 
@@ -207,14 +211,93 @@ public class Printer {
 	private int delayedIndentation;
 	private boolean needsIndentation;
 	private boolean afterAlpha;
+	private Spacing spacing;
+	private IndexedList<LToken> whitespace;
 
 	private void reset() {
 		indentLevel = 0;
 		needsIndentation = true;
 		afterAlpha = false;
+		spacing = Spacing.noSpace;
+		whitespace = null;
+	}
+
+	public void addSpacingConstraint(SpacingConstraint constraint) {
+		final Spacing otherSpacing = constraint == null ? null : constraint.resolve(this);
+		spacing = otherSpacing != null ? spacing.max(otherSpacing) : spacing;
+	}
+
+	public void addWhitespace(IndexedList<LToken> tokens) {
+		if (tokens == null) return;
+		if (whitespace == null) whitespace = Vector.empty();
+		for (LToken token : tokens) {
+			whitespace = whitespace.append(token);
+		}
+	}
+
+	private void renderSpacing() {
+		if (spacing != null) {
+			Spacing spacingCopy = spacing;
+			IndexedList<LToken> whitespaceCopy = whitespace;
+
+			spacing = Spacing.noSpace;
+			whitespace = null;
+
+			render(spacingCopy, whitespaceCopy);
+		}
+	}
+
+	public void render(Spacing expectedSpacing, IndexedList<LToken> tokens) {
+		switch (expectedSpacing.unit) {
+			case Space:
+				if (tokens != null && (!format || containsComments(tokens)))
+					dump(tokens, format);
+				else {
+					for (int i = 0; i < expectedSpacing.count; i++) {
+						appendWhiteSpace(" ");
+					}
+				}
+				break;
+			case Line:
+				if (tokens != null) {
+					// TODO Handle when new line count is higher than expected
+					if (format) {
+						final int actualEmptyLines = emptyLineCount(tokens);
+						appendNewLine(expectedSpacing.count - actualEmptyLines);
+					}
+					dump(tokens, format);
+				} else {
+					appendNewLine(expectedSpacing.count);
+				}
+				break;
+		}
+	}
+
+	private void dump(IndexedList<LToken> tokens, boolean requiresFormatting) {
+		for (LToken token : tokens) {
+			switch (token.kind) {
+				case ParserImplConstants.JAVA_DOC_COMMENT:
+					// TODO format javadoc comment
+					appendComment(token.string, requiresFormatting);
+					break;
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+					appendComment(token.string, requiresFormatting);
+					break;
+				case ParserImplConstants.NEWLINE:
+					appendNewLine(token.string);
+					break;
+				case ParserImplConstants.WHITESPACE:
+					appendWhiteSpace(token.string);
+					break;
+				default:
+					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
+			}
+		}
 	}
 
 	public void append(LToken token, boolean requiresFormatting) {
+		renderSpacing();
 		boolean isAlpha = token.isKeyword() || token.isIdentifier();
 		if ((format || requiresFormatting) && needsIndentation) doPrintIndent();
 		if (afterAlpha && isAlpha) writer.append(" ");
@@ -263,5 +346,51 @@ public class Printer {
 			writer.append(formattingSettings.indentation());
 		}
 		needsIndentation = false;
+	}
+
+	public void appendComment(String image, boolean requiresFormatting) {
+		writer.append(image);
+		afterAlpha = false;
+	}
+
+
+	private static int emptyLineCount(IndexedList<LToken> tokens) {
+		int count = 0;
+		boolean emptyLine = true;
+		for (LToken token : tokens) {
+			switch (token.kind) {
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case ParserImplConstants.JAVA_DOC_COMMENT:
+					emptyLine = false;
+					break;
+				case ParserImplConstants.NEWLINE:
+					if (emptyLine) count++;
+					emptyLine = true;
+					break;
+				case ParserImplConstants.WHITESPACE:
+					break;
+				default:
+					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
+			}
+		}
+		return count;
+	}
+
+	private static boolean containsComments(IndexedList<LToken> tokens) {
+		for (LToken token : tokens) {
+			switch (token.kind) {
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case ParserImplConstants.JAVA_DOC_COMMENT:
+					return true;
+				case ParserImplConstants.NEWLINE:
+				case ParserImplConstants.WHITESPACE:
+					break;
+				default:
+					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
+			}
+		}
+		return false;
 	}
 }

@@ -30,7 +30,7 @@ import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.LabeledStmt_AfterLabel;
 
@@ -74,10 +74,10 @@ public class LabeledStmt extends Stmt {
 	private static final int STMT = 1;
 
 	public final static LexicalShape shape = composite(
-			none().withIndentation(indent(IndentationContext.LABEL)),
+			none().withIndentationAfter(indent(IndentationContext.LABEL)),
 			child(LABEL),
 			token(LToken.Colon).withSpacingAfter(spacing(LabeledStmt_AfterLabel)),
-			none().withIndentation(unIndent(IndentationContext.LABEL)),
+			none().withIndentationBefore(unIndent(IndentationContext.LABEL)),
 			child(STMT)
 	);
 }

@@ -25,8 +25,8 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Modifiable;
 import org.jlato.tree.Tree;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.list;
-import static org.jlato.internal.shapes.LexicalShape.Factory.token;
+import static org.jlato.internal.shapes.LexicalShape.list;
+import static org.jlato.internal.shapes.LexicalShape.token;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public abstract class Type extends Tree implements Modifiable<Type> {
@@ -39,7 +39,7 @@ public abstract class Type extends Tree implements Modifiable<Type> {
 		return location.replace(replacement);
 	}
 
-	public static final LexicalShape typeArgumentsShape = list(
+	public static final LexicalShape typeArgumentsShape = list(true,
 			token(LToken.Less),
 			token(LToken.Comma).withSpacingAfter(space()),
 			token(LToken.Greater)

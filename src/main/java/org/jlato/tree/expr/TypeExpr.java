@@ -26,7 +26,7 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.child;
+import static org.jlato.internal.shapes.LexicalShape.child;
 
 public class TypeExpr extends Expr {
 

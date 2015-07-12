@@ -27,7 +27,7 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class LocalVariableDecl extends Decl {
@@ -92,7 +92,6 @@ public class LocalVariableDecl extends Decl {
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.singleLineShape),
 			child(TYPE),
-			none().withSpacing(space()),
-			child(VARIABLES, VariableDeclarator.listShape)
+			child(VARIABLES, VariableDeclarator.listShape).withSpacingBefore(space())
 	);
 }

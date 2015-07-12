@@ -26,8 +26,8 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.TypeDecl;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.child;
-import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
+import static org.jlato.internal.shapes.LexicalShape.child;
+import static org.jlato.internal.shapes.LexicalShape.composite;
 
 public class TypeDeclarationStmt extends Stmt {
 

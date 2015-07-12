@@ -25,7 +25,7 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.none;
+import static org.jlato.internal.shapes.LexicalShape.none;
 
 public class UnknownType extends Type {
 

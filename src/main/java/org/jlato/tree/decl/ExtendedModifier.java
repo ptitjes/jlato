@@ -22,7 +22,7 @@ package org.jlato.tree.decl;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
@@ -32,20 +32,20 @@ import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 public interface ExtendedModifier {
 
 	public static final LexicalShape singleLineShape = list(
-			none().withSpacing(space())
+			none().withSpacingAfter(space())
 	);
 
 	public static final LexicalShape multiLineShape = list(
 			none(),
 			alternative(
 					LSCondition.kind(Modifier.kind),
-					none().withSpacing(space()),
-					none().withSpacing(newLine())
+					none().withSpacingAfter(space()),
+					none().withSpacingAfter(newLine())
 			),
 			alternative(
 					LSCondition.lastChildKind(Modifier.kind),
-					none().withSpacing(space()),
-					none().withSpacing(newLine())
+					none().withSpacingAfter(space()),
+					none().withSpacingAfter(newLine())
 			)
 	);
 }

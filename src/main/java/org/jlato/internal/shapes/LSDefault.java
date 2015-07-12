@@ -46,11 +46,6 @@ public final class LSDefault extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly(STree tree) {
-		return false;
-	}
-
-	@Override
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
 		return null;
 	}
@@ -60,15 +55,4 @@ public final class LSDefault extends LexicalShape {
 		if (shape != null) shape.render(tree, tree.run, printer);
 	}
 
-	@Override
-	public SpacingConstraint spacingBefore(STree tree) {
-		final LexicalShape shape = shapeFor(tree);
-		return shape == null ? null : shape.spacingBefore(tree);
-	}
-
-	@Override
-	public SpacingConstraint spacingAfter(STree tree) {
-		final LexicalShape shape = shapeFor(tree);
-		return shape == null ? null : shape.spacingAfter(tree);
-	}
 }

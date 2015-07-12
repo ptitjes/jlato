@@ -32,52 +32,19 @@ import java.util.Iterator;
  */
 public final class LSNone extends LexicalShape {
 
-	private final SpacingConstraint spacing;
-	private final IndentationConstraint indentation;
-
 	public LSNone() {
-		this(null, null);
-	}
-
-	private LSNone(SpacingConstraint spacing, IndentationConstraint indentation) {
-		this.spacing = spacing;
-		this.indentation = indentation;
-	}
-
-	public LSNone withSpacing(SpacingConstraint spacing) {
-		return new LSNone(spacing, indentation);
-	}
-
-	public LSNone withIndentation(IndentationConstraint indentation) {
-		return new LSNone(spacing, indentation);
 	}
 
 	@Override
 	public boolean isDefined(STree tree) {
-		return true;
-	}
-
-	@Override
-	public boolean isWhitespaceOnly(STree tree) {
-		return true;
+		return false;
 	}
 
 	@Override
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	public void render(STree tree, LRun run, Printer printer) {
-		if (indentation != null) printer.indent(indentation.resolve(printer));
-	}
-
-	@Override
-	public SpacingConstraint spacingBefore(STree tree) {
-		return spacing;
-	}
-
-	@Override
-	public SpacingConstraint spacingAfter(STree tree) {
-		return spacing;
 	}
 }

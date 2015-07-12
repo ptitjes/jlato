@@ -29,7 +29,7 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class QualifiedType extends ReferenceType {
@@ -85,10 +85,10 @@ public class QualifiedType extends ReferenceType {
 			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
 			child(NAME),
 			nonNullChild(TYPE_ARGUMENTS,
-					nonEmptyChildren(TYPE_ARGUMENTS,
-							child(TYPE_ARGUMENTS, list(token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater))),
-							composite(token(LToken.Less), token(LToken.Greater))
-					)
+//					nonEmptyChildren(TYPE_ARGUMENTS,
+							child(TYPE_ARGUMENTS, Type.typeArgumentsShape)/*,
+							composite(token(LToken.Less), token(LToken.Greater))*/
+//					)
 			)
 	);
 

@@ -29,7 +29,7 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.stmt.BlockStmt;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class LambdaExpr extends Expr {

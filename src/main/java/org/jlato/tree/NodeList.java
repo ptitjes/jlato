@@ -19,11 +19,10 @@
 
 package org.jlato.tree;
 
+import com.github.andrewoma.dexx.collection.ArrayList;
+import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.LRun;
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeState;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 
@@ -84,9 +83,22 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		return location.nodeListWithChild(index, element);
 	}
 
+	@SuppressWarnings("unchecked")
 	public NodeList<T> prepend(T element) {
-		final Vector<STree> newChildren = location.nodeListChildren().prepend(treeOf(element));
-		return location.nodeListWithChildren(newChildren);
+		final STree tree = location.tree;
+
+		final SNodeListState state = (SNodeListState) tree.state;
+		final SNodeListState newState = state.withChildren(state.children.prepend(treeOf(element)));
+		STree newTree = tree.withState(newState);
+
+		LRun run = tree.run;
+		if (run != null) {
+			final ArrayList<LRun> subRuns = run.subRuns.prepend(null).prepend(null);
+			IndexedList<IndexedList<LToken>> whitespaces = run.whitespaces.prepend(null).prepend(null);
+			newTree = newTree.withRun(new LRun(subRuns, whitespaces));
+		}
+
+		return (NodeList<T>) location.withTree(newTree).facade;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -95,11 +107,16 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 
 		final SNodeListState state = (SNodeListState) tree.state;
 		final SNodeListState newState = state.withChildren(state.children.append(treeOf(element)));
+		STree newTree = tree.withState(newState);
 
-		final LRun run = tree.run;
-		final LRun newRun = run;
+		LRun run = tree.run;
+		if (run != null) {
+			final ArrayList<LRun> subRuns = run.subRuns.append(null).append(null);
+			IndexedList<IndexedList<LToken>> whitespaces = run.whitespaces.append(null).append(null);
+			newTree = newTree.withRun(new LRun(subRuns, whitespaces));
+		}
 
-		return (NodeList<T>) location.withTree(tree.withState(newState).withRun(newRun)).facade;
+		return (NodeList<T>) location.withTree(newTree).facade;
 	}
 
 	public Iterator<T> iterator() {

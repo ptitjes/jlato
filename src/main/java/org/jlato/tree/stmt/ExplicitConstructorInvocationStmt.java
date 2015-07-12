@@ -30,7 +30,7 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class ExplicitConstructorInvocationStmt extends Stmt {
 

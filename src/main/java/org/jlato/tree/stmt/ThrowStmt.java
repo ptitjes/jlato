@@ -27,7 +27,7 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class ThrowStmt extends Stmt {
 

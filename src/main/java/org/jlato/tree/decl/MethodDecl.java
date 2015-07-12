@@ -32,7 +32,7 @@ import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class MethodDecl extends MemberDecl {
@@ -140,13 +140,13 @@ public class MethodDecl extends MemberDecl {
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(TYPE_PARAMETERS, TypeParameter.listShape),
 			child(TYPE),
-			none().withSpacing(space()),
+			none().withSpacingAfter(space()),
 			child(NAME),
 			child(PARAMETERS, FormalParameter.listShape),
 			child(DIMS, ArrayDim.listShape),
 			child(THROWS_CLAUSE, QualifiedType.throwsClauseShape),
 			nonNullChild(BODY,
-					composite(none().withSpacing(space()), child(BODY)),
+					composite(none().withSpacingAfter(space()), child(BODY)),
 					token(LToken.SemiColon)
 			)
 	);

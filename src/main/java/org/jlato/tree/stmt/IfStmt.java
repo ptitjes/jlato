@@ -29,7 +29,7 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
@@ -87,39 +87,39 @@ public class IfStmt extends Stmt {
 			child(CONDITION),
 			token(LToken.ParenthesisRight),
 			childKindAlternative(THEN_STMT, BlockStmt.kind,
-					composite(none().withSpacing(space()), child(THEN_STMT)),
+					composite(none().withSpacingAfter(space()), child(THEN_STMT)),
 					childKindAlternative(THEN_STMT, ExpressionStmt.kind,
 							composite(
-									none().withSpacing(spacing(IfStmt_ThenExpressionStmt)).withIndentation(indent(BLOCK)),
+									none().withSpacingAfter(spacing(IfStmt_ThenExpressionStmt)).withIndentationAfter(indent(BLOCK)),
 									child(THEN_STMT),
-									none().withIndentation(unIndent(BLOCK)).withSpacing(newLine())
+									none().withIndentationBefore(unIndent(BLOCK)).withSpacingAfter(newLine())
 							),
 							composite(
-									none().withSpacing(spacing(IfStmt_ThenOtherStmt)).withIndentation(indent(BLOCK)),
+									none().withSpacingAfter(spacing(IfStmt_ThenOtherStmt)).withIndentationAfter(indent(BLOCK)),
 									child(THEN_STMT),
-									none().withIndentation(unIndent(BLOCK)).withSpacing(newLine())
+									none().withIndentationBefore(unIndent(BLOCK)).withSpacingAfter(newLine())
 							)
 					)
 			),
 			nonNullChild(ELSE_STMT, composite(
 					token(LToken.Else).withSpacingBefore(space()),
 					childKindAlternative(ELSE_STMT, BlockStmt.kind,
-							composite(none().withSpacing(space()), child(ELSE_STMT)),
+							composite(none().withSpacingAfter(space()), child(ELSE_STMT)),
 							childKindAlternative(ELSE_STMT, IfStmt.kind,
 									composite(
-											none().withSpacing(spacing(IfStmt_ElseIfStmt)),
+											none().withSpacingAfter(spacing(IfStmt_ElseIfStmt)),
 											child(ELSE_STMT)
 									),
 									childKindAlternative(ELSE_STMT, ExpressionStmt.kind,
 											composite(
-													none().withSpacing(spacing(IfStmt_ElseExpressionStmt)).withIndentation(indent(BLOCK)),
+													none().withSpacingAfter(spacing(IfStmt_ElseExpressionStmt)).withIndentationAfter(indent(BLOCK)),
 													child(ELSE_STMT),
-													none().withIndentation(unIndent(BLOCK))
+													none().withIndentationBefore(unIndent(BLOCK))
 											),
 											composite(
-													none().withSpacing(spacing(IfStmt_ElseOtherStmt)).withIndentation(indent(BLOCK)),
+													none().withSpacingAfter(spacing(IfStmt_ElseOtherStmt)).withIndentationAfter(indent(BLOCK)),
 													child(ELSE_STMT),
-													none().withIndentation(unIndent(BLOCK)).withSpacing(newLine())
+													none().withIndentationBefore(unIndent(BLOCK)).withSpacingAfter(newLine())
 											)
 									)
 							)

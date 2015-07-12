@@ -27,7 +27,7 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class VariableDeclaratorId extends Tree {
 

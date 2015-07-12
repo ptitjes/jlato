@@ -31,7 +31,7 @@ import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_AfterConstants;
@@ -125,8 +125,8 @@ public class EnumDecl extends TypeDecl {
 			),
 			emptyChildren(MEMBERS,
 					emptyChildren(ENUM_CONSTANTS,
-							none().withSpacing(newLine()),
-							none().withSpacing(spacing(EnumBody_AfterConstants))
+							none().withSpacingAfter(newLine()),
+							none().withSpacingAfter(spacing(EnumBody_AfterConstants))
 					)
 			),
 			nonEmptyChildren(MEMBERS,

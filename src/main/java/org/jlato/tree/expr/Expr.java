@@ -25,8 +25,9 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Modifiable;
 import org.jlato.tree.Tree;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.list;
-import static org.jlato.internal.shapes.LexicalShape.Factory.token;
+import static org.jlato.internal.shapes.LexicalShape.list;
+import static org.jlato.internal.shapes.LexicalShape.none;
+import static org.jlato.internal.shapes.LexicalShape.token;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 /**

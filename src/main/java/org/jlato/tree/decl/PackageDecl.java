@@ -29,7 +29,7 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.QualifiedName;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class PackageDecl extends Tree {
 

@@ -37,99 +37,111 @@ public abstract class LexicalShape {
 
 	public abstract boolean isDefined(STree tree);
 
-	public abstract boolean isWhitespaceOnly(STree tree);
-
 	public abstract LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator);
 
 	public abstract void render(STree tree, LRun run, Printer printer);
 
-	public abstract SpacingConstraint spacingBefore(STree tree);
+	public LSDecorated withSpacing(SpacingConstraint before, SpacingConstraint after) {
+		return new LSSpacing(this, before, after, null, null);
+	}
 
-	public abstract SpacingConstraint spacingAfter(STree tree);
+	public LSDecorated withSpacingBefore(SpacingConstraint spacingBefore) {
+		return new LSSpacing(this, spacingBefore, null, null, null);
+	}
 
-	public static class Factory {
-		public static LSNone none() {
-			return new LSNone();
-		}
+	public LSDecorated withSpacingAfter(SpacingConstraint spacingAfter) {
+		return new LSSpacing(this, null, spacingAfter, null, null);
+	}
 
-		public static LexicalShape alternative(LSCondition condition, LexicalShape shape, LexicalShape alternative) {
-			return new LSAlternative(condition, shape, alternative);
-		}
+	public LSDecorated withIndentationBefore(IndentationConstraint indentationBefore) {
+		return new LSSpacing(this, null, null, indentationBefore, null);
+	}
 
-		public static LexicalShape childKindAlternative(int index, Tree.Kind kind, LexicalShape shape, LexicalShape alternative) {
-			return alternative(LSCondition.childKind(index, kind), shape, alternative);
-		}
+	public LSDecorated withIndentationAfter(IndentationConstraint indentationAfter) {
+		return new LSSpacing(this, null, null, null, indentationAfter);
+	}
 
-		public static LexicalShape dataOption(int index, LexicalShape shape) {
-			return alternative(LSCondition.data(index), shape, null);
-		}
+	public static LSNone none() {
+		return new LSNone();
+	}
 
-		public static LexicalShape nonNullChild(int index, LexicalShape shape) {
-			return nonNullChild(index, shape, null);
-		}
+	public static LexicalShape alternative(LSCondition condition, LexicalShape shape, LexicalShape alternative) {
+		return new LSAlternative(condition, shape, alternative);
+	}
 
-		public static LexicalShape nonNullChild(int index, LexicalShape shape, LexicalShape alternative) {
-			return alternative(LSCondition.nonNullChild(index), shape, alternative);
-		}
+	public static LexicalShape childKindAlternative(int index, Tree.Kind kind, LexicalShape shape, LexicalShape alternative) {
+		return alternative(LSCondition.childKind(index, kind), shape, alternative);
+	}
 
-		public static LexicalShape nonEmptyChildren(int index, LexicalShape shape) {
-			return nonEmptyChildren(index, shape, null);
-		}
+	public static LexicalShape dataOption(int index, LexicalShape shape) {
+		return alternative(LSCondition.data(index), shape, null);
+	}
 
-		public static LexicalShape nonEmptyChildren(int index, LexicalShape shape, LexicalShape alternative) {
-			return alternative(LSCondition.not(LSCondition.emptyList(index)), shape, alternative);
-		}
+	public static LexicalShape nonNullChild(int index, LexicalShape shape) {
+		return nonNullChild(index, shape, null);
+	}
 
-		public static LexicalShape emptyChildren(int index, LexicalShape shape) {
-			return nonEmptyChildren(index, null, shape);
-		}
+	public static LexicalShape nonNullChild(int index, LexicalShape shape, LexicalShape alternative) {
+		return alternative(LSCondition.nonNullChild(index), shape, alternative);
+	}
 
-		public static LexicalShape emptyChildren(int index, LexicalShape shape, LexicalShape alternative) {
-			return nonEmptyChildren(index, alternative, shape);
-		}
+	public static LexicalShape nonEmptyChildren(int index, LexicalShape shape) {
+		return nonEmptyChildren(index, shape, null);
+	}
 
-		public static LexicalShape composite(LexicalShape... shapes) {
-			return new LSComposite(shapes);
-		}
+	public static LexicalShape nonEmptyChildren(int index, LexicalShape shape, LexicalShape alternative) {
+		return alternative(LSCondition.not(LSCondition.emptyList(index)), shape, alternative);
+	}
 
-		public static LSToken token(LToken token) {
-			return new LSToken(token);
-		}
+	public static LexicalShape emptyChildren(int index, LexicalShape shape) {
+		return nonEmptyChildren(index, null, shape);
+	}
 
-		public static LSToken token(LSToken.Provider tokenProvider) {
-			return new LSToken(tokenProvider);
-		}
+	public static LexicalShape emptyChildren(int index, LexicalShape shape, LexicalShape alternative) {
+		return nonEmptyChildren(index, alternative, shape);
+	}
 
-		public static LexicalShape child(int index) {
-			return child(index, defaultShape());
-		}
+	public static LexicalShape composite(LexicalShape... shapes) {
+		return new LSComposite(shapes);
+	}
 
-		public static LexicalShape child(int index, LexicalShape shape) {
-			return new LSTravesal(index, shape);
-		}
+	public static LSToken token(LToken token) {
+		return new LSToken(token);
+	}
 
-		public static LexicalShape list() {
-			return list(false, defaultShape(), null, null, null);
-		}
+	public static LSToken token(LSToken.Provider tokenProvider) {
+		return new LSToken(tokenProvider);
+	}
 
-		public static LexicalShape list(LexicalShape separator) {
-			return list(false, defaultShape(), null, separator, null);
-		}
+	public static LexicalShape child(int index) {
+		return child(index, defaultShape());
+	}
 
-		public static LexicalShape list(LexicalShape before, LexicalShape separator, LexicalShape after) {
-			return list(false, defaultShape(), before, separator, after);
-		}
+	public static LexicalShape child(int index, LexicalShape shape) {
+		return new LSTravesal(index, shape);
+	}
 
-		public static LexicalShape list(boolean renderIfEmpty, LexicalShape before, LexicalShape separator, LexicalShape after) {
-			return list(renderIfEmpty, defaultShape(), before, separator, after);
-		}
+	public static LexicalShape list() {
+		return list(false, defaultShape(), null, null, null);
+	}
 
-		public static LexicalShape list(boolean renderIfEmpty, LexicalShape shape, LexicalShape before, LexicalShape separator, LexicalShape after) {
-			return new LSList(shape, before, separator, after, renderIfEmpty);
-		}
+	public static LexicalShape list(LexicalShape separator) {
+		return list(false, defaultShape(), null, separator, null);
+	}
 
-		public static LexicalShape defaultShape() {
-			return new LSDefault();
-		}
+	public static LexicalShape list(LexicalShape before, LexicalShape separator, LexicalShape after) {
+		return list(false, defaultShape(), before, separator, after);
+	}
+
+	public static LexicalShape list(boolean renderIfEmpty, LexicalShape before, LexicalShape separator, LexicalShape after) {
+		return list(renderIfEmpty, defaultShape(), before, separator, after);
+	}
+
+	public static LexicalShape list(boolean renderIfEmpty, LexicalShape shape, LexicalShape before, LexicalShape separator, LexicalShape after) {
+		return new LSList(shape, before, separator, after, renderIfEmpty);
+	}
+
+	public static LexicalShape defaultShape() {
+		return new LSDefault();
 	}
 }

@@ -24,8 +24,8 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.name.QualifiedName;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.list;
-import static org.jlato.internal.shapes.LexicalShape.Factory.none;
+import static org.jlato.internal.shapes.LexicalShape.list;
+import static org.jlato.internal.shapes.LexicalShape.none;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
@@ -47,13 +47,13 @@ public abstract class AnnotationExpr extends Expr implements ExtendedModifier {
 
 	public static final LexicalShape singleLineAnnotationsShape = list(
 			none(),
-			none().withSpacing(space()),
-			none().withSpacing(space())
+			none().withSpacingAfter(space()),
+			none().withSpacingAfter(space())
 	);
 
 	public static final LexicalShape multiLineAnnotationsShape = list(
 			none(),
-			none().withSpacing(newLine()),
-			none().withSpacing(newLine())
+			none().withSpacingAfter(newLine()),
+			none().withSpacingAfter(newLine())
 	);
 }

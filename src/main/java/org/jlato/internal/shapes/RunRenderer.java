@@ -36,9 +36,7 @@ public class RunRenderer {
 	private final Iterator<LRun> subRunIterator;
 	private final Iterator<IndexedList<LToken>> whitespaceIterator;
 
-	private SpacingConstraint constraint;
-	private Spacing spacing = null;
-	private boolean firstNonWhitespaceShape = true;
+	private boolean firstShape = true;
 
 	public RunRenderer(LRun run) {
 		subRunIterator = run == null ? null : run.subRuns.iterator();
@@ -46,39 +44,20 @@ public class RunRenderer {
 	}
 
 	public void renderNext(LexicalShape shape, STree tree, Printer printer) {
-		if (shape.isWhitespaceOnly(tree)) {
-			constraint = shape.spacingBefore(tree);
-			spacing = constraint == null ? spacing : maxSpacing(spacing, constraint, printer);
+		final LRun subRun = safeNext(subRunIterator);
 
-			shape.render(tree, null, printer);
+		if (firstShape) firstShape = false;
+		else {
+			final IndexedList<LToken> tokens = safeNext(whitespaceIterator);
+			printer.addWhitespace(tokens);
+		}
 
-			constraint = shape.spacingAfter(tree);
-			spacing = constraint == null ? spacing : maxSpacing(spacing, constraint, printer);
-		} else {
-			if (firstNonWhitespaceShape) firstNonWhitespaceShape = false;
-			else {
-				constraint = shape.spacingBefore(tree);
-				spacing = constraint == null ? spacing : maxSpacing(spacing, constraint, printer);
-
-				final IndexedList<LToken> tokens = safeNext(whitespaceIterator);
-				SpacingConstraint.render(
-						spacing == null ? Spacing.noSpace : spacing,
-						tokens, printer);
-			}
-
-			shape.render(tree, safeNext(subRunIterator), printer);
-
-			constraint = shape.spacingAfter(tree);
-			spacing = constraint == null ? null : constraint.resolve(printer);
+		if (shape != null) {
+			shape.render(tree, subRun, printer);
 		}
 	}
 
 	private <E> E safeNext(Iterator<E> iterator) {
 		return iterator == null ? null : iterator.next();
-	}
-
-	private Spacing maxSpacing(Spacing spacing, SpacingConstraint constraint, Printer printer) {
-		final Spacing otherSpacing = constraint.resolve(printer);
-		return spacing != null && otherSpacing != null ? spacing.max(otherSpacing) : otherSpacing;
 	}
 }

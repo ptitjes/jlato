@@ -27,8 +27,8 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.stmt.BlockStmt;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.child;
-import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
+import static org.jlato.internal.shapes.LexicalShape.child;
+import static org.jlato.internal.shapes.LexicalShape.composite;
 
 public class InitializerDecl extends MemberDecl {
 

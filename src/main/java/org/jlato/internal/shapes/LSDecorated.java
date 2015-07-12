@@ -17,29 +17,39 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.tree.stmt;
+package org.jlato.internal.shapes;
 
-import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Modifiable;
-import org.jlato.tree.Tree;
+import com.github.andrewoma.dexx.collection.IndexedList;
+import org.jlato.internal.bu.LRun;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.STree;
+import org.jlato.printer.Printer;
 
-import static org.jlato.internal.shapes.LexicalShape.list;
-import static org.jlato.internal.shapes.LexicalShape.none;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
+import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
  */
-public abstract class Stmt extends Tree implements Modifiable<Stmt> {
+public class LSDecorated extends LexicalShape {
 
-	protected Stmt(SLocation location) {
-		super(location);
+	protected final LexicalShape shape;
+
+	public LSDecorated(LexicalShape shape) {
+		this.shape = shape;
 	}
 
-	public  Stmt replace(Stmt replacement) {
-		return location.replace(replacement);
+	@Override
+	public boolean isDefined(STree tree) {
+		return true;
 	}
 
-	public static final LexicalShape listShape = list(none().withSpacingAfter(newLine()));
+	@Override
+	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
+		return shape.enRun(tree, tokenIterator);
+	}
+
+	public void render(STree tree, LRun run, Printer printer) {
+		shape.render(tree, run, printer);
+	}
+
 }

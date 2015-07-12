@@ -29,7 +29,7 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterPackageDecl;
@@ -87,7 +87,7 @@ public class CompilationUnit extends Tree {
 	public final static LexicalShape shape = composite(
 			new LSDump(PREAMBLE),
 			child(PACKAGE_DECL),
-			none().withSpacing(spacing(CompilationUnit_AfterPackageDecl)),
+			none().withSpacingAfter(spacing(CompilationUnit_AfterPackageDecl)),
 			child(IMPORTS, ImportDecl.listShape),
 			child(TYPES, TypeDecl.listShape),
 			token(LToken.EOF).withSpacingBefore(newLine())

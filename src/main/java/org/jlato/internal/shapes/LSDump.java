@@ -44,11 +44,6 @@ public class LSDump extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly(STree tree) {
-		return true;
-	}
-
-	@Override
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
 		throw new UnsupportedOperationException();
 	}
@@ -64,13 +59,4 @@ public class LSDump extends LexicalShape {
 		}
 	}
 
-	@Override
-	public SpacingConstraint spacingBefore(STree tree) {
-		return null;
-	}
-
-	@Override
-	public SpacingConstraint spacingAfter(STree tree) {
-		return null;
-	}
 }

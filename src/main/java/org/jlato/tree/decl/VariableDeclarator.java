@@ -27,7 +27,7 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class VariableDeclarator extends Tree {
@@ -71,11 +71,13 @@ public class VariableDeclarator extends Tree {
 
 	public final static LexicalShape shape = composite(
 			child(ID),
-			nonNullChild(INIT, composite(
-					token(LToken.Assign).withSpacing(space(), space()),
-					child(INIT)
-			))
+			nonNullChild(INIT,
+					composite(
+							token(LToken.Assign).withSpacing(space(), space()),
+							child(INIT)
+					)
+			)
 	);
 
-	public final static LexicalShape listShape = list(token(LToken.Comma).withSpacingAfter(space()));
+	public final static LexicalShape listShape = list(none(), token(LToken.Comma).withSpacingAfter(space()), none());
 }

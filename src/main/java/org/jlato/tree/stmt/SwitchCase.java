@@ -30,7 +30,7 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 
@@ -81,12 +81,12 @@ public class SwitchCase extends Tree {
 			token(LToken.Colon).withSpacingAfter(newLine()),
 			nonNullChild(STMTS,
 					composite(
-							none().withIndentation(indent(BLOCK)),
+							none().withIndentationAfter(indent(BLOCK)),
 							child(STMTS, Stmt.listShape),
-							none().withIndentation(unIndent(BLOCK))
+							none().withIndentationBefore(unIndent(BLOCK))
 					)
 			)
 	);
 
-	public static final LexicalShape listShape = list(none().withSpacing(newLine()));
+	public static final LexicalShape listShape = list(none().withSpacingAfter(newLine()));
 }

@@ -29,7 +29,7 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class PrimitiveType extends AnnotatedType {
 

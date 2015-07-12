@@ -22,8 +22,8 @@ package org.jlato.tree.decl;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.list;
-import static org.jlato.internal.shapes.LexicalShape.Factory.none;
+import static org.jlato.internal.shapes.LexicalShape.list;
+import static org.jlato.internal.shapes.LexicalShape.none;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_BetweenTopLevelDecl;
 
@@ -36,7 +36,7 @@ public abstract class TypeDecl extends MemberDecl {
 	public abstract TypeKind typeKind();
 
 	public static final LexicalShape listShape = list(
-			none().withSpacing(spacing(CompilationUnit_BetweenTopLevelDecl))
+			none().withSpacingAfter(spacing(CompilationUnit_BetweenTopLevelDecl))
 	);
 
 	public enum TypeKind {

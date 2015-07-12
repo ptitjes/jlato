@@ -55,14 +55,6 @@ public final class LSComposite extends LexicalShape {
 	}
 
 	@Override
-	public boolean isWhitespaceOnly(STree tree) {
-		for (LexicalShape shape : shapes) {
-			if (!shape.isWhitespaceOnly(tree)) return false;
-		}
-		return true;
-	}
-
-	@Override
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
 		final RunBuilder builder = new RunBuilder(tokenIterator);
 		for (LexicalShape shape : shapes) {
@@ -76,20 +68,5 @@ public final class LSComposite extends LexicalShape {
 		for (LexicalShape shape : shapes) {
 			renderer.renderNext(shape, tree, printer);
 		}
-	}
-
-	private Spacing maxSpacing(Spacing spacing, SpacingConstraint constraint, Printer printer) {
-		final Spacing otherSpacing = constraint.resolve(printer);
-		return spacing != null && otherSpacing != null ? spacing.max(otherSpacing) : otherSpacing;
-	}
-
-	@Override
-	public SpacingConstraint spacingBefore(STree tree) {
-		return shapes.first().spacingBefore(tree);
-	}
-
-	@Override
-	public SpacingConstraint spacingAfter(STree tree) {
-		return shapes.last().spacingAfter(tree);
 	}
 }
