@@ -19,11 +19,9 @@
 
 package org.jlato.internal.td;
 
+import com.github.andrewoma.dexx.collection.TreeMap;
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.SLeafState;
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 
 /**
@@ -103,19 +101,19 @@ public class SLocation {
 		return (T) withTree(newNode).facade;
 	}
 
-	/* Leaf methods */
+	/* Tree methods */
 
 	@SuppressWarnings("unchecked")
-	public <A> A leafData(final int index) {
-		final SLeafState state = (SLeafState) tree.state;
+	public <A> A data(final int index) {
+		final STreeState state = tree.state;
 		return (A) state.data(index);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Tree, A> T leafWithData(int index, A attribute) {
-		final SLeafState state = (SLeafState) tree.state;
-		final STree newLeaf = tree.withState(state.withData(index, attribute));
-		return (T) withTree(newLeaf).facade;
+	public <T extends Tree, A> T withData(int index, A attribute) {
+		final STreeState state = tree.state;
+		final STree newTree = tree.withState(state.withData(index, attribute));
+		return (T) withTree(newTree).facade;
 	}
 
 	/* NodeList methods */
@@ -147,6 +145,38 @@ public class SLocation {
 	public <T extends Tree, C extends Tree> T nodeListWithChildren(Vector<STree> children) {
 		final SNodeListState state = (SNodeListState) tree.state;
 		final STree newTree = tree.withState(state.withChildren(children));
+		return (T) withTree(newTree).facade;
+	}
+
+	/* TreeSet methods */
+
+	@SuppressWarnings("unchecked")
+	public <C extends Tree> C treeSetTree(final String path) {
+		final STreeSetState state = (STreeSetState) tree.state;
+		final STree childTree = state.tree(path);
+		if (childTree == null) return null;
+
+		final SContext childContext = new SContext.TreeSetTree(this, path);
+		final SLocation childLocation = new SLocation(childContext, childTree);
+		return (C) childLocation.facade;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends Tree, C extends Tree> T treeSetWithTree(String path, C newChild) {
+		final STreeSetState state = (STreeSetState) tree.state;
+		final STree newTree = tree.withState(state.withTree(path, Tree.treeOf(newChild)));
+		return (T) withTree(newTree).facade;
+	}
+
+	public TreeMap<String, STree> treeSetTrees() {
+		final STreeSetState state = (STreeSetState) tree.state;
+		return state.trees;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends Tree, C extends Tree> T treeSetWithTrees(TreeMap<String, STree> trees) {
+		final STreeSetState state = (STreeSetState) tree.state;
+		final STree newTree = tree.withState(state.withTrees(trees));
 		return (T) withTree(newTree).facade;
 	}
 }

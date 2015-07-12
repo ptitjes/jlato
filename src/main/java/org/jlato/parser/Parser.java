@@ -20,9 +20,13 @@
 package org.jlato.parser;
 
 import org.jlato.tree.Tree;
+import org.jlato.tree.TreeSet;
 import org.jlato.tree.decl.CompilationUnit;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Didier Villevalois
@@ -64,4 +68,43 @@ public class Parser {
 	public CompilationUnit parse(File file, String encoding) throws ParseException, FileNotFoundException {
 		return parse(ParseContext.CompilationUnit, new FileInputStream(file), encoding);
 	}
+
+	public TreeSet<CompilationUnit> parseAll(File directory, String encoding) throws ParseException, FileNotFoundException {
+		List<File> files = collectAllJavaFiles(directory, new ArrayList<File>());
+
+		String rootPath = directory.getAbsolutePath();
+		if (!rootPath.endsWith("/")) rootPath = rootPath + "/";
+
+		TreeSet<CompilationUnit> set = new TreeSet<CompilationUnit>(rootPath);
+		for (File file : files) {
+			final CompilationUnit cu = parse(file, encoding);
+			final String path = file.getAbsolutePath().substring(rootPath.length());
+			set = set.put(path, cu);
+		}
+		return set;
+	}
+
+	// TODO Use NIO filesystem walker
+	private static List<File> collectAllJavaFiles(File rootDirectory, List<File> files) {
+		final File[] localFiles = rootDirectory.listFiles(JAVA_FILTER);
+		files.addAll(Arrays.asList(localFiles));
+
+		for (File directory : rootDirectory.listFiles(DIRECTORY_FILTER)) {
+			collectAllJavaFiles(directory, files);
+		}
+
+		return files;
+	}
+
+	private static final FileFilter JAVA_FILTER = new FileFilter() {
+		public boolean accept(File file) {
+			return file.getName().endsWith(".java");
+		}
+	};
+
+	private static final FileFilter DIRECTORY_FILTER = new FileFilter() {
+		public boolean accept(File file) {
+			return file.isDirectory();
+		}
+	};
 }

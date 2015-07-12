@@ -24,7 +24,7 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 /**
  * @author Didier Villevalois
  */
-public class STreeState {
+public abstract class STreeState {
 
 	public final ArrayList<Object> data;
 
@@ -35,4 +35,6 @@ public class STreeState {
 	public Object data(int index) {
 		return data.get(index);
 	}
+
+	public abstract STreeState withData(int index, Object value);
 }

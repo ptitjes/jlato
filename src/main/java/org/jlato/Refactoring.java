@@ -21,12 +21,17 @@ package org.jlato;
 
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
+import org.jlato.parser.ParserConfiguration;
+import org.jlato.printer.FormattingSettings;
+import org.jlato.printer.Printer;
+import org.jlato.tree.TreeSet;
+import org.jlato.tree.decl.ClassDecl;
 import org.jlato.tree.decl.CompilationUnit;
+import org.jlato.tree.decl.TypeDecl;
+import org.jlato.tree.type.QualifiedType;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,48 +42,28 @@ public class Refactoring {
 
 	public static final List<String> TREE_CLASSES = Arrays.asList("Tree", "Decl", "Stmt", "Expr", "Type");
 
-	public static void main(String[] args) throws FileNotFoundException, ParseException {
-		Parser parser = new Parser();
+	public static void main(String[] args) throws IOException, ParseException {
+		Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
 
-		File rootDirectory = new File("src/main/java/org/jlato/tree/");
-		List<File> files = collectAllJavaFiles(rootDirectory, new ArrayList<File>());
+		File rootDirectory = new File("src/main/java");
 
-		for (File file : files) {
-			final CompilationUnit cu = parser.parse(file, "UTF-8");
+		final TreeSet<CompilationUnit> treeSet = parser.parseAll(rootDirectory, "UTF-8");
+		for (String path : treeSet.paths()) {
+			CompilationUnit cu = treeSet.get(path);
 
+			final TypeDecl typeDecl = cu.types().get(0);
+			if (typeDecl.typeKind() == TypeDecl.TypeKind.Class) {
+				final ClassDecl classDecl = (ClassDecl) typeDecl;
+				final String name = classDecl.name().name();
 
-//			final TypeDecl typeDecl = cu.types().get(0);
-//			final String name = typeDecl.name().name();
-//
-//			final NodeList<QualifiedType> extendsClause = typeDecl.extendsClause();
-//			final String superclassName = extendsClause == null ? null : extendsClause.get(0).name().name();
-//
-//			if (superclassName != null && !TREE_CLASSES.contains(name) && TREE_CLASSES.contains(superclassName)) {
-//				System.out.println(file.getAbsolutePath());
-//			}
+				final QualifiedType extendsClause = classDecl.extendsClause();
+				final String superclassName = extendsClause == null ? null : Printer.printToString(extendsClause);
+
+				if (superclassName != null && !TREE_CLASSES.contains(name) && TREE_CLASSES.contains(superclassName)) {
+
+				}
+			}
 		}
+		treeSet.updateOnDisk(false, FormattingSettings.Default);
 	}
-
-	public static List<File> collectAllJavaFiles(File rootDirectory, List<File> files) {
-		final File[] localFiles = rootDirectory.listFiles(JAVA_FILTER);
-		files.addAll(Arrays.asList(localFiles));
-
-		for (File directory : rootDirectory.listFiles(DIRECTORY_FILTER)) {
-			collectAllJavaFiles(directory, files);
-		}
-
-		return files;
-	}
-
-	private static final FileFilter JAVA_FILTER = new FileFilter() {
-		public boolean accept(File file) {
-			return file.getName().endsWith(".java");
-		}
-	};
-
-	private static final FileFilter DIRECTORY_FILTER = new FileFilter() {
-		public boolean accept(File file) {
-			return file.isDirectory();
-		}
-	};
 }

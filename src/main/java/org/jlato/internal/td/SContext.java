@@ -22,6 +22,7 @@ package org.jlato.internal.td;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STreeSetState;
 
 /**
  * @author Didier Villevalois
@@ -89,6 +90,30 @@ public abstract class SContext {
 			final STree parentTree = parent.tree;
 			final SNodeListState state = (SNodeListState) parentTree.state;
 			final STree newTree = parentTree.withState(state.withChild(index, content));
+			return parent.withTree(newTree);
+		}
+	}
+
+	public static class TreeSetTree extends SContext {
+
+		private final SLocation parent;
+		private final String path;
+
+		public TreeSetTree(SLocation parent, String path) {
+			this.parent = parent;
+			this.path = path;
+		}
+
+		@Override
+		public SLocation original() {
+			return parent;
+		}
+
+		@Override
+		public SLocation rebuiltWith(STree content) {
+			final STree parentTree = parent.tree;
+			final STreeSetState state = (STreeSetState) parentTree.state;
+			final STree newTree = parentTree.withState(state.withTree(path, content));
 			return parent.withTree(newTree);
 		}
 	}

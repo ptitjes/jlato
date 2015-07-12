@@ -52,11 +52,11 @@ public class Name extends Expr {
 	}
 
 	public String name() {
-		return location.leafData(IDENTIFIER).toString();
+		return location.data(IDENTIFIER).toString();
 	}
 
 	public Name withName(String name) {
-		return location.leafWithData(IDENTIFIER, name);
+		return location.withData(IDENTIFIER, name);
 	}
 
 	@Override

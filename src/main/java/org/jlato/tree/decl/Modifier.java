@@ -63,7 +63,7 @@ public class Modifier extends Tree implements ExtendedModifier {
 	}
 
 	public String toString() {
-		return location.leafData(KEYWORD).toString();
+		return location.data(KEYWORD).toString();
 	}
 
 	public static final int KEYWORD = 0;
