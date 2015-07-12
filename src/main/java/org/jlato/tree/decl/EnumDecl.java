@@ -35,6 +35,7 @@ import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_AfterConstants;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_BetweenConstants;
 
 public class EnumDecl extends TypeDecl {
 
@@ -52,8 +53,8 @@ public class EnumDecl extends TypeDecl {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> EnumDecl(NodeList<EM> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, NodeList<MemberDecl> members) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, implementsClause, enumConstants, members)))));
+	public <EM extends Tree & ExtendedModifier> EnumDecl(NodeList<EM> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, boolean trailingComma, NodeList<MemberDecl> members) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, implementsClause, enumConstants, members), dataOf(trailingComma)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
@@ -106,6 +107,8 @@ public class EnumDecl extends TypeDecl {
 	private static final int ENUM_CONSTANTS = 3;
 	private static final int MEMBERS = 4;
 
+	private static final int TRAILING_COMMA = 0;
+
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			token(LToken.Enum),
@@ -117,16 +120,17 @@ public class EnumDecl extends TypeDecl {
 			nonEmptyChildren(ENUM_CONSTANTS,
 					child(ENUM_CONSTANTS, EnumConstantDecl.listShape)
 			),
-			nonEmptyChildren(MEMBERS,
-					nonEmptyChildren(ENUM_CONSTANTS,
-							token(LToken.SemiColon).withSpacingAfter(spacing(EnumBody_AfterConstants))
-					)
+			dataOption(TRAILING_COMMA,
+					token(LToken.Comma).withSpacingAfter(spacing(EnumBody_BetweenConstants))
 			),
 			emptyChildren(MEMBERS,
 					emptyChildren(ENUM_CONSTANTS,
 							none().withSpacing(newLine()),
 							none().withSpacing(spacing(EnumBody_AfterConstants))
 					)
+			),
+			nonEmptyChildren(MEMBERS,
+					token(LToken.SemiColon).withSpacingAfter(spacing(EnumBody_AfterConstants))
 			),
 			child(MEMBERS, MemberDecl.membersShape),
 			token(LToken.BraceRight)

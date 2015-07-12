@@ -1322,6 +1322,7 @@ TypeDecl EnumDecl(NodeList modifiers):
 	NodeList implementsClause = new NodeList();
 	EnumConstantDecl entry;
 	NodeList<EnumConstantDecl> constants = new NodeList<EnumConstantDecl>();
+	boolean trailingComma = false;
 	NodeList members = null;
 }
 {
@@ -1335,13 +1336,11 @@ TypeDecl EnumDecl(NodeList modifiers):
     ( LOOKAHEAD(2) "," entry = EnumConstantDecl() { constants = constants.append(entry); } )*
     { constants = enRun(constants, EnumConstantDecl.listShape); }
   ]
-  [ "," ] // TODO Add syntactic data about comma presence in EnumDecl
-  [
-    ";" members = ClassOrInterfaceBodyDecls(TypeKind.Enum)
-  ]
+  [ "," { trailingComma = true; } ] // TODO Add syntactic data about comma presence in EnumDecl
+  [ ";" members = ClassOrInterfaceBodyDecls(TypeKind.Enum) ]
   "}"
 
-  { return enRun(new EnumDecl(modifiers, name, implementsClause, constants, members)); }
+  { return enRun(new EnumDecl(modifiers, name, implementsClause, constants, trailingComma, members)); }
 }
 
 EnumConstantDecl EnumConstantDecl():
