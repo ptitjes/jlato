@@ -1543,7 +1543,7 @@ Decl ClassOrInterfaceBodyDecl(TypeKind typeKind):
         throwParseException(token, "Only interfaces can have default members");
     }
     (
-      LOOKAHEAD( Block() )
+      LOOKAHEAD( "{" )
       ret = InitializerDecl(modifiers)
       {
         if (typeKind == TypeKind.Interface)
@@ -2072,7 +2072,7 @@ Expr Expression():
 }
 {
   (
-    LOOKAHEAD( LambdaExpression() ) ret = LambdaExpression()
+    LOOKAHEAD( LambdaParameters() "->" ) ret = LambdaExpression()
   |
     ret = ConditionalExpression()
     [
@@ -2669,7 +2669,7 @@ Expr AllocationExpression(Expr scope):
     (
 	  ret = ArrayCreationExpr(type)
 	|
-	  args = Arguments() [ LOOKAHEAD(2) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
+	  args = Arguments() [ LOOKAHEAD( "{" ) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
       { ret = enRun(new ObjectCreationExpr(scope, (QualifiedType) type, typeArgs, args, anonymousBody)); }
     )
   )
@@ -2686,7 +2686,7 @@ Expr ArrayCreationExpr(Type componentType):
 }
 {
   (
-    LOOKAHEAD( Annotations() "[" Expression() )
+    LOOKAHEAD( Annotations() "[" Expression() "]" )
     arrayDimExprs = ArrayDimExprsMandatory()
     arrayDims = ArrayDims()
     { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, null)); }
@@ -2970,6 +2970,7 @@ DoStmt DoStatement():
   "do" body = Statement() "while" "(" condition = Expression() ")" ";"
   { return enRun(new DoStmt(body, condition)); }
 }
+
 Stmt ForStatement():
 {
 	String id = null;
@@ -3084,22 +3085,24 @@ SynchronizedStmt SynchronizedStatement():
 }
 
 TryStmt TryStatement():
-// FIXME
-// Semantic check required here to make sure that at least one
-// finally/catch is present.
+// TODO Make catchClauses/finallyClause counts less fatal
 {
 	NodeList resources = new NodeList();
 	BlockStmt tryBlock;
 	BlockStmt finallyBlock = null;
-	NodeList catchClauses = new NodeList();
+	NodeList catchClauses = null;
 }
 {
   { run(); }
   "try" 
   ( resources = ResourceSpecification() )?
   tryBlock = Block()
-  catchClauses = CatchClauses()
-  [ "finally" finallyBlock = Block() ]
+  (
+    catchClauses = CatchClauses()
+    [ "finally" finallyBlock = Block() ]
+  |
+    "finally" finallyBlock = Block()
+  )
   { return enRun(new TryStmt(resources, tryBlock, catchClauses, finallyBlock)); }
 }
 
@@ -3112,7 +3115,7 @@ NodeList CatchClauses():
   { run(); }
   (
     catchClause = CatchClause() { catchClauses = catchClauses.append(catchClause); }
-  )*
+  )+
   { return enRun(catchClauses, CatchClause.listShape); }
 }
 
