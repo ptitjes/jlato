@@ -33,7 +33,7 @@ import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
-public class EnumConstantDecl extends Decl {
+public class EnumConstantDecl extends MemberDecl {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public EnumConstantDecl instantiate(SLocation location) {
@@ -105,7 +105,7 @@ public class EnumConstantDecl extends Decl {
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(NAME),
 			child(ARGS, Expr.argumentsShape),
-			child(CLASS_BODY, Decl.bodyShape),
+			child(CLASS_BODY, MemberDecl.bodyShape),
 			nonNullChild(CLASS_BODY, none().withSpacing(spacing(EnumConstant_AfterBody)))
 	);
 

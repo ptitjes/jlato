@@ -34,7 +34,7 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
-public class MethodDecl extends Decl implements Member {
+public class MethodDecl extends MemberDecl {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public MethodDecl instantiate(SLocation location) {
@@ -50,7 +50,7 @@ public class MethodDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<Parameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
+	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParams, type, name, params, dims, throwsClause, body/*, javadocComment*/)))));
 	}
 
@@ -86,11 +86,11 @@ public class MethodDecl extends Decl implements Member {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public NodeList<Parameter> params() {
+	public NodeList<FormalParameter> params() {
 		return location.nodeChild(PARAMETERS);
 	}
 
-	public MethodDecl withParams(NodeList<Parameter> params) {
+	public MethodDecl withParams(NodeList<FormalParameter> params) {
 		return location.nodeWithChild(PARAMETERS, params);
 	}
 
@@ -133,7 +133,7 @@ public class MethodDecl extends Decl implements Member {
 			child(TYPE),
 			none().withSpacing(space()),
 			child(NAME),
-			child(PARAMETERS, Parameter.listShape),
+			child(PARAMETERS, FormalParameter.listShape),
 			child(DIMS, ArrayDim.listShape),
 			child(THROWS_CLAUSE, QualifiedType.throwsClauseShape),
 			nonNullChild(BODY,

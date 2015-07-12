@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.decl.Parameter;
+import org.jlato.tree.decl.FormalParameter;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
@@ -46,15 +46,15 @@ public class CatchClause extends Tree {
 		super(location);
 	}
 
-	public CatchClause(Parameter except, BlockStmt catchBlock) {
+	public CatchClause(FormalParameter except, BlockStmt catchBlock) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(except, catchBlock)))));
 	}
 
-	public Parameter except() {
+	public FormalParameter except() {
 		return location.nodeChild(EXCEPT);
 	}
 
-	public CatchClause withExcept(Parameter except) {
+	public CatchClause withExcept(FormalParameter except) {
 		return location.nodeWithChild(EXCEPT, except);
 	}
 

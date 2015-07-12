@@ -30,7 +30,7 @@ import org.jlato.tree.stmt.BlockStmt;
 import static org.jlato.internal.shapes.LexicalShape.Factory.child;
 import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
 
-public class InitializerDecl extends Decl {
+public class InitializerDecl extends MemberDecl {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public InitializerDecl instantiate(SLocation location) {

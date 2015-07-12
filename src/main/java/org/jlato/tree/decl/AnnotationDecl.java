@@ -30,7 +30,7 @@ import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
-public class AnnotationDecl extends TypeDecl implements TopLevel, Member {
+public class AnnotationDecl extends TypeDecl {
 
 	public final static Kind kind = new Kind() {
 		public AnnotationDecl instantiate(SLocation location) {
@@ -46,7 +46,7 @@ public class AnnotationDecl extends TypeDecl implements TopLevel, Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> AnnotationDecl(NodeList<EM> modifiers, Name name, NodeList<M> members) {
+	public <EM extends Tree & ExtendedModifier> AnnotationDecl(NodeList<EM> modifiers, Name name, NodeList<MemberDecl> members) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, members)))));
 	}
 
@@ -70,11 +70,11 @@ public class AnnotationDecl extends TypeDecl implements TopLevel, Member {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public <M extends Decl & Member> NodeList<M> members() {
+	public NodeList<MemberDecl> members() {
 		return location.nodeChild(MEMBERS);
 	}
 
-	public <M extends Decl & Member> AnnotationDecl withMembers(NodeList<M> members) {
+	public AnnotationDecl withMembers(NodeList<MemberDecl> members) {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 
@@ -86,6 +86,6 @@ public class AnnotationDecl extends TypeDecl implements TopLevel, Member {
 			child(MODIFIERS),
 			token(LToken.At), token(LToken.Interface),
 			child(NAME),
-			child(MEMBERS, Decl.bodyShape)
+			child(MEMBERS, MemberDecl.bodyShape)
 	);
 }

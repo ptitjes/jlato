@@ -31,11 +31,11 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
-public class Parameter extends Tree {
+public class FormalParameter extends Tree {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
-		public Parameter instantiate(SLocation location) {
-			return new Parameter(location);
+		public FormalParameter instantiate(SLocation location) {
+			return new FormalParameter(location);
 		}
 
 		public LexicalShape shape() {
@@ -43,11 +43,11 @@ public class Parameter extends Tree {
 		}
 	};
 
-	private Parameter(SLocation location) {
+	private FormalParameter(SLocation location) {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> Parameter(NodeList<EM> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
+	public <EM extends Tree & ExtendedModifier> FormalParameter(NodeList<EM> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, type, id), dataOf(isVarArgs)))));
 	}
 
@@ -55,7 +55,7 @@ public class Parameter extends Tree {
 		return location.nodeChild(MODIFIERS);
 	}
 
-	public <EM extends Tree & ExtendedModifier> Parameter withModifiers(NodeList<EM> modifiers) {
+	public <EM extends Tree & ExtendedModifier> FormalParameter withModifiers(NodeList<EM> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -63,7 +63,7 @@ public class Parameter extends Tree {
 		return location.nodeChild(TYPE);
 	}
 
-	public Parameter withType(Type type) {
+	public FormalParameter withType(Type type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 
@@ -71,7 +71,7 @@ public class Parameter extends Tree {
 		return location.nodeData(VAR_ARG);
 	}
 
-	public Parameter setVarArgs(boolean isVarArgs) {
+	public FormalParameter setVarArgs(boolean isVarArgs) {
 		return location.nodeWithData(VAR_ARG, isVarArgs);
 	}
 
@@ -79,7 +79,7 @@ public class Parameter extends Tree {
 		return location.nodeChild(ID);
 	}
 
-	public Parameter withId(VariableDeclaratorId id) {
+	public FormalParameter withId(VariableDeclaratorId id) {
 		return location.nodeWithChild(ID, id);
 	}
 

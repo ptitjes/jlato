@@ -26,7 +26,7 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
-import org.jlato.tree.decl.Parameter;
+import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.stmt.BlockStmt;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
@@ -48,19 +48,19 @@ public class LambdaExpr extends Expr {
 		super(location);
 	}
 
-	public LambdaExpr(NodeList<Parameter> params, Expr expr) {
+	public LambdaExpr(NodeList<FormalParameter> params, Expr expr) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(params, expr, null)))));
 	}
 
-	public LambdaExpr(NodeList<Parameter> params, BlockStmt body) {
+	public LambdaExpr(NodeList<FormalParameter> params, BlockStmt body) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(params, null, body)))));
 	}
 
-	public NodeList<Parameter> params() {
+	public NodeList<FormalParameter> params() {
 		return location.nodeChild(PARAMETERS);
 	}
 
-	public LambdaExpr withParams(NodeList<Parameter> params) {
+	public LambdaExpr withParams(NodeList<FormalParameter> params) {
 		return location.nodeWithChild(PARAMETERS, params);
 	}
 

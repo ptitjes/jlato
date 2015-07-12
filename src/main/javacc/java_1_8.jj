@@ -101,14 +101,14 @@ final class ParserImpl extends ParserBase {
 	        Expr inner = ((ParenthesizedExpr) ret).getInner();
 	        if (inner != null && inner instanceof Name) {
 	            VariableDeclaratorId id = new VariableDeclaratorId(((Name)inner).getName(), 0);
-	       	    NodeList params = add(null, new Parameter(0, null, new UnknownType(), false, id));
+	       	    NodeList params = add(null, new FormalParameter(0, null, new UnknownType(), false, id));
 	            ret = new LambdaExpr(params, lambdaBody, true);
 	        } else {
 	            ret = new LambdaExpr(null, lambdaBody, true);
 	        }
 	    } else if (ret instanceof Name) {
 		    VariableDeclaratorId id = new VariableDeclaratorId(((Name)ret).getName(), 0);
-	        NodeList params = add(null, new Parameter(0, null, new UnknownType(), false, id));
+	        NodeList params = add(null, new FormalParameter(0, null, new UnknownType(), false, id));
 	        ret = new LambdaExpr(params, lambdaBody, false);
 	    } else if (ret instanceof LambdaExpr) {
 	        ((LambdaExpr) ret).setBody(lambdaBody);
@@ -1410,7 +1410,7 @@ NodeList AnnotationTypeBody():
   "{"
   ( member = AnnotationTypeBodyDecl() { ret = ret.append(member); }  )*
   "}"
-  { return enRun(ret, Decl.bodyShape); }
+  { return enRun(ret, MemberDecl.bodyShape); }
 }
 
 // TODO Merge with ClassOrInterfaceDecl production and do later checks programmaticaly
@@ -1512,7 +1512,7 @@ NodeList ClassOrInterfaceBody(TypeKind typeKind):
   "{"
   ( member = ClassOrInterfaceBodyDecl(typeKind) { ret = ret.append(member); }  )*
   "}"
-  { return enRun(ret, Decl.bodyShape); }
+  { return enRun(ret, MemberDecl.bodyShape); }
 }
 
 NodeList ClassOrInterfaceBodyDecls(TypeKind typeKind):
@@ -1523,7 +1523,7 @@ NodeList ClassOrInterfaceBodyDecls(TypeKind typeKind):
 {
     { run(); }
     ( member = ClassOrInterfaceBodyDecl(typeKind) { members = members.append(member); } )*
-    { return enRun(members, Decl.membersShape); }
+    { return enRun(members, MemberDecl.membersShape); }
 }
 
 Decl ClassOrInterfaceBodyDecl(TypeKind typeKind):
@@ -1719,7 +1719,7 @@ MethodDecl MethodDecl(NodeList modifiers):
 NodeList FormalParameterList():
 {
 	NodeList ret = new NodeList();
-	Parameter par;
+	FormalParameter par;
 }
 {
   { run(); }
@@ -1729,10 +1729,10 @@ NodeList FormalParameterList():
     ( "," par = FormalParameter() { ret = ret.append(par); } )*
   ]
   ")"
-  { return enRun(ret, Parameter.listShape); }
+  { return enRun(ret, FormalParameter.listShape); }
 }
 
-Parameter FormalParameter():
+FormalParameter FormalParameter():
 {
 	NodeList modifiers;
 	Type type;
@@ -1744,7 +1744,7 @@ Parameter FormalParameter():
 
   modifiers = Modifiers() type = Type(null) [ "..." { isVarArg = true; } ] id = VariableDeclaratorId()
 
-  { return enRun(new Parameter(modifiers, type, isVarArg, id)); }
+  { return enRun(new FormalParameter(modifiers, type, isVarArg, id)); }
 }
 
 
@@ -2105,7 +2105,7 @@ LambdaExpr LambdaExpression():
 NodeList LambdaParameters():
 {
   NodeList ret;
-  Parameter param;
+  FormalParameter param;
 }
 {
   (
@@ -2125,7 +2125,7 @@ NodeList LambdaParameters():
 NodeList InferredFormalParameterList():
 {
   NodeList ret = new NodeList();
-  Parameter param;
+  FormalParameter param;
 }
 {
   { run(); }
@@ -2136,14 +2136,14 @@ NodeList InferredFormalParameterList():
   { return enRun(ret); }
 }
 
-Parameter InferredFormalParameter():
+FormalParameter InferredFormalParameter():
 {
   Name name;
 }
 {
   { run(); }
   name = Name()
-  { return enRun(new Parameter(null, new UnknownType(), false, new VariableDeclaratorId(name, null))); }
+  { return enRun(new FormalParameter(null, new UnknownType(), false, new VariableDeclaratorId(name, null))); }
 }
 
 AssignExpr.AssignOp AssignmentOperator():
@@ -2484,7 +2484,7 @@ Expr PrimaryPrefix():
 	boolean hasArgs = false;
 	boolean isLambda = false;
 	Type type;
-	Parameter p = null;
+	FormalParameter p = null;
 	VariableDeclaratorId id = null;
 }
 {
@@ -3121,7 +3121,7 @@ NodeList CatchClauses():
 
 CatchClause CatchClause():
 {
-	Parameter param;
+	FormalParameter param;
 	BlockStmt catchBlock;
 }
 {
@@ -3130,7 +3130,7 @@ CatchClause CatchClause():
   { return enRun(new CatchClause(param, catchBlock)); }
 }
 
-Parameter CatchFormalParameter():
+FormalParameter CatchFormalParameter():
 {
 	NodeList modifiers;
 	Type exceptType;
@@ -3153,7 +3153,7 @@ Parameter CatchFormalParameter():
   ]
 
   exceptId = VariableDeclaratorId()
-  { return enRun(new Parameter(modifiers, exceptType, false, exceptId)); }
+  { return enRun(new FormalParameter(modifiers, exceptType, false, exceptId)); }
 }
 
 NodeList ResourceSpecification() :

@@ -31,7 +31,7 @@ import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
-public class InterfaceDecl extends TypeDecl implements TopLevel, Member {
+public class InterfaceDecl extends TypeDecl {
 
 	public final static Kind kind = new Kind() {
 		public InterfaceDecl instantiate(SLocation location) {
@@ -47,7 +47,7 @@ public class InterfaceDecl extends TypeDecl implements TopLevel, Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> InterfaceDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParams, NodeList<QualifiedType> extendsClause, NodeList<M> members) {
+	public <EM extends Tree & ExtendedModifier> InterfaceDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParams, NodeList<QualifiedType> extendsClause, NodeList<MemberDecl> members) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, typeParams, extendsClause, members)))));
 	}
 
@@ -87,11 +87,11 @@ public class InterfaceDecl extends TypeDecl implements TopLevel, Member {
 		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
-	public <M extends Decl & Member> NodeList<M> members() {
+	public NodeList<MemberDecl> members() {
 		return location.nodeChild(MEMBERS);
 	}
 
-	public <M extends Decl & Member> InterfaceDecl withMembers(NodeList<M> members) {
+	public InterfaceDecl withMembers(NodeList<MemberDecl> members) {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 
@@ -107,6 +107,6 @@ public class InterfaceDecl extends TypeDecl implements TopLevel, Member {
 			child(NAME),
 			child(TYPE_PARAMETERS, TypeParameter.listShape),
 			child(EXTENDS_CLAUSE, QualifiedType.extendsClauseShape),
-			child(MEMBERS, Decl.bodyShape)
+			child(MEMBERS, MemberDecl.bodyShape)
 	);
 }

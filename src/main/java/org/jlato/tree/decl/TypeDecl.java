@@ -27,25 +27,13 @@ import static org.jlato.internal.shapes.LexicalShape.Factory.none;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_BetweenTopLevelDecl;
 
-public abstract class TypeDecl extends Decl implements TopLevel, Member {
+public abstract class TypeDecl extends MemberDecl {
 
 	protected TypeDecl(SLocation location) {
 		super(location);
 	}
 
 	public abstract TypeKind typeKind();
-
-//	public abstract Modifiers modifiers();
-//
-//	public abstract TypeDecl withModifiers(Modifiers modifiers);
-//
-//	public abstract Name name();
-//
-//	public abstract TypeDecl withName(Name name);
-//
-//	public abstract <M extends Decl & Member> NodeList<M> members();
-//
-//	public abstract <M extends Decl & Member> TypeDecl withMembers(NodeList<M> members);
 
 	public static final LexicalShape listShape = list(
 			none().withSpacing(spacing(CompilationUnit_BetweenTopLevelDecl))

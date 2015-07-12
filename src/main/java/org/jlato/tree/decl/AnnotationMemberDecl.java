@@ -32,7 +32,7 @@ import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
-public class AnnotationMemberDecl extends Decl implements Member {
+public class AnnotationMemberDecl extends MemberDecl {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public AnnotationMemberDecl instantiate(SLocation location) {

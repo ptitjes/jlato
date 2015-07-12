@@ -28,7 +28,7 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.token;
 
-public class EmptyMemberDecl extends Decl implements Member {
+public class EmptyMemberDecl extends MemberDecl {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public EmptyMemberDecl instantiate(SLocation location) {

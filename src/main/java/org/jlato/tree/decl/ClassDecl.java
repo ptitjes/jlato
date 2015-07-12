@@ -32,7 +32,7 @@ import org.jlato.tree.type.QualifiedType;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
-public class ClassDecl extends TypeDecl implements TopLevel, Member {
+public class ClassDecl extends TypeDecl {
 
 	public final static Kind kind = new Kind() {
 		public ClassDecl instantiate(SLocation location) {
@@ -48,7 +48,7 @@ public class ClassDecl extends TypeDecl implements TopLevel, Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> ClassDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParams, QualifiedType extendsClause, NodeList<QualifiedType> implementsClause, NodeList<M> members) {
+	public <EM extends Tree & ExtendedModifier> ClassDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParams, QualifiedType extendsClause, NodeList<QualifiedType> implementsClause, NodeList<MemberDecl> members) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, typeParams, extendsClause, implementsClause, members)))));
 	}
 
@@ -96,11 +96,11 @@ public class ClassDecl extends TypeDecl implements TopLevel, Member {
 		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
-	public <M extends Decl & Member> NodeList<M> members() {
+	public NodeList<MemberDecl> members() {
 		return location.nodeChild(MEMBERS);
 	}
 
-	public <M extends Decl & Member> ClassDecl withMembers(NodeList<M> members) {
+	public ClassDecl withMembers(NodeList<MemberDecl> members) {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 
@@ -121,6 +121,6 @@ public class ClassDecl extends TypeDecl implements TopLevel, Member {
 					defaultShape()
 			)),
 			child(IMPLEMENTS_CLAUSE, QualifiedType.implementsClauseShape),
-			child(MEMBERS, Decl.bodyShape)
+			child(MEMBERS, MemberDecl.bodyShape)
 	);
 }

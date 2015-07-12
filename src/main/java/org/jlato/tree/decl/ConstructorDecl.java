@@ -32,7 +32,7 @@ import org.jlato.tree.type.QualifiedType;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
-public class ConstructorDecl extends Decl implements Member {
+public class ConstructorDecl extends MemberDecl {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public ConstructorDecl instantiate(SLocation location) {
@@ -48,7 +48,7 @@ public class ConstructorDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ConstructorDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<Parameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
+	public <EM extends Tree & ExtendedModifier> ConstructorDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<FormalParameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParams, name, params, throwsClause, body)))));
 	}
 
@@ -76,11 +76,11 @@ public class ConstructorDecl extends Decl implements Member {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public NodeList<Parameter> params() {
+	public NodeList<FormalParameter> params() {
 		return location.nodeChild(PARAMETERS);
 	}
 
-	public ConstructorDecl withParams(NodeList<Parameter> params) {
+	public ConstructorDecl withParams(NodeList<FormalParameter> params) {
 		return location.nodeWithChild(PARAMETERS, params);
 	}
 
@@ -111,7 +111,7 @@ public class ConstructorDecl extends Decl implements Member {
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(TYPE_PARAMETERS, TypeParameter.listShape),
 			child(NAME),
-			child(PARAMETERS, Parameter.listShape),
+			child(PARAMETERS, FormalParameter.listShape),
 			child(THROWS_CLAUSE, QualifiedType.throwsClauseShape),
 			none().withSpacing(space()), child(BODY)
 	);

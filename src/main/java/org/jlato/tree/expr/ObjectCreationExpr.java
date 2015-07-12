@@ -27,6 +27,7 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.Decl;
+import org.jlato.tree.decl.MemberDecl;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 
@@ -106,7 +107,7 @@ public class ObjectCreationExpr extends Expr {
 			child(TYPE),
 			child(ARGUMENTS, Expr.argumentsShape),
 			nonNullChild(BODY,
-					child(BODY, Decl.bodyShape)
+					child(BODY, MemberDecl.bodyShape)
 			)
 	);
 }

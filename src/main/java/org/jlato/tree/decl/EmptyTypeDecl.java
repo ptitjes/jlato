@@ -28,7 +28,7 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.token;
 
-public class EmptyTypeDecl extends TypeDecl implements TopLevel, Member {
+public class EmptyTypeDecl extends TypeDecl {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public EmptyTypeDecl instantiate(SLocation location) {

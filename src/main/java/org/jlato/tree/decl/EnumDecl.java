@@ -36,7 +36,7 @@ import static org.jlato.internal.shapes.SpacingConstraint.Factory.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_AfterConstants;
 
-public class EnumDecl extends TypeDecl implements TopLevel, Member {
+public class EnumDecl extends TypeDecl {
 
 	public final static Kind kind = new Kind() {
 		public EnumDecl instantiate(SLocation location) {
@@ -52,7 +52,7 @@ public class EnumDecl extends TypeDecl implements TopLevel, Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> EnumDecl(NodeList<EM> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, NodeList<M> members) {
+	public <EM extends Tree & ExtendedModifier> EnumDecl(NodeList<EM> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, NodeList<MemberDecl> members) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, implementsClause, enumConstants, members)))));
 	}
 
@@ -92,11 +92,11 @@ public class EnumDecl extends TypeDecl implements TopLevel, Member {
 		return location.nodeWithChild(ENUM_CONSTANTS, enumConstants);
 	}
 
-	public <M extends Decl & Member> NodeList<M> members() {
+	public NodeList<MemberDecl> members() {
 		return location.nodeChild(MEMBERS);
 	}
 
-	public <M extends Decl & Member> EnumDecl withMembers(NodeList<M> members) {
+	public EnumDecl withMembers(NodeList<MemberDecl> members) {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 
@@ -128,7 +128,7 @@ public class EnumDecl extends TypeDecl implements TopLevel, Member {
 							none().withSpacing(spacing(EnumBody_AfterConstants))
 					)
 			),
-			child(MEMBERS, Decl.membersShape),
+			child(MEMBERS, MemberDecl.membersShape),
 			token(LToken.BraceRight)
 					.withIndentationBefore(unIndent(TYPE_BODY))
 	);

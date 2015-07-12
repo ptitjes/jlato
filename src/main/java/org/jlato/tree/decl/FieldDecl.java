@@ -31,7 +31,7 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
-public class FieldDecl extends Decl implements Member {
+public class FieldDecl extends MemberDecl {
 
 	public final static Kind kind = new Kind() {
 		public FieldDecl instantiate(SLocation location) {

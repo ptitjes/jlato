@@ -55,7 +55,7 @@ public class PackageDecl extends Tree {
 		return location.nodeChild(ANNOTATIONS);
 	}
 
-	public Modifiers withAnnotations(NodeList<AnnotationExpr> annotations) {
+	public PackageDecl withAnnotations(NodeList<AnnotationExpr> annotations) {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
