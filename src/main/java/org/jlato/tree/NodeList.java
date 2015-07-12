@@ -20,8 +20,10 @@
 package org.jlato.tree;
 
 import com.github.andrewoma.dexx.collection.Vector;
+import org.jlato.internal.bu.LRun;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 
@@ -47,6 +49,11 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		public LexicalShape shape() {
 			throw new UnsupportedOperationException();
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> empty() {
+		return new NodeList<T>();
 	}
 
 	private NodeList(SLocation location) {
@@ -82,9 +89,17 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		return location.nodeListWithChildren(newChildren);
 	}
 
+	@SuppressWarnings("unchecked")
 	public NodeList<T> append(T element) {
-		final Vector<STree> newChildren = location.nodeListChildren().append(treeOf(element));
-		return location.nodeListWithChildren(newChildren);
+		final STree tree = location.tree;
+
+		final SNodeListState state = (SNodeListState) tree.state;
+		final SNodeListState newState = state.withChildren(state.children.append(treeOf(element)));
+
+		final LRun run = tree.run;
+		final LRun newRun = run;
+
+		return (NodeList<T>) location.withTree(tree.withState(newState).withRun(newRun)).facade;
 	}
 
 	public Iterator<T> iterator() {
