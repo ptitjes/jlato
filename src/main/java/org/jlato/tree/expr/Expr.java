@@ -38,7 +38,7 @@ public abstract class Expr extends Tree implements Modifiable<Expr> {
 		super(location);
 	}
 
-	public <S extends Expr> Expr replace(S replacement) {
+	public Expr replace(Expr replacement) {
 		return location.replace(replacement);
 	}
 

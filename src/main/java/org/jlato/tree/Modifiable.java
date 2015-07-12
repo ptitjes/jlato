@@ -24,7 +24,7 @@ package org.jlato.tree;
  */
 public interface Modifiable<T> {
 
-	<S extends T> T replace(S replacement);
+	T replace(T replacement);
 /*
 	<S extends T, U extends T> T modify(ModifyFunc<T, S, U> f);
 

@@ -37,7 +37,7 @@ public abstract class Stmt extends Tree implements Modifiable<Stmt> {
 		super(location);
 	}
 
-	public <S extends Stmt> Stmt replace(S replacement) {
+	public  Stmt replace(Stmt replacement) {
 		return location.replace(replacement);
 	}
 

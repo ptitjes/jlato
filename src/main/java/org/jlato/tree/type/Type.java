@@ -22,16 +22,21 @@ package org.jlato.tree.type;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Modifiable;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.list;
 import static org.jlato.internal.shapes.LexicalShape.Factory.token;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
-public abstract class Type extends Tree {
+public abstract class Type extends Tree implements Modifiable<Type> {
 
 	protected Type(SLocation location) {
 		super(location);
+	}
+
+	public Type replace(Type replacement) {
+		return location.replace(replacement);
 	}
 
 	public static final LexicalShape typeArgumentsShape = list(
