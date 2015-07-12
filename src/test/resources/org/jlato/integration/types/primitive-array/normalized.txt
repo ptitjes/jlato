@@ -3,14 +3,21 @@
   annotations: [
   ],
   componentType: {
-    class: org.jlato.tree.type.ArrayType,
+    class: org.jlato.tree.type.PrimitiveType,
     annotations: [
     ],
-    componentType: {
-      class: org.jlato.tree.type.PrimitiveType,
+    type: int,
+  },
+  dims: [
+    {
+      class: org.jlato.tree.decl.ArrayDim,
       annotations: [
       ],
-      type: int,
     },
-  },
+    {
+      class: org.jlato.tree.decl.ArrayDim,
+      annotations: [
+      ],
+    },
+  ],
 }

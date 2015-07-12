@@ -1,27 +1,38 @@
 {
   class: org.jlato.tree.type.ArrayType,
   annotations: [
+    {
+      class: org.jlato.tree.expr.MarkerAnnotationExpr,
+      name: Ann,
+    },
   ],
   componentType: {
-    class: org.jlato.tree.type.ArrayType,
+    class: org.jlato.tree.type.QualifiedType,
     annotations: [
+      {
+        class: org.jlato.tree.expr.MarkerAnnotationExpr,
+        name: Ann,
+      },
     ],
-    componentType: {
-      class: org.jlato.tree.type.ArrayType,
+    name: String,
+    scope: null,
+    typeArgs: null,
+  },
+  dims: [
+    {
+      class: org.jlato.tree.decl.ArrayDim,
       annotations: [
       ],
-      componentType: {
-        class: org.jlato.tree.type.QualifiedType,
-        annotations: [
-          {
-            class: org.jlato.tree.expr.MarkerAnnotationExpr,
-            name: Ann,
-          },
-        ],
-        name: String,
-        scope: null,
-        typeArgs: null,
-      },
     },
-  },
+    {
+      class: org.jlato.tree.decl.ArrayDim,
+      annotations: [
+      ],
+    },
+    {
+      class: org.jlato.tree.decl.ArrayDim,
+      annotations: [
+      ],
+    },
+  ],
 }

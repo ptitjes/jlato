@@ -3,21 +3,28 @@
   annotations: [
   ],
   componentType: {
-    class: org.jlato.tree.type.ArrayType,
+    class: org.jlato.tree.type.QualifiedType,
     annotations: [
     ],
-    componentType: {
-      class: org.jlato.tree.type.ArrayType,
+    name: String,
+    scope: null,
+    typeArgs: null,
+  },
+  dims: [
+    {
+      class: org.jlato.tree.decl.ArrayDim,
       annotations: [
       ],
-      componentType: {
-        class: org.jlato.tree.type.QualifiedType,
-        annotations: [
-        ],
-        name: String,
-        scope: null,
-        typeArgs: null,
-      },
     },
-  },
+    {
+      class: org.jlato.tree.decl.ArrayDim,
+      annotations: [
+      ],
+    },
+    {
+      class: org.jlato.tree.decl.ArrayDim,
+      annotations: [
+      ],
+    },
+  ],
 }

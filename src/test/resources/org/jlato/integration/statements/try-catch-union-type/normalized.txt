@@ -9,21 +9,16 @@
         ],
       },
       except: {
-        class: org.jlato.tree.decl.Parameter,
+        class: org.jlato.tree.decl.FormalParameter,
         id: {
           class: org.jlato.tree.decl.VariableDeclaratorId,
-          dimensions: [
+          dims: [
           ],
           name: ex,
         },
         isVarArgs: false,
-        modifiers: {
-          class: org.jlato.tree.decl.Modifiers,
-          annotations: [
-          ],
-          modifiers: [
-          ],
-        },
+        modifiers: [
+        ],
         type: {
           class: org.jlato.tree.type.UnionType,
           types: [
@@ -36,7 +31,8 @@
             },
             {
               class: org.jlato.tree.type.QualifiedType,
-              annotations: null,
+              annotations: [
+              ],
               name: Exception2,
               scope: null,
               typeArgs: null,
