@@ -19,18 +19,18 @@
 
 package org.jlato.tree.stmt;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.expr.Expr;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
+import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
@@ -51,7 +51,7 @@ public class IfStmt extends Stmt {
 	}
 
 	public IfStmt(Expr condition, Stmt thenStmt, Stmt elseStmt) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(condition, thenStmt, elseStmt)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(condition, thenStmt, elseStmt)))));
 	}
 
 	public Expr condition() {

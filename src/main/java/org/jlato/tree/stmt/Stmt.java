@@ -20,8 +20,8 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Modifiable;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Modifiable;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.list;

@@ -24,8 +24,8 @@ import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SContext;
-import org.jlato.printer.Printer;
 import org.jlato.internal.td.SLocation;
+import org.jlato.printer.Printer;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AssignExpr;
 
@@ -176,16 +176,18 @@ public abstract class ParserBase {
 			System.out.println("Failed to enRun tokens:");
 			System.out.println(tokens);
 			System.out.println("For tree of kind: " + tree.kind);
-			if (tree instanceof SNodeList) {
+
+			final STreeState state = tree.state;
+			if (state instanceof SNodeListState) {
 				System.out.println("Elements: ");
-				for (STree child : ((SNodeList) tree).state().children) {
+				for (STree child : ((SNodeListState) state).children) {
 					System.out.println(Printer.printToString(child.asTree()));
 					System.out.println("  " + child.kind);
 				}
-			} else if (tree instanceof SNode && tree.kind == AssignExpr.kind) {
+			} else if (state instanceof SNodeState && tree.kind == AssignExpr.kind) {
 				System.out.println("Children: ");
-				final STree target = ((SNode) tree).state().child(0);
-				final STree value = ((SNode) tree).state().child(1);
+				final STree target = ((SNodeState) state).child(0);
+				final STree value = ((SNodeState) state).child(1);
 				System.out.println(Printer.printToString(target.asTree()));
 				System.out.println(Printer.printToString(value.asTree()));
 			}

@@ -20,7 +20,6 @@
 package org.jlato.tree;
 
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
@@ -55,7 +54,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 	}
 
 	public NodeList(T... elements) {
-		super(new SLocation(new SNodeList(kind, new SNodeListState(treeListOf(elements)))));
+		super(new SLocation(new STree(kind, new SNodeListState(treeListOf(elements)))));
 	}
 
 	public boolean isEmpty() {

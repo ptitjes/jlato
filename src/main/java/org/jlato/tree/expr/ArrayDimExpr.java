@@ -20,11 +20,11 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.NodeList;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
@@ -46,7 +46,7 @@ public class ArrayDimExpr extends Tree {
 	}
 
 	public ArrayDimExpr(NodeList<AnnotationExpr> annotations, Expr expression) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(annotations, expression)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations, expression)))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

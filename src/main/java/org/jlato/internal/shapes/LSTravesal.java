@@ -22,7 +22,7 @@ package org.jlato.internal.shapes;
 import com.github.andrewoma.dexx.collection.IndexedList;
 import org.jlato.internal.bu.LRun;
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.printer.Printer;
 
@@ -42,8 +42,8 @@ public final class LSTravesal extends LexicalShape {
 	}
 
 	private STree traverse(STree tree) {
-		final SNode node = (SNode) tree;
-		return node.state().child(index);
+		final SNodeState state = (SNodeState) tree.state;
+		return state.child(index);
 	}
 
 	@Override

@@ -20,17 +20,17 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.NodeList;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterPackageDecl;
 
 public class CompilationUnit extends Tree {
 
@@ -49,7 +49,7 @@ public class CompilationUnit extends Tree {
 	}
 
 	public CompilationUnit(PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(packageDecl, imports, types)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(packageDecl, imports, types)))));
 	}
 
 	public PackageDecl packageDecl() {

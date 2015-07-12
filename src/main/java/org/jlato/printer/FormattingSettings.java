@@ -21,9 +21,9 @@ package org.jlato.printer;
 
 import com.github.andrewoma.dexx.collection.TreeMap;
 
-import static org.jlato.printer.Spacing.*;
 import static org.jlato.printer.Spacing.Unit.Line;
 import static org.jlato.printer.Spacing.Unit.Space;
+import static org.jlato.printer.Spacing.*;
 
 /**
  * @author Didier Villevalois

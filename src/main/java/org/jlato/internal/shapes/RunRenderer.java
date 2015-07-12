@@ -27,7 +27,6 @@ import org.jlato.printer.Printer;
 import org.jlato.printer.Spacing;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * @author Didier Villevalois

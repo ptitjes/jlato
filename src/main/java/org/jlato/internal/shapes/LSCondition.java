@@ -20,7 +20,9 @@
 package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.tree.Tree;
 
 /**
@@ -50,7 +52,7 @@ public abstract class LSCondition {
 	public static LSCondition nonNullChild(final int index) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
-				final SNodeState state = ((SNode) tree).state();
+				final SNodeState state = (SNodeState) tree.state;
 				final STree child = state.child(index);
 				return child != null;
 			}
@@ -69,7 +71,7 @@ public abstract class LSCondition {
 	public static LSCondition childKind(final int index, final Tree.Kind kind) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
-				final SNodeState state = ((SNode) tree).state();
+				final SNodeState state = (SNodeState) tree.state;
 				final Tree.Kind childKind = state.child(index).kind;
 				return childKind == kind;
 			}
@@ -79,8 +81,8 @@ public abstract class LSCondition {
 	public static LSCondition lastChildKind(final Tree.Kind kind) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
-				final SNodeList nodeList = (SNodeList) tree;
-				final Vector<STree> children = nodeList.state().children;
+				final SNodeListState state = (SNodeListState) tree.state;
+				final Vector<STree> children = state.children;
 				final Tree.Kind childKind = children.last().kind;
 				return childKind == kind;
 			}
@@ -91,8 +93,8 @@ public abstract class LSCondition {
 		return new LSCondition() {
 			@Override
 			public boolean test(STree tree) {
-				final SNodeList nodeList = (SNodeList) tree;
-				final Vector<STree> children = nodeList.state().children;
+				final SNodeListState state = (SNodeListState) tree.state;
+				final Vector<STree> children = state.children;
 				return children == null || children.isEmpty();
 			}
 		};
@@ -102,11 +104,12 @@ public abstract class LSCondition {
 		return new LSCondition() {
 			@Override
 			public boolean test(STree tree) {
-				final SNodeState state = ((SNode) tree).state();
-				final SNodeList nodeList = (SNodeList) state.child(index);
+				final SNodeState state = (SNodeState) tree.state;
+				final STree nodeList = state.child(index);
 				if (nodeList == null) return true;
 
-				final Vector<STree> children = nodeList.state().children;
+				final SNodeListState nodeListState = (SNodeListState) nodeList.state;
+				final Vector<STree> children = nodeListState.children;
 				return children == null || children.isEmpty();
 			}
 		};

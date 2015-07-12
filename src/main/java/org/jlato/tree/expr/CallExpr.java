@@ -20,11 +20,12 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.*;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
@@ -47,7 +48,7 @@ public class CallExpr extends Expr {
 	}
 
 	public CallExpr(Expr scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(scope, typeArgs, name, args)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, name, args)))));
 	}
 
 	public Expr scope() {

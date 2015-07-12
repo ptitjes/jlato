@@ -19,8 +19,8 @@
 
 package org.jlato.tree.type;
 
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
@@ -44,7 +44,7 @@ public class UnknownType extends Type {
 	}
 
 	public UnknownType() {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf()))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf()))));
 	}
 
 	public final static LexicalShape shape = none();

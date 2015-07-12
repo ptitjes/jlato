@@ -20,7 +20,10 @@
 package org.jlato.internal.td;
 
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.SLeafState;
+import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.tree.Tree;
 
 /**
@@ -72,8 +75,7 @@ public class SLocation {
 
 	@SuppressWarnings("unchecked")
 	public <C extends Tree> C nodeChild(final int index) {
-		final SNode node = (SNode) this.tree;
-		final SNodeState state = node.state();
+		final SNodeState state = (SNodeState) tree.state;
 		final STree childTree = state.child(index);
 		if (childTree == null) return null;
 
@@ -84,23 +86,20 @@ public class SLocation {
 
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, C extends Tree> T nodeWithChild(int index, C child) {
-		final SNode node = (SNode) this.tree;
-		final SNodeState state = node.state();
-		final SNode newNode = node.withState(state.withChild(index, Tree.treeOf(child)));
+		final SNodeState state = (SNodeState) tree.state;
+		final STree newNode = tree.withState(state.withChild(index, Tree.treeOf(child)));
 		return (T) withTree(newNode).facade;
 	}
 
 	@SuppressWarnings("unchecked")
 	public <A> A nodeData(final int index) {
-		final SNode node = (SNode) this.tree;
-		return (A) node.state.data(index);
+		return (A) tree.state.data(index);
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, A> T nodeWithData(int index, A attribute) {
-		final SNode node = (SNode) this.tree;
-		final SNodeState state = node.state();
-		final SNode newNode = node.withState(state.withData(index, attribute));
+		final SNodeState state = (SNodeState) tree.state;
+		final STree newNode = tree.withState(state.withData(index, attribute));
 		return (T) withTree(newNode).facade;
 	}
 
@@ -108,15 +107,14 @@ public class SLocation {
 
 	@SuppressWarnings("unchecked")
 	public <A> A leafData(final int index) {
-		final SLeaf leaf = (SLeaf) this.tree;
-		return (A) leaf.state.data(index);
+		final SLeafState state = (SLeafState) tree.state;
+		return (A) state.data(index);
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, A> T leafWithData(int index, A attribute) {
-		final SLeaf leaf = (SLeaf) this.tree;
-		final SLeafState state = leaf.state();
-		final SLeaf newLeaf = leaf.withState(state.withData(index, attribute));
+		final SLeafState state = (SLeafState) tree.state;
+		final STree newLeaf = tree.withState(state.withData(index, attribute));
 		return (T) withTree(newLeaf).facade;
 	}
 
@@ -124,8 +122,7 @@ public class SLocation {
 
 	@SuppressWarnings("unchecked")
 	public <C extends Tree> C nodeListChild(final int index) {
-		final SNodeList nodeList = (SNodeList) this.tree;
-		final SNodeListState state = nodeList.state();
+		final SNodeListState state = (SNodeListState) tree.state;
 		final STree childTree = state.child(index);
 		if (childTree == null) return null;
 
@@ -136,23 +133,20 @@ public class SLocation {
 
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, C extends Tree> T nodeListWithChild(int index, C newChild) {
-		final SNodeList nodeList = (SNodeList) this.tree;
-		final SNodeListState state = nodeList.state();
-		final SNodeList newNodeList = nodeList.withState(state.withChild(index, Tree.treeOf(newChild)));
-		return (T) withTree(newNodeList).facade;
+		final SNodeListState state = (SNodeListState) tree.state;
+		final STree newTree = tree.withState(state.withChild(index, Tree.treeOf(newChild)));
+		return (T) withTree(newTree).facade;
 	}
 
 	public Vector<STree> nodeListChildren() {
-		final SNodeList nodeList = (SNodeList) this.tree;
-		final SNodeListState state = nodeList.state();
+		final SNodeListState state = (SNodeListState) tree.state;
 		return state.children;
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, C extends Tree> T nodeListWithChildren(Vector<STree> children) {
-		final SNodeList nodeList = (SNodeList) this.tree;
-		final SNodeListState state = nodeList.state();
-		final SNodeList newNodeList = nodeList.withState(state.withChildren(children));
-		return (T) withTree(newNodeList).facade;
+		final SNodeListState state = (SNodeListState) tree.state;
+		final STree newTree = tree.withState(state.withChildren(children));
+		return (T) withTree(newTree).facade;
 	}
 }

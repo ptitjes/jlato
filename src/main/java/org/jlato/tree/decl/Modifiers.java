@@ -19,11 +19,11 @@
 
 package org.jlato.tree.decl;
 
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.NodeList;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
@@ -47,7 +47,7 @@ public class Modifiers extends Tree {
 	}
 
 	public Modifiers(NodeList<Modifier> modifiers, NodeList<AnnotationExpr> annotations) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, annotations)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, annotations)))));
 	}
 
 	public NodeList<Modifier> modifiers() {

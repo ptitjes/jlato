@@ -20,19 +20,16 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.NodeList;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
-import static org.jlato.internal.shapes.LexicalShape.Factory.child;import static org.jlato.internal.shapes.LexicalShape.Factory.list;
-import static org.jlato.internal.shapes.LexicalShape.Factory.composite;
-import static org.jlato.internal.shapes.LexicalShape.Factory.token;
+import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
 public class PrimitiveType extends AnnotatedType {
 
@@ -51,7 +48,7 @@ public class PrimitiveType extends AnnotatedType {
 	}
 
 	public PrimitiveType(NodeList<AnnotationExpr> annotations, Primitive type) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(annotations), dataOf(type)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations), dataOf(type)))));
 	}
 
 	public Primitive type() {

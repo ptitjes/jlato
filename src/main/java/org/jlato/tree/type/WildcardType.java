@@ -20,11 +20,11 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.NodeList;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
@@ -48,7 +48,7 @@ public class WildcardType extends AnnotatedType {
 	}
 
 	public WildcardType(NodeList<AnnotationExpr> annotations, ReferenceType ext, ReferenceType sup) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(annotations, ext, sup)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations, ext, sup)))));
 	}
 
 	public ReferenceType ext() {

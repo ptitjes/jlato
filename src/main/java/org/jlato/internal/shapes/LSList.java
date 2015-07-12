@@ -21,12 +21,13 @@ package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.*;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.bu.LRun;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.STree;
 import org.jlato.printer.Printer;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * @author Didier Villevalois
@@ -46,8 +47,8 @@ public final class LSList extends LexicalShape {
 
 	@Override
 	public boolean isDefined(STree tree) {
-		final SNodeList nodeList = (SNodeList) tree;
-		final Vector<STree> children = nodeList.state().children;
+		final SNodeListState state = (SNodeListState) tree.state;
+		final Vector<STree> children = state.children;
 		return !children.isEmpty() || (renderIfEmpty &&
 				((before != null && before.isDefined(tree)) ||
 						(after != null && after.isDefined(tree))));
@@ -62,8 +63,8 @@ public final class LSList extends LexicalShape {
 	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
 		final RunBuilder builder = new RunBuilder(tokenIterator);
 
-		final SNodeList nodeList = (SNodeList) tree;
-		final Vector<STree> children = nodeList.state().children;
+		final SNodeListState state = (SNodeListState) tree.state;
+		final Vector<STree> children = state.children;
 		final boolean isEmpty = children.isEmpty();
 
 		if (before != null && (!isEmpty || renderIfEmpty)) {
@@ -92,8 +93,8 @@ public final class LSList extends LexicalShape {
 	}
 
 	public void render(STree tree, LRun run, Printer printer) {
-		final SNodeList nodeList = (SNodeList) tree;
-		final Vector<STree> children = nodeList.state().children;
+		final SNodeListState state = (SNodeListState) tree.state;
+		final Vector<STree> children = state.children;
 		final boolean isEmpty = children.isEmpty();
 
 		final RunRenderer renderer = new RunRenderer(run);
@@ -123,8 +124,8 @@ public final class LSList extends LexicalShape {
 
 	@Override
 	public SpacingConstraint spacingBefore(STree tree) {
-		final SNodeList nodeList = (SNodeList) tree;
-		final Vector<STree> children = nodeList.state().children;
+		final SNodeListState state = (SNodeListState) tree.state;
+		final Vector<STree> children = state.children;
 		if (children.isEmpty() && !renderIfEmpty) return null;
 
 		if (before != null) return before.spacingBefore(tree);
@@ -134,8 +135,8 @@ public final class LSList extends LexicalShape {
 
 	@Override
 	public SpacingConstraint spacingAfter(STree tree) {
-		final SNodeList nodeList = (SNodeList) tree;
-		final Vector<STree> children = nodeList.state().children;
+		final SNodeListState state = (SNodeListState) tree.state;
+		final Vector<STree> children = state.children;
 		if (children.isEmpty() && !renderIfEmpty) return null;
 
 		if (after != null) return after.spacingAfter(tree);

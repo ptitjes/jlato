@@ -20,11 +20,11 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.NodeList;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
@@ -48,7 +48,7 @@ public class Parameter extends Tree {
 	}
 
 	public <EM extends Tree & ExtendedModifier> Parameter(NodeList<EM> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, type, id), dataOf(isVarArgs)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, type, id), dataOf(isVarArgs)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {

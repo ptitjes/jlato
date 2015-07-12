@@ -20,11 +20,11 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.printer.FormattingSettings.IndentationContext;
 import org.jlato.internal.td.SLocation;
+import org.jlato.printer.FormattingSettings.IndentationContext;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
@@ -51,7 +51,7 @@ public class LabeledStmt extends Stmt {
 	}
 
 	public LabeledStmt(Name label, Stmt stmt) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(label, stmt)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(label, stmt)))));
 	}
 
 	public Name label() {

@@ -20,11 +20,12 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.*;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.type.Type;
 
@@ -48,7 +49,7 @@ public class ArrayCreationExpr extends Expr {
 	}
 
 	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimensionExpressions, NodeList<ArrayDim> dimensions, ArrayInitializerExpr initializer) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(type, dimensionExpressions, dimensions, initializer)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(type, dimensionExpressions, dimensions, initializer)))));
 	}
 
 	public Type type() {

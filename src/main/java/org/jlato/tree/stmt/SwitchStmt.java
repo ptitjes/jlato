@@ -20,19 +20,18 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.*;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.SwitchStmt_AfterSwitchKeyword;
 
@@ -53,7 +52,7 @@ public class SwitchStmt extends Stmt {
 	}
 
 	public SwitchStmt(Expr selector, NodeList<SwitchEntryStmt> entries) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(selector, entries)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(selector, entries)))));
 	}
 
 	public Expr selector() {

@@ -20,11 +20,11 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.NodeList;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
@@ -47,7 +47,7 @@ public class AnnotationDecl extends TypeDecl implements TopLevel, Member {
 	}
 
 	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> AnnotationDecl(NodeList<EM> modifiers, Name name, NodeList<M> members) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, name, members)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, members)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {

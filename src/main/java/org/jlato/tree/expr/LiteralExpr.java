@@ -19,7 +19,10 @@
 
 package org.jlato.tree.expr;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.Literals;
+import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
@@ -87,7 +90,7 @@ public class LiteralExpr<T> extends Expr {
 	}
 
 	public LiteralExpr(Class<T> literalClass, String literalString) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(), dataOf(literalClass, literalString)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(), dataOf(literalClass, literalString)))));
 	}
 
 	@SuppressWarnings("unchecked")

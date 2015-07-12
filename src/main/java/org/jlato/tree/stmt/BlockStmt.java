@@ -20,11 +20,11 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.NodeList;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
@@ -50,7 +50,7 @@ public class BlockStmt extends Stmt {
 	}
 
 	public BlockStmt(NodeList<Stmt> stmts) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(stmts)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(stmts)))));
 	}
 
 	public NodeList<Stmt> stmts() {

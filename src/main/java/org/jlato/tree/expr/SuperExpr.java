@@ -20,8 +20,8 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
@@ -45,7 +45,7 @@ public class SuperExpr extends Expr {
 	}
 
 	public SuperExpr(Expr classExpr) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(classExpr)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(classExpr)))));
 	}
 
 	public Expr classExpr() {

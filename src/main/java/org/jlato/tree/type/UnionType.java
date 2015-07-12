@@ -19,11 +19,11 @@
 
 package org.jlato.tree.type;
 
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.NodeList;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.child;
@@ -46,7 +46,7 @@ public class UnionType extends Type {
 	}
 
 	public UnionType(NodeList<Type> types) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(types)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(types)))));
 	}
 
 	public NodeList<Type> types() {

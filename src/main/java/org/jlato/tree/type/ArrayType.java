@@ -19,11 +19,11 @@
 
 package org.jlato.tree.type;
 
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.NodeList;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.decl.VariableDeclaratorId;
@@ -48,7 +48,7 @@ public class ArrayType extends ReferenceType {
 	}
 
 	public ArrayType(NodeList<AnnotationExpr> annotations, Type componentType, NodeList<ArrayDim> dimensions) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(annotations, componentType, dimensions)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations, componentType, dimensions)))));
 	}
 
 	public Type componentType() {

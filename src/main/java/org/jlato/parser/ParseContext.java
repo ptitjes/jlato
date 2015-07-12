@@ -19,7 +19,8 @@
 
 package org.jlato.parser;
 
-import org.jlato.tree.*;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
 import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.Decl;
 import org.jlato.tree.decl.ImportDecl;
@@ -29,7 +30,7 @@ import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.tree.decl.TypeDecl.*;
+import static org.jlato.tree.decl.TypeDecl.TypeKind;
 
 /**
  * @author Didier Villevalois

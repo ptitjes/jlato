@@ -20,8 +20,8 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
@@ -45,7 +45,7 @@ public class VoidType extends Type {
 	}
 
 	public VoidType() {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf()))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf()))));
 	}
 
 	public final static LexicalShape shape = token(LToken.Void);

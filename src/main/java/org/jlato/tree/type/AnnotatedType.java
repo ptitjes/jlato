@@ -19,8 +19,8 @@
 
 package org.jlato.tree.type;
 
-import org.jlato.tree.NodeList;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.expr.AnnotationExpr;
 
 /**

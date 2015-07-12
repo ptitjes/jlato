@@ -26,11 +26,15 @@ import org.jlato.tree.Tree;
 /**
  * @author Didier Villevalois
  */
-public abstract class STree extends LElement {
+public class STree extends LElement {
 
 	public final Tree.Kind kind;
 	public final STreeState state;
 	public final LRun run;
+
+	public STree(Tree.Kind kind, STreeState state) {
+		this(kind, state, null);
+	}
 
 	public STree(Tree.Kind kind, STreeState state, LRun run) {
 		this.kind = kind;
@@ -43,7 +47,18 @@ public abstract class STree extends LElement {
 		return false;
 	}
 
-	public abstract STree withRun(LRun run);
+	@Override
+	public int width() {
+		return 0;
+	}
+
+	public STree withState(STreeState state) {
+		return new STree(kind, state, run);
+	}
+
+	public STree withRun(LRun run) {
+		return new STree(kind, state, run);
+	}
 
 	public Tree asTree() {
 		return kind.instantiate(new SLocation(new SContext.Root(), this));

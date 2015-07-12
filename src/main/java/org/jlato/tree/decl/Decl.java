@@ -28,9 +28,7 @@ import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LSCondition.emptyList;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 

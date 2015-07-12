@@ -20,11 +20,12 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.*;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
@@ -47,7 +48,7 @@ public class ForStmt extends Stmt {
 	}
 
 	public ForStmt(NodeList<Expr> init, Expr compare, NodeList<Expr> update, Stmt body) {
-		super(new SLocation(new SNode(kind, new SNodeState(treesOf(init, compare, update, body)))));
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(init, compare, update, body)))));
 	}
 
 	public NodeList<Expr> init() {
