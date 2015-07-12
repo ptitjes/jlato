@@ -23,7 +23,6 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeaf;
 import org.jlato.internal.bu.SLeafState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Decl;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 

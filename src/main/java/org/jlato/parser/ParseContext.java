@@ -21,10 +21,13 @@ package org.jlato.parser;
 
 import org.jlato.tree.*;
 import org.jlato.tree.decl.CompilationUnit;
+import org.jlato.tree.decl.Decl;
 import org.jlato.tree.decl.ImportDecl;
 import org.jlato.tree.decl.TypeDecl;
 import org.jlato.tree.expr.AnnotationExpr;
-import org.jlato.tree.Type;
+import org.jlato.tree.expr.Expr;
+import org.jlato.tree.stmt.Stmt;
+import org.jlato.tree.type.Type;
 
 import static org.jlato.tree.decl.TypeDecl.*;
 

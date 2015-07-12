@@ -17,10 +17,12 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.tree;
+package org.jlato.tree.type;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.tree.SLocation;
+import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.list;
 import static org.jlato.internal.shapes.LexicalShape.Factory.token;

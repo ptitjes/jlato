@@ -21,7 +21,7 @@ package org.jlato.integration;
 
 import org.jlato.parser.*;
 import org.jlato.integration.utils.BulkTestRunner;
-import org.jlato.tree.Stmt;
+import org.jlato.tree.stmt.Stmt;
 import org.junit.runner.RunWith;
 
 /**

@@ -19,12 +19,8 @@
 
 package org.jlato.tree.decl;
 
-import org.jlato.internal.bu.LToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Decl;
-import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
-import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.list;
 import static org.jlato.internal.shapes.LexicalShape.Factory.none;

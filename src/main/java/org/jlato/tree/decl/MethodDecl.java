@@ -27,6 +27,7 @@ import org.jlato.tree.*;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.QualifiedType;
+import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;

@@ -25,9 +25,9 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.*;
 import org.jlato.tree.name.Name;
+import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
 public class CallExpr extends Expr {
 

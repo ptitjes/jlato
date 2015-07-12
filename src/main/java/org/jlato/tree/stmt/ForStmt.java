@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.*;
+import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;

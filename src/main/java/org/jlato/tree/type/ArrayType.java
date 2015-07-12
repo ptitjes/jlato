@@ -25,7 +25,6 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.Type;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.decl.VariableDeclaratorId;
 import org.jlato.tree.expr.AnnotationExpr;

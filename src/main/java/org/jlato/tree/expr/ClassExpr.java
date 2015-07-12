@@ -23,10 +23,9 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.Type;
+import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
