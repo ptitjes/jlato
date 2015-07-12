@@ -22,7 +22,7 @@ package org.jlato.tree.stmt;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.expr.Expr;
-import org.jlato.tree.SLocation;
+import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;

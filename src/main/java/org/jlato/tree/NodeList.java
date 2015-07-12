@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SLocation;
 
 import java.util.Iterator;
 

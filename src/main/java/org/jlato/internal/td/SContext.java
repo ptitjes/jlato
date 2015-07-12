@@ -20,7 +20,6 @@
 package org.jlato.internal.td;
 
 import org.jlato.internal.bu.*;
-import org.jlato.tree.SLocation;
 
 /**
  * @author Didier Villevalois

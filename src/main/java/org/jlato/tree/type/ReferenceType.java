@@ -19,7 +19,7 @@
 
 package org.jlato.tree.type;
 
-import org.jlato.tree.SLocation;
+import org.jlato.internal.td.SLocation;
 
 public abstract class ReferenceType extends AnnotatedType {
 

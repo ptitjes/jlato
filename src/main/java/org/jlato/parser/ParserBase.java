@@ -25,13 +25,11 @@ import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SContext;
 import org.jlato.printer.Printer;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.SLocation;
+import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AssignExpr;
 
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.EmptyStackException;
 import java.util.Iterator;

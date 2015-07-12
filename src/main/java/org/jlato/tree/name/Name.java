@@ -27,7 +27,7 @@ import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.parser.ParserImplConstants;
 import org.jlato.tree.expr.Expr;
-import org.jlato.tree.SLocation;
+import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.token;

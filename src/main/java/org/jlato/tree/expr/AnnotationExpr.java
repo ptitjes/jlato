@@ -20,7 +20,7 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.SLocation;
+import org.jlato.internal.td.SLocation;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.name.QualifiedName;
 

@@ -17,11 +17,11 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.tree;
+package org.jlato.internal.td;
 
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.SContext;
+import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois

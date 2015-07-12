@@ -20,7 +20,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.SLocation;
+import org.jlato.internal.td.SLocation;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.list;
 import static org.jlato.internal.shapes.LexicalShape.Factory.none;
