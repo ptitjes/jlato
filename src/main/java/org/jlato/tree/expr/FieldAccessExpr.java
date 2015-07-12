@@ -31,11 +31,11 @@ import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
-public class SelectExpr extends Expr {
+public class FieldAccessExpr extends Expr {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
-		public SelectExpr instantiate(SLocation location) {
-			return new SelectExpr(location);
+		public FieldAccessExpr instantiate(SLocation location) {
+			return new FieldAccessExpr(location);
 		}
 
 		public LexicalShape shape() {
@@ -43,11 +43,11 @@ public class SelectExpr extends Expr {
 		}
 	};
 
-	private SelectExpr(SLocation location) {
+	private FieldAccessExpr(SLocation location) {
 		super(location);
 	}
 
-	public SelectExpr(Expr scope, NodeList<Type> typeArgs, Name name) {
+	public FieldAccessExpr(Expr scope, NodeList<Type> typeArgs, Name name) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, name)))));
 	}
 
@@ -55,7 +55,7 @@ public class SelectExpr extends Expr {
 		return location.nodeChild(SCOPE);
 	}
 
-	public SelectExpr withScope(Expr scope) {
+	public FieldAccessExpr withScope(Expr scope) {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
@@ -63,7 +63,7 @@ public class SelectExpr extends Expr {
 		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
-	public SelectExpr withTypeArgs(NodeList<Type> typeArgs) {
+	public FieldAccessExpr withTypeArgs(NodeList<Type> typeArgs) {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
@@ -71,7 +71,7 @@ public class SelectExpr extends Expr {
 		return location.nodeChild(NAME);
 	}
 
-	public SelectExpr withName(Name name) {
+	public FieldAccessExpr withName(Name name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

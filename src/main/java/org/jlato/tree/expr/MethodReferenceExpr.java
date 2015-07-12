@@ -30,12 +30,13 @@ import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
+import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
-public class CallExpr extends Expr {
+public class MethodReferenceExpr extends Expr {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
-		public CallExpr instantiate(SLocation location) {
-			return new CallExpr(location);
+		public MethodReferenceExpr instantiate(SLocation location) {
+			return new MethodReferenceExpr(location);
 		}
 
 		public LexicalShape shape() {
@@ -43,19 +44,19 @@ public class CallExpr extends Expr {
 		}
 	};
 
-	private CallExpr(SLocation location) {
+	private MethodReferenceExpr(SLocation location) {
 		super(location);
 	}
 
-	public CallExpr(Expr scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, name, args)))));
+	public MethodReferenceExpr(Expr scope, NodeList<Type> typeArgs, Name name) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, name)))));
 	}
 
 	public Expr scope() {
 		return location.nodeChild(SCOPE);
 	}
 
-	public CallExpr withScope(Expr scope) {
+	public MethodReferenceExpr withScope(Expr scope) {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
@@ -63,7 +64,7 @@ public class CallExpr extends Expr {
 		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
-	public CallExpr withTypeArgs(NodeList<Type> typeArgs) {
+	public MethodReferenceExpr withTypeArgs(NodeList<Type> typeArgs) {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
@@ -71,27 +72,18 @@ public class CallExpr extends Expr {
 		return location.nodeChild(NAME);
 	}
 
-	public CallExpr withName(Name name) {
+	public MethodReferenceExpr withName(Name name) {
 		return location.nodeWithChild(NAME, name);
-	}
-
-	public NodeList<Expr> args() {
-		return location.nodeChild(ARGUMENTS);
-	}
-
-	public CallExpr withArgs(NodeList<Expr> args) {
-		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
 	private static final int SCOPE = 0;
 	private static final int TYPE_ARGUMENTS = 1;
 	private static final int NAME = 2;
-	private static final int ARGUMENTS = 3;
 
 	public final static LexicalShape shape = composite(
-			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
-			child(TYPE_ARGUMENTS, Type.typeArgumentsShape),
-			child(NAME),
-			child(ARGUMENTS, Expr.argumentsShape)
+			child(SCOPE),
+			token(LToken.DoubleColon),
+			child(TYPE_ARGUMENTS, list(token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater))),
+			child(NAME)
 	);
 }

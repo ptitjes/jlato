@@ -97,8 +97,8 @@ final class ParserImpl extends ParserBase {
     }
 
     private Expr generateLambda(Expr ret, Stmt lambdaBody) throws ParseException {
-/*	    if (ret instanceof EnclosedExpr) {
-	        Expr inner = ((EnclosedExpr) ret).getInner();
+/*	    if (ret instanceof ParenthesizedExpr) {
+	        Expr inner = ((ParenthesizedExpr) ret).getInner();
 	        if (inner != null && inner instanceof Name) {
 	            VariableDeclaratorId id = new VariableDeclaratorId(((Name)inner).getName(), 0);
 	       	    NodeList params = add(null, new Parameter(0, null, new UnknownType(), false, id));
@@ -2502,25 +2502,25 @@ Expr PrimaryPrefix():
 	  [ args = Arguments() { hasArgs = true; } ]
 	  {
 	    if (hasArgs) {
-	  	  ret = enRun(new CallExpr(ret, typeArgs, name, args));
+	  	  ret = enRun(new MethodInvocationExpr(ret, typeArgs, name, args));
 		} else {
-	  	  ret = enRun(new SelectExpr(ret, null, name));
+	  	  ret = enRun(new FieldAccessExpr(ret, null, name));
 		}
       }
 	|
 	  { lateRun(); }
 	  "::" [typeArgs = TypeParameters() ]
       ( name = Name() | "new" { name = new Name("new"); } )
-	  { ret = enRun(new ReferenceExpr(ret, typeArgs, name)); }
+	  { ret = enRun(new MethodReferenceExpr(ret, typeArgs, name)); }
 
 // WTF!!
 //    |
 //      args = Arguments()
-//      { new CallExpr(ret, typeArgs, null, args); }
+//      { new MethodInvocationExpr(ret, typeArgs, null, args); }
 
 	)
   |
-    { run(); } "(" ret = Expression() ")" { ret = enRun(new EnclosedExpr(ret)); }
+    { run(); } "(" ret = Expression() ")" { ret = enRun(new ParenthesizedExpr(ret)); }
   |
     ret = AllocationExpression(null)
   |
@@ -2531,13 +2531,13 @@ Expr PrimaryPrefix():
     { run(); }
     type = ResultType() "::" [typeArgs = TypeParameters() ]
     ( name = Name() | "new" { name = new Name("new"); } )
-    { ret = enRun(new ReferenceExpr(new TypeExpr(type), typeArgs, name)); }
+    { ret = enRun(new MethodReferenceExpr(new TypeExpr(type), typeArgs, name)); }
   |
     { run(); }
     name = Name() [ args = Arguments() { hasArgs=true; } ]
     {
       if (hasArgs) {
-        ret = enRun(new CallExpr(null, null, name, args));
+        ret = enRun(new MethodInvocationExpr(null, null, name, args));
       } else {
         ret = enRun(name);
       }
@@ -2586,9 +2586,9 @@ Expr PrimarySuffixWithoutSuper(Expr scope):
       [ args = Arguments() { hasArgs=true; } ]
       {
         if (hasArgs) {
-          ret = enRun(new CallExpr(scope, typeArgs, name, args));
+          ret = enRun(new MethodInvocationExpr(scope, typeArgs, name, args));
         } else {
-          ret = enRun(new SelectExpr(scope, typeArgs, name));
+          ret = enRun(new FieldAccessExpr(scope, typeArgs, name));
         }
       }
     )

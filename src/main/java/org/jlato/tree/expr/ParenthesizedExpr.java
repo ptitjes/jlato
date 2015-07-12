@@ -28,11 +28,11 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
-public class EnclosedExpr extends Expr {
+public class ParenthesizedExpr extends Expr {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
-		public EnclosedExpr instantiate(SLocation location) {
-			return new EnclosedExpr(location);
+		public ParenthesizedExpr instantiate(SLocation location) {
+			return new ParenthesizedExpr(location);
 		}
 
 		public LexicalShape shape() {
@@ -40,11 +40,11 @@ public class EnclosedExpr extends Expr {
 		}
 	};
 
-	private EnclosedExpr(SLocation location) {
+	private ParenthesizedExpr(SLocation location) {
 		super(location);
 	}
 
-	public EnclosedExpr(Expr inner) {
+	public ParenthesizedExpr(Expr inner) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(inner)))));
 	}
 
@@ -52,7 +52,7 @@ public class EnclosedExpr extends Expr {
 		return location.nodeChild(INNER);
 	}
 
-	public EnclosedExpr withInner(Expr inner) {
+	public ParenthesizedExpr withInner(Expr inner) {
 		return location.nodeWithChild(INNER, inner);
 	}
 
