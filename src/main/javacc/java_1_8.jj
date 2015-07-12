@@ -1797,12 +1797,12 @@ ExplicitConstructorInvocationStmt ExplicitConstructorInvocation():
 
 NodeList Statements():
 {
-	NodeList ret = new NodeList();
+	NodeList ret = null;
 	Stmt stmt;
 }
 {
   { run(); }
-  ( LOOKAHEAD(2) stmt = BlockStatement() { ret = ret.append(stmt); } )*
+  ( LOOKAHEAD(2) stmt = BlockStatement() { ret = append(ret, stmt); } )*
   { return enRun(ret, Stmt.listShape); }
 }
 
@@ -2878,7 +2878,7 @@ ExpressionStmt StatementExpression():
 SwitchStmt SwitchStatement():
 {
 	Expr selector;
-	SwitchEntryStmt entry;
+	SwitchCase entry;
 	NodeList entries = new NodeList();
 }
 {
@@ -2886,12 +2886,12 @@ SwitchStmt SwitchStatement():
   "switch" "(" selector = Expression() ")" "{"
   { run(); }
   ( entry = SwitchEntry() { entries = entries.append(entry); } )*
-  { entries = enRun(entries, SwitchEntryStmt.listShape); }
+  { entries = enRun(entries, SwitchCase.listShape); }
   "}"
   { return enRun(new SwitchStmt(selector, entries)); }
 }
 
-SwitchEntryStmt SwitchEntry():
+SwitchCase SwitchEntry():
 {
 	Expr label = null;
 	NodeList stmts;
@@ -2904,7 +2904,7 @@ SwitchEntryStmt SwitchEntry():
     "default"
   )
   ":" stmts = Statements()
-  { return enRun(new SwitchEntryStmt(label, stmts)); }
+  { return enRun(new SwitchCase(label, stmts)); }
 }
 
 IfStmt IfStatement():

@@ -26,6 +26,7 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SContext;
 import org.jlato.internal.td.SLocation;
 import org.jlato.printer.Printer;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AssignExpr;
 
@@ -139,6 +140,8 @@ abstract class ParserBase {
 		try {
 			final IndexedList<IndexedList<LToken>> tokens = popTokens();
 
+			if (facade == null) return null;
+
 			final STree tree = Tree.treeOf(facade);
 			return doEnRun(tree, shape, tokens);
 		} catch (EmptyStackException e) {
@@ -230,5 +233,11 @@ abstract class ParserBase {
 
 		int realKind = ParserImplConstants.GT;
 		IndexedList<LToken> whitespace;
+	}
+
+	// Utility methods
+
+	protected <T extends Tree> NodeList<T> append(NodeList<T> list, T element) {
+		return list == null ? new NodeList<T>(element) : list.append(element);
 	}
 }

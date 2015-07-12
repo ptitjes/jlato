@@ -51,8 +51,8 @@ public class SwitchStmt extends Stmt {
 		super(location);
 	}
 
-	public SwitchStmt(Expr selector, NodeList<SwitchEntryStmt> entries) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(selector, entries)))));
+	public SwitchStmt(Expr selector, NodeList<SwitchCase> cases) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(selector, cases)))));
 	}
 
 	public Expr selector() {
@@ -63,28 +63,28 @@ public class SwitchStmt extends Stmt {
 		return location.nodeWithChild(SELECTOR, selector);
 	}
 
-	public NodeList<SwitchEntryStmt> entries() {
-		return location.nodeChild(ENTRIES);
+	public NodeList<SwitchCase> cases() {
+		return location.nodeChild(CASES);
 	}
 
-	public SwitchStmt withEntries(NodeList<SwitchEntryStmt> entries) {
-		return location.nodeWithChild(ENTRIES, entries);
+	public SwitchStmt withCases(NodeList<SwitchCase> cases) {
+		return location.nodeWithChild(CASES, cases);
 	}
 
 	private static final int SELECTOR = 0;
-	private static final int ENTRIES = 1;
+	private static final int CASES = 1;
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Switch),
 			token(LToken.ParenthesisLeft).withSpacingBefore(spacing(SwitchStmt_AfterSwitchKeyword)),
 			child(SELECTOR),
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
-			nonEmptyChildren(ENTRIES,
+			nonEmptyChildren(CASES,
 					composite(
 							token(LToken.BraceLeft)
 									.withSpacingAfter(newLine())
 									.withIndentationAfter(indent(BLOCK)),
-							child(ENTRIES, SwitchEntryStmt.listShape),
+							child(CASES, SwitchCase.listShape),
 							token(LToken.BraceRight)
 									.withIndentationBefore(unIndent(BLOCK))
 									.withSpacingBefore(newLine())

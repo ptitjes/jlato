@@ -34,11 +34,11 @@ import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 
-public class SwitchEntryStmt extends Stmt {
+public class SwitchCase extends Tree {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
-		public SwitchEntryStmt instantiate(SLocation location) {
-			return new SwitchEntryStmt(location);
+		public SwitchCase instantiate(SLocation location) {
+			return new SwitchCase(location);
 		}
 
 		public LexicalShape shape() {
@@ -46,11 +46,11 @@ public class SwitchEntryStmt extends Stmt {
 		}
 	};
 
-	private SwitchEntryStmt(SLocation location) {
+	private SwitchCase(SLocation location) {
 		super(location);
 	}
 
-	public SwitchEntryStmt(Expr label, NodeList<Stmt> stmts) {
+	public SwitchCase(Expr label, NodeList<Stmt> stmts) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(label, stmts)))));
 	}
 
@@ -58,7 +58,7 @@ public class SwitchEntryStmt extends Stmt {
 		return location.nodeChild(LABEL);
 	}
 
-	public SwitchEntryStmt withLabel(Expr label) {
+	public SwitchCase withLabel(Expr label) {
 		return location.nodeWithChild(LABEL, label);
 	}
 
@@ -66,7 +66,7 @@ public class SwitchEntryStmt extends Stmt {
 		return location.nodeChild(STMTS);
 	}
 
-	public SwitchEntryStmt withStmts(NodeList<Stmt> stmts) {
+	public SwitchCase withStmts(NodeList<Stmt> stmts) {
 		return location.nodeWithChild(STMTS, stmts);
 	}
 
