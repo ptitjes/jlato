@@ -39,7 +39,7 @@ import java.util.Stack;
 /**
  * @author Didier Villevalois
  */
-public abstract class ParserBase {
+abstract class ParserBase {
 
 	public static ParserImpl newInstance(InputStream in, String encoding, ParserConfiguration configuration) {
 		ParserImpl parser = new ParserImpl(in, encoding);
