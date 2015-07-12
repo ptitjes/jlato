@@ -44,8 +44,7 @@ public abstract class TypeDecl extends MemberDecl {
 		Class,
 		Interface,
 		Enum,
-		AnnotationType
+		AnnotationType,
 		// Keep last comma
-		;
 	}
 }

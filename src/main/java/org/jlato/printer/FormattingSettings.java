@@ -41,9 +41,7 @@ public class FormattingSettings {
 		TRY_RESOURCES,
 		LABEL,
 		// Keep the last comma
-		;
 	}
-
 	public enum SpacingLocation {
 		DefaultNewLine(Line),
 		CompilationUnit_AfterPackageDecl(Line),
@@ -66,8 +64,7 @@ public class FormattingSettings {
 		IfStmt_ThenOtherStmt(Line),
 		IfStmt_ElseIfStmt(Space),
 		IfStmt_ElseExpressionStmt(Space),
-		IfStmt_ElseOtherStmt(Line)
-
+		IfStmt_ElseOtherStmt(Line),
 		// Keep the last comma
 		;
 
@@ -117,10 +114,10 @@ public class FormattingSettings {
 			;
 
 	private final String indentationImage;
+
 	private final String newLineImage;
 	private final TreeMap<IndentationContext, Integer> indentationLevels;
 	private final TreeMap<SpacingLocation, Spacing> spacingCounts;
-
 	public FormattingSettings() {
 		this("\t", "\n", new TreeMap<IndentationContext, Integer>(), new TreeMap<SpacingLocation, Spacing>());
 	}
@@ -167,4 +164,5 @@ public class FormattingSettings {
 		if (spacingCounts.containsKey(location)) return spacingCounts.get(location);
 		else return new Spacing(1, location.defaultUnit);
 	}
-}
+
+	}
