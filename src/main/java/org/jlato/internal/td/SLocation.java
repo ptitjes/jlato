@@ -22,6 +22,7 @@ package org.jlato.internal.td;
 import com.github.andrewoma.dexx.collection.TreeMap;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 
 /**
@@ -87,6 +88,10 @@ public class SLocation {
 		final SNodeState state = (SNodeState) tree.state;
 		final STree newNode = tree.withState(state.withChild(index, Tree.treeOf(child)));
 		return (T) withTree(newNode).facade;
+	}
+
+	public <T extends Tree, C extends Tree> T nodeWithChild(int index, Rewrite<C> rewrite) {
+		return nodeWithChild(index, rewrite.rewrite(this.<C>nodeChild(index)));
 	}
 
 	@SuppressWarnings("unchecked")

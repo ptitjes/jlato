@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
@@ -50,8 +51,12 @@ public class MethodDecl extends MemberDecl {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParams, type, name, params, dims, throwsClause, body/*, javadocComment*/)))));
+	public <EM extends Tree & ExtendedModifier> MethodDecl() {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(NodeList.empty(), NodeList.empty(), null, null, NodeList.empty(), NodeList.empty(), NodeList.empty(), null)))));
+	}
+
+	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, BlockStmt body) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParams, type, name, params, dims, throwsClause, body)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
@@ -60,6 +65,10 @@ public class MethodDecl extends MemberDecl {
 
 	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(NodeList<EM> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
+	}
+
+	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(Rewrite<NodeList<EM>> rewrite) {
+		return location.nodeWithChild(MODIFIERS, rewrite);
 	}
 
 	public NodeList<TypeParameter> typeParams() {
