@@ -69,20 +69,20 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public NodeList<Type> typeArguments() {
+	public NodeList<Type> typeArgs() {
 		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
-	public ObjectCreationExpr withTypeArguments(NodeList<Type> typeArguments) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArguments);
+	public ObjectCreationExpr withTypeArgs(NodeList<Type> typeArgs) {
+		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
-	public NodeList<Expr> arguments() {
+	public NodeList<Expr> args() {
 		return location.nodeChild(ARGUMENTS);
 	}
 
-	public ObjectCreationExpr withArguments(NodeList<Expr> arguments) {
-		return location.nodeWithChild(ARGUMENTS, arguments);
+	public ObjectCreationExpr withArgs(NodeList<Expr> args) {
+		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
 	public NodeList<Decl> anonymousClassBody() {

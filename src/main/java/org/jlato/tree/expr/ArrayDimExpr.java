@@ -45,8 +45,8 @@ public class ArrayDimExpr extends Tree {
 		super(location);
 	}
 
-	public ArrayDimExpr(NodeList<AnnotationExpr> annotations, Expr expression) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations, expression)))));
+	public ArrayDimExpr(NodeList<AnnotationExpr> annotations, Expr expr) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations, expr)))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
@@ -57,12 +57,12 @@ public class ArrayDimExpr extends Tree {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
-	public Expr expression() {
+	public Expr expr() {
 		return location.nodeChild(EXPRESSION);
 	}
 
-	public ArrayDimExpr withExpression(Expr expression) {
-		return location.nodeWithChild(EXPRESSION, expression);
+	public ArrayDimExpr withExpr(Expr expr) {
+		return location.nodeWithChild(EXPRESSION, expr);
 	}
 
 	private static final int ANNOTATIONS = 0;

@@ -59,12 +59,12 @@ public class CallExpr extends Expr {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public NodeList<Type> typeArguments() {
+	public NodeList<Type> typeArgs() {
 		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
-	public CallExpr withTypeArguments(NodeList<Type> typeArguments) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArguments);
+	public CallExpr withTypeArgs(NodeList<Type> typeArgs) {
+		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
 	public Name name() {
@@ -75,12 +75,12 @@ public class CallExpr extends Expr {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public NodeList<Expr> arguments() {
+	public NodeList<Expr> args() {
 		return location.nodeChild(ARGUMENTS);
 	}
 
-	public CallExpr withArguments(NodeList<Expr> arguments) {
-		return location.nodeWithChild(ARGUMENTS, arguments);
+	public CallExpr withArgs(NodeList<Expr> args) {
+		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
 	private static final int SCOPE = 0;

@@ -52,12 +52,12 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(typeArgs, expr, args), dataOf(constructorKind(isThis))))));
 	}
 
-	public NodeList<Type> typeArguments() {
+	public NodeList<Type> typeArgs() {
 		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
-	public ExplicitConstructorInvocationStmt withTypeArguments(NodeList<Type> typeArguments) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArguments);
+	public ExplicitConstructorInvocationStmt withTypeArgs(NodeList<Type> typeArgs) {
+		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
 	public boolean isThis() {
@@ -76,12 +76,12 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
-	public NodeList<Expr> arguments() {
+	public NodeList<Expr> args() {
 		return location.nodeChild(ARGUMENTS);
 	}
 
-	public ExplicitConstructorInvocationStmt withArguments(NodeList<Expr> arguments) {
-		return location.nodeWithChild(ARGUMENTS, arguments);
+	public ExplicitConstructorInvocationStmt withArgs(NodeList<Expr> args) {
+		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
 	private static final int TYPE_ARGUMENTS = 0;

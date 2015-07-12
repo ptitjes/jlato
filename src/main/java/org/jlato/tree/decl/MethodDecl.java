@@ -50,8 +50,8 @@ public class MethodDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParameters, Type type, Name name, NodeList<Parameter> parameters, NodeList<ArrayDim> dimensions, NodeList<QualifiedType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParameters, type, name, parameters, dimensions, throwsClause, body/*, javadocComment*/)))));
+	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<Parameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParams, type, name, params, dims, throwsClause, body/*, javadocComment*/)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
@@ -62,12 +62,12 @@ public class MethodDecl extends Decl implements Member {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public NodeList<TypeParameter> typeParameters() {
+	public NodeList<TypeParameter> typeParams() {
 		return location.nodeChild(TYPE_PARAMETERS);
 	}
 
-	public MethodDecl withTypeParameters(NodeList<TypeParameter> typeParameters) {
-		return location.nodeWithChild(TYPE_PARAMETERS, typeParameters);
+	public MethodDecl withTypeParams(NodeList<TypeParameter> typeParams) {
+		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
 	public Type type() {
@@ -86,20 +86,20 @@ public class MethodDecl extends Decl implements Member {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public NodeList<Parameter> parameters() {
+	public NodeList<Parameter> params() {
 		return location.nodeChild(PARAMETERS);
 	}
 
-	public MethodDecl withParameters(NodeList<Parameter> parameters) {
-		return location.nodeWithChild(PARAMETERS, parameters);
+	public MethodDecl withParams(NodeList<Parameter> params) {
+		return location.nodeWithChild(PARAMETERS, params);
 	}
 
-	public NodeList<ArrayDim> dimensions() {
-		return location.nodeChild(DIMENSIONS);
+	public NodeList<ArrayDim> dims() {
+		return location.nodeChild(DIMS);
 	}
 
-	public VariableDeclaratorId withDimensions(NodeList<ArrayDim> dimensions) {
-		return location.nodeWithChild(DIMENSIONS, dimensions);
+	public VariableDeclaratorId withDims(NodeList<ArrayDim> dims) {
+		return location.nodeWithChild(DIMS, dims);
 	}
 
 	public NodeList<QualifiedType> throwsClause() {
@@ -123,7 +123,7 @@ public class MethodDecl extends Decl implements Member {
 	private static final int TYPE = 2;
 	private static final int NAME = 3;
 	private static final int PARAMETERS = 4;
-	private static final int DIMENSIONS = 5;
+	private static final int DIMS = 5;
 	private static final int THROWS_CLAUSE = 6;
 	private static final int BODY = 7;
 
@@ -134,7 +134,7 @@ public class MethodDecl extends Decl implements Member {
 			none().withSpacing(space()),
 			child(NAME),
 			child(PARAMETERS, Parameter.listShape),
-			child(DIMENSIONS, ArrayDim.listShape),
+			child(DIMS, ArrayDim.listShape),
 			child(THROWS_CLAUSE, QualifiedType.throwsClauseShape),
 			nonNullChild(BODY,
 					composite(none().withSpacing(space()), child(BODY)),

@@ -47,8 +47,8 @@ public class SelectExpr extends Expr {
 		super(location);
 	}
 
-	public SelectExpr(Expr scope, NodeList<Type> typeArgs, Name field) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, field)))));
+	public SelectExpr(Expr scope, NodeList<Type> typeArgs, Name name) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, name)))));
 	}
 
 	public Expr scope() {
@@ -60,27 +60,27 @@ public class SelectExpr extends Expr {
 	}
 
 	public NodeList<Type> typeArgs() {
-		return location.nodeChild(TYPE_ARGS);
+		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
 	public SelectExpr withTypeArgs(NodeList<Type> typeArgs) {
-		return location.nodeWithChild(TYPE_ARGS, typeArgs);
+		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
-	public Name field() {
-		return location.nodeChild(FIELD);
+	public Name name() {
+		return location.nodeChild(NAME);
 	}
 
-	public SelectExpr withField(Name field) {
-		return location.nodeWithChild(FIELD, field);
+	public SelectExpr withName(Name name) {
+		return location.nodeWithChild(NAME, name);
 	}
 
 	private static final int SCOPE = 0;
-	private static final int TYPE_ARGS = 1;
-	private static final int FIELD = 2;
+	private static final int TYPE_ARGUMENTS = 1;
+	private static final int NAME = 2;
 
 	public final static LexicalShape shape = composite(
 			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
-			child(FIELD)
+			child(NAME)
 	);
 }

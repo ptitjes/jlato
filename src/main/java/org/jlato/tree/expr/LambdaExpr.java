@@ -48,20 +48,20 @@ public class LambdaExpr extends Expr {
 		super(location);
 	}
 
-	public LambdaExpr(NodeList<Parameter> parameters, Expr expr) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(parameters, expr, null)))));
+	public LambdaExpr(NodeList<Parameter> params, Expr expr) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(params, expr, null)))));
 	}
 
-	public LambdaExpr(NodeList<Parameter> parameters, BlockStmt body) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(parameters, null, body)))));
+	public LambdaExpr(NodeList<Parameter> params, BlockStmt body) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(params, null, body)))));
 	}
 
-	public NodeList<Parameter> parameters() {
+	public NodeList<Parameter> params() {
 		return location.nodeChild(PARAMETERS);
 	}
 
-	public LambdaExpr withParameters(NodeList<Parameter> parameters) {
-		return location.nodeWithChild(PARAMETERS, parameters);
+	public LambdaExpr withParams(NodeList<Parameter> params) {
+		return location.nodeWithChild(PARAMETERS, params);
 	}
 
 	public Expr expr() {

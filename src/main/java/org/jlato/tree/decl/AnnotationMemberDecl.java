@@ -48,8 +48,8 @@ public class AnnotationMemberDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl(NodeList<EM> modifiers, Type type, Name name, NodeList<ArrayDim> dimensions, Expr defaultValue) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, type, name, dimensions, defaultValue)))));
+	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl(NodeList<EM> modifiers, Type type, Name name, NodeList<ArrayDim> dims, Expr defaultValue) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, type, name, dims, defaultValue)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
@@ -76,12 +76,12 @@ public class AnnotationMemberDecl extends Decl implements Member {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public NodeList<ArrayDim> dimensions() {
-		return location.nodeChild(DIMENSIONS);
+	public NodeList<ArrayDim> dims() {
+		return location.nodeChild(DIMS);
 	}
 
-	public VariableDeclaratorId withDimensions(NodeList<ArrayDim> dimensions) {
-		return location.nodeWithChild(DIMENSIONS, dimensions);
+	public VariableDeclaratorId withDims(NodeList<ArrayDim> dims) {
+		return location.nodeWithChild(DIMS, dims);
 	}
 
 	public Expr defaultValue() {
@@ -95,7 +95,7 @@ public class AnnotationMemberDecl extends Decl implements Member {
 	private static final int MODIFIERS = 0;
 	private static final int TYPE = 1;
 	private static final int NAME = 2;
-	private static final int DIMENSIONS = 3;
+	private static final int DIMS = 3;
 	private static final int DEFAULT_VALUE = 4;
 
 	public final static LexicalShape shape = composite(

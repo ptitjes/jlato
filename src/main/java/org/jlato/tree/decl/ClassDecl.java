@@ -48,8 +48,8 @@ public class ClassDecl extends TypeDecl implements TopLevel, Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> ClassDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParameters, QualifiedType extendsClause, NodeList<QualifiedType> implementsClause, NodeList<M> members) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, typeParameters, extendsClause, implementsClause, members)))));
+	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> ClassDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParams, QualifiedType extendsClause, NodeList<QualifiedType> implementsClause, NodeList<M> members) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, typeParams, extendsClause, implementsClause, members)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
@@ -72,12 +72,12 @@ public class ClassDecl extends TypeDecl implements TopLevel, Member {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public NodeList<TypeParameter> typeParameters() {
+	public NodeList<TypeParameter> typeParams() {
 		return location.nodeChild(TYPE_PARAMETERS);
 	}
 
-	public ClassDecl withTypeParameters(NodeList<TypeParameter> typeParameters) {
-		return location.nodeWithChild(TYPE_PARAMETERS, typeParameters);
+	public ClassDecl withTypeParams(NodeList<TypeParameter> typeParams) {
+		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
 	public QualifiedType extendsClause() {

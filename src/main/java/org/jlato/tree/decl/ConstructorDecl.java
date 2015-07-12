@@ -48,8 +48,8 @@ public class ConstructorDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ConstructorDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParameters, Name name, NodeList<Parameter> parameters, NodeList<QualifiedType> throwsClause, BlockStmt body) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParameters, name, parameters, throwsClause, body)))));
+	public <EM extends Tree & ExtendedModifier> ConstructorDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<Parameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParams, name, params, throwsClause, body)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
@@ -60,12 +60,12 @@ public class ConstructorDecl extends Decl implements Member {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public NodeList<TypeParameter> typeParameters() {
+	public NodeList<TypeParameter> typeParams() {
 		return location.nodeChild(TYPE_PARAMETERS);
 	}
 
-	public ConstructorDecl withTypeParameters(NodeList<TypeParameter> typeParameters) {
-		return location.nodeWithChild(TYPE_PARAMETERS, typeParameters);
+	public ConstructorDecl withTypeParams(NodeList<TypeParameter> typeParams) {
+		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
 	public Name name() {
@@ -76,12 +76,12 @@ public class ConstructorDecl extends Decl implements Member {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public NodeList<Parameter> parameters() {
+	public NodeList<Parameter> params() {
 		return location.nodeChild(PARAMETERS);
 	}
 
-	public ConstructorDecl withParameters(NodeList<Parameter> parameters) {
-		return location.nodeWithChild(PARAMETERS, parameters);
+	public ConstructorDecl withParams(NodeList<Parameter> params) {
+		return location.nodeWithChild(PARAMETERS, params);
 	}
 
 	public NodeList<QualifiedType> throwsClause() {

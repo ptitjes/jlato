@@ -47,8 +47,8 @@ public class InterfaceDecl extends TypeDecl implements TopLevel, Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> InterfaceDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParameters, NodeList<QualifiedType> extendsClause, NodeList<M> members) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, typeParameters, extendsClause, members)))));
+	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> InterfaceDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParams, NodeList<QualifiedType> extendsClause, NodeList<M> members) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, typeParams, extendsClause, members)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
@@ -71,12 +71,12 @@ public class InterfaceDecl extends TypeDecl implements TopLevel, Member {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public NodeList<TypeParameter> typeParameters() {
+	public NodeList<TypeParameter> typeParams() {
 		return location.nodeChild(TYPE_PARAMETERS);
 	}
 
-	public InterfaceDecl withTypeParameters(NodeList<TypeParameter> typeParameters) {
-		return location.nodeWithChild(TYPE_PARAMETERS, typeParameters);
+	public InterfaceDecl withTypeParams(NodeList<TypeParameter> typeParams) {
+		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
 	public NodeList<QualifiedType> extendsClause() {

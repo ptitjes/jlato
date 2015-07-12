@@ -48,8 +48,8 @@ public class ArrayCreationExpr extends Expr {
 		super(location);
 	}
 
-	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimensionExpressions, NodeList<ArrayDim> dimensions, ArrayInitializerExpr initializer) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(type, dimensionExpressions, dimensions, initializer)))));
+	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, ArrayInitializerExpr initializer) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(type, dimExprs, dims, initializer)))));
 	}
 
 	public Type type() {
@@ -60,27 +60,27 @@ public class ArrayCreationExpr extends Expr {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public NodeList<ArrayDimExpr> dimensionExpressions() {
+	public NodeList<ArrayDimExpr> dimExprs() {
 		return location.nodeChild(DIMENSION_EXPRESSIONS);
 	}
 
-	public ArrayCreationExpr withDimensionExpressions(NodeList<ArrayDimExpr> dimensionExpressions) {
-		return location.nodeWithChild(DIMENSION_EXPRESSIONS, dimensionExpressions);
+	public ArrayCreationExpr withDimExprs(NodeList<ArrayDimExpr> dimExprs) {
+		return location.nodeWithChild(DIMENSION_EXPRESSIONS, dimExprs);
 	}
 
-	public NodeList<ArrayDim> dimensions() {
+	public NodeList<ArrayDim> dims() {
 		return location.nodeChild(DIMENSIONS);
 	}
 
-	public ArrayCreationExpr withDimensions(NodeList<ArrayDim> dimensions) {
-		return location.nodeWithChild(DIMENSIONS, dimensions);
+	public ArrayCreationExpr withDims(NodeList<ArrayDim> dims) {
+		return location.nodeWithChild(DIMENSIONS, dims);
 	}
 
-	public ArrayInitializerExpr initializer() {
+	public ArrayInitializerExpr init() {
 		return location.nodeChild(INITIALIZER);
 	}
 
-	public ArrayCreationExpr withInitializer(ArrayInitializerExpr initializer) {
+	public ArrayCreationExpr withInit(ArrayInitializerExpr initializer) {
 		return location.nodeWithChild(INITIALIZER, initializer);
 	}
 

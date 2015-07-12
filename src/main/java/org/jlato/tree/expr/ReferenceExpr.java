@@ -48,8 +48,8 @@ public class ReferenceExpr extends Expr {
 		super(location);
 	}
 
-	public ReferenceExpr(Expr scope, NodeList<Type> typeArguments, Name identifier) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArguments, identifier)))));
+	public ReferenceExpr(Expr scope, NodeList<Type> typeArgs, Name name) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, name)))));
 	}
 
 	public Expr scope() {
@@ -60,30 +60,30 @@ public class ReferenceExpr extends Expr {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public NodeList<Type> typeArguments() {
+	public NodeList<Type> typeArgs() {
 		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
-	public ReferenceExpr withTypeArguments(NodeList<Type> typeArguments) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArguments);
+	public ReferenceExpr withTypeArgs(NodeList<Type> typeArgs) {
+		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
-	public Name identifier() {
-		return location.nodeChild(IDENTIFIER);
+	public Name name() {
+		return location.nodeChild(NAME);
 	}
 
-	public ReferenceExpr withIdentifier(Name identifier) {
-		return location.nodeWithChild(IDENTIFIER, identifier);
+	public ReferenceExpr withName(Name name) {
+		return location.nodeWithChild(NAME, name);
 	}
 
 	private static final int SCOPE = 0;
 	private static final int TYPE_ARGUMENTS = 1;
-	private static final int IDENTIFIER = 2;
+	private static final int NAME = 2;
 
 	public final static LexicalShape shape = composite(
 			child(SCOPE),
 			token(LToken.DoubleColon),
 			child(TYPE_ARGUMENTS, list(token(LToken.Less), token(LToken.Comma).withSpacingAfter(space()), token(LToken.Greater))),
-			child(IDENTIFIER)
+			child(NAME)
 	);
 }

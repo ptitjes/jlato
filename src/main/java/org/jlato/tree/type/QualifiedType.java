@@ -68,12 +68,12 @@ public class QualifiedType extends ReferenceType {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public NodeList<Type> typeArguments() {
+	public NodeList<Type> typeArgs() {
 		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
-	public QualifiedType withTypeArguments(NodeList<Type> typeArguments) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArguments);
+	public QualifiedType withTypeArgs(NodeList<Type> typeArgs) {
+		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
 	private static final int SCOPE = 1;
