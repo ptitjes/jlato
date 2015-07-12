@@ -8,10 +8,11 @@
 You first have to create a `Parser` object:
 
 ```java
-final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(preserveWhitespaces));
+final Parser parser = new Parser();
 ```
 
-Then parsing is just a matter of calling the `parse(...)` method with the appropriate reader, file or input-stream and encoding.
+Then, parsing is just a matter of calling the `parse(...)` method with the appropriate reader, file or input-stream and
+encoding.
 
 ```java
 final File sourceFile = new File("<path-to-java-source-file>.java");
@@ -25,11 +26,11 @@ whitespace preservation.
 
 ```java
 final Parser parser = new Parser(
-		ParserConfiguration.Default.preserveWhitespaces(preserveWhitespaces));
+		ParserConfiguration.Default.preserveWhitespaces(true));
 ```
 
-The `Parser` class also provide a finer-grain `parse(...)` method that accept a `ParseContext` object. For instance, you
-can parse an expression:
+The `Parser` class also provides a finer-grain `parse(...)` method that accepts a `ParseContext` object. For instance,
+you can parse an expression:
 
 ```java
 final String exprString = "x -> x + x";
@@ -56,6 +57,8 @@ The `Printer` class also propose static helper methods:
 String formatted = Printer.printToString(tree);
 ```
 
+Please refer to the JavaDoc of `Printer` for more variants of the static helper methods.
+
 ### Customization
 
 A `Printer` can be instantiated with an additional boolean flag to enable formatting of existing nodes and a
@@ -73,10 +76,11 @@ JavaDoc of `FormattingSettings` for further customization.
 
 ## Abstract Syntax Tree Manipulation
 
-Every abstract syntax tree objects derive from the base `Tree` class and obeys common design rules.
+Every abstract syntax tree objects derive from the base `Tree` class and obey the same common design rules.
 
-For each property `prop` of a `Tree` subclass is provided an accessor `prop()` and a mutator `withProp(...)`. For
-instance, the `ImportDecl` class provide the following accessor and mutator for its properties:
+For each property `prop` of a `Tree` subclass is provided an accessor `prop()` and a mutator `withProp(...)` (or
+`isProp()` and `setProp(...)` for boolean properties). For instance, the `ImportDecl` class provide the following
+accessors and mutators for its properties:
 
 ```java
 public QualifiedName name();
@@ -93,7 +97,7 @@ Thus you can modify an `ImportDecl` in the following way:
 final ImportDecl decl = new ImportDecl(QualifiedName.of("org.jlato.tree"), false, true);
 Assert.assertEquals("import org.jlato.tree.*;", Printer.printToString(decl));
 
-final ImportDecl newDecl = decl.withName(new QualifiedName(decl.name(), "Tree"))
+final ImportDecl newDecl = decl.withName(new QualifiedName(decl.name(), new Name("Tree")))
                                .setOnDemand(false);
 Assert.assertEquals("import org.jlato.tree.Tree;", Printer.printToString(newDecl));
 ```
@@ -111,5 +115,5 @@ final ImportDecl newImportDecl = anImportDecl.withName(QualifiedName.of("com.acm
                                              .setOnDemand(false);
 
 final CompilationUnit newCU = (CompilationUnit) newImportDecl.root();
-Assert.assertEquals("import com.acme.MyClass;", Printer.printToString(newCU.imports().get(0));
+Assert.assertEquals("import com.acme.MyClass;", Printer.printToString(newCU.imports().get(0)));
 ```
