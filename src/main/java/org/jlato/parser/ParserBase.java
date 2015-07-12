@@ -60,10 +60,9 @@ public abstract class ParserBase {
 	private Stack<IndexedList<IndexedList<LToken>>> runStack = new Stack<IndexedList<IndexedList<LToken>>>();
 	private Token lastProcessedToken;
 
-	{
-		runStack.push(Vector.<IndexedList<LToken>>empty()
-				.append(Vector.<LToken>empty()
-						.append(new LToken(ParserImplConstants.MULTI_LINE_COMMENT, "/*error*/"))));
+	protected void reset() {
+		lastProcessedToken = null;
+		runStack.clear();
 	}
 
 	protected void run() {

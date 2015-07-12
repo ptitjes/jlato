@@ -24,15 +24,10 @@ import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.*;
-import org.jlato.tree.type.ClassOrInterfaceType;
+import org.jlato.tree.type.QualifiedType;
 
-import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
-import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
-import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
 public class ObjectCreationExpr extends Expr {
 
@@ -50,7 +45,7 @@ public class ObjectCreationExpr extends Expr {
 		super(location);
 	}
 
-	public ObjectCreationExpr(Expr scope, ClassOrInterfaceType type, NodeList<Type> typeArgs, NodeList<Expr> args, NodeList<Decl> anonymousClassBody) {
+	public ObjectCreationExpr(Expr scope, QualifiedType type, NodeList<Type> typeArgs, NodeList<Expr> args, NodeList<Decl> anonymousClassBody) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(scope, type, typeArgs, args, anonymousClassBody)))));
 	}
 
@@ -62,11 +57,11 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public ClassOrInterfaceType type() {
+	public QualifiedType type() {
 		return location.nodeChild(TYPE);
 	}
 
-	public ObjectCreationExpr withType(ClassOrInterfaceType type) {
+	public ObjectCreationExpr withType(QualifiedType type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 

@@ -11,7 +11,7 @@
       annotations: [
       ],
       componentType: {
-        class: org.jlato.tree.type.ClassOrInterfaceType,
+        class: org.jlato.tree.type.QualifiedType,
         annotations: [
         ],
         name: String,

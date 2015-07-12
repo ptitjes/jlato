@@ -25,7 +25,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
-import org.jlato.tree.name.QName;
+import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
@@ -48,15 +48,15 @@ public class ImportDecl extends Tree {
 		super(location);
 	}
 
-	public ImportDecl(QName name, boolean isStatic, boolean isOnDemand) {
+	public ImportDecl(QualifiedName name, boolean isStatic, boolean isOnDemand) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(name), dataOf(isStatic, isOnDemand)))));
 	}
 
-	public QName name() {
+	public QualifiedName name() {
 		return location.nodeChild(NAME);
 	}
 
-	public ImportDecl withName(QName name) {
+	public ImportDecl withName(QualifiedName name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

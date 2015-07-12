@@ -27,7 +27,7 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
-import org.jlato.tree.name.QName;
+import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
@@ -47,7 +47,7 @@ public class PackageDecl extends Tree {
 		super(location);
 	}
 
-	public PackageDecl(NodeList<AnnotationExpr> annotations, QName name) {
+	public PackageDecl(NodeList<AnnotationExpr> annotations, QualifiedName name) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(annotations, name)))));
 	}
 
@@ -59,11 +59,11 @@ public class PackageDecl extends Tree {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
-	public QName name() {
+	public QualifiedName name() {
 		return location.nodeChild(NAME);
 	}
 
-	public PackageDecl withName(QName name) {
+	public PackageDecl withName(QualifiedName name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

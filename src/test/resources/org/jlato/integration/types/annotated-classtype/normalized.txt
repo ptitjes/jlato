@@ -1,5 +1,5 @@
 {
-  class: org.jlato.tree.type.ClassOrInterfaceType,
+  class: org.jlato.tree.type.QualifiedType,
   annotations: [
     {
       class: org.jlato.tree.expr.MarkerAnnotationExpr,

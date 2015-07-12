@@ -23,7 +23,7 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Expr;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.decl.ExtendedModifier;
-import org.jlato.tree.name.QName;
+import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.list;
 import static org.jlato.internal.shapes.LexicalShape.Factory.none;
@@ -36,11 +36,11 @@ public abstract class AnnotationExpr extends Expr implements ExtendedModifier {
 		super(location);
 	}
 
-	public QName name() {
+	public QualifiedName name() {
 		return location.nodeChild(NAME);
 	}
 
-	public AnnotationExpr withName(QName name) {
+	public AnnotationExpr withName(QualifiedName name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

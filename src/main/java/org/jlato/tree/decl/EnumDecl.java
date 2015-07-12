@@ -28,7 +28,7 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
-import org.jlato.tree.type.ClassOrInterfaceType;
+import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
@@ -53,7 +53,7 @@ public class EnumDecl extends TypeDecl implements TopLevel, Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> EnumDecl(NodeList<EM> modifiers, Name name, NodeList<ClassOrInterfaceType> implementsClause, NodeList<EnumConstantDecl> enumConstants, NodeList<M> members) {
+	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> EnumDecl(NodeList<EM> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, NodeList<M> members) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, name, implementsClause, enumConstants, members)))));
 	}
 
@@ -77,11 +77,11 @@ public class EnumDecl extends TypeDecl implements TopLevel, Member {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public NodeList<ClassOrInterfaceType> implementsClause() {
+	public NodeList<QualifiedType> implementsClause() {
 		return location.nodeChild(IMPLEMENTS_CLAUSE);
 	}
 
-	public EnumDecl withImplementsClause(NodeList<ClassOrInterfaceType> implementsClause) {
+	public EnumDecl withImplementsClause(NodeList<QualifiedType> implementsClause) {
 		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
@@ -111,7 +111,7 @@ public class EnumDecl extends TypeDecl implements TopLevel, Member {
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			token(LToken.Enum),
 			child(NAME),
-			child(IMPLEMENTS_CLAUSE, ClassOrInterfaceType.implementsClauseShape),
+			child(IMPLEMENTS_CLAUSE, QualifiedType.implementsClauseShape),
 			token(LToken.BraceLeft)
 					.withSpacingBefore(space())
 					.withIndentationAfter(indent(TYPE_BODY)),

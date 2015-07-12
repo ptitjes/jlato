@@ -21,13 +21,17 @@ package org.jlato.benchmark;
 
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
+import org.jlato.parser.ParserConfiguration;
 import org.jlato.tree.decl.CompilationUnit;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.FileNotFoundException;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -36,75 +40,42 @@ import java.io.InputStream;
 @RunWith(JUnit4.class)
 public class ParseTest {
 
-	public static final int WARM_UP = 10;
-	public static final int TOTAL = 1000;
+	public static final int WARM_UP = 4;
+	public static final int TOTAL = 10;
 	public static final String SAMPLES_DIR = "org/jlato/samples/";
+	private Timer parseTimer = new Timer();
+	private Timer printTimer = new Timer();
+
+	final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(false));
+//	final Printer printer = new Printer();
 
 	@Test
-	public void javaConcepts() throws ParseException, FileNotFoundException {
+	public void javaConcepts() throws ParseException, IOException {
 		benchmark(SAMPLES_DIR + "JavaConcepts.java");
-		memory(SAMPLES_DIR + "JavaConcepts.java");
 	}
 
+	@Ignore
 	@Test
-	public void randoopTest0() throws ParseException, FileNotFoundException {
+	public void randoopTest0() throws ParseException, IOException {
 		benchmark(SAMPLES_DIR + "RandoopTest0.java");
-		memory(SAMPLES_DIR + "RandoopTest0.java");
 	}
 
-	private void benchmark(String name) throws ParseException {
-		final InputStream inputStream = ClassLoader.getSystemResourceAsStream(name);
-		final Parser parser = new Parser();
-
-		final Timer timer = new Timer();
+	private void benchmark(String name) throws ParseException, IOException {
 
 		// Warming up
 		for (int i = 0; i < WARM_UP; i++) {
-			parse1000Times(inputStream, parser, timer);
+			parseAndPrint(name);
 		}
 
-		timer.reset();
+		parseTimer.reset();
+		printTimer.reset();
 		for (int i = 0; i < TOTAL; i++) {
-			parse1000Times(inputStream, parser, timer);
+			parseAndPrint(name);
 		}
 		System.out.println("Benchmark on " + name + " (" + TOTAL + " * 1000 iterations)");
-		System.out.println("  Average time: " + timer.time / TOTAL + " ms");
+		System.out.println("  Average parse time: " + parseTimer.time / (TOTAL * 1000) + " ms");
+		System.out.println("  Average print time: " + printTimer.time / (TOTAL * 1000) + " ms");
 	}
-
-	private void parse1000Times(InputStream inputStream, Parser parser, Timer timer) throws ParseException {
-		timer.start();
-		for (int i = 0; i < 1000; i++) {
-			final CompilationUnit cu = parser.parse(inputStream, "UTF-8");
-		}
-		timer.stop();
-	}
-
-	private void memory(String name) throws ParseException {
-		final InputStream inputStream = ClassLoader.getSystemResourceAsStream(name);
-		final Parser parser = new Parser();
-
-		long startFreeMemory = freeMemory();
-		final CompilationUnit cu = parser.parse(inputStream, "UTF-8");
-
-		double memory = startFreeMemory - freeMemory();
-
-		// To force not being gc'ed in case of compiler optimization
-		Assert.assertNotNull(cu);
-
-		System.out.println("Memory test on " + name);
-		System.out.println("  Average memory: " + memory / (1024 * 1024) + " MB");
-	}
-
-	private long freeMemory() {
-		runtime.gc();
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-		}
-		return runtime.freeMemory();
-	}
-
-	private static final Runtime runtime = Runtime.getRuntime();
 
 	static class Timer {
 		private long startTime;
@@ -121,5 +92,39 @@ public class ParseTest {
 		public void stop() {
 			time += System.currentTimeMillis() - startTime;
 		}
+	}
+
+	private void parseAndPrint(String name) throws ParseException, IOException {
+		parseTimer.start();
+		for (int i = 0; i < 1000; i++) {
+			final InputStream inputStream = ClassLoader.getSystemResourceAsStream(name);
+			final CompilationUnit cu = parser.parse(inputStream, "UTF-8");
+			inputStream.close();
+		}
+		parseTimer.stop();
+//		printTimer.start();
+//		Printer.printToString(cu, format, formattingSettings);
+//		printTimer.stop();
+	}
+
+	private String fileAsString(String name) throws IOException {
+		final InputStream inputStream = new FileInputStream(name);
+		return new String(readFully(inputStream), "UTF-8");
+	}
+
+	private String resourceAsString(String name) throws IOException {
+		final InputStream inputStream = ClassLoader.getSystemResourceAsStream(name);
+		return new String(readFully(inputStream), "UTF-8");
+	}
+
+	private byte[] readFully(InputStream inputStream)
+			throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] buffer = new byte[1024];
+		int length = 0;
+		while ((length = inputStream.read(buffer)) != -1) {
+			baos.write(buffer, 0, length);
+		}
+		return baos.toByteArray();
 	}
 }

@@ -75,7 +75,7 @@ public class BasicTest {
 	@Test
 	public void testPrinter() throws IOException, ParseException {
 		final String original = fileAsString("src/main/java/org/jlato/tree/Tree.java");
-		Assert.assertEquals(original, parseAndPrint(original, false, true, FormattingSettings.Default));
+		Assert.assertEquals(original, parseAndPrint(original, true, false, FormattingSettings.Default));
 	}
 
 	//	@Ignore

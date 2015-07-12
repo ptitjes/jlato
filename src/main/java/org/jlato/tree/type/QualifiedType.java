@@ -33,11 +33,11 @@ import org.jlato.tree.name.Name;
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
 
-public class ClassOrInterfaceType extends ReferenceType {
+public class QualifiedType extends ReferenceType {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
-		public ClassOrInterfaceType instantiate(SLocation location) {
-			return new ClassOrInterfaceType(location);
+		public QualifiedType instantiate(SLocation location) {
+			return new QualifiedType(location);
 		}
 
 		public LexicalShape shape() {
@@ -45,19 +45,19 @@ public class ClassOrInterfaceType extends ReferenceType {
 		}
 	};
 
-	private ClassOrInterfaceType(SLocation location) {
+	private QualifiedType(SLocation location) {
 		super(location);
 	}
 
-	public ClassOrInterfaceType(NodeList<AnnotationExpr> annotations, ClassOrInterfaceType scope, Name name, NodeList<Type> typeArgs) {
+	public QualifiedType(NodeList<AnnotationExpr> annotations, QualifiedType scope, Name name, NodeList<Type> typeArgs) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(annotations, scope, name, typeArgs)))));
 	}
 
-	public ClassOrInterfaceType scope() {
+	public QualifiedType scope() {
 		return location.nodeChild(SCOPE);
 	}
 
-	public ClassOrInterfaceType withScope(ClassOrInterfaceType scope) {
+	public QualifiedType withScope(QualifiedType scope) {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
@@ -65,7 +65,7 @@ public class ClassOrInterfaceType extends ReferenceType {
 		return location.nodeChild(NAME);
 	}
 
-	public ClassOrInterfaceType withName(Name name) {
+	public QualifiedType withName(Name name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -73,7 +73,7 @@ public class ClassOrInterfaceType extends ReferenceType {
 		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
-	public ClassOrInterfaceType withTypeArguments(NodeList<Type> typeArguments) {
+	public QualifiedType withTypeArguments(NodeList<Type> typeArguments) {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArguments);
 	}
 

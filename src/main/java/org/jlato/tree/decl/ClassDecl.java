@@ -22,20 +22,16 @@ package org.jlato.tree.decl;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Decl;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
-import org.jlato.tree.type.ClassOrInterfaceType;
+import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_BetweenTopLevelDecl;
 
 public class ClassDecl extends TypeDecl implements TopLevel, Member {
 
@@ -53,7 +49,7 @@ public class ClassDecl extends TypeDecl implements TopLevel, Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> ClassDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParameters, ClassOrInterfaceType extendsClause, NodeList<ClassOrInterfaceType> implementsClause, NodeList<M> members) {
+	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> ClassDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParameters, QualifiedType extendsClause, NodeList<QualifiedType> implementsClause, NodeList<M> members) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, name, typeParameters, extendsClause, implementsClause, members)))));
 	}
 
@@ -85,19 +81,19 @@ public class ClassDecl extends TypeDecl implements TopLevel, Member {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParameters);
 	}
 
-	public ClassOrInterfaceType extendsClause() {
+	public QualifiedType extendsClause() {
 		return location.nodeChild(EXTENDS_CLAUSE);
 	}
 
-	public ClassDecl withExtendsClause(ClassOrInterfaceType extendsClause) {
+	public ClassDecl withExtendsClause(QualifiedType extendsClause) {
 		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
-	public NodeList<ClassOrInterfaceType> implementsClause() {
+	public NodeList<QualifiedType> implementsClause() {
 		return location.nodeChild(IMPLEMENTS_CLAUSE);
 	}
 
-	public ClassDecl withImplementsClause(NodeList<ClassOrInterfaceType> implementsClause) {
+	public ClassDecl withImplementsClause(NodeList<QualifiedType> implementsClause) {
 		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
@@ -125,7 +121,7 @@ public class ClassDecl extends TypeDecl implements TopLevel, Member {
 					token(LToken.Extends).withSpacing(space(), space()),
 					defaultShape()
 			)),
-			child(IMPLEMENTS_CLAUSE, ClassOrInterfaceType.implementsClauseShape),
+			child(IMPLEMENTS_CLAUSE, QualifiedType.implementsClauseShape),
 			child(MEMBERS, Decl.bodyShape)
 	);
 }

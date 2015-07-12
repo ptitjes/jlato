@@ -28,7 +28,7 @@ import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
-import org.jlato.tree.type.ClassOrInterfaceType;
+import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
@@ -49,7 +49,7 @@ public class ConstructorDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ConstructorDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParameters, Name name, NodeList<Parameter> parameters, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt body) {
+	public <EM extends Tree & ExtendedModifier> ConstructorDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParameters, Name name, NodeList<Parameter> parameters, NodeList<QualifiedType> throwsClause, BlockStmt body) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, typeParameters, name, parameters, throwsClause, body)))));
 	}
 
@@ -85,11 +85,11 @@ public class ConstructorDecl extends Decl implements Member {
 		return location.nodeWithChild(PARAMETERS, parameters);
 	}
 
-	public NodeList<ClassOrInterfaceType> throwsClause() {
+	public NodeList<QualifiedType> throwsClause() {
 		return location.nodeChild(THROWS_CLAUSE);
 	}
 
-	public ConstructorDecl withThrowsClause(NodeList<ClassOrInterfaceType> throwsClause) {
+	public ConstructorDecl withThrowsClause(NodeList<QualifiedType> throwsClause) {
 		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
 	}
 
@@ -113,7 +113,7 @@ public class ConstructorDecl extends Decl implements Member {
 			child(TYPE_PARAMETERS, TypeParameter.listShape),
 			child(NAME),
 			child(PARAMETERS, Parameter.listShape),
-			child(THROWS_CLAUSE, ClassOrInterfaceType.throwsClauseShape),
+			child(THROWS_CLAUSE, QualifiedType.throwsClauseShape),
 			none().withSpacing(space()), child(BODY)
 	);
 }

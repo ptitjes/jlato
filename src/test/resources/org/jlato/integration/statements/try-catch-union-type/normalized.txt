@@ -28,14 +28,14 @@
           class: org.jlato.tree.type.UnionType,
           types: [
             {
-              class: org.jlato.tree.type.ClassOrInterfaceType,
+              class: org.jlato.tree.type.QualifiedType,
               annotations: null,
               name: Exception1,
               scope: null,
               typeArgs: null,
             },
             {
-              class: org.jlato.tree.type.ClassOrInterfaceType,
+              class: org.jlato.tree.type.QualifiedType,
               annotations: null,
               name: Exception2,
               scope: null,

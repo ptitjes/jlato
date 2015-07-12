@@ -22,7 +22,7 @@ package org.jlato.integration.utils;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
-import org.jlato.tree.name.QName;
+import org.jlato.tree.name.QualifiedName;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -131,7 +131,7 @@ public class NormalizedJsonWriter {
 					String.class.isAssignableFrom(valueClass) ||
 					Enum.class.isAssignableFrom(valueClass) ||
 					Name.class.isAssignableFrom(valueClass) ||
-					QName.class.isAssignableFrom(valueClass)) {
+					QualifiedName.class.isAssignableFrom(valueClass)) {
 				builder.append(value.toString());
 			} else if (NodeList.class.isAssignableFrom(valueClass)) {
 				NodeList<?> list = (NodeList<?>) value;

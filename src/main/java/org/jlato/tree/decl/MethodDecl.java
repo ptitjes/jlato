@@ -26,7 +26,7 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.*;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
-import org.jlato.tree.type.ClassOrInterfaceType;
+import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
@@ -47,7 +47,7 @@ public class MethodDecl extends Decl implements Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParameters, Type type, Name name, NodeList<Parameter> parameters, NodeList<ArrayDim> dimensions, NodeList<ClassOrInterfaceType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
+	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParameters, Type type, Name name, NodeList<Parameter> parameters, NodeList<ArrayDim> dimensions, NodeList<QualifiedType> throwsClause, BlockStmt body/*, JavadocComment javadocComment*/) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, typeParameters, type, name, parameters, dimensions, throwsClause, body/*, javadocComment*/)))));
 	}
 
@@ -99,11 +99,11 @@ public class MethodDecl extends Decl implements Member {
 		return location.nodeWithChild(DIMENSIONS, dimensions);
 	}
 
-	public NodeList<ClassOrInterfaceType> throwsClause() {
+	public NodeList<QualifiedType> throwsClause() {
 		return location.nodeChild(THROWS_CLAUSE);
 	}
 
-	public ConstructorDecl withThrowsClause(NodeList<ClassOrInterfaceType> throwsClause) {
+	public ConstructorDecl withThrowsClause(NodeList<QualifiedType> throwsClause) {
 		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
 	}
 
@@ -132,7 +132,7 @@ public class MethodDecl extends Decl implements Member {
 			child(NAME),
 			child(PARAMETERS, Parameter.listShape),
 			child(DIMENSIONS, ArrayDim.listShape),
-			child(THROWS_CLAUSE, ClassOrInterfaceType.throwsClauseShape),
+			child(THROWS_CLAUSE, QualifiedType.throwsClauseShape),
 			nonNullChild(BODY,
 					composite(none().withSpacing(space()), child(BODY)),
 					token(LToken.SemiColon)

@@ -28,11 +28,11 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
-public class QName extends Tree {
+public class QualifiedName extends Tree {
 
 	public final static Kind kind = new Kind() {
-		public QName instantiate(SLocation location) {
-			return new QName(location);
+		public QualifiedName instantiate(SLocation location) {
+			return new QualifiedName(location);
 		}
 
 		public LexicalShape shape() {
@@ -40,28 +40,28 @@ public class QName extends Tree {
 		}
 	};
 
-	public static QName of(String nameString) {
+	public static QualifiedName of(String nameString) {
 		final String[] split = nameString.split("\\.");
-		QName name = null;
+		QualifiedName name = null;
 		for (String part : split) {
-			name = new QName(name, new Name(part));
+			name = new QualifiedName(name, new Name(part));
 		}
 		return name;
 	}
 
-	private QName(SLocation location) {
+	private QualifiedName(SLocation location) {
 		super(location);
 	}
 
-	public QName(QName qualifier, Name name) {
+	public QualifiedName(QualifiedName qualifier, Name name) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(qualifier, name)))));
 	}
 
-	public QName qualifier() {
+	public QualifiedName qualifier() {
 		return location.nodeChild(QUALIFIER);
 	}
 
-	public QName withQualifier(QName qualifier) {
+	public QualifiedName withQualifier(QualifiedName qualifier) {
 		return location.nodeWithChild(QUALIFIER, qualifier);
 	}
 
@@ -69,7 +69,7 @@ public class QName extends Tree {
 		return location.nodeChild(NAME);
 	}
 
-	public QName withName(Name name) {
+	public QualifiedName withName(Name name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -79,7 +79,7 @@ public class QName extends Tree {
 
 	@Override
 	public String toString() {
-		final QName qualifier = qualifier();
+		final QualifiedName qualifier = qualifier();
 		final Name name = name();
 		return qualifier != null ? qualifier.toString() + "." + name.toString() : name.toString();
 	}

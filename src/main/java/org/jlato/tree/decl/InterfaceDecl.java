@@ -28,7 +28,7 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.SLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
-import org.jlato.tree.type.ClassOrInterfaceType;
+import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.LexicalShape.Factory.*;
 
@@ -48,7 +48,7 @@ public class InterfaceDecl extends TypeDecl implements TopLevel, Member {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> InterfaceDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParameters, NodeList<ClassOrInterfaceType> extendsClause, NodeList<M> members) {
+	public <EM extends Tree & ExtendedModifier, M extends Decl & Member> InterfaceDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParameters, NodeList<QualifiedType> extendsClause, NodeList<M> members) {
 		super(new SLocation(new SNode(kind, new SNodeState(treesOf(modifiers, name, typeParameters, extendsClause, members)))));
 	}
 
@@ -80,11 +80,11 @@ public class InterfaceDecl extends TypeDecl implements TopLevel, Member {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParameters);
 	}
 
-	public NodeList<ClassOrInterfaceType> extendsClause() {
+	public NodeList<QualifiedType> extendsClause() {
 		return location.nodeChild(EXTENDS_CLAUSE);
 	}
 
-	public InterfaceDecl withExtendsClause(NodeList<ClassOrInterfaceType> extendsClause) {
+	public InterfaceDecl withExtendsClause(NodeList<QualifiedType> extendsClause) {
 		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
@@ -107,7 +107,7 @@ public class InterfaceDecl extends TypeDecl implements TopLevel, Member {
 			token(LToken.Interface),
 			child(NAME),
 			child(TYPE_PARAMETERS, TypeParameter.listShape),
-			child(EXTENDS_CLAUSE, ClassOrInterfaceType.extendsClauseShape),
+			child(EXTENDS_CLAUSE, QualifiedType.extendsClauseShape),
 			child(MEMBERS, Decl.bodyShape)
 	);
 }

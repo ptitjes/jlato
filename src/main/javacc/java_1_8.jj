@@ -74,10 +74,12 @@ final class ParserImpl extends ParserBase {
 
     void reset(InputStream inputStream, String encoding) {
         ReInit(inputStream, encoding);
+        reset();
     }
 
     void reset(Reader reader) {
         ReInit(reader);
+        reset();
     }
 
     private void throwParseException(Token token, String message) throws ParseException {
@@ -1148,12 +1150,12 @@ CompilationUnit CompilationUnit():
 PackageDecl PackageDecl():
 {
 	NodeList<AnnotationExpr> annotations = null;
-	QName name;
+	QualifiedName name;
 }
 {
   { run(); }
 
-  annotations = Annotations() "package" name = QName() ";"
+  annotations = Annotations() "package" name = QualifiedName() ";"
 
   { return enRun(new PackageDecl(annotations, name)); }
 }
@@ -1171,13 +1173,13 @@ NodeList ImportDecls():
 
 ImportDecl ImportDecl():
 {
-	QName name;
+	QualifiedName name;
 	boolean isStatic = false;
 	boolean isAsterisk = false;
 }
 {
   { run(); }
-  "import" [ "static" { isStatic = true; } ] name = QName() [ "." "*" { isAsterisk = true; } ] ";"
+  "import" [ "static" { isStatic = true; } ] name = QualifiedName() [ "." "*" { isAsterisk = true; } ] ";"
   { return enRun(new ImportDecl(name, isStatic, isAsterisk)); }
 }
 
@@ -1295,7 +1297,7 @@ TypeDecl ClassOrInterfaceDecl(NodeList modifiers):
     if (typeKind == TypeKind.Interface)
       return enRun(new InterfaceDecl(modifiers, name, typePar, extendsClause, members));
     else {
-      ClassOrInterfaceType superClassType = extendsClause == null || extendsClause.isEmpty() ? null : (ClassOrInterfaceType) extendsClause.get(0);
+      QualifiedType superClassType = extendsClause == null || extendsClause.isEmpty() ? null : (QualifiedType) extendsClause.get(0);
       return enRun(new ClassDecl(modifiers, name, typePar, superClassType, implementsClause, members));
     }
   }
@@ -1304,39 +1306,39 @@ TypeDecl ClassOrInterfaceDecl(NodeList modifiers):
 NodeList ExtendsList(TypeKind typeKind):
 {
    NodeList ret = new NodeList();
-   ClassOrInterfaceType cit;
+   QualifiedType cit;
    NodeList<AnnotationExpr> annotations = null;
 }
 {
   { run(); }
 
-  "extends" cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); }
-  ( "," cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); } )*
+  "extends" cit = AnnotatedQualifiedType() { ret = ret.append(cit); }
+  ( "," cit = AnnotatedQualifiedType() { ret = ret.append(cit); } )*
   {
     if (ret.size() > 1 && typeKind == TypeKind.Class)
       throwParseException(token, "A class cannot extend more than one other class");
   }
 
-  { return enRun(ret, ClassOrInterfaceType.extendsClauseShape); }
+  { return enRun(ret, QualifiedType.extendsClauseShape); }
 }
 
 NodeList ImplementsList(TypeKind typeKind):
 {
    NodeList ret = new NodeList();
-   ClassOrInterfaceType cit;
+   QualifiedType cit;
    NodeList<AnnotationExpr> annotations = null;
 }
 {
   { run(); }
 
-  "implements" cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); }
-  ( "," cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); } )*
+  "implements" cit = AnnotatedQualifiedType() { ret = ret.append(cit); }
+  ( "," cit = AnnotatedQualifiedType() { ret = ret.append(cit); } )*
   {
     if (typeKind == TypeKind.Interface)
       throwParseException(token, "An interface cannot implement other interfaces");
   }
 
-  { return enRun(ret, ClassOrInterfaceType.implementsClauseShape); }
+  { return enRun(ret, QualifiedType.implementsClauseShape); }
 }
 
 TypeDecl EnumDecl(NodeList modifiers):
@@ -1488,14 +1490,14 @@ TypeParameter TypeParameter():
 NodeList TypeBounds():
 {
 	NodeList ret = new NodeList();
-	ClassOrInterfaceType cit;
+	QualifiedType cit;
 	NodeList<AnnotationExpr> annotations = null;
 }
 {
   { run(); }
 
-  "extends" cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); }
-  ( "&" cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); } )*
+  "extends" cit = AnnotatedQualifiedType() { ret = ret.append(cit); }
+  ( "&" cit = AnnotatedQualifiedType() { ret = ret.append(cit); } )*
 
   { return enRun(ret, TypeParameter.boundsShape); }
 }
@@ -1749,15 +1751,15 @@ Parameter FormalParameter():
 NodeList ThrowsClause():
 {
    NodeList ret = new NodeList();
-   ClassOrInterfaceType cit;
+   QualifiedType cit;
 }
 {
   { run(); }
 
-  "throws" cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); }
-  ( "," cit = AnnotatedClassOrInterfaceType() { ret = ret.append(cit); } )*
+  "throws" cit = AnnotatedQualifiedType() { ret = ret.append(cit); }
+  ( "," cit = AnnotatedQualifiedType() { ret = ret.append(cit); } )*
 
-  { return enRun(ret, ClassOrInterfaceType.throwsClauseShape); }
+  { return enRun(ret, QualifiedType.throwsClauseShape); }
 }
 
 ConstructorDecl ConstructorDecl(NodeList modifiers):
@@ -1869,10 +1871,10 @@ ReferenceType ReferenceType(NodeList<AnnotationExpr> annotations):
   // Run may be started before annotations
 
   (
-    LOOKAHEAD( ( PrimitiveType() | ClassOrInterfaceType() ) ArrayDimsMandatory() )
+    LOOKAHEAD( ( PrimitiveType() | QualifiedType() ) ArrayDimsMandatory() )
     type = ArrayType(annotations)
   |
-    type = ClassOrInterfaceType(annotations)
+    type = QualifiedType(annotations)
   )
 
   { return type; }
@@ -1886,16 +1888,16 @@ ArrayType ArrayType(NodeList<AnnotationExpr> annotations):
 {
   // Run may be started before annotations
 
-  ( type = PrimitiveType(annotations) | type = ClassOrInterfaceType(annotations) )
+  ( type = PrimitiveType(annotations) | type = QualifiedType(annotations) )
   { lateRun(); }
   arrayDims = ArrayDimsMandatory()
 
   { return enRun(new ArrayType(annotations, type, arrayDims)); }
 }
 
-ClassOrInterfaceType ClassOrInterfaceType(NodeList<AnnotationExpr> annotations):
+QualifiedType QualifiedType(NodeList<AnnotationExpr> annotations):
 {
-	ClassOrInterfaceType ret;
+	QualifiedType ret;
 	Name name;
 	NodeList typeArgs = null;
 }
@@ -1905,13 +1907,13 @@ ClassOrInterfaceType ClassOrInterfaceType(NodeList<AnnotationExpr> annotations):
 
   name = Name()
   [ LOOKAHEAD(2) typeArgs = TypeArguments() ]
-  { ret = enRun(new ClassOrInterfaceType(annotations, null, name, typeArgs)); }
+  { ret = enRun(new QualifiedType(annotations, null, name, typeArgs)); }
   (
     LOOKAHEAD(2)
     { lateRun(); }
     "." annotations = Annotations() name = Name()
     [ LOOKAHEAD(2) typeArgs = TypeArguments() ]
-    { ret = enRun(new ClassOrInterfaceType(annotations, ret, name, typeArgs)); }
+    { ret = enRun(new QualifiedType(annotations, ret, name, typeArgs)); }
   )*
 
   { return ret; }
@@ -1997,29 +1999,29 @@ Type ResultType():
   { return ret; }
 }
 
-NodeList ClassOrInterfaceTypeList():
+NodeList QualifiedTypeList():
 {
 	NodeList ret = new NodeList();
-	ClassOrInterfaceType type;
+	QualifiedType type;
 	NodeList<AnnotationExpr> annotations= null;
 }
 {
   { run(); }
 
-  type = AnnotatedClassOrInterfaceType() { ret = ret.append(type); }
-  ( "," type = AnnotatedClassOrInterfaceType() { ret = ret.append(type); } )*
+  type = AnnotatedQualifiedType() { ret = ret.append(type); }
+  ( "," type = AnnotatedQualifiedType() { ret = ret.append(type); } )*
 
   { return enRun(ret); }
 }
 
-ClassOrInterfaceType AnnotatedClassOrInterfaceType():
+QualifiedType AnnotatedQualifiedType():
 {
     NodeList<AnnotationExpr> annotations;
-	ClassOrInterfaceType ret;
+	QualifiedType ret;
 }
 {
   { run(); }
-  annotations = Annotations() ret = ClassOrInterfaceType(annotations)
+  annotations = Annotations() ret = QualifiedType(annotations)
   { return ret; }
 }
 
@@ -2027,14 +2029,14 @@ ClassOrInterfaceType AnnotatedClassOrInterfaceType():
  * Names
  **********************************************************************************************************************/
 
-QName QName():
+QualifiedName QualifiedName():
 {
-	QName ret = null;
+	QualifiedName ret = null;
 	Name name;
 }
 {
-  { run(); } name = Name() { ret = enRun(new QName(ret, name)); }
-  ( LOOKAHEAD("." Name()) { lateRun(); } "." name = Name() { ret = enRun(new QName(ret, name)); } )*
+  { run(); } name = Name() { ret = enRun(new QualifiedName(ret, name)); }
+  ( LOOKAHEAD("." Name()) { lateRun(); } "." name = Name() { ret = enRun(new QualifiedName(ret, name)); } )*
   { return ret; }
 }
 
@@ -2663,12 +2665,12 @@ Expr AllocationExpression(Expr scope):
     type = PrimitiveType(annotations)
     ret = ArrayCreationExpr(type)
   |
-	type = ClassOrInterfaceType(annotations)
+	type = QualifiedType(annotations)
     (
 	  ret = ArrayCreationExpr(type)
 	|
 	  args = Arguments() [ LOOKAHEAD(2) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
-      { ret = enRun(new ObjectCreationExpr(scope, (ClassOrInterfaceType) type, typeArgs, args, anonymousBody)); }
+      { ret = enRun(new ObjectCreationExpr(scope, (QualifiedType) type, typeArgs, args, anonymousBody)); }
     )
   )
   { return ret; }
@@ -3136,11 +3138,11 @@ Parameter CatchFormalParameter():
   { run(); }
   modifiers = Modifiers()
 
-  exceptType = ClassOrInterfaceType(null) { exceptTypes = exceptTypes.append(exceptType); }
+  exceptType = QualifiedType(null) { exceptTypes = exceptTypes.append(exceptType); }
   [
     LOOKAHEAD("|")
     { lateRun(); }
-    ( "|" exceptType = AnnotatedClassOrInterfaceType() { exceptTypes = exceptTypes.append(exceptType); } )+
+    ( "|" exceptType = AnnotatedQualifiedType() { exceptTypes = exceptTypes.append(exceptType); } )+
     {
       exceptTypes = enRun(exceptTypes, Type.unionShape);
       exceptType = new UnionType(exceptTypes);
@@ -3212,13 +3214,13 @@ AnnotationExpr Annotation():
 }
 {
   (
-    LOOKAHEAD( "@" QName() "(" ( <IDENTIFIER> "=" | ")" ))
+    LOOKAHEAD( "@" QualifiedName() "(" ( <IDENTIFIER> "=" | ")" ))
     ret = NormalAnnotation()
   |
-    LOOKAHEAD( "@" QName() "(" )
+    LOOKAHEAD( "@" QualifiedName() "(" )
     ret = SingleMemberAnnotation()
   |
-    LOOKAHEAD( "@" QName() )
+    LOOKAHEAD( "@" QualifiedName() )
     ret = MarkerAnnotation()
   )
   { return ret; }
@@ -3226,33 +3228,33 @@ AnnotationExpr Annotation():
 
 NormalAnnotationExpr NormalAnnotation():
 {
-	QName name;
+	QualifiedName name;
 	NodeList pairs = null;
 }
 {
   { run(); }
-  "@" name = QName() "(" [ pairs = MemberValuePairs() ] ")"
+  "@" name = QualifiedName() "(" [ pairs = MemberValuePairs() ] ")"
   { return enRun(new NormalAnnotationExpr(name, pairs)); }
 }
 
 MarkerAnnotationExpr MarkerAnnotation():
 {
-	QName name;
+	QualifiedName name;
 }
 {
   { run(); }
-  "@" name = QName()
+  "@" name = QualifiedName()
   { return enRun(new MarkerAnnotationExpr(name)); }
 }
 
 SingleMemberAnnotationExpr SingleMemberAnnotation():
 {
-	QName name;
+	QualifiedName name;
 	Expr memberVal;
 }
 {
   { run(); }
-  "@" name = QName() "(" memberVal = MemberValue() ")"
+  "@" name = QualifiedName() "(" memberVal = MemberValue() ")"
   { return enRun(new SingleMemberAnnotationExpr(name, memberVal)); }
 }
 

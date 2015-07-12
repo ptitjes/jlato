@@ -1,5 +1,5 @@
 {
-  class: org.jlato.tree.type.ClassOrInterfaceType,
+  class: org.jlato.tree.type.QualifiedType,
   annotations: [
   ],
   name: T1,
@@ -14,7 +14,7 @@
         },
       ],
       ext: {
-        class: org.jlato.tree.type.ClassOrInterfaceType,
+        class: org.jlato.tree.type.QualifiedType,
         annotations: [
           {
             class: org.jlato.tree.expr.MarkerAnnotationExpr,
@@ -33,7 +33,7 @@
       ],
       ext: null,
       sup: {
-        class: org.jlato.tree.type.ClassOrInterfaceType,
+        class: org.jlato.tree.type.QualifiedType,
         annotations: [
           {
             class: org.jlato.tree.expr.MarkerAnnotationExpr,
