@@ -94,6 +94,8 @@ abstract class ParserBase {
 	}
 
 	private void pushWhitespace(IndexedList<LToken> whitespace) {
+		if (whitespace == null) return;
+
 		// TODO Handle root whitespace before first token
 		if (!runStack.isEmpty()) {
 			runStack.push(runStack.pop().append(whitespace));

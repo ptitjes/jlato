@@ -71,7 +71,6 @@ public class BasicTest {
 		);
 	}
 
-	@Ignore
 	@Test
 	public void testPrinter() throws IOException, ParseException {
 		final String original = fileAsString("src/main/java/org/jlato/tree/Tree.java");
