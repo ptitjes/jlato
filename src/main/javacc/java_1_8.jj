@@ -95,31 +95,6 @@ final class ParserImpl extends ParserBase {
         e.currentToken = token;
         throw e;
     }
-
-    private Expr generateLambda(Expr ret, Stmt lambdaBody) throws ParseException {
-/*	    if (ret instanceof ParenthesizedExpr) {
-	        Expr inner = ((ParenthesizedExpr) ret).getInner();
-	        if (inner != null && inner instanceof Name) {
-	            VariableDeclaratorId id = new VariableDeclaratorId(((Name)inner).getName(), 0);
-	       	    NodeList params = add(null, new FormalParameter(0, null, new UnknownType(), false, id));
-	            ret = new LambdaExpr(params, lambdaBody, true);
-	        } else {
-	            ret = new LambdaExpr(null, lambdaBody, true);
-	        }
-	    } else if (ret instanceof Name) {
-		    VariableDeclaratorId id = new VariableDeclaratorId(((Name)ret).getName(), 0);
-	        NodeList params = add(null, new FormalParameter(0, null, new UnknownType(), false, id));
-	        ret = new LambdaExpr(params, lambdaBody, false);
-	    } else if (ret instanceof LambdaExpr) {
-	        ((LambdaExpr) ret).setBody(lambdaBody);
-	        ret.setEndLine(lambdaBody.getEndLine());
-	        ret.setEndColumn(lambdaBody.getEndColumn());
-	    } else {
-	        throw new ParseException("Failed to parse lambda Expr! Please create an issue at https://github.com/javaparser/javaparser/issues");
-	    }
-	    return ret;*/
-	    return null;
-    }
 }
 
 PARSER_END(ParserImpl)
