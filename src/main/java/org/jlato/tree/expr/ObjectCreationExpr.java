@@ -49,8 +49,8 @@ public class ObjectCreationExpr extends Expr {
 		super(location);
 	}
 
-	public ObjectCreationExpr(Expr scope, QualifiedType type, NodeList<Type> typeArgs, NodeList<Expr> args, NodeList<Decl> anonymousClassBody) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, type, typeArgs, args, anonymousClassBody)))));
+	public ObjectCreationExpr(Expr scope, QualifiedType type, NodeList<Type> typeArgs, NodeList<Expr> args, NodeList<Decl> body) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, type, typeArgs, args, body)))));
 	}
 
 	public Expr scope() {
@@ -85,19 +85,19 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
-	public NodeList<Decl> anonymousClassBody() {
-		return location.nodeChild(ANONYMOUS_CLASS_BODY);
+	public NodeList<Decl> body() {
+		return location.nodeChild(BODY);
 	}
 
-	public ObjectCreationExpr withAnonymousClassBody(NodeList<Decl> anonymousClassBody) {
-		return location.nodeWithChild(ANONYMOUS_CLASS_BODY, anonymousClassBody);
+	public ObjectCreationExpr withBody(NodeList<Decl> body) {
+		return location.nodeWithChild(BODY, body);
 	}
 
 	private static final int SCOPE = 0;
 	private static final int TYPE = 1;
 	private static final int TYPE_ARGUMENTS = 2;
 	private static final int ARGUMENTS = 3;
-	private static final int ANONYMOUS_CLASS_BODY = 4;
+	private static final int BODY = 4;
 
 	public final static LexicalShape shape = composite(
 			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
@@ -105,8 +105,8 @@ public class ObjectCreationExpr extends Expr {
 			child(TYPE_ARGUMENTS, Type.typeArgumentsShape),
 			child(TYPE),
 			child(ARGUMENTS, Expr.argumentsShape),
-			nonNullChild(ANONYMOUS_CLASS_BODY,
-					child(ANONYMOUS_CLASS_BODY, Decl.bodyShape)
+			nonNullChild(BODY,
+					child(BODY, Decl.bodyShape)
 			)
 	);
 }
