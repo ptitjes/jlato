@@ -150,7 +150,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public NodeList<T> rewriteAll(Rewrite<T> rewrite) {
+	public NodeList<T> rewriteAll(Mutator<T> mutator) {
 		final STree tree = location.tree;
 
 		final SNodeListState state = (SNodeListState) tree.state;
@@ -159,7 +159,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 
 		Builder<STree, Vector<STree>> newTrees = Vector.<STree>factory().newBuilder();
 		for (int i = 0; i < trees.size(); i++) {
-			T rewrote = rewrite.rewrite(get(i));
+			T rewrote = mutator.mutate(get(i));
 			SLocation location = Tree.locationOf(rewrote);
 
 			// TODO Handle change in the node-list run (leading comments and trailing comment)

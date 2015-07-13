@@ -22,6 +22,6 @@ package org.jlato.tree;
 /**
  * @author Didier Villevalois
  */
-public interface Rewrite<T> {
-	T rewrite(T tree);
+public interface Mutator<T> {
+	T mutate(T tree);
 }

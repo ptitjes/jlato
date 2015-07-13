@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -63,7 +63,7 @@ public class SwitchCase extends Tree {
 		return location.nodeWithChild(LABEL, label);
 	}
 
-	public SwitchCase withLabel(Rewrite<Expr> label) {
+	public SwitchCase withLabel(Mutator<Expr> label) {
 		return location.nodeWithChild(LABEL, label);
 	}
 
@@ -75,7 +75,7 @@ public class SwitchCase extends Tree {
 		return location.nodeWithChild(STMTS, stmts);
 	}
 
-	public SwitchCase withStmts(Rewrite<NodeList<Stmt>> stmts) {
+	public SwitchCase withStmts(Mutator<NodeList<Stmt>> stmts) {
 		return location.nodeWithChild(STMTS, stmts);
 	}
 

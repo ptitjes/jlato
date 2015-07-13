@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
@@ -66,7 +66,7 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> EnumDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+	public <EM extends Tree & ExtendedModifier> EnumDecl withModifiers(Mutator<NodeList<EM>> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -82,7 +82,7 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public EnumDecl withName(Rewrite<Name> name) {
+	public EnumDecl withName(Mutator<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -94,7 +94,7 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
-	public EnumDecl withImplementsClause(Rewrite<NodeList<QualifiedType>> implementsClause) {
+	public EnumDecl withImplementsClause(Mutator<NodeList<QualifiedType>> implementsClause) {
 		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
@@ -106,7 +106,7 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(ENUM_CONSTANTS, enumConstants);
 	}
 
-	public EnumDecl withEnumConstants(Rewrite<NodeList<EnumConstantDecl>> enumConstants) {
+	public EnumDecl withEnumConstants(Mutator<NodeList<EnumConstantDecl>> enumConstants) {
 		return location.nodeWithChild(ENUM_CONSTANTS, enumConstants);
 	}
 
@@ -118,7 +118,7 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 
-	public EnumDecl withMembers(Rewrite<NodeList<MemberDecl>> members) {
+	public EnumDecl withMembers(Mutator<NodeList<MemberDecl>> members) {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 

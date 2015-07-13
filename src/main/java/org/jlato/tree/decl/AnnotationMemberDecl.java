@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
@@ -66,7 +66,7 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl withModifiers(Mutator<NodeList<EM>> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -78,7 +78,7 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public AnnotationMemberDecl withType(Rewrite<Type> type) {
+	public AnnotationMemberDecl withType(Mutator<Type> type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 
@@ -90,7 +90,7 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public AnnotationMemberDecl withName(Rewrite<Name> name) {
+	public AnnotationMemberDecl withName(Mutator<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -102,7 +102,7 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(DIMS, dims);
 	}
 
-	public VariableDeclaratorId withDims(Rewrite<NodeList<ArrayDim>> dims) {
+	public VariableDeclaratorId withDims(Mutator<NodeList<ArrayDim>> dims) {
 		return location.nodeWithChild(DIMS, dims);
 	}
 
@@ -114,7 +114,7 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(DEFAULT_VALUE, defaultValue);
 	}
 
-	public AnnotationMemberDecl withDefaultValue(Rewrite<Expr> defaultValue) {
+	public AnnotationMemberDecl withDefaultValue(Mutator<Expr> defaultValue) {
 		return location.nodeWithChild(DEFAULT_VALUE, defaultValue);
 	}
 

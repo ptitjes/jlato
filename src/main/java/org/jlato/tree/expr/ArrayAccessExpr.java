@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -57,7 +57,7 @@ public class ArrayAccessExpr extends Expr {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public ArrayAccessExpr withName(Rewrite<Expr> name) {
+	public ArrayAccessExpr withName(Mutator<Expr> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -69,7 +69,7 @@ public class ArrayAccessExpr extends Expr {
 		return location.nodeWithChild(INDEX, index);
 	}
 
-	public ArrayAccessExpr withIndex(Rewrite<Expr> index) {
+	public ArrayAccessExpr withIndex(Mutator<Expr> index) {
 		return location.nodeWithChild(INDEX, index);
 	}
 

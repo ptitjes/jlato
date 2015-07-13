@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
@@ -60,7 +60,7 @@ public class FormalParameter extends Tree {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> FormalParameter withModifiers(Rewrite<NodeList<EM>> modifiers) {
+	public <EM extends Tree & ExtendedModifier> FormalParameter withModifiers(Mutator<NodeList<EM>> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -72,7 +72,7 @@ public class FormalParameter extends Tree {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public FormalParameter withType(Rewrite<Type> type) {
+	public FormalParameter withType(Mutator<Type> type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 
@@ -92,7 +92,7 @@ public class FormalParameter extends Tree {
 		return location.nodeWithChild(ID, id);
 	}
 
-	public FormalParameter withId(Rewrite<VariableDeclaratorId> id) {
+	public FormalParameter withId(Mutator<VariableDeclaratorId> id) {
 		return location.nodeWithChild(ID, id);
 	}
 

@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.QualifiedName;
 
@@ -60,7 +60,7 @@ public class NormalAnnotationExpr extends AnnotationExpr {
 		return location.nodeWithChild(PAIRS, pairs);
 	}
 
-	public NormalAnnotationExpr withPairs(Rewrite<NodeList<MemberValuePair>> pairs) {
+	public NormalAnnotationExpr withPairs(Mutator<NodeList<MemberValuePair>> pairs) {
 		return location.nodeWithChild(PAIRS, pairs);
 	}
 

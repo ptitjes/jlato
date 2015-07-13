@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -64,7 +64,7 @@ public class SwitchStmt extends Stmt {
 		return location.nodeWithChild(SELECTOR, selector);
 	}
 
-	public SwitchStmt withSelector(Rewrite<Expr> selector) {
+	public SwitchStmt withSelector(Mutator<Expr> selector) {
 		return location.nodeWithChild(SELECTOR, selector);
 	}
 
@@ -76,7 +76,7 @@ public class SwitchStmt extends Stmt {
 		return location.nodeWithChild(CASES, cases);
 	}
 
-	public SwitchStmt withCases(Rewrite<NodeList<SwitchCase>> cases) {
+	public SwitchStmt withCases(Mutator<NodeList<SwitchCase>> cases) {
 		return location.nodeWithChild(CASES, cases);
 	}
 

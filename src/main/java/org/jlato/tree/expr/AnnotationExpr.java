@@ -21,7 +21,7 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.name.QualifiedName;
 
@@ -44,7 +44,7 @@ public abstract class AnnotationExpr extends Expr implements ExtendedModifier {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public AnnotationExpr withName(Rewrite<QualifiedName> name) {
+	public AnnotationExpr withName(Mutator<QualifiedName> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

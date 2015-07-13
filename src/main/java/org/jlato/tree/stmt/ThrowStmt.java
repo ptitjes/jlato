@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -58,7 +58,7 @@ public class ThrowStmt extends Stmt {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
-	public ThrowStmt withExpr(Rewrite<Expr> expr) {
+	public ThrowStmt withExpr(Mutator<Expr> expr) {
 		return location.nodeWithChild(EXPR, expr);
 	}
 

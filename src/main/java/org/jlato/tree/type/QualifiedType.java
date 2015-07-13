@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
@@ -61,7 +61,7 @@ public class QualifiedType extends ReferenceType {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public QualifiedType withScope(Rewrite<QualifiedType> scope) {
+	public QualifiedType withScope(Mutator<QualifiedType> scope) {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
@@ -73,7 +73,7 @@ public class QualifiedType extends ReferenceType {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public QualifiedType withName(Rewrite<Name> name) {
+	public QualifiedType withName(Mutator<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -85,7 +85,7 @@ public class QualifiedType extends ReferenceType {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
-	public QualifiedType withTypeArgs(Rewrite<NodeList<Type>> typeArgs) {
+	public QualifiedType withTypeArgs(Mutator<NodeList<Type>> typeArgs) {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 

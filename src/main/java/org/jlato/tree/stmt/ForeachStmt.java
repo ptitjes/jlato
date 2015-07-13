@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.VariableDeclarationExpr;
@@ -60,7 +60,7 @@ public class ForeachStmt extends Stmt {
 		return location.nodeWithChild(VAR, var);
 	}
 
-	public ForeachStmt withVar(Rewrite<VariableDeclarationExpr> var) {
+	public ForeachStmt withVar(Mutator<VariableDeclarationExpr> var) {
 		return location.nodeWithChild(VAR, var);
 	}
 
@@ -72,7 +72,7 @@ public class ForeachStmt extends Stmt {
 		return location.nodeWithChild(ITERABLE, iterable);
 	}
 
-	public ForeachStmt withIterable(Rewrite<Expr> iterable) {
+	public ForeachStmt withIterable(Mutator<Expr> iterable) {
 		return location.nodeWithChild(ITERABLE, iterable);
 	}
 
@@ -84,7 +84,7 @@ public class ForeachStmt extends Stmt {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public ForeachStmt withBody(Rewrite<Stmt> body) {
+	public ForeachStmt withBody(Mutator<Stmt> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 

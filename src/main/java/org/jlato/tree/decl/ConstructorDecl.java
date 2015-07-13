@@ -24,7 +24,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
@@ -66,7 +66,7 @@ public class ConstructorDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ConstructorDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+	public <EM extends Tree & ExtendedModifier> ConstructorDecl withModifiers(Mutator<NodeList<EM>> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -78,7 +78,7 @@ public class ConstructorDecl extends MemberDecl {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
-	public ConstructorDecl withTypeParams(Rewrite<NodeList<TypeParameter>> typeParams) {
+	public ConstructorDecl withTypeParams(Mutator<NodeList<TypeParameter>> typeParams) {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
@@ -90,7 +90,7 @@ public class ConstructorDecl extends MemberDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public ConstructorDecl withName(Rewrite<Name> name) {
+	public ConstructorDecl withName(Mutator<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -102,7 +102,7 @@ public class ConstructorDecl extends MemberDecl {
 		return location.nodeWithChild(PARAMETERS, params);
 	}
 
-	public ConstructorDecl withParams(Rewrite<NodeList<FormalParameter>> params) {
+	public ConstructorDecl withParams(Mutator<NodeList<FormalParameter>> params) {
 		return location.nodeWithChild(PARAMETERS, params);
 	}
 
@@ -114,7 +114,7 @@ public class ConstructorDecl extends MemberDecl {
 		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
 	}
 
-	public ConstructorDecl withThrowsClause(Rewrite<NodeList<QualifiedType>> throwsClause) {
+	public ConstructorDecl withThrowsClause(Mutator<NodeList<QualifiedType>> throwsClause) {
 		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
 	}
 
@@ -126,7 +126,7 @@ public class ConstructorDecl extends MemberDecl {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public ConstructorDecl withBody(Rewrite<BlockStmt> body) {
+	public ConstructorDecl withBody(Mutator<BlockStmt> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 

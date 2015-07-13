@@ -25,9 +25,8 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
-import org.jlato.tree.decl.Decl;
 import org.jlato.tree.decl.MemberDecl;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
@@ -63,7 +62,7 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public ObjectCreationExpr withScope(Rewrite<Expr> scope) {
+	public ObjectCreationExpr withScope(Mutator<Expr> scope) {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
@@ -75,7 +74,7 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
-	public ObjectCreationExpr withTypeArgs(Rewrite<NodeList<Type>> typeArgs) {
+	public ObjectCreationExpr withTypeArgs(Mutator<NodeList<Type>> typeArgs) {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
@@ -87,7 +86,7 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public ObjectCreationExpr withType(Rewrite<QualifiedType> type) {
+	public ObjectCreationExpr withType(Mutator<QualifiedType> type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 
@@ -99,7 +98,7 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
-	public ObjectCreationExpr withArgs(Rewrite<NodeList<Expr>> args) {
+	public ObjectCreationExpr withArgs(Mutator<NodeList<Expr>> args) {
 		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
@@ -111,7 +110,7 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public ObjectCreationExpr withBody(Rewrite<NodeList<MemberDecl>> body) {
+	public ObjectCreationExpr withBody(Mutator<NodeList<MemberDecl>> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 

@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
@@ -67,7 +67,7 @@ public class EnumConstantDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> EnumConstantDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+	public <EM extends Tree & ExtendedModifier> EnumConstantDecl withModifiers(Mutator<NodeList<EM>> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -79,7 +79,7 @@ public class EnumConstantDecl extends MemberDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public EnumConstantDecl withName(Rewrite<Name> name) {
+	public EnumConstantDecl withName(Mutator<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -91,7 +91,7 @@ public class EnumConstantDecl extends MemberDecl {
 		return location.nodeWithChild(ARGS, args);
 	}
 
-	public EnumConstantDecl withArgs(Rewrite<NodeList<Expr>> args) {
+	public EnumConstantDecl withArgs(Mutator<NodeList<Expr>> args) {
 		return location.nodeWithChild(ARGS, args);
 	}
 
@@ -103,7 +103,7 @@ public class EnumConstantDecl extends MemberDecl {
 		return location.nodeWithChild(CLASS_BODY, classBody);
 	}
 
-	public EnumConstantDecl withClassBody(Rewrite<NodeList<Decl>> classBody) {
+	public EnumConstantDecl withClassBody(Mutator<NodeList<Decl>> classBody) {
 		return location.nodeWithChild(CLASS_BODY, classBody);
 	}
 /*

@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
@@ -60,7 +60,7 @@ public class MethodInvocationExpr extends Expr {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public MethodInvocationExpr withScope(Rewrite<Expr> scope) {
+	public MethodInvocationExpr withScope(Mutator<Expr> scope) {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
@@ -72,7 +72,7 @@ public class MethodInvocationExpr extends Expr {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
-	public MethodInvocationExpr withTypeArgs(Rewrite<NodeList<Type>> typeArgs) {
+	public MethodInvocationExpr withTypeArgs(Mutator<NodeList<Type>> typeArgs) {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
@@ -84,7 +84,7 @@ public class MethodInvocationExpr extends Expr {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public MethodInvocationExpr withName(Rewrite<Name> name) {
+	public MethodInvocationExpr withName(Mutator<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -96,7 +96,7 @@ public class MethodInvocationExpr extends Expr {
 		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
-	public MethodInvocationExpr withArgs(Rewrite<NodeList<Expr>> args) {
+	public MethodInvocationExpr withArgs(Mutator<NodeList<Expr>> args) {
 		return location.nodeWithChild(ARGUMENTS, args);
 	}
 

@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -63,7 +63,7 @@ public class IfStmt extends Stmt {
 		return location.nodeWithChild(CONDITION, condition);
 	}
 
-	public IfStmt withCondition(Rewrite<Expr> condition) {
+	public IfStmt withCondition(Mutator<Expr> condition) {
 		return location.nodeWithChild(CONDITION, condition);
 	}
 
@@ -75,7 +75,7 @@ public class IfStmt extends Stmt {
 		return location.nodeWithChild(THEN_STMT, thenStmt);
 	}
 
-	public IfStmt withThenStmt(Rewrite<Stmt> thenStmt) {
+	public IfStmt withThenStmt(Mutator<Stmt> thenStmt) {
 		return location.nodeWithChild(THEN_STMT, thenStmt);
 	}
 
@@ -87,7 +87,7 @@ public class IfStmt extends Stmt {
 		return location.nodeWithChild(ELSE_STMT, elseStmt);
 	}
 
-	public IfStmt withElseStmt(Rewrite<Stmt> elseStmt) {
+	public IfStmt withElseStmt(Mutator<Stmt> elseStmt) {
 		return location.nodeWithChild(ELSE_STMT, elseStmt);
 	}
 

@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
@@ -61,7 +61,7 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ClassDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+	public <EM extends Tree & ExtendedModifier> ClassDecl withModifiers(Mutator<NodeList<EM>> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -77,7 +77,7 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public ClassDecl withName(Rewrite<Name> name) {
+	public ClassDecl withName(Mutator<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -89,7 +89,7 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
-	public ClassDecl withTypeParams(Rewrite<NodeList<TypeParameter>> typeParams) {
+	public ClassDecl withTypeParams(Mutator<NodeList<TypeParameter>> typeParams) {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
@@ -101,7 +101,7 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
-	public ClassDecl withExtendsClause(Rewrite<QualifiedType> extendsClause) {
+	public ClassDecl withExtendsClause(Mutator<QualifiedType> extendsClause) {
 		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
@@ -113,7 +113,7 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
-	public ClassDecl withImplementsClause(Rewrite<NodeList<QualifiedType>> implementsClause) {
+	public ClassDecl withImplementsClause(Mutator<NodeList<QualifiedType>> implementsClause) {
 		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
@@ -125,7 +125,7 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 
-	public ClassDecl withMembers(Rewrite<NodeList<MemberDecl>> members) {
+	public ClassDecl withMembers(Mutator<NodeList<MemberDecl>> members) {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 

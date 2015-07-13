@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Rewrite;
+import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
@@ -58,7 +58,7 @@ public class ContinueStmt extends Stmt {
 		return location.nodeWithChild(ID, id);
 	}
 
-	public ContinueStmt withId(Rewrite<Name> id) {
+	public ContinueStmt withId(Mutator<Name> id) {
 		return location.nodeWithChild(ID, id);
 	}
 
