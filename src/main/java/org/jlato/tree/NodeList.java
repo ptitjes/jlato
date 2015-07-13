@@ -19,6 +19,7 @@
 
 package org.jlato.tree;
 
+import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
@@ -146,6 +147,28 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		// If not last, count in the before shape
 		// If last, count in the missing separator shape
 		return run.insertBefore(index * 2 + (last ? 0 : 1), 2);
+	}
+
+	@SuppressWarnings("unchecked")
+	public NodeList<T> rewriteAll(Rewrite<T> rewrite) {
+		final STree tree = location.tree;
+
+		final SNodeListState state = (SNodeListState) tree.state;
+		final Vector<STree> trees = state.children;
+		if (trees.isEmpty()) return this;
+
+		Builder<STree, Vector<STree>> newTrees = Vector.<STree>factory().newBuilder();
+		for (STree child : trees) {
+			newTrees.add(doRewriteChild(child, rewrite));
+		}
+
+		STree newTree = tree.withState(state.withChildren(newTrees.build()));
+		return (NodeList<T>) location.withTree(newTree).facade;
+	}
+
+	@SuppressWarnings("unchecked")
+	private STree doRewriteChild(STree child, Rewrite<T> rewrite) {
+		return Tree.treeOf(rewrite.rewrite((T) child.asTree()));
 	}
 
 	public Iterator<T> iterator() {
