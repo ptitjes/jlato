@@ -57,7 +57,7 @@ public class WRunRun extends WRun {
 
 			WRun whitespace = elements.get(cutIndex);
 			IndexedList<WRun> left = elements.take(cutIndex);
-			IndexedList<WRun> right = elements.drop(cutIndex);
+			IndexedList<WRun> right = elements.drop(cutIndex + 1);
 
 			// Split the whitespace run
 			// TODO Implement splitting the whitespaces with user involvement ?
