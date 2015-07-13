@@ -20,9 +20,7 @@
 package org.jlato.printer;
 
 import org.jlato.internal.bu.*;
-import org.jlato.internal.shapes.IndentationConstraint;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.shapes.SpacingConstraint;
 import org.jlato.parser.ParserImplConstants;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;

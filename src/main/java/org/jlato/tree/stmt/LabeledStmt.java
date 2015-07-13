@@ -28,10 +28,10 @@ import org.jlato.printer.FormattingSettings.IndentationContext;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
-import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
-import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
+import static org.jlato.printer.IndentationConstraint.indent;
+import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
+import static org.jlato.printer.SpacingConstraint.spacing;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.LabeledStmt_AfterLabel;
 
 public class LabeledStmt extends Stmt {

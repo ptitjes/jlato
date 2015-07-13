@@ -27,10 +27,10 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
-import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
-import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
+import static org.jlato.printer.IndentationConstraint.indent;
+import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
+import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 
 public class BlockStmt extends Stmt {

@@ -17,11 +17,9 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.internal.shapes;
+package org.jlato.printer;
 
-import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.FormattingSettings.SpacingLocation;
-import org.jlato.printer.Spacing;
 
 /**
  * @author Didier Villevalois
@@ -32,23 +30,20 @@ public abstract class SpacingConstraint {
 
 	// TODO add context argument (Expression, Statement, Block, Declaration, ...) ??
 
-	public static class Factory {
+	public static SpacingConstraint empty() {
+		return new FixedConstraint(Spacing.noSpace);
+	}
 
-		public static SpacingConstraint empty() {
-			return new FixedConstraint(Spacing.noSpace);
-		}
+	public static SpacingConstraint space() {
+		return spacing(SpacingLocation.DefaultSpace);
+	}
 
-		public static SpacingConstraint space() {
-			return spacing(SpacingLocation.DefaultSpace);
-		}
+	public static SpacingConstraint newLine() {
+		return spacing(SpacingLocation.DefaultNewLine);
+	}
 
-		public static SpacingConstraint newLine() {
-			return spacing(SpacingLocation.DefaultNewLine);
-		}
-
-		public static SpacingConstraint spacing(final SpacingLocation location) {
-			return new LocationBasedConstraint(location);
-		}
+	public static SpacingConstraint spacing(final SpacingLocation location) {
+		return new LocationBasedConstraint(location);
 	}
 
 	private static class FixedConstraint extends SpacingConstraint {

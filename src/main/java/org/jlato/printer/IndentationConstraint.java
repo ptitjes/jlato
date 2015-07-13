@@ -17,9 +17,8 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.internal.shapes;
+package org.jlato.printer;
 
-import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.FormattingSettings.IndentationContext;
 
 /**
@@ -31,15 +30,12 @@ public abstract class IndentationConstraint {
 
 	// TODO add context argument (Expression, Statement, Block, Declaration, ...) ??
 
-	public static class Factory {
+	public static IndentationConstraint indent(IndentationContext context) {
+		return new ContextBasedConstraint(context, +1);
+	}
 
-		public static IndentationConstraint indent(IndentationContext context) {
-			return new ContextBasedConstraint(context, +1);
-		}
-
-		public static IndentationConstraint unIndent(IndentationContext context) {
-			return new ContextBasedConstraint(context, -1);
-		}
+	public static IndentationConstraint unIndent(IndentationContext context) {
+		return new ContextBasedConstraint(context, -1);
 	}
 
 	private static class ContextBasedConstraint extends IndentationConstraint {

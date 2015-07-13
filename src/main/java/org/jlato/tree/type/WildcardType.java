@@ -29,7 +29,7 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public class WildcardType extends AnnotatedType {
 

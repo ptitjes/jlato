@@ -27,7 +27,7 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.token;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public abstract class Type extends Tree implements Modifiable<Type> {
 

@@ -26,7 +26,7 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.none;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
+import static org.jlato.printer.SpacingConstraint.newLine;
 
 /**
  * @author Didier Villevalois

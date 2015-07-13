@@ -24,7 +24,7 @@ import org.jlato.internal.td.SLocation;
 
 import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.none;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
+import static org.jlato.printer.SpacingConstraint.spacing;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_BetweenTopLevelDecl;
 
 public abstract class TypeDecl extends MemberDecl {

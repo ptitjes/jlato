@@ -29,10 +29,10 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 
-import static org.jlato.internal.shapes.IndentationConstraint.Factory.indent;
-import static org.jlato.internal.shapes.IndentationConstraint.Factory.unIndent;
+import static org.jlato.printer.IndentationConstraint.indent;
+import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.*;
+import static org.jlato.printer.SpacingConstraint.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_AfterConstants;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_BetweenConstants;

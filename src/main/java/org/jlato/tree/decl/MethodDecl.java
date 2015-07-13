@@ -33,7 +33,7 @@ import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public class MethodDecl extends MemberDecl {
 

@@ -23,8 +23,8 @@ import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.newLine;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+import static org.jlato.printer.SpacingConstraint.newLine;
+import static org.jlato.printer.SpacingConstraint.space;
 
 /**
  * @author Didier Villevalois

@@ -22,7 +22,9 @@ package org.jlato.internal.shapes;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
+import org.jlato.printer.IndentationConstraint;
 import org.jlato.printer.Printer;
+import org.jlato.printer.SpacingConstraint;
 
 import java.util.Iterator;
 

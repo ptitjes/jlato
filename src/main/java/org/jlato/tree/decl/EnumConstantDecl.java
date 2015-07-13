@@ -30,7 +30,7 @@ import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.spacing;
+import static org.jlato.printer.SpacingConstraint.spacing;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
 public class EnumConstantDecl extends MemberDecl {

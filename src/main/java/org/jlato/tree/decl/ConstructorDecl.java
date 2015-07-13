@@ -30,7 +30,7 @@ import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.Factory.space;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public class ConstructorDecl extends MemberDecl {
 
