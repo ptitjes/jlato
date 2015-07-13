@@ -17,32 +17,10 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.internal.shapes;
-
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.WRun;
-import org.jlato.printer.Printer;
-
-import java.util.Iterator;
+package org.jlato.internal.bu;
 
 /**
  * @author Didier Villevalois
  */
-public final class LSNone extends LexicalShape {
-
-	public LSNone() {
-	}
-
-	@Override
-	public boolean isDefined(STree tree) {
-		return false;
-	}
-
-	@Override
-	public WRun enRun(STree tree, Iterator<WRun> tokenIterator) {
-		return null;
-	}
-
-	public void render(STree tree, WRun run, Printer printer) {
-	}
+public class WElement {
 }

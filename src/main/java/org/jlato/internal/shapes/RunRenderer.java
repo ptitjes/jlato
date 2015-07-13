@@ -19,12 +19,10 @@
 
 package org.jlato.internal.shapes;
 
-import com.github.andrewoma.dexx.collection.IndexedList;
-import org.jlato.internal.bu.LRun;
-import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.WElement;
+import org.jlato.internal.bu.WRun;
 import org.jlato.printer.Printer;
-import org.jlato.printer.Spacing;
 
 import java.util.Iterator;
 
@@ -33,25 +31,22 @@ import java.util.Iterator;
  */
 public class RunRenderer {
 
-	private final Iterator<LRun> subRunIterator;
-	private final Iterator<IndexedList<LToken>> whitespaceIterator;
+	private final Iterator<WElement> elements;
 
 	private boolean firstShape = true;
 
-	public RunRenderer(LRun run) {
-		subRunIterator = run == null ? null : run.subRuns.iterator();
-		whitespaceIterator = run == null ? null : run.whitespaces.iterator();
+	public RunRenderer(WRun run) {
+		elements = run == null ? null : run.elements.iterator();
 	}
 
 	public void renderNext(LexicalShape shape, STree tree, Printer printer) {
-		final LRun subRun = safeNext(subRunIterator);
-
 		if (firstShape) firstShape = false;
 		else {
-			final IndexedList<LToken> tokens = safeNext(whitespaceIterator);
+			final WRun tokens = (WRun) safeNext(elements);
 			printer.addWhitespace(tokens);
 		}
 
+		final WRun subRun = (WRun) safeNext(elements);
 		if (shape != null) {
 			shape.render(tree, subRun, printer);
 		}

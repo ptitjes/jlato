@@ -20,9 +20,9 @@
 package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
-import org.jlato.internal.bu.LRun;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.WRun;
 import org.jlato.printer.Printer;
 
 import java.util.Iterator;
@@ -44,19 +44,16 @@ public class LSDump extends LexicalShape {
 	}
 
 	@Override
-	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
+	public WRun enRun(STree tree, Iterator<WRun> tokenIterator) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void render(STree tree, LRun run, Printer printer) {
-		final IndexedList<IndexedList<LToken>> data = (IndexedList<IndexedList<LToken>>) tree.state.data(dataIndex);
+	public void render(STree tree, WRun run, Printer printer) {
+		final IndexedList<WRun> data = (IndexedList<WRun>) tree.state.data(dataIndex);
 		if (data != null) {
-			for (IndexedList<LToken> tokens : data) {
-				for (LToken token : tokens) {
-					printer.appendWhiteSpace(token.string);
-				}
+			for (WRun tokens : data) {
+				printer.dump(tokens, false);
 			}
 		}
 	}
-
 }

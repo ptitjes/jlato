@@ -19,10 +19,9 @@
 
 package org.jlato.internal.shapes;
 
-import com.github.andrewoma.dexx.collection.IndexedList;
-import org.jlato.internal.bu.LRun;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.WRun;
 import org.jlato.printer.Printer;
 import org.jlato.tree.Tree;
 
@@ -37,9 +36,9 @@ public abstract class LexicalShape {
 
 	public abstract boolean isDefined(STree tree);
 
-	public abstract LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator);
+	public abstract WRun enRun(STree tree, Iterator<WRun> tokenIterator);
 
-	public abstract void render(STree tree, LRun run, Printer printer);
+	public abstract void render(STree tree, WRun run, Printer printer);
 
 	public LSDecorated withSpacing(SpacingConstraint before, SpacingConstraint after) {
 		return new LSSpacing(this, before, after, null, null);

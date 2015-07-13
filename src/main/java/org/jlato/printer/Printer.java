@@ -21,8 +21,7 @@ package org.jlato.printer;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.shapes.SpacingConstraint;
 import org.jlato.parser.ParserImplConstants;
@@ -212,7 +211,7 @@ public class Printer {
 	private boolean needsIndentation;
 	private boolean afterAlpha;
 	private Spacing spacing;
-	private IndexedList<LToken> whitespace;
+	private WRun whitespace;
 
 	private void reset() {
 		indentLevel = 0;
@@ -227,18 +226,21 @@ public class Printer {
 		spacing = otherSpacing != null ? spacing.max(otherSpacing) : spacing;
 	}
 
-	public void addWhitespace(IndexedList<LToken> tokens) {
+	public void addWhitespace(WRun tokens) {
 		if (tokens == null) return;
-		if (whitespace == null) whitespace = Vector.empty();
-		for (LToken token : tokens) {
-			whitespace = whitespace.append(token);
-		}
+//		if (whitespace == null) whitespace = Vector.empty();
+//		for (LToken token : tokens) {
+//			whitespace = whitespace.append(token);
+//		}
+		if (whitespace != null)
+			throw new IllegalStateException();
+		whitespace = tokens;
 	}
 
 	private void renderSpacing() {
 		if (spacing != null) {
 			Spacing spacingCopy = spacing;
-			IndexedList<LToken> whitespaceCopy = whitespace;
+			WRun whitespaceCopy = whitespace;
 
 			spacing = Spacing.noSpace;
 			whitespace = null;
@@ -247,7 +249,7 @@ public class Printer {
 		}
 	}
 
-	public void render(Spacing expectedSpacing, IndexedList<LToken> tokens) {
+	public void render(Spacing expectedSpacing, WRun tokens) {
 		switch (expectedSpacing.unit) {
 			case Space:
 				if (tokens != null && (!format || containsComments(tokens)))
@@ -273,8 +275,9 @@ public class Printer {
 		}
 	}
 
-	private void dump(IndexedList<LToken> tokens, boolean requiresFormatting) {
-		for (LToken token : tokens) {
+	public void dump(WRun tokens, boolean requiresFormatting) {
+		for (WElement element : tokens.elements) {
+			WToken token = (WToken) element;
 			switch (token.kind) {
 				case ParserImplConstants.JAVA_DOC_COMMENT:
 					// TODO format javadoc comment
@@ -354,10 +357,11 @@ public class Printer {
 	}
 
 
-	private static int emptyLineCount(IndexedList<LToken> tokens) {
+	private static int emptyLineCount(WRun tokens) {
 		int count = 0;
 		boolean emptyLine = true;
-		for (LToken token : tokens) {
+		for (WElement element : tokens.elements) {
+			WToken token = (WToken) element;
 			switch (token.kind) {
 				case ParserImplConstants.SINGLE_LINE_COMMENT:
 				case ParserImplConstants.MULTI_LINE_COMMENT:
@@ -377,8 +381,9 @@ public class Printer {
 		return count;
 	}
 
-	private static boolean containsComments(IndexedList<LToken> tokens) {
-		for (LToken token : tokens) {
+	private static boolean containsComments(WRun tokens) {
+		for (WElement element : tokens.elements) {
+			WToken token = (WToken) element;
 			switch (token.kind) {
 				case ParserImplConstants.SINGLE_LINE_COMMENT:
 				case ParserImplConstants.MULTI_LINE_COMMENT:

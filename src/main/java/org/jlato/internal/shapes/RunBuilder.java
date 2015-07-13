@@ -21,11 +21,7 @@ package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
-import com.github.andrewoma.dexx.collection.IndexedList;
-import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.LRun;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 
 import java.util.Iterator;
 
@@ -34,15 +30,14 @@ import java.util.Iterator;
  */
 public class RunBuilder {
 
-	private final Iterator<IndexedList<LToken>> tokenIterator;
+	private final Iterator<WRun> tokenIterator;
 
-	private Builder<LRun, ArrayList<LRun>> subRuns = ArrayList.<LRun>factory().newBuilder();
-	private Builder<IndexedList<LToken>, ArrayList<IndexedList<LToken>>> tokens = ArrayList.<IndexedList<LToken>>factory().newBuilder();
+	private Builder<WElement, ArrayList<WElement>> elements = ArrayList.<WElement>factory().newBuilder();
 	private boolean firstShape = true;
 	private boolean firstDefinedShape = true;
 	private int shapeCount = 0;
 
-	public RunBuilder(Iterator<IndexedList<LToken>> tokenIterator) {
+	public RunBuilder(Iterator<WRun> tokenIterator) {
 		this.tokenIterator = tokenIterator;
 	}
 
@@ -53,26 +48,25 @@ public class RunBuilder {
 
 		if (!defined) {
 			if (firstShape) firstShape = false;
-			else tokens.add(null);
+			else elements.add(null);
 
-			subRuns.add(null);
+			elements.add(null);
 		} else {
 			if (firstShape) {
 				firstShape = false;
 				if (firstDefinedShape) firstDefinedShape = false;
 			} else if (firstDefinedShape) {
 				firstDefinedShape = false;
-				tokens.add(null);
-			} else tokens.add(tokenIterator.next());
+				elements.add(null);
+			} else elements.add(tokenIterator.next());
 
-			subRuns.add(shape.enRun(tree, tokenIterator));
+			elements.add(shape.enRun(tree, tokenIterator));
 		}
 	}
 
-	public LRun build() {
-		final LRun run = new LRun(subRuns.build(), tokens.build());
-		if (run.subRuns.size() != shapeCount ||
-				(shapeCount > 0 && run.whitespaces.size() != shapeCount - 1)) {
+	public WRun build() {
+		final WRun run = new WRun(elements.build());
+		if (run.elements.size() != shapeCount * 2 - 1) {
 			throw new IllegalStateException();
 		}
 		return run;

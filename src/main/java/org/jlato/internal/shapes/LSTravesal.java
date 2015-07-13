@@ -19,11 +19,7 @@
 
 package org.jlato.internal.shapes;
 
-import com.github.andrewoma.dexx.collection.IndexedList;
-import org.jlato.internal.bu.LRun;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.printer.Printer;
 
 import java.util.Iterator;
@@ -52,11 +48,11 @@ public final class LSTravesal extends LSDecorated {
 	}
 
 	@Override
-	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
+	public WRun enRun(STree tree, Iterator<WRun> tokenIterator) {
 		return null;
 	}
 
-	public void render(STree tree, LRun run, Printer printer) {
+	public void render(STree tree, WRun run, Printer printer) {
 		final STree child = traverse(tree);
 		if (child == null) return;
 

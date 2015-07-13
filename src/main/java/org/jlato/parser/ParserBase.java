@@ -56,8 +56,8 @@ abstract class ParserBase {
 
 	protected ParserConfiguration configuration;
 
-	protected IndexedList<IndexedList<LToken>> preamble;
-	private Stack<IndexedList<IndexedList<LToken>>> runStack = new Stack<IndexedList<IndexedList<LToken>>>();
+	protected IndexedList<WRun> preamble;
+	private Stack<IndexedList<WRun>> runStack = new Stack<IndexedList<WRun>>();
 	private Token lastProcessedToken;
 
 	public ParserBase() {
@@ -75,11 +75,11 @@ abstract class ParserBase {
 			lastProcessedToken = getToken(0);
 		}
 		pushWhitespaceForTokens(getToken(1));
-		runStack.push(Vector.<IndexedList<LToken>>empty());
+		runStack.push(Vector.<WRun>empty());
 	}
 
 	protected void lateRun() {
-		runStack.push(Vector.<IndexedList<LToken>>empty());
+		runStack.push(Vector.<WRun>empty());
 		pushWhitespaceForTokens(getToken(1));
 	}
 
@@ -93,7 +93,7 @@ abstract class ParserBase {
 		}
 	}
 
-	private void pushWhitespace(IndexedList<LToken> whitespace) {
+	private void pushWhitespace(WRun whitespace) {
 		if (whitespace == null) return;
 
 		// TODO Handle root whitespace before first token
@@ -130,7 +130,7 @@ abstract class ParserBase {
 		if (!configuration.preserveWhitespaces) return facade;
 
 		try {
-			final IndexedList<IndexedList<LToken>> tokens = popTokens();
+			final IndexedList<WRun> tokens = popTokens();
 
 			if (facade == null) return null;
 
@@ -148,7 +148,7 @@ abstract class ParserBase {
 		if (!configuration.preserveWhitespaces) return facade;
 
 		try {
-			final IndexedList<IndexedList<LToken>> tokens = popTokens();
+			final IndexedList<WRun> tokens = popTokens();
 
 			if (facade == null) return null;
 
@@ -163,13 +163,13 @@ abstract class ParserBase {
 
 	@SuppressWarnings("unchecked")
 	private <T extends Tree> T doEnRun(STree tree, LexicalShape shape,
-	                                   IndexedList<IndexedList<LToken>> tokens) {
+	                                   IndexedList<WRun> tokens) {
 		try {
-			final Iterator<IndexedList<LToken>> tokenIterator = tokens.iterator();
-			final LRun run = shape.enRun(tree, tokenIterator);
+			final Iterator<WRun> tokenIterator = tokens.iterator();
+			final WRun run = shape.enRun(tree, tokenIterator);
 
 			if (tokenIterator.hasNext()) {
-				final IndexedList<LToken> defered = tokenIterator.next();
+				final WRun defered = tokenIterator.next();
 				pushWhitespace(defered);
 
 				if (tokenIterator.hasNext()) {
@@ -222,7 +222,7 @@ abstract class ParserBase {
 		popTokens();
 	}
 
-	private IndexedList<IndexedList<LToken>> popTokens() {
+	private IndexedList<WRun> popTokens() {
 		pushWhitespaceForTokens(getToken(0));
 		return runStack.pop();
 	}
@@ -233,16 +233,16 @@ abstract class ParserBase {
 		}
 	}
 
-	private IndexedList<LToken> buildWhitespaceRunPart(Token token) {
+	private WRun buildWhitespaceRunPart(Token token) {
 		if (token != null)
-			return buildWhitespaceRunPart(token.specialToken).append(new LToken(token.kind, token.image));
-		else return Vector.empty();
+			return buildWhitespaceRunPart(token.specialToken).append(new WToken(token.kind, token.image));
+		else return new WRun(Vector.<WElement>empty());
 	}
 
 	static class TokenBase {
 
 		int realKind = ParserImplConstants.GT;
-		IndexedList<LToken> whitespace;
+		WRun whitespace;
 	}
 
 	// Utility methods

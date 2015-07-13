@@ -30,13 +30,13 @@ public class STree extends LElement {
 
 	public final Tree.Kind kind;
 	public final STreeState state;
-	public final LRun run;
+	public final WRun run;
 
 	public STree(Tree.Kind kind, STreeState state) {
 		this(kind, state, null);
 	}
 
-	public STree(Tree.Kind kind, STreeState state, LRun run) {
+	public STree(Tree.Kind kind, STreeState state, WRun run) {
 		this.kind = kind;
 		this.state = state;
 		this.run = run;
@@ -56,7 +56,7 @@ public class STree extends LElement {
 		return new STree(kind, state, run);
 	}
 
-	public STree withRun(LRun run) {
+	public STree withRun(WRun run) {
 		return new STree(kind, state, run);
 	}
 

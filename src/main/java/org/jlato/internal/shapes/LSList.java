@@ -19,12 +19,8 @@
 
 package org.jlato.internal.shapes;
 
-import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.LRun;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.printer.Printer;
 
 import java.util.Iterator;
@@ -55,7 +51,7 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
-	public LRun enRun(STree tree, Iterator<IndexedList<LToken>> tokenIterator) {
+	public WRun enRun(STree tree, Iterator<WRun> tokenIterator) {
 		final RunBuilder builder = new RunBuilder(tokenIterator);
 
 		final SNodeListState state = (SNodeListState) tree.state;
@@ -83,7 +79,7 @@ public final class LSList extends LexicalShape {
 		return builder.build();
 	}
 
-	public void render(STree tree, LRun run, Printer printer) {
+	public void render(STree tree, WRun run, Printer printer) {
 		final SNodeListState state = (SNodeListState) tree.state;
 		final Vector<STree> children = state.children;
 		final boolean isEmpty = children.isEmpty();
