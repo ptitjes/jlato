@@ -46,7 +46,7 @@ public abstract class TreeBase {
 		return location.root().facade;
 	}
 
-	protected static SLocation locationOf(TreeBase facade) {
+	public static SLocation locationOf(TreeBase facade) {
 		return facade == null ? null : facade.location;
 	}
 
