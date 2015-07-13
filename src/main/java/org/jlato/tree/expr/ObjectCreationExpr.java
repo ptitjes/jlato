@@ -51,7 +51,7 @@ public class ObjectCreationExpr extends Expr {
 		super(location);
 	}
 
-	public ObjectCreationExpr(Expr scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeList<Decl> body) {
+	public ObjectCreationExpr(Expr scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeList<MemberDecl> body) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, type, args, body)))));
 	}
 
@@ -103,15 +103,15 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
-	public NodeList<Decl> body() {
+	public NodeList<MemberDecl> body() {
 		return location.nodeChild(BODY);
 	}
 
-	public ObjectCreationExpr withBody(NodeList<Decl> body) {
+	public ObjectCreationExpr withBody(NodeList<MemberDecl> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public ObjectCreationExpr withBody(Rewrite<NodeList<Decl>> body) {
+	public ObjectCreationExpr withBody(Rewrite<NodeList<MemberDecl>> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 
