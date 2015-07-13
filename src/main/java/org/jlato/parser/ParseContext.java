@@ -21,10 +21,7 @@ package org.jlato.parser;
 
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
-import org.jlato.tree.decl.CompilationUnit;
-import org.jlato.tree.decl.Decl;
-import org.jlato.tree.decl.ImportDecl;
-import org.jlato.tree.decl.TypeDecl;
+import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.Stmt;
@@ -44,6 +41,13 @@ public abstract class ParseContext<T extends Tree> {
 		}
 	};
 
+	public final static ParseContext<PackageDecl> PackageDecl = new ParseContext<PackageDecl>() {
+		@Override
+		protected PackageDecl callProduction(ParserImpl parser) throws ParseException {
+			return parser.PackageDecl();
+		}
+	};
+
 	public final static ParseContext<ImportDecl> ImportDecl = new ParseContext<ImportDecl>() {
 		@Override
 		protected ImportDecl callProduction(ParserImpl parser) throws ParseException {
@@ -58,10 +62,68 @@ public abstract class ParseContext<T extends Tree> {
 		}
 	};
 
-	public final static ParseContext<Decl> MemberDecl = new ParseContext<Decl>() {
+	public final static ParseContext<MemberDecl> MemberDecl = new ParseContext<MemberDecl>() {
 		@Override
-		protected Decl callProduction(ParserImpl parser) throws ParseException {
+		protected MemberDecl callProduction(ParserImpl parser) throws ParseException {
 			return parser.ClassOrInterfaceBodyDecl(TypeKind.Class);
+		}
+	};
+
+	public final static ParseContext<MemberDecl> Class_MemberDecl = MemberDecl;
+
+	public final static ParseContext<MemberDecl> Interface_MemberDecl = MemberDecl;
+
+	public final static ParseContext<MemberDecl> Enum_MemberDecl = MemberDecl;
+
+	public final static ParseContext<MemberDecl> Annotation_MemberDecl = new ParseContext<MemberDecl>() {
+		@Override
+		protected MemberDecl callProduction(ParserImpl parser) throws ParseException {
+			return parser.AnnotationTypeBodyDecl();
+		}
+	};
+
+	public final static ParseContext<MethodDecl> MethodDecl = new ParseContext<org.jlato.tree.decl.MethodDecl>() {
+		@Override
+		protected MethodDecl callProduction(ParserImpl parser) throws ParseException {
+			NodeList modifiers = parser.Modifiers();
+			return parser.MethodDecl(modifiers);
+		}
+	};
+
+	public final static ParseContext<FieldDecl> FieldDecl = new ParseContext<org.jlato.tree.decl.FieldDecl>() {
+		@Override
+		protected FieldDecl callProduction(ParserImpl parser) throws ParseException {
+			NodeList modifiers = parser.Modifiers();
+			return parser.FieldDecl(modifiers);
+		}
+	};
+
+	public final static ParseContext<AnnotationMemberDecl> AnnotationMemberDecl = new ParseContext<org.jlato.tree.decl.AnnotationMemberDecl>() {
+		@Override
+		protected AnnotationMemberDecl callProduction(ParserImpl parser) throws ParseException {
+			NodeList modifiers = parser.Modifiers();
+			return parser.AnnotationTypeMemberDecl(modifiers);
+		}
+	};
+
+	public final static ParseContext<EnumConstantDecl> EnumConstantDecl = new ParseContext<org.jlato.tree.decl.EnumConstantDecl>() {
+		@Override
+		protected EnumConstantDecl callProduction(ParserImpl parser) throws ParseException {
+			return parser.EnumConstantDecl();
+		}
+	};
+
+	public final static ParseContext<FormalParameter> Parameter = new ParseContext<FormalParameter>() {
+		@Override
+		protected FormalParameter callProduction(ParserImpl parser) throws ParseException {
+			return parser.FormalParameter();
+		}
+	};
+
+	public final static ParseContext<TypeParameter> TypeParameter = new ParseContext<org.jlato.tree.decl.TypeParameter>() {
+		@Override
+		protected TypeParameter callProduction(ParserImpl parser) throws ParseException {
+			return parser.TypeParameter();
 		}
 	};
 
