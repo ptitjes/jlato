@@ -61,7 +61,7 @@ public class InterfaceDecl extends TypeDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> InterfaceDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.nodeMutateChild(MODIFIERS, modifiers);
 	}
 
 	public TypeKind typeKind() {
@@ -77,7 +77,7 @@ public class InterfaceDecl extends TypeDecl {
 	}
 
 	public InterfaceDecl withName(Mutation<Name> name) {
-		return location.nodeWithChild(NAME, name);
+		return location.nodeMutateChild(NAME, name);
 	}
 
 	public NodeList<TypeParameter> typeParams() {
@@ -89,7 +89,7 @@ public class InterfaceDecl extends TypeDecl {
 	}
 
 	public InterfaceDecl withTypeParams(Mutation<NodeList<TypeParameter>> typeParams) {
-		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
+		return location.nodeMutateChild(TYPE_PARAMETERS, typeParams);
 	}
 
 	public NodeList<QualifiedType> extendsClause() {
@@ -101,7 +101,7 @@ public class InterfaceDecl extends TypeDecl {
 	}
 
 	public InterfaceDecl withExtendsClause(Mutation<NodeList<QualifiedType>> extendsClause) {
-		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
+		return location.nodeMutateChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
 	public NodeList<MemberDecl> members() {
@@ -113,7 +113,7 @@ public class InterfaceDecl extends TypeDecl {
 	}
 
 	public InterfaceDecl withMembers(Mutation<NodeList<MemberDecl>> members) {
-		return location.nodeWithChild(MEMBERS, members);
+		return location.nodeMutateChild(MEMBERS, members);
 	}
 
 	private static final int MODIFIERS = 0;

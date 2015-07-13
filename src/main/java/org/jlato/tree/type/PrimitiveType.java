@@ -61,7 +61,7 @@ public class PrimitiveType extends AnnotatedType {
 	}
 
 	public PrimitiveType withType(Mutation<Primitive> type) {
-		return location.withData(TYPE, type);
+		return location.mutateData(TYPE, type);
 	}
 
 	private static final int TYPE = 0;

@@ -59,7 +59,7 @@ public class InstanceOfExpr extends Expr {
 	}
 
 	public InstanceOfExpr withExpr(Mutation<Expr> expr) {
-		return location.nodeWithChild(EXPR, expr);
+		return location.nodeMutateChild(EXPR, expr);
 	}
 
 	public Type type() {
@@ -71,7 +71,7 @@ public class InstanceOfExpr extends Expr {
 	}
 
 	public InstanceOfExpr withType(Mutation<Type> type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.nodeMutateChild(TYPE, type);
 	}
 
 	private static final int EXPR = 0;

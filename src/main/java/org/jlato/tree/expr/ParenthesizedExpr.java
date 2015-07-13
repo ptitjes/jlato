@@ -58,7 +58,7 @@ public class ParenthesizedExpr extends Expr {
 	}
 
 	public ParenthesizedExpr withInner(Mutation<Expr> inner) {
-		return location.nodeWithChild(INNER, inner);
+		return location.nodeMutateChild(INNER, inner);
 	}
 
 	private static final int INNER = 0;

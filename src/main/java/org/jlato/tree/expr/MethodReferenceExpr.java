@@ -62,7 +62,7 @@ public class MethodReferenceExpr extends Expr {
 	}
 
 	public MethodReferenceExpr withScope(Mutation<Expr> scope) {
-		return location.nodeWithChild(SCOPE, scope);
+		return location.nodeMutateChild(SCOPE, scope);
 	}
 
 	public NodeList<Type> typeArgs() {
@@ -74,7 +74,7 @@ public class MethodReferenceExpr extends Expr {
 	}
 
 	public MethodReferenceExpr withTypeArgs(Mutation<NodeList<Type>> typeArgs) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
+		return location.nodeMutateChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
 	public Name name() {
@@ -86,7 +86,7 @@ public class MethodReferenceExpr extends Expr {
 	}
 
 	public MethodReferenceExpr withName(Mutation<Name> name) {
-		return location.nodeWithChild(NAME, name);
+		return location.nodeMutateChild(NAME, name);
 	}
 
 	private static final int SCOPE = 0;

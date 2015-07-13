@@ -60,7 +60,7 @@ public class AssignExpr extends Expr {
 	}
 
 	public AssignExpr withTarget(Mutation<Expr> target) {
-		return location.nodeWithChild(TARGET, target);
+		return location.nodeMutateChild(TARGET, target);
 	}
 
 	public AssignOp op() {
@@ -72,7 +72,7 @@ public class AssignExpr extends Expr {
 	}
 
 	public AssignExpr withOp(Mutation<AssignOp> operator) {
-		return location.withData(OPERATOR, operator);
+		return location.mutateData(OPERATOR, operator);
 	}
 
 	public Expr value() {
@@ -84,7 +84,7 @@ public class AssignExpr extends Expr {
 	}
 
 	public AssignExpr withValue(Mutation<Expr> value) {
-		return location.nodeWithChild(VALUE, value);
+		return location.nodeMutateChild(VALUE, value);
 	}
 
 	private static final int TARGET = 0;

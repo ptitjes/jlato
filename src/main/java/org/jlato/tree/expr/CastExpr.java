@@ -60,7 +60,7 @@ public class CastExpr extends Expr {
 	}
 
 	public CastExpr withType(Mutation<Type> type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.nodeMutateChild(TYPE, type);
 	}
 
 	public Expr expr() {
@@ -72,7 +72,7 @@ public class CastExpr extends Expr {
 	}
 
 	public CastExpr withExpr(Mutation<Expr> expr) {
-		return location.nodeWithChild(EXPR, expr);
+		return location.nodeMutateChild(EXPR, expr);
 	}
 
 	private static final int TYPE = 0;

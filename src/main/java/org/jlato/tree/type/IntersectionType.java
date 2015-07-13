@@ -59,7 +59,7 @@ public class IntersectionType extends Type {
 	}
 
 	public IntersectionType withTypes(Mutation<NodeList<Type>> types) {
-		return location.nodeWithChild(TYPES, types);
+		return location.nodeMutateChild(TYPES, types);
 	}
 
 	private static final int TYPES = 0;

@@ -65,7 +65,7 @@ public class InitializerDecl extends MemberDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> InitializerDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.nodeMutateChild(MODIFIERS, modifiers);
 	}
 
 	public BlockStmt body() {
@@ -77,7 +77,7 @@ public class InitializerDecl extends MemberDecl {
 	}
 
 	public InitializerDecl withBody(Mutation<BlockStmt> body) {
-		return location.nodeWithChild(BODY, body);
+		return location.nodeMutateChild(BODY, body);
 	}
 
 	/*

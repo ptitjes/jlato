@@ -60,7 +60,7 @@ public class DoStmt extends Stmt {
 	}
 
 	public DoStmt withBody(Mutation<Stmt> body) {
-		return location.nodeWithChild(BODY, body);
+		return location.nodeMutateChild(BODY, body);
 	}
 
 	public Expr condition() {
@@ -72,7 +72,7 @@ public class DoStmt extends Stmt {
 	}
 
 	public DoStmt withCondition(Mutation<Expr> condition) {
-		return location.nodeWithChild(CONDITION, condition);
+		return location.nodeMutateChild(CONDITION, condition);
 	}
 
 	private static final int BODY = 0;

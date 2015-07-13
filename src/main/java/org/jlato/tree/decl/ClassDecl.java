@@ -62,7 +62,7 @@ public class ClassDecl extends TypeDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> ClassDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.nodeMutateChild(MODIFIERS, modifiers);
 	}
 
 	public TypeKind typeKind() {
@@ -78,7 +78,7 @@ public class ClassDecl extends TypeDecl {
 	}
 
 	public ClassDecl withName(Mutation<Name> name) {
-		return location.nodeWithChild(NAME, name);
+		return location.nodeMutateChild(NAME, name);
 	}
 
 	public NodeList<TypeParameter> typeParams() {
@@ -90,7 +90,7 @@ public class ClassDecl extends TypeDecl {
 	}
 
 	public ClassDecl withTypeParams(Mutation<NodeList<TypeParameter>> typeParams) {
-		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
+		return location.nodeMutateChild(TYPE_PARAMETERS, typeParams);
 	}
 
 	public QualifiedType extendsClause() {
@@ -102,7 +102,7 @@ public class ClassDecl extends TypeDecl {
 	}
 
 	public ClassDecl withExtendsClause(Mutation<QualifiedType> extendsClause) {
-		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
+		return location.nodeMutateChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
 	public NodeList<QualifiedType> implementsClause() {
@@ -114,7 +114,7 @@ public class ClassDecl extends TypeDecl {
 	}
 
 	public ClassDecl withImplementsClause(Mutation<NodeList<QualifiedType>> implementsClause) {
-		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
+		return location.nodeMutateChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
 	public NodeList<MemberDecl> members() {
@@ -126,7 +126,7 @@ public class ClassDecl extends TypeDecl {
 	}
 
 	public ClassDecl withMembers(Mutation<NodeList<MemberDecl>> members) {
-		return location.nodeWithChild(MEMBERS, members);
+		return location.nodeMutateChild(MEMBERS, members);
 	}
 
 	private static final int MODIFIERS = 0;

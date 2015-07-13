@@ -67,7 +67,7 @@ public class ConstructorDecl extends MemberDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> ConstructorDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.nodeMutateChild(MODIFIERS, modifiers);
 	}
 
 	public NodeList<TypeParameter> typeParams() {
@@ -79,7 +79,7 @@ public class ConstructorDecl extends MemberDecl {
 	}
 
 	public ConstructorDecl withTypeParams(Mutation<NodeList<TypeParameter>> typeParams) {
-		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
+		return location.nodeMutateChild(TYPE_PARAMETERS, typeParams);
 	}
 
 	public Name name() {
@@ -91,7 +91,7 @@ public class ConstructorDecl extends MemberDecl {
 	}
 
 	public ConstructorDecl withName(Mutation<Name> name) {
-		return location.nodeWithChild(NAME, name);
+		return location.nodeMutateChild(NAME, name);
 	}
 
 	public NodeList<FormalParameter> params() {
@@ -103,7 +103,7 @@ public class ConstructorDecl extends MemberDecl {
 	}
 
 	public ConstructorDecl withParams(Mutation<NodeList<FormalParameter>> params) {
-		return location.nodeWithChild(PARAMETERS, params);
+		return location.nodeMutateChild(PARAMETERS, params);
 	}
 
 	public NodeList<QualifiedType> throwsClause() {
@@ -115,7 +115,7 @@ public class ConstructorDecl extends MemberDecl {
 	}
 
 	public ConstructorDecl withThrowsClause(Mutation<NodeList<QualifiedType>> throwsClause) {
-		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
+		return location.nodeMutateChild(THROWS_CLAUSE, throwsClause);
 	}
 
 	public BlockStmt body() {
@@ -127,7 +127,7 @@ public class ConstructorDecl extends MemberDecl {
 	}
 
 	public ConstructorDecl withBody(Mutation<BlockStmt> body) {
-		return location.nodeWithChild(BODY, body);
+		return location.nodeMutateChild(BODY, body);
 	}
 
 	private static final int MODIFIERS = 0;

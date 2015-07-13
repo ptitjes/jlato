@@ -60,7 +60,7 @@ public class UnaryExpr extends Expr {
 	}
 
 	public UnaryExpr withOp(Mutation<UnaryOp> operator) {
-		return location.withData(OPERATOR, operator);
+		return location.mutateData(OPERATOR, operator);
 	}
 
 	public Expr expr() {
@@ -72,7 +72,7 @@ public class UnaryExpr extends Expr {
 	}
 
 	public UnaryExpr withExpr(Mutation<Expr> expr) {
-		return location.nodeWithChild(EXPR, expr);
+		return location.nodeMutateChild(EXPR, expr);
 	}
 
 	public static boolean isPrefix(UnaryOp op) {

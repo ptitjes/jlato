@@ -67,7 +67,7 @@ public class AnnotationMemberDecl extends MemberDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.nodeMutateChild(MODIFIERS, modifiers);
 	}
 
 	public Type type() {
@@ -79,7 +79,7 @@ public class AnnotationMemberDecl extends MemberDecl {
 	}
 
 	public AnnotationMemberDecl withType(Mutation<Type> type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.nodeMutateChild(TYPE, type);
 	}
 
 	public Name name() {
@@ -91,7 +91,7 @@ public class AnnotationMemberDecl extends MemberDecl {
 	}
 
 	public AnnotationMemberDecl withName(Mutation<Name> name) {
-		return location.nodeWithChild(NAME, name);
+		return location.nodeMutateChild(NAME, name);
 	}
 
 	public NodeList<ArrayDim> dims() {
@@ -103,7 +103,7 @@ public class AnnotationMemberDecl extends MemberDecl {
 	}
 
 	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> dims) {
-		return location.nodeWithChild(DIMS, dims);
+		return location.nodeMutateChild(DIMS, dims);
 	}
 
 	public Expr defaultValue() {
@@ -115,7 +115,7 @@ public class AnnotationMemberDecl extends MemberDecl {
 	}
 
 	public AnnotationMemberDecl withDefaultValue(Mutation<Expr> defaultValue) {
-		return location.nodeWithChild(DEFAULT_VALUE, defaultValue);
+		return location.nodeMutateChild(DEFAULT_VALUE, defaultValue);
 	}
 
 	private static final int MODIFIERS = 0;

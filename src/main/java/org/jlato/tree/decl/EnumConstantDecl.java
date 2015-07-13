@@ -68,7 +68,7 @@ public class EnumConstantDecl extends MemberDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> EnumConstantDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.nodeMutateChild(MODIFIERS, modifiers);
 	}
 
 	public Name name() {
@@ -80,7 +80,7 @@ public class EnumConstantDecl extends MemberDecl {
 	}
 
 	public EnumConstantDecl withName(Mutation<Name> name) {
-		return location.nodeWithChild(NAME, name);
+		return location.nodeMutateChild(NAME, name);
 	}
 
 	public NodeList<Expr> args() {
@@ -92,7 +92,7 @@ public class EnumConstantDecl extends MemberDecl {
 	}
 
 	public EnumConstantDecl withArgs(Mutation<NodeList<Expr>> args) {
-		return location.nodeWithChild(ARGS, args);
+		return location.nodeMutateChild(ARGS, args);
 	}
 
 	public NodeList<Decl> classBody() {
@@ -104,7 +104,7 @@ public class EnumConstantDecl extends MemberDecl {
 	}
 
 	public EnumConstantDecl withClassBody(Mutation<NodeList<Decl>> classBody) {
-		return location.nodeWithChild(CLASS_BODY, classBody);
+		return location.nodeMutateChild(CLASS_BODY, classBody);
 	}
 /*
 

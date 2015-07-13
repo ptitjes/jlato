@@ -61,7 +61,7 @@ public class ArrayType extends ReferenceType {
 	}
 
 	public ArrayType withComponentType(Mutation<Type> componentType) {
-		return location.nodeWithChild(COMPONENT_TYPE, componentType);
+		return location.nodeMutateChild(COMPONENT_TYPE, componentType);
 	}
 
 	public NodeList<ArrayDim> dims() {
@@ -73,7 +73,7 @@ public class ArrayType extends ReferenceType {
 	}
 
 	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> dims) {
-		return location.nodeWithChild(DIMS, dims);
+		return location.nodeMutateChild(DIMS, dims);
 	}
 
 	private static final int COMPONENT_TYPE = 1;

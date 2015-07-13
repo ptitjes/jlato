@@ -59,7 +59,7 @@ public class TypeDeclarationStmt extends Stmt {
 	}
 
 	public TypeDeclarationStmt withTypeDecl(Mutation<TypeDecl> typeDecl) {
-		return location.nodeWithChild(TYPE_DECL, typeDecl);
+		return location.nodeMutateChild(TYPE_DECL, typeDecl);
 	}
 
 	private static final int TYPE_DECL = 0;

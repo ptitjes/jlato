@@ -60,7 +60,7 @@ public class VariableDeclarator extends Tree {
 	}
 
 	public VariableDeclarator withId(Mutation<VariableDeclaratorId> id) {
-		return location.nodeWithChild(ID, id);
+		return location.nodeMutateChild(ID, id);
 	}
 
 	public Expr init() {
@@ -72,7 +72,7 @@ public class VariableDeclarator extends Tree {
 	}
 
 	public VariableDeclarator withInit(Mutation<Expr> init) {
-		return location.nodeWithChild(INIT, init);
+		return location.nodeMutateChild(INIT, init);
 	}
 
 	private static final int ID = 0;

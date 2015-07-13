@@ -59,7 +59,7 @@ public class ThrowStmt extends Stmt {
 	}
 
 	public ThrowStmt withExpr(Mutation<Expr> expr) {
-		return location.nodeWithChild(EXPR, expr);
+		return location.nodeMutateChild(EXPR, expr);
 	}
 
 	private static final int EXPR = 0;

@@ -65,7 +65,7 @@ public class SwitchStmt extends Stmt {
 	}
 
 	public SwitchStmt withSelector(Mutation<Expr> selector) {
-		return location.nodeWithChild(SELECTOR, selector);
+		return location.nodeMutateChild(SELECTOR, selector);
 	}
 
 	public NodeList<SwitchCase> cases() {
@@ -77,7 +77,7 @@ public class SwitchStmt extends Stmt {
 	}
 
 	public SwitchStmt withCases(Mutation<NodeList<SwitchCase>> cases) {
-		return location.nodeWithChild(CASES, cases);
+		return location.nodeMutateChild(CASES, cases);
 	}
 
 	private static final int SELECTOR = 0;

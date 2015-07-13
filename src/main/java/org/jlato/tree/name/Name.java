@@ -61,7 +61,7 @@ public class Name extends Expr {
 	}
 
 	public Name withName(Mutation<String> name) {
-		return location.withData(IDENTIFIER, name);
+		return location.mutateData(IDENTIFIER, name);
 	}
 
 	@Override

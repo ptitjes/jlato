@@ -61,7 +61,7 @@ public class PackageDecl extends Tree {
 	}
 
 	public PackageDecl withAnnotations(Mutation<NodeList<AnnotationExpr>> annotations) {
-		return location.nodeWithChild(ANNOTATIONS, annotations);
+		return location.nodeMutateChild(ANNOTATIONS, annotations);
 	}
 
 	public QualifiedName name() {
@@ -73,7 +73,7 @@ public class PackageDecl extends Tree {
 	}
 
 	public PackageDecl withName(Mutation<QualifiedName> name) {
-		return location.nodeWithChild(NAME, name);
+		return location.nodeMutateChild(NAME, name);
 	}
 
 	private static final int ANNOTATIONS = 0;

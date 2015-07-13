@@ -63,7 +63,7 @@ public class BlockStmt extends Stmt {
 	}
 
 	public BlockStmt withStmts(Mutation<NodeList<Stmt>> stmts) {
-		return location.nodeWithChild(STMTS, stmts);
+		return location.nodeMutateChild(STMTS, stmts);
 	}
 
 	private static final int STMTS = 0;

@@ -62,7 +62,7 @@ public class ArrayCreationExpr extends Expr {
 	}
 
 	public ArrayCreationExpr withType(Mutation<Type> type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.nodeMutateChild(TYPE, type);
 	}
 
 	public NodeList<ArrayDimExpr> dimExprs() {
@@ -74,7 +74,7 @@ public class ArrayCreationExpr extends Expr {
 	}
 
 	public ArrayCreationExpr withDimExprs(Mutation<NodeList<ArrayDimExpr>> dimExprs) {
-		return location.nodeWithChild(DIMENSION_EXPRESSIONS, dimExprs);
+		return location.nodeMutateChild(DIMENSION_EXPRESSIONS, dimExprs);
 	}
 
 	public NodeList<ArrayDim> dims() {
@@ -86,7 +86,7 @@ public class ArrayCreationExpr extends Expr {
 	}
 
 	public ArrayCreationExpr withDims(Mutation<NodeList<ArrayDim>> dims) {
-		return location.nodeWithChild(DIMENSIONS, dims);
+		return location.nodeMutateChild(DIMENSIONS, dims);
 	}
 
 	public ArrayInitializerExpr init() {
@@ -98,7 +98,7 @@ public class ArrayCreationExpr extends Expr {
 	}
 
 	public ArrayCreationExpr withInit(Mutation<ArrayInitializerExpr> initializer) {
-		return location.nodeWithChild(INITIALIZER, initializer);
+		return location.nodeMutateChild(INITIALIZER, initializer);
 	}
 
 	private static final int TYPE = 0;

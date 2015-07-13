@@ -61,7 +61,7 @@ public class FormalParameter extends Tree {
 	}
 
 	public <EM extends Tree & ExtendedModifier> FormalParameter withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.nodeMutateChild(MODIFIERS, modifiers);
 	}
 
 	public Type type() {
@@ -73,7 +73,7 @@ public class FormalParameter extends Tree {
 	}
 
 	public FormalParameter withType(Mutation<Type> type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.nodeMutateChild(TYPE, type);
 	}
 
 	public boolean isVarArgs() {
@@ -93,7 +93,7 @@ public class FormalParameter extends Tree {
 	}
 
 	public FormalParameter withId(Mutation<VariableDeclaratorId> id) {
-		return location.nodeWithChild(ID, id);
+		return location.nodeMutateChild(ID, id);
 	}
 
 	private static final int MODIFIERS = 0;

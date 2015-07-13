@@ -45,7 +45,7 @@ public abstract class AnnotationExpr extends Expr implements ExtendedModifier {
 	}
 
 	public AnnotationExpr withName(Mutation<QualifiedName> name) {
-		return location.nodeWithChild(NAME, name);
+		return location.nodeMutateChild(NAME, name);
 	}
 
 	protected static final int NAME = 0;

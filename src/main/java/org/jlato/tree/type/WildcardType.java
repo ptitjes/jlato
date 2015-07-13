@@ -61,7 +61,7 @@ public class WildcardType extends AnnotatedType {
 	}
 
 	public WildcardType withExt(Mutation<ReferenceType> ext) {
-		return location.nodeWithChild(EXT, ext);
+		return location.nodeMutateChild(EXT, ext);
 	}
 
 	public ReferenceType sup() {
@@ -73,7 +73,7 @@ public class WildcardType extends AnnotatedType {
 	}
 
 	public WildcardType withSup(Mutation<ReferenceType> sup) {
-		return location.nodeWithChild(SUP, sup);
+		return location.nodeMutateChild(SUP, sup);
 	}
 
 	private static final int EXT = 1;

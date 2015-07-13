@@ -59,7 +59,7 @@ public class SingleMemberAnnotationExpr extends AnnotationExpr {
 	}
 
 	public SingleMemberAnnotationExpr withMemberValue(Mutation<Expr> memberValue) {
-		return location.nodeWithChild(MEMBER_VALUE, memberValue);
+		return location.nodeMutateChild(MEMBER_VALUE, memberValue);
 	}
 
 	private static final int MEMBER_VALUE = 1;

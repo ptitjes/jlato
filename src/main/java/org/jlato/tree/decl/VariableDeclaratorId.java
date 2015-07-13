@@ -59,7 +59,7 @@ public class VariableDeclaratorId extends Tree {
 	}
 
 	public VariableDeclaratorId withName(Mutation<Name> name) {
-		return location.nodeWithChild(NAME, name);
+		return location.nodeMutateChild(NAME, name);
 	}
 
 	public NodeList<ArrayDim> dims() {
@@ -71,7 +71,7 @@ public class VariableDeclaratorId extends Tree {
 	}
 
 	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> dims) {
-		return location.nodeWithChild(DIMS, dims);
+		return location.nodeMutateChild(DIMS, dims);
 	}
 
 	private static final int NAME = 0;

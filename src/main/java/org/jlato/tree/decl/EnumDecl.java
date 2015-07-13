@@ -67,7 +67,7 @@ public class EnumDecl extends TypeDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> EnumDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.nodeMutateChild(MODIFIERS, modifiers);
 	}
 
 	public TypeKind typeKind() {
@@ -83,7 +83,7 @@ public class EnumDecl extends TypeDecl {
 	}
 
 	public EnumDecl withName(Mutation<Name> name) {
-		return location.nodeWithChild(NAME, name);
+		return location.nodeMutateChild(NAME, name);
 	}
 
 	public NodeList<QualifiedType> implementsClause() {
@@ -95,7 +95,7 @@ public class EnumDecl extends TypeDecl {
 	}
 
 	public EnumDecl withImplementsClause(Mutation<NodeList<QualifiedType>> implementsClause) {
-		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
+		return location.nodeMutateChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
 	public NodeList<EnumConstantDecl> enumConstants() {
@@ -107,7 +107,7 @@ public class EnumDecl extends TypeDecl {
 	}
 
 	public EnumDecl withEnumConstants(Mutation<NodeList<EnumConstantDecl>> enumConstants) {
-		return location.nodeWithChild(ENUM_CONSTANTS, enumConstants);
+		return location.nodeMutateChild(ENUM_CONSTANTS, enumConstants);
 	}
 
 	public NodeList<MemberDecl> members() {
@@ -119,7 +119,7 @@ public class EnumDecl extends TypeDecl {
 	}
 
 	public EnumDecl withMembers(Mutation<NodeList<MemberDecl>> members) {
-		return location.nodeWithChild(MEMBERS, members);
+		return location.nodeMutateChild(MEMBERS, members);
 	}
 
 	private static final int MODIFIERS = 0;

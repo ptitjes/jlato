@@ -58,7 +58,7 @@ public class TypeExpr extends Expr {
 	}
 
 	public TypeExpr withType(Mutation<Type> type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.nodeMutateChild(TYPE, type);
 	}
 
 	private static final int TYPE = 0;

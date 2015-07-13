@@ -59,7 +59,7 @@ public class BreakStmt extends Stmt {
 	}
 
 	public BreakStmt withId(Mutation<Name> id) {
-		return location.nodeWithChild(ID, id);
+		return location.nodeMutateChild(ID, id);
 	}
 
 	private static final int ID = 0;

@@ -62,7 +62,7 @@ public class ImportDecl extends Tree {
 	}
 
 	public ImportDecl withName(Mutation<QualifiedName> name) {
-		return location.nodeWithChild(NAME, name);
+		return location.nodeMutateChild(NAME, name);
 	}
 
 	public boolean isStatic() {

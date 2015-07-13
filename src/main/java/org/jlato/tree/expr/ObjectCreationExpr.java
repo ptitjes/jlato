@@ -63,7 +63,7 @@ public class ObjectCreationExpr extends Expr {
 	}
 
 	public ObjectCreationExpr withScope(Mutation<Expr> scope) {
-		return location.nodeWithChild(SCOPE, scope);
+		return location.nodeMutateChild(SCOPE, scope);
 	}
 
 	public NodeList<Type> typeArgs() {
@@ -75,7 +75,7 @@ public class ObjectCreationExpr extends Expr {
 	}
 
 	public ObjectCreationExpr withTypeArgs(Mutation<NodeList<Type>> typeArgs) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
+		return location.nodeMutateChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
 	public QualifiedType type() {
@@ -87,7 +87,7 @@ public class ObjectCreationExpr extends Expr {
 	}
 
 	public ObjectCreationExpr withType(Mutation<QualifiedType> type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.nodeMutateChild(TYPE, type);
 	}
 
 	public NodeList<Expr> args() {
@@ -99,7 +99,7 @@ public class ObjectCreationExpr extends Expr {
 	}
 
 	public ObjectCreationExpr withArgs(Mutation<NodeList<Expr>> args) {
-		return location.nodeWithChild(ARGUMENTS, args);
+		return location.nodeMutateChild(ARGUMENTS, args);
 	}
 
 	public NodeList<MemberDecl> body() {
@@ -111,7 +111,7 @@ public class ObjectCreationExpr extends Expr {
 	}
 
 	public ObjectCreationExpr withBody(Mutation<NodeList<MemberDecl>> body) {
-		return location.nodeWithChild(BODY, body);
+		return location.nodeMutateChild(BODY, body);
 	}
 
 	private static final int SCOPE = 0;

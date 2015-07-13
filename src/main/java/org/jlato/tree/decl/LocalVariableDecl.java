@@ -61,7 +61,7 @@ public class LocalVariableDecl extends Decl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> LocalVariableDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.nodeMutateChild(MODIFIERS, modifiers);
 	}
 
 	public Type type() {
@@ -73,7 +73,7 @@ public class LocalVariableDecl extends Decl {
 	}
 
 	public LocalVariableDecl withType(Mutation<Type> type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.nodeMutateChild(TYPE, type);
 	}
 
 	public NodeList<VariableDeclarator> variables() {
@@ -85,7 +85,7 @@ public class LocalVariableDecl extends Decl {
 	}
 
 	public LocalVariableDecl withVariables(Mutation<NodeList<VariableDeclarator>> variables) {
-		return location.nodeWithChild(VARIABLES, variables);
+		return location.nodeMutateChild(VARIABLES, variables);
 	}
 /*
 

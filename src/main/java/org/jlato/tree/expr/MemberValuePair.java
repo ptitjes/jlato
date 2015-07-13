@@ -59,7 +59,7 @@ public class MemberValuePair extends Tree {
 	}
 
 	public MemberValuePair withName(Mutation<Name> name) {
-		return location.nodeWithChild(NAME, name);
+		return location.nodeMutateChild(NAME, name);
 	}
 
 	public Name value() {
@@ -71,7 +71,7 @@ public class MemberValuePair extends Tree {
 	}
 
 	public MemberValuePair withValue(Mutation<Expr> value) {
-		return location.nodeWithChild(VALUE, value);
+		return location.nodeMutateChild(VALUE, value);
 	}
 
 	private static final int NAME = 0;

@@ -60,7 +60,7 @@ public class ArrayInitializerExpr extends Expr {
 	}
 
 	public ArrayInitializerExpr withValues(Mutation<NodeList<Expr>> values) {
-		return location.nodeWithChild(VALUES, values);
+		return location.nodeMutateChild(VALUES, values);
 	}
 
 	private static final int VALUES = 0;

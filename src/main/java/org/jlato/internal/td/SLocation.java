@@ -138,7 +138,7 @@ public class SLocation {
 		return (T) withTree(newNode).facade;
 	}
 
-	public <T extends Tree, C extends Tree> T nodeWithChild(int index, Mutation<C> mutation) {
+	public <T extends Tree, C extends Tree> T nodeMutateChild(int index, Mutation<C> mutation) {
 		return nodeWithChild(index, mutation.mutate(this.<C>nodeChild(index)));
 	}
 
@@ -157,7 +157,7 @@ public class SLocation {
 		return (T) withTree(newTree).facade;
 	}
 
-	public <T extends Tree, A> T withData(int index, Mutation<A> mutation) {
+	public <T extends Tree, A> T mutateData(int index, Mutation<A> mutation) {
 		return withData(index, mutation.mutate(this.<A>data(index)));
 	}
 

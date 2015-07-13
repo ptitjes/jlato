@@ -58,7 +58,7 @@ public class ThisExpr extends Expr {
 	}
 
 	public ThisExpr withClassExpr(Mutation<Expr> classExpr) {
-		return location.nodeWithChild(CLASS_EXPR, classExpr);
+		return location.nodeMutateChild(CLASS_EXPR, classExpr);
 	}
 
 	private static final int CLASS_EXPR = 0;
