@@ -27,16 +27,47 @@ import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.tree.Tree;
+import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
+import org.jlato.tree.stmt.Stmt;
+import org.jlato.tree.type.Type;
 
 /**
  * @author Didier Villevalois
  */
 public abstract class Quotes {
 
+	public static Pattern<PackageDecl> packageDecl(String string) throws ParseException {
+		return quote(ParseContext.PackageDecl, PackageDecl.class, string);
+	}
+
+	public static Pattern<ImportDecl> importDecl(String string) throws ParseException {
+		return quote(ParseContext.ImportDecl, ImportDecl.class, string);
+	}
+
+	public static Pattern<TypeDecl> typeDecl(String string) throws ParseException {
+		return quote(ParseContext.TypeDecl, TypeDecl.class, string);
+	}
+
+	public static Pattern<MemberDecl> memberDecl(String string) throws ParseException {
+		return quote(ParseContext.MemberDecl, MemberDecl.class, string);
+	}
+
+	public static Pattern<FormalParameter> param(String string) throws ParseException {
+		return quote(ParseContext.Parameter, FormalParameter.class, string);
+	}
+
+	public static Pattern<Stmt> stmt(String string) throws ParseException {
+		return quote(ParseContext.Statement, Stmt.class, string);
+	}
+
 	public static Pattern<Expr> expr(String string) throws ParseException {
 		return quote(ParseContext.Expression, Expr.class, string);
+	}
+
+	public static Pattern<Type> type(String string) throws ParseException {
+		return quote(ParseContext.Type, Type.class, string);
 	}
 
 	public static <T extends Tree> Pattern<T> quote(ParseContext<T> context, Class<T> treeClass, String string) throws ParseException {
