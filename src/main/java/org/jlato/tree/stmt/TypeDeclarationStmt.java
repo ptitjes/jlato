@@ -23,7 +23,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.TypeDecl;
 
@@ -58,7 +58,7 @@ public class TypeDeclarationStmt extends Stmt {
 		return location.nodeWithChild(TYPE_DECL, typeDecl);
 	}
 
-	public TypeDeclarationStmt withTypeDecl(Mutator<TypeDecl> typeDecl) {
+	public TypeDeclarationStmt withTypeDecl(Mutation<TypeDecl> typeDecl) {
 		return location.nodeWithChild(TYPE_DECL, typeDecl);
 	}
 

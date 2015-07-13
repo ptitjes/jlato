@@ -27,8 +27,8 @@ import org.jlato.internal.bu.WTokenRun;
 import org.jlato.internal.shapes.LSDump;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -64,7 +64,7 @@ public class CompilationUnit extends Tree {
 		return location.nodeWithChild(PACKAGE_DECL, packageDecl);
 	}
 
-	public CompilationUnit withPackageDecl(Mutator<PackageDecl> packageDecl) {
+	public CompilationUnit withPackageDecl(Mutation<PackageDecl> packageDecl) {
 		return location.nodeWithChild(PACKAGE_DECL, packageDecl);
 	}
 
@@ -76,7 +76,7 @@ public class CompilationUnit extends Tree {
 		return location.nodeWithChild(IMPORTS, imports);
 	}
 
-	public CompilationUnit withImports(Mutator<NodeList<ImportDecl>> imports) {
+	public CompilationUnit withImports(Mutation<NodeList<ImportDecl>> imports) {
 		return location.nodeWithChild(IMPORTS, imports);
 	}
 
@@ -88,7 +88,7 @@ public class CompilationUnit extends Tree {
 		return location.nodeWithChild(TYPES, types);
 	}
 
-	public CompilationUnit withTypes(Mutator<NodeList<TypeDecl>> types) {
+	public CompilationUnit withTypes(Mutation<NodeList<TypeDecl>> types) {
 		return location.nodeWithChild(TYPES, types);
 	}
 

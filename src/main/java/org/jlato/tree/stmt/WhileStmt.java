@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -59,7 +59,7 @@ public class WhileStmt extends Stmt {
 		return location.nodeWithChild(CONDITION, condition);
 	}
 
-	public WhileStmt withCondition(Mutator<Expr> condition) {
+	public WhileStmt withCondition(Mutation<Expr> condition) {
 		return location.nodeWithChild(CONDITION, condition);
 	}
 
@@ -71,7 +71,7 @@ public class WhileStmt extends Stmt {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public WhileStmt withBody(Mutator<Stmt> body) {
+	public WhileStmt withBody(Mutation<Stmt> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 

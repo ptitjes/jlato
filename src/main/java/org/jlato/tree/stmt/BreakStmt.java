@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
@@ -58,7 +58,7 @@ public class BreakStmt extends Stmt {
 		return location.nodeWithChild(ID, id);
 	}
 
-	public BreakStmt withId(Mutator<Name> id) {
+	public BreakStmt withId(Mutation<Name> id) {
 		return location.nodeWithChild(ID, id);
 	}
 

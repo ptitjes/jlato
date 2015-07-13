@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -57,7 +57,7 @@ public class ParenthesizedExpr extends Expr {
 		return location.nodeWithChild(INNER, inner);
 	}
 
-	public ParenthesizedExpr withInner(Mutator<Expr> inner) {
+	public ParenthesizedExpr withInner(Mutation<Expr> inner) {
 		return location.nodeWithChild(INNER, inner);
 	}
 

@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -66,7 +66,7 @@ public class QualifiedName extends Tree {
 		return location.nodeWithChild(QUALIFIER, qualifier);
 	}
 
-	public QualifiedName withQualifier(Mutator<QualifiedName> qualifier) {
+	public QualifiedName withQualifier(Mutation<QualifiedName> qualifier) {
 		return location.nodeWithChild(QUALIFIER, qualifier);
 	}
 
@@ -78,7 +78,7 @@ public class QualifiedName extends Tree {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public QualifiedName withName(Mutator<Name> name) {
+	public QualifiedName withName(Mutation<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

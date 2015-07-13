@@ -22,6 +22,6 @@ package org.jlato.tree;
 /**
  * @author Didier Villevalois
  */
-public interface Mutator<T> {
+public interface Mutation<T> {
 	T mutate(T tree);
 }

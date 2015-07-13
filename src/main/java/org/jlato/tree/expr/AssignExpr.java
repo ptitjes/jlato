@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -59,7 +59,7 @@ public class AssignExpr extends Expr {
 		return location.nodeWithChild(TARGET, target);
 	}
 
-	public AssignExpr withTarget(Mutator<Expr> target) {
+	public AssignExpr withTarget(Mutation<Expr> target) {
 		return location.nodeWithChild(TARGET, target);
 	}
 
@@ -71,7 +71,7 @@ public class AssignExpr extends Expr {
 		return location.withData(OPERATOR, operator);
 	}
 
-	public AssignExpr withOp(Mutator<AssignOp> operator) {
+	public AssignExpr withOp(Mutation<AssignOp> operator) {
 		return location.withData(OPERATOR, operator);
 	}
 
@@ -83,7 +83,7 @@ public class AssignExpr extends Expr {
 		return location.nodeWithChild(VALUE, value);
 	}
 
-	public AssignExpr withValue(Mutator<Expr> value) {
+	public AssignExpr withValue(Mutation<Expr> value) {
 		return location.nodeWithChild(VALUE, value);
 	}
 

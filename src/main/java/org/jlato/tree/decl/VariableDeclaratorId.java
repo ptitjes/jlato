@@ -23,8 +23,8 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
@@ -58,7 +58,7 @@ public class VariableDeclaratorId extends Tree {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public VariableDeclaratorId withName(Mutator<Name> name) {
+	public VariableDeclaratorId withName(Mutation<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -70,7 +70,7 @@ public class VariableDeclaratorId extends Tree {
 		return location.nodeWithChild(DIMS, dims);
 	}
 
-	public VariableDeclaratorId withDims(Mutator<NodeList<ArrayDim>> dims) {
+	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> dims) {
 		return location.nodeWithChild(DIMS, dims);
 	}
 

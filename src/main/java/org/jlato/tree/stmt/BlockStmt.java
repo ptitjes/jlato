@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -62,7 +62,7 @@ public class BlockStmt extends Stmt {
 		return location.nodeWithChild(STMTS, stmts);
 	}
 
-	public BlockStmt withStmts(Mutator<NodeList<Stmt>> stmts) {
+	public BlockStmt withStmts(Mutation<NodeList<Stmt>> stmts) {
 		return location.nodeWithChild(STMTS, stmts);
 	}
 

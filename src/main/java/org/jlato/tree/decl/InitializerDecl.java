@@ -23,8 +23,8 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.stmt.BlockStmt;
 
@@ -64,7 +64,7 @@ public class InitializerDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> InitializerDecl withModifiers(Mutator<NodeList<EM>> modifiers) {
+	public <EM extends Tree & ExtendedModifier> InitializerDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -76,7 +76,7 @@ public class InitializerDecl extends MemberDecl {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public InitializerDecl withBody(Mutator<BlockStmt> body) {
+	public InitializerDecl withBody(Mutation<BlockStmt> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 

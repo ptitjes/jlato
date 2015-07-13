@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
@@ -58,7 +58,7 @@ public class MemberValuePair extends Tree {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public MemberValuePair withName(Mutator<Name> name) {
+	public MemberValuePair withName(Mutation<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -70,7 +70,7 @@ public class MemberValuePair extends Tree {
 		return location.nodeWithChild(VALUE, value);
 	}
 
-	public MemberValuePair withValue(Mutator<Expr> value) {
+	public MemberValuePair withValue(Mutation<Expr> value) {
 		return location.nodeWithChild(VALUE, value);
 	}
 

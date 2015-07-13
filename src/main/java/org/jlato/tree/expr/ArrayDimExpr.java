@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -58,7 +58,7 @@ public class ArrayDimExpr extends Tree {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
-	public ArrayDimExpr withAnnotations(Mutator<NodeList<AnnotationExpr>> annotations) {
+	public ArrayDimExpr withAnnotations(Mutation<NodeList<AnnotationExpr>> annotations) {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
@@ -70,7 +70,7 @@ public class ArrayDimExpr extends Tree {
 		return location.nodeWithChild(EXPRESSION, expr);
 	}
 
-	public ArrayDimExpr withExpr(Mutator<Expr> expr) {
+	public ArrayDimExpr withExpr(Mutation<Expr> expr) {
 		return location.nodeWithChild(EXPRESSION, expr);
 	}
 

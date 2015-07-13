@@ -23,8 +23,8 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.decl.VariableDeclaratorId;
@@ -60,7 +60,7 @@ public class ArrayType extends ReferenceType {
 		return location.nodeWithChild(COMPONENT_TYPE, componentType);
 	}
 
-	public ArrayType withComponentType(Mutator<Type> componentType) {
+	public ArrayType withComponentType(Mutation<Type> componentType) {
 		return location.nodeWithChild(COMPONENT_TYPE, componentType);
 	}
 
@@ -72,7 +72,7 @@ public class ArrayType extends ReferenceType {
 		return location.nodeWithChild(DIMS, dims);
 	}
 
-	public VariableDeclaratorId withDims(Mutator<NodeList<ArrayDim>> dims) {
+	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> dims) {
 		return location.nodeWithChild(DIMS, dims);
 	}
 

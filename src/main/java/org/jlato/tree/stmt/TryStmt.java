@@ -24,8 +24,8 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.VariableDeclarationExpr;
 
@@ -60,7 +60,7 @@ public class TryStmt extends Stmt {
 		return location.nodeWithChild(RESOURCES, resources);
 	}
 
-	public TryStmt withResources(Mutator<NodeList<VariableDeclarationExpr>> resources) {
+	public TryStmt withResources(Mutation<NodeList<VariableDeclarationExpr>> resources) {
 		return location.nodeWithChild(RESOURCES, resources);
 	}
 
@@ -72,7 +72,7 @@ public class TryStmt extends Stmt {
 		return location.nodeWithChild(TRY_BLOCK, tryBlock);
 	}
 
-	public TryStmt withTryBlock(Mutator<BlockStmt> tryBlock) {
+	public TryStmt withTryBlock(Mutation<BlockStmt> tryBlock) {
 		return location.nodeWithChild(TRY_BLOCK, tryBlock);
 	}
 
@@ -84,7 +84,7 @@ public class TryStmt extends Stmt {
 		return location.nodeWithChild(CATCHS, catchs);
 	}
 
-	public TryStmt withCatchs(Mutator<NodeList<CatchClause>> catchs) {
+	public TryStmt withCatchs(Mutation<NodeList<CatchClause>> catchs) {
 		return location.nodeWithChild(CATCHS, catchs);
 	}
 
@@ -96,7 +96,7 @@ public class TryStmt extends Stmt {
 		return location.nodeWithChild(FINALLY_BLOCK, finallyBlock);
 	}
 
-	public TryStmt withFinallyBlock(Mutator<BlockStmt> finallyBlock) {
+	public TryStmt withFinallyBlock(Mutation<BlockStmt> finallyBlock) {
 		return location.nodeWithChild(FINALLY_BLOCK, finallyBlock);
 	}
 

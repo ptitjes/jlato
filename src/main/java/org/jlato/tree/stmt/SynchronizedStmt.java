@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -59,7 +59,7 @@ public class SynchronizedStmt extends Stmt {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
-	public SynchronizedStmt withExpr(Mutator<Expr> expr) {
+	public SynchronizedStmt withExpr(Mutation<Expr> expr) {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
@@ -71,7 +71,7 @@ public class SynchronizedStmt extends Stmt {
 		return location.nodeWithChild(BLOCK, block);
 	}
 
-	public SynchronizedStmt withBlock(Mutator<BlockStmt> block) {
+	public SynchronizedStmt withBlock(Mutation<BlockStmt> block) {
 		return location.nodeWithChild(BLOCK, block);
 	}
 

@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
@@ -65,7 +65,7 @@ public class FieldDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> FieldDecl withModifiers(Mutator<NodeList<EM>> modifiers) {
+	public <EM extends Tree & ExtendedModifier> FieldDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -77,7 +77,7 @@ public class FieldDecl extends MemberDecl {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public FieldDecl withType(Mutator<Type> type) {
+	public FieldDecl withType(Mutation<Type> type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 
@@ -89,7 +89,7 @@ public class FieldDecl extends MemberDecl {
 		return location.nodeWithChild(VARIABLES, variables);
 	}
 
-	public FieldDecl withVariables(Mutator<NodeList<VariableDeclarator>> variables) {
+	public FieldDecl withVariables(Mutation<NodeList<VariableDeclarator>> variables) {
 		return location.nodeWithChild(VARIABLES, variables);
 	}
 /*

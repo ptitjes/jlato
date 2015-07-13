@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
@@ -60,7 +60,7 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> InterfaceDecl withModifiers(Mutator<NodeList<EM>> modifiers) {
+	public <EM extends Tree & ExtendedModifier> InterfaceDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -76,7 +76,7 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public InterfaceDecl withName(Mutator<Name> name) {
+	public InterfaceDecl withName(Mutation<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -88,7 +88,7 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
-	public InterfaceDecl withTypeParams(Mutator<NodeList<TypeParameter>> typeParams) {
+	public InterfaceDecl withTypeParams(Mutation<NodeList<TypeParameter>> typeParams) {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
@@ -100,7 +100,7 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
-	public InterfaceDecl withExtendsClause(Mutator<NodeList<QualifiedType>> extendsClause) {
+	public InterfaceDecl withExtendsClause(Mutation<NodeList<QualifiedType>> extendsClause) {
 		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
@@ -112,7 +112,7 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 
-	public InterfaceDecl withMembers(Mutator<NodeList<MemberDecl>> members) {
+	public InterfaceDecl withMembers(Mutation<NodeList<MemberDecl>> members) {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 

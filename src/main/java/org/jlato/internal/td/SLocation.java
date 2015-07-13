@@ -22,7 +22,7 @@ package org.jlato.internal.td;
 import com.github.andrewoma.dexx.collection.TreeMap;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 
 /**
@@ -138,8 +138,8 @@ public class SLocation {
 		return (T) withTree(newNode).facade;
 	}
 
-	public <T extends Tree, C extends Tree> T nodeWithChild(int index, Mutator<C> mutator) {
-		return nodeWithChild(index, mutator.mutate(this.<C>nodeChild(index)));
+	public <T extends Tree, C extends Tree> T nodeWithChild(int index, Mutation<C> mutation) {
+		return nodeWithChild(index, mutation.mutate(this.<C>nodeChild(index)));
 	}
 
 	/* Tree methods */
@@ -157,8 +157,8 @@ public class SLocation {
 		return (T) withTree(newTree).facade;
 	}
 
-	public <T extends Tree, A> T withData(int index, Mutator<A> mutator) {
-		return withData(index, mutator.mutate(this.<A>data(index)));
+	public <T extends Tree, A> T withData(int index, Mutation<A> mutation) {
+		return withData(index, mutation.mutate(this.<A>data(index)));
 	}
 
 	/* NodeList methods */

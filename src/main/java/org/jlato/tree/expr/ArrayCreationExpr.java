@@ -24,8 +24,8 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.type.Type;
@@ -61,7 +61,7 @@ public class ArrayCreationExpr extends Expr {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public ArrayCreationExpr withType(Mutator<Type> type) {
+	public ArrayCreationExpr withType(Mutation<Type> type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 
@@ -73,7 +73,7 @@ public class ArrayCreationExpr extends Expr {
 		return location.nodeWithChild(DIMENSION_EXPRESSIONS, dimExprs);
 	}
 
-	public ArrayCreationExpr withDimExprs(Mutator<NodeList<ArrayDimExpr>> dimExprs) {
+	public ArrayCreationExpr withDimExprs(Mutation<NodeList<ArrayDimExpr>> dimExprs) {
 		return location.nodeWithChild(DIMENSION_EXPRESSIONS, dimExprs);
 	}
 
@@ -85,7 +85,7 @@ public class ArrayCreationExpr extends Expr {
 		return location.nodeWithChild(DIMENSIONS, dims);
 	}
 
-	public ArrayCreationExpr withDims(Mutator<NodeList<ArrayDim>> dims) {
+	public ArrayCreationExpr withDims(Mutation<NodeList<ArrayDim>> dims) {
 		return location.nodeWithChild(DIMENSIONS, dims);
 	}
 
@@ -97,7 +97,7 @@ public class ArrayCreationExpr extends Expr {
 		return location.nodeWithChild(INITIALIZER, initializer);
 	}
 
-	public ArrayCreationExpr withInit(Mutator<ArrayInitializerExpr> initializer) {
+	public ArrayCreationExpr withInit(Mutation<ArrayInitializerExpr> initializer) {
 		return location.nodeWithChild(INITIALIZER, initializer);
 	}
 

@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
@@ -58,7 +58,7 @@ public class ClassExpr extends Expr {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public ClassExpr withType(Mutator<Type> type) {
+	public ClassExpr withType(Mutation<Type> type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 

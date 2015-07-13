@@ -23,8 +23,8 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
@@ -60,7 +60,7 @@ public class LocalVariableDecl extends Decl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> LocalVariableDecl withModifiers(Mutator<NodeList<EM>> modifiers) {
+	public <EM extends Tree & ExtendedModifier> LocalVariableDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -72,7 +72,7 @@ public class LocalVariableDecl extends Decl {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public LocalVariableDecl withType(Mutator<Type> type) {
+	public LocalVariableDecl withType(Mutation<Type> type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 
@@ -84,7 +84,7 @@ public class LocalVariableDecl extends Decl {
 		return location.nodeWithChild(VARIABLES, variables);
 	}
 
-	public LocalVariableDecl withVariables(Mutator<NodeList<VariableDeclarator>> variables) {
+	public LocalVariableDecl withVariables(Mutation<NodeList<VariableDeclarator>> variables) {
 		return location.nodeWithChild(VARIABLES, variables);
 	}
 /*

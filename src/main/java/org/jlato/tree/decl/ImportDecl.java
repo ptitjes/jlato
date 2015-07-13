@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.QualifiedName;
 
@@ -61,7 +61,7 @@ public class ImportDecl extends Tree {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public ImportDecl withName(Mutator<QualifiedName> name) {
+	public ImportDecl withName(Mutation<QualifiedName> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

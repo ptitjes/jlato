@@ -25,7 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
@@ -63,7 +63,7 @@ public class LabeledStmt extends Stmt {
 		return location.nodeWithChild(LABEL, label);
 	}
 
-	public LabeledStmt withLabel(Mutator<Name> label) {
+	public LabeledStmt withLabel(Mutation<Name> label) {
 		return location.nodeWithChild(LABEL, label);
 	}
 
@@ -75,7 +75,7 @@ public class LabeledStmt extends Stmt {
 		return location.nodeWithChild(STMT, stmt);
 	}
 
-	public LabeledStmt withStmt(Mutator<Stmt> stmt) {
+	public LabeledStmt withStmt(Mutation<Stmt> stmt) {
 		return location.nodeWithChild(STMT, stmt);
 	}
 

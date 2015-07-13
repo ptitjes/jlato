@@ -24,8 +24,8 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
@@ -72,7 +72,7 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(Mutator<NodeList<EM>> modifiers) {
+	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
@@ -84,7 +84,7 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
-	public MethodDecl withTypeParams(Mutator<NodeList<TypeParameter>> typeParams) {
+	public MethodDecl withTypeParams(Mutation<NodeList<TypeParameter>> typeParams) {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
@@ -96,7 +96,7 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public MethodDecl withType(Mutator<Type> type) {
+	public MethodDecl withType(Mutation<Type> type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 
@@ -108,7 +108,7 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public MethodDecl withName(Mutator<Name> name) {
+	public MethodDecl withName(Mutation<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 
@@ -120,7 +120,7 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(PARAMETERS, params);
 	}
 
-	public MethodDecl withParams(Mutator<NodeList<FormalParameter>> params) {
+	public MethodDecl withParams(Mutation<NodeList<FormalParameter>> params) {
 		return location.nodeWithChild(PARAMETERS, params);
 	}
 
@@ -132,7 +132,7 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(DIMS, dims);
 	}
 
-	public VariableDeclaratorId withDims(Mutator<NodeList<ArrayDim>> dims) {
+	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> dims) {
 		return location.nodeWithChild(DIMS, dims);
 	}
 
@@ -144,7 +144,7 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
 	}
 
-	public ConstructorDecl withThrowsClause(Mutator<NodeList<QualifiedType>> throwsClause) {
+	public ConstructorDecl withThrowsClause(Mutation<NodeList<QualifiedType>> throwsClause) {
 		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
 	}
 
@@ -156,7 +156,7 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public MethodDecl withBody(Mutator<BlockStmt> body) {
+	public MethodDecl withBody(Mutation<BlockStmt> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 

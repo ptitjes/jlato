@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.FormalParameter;
 
@@ -59,7 +59,7 @@ public class CatchClause extends Tree {
 		return location.nodeWithChild(EXCEPT, except);
 	}
 
-	public CatchClause withExcept(Mutator<FormalParameter> except) {
+	public CatchClause withExcept(Mutation<FormalParameter> except) {
 		return location.nodeWithChild(EXCEPT, except);
 	}
 
@@ -71,7 +71,7 @@ public class CatchClause extends Tree {
 		return location.nodeWithChild(CATCH_BLOCK, catchBlock);
 	}
 
-	public CatchClause withCatchBlock(Mutator<BlockStmt> catchBlock) {
+	public CatchClause withCatchBlock(Mutation<BlockStmt> catchBlock) {
 		return location.nodeWithChild(CATCH_BLOCK, catchBlock);
 	}
 

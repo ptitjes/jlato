@@ -23,8 +23,8 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
@@ -58,7 +58,7 @@ public class UnionType extends Type {
 		return location.nodeWithChild(TYPES, types);
 	}
 
-	public UnionType withTypes(Mutator<NodeList<Type>> types) {
+	public UnionType withTypes(Mutation<NodeList<Type>> types) {
 		return location.nodeWithChild(TYPES, types);
 	}
 

@@ -150,7 +150,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public NodeList<T> rewriteAll(Mutator<T> mutator) {
+	public NodeList<T> rewriteAll(Mutation<T> mutator) {
 		final STree tree = location.tree;
 
 		final SNodeListState state = (SNodeListState) tree.state;

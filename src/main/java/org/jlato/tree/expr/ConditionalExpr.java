@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -58,7 +58,7 @@ public class ConditionalExpr extends Expr {
 		return location.nodeWithChild(CONDITION, condition);
 	}
 
-	public ConditionalExpr withCondition(Mutator<Expr> condition) {
+	public ConditionalExpr withCondition(Mutation<Expr> condition) {
 		return location.nodeWithChild(CONDITION, condition);
 	}
 
@@ -70,7 +70,7 @@ public class ConditionalExpr extends Expr {
 		return location.nodeWithChild(THEN_EXPR, thenExpr);
 	}
 
-	public ConditionalExpr withThenExpr(Mutator<Expr> thenExpr) {
+	public ConditionalExpr withThenExpr(Mutation<Expr> thenExpr) {
 		return location.nodeWithChild(THEN_EXPR, thenExpr);
 	}
 
@@ -82,7 +82,7 @@ public class ConditionalExpr extends Expr {
 		return location.nodeWithChild(ELSE_EXPR, elseExpr);
 	}
 
-	public ConditionalExpr withElseExpr(Mutator<Expr> elseExpr) {
+	public ConditionalExpr withElseExpr(Mutation<Expr> elseExpr) {
 		return location.nodeWithChild(ELSE_EXPR, elseExpr);
 	}
 

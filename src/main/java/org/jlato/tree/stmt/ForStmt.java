@@ -24,8 +24,8 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Mutator;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -60,7 +60,7 @@ public class ForStmt extends Stmt {
 		return location.nodeWithChild(INIT, init);
 	}
 
-	public ForStmt withInit(Mutator<NodeList<Expr>> init) {
+	public ForStmt withInit(Mutation<NodeList<Expr>> init) {
 		return location.nodeWithChild(INIT, init);
 	}
 
@@ -72,7 +72,7 @@ public class ForStmt extends Stmt {
 		return location.nodeWithChild(COMPARE, compare);
 	}
 
-	public ForStmt withCompare(Mutator<Expr> compare) {
+	public ForStmt withCompare(Mutation<Expr> compare) {
 		return location.nodeWithChild(COMPARE, compare);
 	}
 
@@ -84,7 +84,7 @@ public class ForStmt extends Stmt {
 		return location.nodeWithChild(UPDATE, update);
 	}
 
-	public ForStmt withUpdate(Mutator<NodeList<Expr>> update) {
+	public ForStmt withUpdate(Mutation<NodeList<Expr>> update) {
 		return location.nodeWithChild(UPDATE, update);
 	}
 
@@ -96,7 +96,7 @@ public class ForStmt extends Stmt {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public ForStmt withBody(Mutator<Stmt> body) {
+	public ForStmt withBody(Mutation<Stmt> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 

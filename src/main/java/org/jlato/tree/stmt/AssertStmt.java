@@ -24,7 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Mutator;
+import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -59,7 +59,7 @@ public class AssertStmt extends Stmt {
 		return location.nodeWithChild(CHECK, check);
 	}
 
-	public AssertStmt withCheck(Mutator<Expr> check) {
+	public AssertStmt withCheck(Mutation<Expr> check) {
 		return location.nodeWithChild(CHECK, check);
 	}
 
@@ -71,7 +71,7 @@ public class AssertStmt extends Stmt {
 		return location.nodeWithChild(MSG, msg);
 	}
 
-	public AssertStmt withMsg(Mutator<Expr> msg) {
+	public AssertStmt withMsg(Mutation<Expr> msg) {
 		return location.nodeWithChild(MSG, msg);
 	}
 
