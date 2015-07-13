@@ -61,19 +61,19 @@ public class ImportDecl extends Tree {
 	}
 
 	public boolean isStatic() {
-		return location.nodeData(STATIC);
+		return location.data(STATIC);
 	}
 
 	public ImportDecl setStatic(boolean isStatic) {
-		return location.nodeWithData(STATIC, isStatic);
+		return location.withData(STATIC, isStatic);
 	}
 
 	public boolean isOnDemand() {
-		return location.nodeData(ON_DEMAND);
+		return location.data(ON_DEMAND);
 	}
 
 	public ImportDecl setOnDemand(boolean isOnDemand) {
-		return location.nodeWithData(ON_DEMAND, isOnDemand);
+		return location.withData(ON_DEMAND, isOnDemand);
 	}
 
 	private static final int NAME = 0;

@@ -72,8 +72,8 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(Rewrite<NodeList<EM>> rewrite) {
-		return location.nodeWithChild(MODIFIERS, rewrite);
+	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
 	public NodeList<TypeParameter> typeParams() {

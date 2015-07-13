@@ -95,15 +95,15 @@ public class LiteralExpr<T> extends Expr {
 
 	@SuppressWarnings("unchecked")
 	public T value() {
-		final Class<T> literalClass = location.nodeData(CLASS);
-		final String literalString = location.nodeData(STRING);
+		final Class<T> literalClass = location.data(CLASS);
+		final String literalString = location.data(STRING);
 		return Literals.valueFor(literalClass, literalString);
 	}
 
 	@SuppressWarnings("unchecked")
 	public LiteralExpr<T> withValue(T value) {
-		final Class<T> literalClass = location.nodeData(CLASS);
-		return location.nodeWithData(STRING, Literals.from(literalClass, value));
+		final Class<T> literalClass = location.data(CLASS);
+		return location.withData(STRING, Literals.from(literalClass, value));
 	}
 
 	private static final int CLASS = 0;

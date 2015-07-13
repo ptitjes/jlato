@@ -59,11 +59,11 @@ public class AssignExpr extends Expr {
 	}
 
 	public AssignOp op() {
-		return location.nodeData(OPERATOR);
+		return location.data(OPERATOR);
 	}
 
 	public AssignExpr withOp(AssignOp operator) {
-		return location.nodeWithData(OPERATOR, operator);
+		return location.withData(OPERATOR, operator);
 	}
 
 	public Expr value() {

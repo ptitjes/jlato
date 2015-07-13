@@ -59,11 +59,11 @@ public class BinaryExpr extends Expr {
 	}
 
 	public BinaryOp op() {
-		return location.nodeData(OPERATOR);
+		return location.data(OPERATOR);
 	}
 
 	public BinaryExpr withOp(BinaryOp operator) {
-		return location.nodeWithData(OPERATOR, operator);
+		return location.withData(OPERATOR, operator);
 	}
 
 	public Expr right() {

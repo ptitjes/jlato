@@ -94,18 +94,6 @@ public class SLocation {
 		return nodeWithChild(index, rewrite.rewrite(this.<C>nodeChild(index)));
 	}
 
-	@SuppressWarnings("unchecked")
-	public <A> A nodeData(final int index) {
-		return (A) tree.state.data(index);
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends Tree, A> T nodeWithData(int index, A attribute) {
-		final SNodeState state = (SNodeState) tree.state;
-		final STree newNode = tree.withState(state.withData(index, attribute));
-		return (T) withTree(newNode).facade;
-	}
-
 	/* Tree methods */
 
 	@SuppressWarnings("unchecked")
@@ -119,6 +107,10 @@ public class SLocation {
 		final STreeState state = tree.state;
 		final STree newTree = tree.withState(state.withData(index, attribute));
 		return (T) withTree(newTree).facade;
+	}
+
+	public <T extends Tree, A> T withData(int index, Rewrite<A> rewrite) {
+		return withData(index, rewrite);
 	}
 
 	/* NodeList methods */

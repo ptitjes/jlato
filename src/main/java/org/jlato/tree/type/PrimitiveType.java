@@ -52,11 +52,11 @@ public class PrimitiveType extends AnnotatedType {
 	}
 
 	public Primitive type() {
-		return location.nodeData(TYPE);
+		return location.data(TYPE);
 	}
 
 	public PrimitiveType withType(Primitive type) {
-		return location.nodeWithData(TYPE, type);
+		return location.withData(TYPE, type);
 	}
 
 	private static final int TYPE = 0;

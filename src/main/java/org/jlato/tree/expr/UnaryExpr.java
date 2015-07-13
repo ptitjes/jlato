@@ -51,11 +51,11 @@ public class UnaryExpr extends Expr {
 	}
 
 	public UnaryOp op() {
-		return location.nodeData(OPERATOR);
+		return location.data(OPERATOR);
 	}
 
 	public UnaryExpr withOp(UnaryOp operator) {
-		return location.nodeWithData(OPERATOR, operator);
+		return location.withData(OPERATOR, operator);
 	}
 
 	public Expr expr() {

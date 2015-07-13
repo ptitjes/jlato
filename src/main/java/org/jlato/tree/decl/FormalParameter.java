@@ -68,11 +68,11 @@ public class FormalParameter extends Tree {
 	}
 
 	public boolean isVarArgs() {
-		return location.nodeData(VAR_ARG);
+		return location.data(VAR_ARG);
 	}
 
 	public FormalParameter setVarArgs(boolean isVarArgs) {
-		return location.nodeWithData(VAR_ARG, isVarArgs);
+		return location.withData(VAR_ARG, isVarArgs);
 	}
 
 	public VariableDeclaratorId id() {

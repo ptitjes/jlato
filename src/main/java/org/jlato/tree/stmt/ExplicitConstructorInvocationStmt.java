@@ -61,11 +61,11 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 	}
 
 	public boolean isThis() {
-		return location.nodeData(CONSTRUCTOR_KIND) == ConstructorKind.This;
+		return location.data(CONSTRUCTOR_KIND) == ConstructorKind.This;
 	}
 
 	public ExplicitConstructorInvocationStmt setThis(boolean isThis) {
-		return location.nodeWithData(CONSTRUCTOR_KIND, constructorKind(isThis));
+		return location.withData(CONSTRUCTOR_KIND, constructorKind(isThis));
 	}
 
 	public Expr expr() {
