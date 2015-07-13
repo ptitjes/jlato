@@ -19,9 +19,8 @@
 
 package org.jlato.printer;
 
-import com.github.andrewoma.dexx.collection.IndexedList;
-import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.shapes.IndentationConstraint;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.shapes.SpacingConstraint;
 import org.jlato.parser.ParserImplConstants;
@@ -206,81 +205,89 @@ public class Printer {
 		shape.render(sTree, sTree.run, this);
 	}
 
-	private int indentLevel;
-	private int delayedIndentation;
+	private int indentationLevel;
 	private boolean needsIndentation;
 	private boolean afterAlpha;
+
 	private Spacing spacing;
-	private WTokenRun whitespace;
+	private WTokenRun existingWhitespace;
 
 	private void reset() {
-		indentLevel = 0;
+		indentationLevel = 0;
 		needsIndentation = true;
 		afterAlpha = false;
 		spacing = Spacing.noSpace;
-		whitespace = null;
+		existingWhitespace = null;
 	}
 
-	public void addSpacingConstraint(SpacingConstraint constraint) {
-		final Spacing otherSpacing = constraint == null ? null : constraint.resolve(this);
+	public void encounteredSpacing(SpacingConstraint constraint) {
+		final Spacing otherSpacing = constraint.resolve(formattingSettings);
 		spacing = otherSpacing != null ? spacing.max(otherSpacing) : spacing;
 	}
 
-	public void addWhitespace(WTokenRun tokens) {
-		if (tokens == null) return;
-		if (whitespace != null)
-			throw new IllegalStateException();
-		whitespace = tokens;
+	public void encounteredWhitespace(WTokenRun whitespace) {
+		if (whitespace == null) return;
+
+		// Only one token run should be found between meaningful content
+		// This is ensured in RunBuilder and in its RunRenderer counterpart
+		if (existingWhitespace != null) throw new IllegalStateException();
+
+		existingWhitespace = whitespace;
+	}
+
+	public void encounteredIndentation(IndentationConstraint constraint) {
+		indentationLevel += constraint.resolve(formattingSettings);
+	}
+
+	public void append(LToken token, boolean requiresFormatting) {
+		renderSpacing();
+
+		boolean isAlpha = token.isKeyword() || token.isIdentifier();
+		if ((format || requiresFormatting) && needsIndentation) doPrintIndent();
+		if (afterAlpha && isAlpha) writer.append(" ");
+
+		writer.append(token.string);
+		afterAlpha = isAlpha;
 	}
 
 	private void renderSpacing() {
-		if (spacing != null) {
-			Spacing spacingCopy = spacing;
-			WTokenRun whitespaceCopy = whitespace;
-
-			spacing = Spacing.noSpace;
-			whitespace = null;
-
-			render(spacingCopy, whitespaceCopy);
-		}
-	}
-
-	public void render(Spacing expectedSpacing, WTokenRun tokens) {
-		switch (expectedSpacing.unit) {
+		switch (spacing.unit) {
 			case Space:
-				if (tokens != null && (!format || tokens.containsComments()))
-					dump(tokens, format);
+				if (existingWhitespace != null && (!format || existingWhitespace.containsComments()))
+					dump(existingWhitespace);
 				else {
-					for (int i = 0; i < expectedSpacing.count; i++) {
+					for (int i = 0; i < spacing.count; i++) {
 						appendWhiteSpace(" ");
 					}
 				}
 				break;
 			case Line:
-				if (tokens != null) {
-					// TODO Handle when new line count is higher than expected
+				if (existingWhitespace != null) {
 					if (format) {
-						final int actualEmptyLines = tokens.emptyLineCount();
-						appendNewLine(expectedSpacing.count - actualEmptyLines);
+						final int actualEmptyLines = existingWhitespace.emptyLineCount();
+						appendNewLine(spacing.count - actualEmptyLines);
 					}
-					dump(tokens, format);
+					dump(existingWhitespace);
 				} else {
-					appendNewLine(expectedSpacing.count);
+					appendNewLine(spacing.count);
 				}
 				break;
 		}
+
+		spacing = Spacing.noSpace;
+		existingWhitespace = null;
 	}
 
-	public void dump(WTokenRun tokens, boolean requiresFormatting) {
+	public void dump(WTokenRun tokens) {
 		for (WToken token : tokens.elements) {
 			switch (token.kind) {
 				case ParserImplConstants.JAVA_DOC_COMMENT:
 					// TODO format javadoc comment
-					appendComment(token.string, requiresFormatting);
+					appendJavaDoc(token.string);
 					break;
 				case ParserImplConstants.SINGLE_LINE_COMMENT:
 				case ParserImplConstants.MULTI_LINE_COMMENT:
-					appendComment(token.string, requiresFormatting);
+					appendComment(token.string);
 					break;
 				case ParserImplConstants.NEWLINE:
 					appendNewLine(token.string);
@@ -294,16 +301,18 @@ public class Printer {
 		}
 	}
 
-	public void append(LToken token, boolean requiresFormatting) {
-		renderSpacing();
-		boolean isAlpha = token.isKeyword() || token.isIdentifier();
-		if ((format || requiresFormatting) && needsIndentation) doPrintIndent();
-		if (afterAlpha && isAlpha) writer.append(" ");
-		writer.append(token.string);
-		afterAlpha = isAlpha;
+	private void appendJavaDoc(String image) {
+		// TODO Implement JavaDoc comment formatting
+		writer.append(image);
+		afterAlpha = false;
 	}
 
-	public void appendWhiteSpace(String string) {
+	private void appendComment(String image) {
+		writer.append(image);
+		afterAlpha = false;
+	}
+
+	private void appendWhiteSpace(String string) {
 		if (!(format && needsIndentation)) {
 			writer.append(string);
 			needsIndentation = false;
@@ -311,27 +320,19 @@ public class Printer {
 		afterAlpha = false;
 	}
 
-	public void appendNewLine(int count) {
+	private void appendNewLine(int count) {
 		for (int i = 0; i < count; i++) {
 			appendNewLine();
 		}
 	}
 
-	public void appendNewLine() {
+	private void appendNewLine() {
 		appendNewLine(formattingSettings.newLine());
 	}
 
-	public void appendNewLine(String image) {
+	private void appendNewLine(String image) {
 		doPrintNewLine(image);
 		afterAlpha = false;
-	}
-
-	public void indent(int indentation) {
-		indentLevel += indentation;
-	}
-
-	public void unIndent(int indentation) {
-		indentLevel -= indentation;
 	}
 
 	private void doPrintNewLine(String image) {
@@ -340,14 +341,9 @@ public class Printer {
 	}
 
 	private void doPrintIndent() {
-		for (int i = 0; i < indentLevel; i++) {
+		for (int i = 0; i < indentationLevel; i++) {
 			writer.append(formattingSettings.indentation());
 		}
 		needsIndentation = false;
-	}
-
-	public void appendComment(String image, boolean requiresFormatting) {
-		writer.append(image);
-		afterAlpha = false;
 	}
 }

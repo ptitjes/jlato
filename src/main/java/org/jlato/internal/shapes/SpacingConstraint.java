@@ -19,8 +19,8 @@
 
 package org.jlato.internal.shapes;
 
+import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.FormattingSettings.SpacingLocation;
-import org.jlato.printer.Printer;
 import org.jlato.printer.Spacing;
 
 /**
@@ -28,7 +28,7 @@ import org.jlato.printer.Spacing;
  */
 public abstract class SpacingConstraint {
 
-	public abstract Spacing resolve(Printer printer);
+	public abstract Spacing resolve(FormattingSettings settings);
 
 	// TODO add context argument (Expression, Statement, Block, Declaration, ...) ??
 
@@ -59,7 +59,7 @@ public abstract class SpacingConstraint {
 			this.spacing = spacing;
 		}
 
-		public Spacing resolve(Printer printer) {
+		public Spacing resolve(FormattingSettings settings) {
 			return spacing;
 		}
 	}
@@ -72,8 +72,8 @@ public abstract class SpacingConstraint {
 			this.location = location;
 		}
 
-		public Spacing resolve(Printer printer) {
-			return printer.formattingSettings.spacing(location);
+		public Spacing resolve(FormattingSettings settings) {
+			return settings.spacing(location);
 		}
 	}
 }

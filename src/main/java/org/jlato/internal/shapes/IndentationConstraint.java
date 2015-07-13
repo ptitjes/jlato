@@ -19,15 +19,15 @@
 
 package org.jlato.internal.shapes;
 
+import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.Printer;
 
 /**
  * @author Didier Villevalois
  */
 public abstract class IndentationConstraint {
 
-	public abstract int resolve(Printer printer);
+	public abstract int resolve(FormattingSettings settings);
 
 	// TODO add context argument (Expression, Statement, Block, Declaration, ...) ??
 
@@ -52,8 +52,8 @@ public abstract class IndentationConstraint {
 			this.factor = factor;
 		}
 
-		public int resolve(Printer printer) {
-			return printer.formattingSettings.indentation(context) * factor;
+		public int resolve(FormattingSettings settings) {
+			return settings.indentation(context) * factor;
 		}
 	}
 }

@@ -44,7 +44,7 @@ public class RunRenderer {
 		if (firstShape) firstShape = false;
 		else {
 			final WTokenRun tokens = (WTokenRun) safeNext(elements);
-			printer.addWhitespace(tokens);
+			printer.encounteredWhitespace(tokens);
 		}
 
 		final WRunRun subRun = (WRunRun) safeNext(elements);

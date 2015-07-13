@@ -30,6 +30,17 @@ public class WToken {
 	public final String string;
 
 	public WToken(int kind, String string) {
+		switch (kind) {
+			case ParserImplConstants.SINGLE_LINE_COMMENT:
+			case ParserImplConstants.MULTI_LINE_COMMENT:
+			case ParserImplConstants.JAVA_DOC_COMMENT:
+			case ParserImplConstants.NEWLINE:
+			case ParserImplConstants.WHITESPACE:
+				break;
+			default:
+				throw new IllegalArgumentException("Tokens are supposed to be meaningless");
+		}
+
 		this.kind = kind;
 		this.string = string;
 	}

@@ -28,7 +28,6 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.printer.Printer;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
-import org.jlato.tree.expr.AssignExpr;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -64,6 +63,9 @@ abstract class ParserBase {
 		reset();
 	}
 
+	// Interface with ParserImpl
+	protected abstract Token getToken(int index);
+
 	protected void reset() {
 		lastProcessedToken = null;
 		runStack.clear();
@@ -71,19 +73,29 @@ abstract class ParserBase {
 	}
 
 	protected void run() {
+		if (!configuration.preserveWhitespaces) return;
+
 		if (lastProcessedToken == null) {
 			lastProcessedToken = getToken(0);
 		}
-		pushWhitespaceForTokens(getToken(1));
+		pushWhitespace(getToken(1));
 		runStack.push(Vector.<WTokenRun>empty());
 	}
 
 	protected void lateRun() {
+		if (!configuration.preserveWhitespaces) return;
+
 		runStack.push(Vector.<WTokenRun>empty());
-		pushWhitespaceForTokens(getToken(1));
+		pushWhitespace(getToken(1));
 	}
 
-	private void pushWhitespaceForTokens(Token upToToken) {
+	protected void popNewWhitespaces() {
+		if (!configuration.preserveWhitespaces) return;
+
+		lastProcessedToken = getToken(0);
+	}
+
+	private void pushWhitespace(Token upToToken) {
 		if (lastProcessedToken != upToToken &&
 				(upToToken.next == null || lastProcessedToken != upToToken.next)) {
 			do {
@@ -96,7 +108,7 @@ abstract class ParserBase {
 	private void pushWhitespace(WTokenRun whitespace) {
 		if (whitespace == null) return;
 
-		// TODO Handle root whitespace before first token
+		// TODO Handle root whitespace before first token better than with LSDump
 		if (!runStack.isEmpty()) {
 			runStack.push(runStack.pop().append(whitespace));
 		} else {
@@ -104,11 +116,144 @@ abstract class ParserBase {
 		}
 	}
 
-	protected void popNewWhitespaces() {
-		lastProcessedToken = getToken(0);
+	private IndexedList<WTokenRun> popTokens() {
+		pushWhitespace(getToken(0));
+		return runStack.pop();
 	}
 
-	protected abstract Token getToken(int index);
+	protected <T extends Tree> T enRun(T facade) {
+		if (!configuration.preserveWhitespaces) return facade;
+
+		try {
+			final IndexedList<WTokenRun> tokens = popTokens();
+
+			if (facade == null) return null;
+
+			final STree tree = Tree.treeOf(facade);
+			final LexicalShape shape = tree.kind.shape();
+			return doEnRun(tree, shape, tokens);
+
+		} catch (EmptyStackException e) {
+			debugFailedPopTokens();
+			throw e;
+		}
+	}
+
+	protected <T extends Tree> T enRun(T facade, LexicalShape shape) {
+		if (!configuration.preserveWhitespaces) return facade;
+
+		try {
+			final IndexedList<WTokenRun> tokens = popTokens();
+
+			if (facade == null) return null;
+
+			final STree tree = Tree.treeOf(facade);
+			return doEnRun(tree, shape, tokens);
+
+		} catch (EmptyStackException e) {
+			debugFailedPopTokens();
+			throw e;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends Tree> T doEnRun(STree tree, LexicalShape shape,
+	                                   IndexedList<WTokenRun> tokens) {
+		try {
+			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
+			final WRunRun run = shape.enRun(tree, tokenIterator);
+
+			if (tokenIterator.hasNext()) {
+				// Flow up the remaining whitespace run for consumption by parent tree
+				final WTokenRun deferred = tokenIterator.next();
+				pushWhitespace(deferred);
+
+				// Only one whitespace run at most should flow up
+				if (tokenIterator.hasNext()) {
+					throw new IllegalStateException();
+				}
+			}
+
+			final STree newTree = tree.withRun(run);
+			final SLocation location = new SLocation(new SContext.Root(), newTree);
+			return (T) newTree.kind.instantiate(location);
+
+		} catch (NoSuchElementException e) {
+			debugFailedEnRun(tree, shape, tokens);
+			throw e;
+		}
+	}
+
+	// Interface with ParserImpl
+	protected void postProcessToken(Token token) {
+		if (!configuration.preserveWhitespaces) return;
+
+		token.whitespace = buildWhitespaceRunPart(token.specialToken);
+	}
+
+	private WTokenRun buildWhitespaceRunPart(Token token) {
+		if (token != null)
+			return buildWhitespaceRunPart(token.specialToken).append(new WToken(token.kind, token.image));
+		else return new WTokenRun(Vector.<WToken>empty());
+	}
+
+	static class TokenBase {
+
+		int realKind = ParserImplConstants.GT;
+		WTokenRun whitespace;
+	}
+
+	// Convenience methods for lists
+
+	protected <T extends Tree> NodeList<T> append(NodeList<T> list, T element) {
+		return list == null ? new NodeList<T>(element) : list.append(element);
+	}
+
+	// Debug methods
+
+	private void debugFailedPopTokens() {
+		System.out.println("Error at location: " + getToken(0).beginLine + ", " + getToken(0).beginColumn);
+		System.out.println("Failed to pop tokens !");
+	}
+
+	private void debugFailedEnRun(STree tree, LexicalShape shape, IndexedList<WTokenRun> tokens) {
+		System.out.println("Error at location: " + getToken(0).beginLine + ", " + getToken(0).beginColumn);
+
+		System.out.print("Failed to enRun tokens: ");
+		System.out.println(tokens);
+
+		System.out.println("For tree of kind: " + tree.kind);
+
+		final STreeState state = tree.state;
+
+		IndexedList<STree> children =
+				state instanceof SNodeListState ? ((SNodeListState) state).children :
+						state instanceof SNodeState ? ((SNodeState) state).children :
+								Vector.<STree>empty();
+		if (!children.isEmpty()) {
+			System.out.println("With children: ");
+			for (int i = 0; i < children.size(); i++) {
+				STree child = children.get(i);
+				System.out.print("  " + i + " - ");
+				if (child == null) {
+					System.out.println("null");
+				} else {
+					System.out.print(child.kind + ": ");
+					System.out.println(Printer.printToString(child.asTree()));
+				}
+			}
+		}
+
+		System.out.println("For shape: " + shape);
+		dumpRunStack();
+	}
+
+	private void dumpRunStack() {
+		System.out.println("RunStack dump:");
+		for (int i = runStack.size() - 1; i >= 0; i--) {
+			System.out.println("  " + runStack.get(i));
+		}
+	}
 
 	public static boolean lContains(IndexedList<LToken> tokens, String str) {
 		for (LToken token : tokens) {
@@ -124,130 +269,5 @@ abstract class ParserBase {
 			}
 		}
 		return false;
-	}
-
-	protected <T extends Tree> T enRun(T facade) {
-		if (!configuration.preserveWhitespaces) return facade;
-
-		try {
-			final IndexedList<WTokenRun> tokens = popTokens();
-
-			if (facade == null) return null;
-
-			final STree tree = Tree.treeOf(facade);
-			final LexicalShape shape = tree.kind.shape();
-			return doEnRun(tree, shape, tokens);
-		} catch (EmptyStackException e) {
-			System.out.println("Failed to pop tokens:");
-			System.out.println("Parser location: " + getToken(0).beginLine + ", " + getToken(0).beginColumn);
-			throw e;
-		}
-	}
-
-	protected <T extends Tree> T enRun(T facade, LexicalShape shape) {
-		if (!configuration.preserveWhitespaces) return facade;
-
-		try {
-			final IndexedList<WTokenRun> tokens = popTokens();
-
-			if (facade == null) return null;
-
-			final STree tree = Tree.treeOf(facade);
-			return doEnRun(tree, shape, tokens);
-		} catch (EmptyStackException e) {
-			System.out.println("Failed to pop tokens:");
-			System.out.println("Parser location: " + getToken(0).beginLine + ", " + getToken(0).beginColumn);
-			throw e;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private <T extends Tree> T doEnRun(STree tree, LexicalShape shape,
-	                                   IndexedList<WTokenRun> tokens) {
-		try {
-			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
-			final WRunRun run = shape.enRun(tree, tokenIterator);
-
-			if (tokenIterator.hasNext()) {
-				final WTokenRun defered = tokenIterator.next();
-				pushWhitespace(defered);
-
-				if (tokenIterator.hasNext()) {
-					throw new IllegalStateException();
-				}
-				while (tokenIterator.hasNext()) {
-					pushWhitespace(tokenIterator.next());
-				}
-			}
-
-			final STree newTree = tree.withRun(run);
-
-			final SLocation location = new SLocation(new SContext.Root(), newTree);
-			return (T) newTree.kind.instantiate(location);
-
-		} catch (NoSuchElementException e) {
-			System.out.println("Failed to enRun tokens:");
-			System.out.println(tokens);
-			System.out.println("For tree of kind: " + tree.kind);
-
-			final STreeState state = tree.state;
-			if (state instanceof SNodeListState) {
-				System.out.println("Elements: ");
-				for (STree child : ((SNodeListState) state).children) {
-					System.out.println(Printer.printToString(child.asTree()));
-					System.out.println("  " + child.kind);
-				}
-			} else if (state instanceof SNodeState && tree.kind == AssignExpr.kind) {
-				System.out.println("Children: ");
-				final STree target = ((SNodeState) state).child(0);
-				final STree value = ((SNodeState) state).child(1);
-				System.out.println(Printer.printToString(target.asTree()));
-				System.out.println(Printer.printToString(value.asTree()));
-			}
-			System.out.println("For shape: " + shape);
-			System.out.println("Parser location: " + getToken(0).beginLine + ", " + getToken(0).beginColumn);
-			dumpRunStack();
-			throw e;
-		}
-	}
-
-	private void dumpRunStack() {
-		System.out.println("RunStack dump: ");
-		for (int i = runStack.size() - 1; i >= 0; i--) {
-			System.out.println("  " + runStack.get(i));
-		}
-	}
-
-	protected void popRun() {
-		popTokens();
-	}
-
-	private IndexedList<WTokenRun> popTokens() {
-		pushWhitespaceForTokens(getToken(0));
-		return runStack.pop();
-	}
-
-	protected void postProcessToken(Token token) {
-		if (configuration.preserveWhitespaces) {
-			token.whitespace = buildWhitespaceRunPart(token.specialToken);
-		}
-	}
-
-	private WTokenRun buildWhitespaceRunPart(Token token) {
-		if (token != null)
-			return buildWhitespaceRunPart(token.specialToken).append(new WToken(token.kind, token.image));
-		else return new WTokenRun(Vector.<WToken>empty());
-	}
-
-	static class TokenBase {
-
-		int realKind = ParserImplConstants.GT;
-		WTokenRun whitespace;
-	}
-
-	// Utility methods
-
-	protected <T extends Tree> NodeList<T> append(NodeList<T> list, T element) {
-		return list == null ? new NodeList<T>(element) : list.append(element);
 	}
 }

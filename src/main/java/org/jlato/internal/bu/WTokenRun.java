@@ -54,7 +54,8 @@ public class WTokenRun extends WRun {
 				case ParserImplConstants.WHITESPACE:
 					break;
 				default:
-					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
+					// Checked at WToken instantiation
+					throw new IllegalStateException();
 			}
 		}
 		return count;
@@ -71,7 +72,8 @@ public class WTokenRun extends WRun {
 				case ParserImplConstants.WHITESPACE:
 					break;
 				default:
-					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
+					// Checked at WToken instantiation
+					throw new IllegalStateException();
 			}
 		}
 		return false;

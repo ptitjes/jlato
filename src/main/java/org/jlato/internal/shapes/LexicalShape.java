@@ -39,23 +39,23 @@ public abstract class LexicalShape {
 	public abstract void render(STree tree, WRunRun run, Printer printer);
 
 	public LSDecorated withSpacing(SpacingConstraint before, SpacingConstraint after) {
-		return new LSSpacing(this, before, after, null, null);
+		return new LSConstraint(this, before, after, null, null);
 	}
 
 	public LSDecorated withSpacingBefore(SpacingConstraint spacingBefore) {
-		return new LSSpacing(this, spacingBefore, null, null, null);
+		return new LSConstraint(this, spacingBefore, null, null, null);
 	}
 
 	public LSDecorated withSpacingAfter(SpacingConstraint spacingAfter) {
-		return new LSSpacing(this, null, spacingAfter, null, null);
+		return new LSConstraint(this, null, spacingAfter, null, null);
 	}
 
 	public LSDecorated withIndentationBefore(IndentationConstraint indentationBefore) {
-		return new LSSpacing(this, null, null, indentationBefore, null);
+		return new LSConstraint(this, null, null, indentationBefore, null);
 	}
 
 	public LSDecorated withIndentationAfter(IndentationConstraint indentationAfter) {
-		return new LSSpacing(this, null, null, null, indentationAfter);
+		return new LSConstraint(this, null, null, null, indentationAfter);
 	}
 
 	public static LSNone none() {

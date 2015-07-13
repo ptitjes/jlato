@@ -50,7 +50,7 @@ public class LSDump extends LexicalShape {
 		final IndexedList<WTokenRun> data = (IndexedList<WTokenRun>) tree.state.data(dataIndex);
 		if (data != null) {
 			for (WTokenRun tokens : data) {
-				printer.dump(tokens, false);
+				printer.dump(tokens);
 			}
 		}
 	}

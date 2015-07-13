@@ -29,18 +29,18 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public final class LSSpacing extends LSDecorated {
+public final class LSConstraint extends LSDecorated {
 
 	private final SpacingConstraint spacingBefore;
 	private final SpacingConstraint spacingAfter;
 	private final IndentationConstraint indentationBefore;
 	private final IndentationConstraint indentationAfter;
 
-	public LSSpacing(LexicalShape shape,
-	                 SpacingConstraint spacingBefore,
-	                 SpacingConstraint spacingAfter,
-	                 IndentationConstraint indentationBefore,
-	                 IndentationConstraint indentationAfter) {
+	public LSConstraint(LexicalShape shape,
+	                    SpacingConstraint spacingBefore,
+	                    SpacingConstraint spacingAfter,
+	                    IndentationConstraint indentationBefore,
+	                    IndentationConstraint indentationAfter) {
 		super(shape);
 		this.spacingBefore = spacingBefore;
 		this.spacingAfter = spacingAfter;
@@ -48,24 +48,24 @@ public final class LSSpacing extends LSDecorated {
 		this.indentationAfter = indentationAfter;
 	}
 
-	public LSSpacing withSpacing(SpacingConstraint before, SpacingConstraint after) {
-		return new LSSpacing(shape, before, after, indentationBefore, indentationAfter);
+	public LSConstraint withSpacing(SpacingConstraint before, SpacingConstraint after) {
+		return new LSConstraint(shape, before, after, indentationBefore, indentationAfter);
 	}
 
-	public LSSpacing withSpacingBefore(SpacingConstraint spacingBefore) {
-		return new LSSpacing(shape, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
+	public LSConstraint withSpacingBefore(SpacingConstraint spacingBefore) {
+		return new LSConstraint(shape, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
 	}
 
-	public LSSpacing withSpacingAfter(SpacingConstraint spacingAfter) {
-		return new LSSpacing(shape, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
+	public LSConstraint withSpacingAfter(SpacingConstraint spacingAfter) {
+		return new LSConstraint(shape, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
 	}
 
-	public LSSpacing withIndentationBefore(IndentationConstraint indentationBefore) {
-		return new LSSpacing(shape, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
+	public LSConstraint withIndentationBefore(IndentationConstraint indentationBefore) {
+		return new LSConstraint(shape, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
 	}
 
-	public LSSpacing withIndentationAfter(IndentationConstraint indentationAfter) {
-		return new LSSpacing(shape, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
+	public LSConstraint withIndentationAfter(IndentationConstraint indentationAfter) {
+		return new LSConstraint(shape, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
 	}
 
 	@Override
@@ -79,12 +79,12 @@ public final class LSSpacing extends LSDecorated {
 	}
 
 	public void render(STree tree, WRunRun run, Printer printer) {
-		if (spacingBefore != null) printer.addSpacingConstraint(spacingBefore);
-		if (indentationBefore != null) printer.indent(indentationBefore.resolve(printer));
+		if (spacingBefore != null) printer.encounteredSpacing(spacingBefore);
+		if (indentationBefore != null) printer.encounteredIndentation(indentationBefore);
 
 		super.render(tree, run, printer);
 
-		if (indentationAfter != null) printer.indent(indentationAfter.resolve(printer));
-		if (spacingAfter != null) printer.addSpacingConstraint(spacingAfter);
+		if (indentationAfter != null) printer.encounteredIndentation(indentationAfter);
+		if (spacingAfter != null) printer.encounteredSpacing(spacingAfter);
 	}
 }
