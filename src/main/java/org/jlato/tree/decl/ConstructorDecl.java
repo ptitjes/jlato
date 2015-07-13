@@ -52,6 +52,11 @@ public class ConstructorDecl extends MemberDecl {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParams, name, params, throwsClause, body)))));
 	}
 
+	@Override
+	public MemberKind memberKind() {
+		return MemberKind.Constructor;
+	}
+
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}

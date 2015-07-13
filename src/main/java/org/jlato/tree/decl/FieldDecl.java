@@ -51,6 +51,11 @@ public class FieldDecl extends MemberDecl {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, type, variables/*, javadocComment*/)))));
 	}
 
+	@Override
+	public MemberKind memberKind() {
+		return MemberKind.Field;
+	}
+
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}

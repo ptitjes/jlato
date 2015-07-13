@@ -52,6 +52,11 @@ public class AnnotationMemberDecl extends MemberDecl {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, type, name, dims, defaultValue)))));
 	}
 
+	@Override
+	public MemberKind memberKind() {
+		return MemberKind.AnnotationMember;
+	}
+
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}

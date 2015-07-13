@@ -59,6 +59,11 @@ public class MethodDecl extends MemberDecl {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParams, type, name, params, dims, throwsClause, body)))));
 	}
 
+	@Override
+	public MemberKind memberKind() {
+		return MemberKind.Method;
+	}
+
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}

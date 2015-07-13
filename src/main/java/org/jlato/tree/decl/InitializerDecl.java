@@ -50,6 +50,11 @@ public class InitializerDecl extends MemberDecl {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, body/*, javadocComment*/)))));
 	}
 
+	@Override
+	public MemberKind memberKind() {
+		return MemberKind.Initializer;
+	}
+
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}

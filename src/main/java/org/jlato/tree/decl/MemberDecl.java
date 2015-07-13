@@ -37,6 +37,8 @@ public abstract class MemberDecl extends Decl {
 		super(location);
 	}
 
+	public abstract MemberKind memberKind();
+
 	public static final LexicalShape bodyShape = list(true,
 			alternative(emptyList(),
 					token(LToken.BraceLeft)
@@ -61,4 +63,16 @@ public abstract class MemberDecl extends Decl {
 			none().withSpacingAfter(spacing(ClassBody_BetweenMembers)),
 			none().withSpacingAfter(spacing(ClassBody_AfterMembers))
 	);
+
+	public enum MemberKind {
+		Empty,
+		Initializer,
+		Constructor,
+		Method,
+		AnnotationMember,
+		Field,
+		EnumConstant,
+		Type,
+		// Keep last comma
+	}
 }

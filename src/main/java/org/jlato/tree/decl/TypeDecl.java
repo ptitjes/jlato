@@ -33,6 +33,11 @@ public abstract class TypeDecl extends MemberDecl {
 		super(location);
 	}
 
+	@Override
+	public MemberKind memberKind() {
+		return MemberKind.Type;
+	}
+
 	public abstract TypeKind typeKind();
 
 	public static final LexicalShape listShape = list(

@@ -53,6 +53,11 @@ public class EnumConstantDecl extends MemberDecl {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, args, classBody/*, javadocComment*/)))));
 	}
 
+	@Override
+	public MemberKind memberKind() {
+		return MemberKind.EnumConstant;
+	}
+
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
 		return location.nodeChild(MODIFIERS);
 	}

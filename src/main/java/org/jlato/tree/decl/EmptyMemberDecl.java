@@ -48,5 +48,10 @@ public class EmptyMemberDecl extends MemberDecl {
 		super(new SLocation(new STree(kind, new SLeafState(dataOf()))));
 	}
 
+	@Override
+	public MemberKind memberKind() {
+		return MemberKind.Empty;
+	}
+
 	public final static LexicalShape shape = token(LToken.SemiColon);
 }
