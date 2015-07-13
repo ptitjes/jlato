@@ -1377,7 +1377,7 @@ TypeDecl AnnotationTypeDecl(NodeList modifiers):
 NodeList AnnotationTypeBody():
 {
 	NodeList ret = new NodeList();
-	Decl member;
+	MemberDecl member;
 }
 {
   { run(); }
@@ -1388,10 +1388,10 @@ NodeList AnnotationTypeBody():
 }
 
 // TODO Merge with ClassOrInterfaceDecl production and do later checks programmaticaly
-Decl AnnotationTypeBodyDecl():
+MemberDecl AnnotationTypeBodyDecl():
 {
    NodeList modifiers;
-   Decl ret;
+   MemberDecl ret;
 }
 {
   { run(); }
@@ -1479,7 +1479,7 @@ NodeList TypeBounds():
 NodeList ClassOrInterfaceBody(TypeKind typeKind):
 {
 	NodeList ret = new NodeList();
-	Decl member;
+	MemberDecl member;
 }
 {
   { run(); }
@@ -1491,7 +1491,7 @@ NodeList ClassOrInterfaceBody(TypeKind typeKind):
 
 NodeList ClassOrInterfaceBodyDecls(TypeKind typeKind):
 {
-	Decl member;
+	MemberDecl member;
 	NodeList members = new NodeList();
 }
 {
@@ -1500,10 +1500,10 @@ NodeList ClassOrInterfaceBodyDecls(TypeKind typeKind):
     { return enRun(members, MemberDecl.membersShape); }
 }
 
-Decl ClassOrInterfaceBodyDecl(TypeKind typeKind):
+MemberDecl ClassOrInterfaceBodyDecl(TypeKind typeKind):
 {
    NodeList modifiers;
-   Decl ret;
+   MemberDecl ret;
 }
 {
   { run(); }
