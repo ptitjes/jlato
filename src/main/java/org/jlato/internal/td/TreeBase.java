@@ -45,6 +45,10 @@ public abstract class TreeBase {
 		return location.root();
 	}
 
+	protected static SLocation locationOf(TreeBase facade) {
+		return facade == null ? null : facade.location;
+	}
+
 	public static STree treeOf(TreeBase facade) {
 		return facade == null ? null : facade.location.tree;
 	}

@@ -158,17 +158,17 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		if (trees.isEmpty()) return this;
 
 		Builder<STree, Vector<STree>> newTrees = Vector.<STree>factory().newBuilder();
-		for (STree child : trees) {
-			newTrees.add(doRewriteChild(child, rewrite));
+		for (int i = 0; i < trees.size(); i++) {
+			T rewrote = rewrite.rewrite(get(i));
+			SLocation location = Tree.locationOf(rewrote);
+
+			// TODO Handle change in the node-list run (leading comments and trailing comment)
+
+			newTrees.add(location.tree);
 		}
 
 		STree newTree = tree.withState(state.withChildren(newTrees.build()));
 		return (NodeList<T>) location.withTree(newTree).facade;
-	}
-
-	@SuppressWarnings("unchecked")
-	private STree doRewriteChild(STree child, Rewrite<T> rewrite) {
-		return Tree.treeOf(rewrite.rewrite((T) child.asTree()));
 	}
 
 	public Iterator<T> iterator() {
