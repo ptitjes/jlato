@@ -92,11 +92,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		STree newTree = tree.withState(newState);
 
 		LRun run = tree.run;
-		if (run != null) {
-			final ArrayList<LRun> subRuns = run.subRuns.prepend(null).prepend(null);
-			IndexedList<IndexedList<LToken>> whitespaces = run.whitespaces.prepend(null).prepend(null);
-			newTree = newTree.withRun(new LRun(subRuns, whitespaces));
-		}
+		if (run != null) newTree = newTree.withRun(insertAt(run, 0));
 
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
@@ -110,13 +106,57 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		STree newTree = tree.withState(newState);
 
 		LRun run = tree.run;
-		if (run != null) {
-			final ArrayList<LRun> subRuns = run.subRuns.append(null).append(null);
-			IndexedList<IndexedList<LToken>> whitespaces = run.whitespaces.append(null).append(null);
-			newTree = newTree.withRun(new LRun(subRuns, whitespaces));
-		}
+		if (run != null) newTree = newTree.withRun(insertAt(run, state.children.size()));
 
 		return (NodeList<T>) location.withTree(newTree).facade;
+	}
+
+	@SuppressWarnings("unchecked")
+	public NodeList<T> insert(int index, T element) {
+		final STree tree = location.tree;
+
+		final SNodeListState state = (SNodeListState) tree.state;
+		final Vector<STree> trees = state.children;
+		if (index < 0 || index > trees.size())
+			throw new IllegalArgumentException();
+
+		final SNodeListState newState = state.withChildren(insertAt(trees, index, treeOf(element)));
+		STree newTree = tree.withState(newState);
+
+		LRun run = tree.run;
+		if (run != null) newTree = newTree.withRun(insertAt(run, index));
+
+		return (NodeList<T>) location.withTree(newTree).facade;
+	}
+
+	private Vector<STree> insertAt(Vector<STree> trees, int index, STree element) {
+		Vector<STree> leftTrees = trees.take(index);
+		Vector<STree> rightTrees = trees.drop(index);
+		Vector<STree> newTrees = leftTrees.append(element);
+		for (STree rightTree : rightTrees) {
+			newTrees = newTrees.append(rightTree);
+		}
+		return newTrees;
+	}
+
+	private LRun insertAt(LRun run, int index) {
+		boolean last = index == (run.subRuns.size() - 1) / 2;
+
+		ArrayList<LRun> leftSubRuns = run.subRuns.take(index * 2 + (last ? 0 : 1));
+		ArrayList<LRun> rightSubRuns = run.subRuns.drop(index * 2 + (last ? 0 : 1));
+		ArrayList<LRun> newSubRuns = leftSubRuns.append(null).append(null);
+		for (LRun rightSubRun : rightSubRuns) {
+			newSubRuns = newSubRuns.append(rightSubRun);
+		}
+
+		IndexedList<IndexedList<LToken>> leftWhitspaces = run.whitespaces.take(index * 2);
+		IndexedList<IndexedList<LToken>> rightWhitspaces = run.whitespaces.drop(index * 2);
+		IndexedList<IndexedList<LToken>> newWhitspaces = leftWhitspaces.append(null).append(null);
+		for (IndexedList<LToken> whitespaces : rightWhitspaces) {
+			newWhitspaces = newWhitspaces.append(whitespaces);
+		}
+
+		return new LRun(newSubRuns, newWhitspaces);
 	}
 
 	public Iterator<T> iterator() {
