@@ -24,7 +24,7 @@ import org.jlato.parser.ParserImplConstants;
 /**
  * @author Didier Villevalois
  */
-public class WToken extends WElement {
+public class WToken {
 
 	public final int kind;
 	public final String string;

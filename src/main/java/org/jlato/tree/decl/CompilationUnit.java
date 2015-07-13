@@ -20,10 +20,7 @@
 package org.jlato.tree.decl;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.WRun;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LSDump;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
@@ -51,7 +48,7 @@ public class CompilationUnit extends Tree {
 		super(location);
 	}
 
-	public CompilationUnit(IndexedList<WRun> preamble, PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
+	public CompilationUnit(IndexedList<WTokenRun> preamble, PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(packageDecl, imports, types), dataOf(preamble)))));
 	}
 

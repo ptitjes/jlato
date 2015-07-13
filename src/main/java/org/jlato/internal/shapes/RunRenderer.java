@@ -20,8 +20,9 @@
 package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.WElement;
+import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WRun;
+import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
 
 import java.util.Iterator;
@@ -31,22 +32,22 @@ import java.util.Iterator;
  */
 public class RunRenderer {
 
-	private final Iterator<WElement> elements;
+	private final Iterator<WRun> elements;
 
 	private boolean firstShape = true;
 
-	public RunRenderer(WRun run) {
+	public RunRenderer(WRunRun run) {
 		elements = run == null ? null : run.elements.iterator();
 	}
 
 	public void renderNext(LexicalShape shape, STree tree, Printer printer) {
 		if (firstShape) firstShape = false;
 		else {
-			final WRun tokens = (WRun) safeNext(elements);
+			final WTokenRun tokens = (WTokenRun) safeNext(elements);
 			printer.addWhitespace(tokens);
 		}
 
-		final WRun subRun = (WRun) safeNext(elements);
+		final WRunRun subRun = (WRunRun) safeNext(elements);
 		if (shape != null) {
 			shape.render(tree, subRun, printer);
 		}

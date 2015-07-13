@@ -19,8 +19,6 @@
 
 package org.jlato.tree;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
-import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
@@ -93,7 +91,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		final SNodeListState newState = state.withChildren(trees.prepend(treeOf(element)));
 		STree newTree = tree.withState(newState);
 
-		WRun run = tree.run;
+		WRunRun run = tree.run;
 		if (run != null) newTree = newTree.withRun(insertAt(run, 0, false));
 
 		return (NodeList<T>) location.withTree(newTree).facade;
@@ -109,7 +107,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		final SNodeListState newState = state.withChildren(trees.append(treeOf(element)));
 		STree newTree = tree.withState(newState);
 
-		WRun run = tree.run;
+		WRunRun run = tree.run;
 		if (run != null) newTree = newTree.withRun(insertAt(run, trees.size(), true));
 
 		return (NodeList<T>) location.withTree(newTree).facade;
@@ -128,7 +126,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		final SNodeListState newState = state.withChildren(insertAt(trees, index, treeOf(element)));
 		STree newTree = tree.withState(newState);
 
-		WRun run = tree.run;
+		WRunRun run = tree.run;
 		if (run != null) newTree = newTree.withRun(insertAt(run, index, index == trees.size()));
 
 		return (NodeList<T>) location.withTree(newTree).facade;
@@ -144,7 +142,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		return newTrees;
 	}
 
-	private WRun insertAt(WRun run, int index, boolean last) {
+	private WRunRun insertAt(WRunRun run, int index, boolean last) {
 		// If not last, count in the before shape
 		// If last, count in the missing separator shape
 		return run.insertBefore(index * 2 + (last ? 0 : 1), 2);

@@ -20,7 +20,8 @@
 package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.WRun;
+import org.jlato.internal.bu.WRunRun;
+import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
 
 import java.util.Iterator;
@@ -73,11 +74,11 @@ public final class LSSpacing extends LSDecorated {
 	}
 
 	@Override
-	public WRun enRun(STree tree, Iterator<WRun> tokenIterator) {
+	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
 		return super.enRun(tree, tokenIterator);
 	}
 
-	public void render(STree tree, WRun run, Printer printer) {
+	public void render(STree tree, WRunRun run, Printer printer) {
 		if (spacingBefore != null) printer.addSpacingConstraint(spacingBefore);
 		if (indentationBefore != null) printer.indent(indentationBefore.resolve(printer));
 

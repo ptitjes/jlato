@@ -22,7 +22,8 @@ package org.jlato.internal.shapes;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.WRun;
+import org.jlato.internal.bu.WRunRun;
+import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
 
 import java.util.Iterator;
@@ -52,7 +53,7 @@ public final class LSComposite extends LexicalShape {
 	}
 
 	@Override
-	public WRun enRun(STree tree, Iterator<WRun> tokenIterator) {
+	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
 		final RunBuilder builder = new RunBuilder(tokenIterator);
 		for (LexicalShape shape : shapes) {
 			builder.handleNext(shape, tree);
@@ -60,7 +61,7 @@ public final class LSComposite extends LexicalShape {
 		return builder.build();
 	}
 
-	public void render(STree tree, WRun run, Printer printer) {
+	public void render(STree tree, WRunRun run, Printer printer) {
 		final RunRenderer renderer = new RunRenderer(run);
 		for (LexicalShape shape : shapes) {
 			renderer.renderNext(shape, tree, printer);

@@ -48,11 +48,11 @@ public final class LSTravesal extends LSDecorated {
 	}
 
 	@Override
-	public WRun enRun(STree tree, Iterator<WRun> tokenIterator) {
+	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
 		return null;
 	}
 
-	public void render(STree tree, WRun run, Printer printer) {
+	public void render(STree tree, WRunRun run, Printer printer) {
 		final STree child = traverse(tree);
 		if (child == null) return;
 

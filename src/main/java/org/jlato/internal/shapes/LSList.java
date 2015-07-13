@@ -51,7 +51,7 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
-	public WRun enRun(STree tree, Iterator<WRun> tokenIterator) {
+	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
 		final RunBuilder builder = new RunBuilder(tokenIterator);
 
 		final SNodeListState state = (SNodeListState) tree.state;
@@ -79,7 +79,7 @@ public final class LSList extends LexicalShape {
 		return builder.build();
 	}
 
-	public void render(STree tree, WRun run, Printer printer) {
+	public void render(STree tree, WRunRun run, Printer printer) {
 		final SNodeListState state = (SNodeListState) tree.state;
 		final Vector<STree> children = state.children;
 		final boolean isEmpty = children.isEmpty();

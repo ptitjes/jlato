@@ -19,9 +19,7 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.WRun;
+import org.jlato.internal.bu.*;
 import org.jlato.printer.Printer;
 
 import java.util.Iterator;
@@ -47,11 +45,11 @@ public final class LSToken extends LexicalShape {
 	}
 
 	@Override
-	public WRun enRun(STree tree, Iterator<WRun> tokenIterator) {
+	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
 		return null;
 	}
 
-	public void render(STree tree, WRun run, Printer printer) {
+	public void render(STree tree, WRunRun run, Printer printer) {
 		final LToken token = provider.tokenFor(tree);
 		if (token == null) throw new IllegalStateException();
 

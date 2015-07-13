@@ -211,7 +211,7 @@ public class Printer {
 	private boolean needsIndentation;
 	private boolean afterAlpha;
 	private Spacing spacing;
-	private WRun whitespace;
+	private WTokenRun whitespace;
 
 	private void reset() {
 		indentLevel = 0;
@@ -226,12 +226,8 @@ public class Printer {
 		spacing = otherSpacing != null ? spacing.max(otherSpacing) : spacing;
 	}
 
-	public void addWhitespace(WRun tokens) {
+	public void addWhitespace(WTokenRun tokens) {
 		if (tokens == null) return;
-//		if (whitespace == null) whitespace = Vector.empty();
-//		for (LToken token : tokens) {
-//			whitespace = whitespace.append(token);
-//		}
 		if (whitespace != null)
 			throw new IllegalStateException();
 		whitespace = tokens;
@@ -240,7 +236,7 @@ public class Printer {
 	private void renderSpacing() {
 		if (spacing != null) {
 			Spacing spacingCopy = spacing;
-			WRun whitespaceCopy = whitespace;
+			WTokenRun whitespaceCopy = whitespace;
 
 			spacing = Spacing.noSpace;
 			whitespace = null;
@@ -249,10 +245,10 @@ public class Printer {
 		}
 	}
 
-	public void render(Spacing expectedSpacing, WRun tokens) {
+	public void render(Spacing expectedSpacing, WTokenRun tokens) {
 		switch (expectedSpacing.unit) {
 			case Space:
-				if (tokens != null && (!format || containsComments(tokens)))
+				if (tokens != null && (!format || tokens.containsComments()))
 					dump(tokens, format);
 				else {
 					for (int i = 0; i < expectedSpacing.count; i++) {
@@ -264,7 +260,7 @@ public class Printer {
 				if (tokens != null) {
 					// TODO Handle when new line count is higher than expected
 					if (format) {
-						final int actualEmptyLines = emptyLineCount(tokens);
+						final int actualEmptyLines = tokens.emptyLineCount();
 						appendNewLine(expectedSpacing.count - actualEmptyLines);
 					}
 					dump(tokens, format);
@@ -275,9 +271,8 @@ public class Printer {
 		}
 	}
 
-	public void dump(WRun tokens, boolean requiresFormatting) {
-		for (WElement element : tokens.elements) {
-			WToken token = (WToken) element;
+	public void dump(WTokenRun tokens, boolean requiresFormatting) {
+		for (WToken token : tokens.elements) {
 			switch (token.kind) {
 				case ParserImplConstants.JAVA_DOC_COMMENT:
 					// TODO format javadoc comment
@@ -354,48 +349,5 @@ public class Printer {
 	public void appendComment(String image, boolean requiresFormatting) {
 		writer.append(image);
 		afterAlpha = false;
-	}
-
-
-	private static int emptyLineCount(WRun tokens) {
-		int count = 0;
-		boolean emptyLine = true;
-		for (WElement element : tokens.elements) {
-			WToken token = (WToken) element;
-			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-				case ParserImplConstants.JAVA_DOC_COMMENT:
-					emptyLine = false;
-					break;
-				case ParserImplConstants.NEWLINE:
-					if (emptyLine) count++;
-					emptyLine = true;
-					break;
-				case ParserImplConstants.WHITESPACE:
-					break;
-				default:
-					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
-			}
-		}
-		return count;
-	}
-
-	private static boolean containsComments(WRun tokens) {
-		for (WElement element : tokens.elements) {
-			WToken token = (WToken) element;
-			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-				case ParserImplConstants.JAVA_DOC_COMMENT:
-					return true;
-				case ParserImplConstants.NEWLINE:
-				case ParserImplConstants.WHITESPACE:
-					break;
-				default:
-					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
-			}
-		}
-		return false;
 	}
 }

@@ -30,14 +30,14 @@ import java.util.Iterator;
  */
 public class RunBuilder {
 
-	private final Iterator<WRun> tokenIterator;
+	private final Iterator<WTokenRun> tokenIterator;
 
-	private Builder<WElement, ArrayList<WElement>> elements = ArrayList.<WElement>factory().newBuilder();
+	private Builder<WRun, ArrayList<WRun>> elements = ArrayList.<WRun>factory().newBuilder();
 	private boolean firstShape = true;
 	private boolean firstDefinedShape = true;
 	private int shapeCount = 0;
 
-	public RunBuilder(Iterator<WRun> tokenIterator) {
+	public RunBuilder(Iterator<WTokenRun> tokenIterator) {
 		this.tokenIterator = tokenIterator;
 	}
 
@@ -64,8 +64,8 @@ public class RunBuilder {
 		}
 	}
 
-	public WRun build() {
-		final WRun run = new WRun(elements.build());
+	public WRunRun build() {
+		final WRunRun run = new WRunRun(elements.build());
 		if (run.elements.size() != shapeCount * 2 - 1) {
 			throw new IllegalStateException();
 		}
