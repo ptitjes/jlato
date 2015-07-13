@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.VariableDeclarationExpr;
 
@@ -59,11 +60,19 @@ public class TryStmt extends Stmt {
 		return location.nodeWithChild(RESOURCES, resources);
 	}
 
+	public TryStmt withResources(Rewrite<NodeList<VariableDeclarationExpr>> resources) {
+		return location.nodeWithChild(RESOURCES, resources);
+	}
+
 	public BlockStmt tryBlock() {
 		return location.nodeChild(TRY_BLOCK);
 	}
 
 	public TryStmt withTryBlock(BlockStmt tryBlock) {
+		return location.nodeWithChild(TRY_BLOCK, tryBlock);
+	}
+
+	public TryStmt withTryBlock(Rewrite<BlockStmt> tryBlock) {
 		return location.nodeWithChild(TRY_BLOCK, tryBlock);
 	}
 
@@ -75,11 +84,19 @@ public class TryStmt extends Stmt {
 		return location.nodeWithChild(CATCHS, catchs);
 	}
 
+	public TryStmt withCatchs(Rewrite<NodeList<CatchClause>> catchs) {
+		return location.nodeWithChild(CATCHS, catchs);
+	}
+
 	public BlockStmt finallyBlock() {
 		return location.nodeChild(FINALLY_BLOCK);
 	}
 
 	public TryStmt withFinallyBlock(BlockStmt finallyBlock) {
+		return location.nodeWithChild(FINALLY_BLOCK, finallyBlock);
+	}
+
+	public TryStmt withFinallyBlock(Rewrite<BlockStmt> finallyBlock) {
 		return location.nodeWithChild(FINALLY_BLOCK, finallyBlock);
 	}
 

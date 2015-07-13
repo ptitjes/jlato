@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.stmt.BlockStmt;
@@ -68,6 +69,10 @@ public class LambdaExpr extends Expr {
 		return location.nodeWithChild(PARAMETERS, params);
 	}
 
+	public LambdaExpr withParams(Rewrite<NodeList<FormalParameter>> params) {
+		return location.nodeWithChild(PARAMETERS, params);
+	}
+
 	public Expr expr() {
 		return location.nodeChild(EXPR);
 	}
@@ -76,11 +81,19 @@ public class LambdaExpr extends Expr {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
+	public LambdaExpr withExpr(Rewrite<Expr> expr) {
+		return location.nodeWithChild(EXPR, expr);
+	}
+
 	public BlockStmt block() {
 		return location.nodeChild(BLOCK);
 	}
 
 	public LambdaExpr withBlock(BlockStmt block) {
+		return location.nodeWithChild(BLOCK, block);
+	}
+
+	public LambdaExpr withBlock(Rewrite<BlockStmt> block) {
 		return location.nodeWithChild(BLOCK, block);
 	}
 

@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
@@ -57,11 +58,19 @@ public class MemberValuePair extends Tree {
 		return location.nodeWithChild(NAME, name);
 	}
 
+	public MemberValuePair withName(Rewrite<Name> name) {
+		return location.nodeWithChild(NAME, name);
+	}
+
 	public Name value() {
 		return location.nodeChild(VALUE);
 	}
 
 	public MemberValuePair withValue(Expr value) {
+		return location.nodeWithChild(VALUE, value);
+	}
+
+	public MemberValuePair withValue(Rewrite<Expr> value) {
 		return location.nodeWithChild(VALUE, value);
 	}
 

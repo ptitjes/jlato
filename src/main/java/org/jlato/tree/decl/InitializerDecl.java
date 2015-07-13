@@ -24,6 +24,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.stmt.BlockStmt;
 
@@ -63,11 +64,19 @@ public class InitializerDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
+	public <EM extends Tree & ExtendedModifier> InitializerDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+		return location.nodeWithChild(MODIFIERS, modifiers);
+	}
+
 	public BlockStmt body() {
 		return location.nodeChild(BODY);
 	}
 
 	public InitializerDecl withBody(BlockStmt body) {
+		return location.nodeWithChild(BODY, body);
+	}
+
+	public InitializerDecl withBody(Rewrite<BlockStmt> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 

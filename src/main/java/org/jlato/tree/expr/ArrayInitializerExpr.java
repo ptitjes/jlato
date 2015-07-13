@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -55,6 +56,10 @@ public class ArrayInitializerExpr extends Expr {
 	}
 
 	public ArrayInitializerExpr withValues(NodeList<Expr> values) {
+		return location.nodeWithChild(VALUES, values);
+	}
+
+	public ArrayInitializerExpr withValues(Rewrite<NodeList<Expr>> values) {
 		return location.nodeWithChild(VALUES, values);
 	}
 

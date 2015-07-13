@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -59,11 +60,19 @@ public class ForStmt extends Stmt {
 		return location.nodeWithChild(INIT, init);
 	}
 
+	public ForStmt withInit(Rewrite<NodeList<Expr>> init) {
+		return location.nodeWithChild(INIT, init);
+	}
+
 	public Expr compare() {
 		return location.nodeChild(COMPARE);
 	}
 
 	public ForStmt withCompare(Expr compare) {
+		return location.nodeWithChild(COMPARE, compare);
+	}
+
+	public ForStmt withCompare(Rewrite<Expr> compare) {
 		return location.nodeWithChild(COMPARE, compare);
 	}
 
@@ -75,11 +84,19 @@ public class ForStmt extends Stmt {
 		return location.nodeWithChild(UPDATE, update);
 	}
 
+	public ForStmt withUpdate(Rewrite<NodeList<Expr>> update) {
+		return location.nodeWithChild(UPDATE, update);
+	}
+
 	public Stmt body() {
 		return location.nodeChild(BODY);
 	}
 
 	public ForStmt withBody(Stmt body) {
+		return location.nodeWithChild(BODY, body);
+	}
+
+	public ForStmt withBody(Rewrite<Stmt> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 

@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
@@ -54,6 +55,10 @@ public class BreakStmt extends Stmt {
 	}
 
 	public BreakStmt withId(Name id) {
+		return location.nodeWithChild(ID, id);
+	}
+
+	public BreakStmt withId(Rewrite<Name> id) {
 		return location.nodeWithChild(ID, id);
 	}
 

@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
@@ -65,11 +66,19 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
+	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+		return location.nodeWithChild(MODIFIERS, modifiers);
+	}
+
 	public Type type() {
 		return location.nodeChild(TYPE);
 	}
 
 	public AnnotationMemberDecl withType(Type type) {
+		return location.nodeWithChild(TYPE, type);
+	}
+
+	public AnnotationMemberDecl withType(Rewrite<Type> type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 
@@ -81,6 +90,10 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
+	public AnnotationMemberDecl withName(Rewrite<Name> name) {
+		return location.nodeWithChild(NAME, name);
+	}
+
 	public NodeList<ArrayDim> dims() {
 		return location.nodeChild(DIMS);
 	}
@@ -89,11 +102,19 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(DIMS, dims);
 	}
 
+	public VariableDeclaratorId withDims(Rewrite<NodeList<ArrayDim>> dims) {
+		return location.nodeWithChild(DIMS, dims);
+	}
+
 	public Expr defaultValue() {
 		return location.nodeChild(DEFAULT_VALUE);
 	}
 
 	public AnnotationMemberDecl withDefaultValue(Expr defaultValue) {
+		return location.nodeWithChild(DEFAULT_VALUE, defaultValue);
+	}
+
+	public AnnotationMemberDecl withDefaultValue(Rewrite<Expr> defaultValue) {
 		return location.nodeWithChild(DEFAULT_VALUE, defaultValue);
 	}
 

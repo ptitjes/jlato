@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.QualifiedName;
 
@@ -54,6 +55,10 @@ public class SingleMemberAnnotationExpr extends AnnotationExpr {
 	}
 
 	public SingleMemberAnnotationExpr withMemberValue(Expr memberValue) {
+		return location.nodeWithChild(MEMBER_VALUE, memberValue);
+	}
+
+	public SingleMemberAnnotationExpr withMemberValue(Rewrite<Expr> memberValue) {
 		return location.nodeWithChild(MEMBER_VALUE, memberValue);
 	}
 

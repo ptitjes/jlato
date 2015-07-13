@@ -24,10 +24,12 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.internal.shapes.LexicalShape.child;
+import static org.jlato.internal.shapes.LexicalShape.composite;
 import static org.jlato.printer.SpacingConstraint.space;
 
 public class LocalVariableDecl extends Decl {
@@ -58,6 +60,10 @@ public class LocalVariableDecl extends Decl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
+	public <EM extends Tree & ExtendedModifier> LocalVariableDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+		return location.nodeWithChild(MODIFIERS, modifiers);
+	}
+
 	public Type type() {
 		return location.nodeChild(TYPE);
 	}
@@ -66,11 +72,19 @@ public class LocalVariableDecl extends Decl {
 		return location.nodeWithChild(TYPE, type);
 	}
 
+	public LocalVariableDecl withType(Rewrite<Type> type) {
+		return location.nodeWithChild(TYPE, type);
+	}
+
 	public NodeList<VariableDeclarator> variables() {
 		return location.nodeChild(VARIABLES);
 	}
 
 	public LocalVariableDecl withVariables(NodeList<VariableDeclarator> variables) {
+		return location.nodeWithChild(VARIABLES, variables);
+	}
+
+	public LocalVariableDecl withVariables(Rewrite<NodeList<VariableDeclarator>> variables) {
 		return location.nodeWithChild(VARIABLES, variables);
 	}
 /*

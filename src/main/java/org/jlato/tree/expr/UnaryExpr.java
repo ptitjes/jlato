@@ -26,6 +26,7 @@ import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -58,11 +59,19 @@ public class UnaryExpr extends Expr {
 		return location.withData(OPERATOR, operator);
 	}
 
+	public UnaryExpr withOp(Rewrite<UnaryOp> operator) {
+		return location.withData(OPERATOR, operator);
+	}
+
 	public Expr expr() {
 		return location.nodeChild(EXPR);
 	}
 
 	public UnaryExpr withExpr(Expr expr) {
+		return location.nodeWithChild(EXPR, expr);
+	}
+
+	public UnaryExpr withExpr(Rewrite<Expr> expr) {
 		return location.nodeWithChild(EXPR, expr);
 	}
 

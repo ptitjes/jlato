@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
@@ -61,6 +62,10 @@ public class TypeParameter extends Tree {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
+	public TypeParameter withAnnotations(Rewrite<NodeList<AnnotationExpr>> annotations) {
+		return location.nodeWithChild(ANNOTATIONS, annotations);
+	}
+
 	public Name name() {
 		return location.nodeChild(NAME);
 	}
@@ -69,11 +74,19 @@ public class TypeParameter extends Tree {
 		return location.nodeWithChild(NAME, name);
 	}
 
+	public TypeParameter withName(Rewrite<Name> name) {
+		return location.nodeWithChild(NAME, name);
+	}
+
 	public NodeList<Type> bounds() {
 		return location.nodeChild(BOUNDS);
 	}
 
 	public TypeParameter withBounds(NodeList<Type> bounds) {
+		return location.nodeWithChild(BOUNDS, bounds);
+	}
+
+	public TypeParameter withBounds(Rewrite<NodeList<Type>> bounds) {
 		return location.nodeWithChild(BOUNDS, bounds);
 	}
 

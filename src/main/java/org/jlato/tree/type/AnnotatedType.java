@@ -21,6 +21,7 @@ package org.jlato.tree.type;
 
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.expr.AnnotationExpr;
 
 /**
@@ -37,6 +38,10 @@ public abstract class AnnotatedType extends Type {
 	}
 
 	public Type withAnnotations(NodeList<AnnotationExpr> annotations) {
+		return location.nodeWithChild(ANNOTATIONS, annotations);
+	}
+
+	public Type withAnnotations(Rewrite<NodeList<AnnotationExpr>> annotations) {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 

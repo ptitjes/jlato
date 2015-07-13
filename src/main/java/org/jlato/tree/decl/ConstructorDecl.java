@@ -24,6 +24,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
@@ -65,11 +66,19 @@ public class ConstructorDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
+	public <EM extends Tree & ExtendedModifier> ConstructorDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+		return location.nodeWithChild(MODIFIERS, modifiers);
+	}
+
 	public NodeList<TypeParameter> typeParams() {
 		return location.nodeChild(TYPE_PARAMETERS);
 	}
 
 	public ConstructorDecl withTypeParams(NodeList<TypeParameter> typeParams) {
+		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
+	}
+
+	public ConstructorDecl withTypeParams(Rewrite<NodeList<TypeParameter>> typeParams) {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
@@ -81,11 +90,19 @@ public class ConstructorDecl extends MemberDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
+	public ConstructorDecl withName(Rewrite<Name> name) {
+		return location.nodeWithChild(NAME, name);
+	}
+
 	public NodeList<FormalParameter> params() {
 		return location.nodeChild(PARAMETERS);
 	}
 
 	public ConstructorDecl withParams(NodeList<FormalParameter> params) {
+		return location.nodeWithChild(PARAMETERS, params);
+	}
+
+	public ConstructorDecl withParams(Rewrite<NodeList<FormalParameter>> params) {
 		return location.nodeWithChild(PARAMETERS, params);
 	}
 
@@ -97,11 +114,19 @@ public class ConstructorDecl extends MemberDecl {
 		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
 	}
 
+	public ConstructorDecl withThrowsClause(Rewrite<NodeList<QualifiedType>> throwsClause) {
+		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
+	}
+
 	public BlockStmt body() {
 		return location.nodeChild(BODY);
 	}
 
 	public ConstructorDecl withBody(BlockStmt body) {
+		return location.nodeWithChild(BODY, body);
+	}
+
+	public ConstructorDecl withBody(Rewrite<BlockStmt> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 

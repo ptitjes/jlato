@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -58,6 +59,10 @@ public class BinaryExpr extends Expr {
 		return location.nodeWithChild(LEFT, left);
 	}
 
+	public BinaryExpr withLeft(Rewrite<Expr> left) {
+		return location.nodeWithChild(LEFT, left);
+	}
+
 	public BinaryOp op() {
 		return location.data(OPERATOR);
 	}
@@ -66,11 +71,19 @@ public class BinaryExpr extends Expr {
 		return location.withData(OPERATOR, operator);
 	}
 
+	public BinaryExpr withOp(Rewrite<BinaryOp> operator) {
+		return location.withData(OPERATOR, operator);
+	}
+
 	public Expr right() {
 		return location.nodeChild(RIGHT);
 	}
 
 	public BinaryExpr withRight(Expr right) {
+		return location.nodeWithChild(RIGHT, right);
+	}
+
+	public BinaryExpr withRight(Rewrite<Expr> right) {
 		return location.nodeWithChild(RIGHT, right);
 	}
 

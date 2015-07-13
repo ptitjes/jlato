@@ -20,17 +20,21 @@
 package org.jlato.tree.decl;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.WTokenRun;
 import org.jlato.internal.shapes.LSDump;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterPackageDecl;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterPackageDecl;
 
 public class CompilationUnit extends Tree {
 
@@ -60,6 +64,10 @@ public class CompilationUnit extends Tree {
 		return location.nodeWithChild(PACKAGE_DECL, packageDecl);
 	}
 
+	public CompilationUnit withPackageDecl(Rewrite<PackageDecl> packageDecl) {
+		return location.nodeWithChild(PACKAGE_DECL, packageDecl);
+	}
+
 	public NodeList<ImportDecl> imports() {
 		return location.nodeChild(IMPORTS);
 	}
@@ -68,11 +76,19 @@ public class CompilationUnit extends Tree {
 		return location.nodeWithChild(IMPORTS, imports);
 	}
 
+	public CompilationUnit withImports(Rewrite<NodeList<ImportDecl>> imports) {
+		return location.nodeWithChild(IMPORTS, imports);
+	}
+
 	public NodeList<TypeDecl> types() {
 		return location.nodeChild(TYPES);
 	}
 
 	public CompilationUnit withTypes(NodeList<TypeDecl> types) {
+		return location.nodeWithChild(TYPES, types);
+	}
+
+	public CompilationUnit withTypes(Rewrite<NodeList<TypeDecl>> types) {
 		return location.nodeWithChild(TYPES, types);
 	}
 

@@ -23,6 +23,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
@@ -53,6 +54,10 @@ public class TypeExpr extends Expr {
 	}
 
 	public TypeExpr withType(Type type) {
+		return location.nodeWithChild(TYPE, type);
+	}
+
+	public TypeExpr withType(Rewrite<Type> type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 

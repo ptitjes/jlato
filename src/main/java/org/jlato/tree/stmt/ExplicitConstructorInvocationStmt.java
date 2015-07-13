@@ -26,6 +26,7 @@ import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.type.Type;
@@ -60,6 +61,10 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
+	public ExplicitConstructorInvocationStmt withTypeArgs(Rewrite<NodeList<Type>> typeArgs) {
+		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
+	}
+
 	public boolean isThis() {
 		return location.data(CONSTRUCTOR_KIND) == ConstructorKind.This;
 	}
@@ -76,11 +81,19 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
+	public ExplicitConstructorInvocationStmt withExpr(Rewrite<Expr> expr) {
+		return location.nodeWithChild(EXPR, expr);
+	}
+
 	public NodeList<Expr> args() {
 		return location.nodeChild(ARGUMENTS);
 	}
 
 	public ExplicitConstructorInvocationStmt withArgs(NodeList<Expr> args) {
+		return location.nodeWithChild(ARGUMENTS, args);
+	}
+
+	public ExplicitConstructorInvocationStmt withArgs(Rewrite<NodeList<Expr>> args) {
 		return location.nodeWithChild(ARGUMENTS, args);
 	}
 

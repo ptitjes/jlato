@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
@@ -58,11 +59,19 @@ public class CastExpr extends Expr {
 		return location.nodeWithChild(TYPE, type);
 	}
 
+	public CastExpr withType(Rewrite<Type> type) {
+		return location.nodeWithChild(TYPE, type);
+	}
+
 	public Expr expr() {
 		return location.nodeChild(EXPR);
 	}
 
 	public CastExpr withExpr(Expr expr) {
+		return location.nodeWithChild(EXPR, expr);
+	}
+
+	public CastExpr withExpr(Rewrite<Expr> expr) {
 		return location.nodeWithChild(EXPR, expr);
 	}
 

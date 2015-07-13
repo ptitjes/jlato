@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -54,6 +55,10 @@ public class ReturnStmt extends Stmt {
 	}
 
 	public ReturnStmt withExpr(Expr expr) {
+		return location.nodeWithChild(EXPR, expr);
+	}
+
+	public ReturnStmt withExpr(Rewrite<Expr> expr) {
 		return location.nodeWithChild(EXPR, expr);
 	}
 

@@ -24,15 +24,16 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.LocalVariableDecl;
 
+import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.TRY_RESOURCES;
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
-import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
-import static org.jlato.printer.FormattingSettings.IndentationContext.TRY_RESOURCES;
 
 public class VariableDeclarationExpr extends Expr {
 
@@ -59,6 +60,10 @@ public class VariableDeclarationExpr extends Expr {
 	}
 
 	public VariableDeclarationExpr withDeclaration(LocalVariableDecl declaration) {
+		return location.nodeWithChild(DECLARATION, declaration);
+	}
+
+	public VariableDeclarationExpr withDeclaration(Rewrite<LocalVariableDecl> declaration) {
 		return location.nodeWithChild(DECLARATION, declaration);
 	}
 

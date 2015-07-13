@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.Decl;
 import org.jlato.tree.decl.MemberDecl;
@@ -62,11 +63,19 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
+	public ObjectCreationExpr withScope(Rewrite<Expr> scope) {
+		return location.nodeWithChild(SCOPE, scope);
+	}
+
 	public NodeList<Type> typeArgs() {
 		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
 	public ObjectCreationExpr withTypeArgs(NodeList<Type> typeArgs) {
+		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
+	}
+
+	public ObjectCreationExpr withTypeArgs(Rewrite<NodeList<Type>> typeArgs) {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
@@ -78,6 +87,10 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(TYPE, type);
 	}
 
+	public ObjectCreationExpr withType(Rewrite<QualifiedType> type) {
+		return location.nodeWithChild(TYPE, type);
+	}
+
 	public NodeList<Expr> args() {
 		return location.nodeChild(ARGUMENTS);
 	}
@@ -86,11 +99,19 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
+	public ObjectCreationExpr withArgs(Rewrite<NodeList<Expr>> args) {
+		return location.nodeWithChild(ARGUMENTS, args);
+	}
+
 	public NodeList<Decl> body() {
 		return location.nodeChild(BODY);
 	}
 
 	public ObjectCreationExpr withBody(NodeList<Decl> body) {
+		return location.nodeWithChild(BODY, body);
+	}
+
+	public ObjectCreationExpr withBody(Rewrite<NodeList<Decl>> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 

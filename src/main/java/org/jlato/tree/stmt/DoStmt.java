@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -58,11 +59,19 @@ public class DoStmt extends Stmt {
 		return location.nodeWithChild(BODY, body);
 	}
 
+	public DoStmt withBody(Rewrite<Stmt> body) {
+		return location.nodeWithChild(BODY, body);
+	}
+
 	public Expr condition() {
 		return location.nodeChild(CONDITION);
 	}
 
 	public DoStmt withCondition(Expr condition) {
+		return location.nodeWithChild(CONDITION, condition);
+	}
+
+	public DoStmt withCondition(Rewrite<Expr> condition) {
 		return location.nodeWithChild(CONDITION, condition);
 	}
 

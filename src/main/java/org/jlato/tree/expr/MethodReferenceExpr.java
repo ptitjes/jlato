@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
@@ -60,6 +61,10 @@ public class MethodReferenceExpr extends Expr {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
+	public MethodReferenceExpr withScope(Rewrite<Expr> scope) {
+		return location.nodeWithChild(SCOPE, scope);
+	}
+
 	public NodeList<Type> typeArgs() {
 		return location.nodeChild(TYPE_ARGUMENTS);
 	}
@@ -68,11 +73,19 @@ public class MethodReferenceExpr extends Expr {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
+	public MethodReferenceExpr withTypeArgs(Rewrite<NodeList<Type>> typeArgs) {
+		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
+	}
+
 	public Name name() {
 		return location.nodeChild(NAME);
 	}
 
 	public MethodReferenceExpr withName(Name name) {
+		return location.nodeWithChild(NAME, name);
+	}
+
+	public MethodReferenceExpr withName(Rewrite<Name> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

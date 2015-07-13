@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
@@ -59,6 +60,10 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
+	public <EM extends Tree & ExtendedModifier> InterfaceDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+		return location.nodeWithChild(MODIFIERS, modifiers);
+	}
+
 	public TypeKind typeKind() {
 		return TypeKind.Interface;
 	}
@@ -71,11 +76,19 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
+	public InterfaceDecl withName(Rewrite<Name> name) {
+		return location.nodeWithChild(NAME, name);
+	}
+
 	public NodeList<TypeParameter> typeParams() {
 		return location.nodeChild(TYPE_PARAMETERS);
 	}
 
 	public InterfaceDecl withTypeParams(NodeList<TypeParameter> typeParams) {
+		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
+	}
+
+	public InterfaceDecl withTypeParams(Rewrite<NodeList<TypeParameter>> typeParams) {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
@@ -87,11 +100,19 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
+	public InterfaceDecl withExtendsClause(Rewrite<NodeList<QualifiedType>> extendsClause) {
+		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
+	}
+
 	public NodeList<MemberDecl> members() {
 		return location.nodeChild(MEMBERS);
 	}
 
 	public InterfaceDecl withMembers(NodeList<MemberDecl> members) {
+		return location.nodeWithChild(MEMBERS, members);
+	}
+
+	public InterfaceDecl withMembers(Rewrite<NodeList<MemberDecl>> members) {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 

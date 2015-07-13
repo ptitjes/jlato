@@ -25,15 +25,16 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
-import static org.jlato.printer.IndentationConstraint.indent;
-import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.SpacingConstraint.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.SwitchStmt_AfterSwitchKeyword;
+import static org.jlato.printer.IndentationConstraint.indent;
+import static org.jlato.printer.IndentationConstraint.unIndent;
+import static org.jlato.printer.SpacingConstraint.*;
 
 public class SwitchStmt extends Stmt {
 
@@ -63,11 +64,19 @@ public class SwitchStmt extends Stmt {
 		return location.nodeWithChild(SELECTOR, selector);
 	}
 
+	public SwitchStmt withSelector(Rewrite<Expr> selector) {
+		return location.nodeWithChild(SELECTOR, selector);
+	}
+
 	public NodeList<SwitchCase> cases() {
 		return location.nodeChild(CASES);
 	}
 
 	public SwitchStmt withCases(NodeList<SwitchCase> cases) {
+		return location.nodeWithChild(CASES, cases);
+	}
+
+	public SwitchStmt withCases(Rewrite<NodeList<SwitchCase>> cases) {
 		return location.nodeWithChild(CASES, cases);
 	}
 

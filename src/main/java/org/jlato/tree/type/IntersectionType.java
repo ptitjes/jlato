@@ -24,6 +24,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
@@ -54,6 +55,10 @@ public class IntersectionType extends Type {
 	}
 
 	public IntersectionType withTypes(NodeList<Type> types) {
+		return location.nodeWithChild(TYPES, types);
+	}
+
+	public IntersectionType withTypes(Rewrite<NodeList<Type>> types) {
 		return location.nodeWithChild(TYPES, types);
 	}
 

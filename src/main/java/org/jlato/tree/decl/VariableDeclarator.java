@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -58,11 +59,19 @@ public class VariableDeclarator extends Tree {
 		return location.nodeWithChild(ID, id);
 	}
 
+	public VariableDeclarator withId(Rewrite<VariableDeclaratorId> id) {
+		return location.nodeWithChild(ID, id);
+	}
+
 	public Expr init() {
 		return location.nodeChild(INIT);
 	}
 
 	public VariableDeclarator withInit(Expr init) {
+		return location.nodeWithChild(INIT, init);
+	}
+
+	public VariableDeclarator withInit(Rewrite<Expr> init) {
 		return location.nodeWithChild(INIT, init);
 	}
 

@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -58,11 +59,19 @@ public class AssertStmt extends Stmt {
 		return location.nodeWithChild(CHECK, check);
 	}
 
+	public AssertStmt withCheck(Rewrite<Expr> check) {
+		return location.nodeWithChild(CHECK, check);
+	}
+
 	public Expr msg() {
 		return location.nodeChild(MSG);
 	}
 
 	public AssertStmt withMsg(Expr msg) {
+		return location.nodeWithChild(MSG, msg);
+	}
+
+	public AssertStmt withMsg(Rewrite<Expr> msg) {
 		return location.nodeWithChild(MSG, msg);
 	}
 

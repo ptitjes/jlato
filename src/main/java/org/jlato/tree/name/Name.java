@@ -26,6 +26,7 @@ import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.parser.ParserImplConstants;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
@@ -56,6 +57,10 @@ public class Name extends Expr {
 	}
 
 	public Name withName(String name) {
+		return location.withData(IDENTIFIER, name);
+	}
+
+	public Name withName(Rewrite<String> name) {
 		return location.withData(IDENTIFIER, name);
 	}
 

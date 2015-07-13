@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
@@ -64,6 +65,10 @@ public class FieldDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
+	public <EM extends Tree & ExtendedModifier> FieldDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+		return location.nodeWithChild(MODIFIERS, modifiers);
+	}
+
 	public Type type() {
 		return location.nodeChild(TYPE);
 	}
@@ -72,11 +77,19 @@ public class FieldDecl extends MemberDecl {
 		return location.nodeWithChild(TYPE, type);
 	}
 
+	public FieldDecl withType(Rewrite<Type> type) {
+		return location.nodeWithChild(TYPE, type);
+	}
+
 	public NodeList<VariableDeclarator> variables() {
 		return location.nodeChild(VARIABLES);
 	}
 
 	public FieldDecl withVariables(NodeList<VariableDeclarator> variables) {
+		return location.nodeWithChild(VARIABLES, variables);
+	}
+
+	public FieldDecl withVariables(Rewrite<NodeList<VariableDeclarator>> variables) {
 		return location.nodeWithChild(VARIABLES, variables);
 	}
 /*

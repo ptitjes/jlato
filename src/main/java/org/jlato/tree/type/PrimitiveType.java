@@ -26,6 +26,7 @@ import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
@@ -56,6 +57,10 @@ public class PrimitiveType extends AnnotatedType {
 	}
 
 	public PrimitiveType withType(Primitive type) {
+		return location.withData(TYPE, type);
+	}
+
+	public PrimitiveType withType(Rewrite<Primitive> type) {
 		return location.withData(TYPE, type);
 	}
 

@@ -84,11 +84,19 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
+	public MethodDecl withTypeParams(Rewrite<NodeList<TypeParameter>> typeParams) {
+		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
+	}
+
 	public Type type() {
 		return location.nodeChild(TYPE);
 	}
 
 	public MethodDecl withType(Type type) {
+		return location.nodeWithChild(TYPE, type);
+	}
+
+	public MethodDecl withType(Rewrite<Type> type) {
 		return location.nodeWithChild(TYPE, type);
 	}
 
@@ -100,11 +108,19 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
+	public MethodDecl withName(Rewrite<Name> name) {
+		return location.nodeWithChild(NAME, name);
+	}
+
 	public NodeList<FormalParameter> params() {
 		return location.nodeChild(PARAMETERS);
 	}
 
 	public MethodDecl withParams(NodeList<FormalParameter> params) {
+		return location.nodeWithChild(PARAMETERS, params);
+	}
+
+	public MethodDecl withParams(Rewrite<NodeList<FormalParameter>> params) {
 		return location.nodeWithChild(PARAMETERS, params);
 	}
 
@@ -116,6 +132,10 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(DIMS, dims);
 	}
 
+	public VariableDeclaratorId withDims(Rewrite<NodeList<ArrayDim>> dims) {
+		return location.nodeWithChild(DIMS, dims);
+	}
+
 	public NodeList<QualifiedType> throwsClause() {
 		return location.nodeChild(THROWS_CLAUSE);
 	}
@@ -124,11 +144,19 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
 	}
 
+	public ConstructorDecl withThrowsClause(Rewrite<NodeList<QualifiedType>> throwsClause) {
+		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
+	}
+
 	public BlockStmt body() {
 		return location.nodeChild(BODY);
 	}
 
 	public MethodDecl withBody(BlockStmt body) {
+		return location.nodeWithChild(BODY, body);
+	}
+
+	public MethodDecl withBody(Rewrite<BlockStmt> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 

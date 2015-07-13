@@ -25,17 +25,18 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 
-import static org.jlato.printer.IndentationConstraint.indent;
-import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.SpacingConstraint.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_AfterConstants;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_BetweenConstants;
+import static org.jlato.printer.IndentationConstraint.indent;
+import static org.jlato.printer.IndentationConstraint.unIndent;
+import static org.jlato.printer.SpacingConstraint.*;
 
 public class EnumDecl extends TypeDecl {
 
@@ -65,6 +66,10 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
+	public <EM extends Tree & ExtendedModifier> EnumDecl withModifiers(Rewrite<NodeList<EM>> modifiers) {
+		return location.nodeWithChild(MODIFIERS, modifiers);
+	}
+
 	public TypeKind typeKind() {
 		return TypeKind.Enum;
 	}
@@ -77,11 +82,19 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
+	public EnumDecl withName(Rewrite<Name> name) {
+		return location.nodeWithChild(NAME, name);
+	}
+
 	public NodeList<QualifiedType> implementsClause() {
 		return location.nodeChild(IMPLEMENTS_CLAUSE);
 	}
 
 	public EnumDecl withImplementsClause(NodeList<QualifiedType> implementsClause) {
+		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
+	}
+
+	public EnumDecl withImplementsClause(Rewrite<NodeList<QualifiedType>> implementsClause) {
 		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
@@ -93,11 +106,19 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(ENUM_CONSTANTS, enumConstants);
 	}
 
+	public EnumDecl withEnumConstants(Rewrite<NodeList<EnumConstantDecl>> enumConstants) {
+		return location.nodeWithChild(ENUM_CONSTANTS, enumConstants);
+	}
+
 	public NodeList<MemberDecl> members() {
 		return location.nodeChild(MEMBERS);
 	}
 
 	public EnumDecl withMembers(NodeList<MemberDecl> members) {
+		return location.nodeWithChild(MEMBERS, members);
+	}
+
+	public EnumDecl withMembers(Rewrite<NodeList<MemberDecl>> members) {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 

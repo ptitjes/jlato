@@ -23,13 +23,13 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 
-import static org.jlato.printer.IndentationConstraint.indent;
-import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.internal.shapes.LSCondition.emptyList;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.SpacingConstraint.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
+import static org.jlato.printer.IndentationConstraint.indent;
+import static org.jlato.printer.IndentationConstraint.unIndent;
+import static org.jlato.printer.SpacingConstraint.*;
 
 public abstract class MemberDecl extends Decl {
 

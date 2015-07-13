@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.QualifiedName;
@@ -59,11 +60,19 @@ public class PackageDecl extends Tree {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
+	public PackageDecl withAnnotations(Rewrite<NodeList<AnnotationExpr>> annotations) {
+		return location.nodeWithChild(ANNOTATIONS, annotations);
+	}
+
 	public QualifiedName name() {
 		return location.nodeChild(NAME);
 	}
 
 	public PackageDecl withName(QualifiedName name) {
+		return location.nodeWithChild(NAME, name);
+	}
+
+	public PackageDecl withName(Rewrite<QualifiedName> name) {
 		return location.nodeWithChild(NAME, name);
 	}
 

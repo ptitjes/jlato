@@ -24,15 +24,16 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
-import static org.jlato.printer.IndentationConstraint.indent;
-import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.SpacingConstraint.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
+import static org.jlato.printer.IndentationConstraint.indent;
+import static org.jlato.printer.IndentationConstraint.unIndent;
+import static org.jlato.printer.SpacingConstraint.*;
 
 public class IfStmt extends Stmt {
 
@@ -62,6 +63,10 @@ public class IfStmt extends Stmt {
 		return location.nodeWithChild(CONDITION, condition);
 	}
 
+	public IfStmt withCondition(Rewrite<Expr> condition) {
+		return location.nodeWithChild(CONDITION, condition);
+	}
+
 	public Stmt thenStmt() {
 		return location.nodeChild(THEN_STMT);
 	}
@@ -70,11 +75,19 @@ public class IfStmt extends Stmt {
 		return location.nodeWithChild(THEN_STMT, thenStmt);
 	}
 
+	public IfStmt withThenStmt(Rewrite<Stmt> thenStmt) {
+		return location.nodeWithChild(THEN_STMT, thenStmt);
+	}
+
 	public Stmt elseStmt() {
 		return location.nodeChild(ELSE_STMT);
 	}
 
 	public IfStmt withElseStmt(Stmt elseStmt) {
+		return location.nodeWithChild(ELSE_STMT, elseStmt);
+	}
+
+	public IfStmt withElseStmt(Rewrite<Stmt> elseStmt) {
 		return location.nodeWithChild(ELSE_STMT, elseStmt);
 	}
 

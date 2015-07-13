@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Rewrite;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
@@ -59,11 +60,19 @@ public class WildcardType extends AnnotatedType {
 		return location.nodeWithChild(EXT, ext);
 	}
 
+	public WildcardType withExt(Rewrite<ReferenceType> ext) {
+		return location.nodeWithChild(EXT, ext);
+	}
+
 	public ReferenceType sup() {
 		return location.nodeChild(SUP);
 	}
 
 	public WildcardType withSup(ReferenceType sup) {
+		return location.nodeWithChild(SUP, sup);
+	}
+
+	public WildcardType withSup(Rewrite<ReferenceType> sup) {
 		return location.nodeWithChild(SUP, sup);
 	}
 
