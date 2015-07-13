@@ -30,20 +30,22 @@ import org.jlato.tree.Tree;
  */
 public class SLocation {
 
-	public final SContext context;
+	private final SLocation parent;
+	private final SContext context;
 	public final STree tree;
 	public final boolean changed;
 	public final Tree facade;
 
 	public SLocation(STree tree) {
-		this(new SContext.Root(), tree, false);
+		this(null, null, tree, false);
 	}
 
-	public SLocation(SContext context, STree tree) {
-		this(context, tree, false);
+	public SLocation(SLocation parent, SContext context, STree tree) {
+		this(parent, context, tree, false);
 	}
 
-	public SLocation(SContext context, STree tree, boolean changed) {
+	public SLocation(SLocation parent, SContext context, STree tree, boolean changed) {
+		this.parent = parent;
 		this.context = context;
 		this.tree = tree;
 		this.changed = changed;
@@ -51,17 +53,63 @@ public class SLocation {
 	}
 
 	public SLocation withTree(STree newTree) {
-		return newTree == tree ? this : new SLocation(context, newTree, true);
+		return newTree == tree ? this : new SLocation(parent, context, newTree, true);
 	}
 
-	public Tree parent() {
-		final SLocation parentLocation = changed ? context.rebuiltWith(tree) : context.original();
-		return parentLocation == null ? null : parentLocation.facade;
+	public SLocation parent() {
+		if (parent == null) return null;
+		return changed ? parent.withTree(context.rebuildParent(parent.tree, tree)) : parent;
 	}
 
-	public Tree root() {
-		final Tree parent = parent();
-		return parent == null ? facade : parent.root();
+	public SLocation root() {
+		final SLocation parent = parent();
+		return parent == null ? this : parent.root();
+	}
+
+	public SLocation firstChild() {
+		if (tree.state instanceof SLeafState) return null;
+		else if (tree.state instanceof SNodeState) {
+			final SNodeState state = (SNodeState) tree.state;
+			if (state.children.isEmpty()) return null;
+			SContext first = new SContext.NodeChild(-1).rightSibling(tree);
+			return first == null ? null : new SLocation(this, first, first.peruse(tree));
+		} else if (tree.state instanceof SNodeListState) {
+			final SNodeListState state = (SNodeListState) tree.state;
+			if (state.children.isEmpty()) return null;
+			SContext first = new SContext.NodeListChild(-1).rightSibling(tree);
+			return first == null ? null : new SLocation(this, first, first.peruse(tree));
+		} else if (tree.state instanceof STreeSetState) {
+			return null; // For now
+		} else throw new IllegalStateException();
+	}
+
+	public SLocation lastChild() {
+		if (tree.state instanceof SLeafState) return null;
+		else if (tree.state instanceof SNodeState) {
+			final SNodeState state = (SNodeState) tree.state;
+			if (state.children.isEmpty()) return null;
+			SContext last = new SContext.NodeChild(state.children.size()).leftSibling(tree);
+			return last == null ? null : new SLocation(this, last, last.peruse(tree));
+		} else if (tree.state instanceof SNodeListState) {
+			final SNodeListState state = (SNodeListState) tree.state;
+			if (state.children.isEmpty()) return null;
+			SContext last = new SContext.NodeListChild(state.children.size()).leftSibling(tree);
+			return last == null ? null : new SLocation(this, last, last.peruse(tree));
+		} else if (tree.state instanceof STreeSetState) {
+			return null; // For now
+		} else throw new IllegalStateException();
+	}
+
+	public SLocation leftSibling() {
+		SLocation parent = parent();
+		SContext sibling = context.leftSibling(parent.tree);
+		return sibling == null ? null : new SLocation(parent, sibling, sibling.peruse(parent.tree), false);
+	}
+
+	public SLocation rightSibling() {
+		SLocation parent = parent();
+		SContext sibling = context.rightSibling(parent.tree);
+		return sibling == null ? null : new SLocation(parent, sibling, sibling.peruse(parent.tree), false);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -78,8 +126,8 @@ public class SLocation {
 		final STree childTree = state.child(index);
 		if (childTree == null) return null;
 
-		final SContext childContext = new SContext.NodeChild(this, index);
-		final SLocation childLocation = new SLocation(childContext, childTree);
+		final SContext childContext = new SContext.NodeChild(index);
+		final SLocation childLocation = new SLocation(this, childContext, childTree);
 		return (C) childLocation.facade;
 	}
 
@@ -110,7 +158,7 @@ public class SLocation {
 	}
 
 	public <T extends Tree, A> T withData(int index, Rewrite<A> rewrite) {
-		return withData(index, rewrite);
+		return withData(index, rewrite.rewrite(this.<A>data(index)));
 	}
 
 	/* NodeList methods */
@@ -121,8 +169,8 @@ public class SLocation {
 		final STree childTree = state.child(index);
 		if (childTree == null) return null;
 
-		final SContext childContext = new SContext.NodeListChild(this, index);
-		final SLocation childLocation = new SLocation(childContext, childTree);
+		final SContext childContext = new SContext.NodeListChild(index);
+		final SLocation childLocation = new SLocation(this, childContext, childTree);
 		return (C) childLocation.facade;
 	}
 
@@ -153,8 +201,8 @@ public class SLocation {
 		final STree childTree = state.tree(path);
 		if (childTree == null) return null;
 
-		final SContext childContext = new SContext.TreeSetTree(this, path);
-		final SLocation childLocation = new SLocation(childContext, childTree);
+		final SContext childContext = new SContext.TreeSetTree(path);
+		final SLocation childLocation = new SLocation(this, childContext, childTree);
 		return (C) childLocation.facade;
 	}
 

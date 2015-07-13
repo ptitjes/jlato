@@ -29,92 +29,127 @@ import org.jlato.internal.bu.STreeSetState;
  */
 public abstract class SContext {
 
-	public abstract SLocation original();
+	public abstract STree peruse(STree parent);
 
-	public abstract SLocation rebuiltWith(STree content);
+	public abstract STree rebuildParent(STree parent, STree child);
 
-	public static class Root extends SContext {
+	public abstract SContext leftSibling(STree parent);
 
-		@Override
-		public SLocation original() {
-			return null;
-		}
-
-		@Override
-		public SLocation rebuiltWith(STree content) {
-			return null;
-		}
-	}
+	public abstract SContext rightSibling(STree parent);
 
 	public static class NodeChild extends SContext {
 
-		private final SLocation parent;
 		private final int index;
 
-		public NodeChild(SLocation parent, int index) {
-			this.parent = parent;
+		public NodeChild(int index) {
 			this.index = index;
 		}
 
 		@Override
-		public SLocation original() {
-			return parent;
+		public STree peruse(STree parent) {
+			final SNodeState state = (SNodeState) parent.state;
+			return state.child(index);
+		}
+
+		public STree rebuildParent(STree parent, STree child) {
+			final SNodeState state = (SNodeState) parent.state;
+			return parent.withState(state.withChild(index, child));
 		}
 
 		@Override
-		public SLocation rebuiltWith(STree content) {
-			final STree parentTree = parent.tree;
-			final SNodeState state = (SNodeState) parentTree.state;
-			final STree newTree = parentTree.withState(state.withChild(index, content));
-			return parent.withTree(newTree);
+		public SContext leftSibling(STree parent) {
+			final SNodeState state = (SNodeState) parent.state;
+			int previousIndex = index - 1;
+			while (previousIndex >= 0) {
+				if (state.child(previousIndex) != null) return new NodeChild(previousIndex);
+				previousIndex--;
+			}
+			return null;
+		}
+
+		@Override
+		public SContext rightSibling(STree parent) {
+			final SNodeState state = (SNodeState) parent.state;
+			int nextIndex = index + 1;
+			while (nextIndex < state.children.size()) {
+				if (state.child(nextIndex) != null) return new NodeChild(nextIndex);
+				nextIndex++;
+			}
+			return null;
 		}
 	}
 
 	public static class NodeListChild extends SContext {
 
-		private final SLocation parent;
 		private final int index;
 
-		public NodeListChild(SLocation parent, int index) {
-			this.parent = parent;
+		public NodeListChild(int index) {
 			this.index = index;
 		}
 
 		@Override
-		public SLocation original() {
-			return parent;
+		public STree peruse(STree parent) {
+			final SNodeListState state = (SNodeListState) parent.state;
+			return state.child(index);
 		}
 
 		@Override
-		public SLocation rebuiltWith(STree content) {
-			final STree parentTree = parent.tree;
-			final SNodeListState state = (SNodeListState) parentTree.state;
-			final STree newTree = parentTree.withState(state.withChild(index, content));
-			return parent.withTree(newTree);
+		public STree rebuildParent(STree parent, STree child) {
+			final SNodeListState state = (SNodeListState) parent.state;
+			return parent.withState(state.withChild(index, child));
+		}
+
+		@Override
+		public SContext leftSibling(STree parent) {
+			final SNodeListState state = (SNodeListState) parent.state;
+			int previousIndex = index - 1;
+			while (previousIndex >= 0) {
+				if (state.child(previousIndex) != null) return new NodeListChild(previousIndex);
+				previousIndex--;
+			}
+			return null;
+		}
+
+		@Override
+		public SContext rightSibling(STree parent) {
+			final SNodeListState state = (SNodeListState) parent.state;
+			int nextIndex = index + 1;
+			while (nextIndex < state.children.size()) {
+				if (state.child(nextIndex) != null) return new NodeListChild(nextIndex);
+				nextIndex++;
+			}
+			return null;
 		}
 	}
 
 	public static class TreeSetTree extends SContext {
 
-		private final SLocation parent;
 		private final String path;
 
-		public TreeSetTree(SLocation parent, String path) {
-			this.parent = parent;
+		public TreeSetTree(String path) {
 			this.path = path;
 		}
 
 		@Override
-		public SLocation original() {
-			return parent;
+		public STree peruse(STree parent) {
+			final STreeSetState state = (STreeSetState) parent.state;
+			return state.tree(path);
 		}
 
 		@Override
-		public SLocation rebuiltWith(STree content) {
-			final STree parentTree = parent.tree;
-			final STreeSetState state = (STreeSetState) parentTree.state;
-			final STree newTree = parentTree.withState(state.withTree(path, content));
-			return parent.withTree(newTree);
+		public STree rebuildParent(STree parent, STree child) {
+			final STreeSetState state = (STreeSetState) parent.state;
+			return parent.withState(state.withTree(path, child));
+		}
+
+		@Override
+		public SContext leftSibling(STree parent) {
+			return null;
+		}
+
+		@Override
+		public SContext rightSibling(STree parent) {
+			return null;
 		}
 	}
 }

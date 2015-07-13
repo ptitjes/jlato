@@ -37,12 +37,13 @@ public abstract class TreeBase {
 		this.location = location;
 	}
 
-	public TreeBase parent() {
-		return location.parent();
+	public Tree parent() {
+		SLocation parentLocation = location.parent();
+		return parentLocation == null ? null : parentLocation.facade;
 	}
 
-	public TreeBase root() {
-		return location.root();
+	public Tree root() {
+		return location.root().facade;
 	}
 
 	protected static SLocation locationOf(TreeBase facade) {

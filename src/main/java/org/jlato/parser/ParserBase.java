@@ -175,7 +175,7 @@ abstract class ParserBase {
 			}
 
 			final STree newTree = tree.withRun(run);
-			final SLocation location = new SLocation(new SContext.Root(), newTree);
+			final SLocation location = new SLocation(newTree);
 			return (T) newTree.kind.instantiate(location);
 
 		} catch (NoSuchElementException e) {

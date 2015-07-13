@@ -30,12 +30,4 @@ public abstract class Tree extends TreeBase {
 	protected Tree(SLocation location) {
 		super(location);
 	}
-
-	public Tree parent() {
-		return location.parent();
-	}
-
-	public Tree root() {
-		return location.root();
-	}
 }

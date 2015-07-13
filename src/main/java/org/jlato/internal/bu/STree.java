@@ -61,6 +61,6 @@ public class STree extends LElement {
 	}
 
 	public Tree asTree() {
-		return kind.instantiate(new SLocation(new SContext.Root(), this));
+		return kind.instantiate(new SLocation(this));
 	}
 }
