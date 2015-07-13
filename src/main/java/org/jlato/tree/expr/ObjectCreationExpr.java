@@ -50,8 +50,8 @@ public class ObjectCreationExpr extends Expr {
 		super(location);
 	}
 
-	public ObjectCreationExpr(Expr scope, QualifiedType type, NodeList<Type> typeArgs, NodeList<Expr> args, NodeList<Decl> body) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, type, typeArgs, args, body)))));
+	public ObjectCreationExpr(Expr scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeList<Decl> body) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, type, args, body)))));
 	}
 
 	public Expr scope() {
@@ -62,20 +62,20 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public QualifiedType type() {
-		return location.nodeChild(TYPE);
-	}
-
-	public ObjectCreationExpr withType(QualifiedType type) {
-		return location.nodeWithChild(TYPE, type);
-	}
-
 	public NodeList<Type> typeArgs() {
 		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
 	public ObjectCreationExpr withTypeArgs(NodeList<Type> typeArgs) {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
+	}
+
+	public QualifiedType type() {
+		return location.nodeChild(TYPE);
+	}
+
+	public ObjectCreationExpr withType(QualifiedType type) {
+		return location.nodeWithChild(TYPE, type);
 	}
 
 	public NodeList<Expr> args() {
@@ -95,8 +95,8 @@ public class ObjectCreationExpr extends Expr {
 	}
 
 	private static final int SCOPE = 0;
-	private static final int TYPE = 1;
-	private static final int TYPE_ARGUMENTS = 2;
+	private static final int TYPE_ARGUMENTS = 1;
+	private static final int TYPE = 2;
 	private static final int ARGUMENTS = 3;
 	private static final int BODY = 4;
 

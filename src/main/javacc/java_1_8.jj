@@ -2644,7 +2644,7 @@ Expr AllocationExpression(Expr scope):
 	  ret = ArrayCreationExpr(type)
 	|
 	  args = Arguments() [ LOOKAHEAD( "{" ) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
-      { ret = enRun(new ObjectCreationExpr(scope, (QualifiedType) type, typeArgs, args, anonymousBody)); }
+      { ret = enRun(new ObjectCreationExpr(scope, typeArgs, (QualifiedType) type, args, anonymousBody)); }
     )
   )
   { return ret; }
