@@ -32,7 +32,7 @@ import org.jlato.tree.expr.AnnotationExpr;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class WildcardType extends AnnotatedType {
+public class WildcardType extends Type {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public WildcardType instantiate(SLocation location) {
@@ -50,6 +50,18 @@ public class WildcardType extends AnnotatedType {
 
 	public WildcardType(NodeList<AnnotationExpr> annotations, ReferenceType ext, ReferenceType sup) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations, ext, sup)))));
+	}
+
+	public NodeList<AnnotationExpr> annotations() {
+		return location.nodeChild(ANNOTATIONS);
+	}
+
+	public Type withAnnotations(NodeList<AnnotationExpr> annotations) {
+		return location.nodeWithChild(ANNOTATIONS, annotations);
+	}
+
+	public Type withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
+		return location.nodeMutateChild(ANNOTATIONS, mutation);
 	}
 
 	public ReferenceType ext() {
@@ -76,6 +88,7 @@ public class WildcardType extends AnnotatedType {
 		return location.nodeMutateChild(SUP, mutation);
 	}
 
+	private static final int ANNOTATIONS = 0;
 	private static final int EXT = 1;
 	private static final int SUP = 2;
 

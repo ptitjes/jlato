@@ -21,7 +21,7 @@ package org.jlato.tree.type;
 
 import org.jlato.internal.td.SLocation;
 
-public abstract class ReferenceType extends AnnotatedType {
+public abstract class ReferenceType extends Type {
 
 	protected ReferenceType(SLocation location) {
 		super(location);

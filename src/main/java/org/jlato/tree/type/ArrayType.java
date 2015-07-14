@@ -48,8 +48,8 @@ public class ArrayType extends ReferenceType {
 		super(location);
 	}
 
-	public ArrayType(NodeList<AnnotationExpr> annotations, Type componentType, NodeList<ArrayDim> dims) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations, componentType, dims)))));
+	public ArrayType(Type componentType, NodeList<ArrayDim> dims) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(componentType, dims)))));
 	}
 
 	public Type componentType() {
@@ -76,11 +76,10 @@ public class ArrayType extends ReferenceType {
 		return location.nodeMutateChild(DIMS, mutation);
 	}
 
-	private static final int COMPONENT_TYPE = 1;
-	private static final int DIMS = 2;
+	private static final int COMPONENT_TYPE = 0;
+	private static final int DIMS = 1;
 
 	public final static LexicalShape shape = composite(
-			child(ANNOTATIONS, list()),
 			child(COMPONENT_TYPE),
 			child(DIMS, list())
 	);

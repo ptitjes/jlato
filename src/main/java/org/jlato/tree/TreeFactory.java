@@ -285,7 +285,7 @@ public abstract class TreeFactory {
 	}
 
 	public static ArrayType arrayType() {
-		return new ArrayType(NodeList.<AnnotationExpr>empty(), null, NodeList.<ArrayDim>empty());
+		return new ArrayType(null, NodeList.<ArrayDim>empty());
 	}
 
 	public static IntersectionType intersectionType() {

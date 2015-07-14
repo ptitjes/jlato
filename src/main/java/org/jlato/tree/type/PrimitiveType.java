@@ -32,7 +32,7 @@ import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class PrimitiveType extends AnnotatedType {
+public class PrimitiveType extends Type {
 
 	public final static Tree.Kind kind = new Tree.Kind() {
 		public PrimitiveType instantiate(SLocation location) {
@@ -52,25 +52,39 @@ public class PrimitiveType extends AnnotatedType {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations), dataOf(type)))));
 	}
 
+	public NodeList<AnnotationExpr> annotations() {
+		return location.nodeChild(ANNOTATIONS);
+	}
+
+	public Type withAnnotations(NodeList<AnnotationExpr> annotations) {
+		return location.nodeWithChild(ANNOTATIONS, annotations);
+	}
+
+	public Type withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
+		return location.nodeMutateChild(ANNOTATIONS, mutation);
+	}
+
 	public Primitive type() {
-		return location.data(TYPE);
+		return location.data(PRIMITIVE);
 	}
 
 	public PrimitiveType withType(Primitive type) {
-		return location.withData(TYPE, type);
+		return location.withData(PRIMITIVE, type);
 	}
 
 	public PrimitiveType withType(Mutation<Primitive> mutation) {
-		return location.mutateData(TYPE, mutation);
+		return location.mutateData(PRIMITIVE, mutation);
 	}
 
-	private static final int TYPE = 0;
+	private static final int ANNOTATIONS = 0;
+
+	private static final int PRIMITIVE = 0;
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
-					return ((Primitive) tree.state.data(TYPE)).token;
+					return ((Primitive) tree.state.data(PRIMITIVE)).token;
 				}
 			})
 	);

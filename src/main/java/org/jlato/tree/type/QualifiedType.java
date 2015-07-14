@@ -68,6 +68,18 @@ public class QualifiedType extends ReferenceType {
 		return location.nodeMutateChild(SCOPE, mutation);
 	}
 
+	public NodeList<AnnotationExpr> annotations() {
+		return location.nodeChild(ANNOTATIONS);
+	}
+
+	public Type withAnnotations(NodeList<AnnotationExpr> annotations) {
+		return location.nodeWithChild(ANNOTATIONS, annotations);
+	}
+
+	public Type withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
+		return location.nodeMutateChild(ANNOTATIONS, mutation);
+	}
+
 	public Name name() {
 		return location.nodeChild(NAME);
 	}
@@ -92,6 +104,7 @@ public class QualifiedType extends ReferenceType {
 		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
 	}
 
+	private static final int ANNOTATIONS = 0;
 	private static final int SCOPE = 1;
 	private static final int NAME = 2;
 	private static final int TYPE_ARGUMENTS = 3;
@@ -99,8 +112,8 @@ public class QualifiedType extends ReferenceType {
 	public static final LexicalShape scopeShape = composite(element(), token(LToken.Dot));
 
 	public final static LexicalShape shape = composite(
-			child(ANNOTATIONS, AnnotationExpr.singleLineAnnotationsShape),
 			child(SCOPE, when(some(), scopeShape)),
+			child(ANNOTATIONS, AnnotationExpr.singleLineAnnotationsShape),
 			child(NAME),
 			child(TYPE_ARGUMENTS, when(some(), element(Type.typeArgumentsOrDiamondShape)))
 	);

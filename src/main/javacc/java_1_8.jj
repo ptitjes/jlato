@@ -1465,7 +1465,7 @@ TypeParameter TypeParameter():
 {
   { run(); }
   annotations = Annotations() name = Name() [ typeBounds = TypeBounds() ]
-  { return enRun(new TypeParameter(annotations, name, typeBounds)); }
+  { return enRun(new TypeParameter(annotations, name, ensureNotNull(typeBounds))); }
 }
 
 NodeList TypeBounds():
@@ -1879,7 +1879,7 @@ ArrayType ArrayType(NodeList<AnnotationExpr> annotations):
   { lateRun(); }
   arrayDims = ArrayDimsMandatory()
 
-  { return enRun(new ArrayType(annotations, type, arrayDims)); }
+  { return enRun(new ArrayType(type, arrayDims)); }
 }
 
 QualifiedType QualifiedType(NodeList<AnnotationExpr> annotations):
