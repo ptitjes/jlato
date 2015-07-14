@@ -41,7 +41,7 @@ public class JavaConcepts<T extends List<int[]>, X> extends Base implements Seri
 
     int binaryLiteral = 0b101101;
 
-    List<String>[][] arrLS = (List<String>[][]) new List<?>[10][];
+    Toto<U>.List<String>[][] arrLS = (Toto<U>.List<String>[][]) new List<?>[10][];
 
     ;
 

@@ -297,7 +297,7 @@ public abstract class TreeFactory {
 	}
 
 	public static QualifiedType qualifiedType() {
-		return new QualifiedType(NodeList.<AnnotationExpr>empty(), null, null, NodeList.<Type>empty());
+		return new QualifiedType(NodeList.<AnnotationExpr>empty(), NodeOption.<QualifiedType>none(), null, NodeOption.<NodeList<Type>>none());
 	}
 
 	public static UnionType unionType() {

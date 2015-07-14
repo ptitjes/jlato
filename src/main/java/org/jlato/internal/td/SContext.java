@@ -19,10 +19,7 @@
 
 package org.jlato.internal.td;
 
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeSetState;
+import org.jlato.internal.bu.*;
 
 /**
  * @author Didier Villevalois
@@ -118,6 +115,34 @@ public abstract class SContext {
 				if (state.child(nextIndex) != null) return new NodeListChild(nextIndex);
 				nextIndex++;
 			}
+			return null;
+		}
+	}
+
+	public static class NodeOptionElement extends SContext {
+
+		public NodeOptionElement() {
+		}
+
+		@Override
+		public STree peruse(STree parent) {
+			final SNodeOptionState state = (SNodeOptionState) parent.state;
+			return state.element;
+		}
+
+		@Override
+		public STree rebuildParent(STree parent, STree child) {
+			final SNodeOptionState state = (SNodeOptionState) parent.state;
+			return parent.withState(state.withElement(child));
+		}
+
+		@Override
+		public SContext leftSibling(STree parent) {
+			return null;
+		}
+
+		@Override
+		public SContext rightSibling(STree parent) {
 			return null;
 		}
 	}

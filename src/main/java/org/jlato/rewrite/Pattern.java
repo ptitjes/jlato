@@ -41,8 +41,13 @@ public abstract class Pattern<T> {
 
 	protected HashSet<Variable<?>> collectVariables(ArrayList<? extends Pattern<?>> terms, HashSet<Variable<?>> variables) {
 		for (Pattern<?> term : terms) {
-			if (term instanceof Variable) variables = variables.add((Variable<?>) term);
+			variables = collectVariables(term, variables);
 		}
+		return variables;
+	}
+
+	protected HashSet<Variable<?>> collectVariables(Pattern<?> term, HashSet<Variable<?>> variables) {
+		if (term instanceof Variable) variables = variables.add((Variable<?>) term);
 		return variables;
 	}
 

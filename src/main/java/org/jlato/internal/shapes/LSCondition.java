@@ -21,6 +21,7 @@ package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.tree.Tree;
@@ -111,6 +112,17 @@ public abstract class LSCondition {
 				final SNodeListState nodeListState = (SNodeListState) nodeList.state;
 				final Vector<STree> children = nodeListState.children;
 				return children == null || children.isEmpty();
+			}
+		};
+	}
+
+	public static LSCondition some() {
+		return new LSCondition() {
+			@Override
+			public boolean test(STree tree) {
+				final SNodeOptionState state = (SNodeOptionState) tree.state;
+				final STree element = state.element;
+				return element != null;
 			}
 		};
 	}

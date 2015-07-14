@@ -64,6 +64,10 @@ public abstract class LexicalShape {
 		return new LSNone();
 	}
 
+	public static LexicalShape when(LSCondition condition, LexicalShape shape) {
+		return new LSAlternative(condition, shape, none());
+	}
+
 	public static LexicalShape alternative(LSCondition condition, LexicalShape shape, LexicalShape alternative) {
 		return new LSAlternative(condition, shape, alternative);
 	}
@@ -112,12 +116,20 @@ public abstract class LexicalShape {
 		return new LSToken(tokenProvider);
 	}
 
+	public static LexicalShape element() {
+		return element(defaultShape());
+	}
+
+	public static LexicalShape element(LexicalShape shape) {
+		return new LSNodeOptionElement(shape);
+	}
+
 	public static LexicalShape child(int index) {
 		return child(index, defaultShape());
 	}
 
 	public static LexicalShape child(int index, LexicalShape shape) {
-		return new LSTravesal(index, shape);
+		return new LSNodeChild(index, shape);
 	}
 
 	public static LexicalShape list() {

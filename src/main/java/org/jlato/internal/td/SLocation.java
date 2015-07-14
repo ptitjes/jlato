@@ -78,6 +78,11 @@ public class SLocation {
 			if (state.children.isEmpty()) return null;
 			SContext first = new SContext.NodeListChild(-1).rightSibling(tree);
 			return first == null ? null : new SLocation(this, first, first.peruse(tree));
+		} else if (tree.state instanceof SNodeOptionState) {
+			final SNodeOptionState state = (SNodeOptionState) tree.state;
+			if (state.element == null) return null;
+			SContext first = new SContext.NodeOptionElement();
+			return new SLocation(this, first, first.peruse(tree));
 		} else if (tree.state instanceof STreeSetState) {
 			return null; // For now
 		} else throw new IllegalStateException();
@@ -95,6 +100,11 @@ public class SLocation {
 			if (state.children.isEmpty()) return null;
 			SContext last = new SContext.NodeListChild(state.children.size()).leftSibling(tree);
 			return last == null ? null : new SLocation(this, last, last.peruse(tree));
+		} else if (tree.state instanceof SNodeOptionState) {
+			final SNodeOptionState state = (SNodeOptionState) tree.state;
+			if (state.element == null) return null;
+			SContext last = new SContext.NodeOptionElement();
+			return new SLocation(this, last, last.peruse(tree));
 		} else if (tree.state instanceof STreeSetState) {
 			return null; // For now
 		} else throw new IllegalStateException();
@@ -191,6 +201,31 @@ public class SLocation {
 		final SNodeListState state = (SNodeListState) tree.state;
 		final STree newTree = tree.withState(state.withChildren(children));
 		return (T) withTree(newTree).facade;
+	}
+
+	/* NodeOption methods */
+
+	@SuppressWarnings("unchecked")
+	public <C extends Tree> C nodeOptionElement() {
+		final SNodeOptionState state = (SNodeOptionState) tree.state;
+		final STree element = state.element;
+		if (element == null) return null;
+
+		final SContext childContext = new SContext.NodeOptionElement();
+		final SLocation childLocation = new SLocation(this, childContext, element);
+		return (C) childLocation.facade;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends Tree, C extends Tree> T nodeOptionWithElement(C newElement) {
+		final SNodeOptionState state = (SNodeOptionState) tree.state;
+		final STree newTree = tree.withState(state.withElement(Tree.treeOf(newElement)));
+		return (T) withTree(newTree).facade;
+	}
+
+	public <T extends Tree, C extends Tree> T nodeOptionMutateElement(Mutation<C> mutation) {
+		C tree = this.<C>nodeOptionElement();
+		return nodeOptionWithElement(tree != null ? mutation.mutate(tree) : null);
 	}
 
 	/* TreeSet methods */

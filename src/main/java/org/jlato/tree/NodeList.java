@@ -172,7 +172,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 	}
 
 	public Iterator<T> iterator() {
-		return new NodeIterator();
+		return new ChildIterator();
 	}
 
 	public String mkString(String start, String sep, String end) {
@@ -192,7 +192,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		return builder.toString();
 	}
 
-	private class NodeIterator implements Iterator<T> {
+	private class ChildIterator implements Iterator<T> {
 
 		private int index = 0;
 

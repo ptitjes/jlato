@@ -52,13 +52,30 @@ public class RewriteTest {
 		final String original = resourceAsString("org/jlato/samples/TestClass.java");
 		CompilationUnit cu = parse(original, true);
 
-		forAll(param("$t $n").or(param("$t... $n")), cu, new Traversal.Visitor<FormalParameter>() {
+
+		final Pattern<FormalParameter> paramPattern = param("$t $n").or(param("$t... $n"));
+		final Pattern<Type> typePattern = type("$t");
+
+		forAll(paramPattern, cu, new Traversal.Visitor<FormalParameter>() {
 			@Override
 			public FormalParameter visit(FormalParameter formalParameter) {
-				System.out.println(printToString(formalParameter, false, FormattingSettings.Default));
+				debug(formalParameter);
+
+				forAll(typePattern, formalParameter, new Traversal.Visitor<Type>() {
+					@Override
+					public Type visit(Type type) {
+						debug(type);
+						return type;
+					}
+				});
+
 				return formalParameter;
 			}
 		});
+	}
+
+	private static void debug(Tree tree) {
+		System.out.println(printToString(tree, false, FormattingSettings.Default));
 	}
 
 	@Ignore
@@ -78,11 +95,11 @@ public class RewriteTest {
 		return printToString(rewrote, format, formattingSettings);
 	}
 
-	private String printToString(Tree tree, boolean format, FormattingSettings formattingSettings) {
+	private static String printToString(Tree tree, boolean format, FormattingSettings formattingSettings) {
 		return Printer.printToString(tree, format, formattingSettings);
 	}
 
-	private CompilationUnit parse(String original, boolean preserveWhitespaces) throws ParseException {
+	private static CompilationUnit parse(String original, boolean preserveWhitespaces) throws ParseException {
 		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(preserveWhitespaces));
 		return parser.parse(ParseContext.CompilationUnit, original);
 	}

@@ -23,7 +23,8 @@
           types: [
             {
               class: org.jlato.tree.type.QualifiedType,
-              annotations: null,
+              annotations: [
+              ],
               name: Exception1,
               scope: null,
               typeArgs: null,

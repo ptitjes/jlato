@@ -109,6 +109,8 @@ public abstract class Quotes {
 				return new NodePattern<T>(tree.kind, buildDataPattern(state.data), buildTreePattern(((SNodeState) state).children));
 			} else if (state instanceof SNodeListState) {
 				return new NodeListPattern<T>(tree.kind, buildDataPattern(state.data), buildTreePattern(((SNodeListState) state).children));
+			} else if (state instanceof SNodeOptionState) {
+				return new NodeOptionPattern<T>(tree.kind, buildDataPattern(state.data), buildTreePattern(((SNodeOptionState) state).element, Tree.class));
 			}
 		}
 		return null;

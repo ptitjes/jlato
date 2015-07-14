@@ -22,14 +22,17 @@ package org.jlato.tree.type;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
@@ -49,19 +52,19 @@ public class QualifiedType extends ReferenceType {
 		super(location);
 	}
 
-	public QualifiedType(NodeList<AnnotationExpr> annotations, QualifiedType scope, Name name, NodeList<Type> typeArgs) {
+	public QualifiedType(NodeList<AnnotationExpr> annotations, NodeOption<QualifiedType> scope, Name name, NodeOption<NodeList<Type>> typeArgs) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations, scope, name, typeArgs)))));
 	}
 
-	public QualifiedType scope() {
+	public NodeOption<QualifiedType> scope() {
 		return location.nodeChild(SCOPE);
 	}
 
-	public QualifiedType withScope(QualifiedType scope) {
+	public QualifiedType withScope(NodeOption<QualifiedType> scope) {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public QualifiedType withScope(Mutation<QualifiedType> mutation) {
+	public QualifiedType withScope(Mutation<NodeOption<QualifiedType>> mutation) {
 		return location.nodeMutateChild(SCOPE, mutation);
 	}
 
@@ -77,15 +80,15 @@ public class QualifiedType extends ReferenceType {
 		return location.nodeMutateChild(NAME, mutation);
 	}
 
-	public NodeList<Type> typeArgs() {
+	public NodeOption<NodeList<Type>> typeArgs() {
 		return location.nodeChild(TYPE_ARGUMENTS);
 	}
 
-	public QualifiedType withTypeArgs(NodeList<Type> typeArgs) {
+	public QualifiedType withTypeArgs(NodeOption<NodeList<Type>> typeArgs) {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
-	public QualifiedType withTypeArgs(Mutation<NodeList<Type>> mutation) {
+	public QualifiedType withTypeArgs(Mutation<NodeOption<NodeList<Type>>> mutation) {
 		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
 	}
 
@@ -93,16 +96,13 @@ public class QualifiedType extends ReferenceType {
 	private static final int NAME = 2;
 	private static final int TYPE_ARGUMENTS = 3;
 
+	public static final LexicalShape scopeShape = composite(element(), token(LToken.Dot));
+
 	public final static LexicalShape shape = composite(
-			child(ANNOTATIONS, list()),
-			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
+			child(ANNOTATIONS, AnnotationExpr.singleLineAnnotationsShape),
+			child(SCOPE, when(some(), scopeShape)),
 			child(NAME),
-			nonNullChild(TYPE_ARGUMENTS,
-//					nonEmptyChildren(TYPE_ARGUMENTS,
-							child(TYPE_ARGUMENTS, Type.typeArgumentsShape)/*,
-							composite(token(LToken.Less), token(LToken.Greater))*/
-//					)
-			)
+			child(TYPE_ARGUMENTS, when(some(), element(Type.typeArgumentsShape)))
 	);
 
 	public static final LexicalShape extendsClauseShape = list(

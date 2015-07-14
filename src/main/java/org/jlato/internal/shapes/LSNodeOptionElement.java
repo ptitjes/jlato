@@ -19,44 +19,20 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.*;
-import org.jlato.printer.Printer;
-
-import java.util.Iterator;
+import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.STree;
 
 /**
  * @author Didier Villevalois
  */
-public final class LSTravesal extends LSDecorated {
+public final class LSNodeOptionElement extends LSTraversal {
 
-	private final int index;
-
-	public LSTravesal(int index, LexicalShape shape) {
+	public LSNodeOptionElement(LexicalShape shape) {
 		super(shape);
-		this.index = index;
 	}
 
-	private STree traverse(STree tree) {
-		final SNodeState state = (SNodeState) tree.state;
-		return state.child(index);
+	protected STree traverse(STree tree) {
+		final SNodeOptionState state = (SNodeOptionState) tree.state;
+		return state.element;
 	}
-
-	@Override
-	public boolean isDefined(STree tree) {
-		final STree child = traverse(tree);
-		return child != null && shape.isDefined(child);
-	}
-
-	@Override
-	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
-		return null;
-	}
-
-	public void render(STree tree, WRunRun run, Printer printer) {
-		final STree child = traverse(tree);
-		if (child == null) return;
-
-		shape.render(child, child.run, printer);
-	}
-
 }

@@ -1871,23 +1871,31 @@ ArrayType ArrayType(NodeList<AnnotationExpr> annotations):
 
 QualifiedType QualifiedType(NodeList<AnnotationExpr> annotations):
 {
+    NodeOption<QualifiedType> scope = new NodeOption<QualifiedType>();
 	QualifiedType ret;
 	Name name;
-	NodeList typeArgs = null;
+	NodeList<Type> typeArgs = null;
 }
 {
   // Run may be started before annotations
-  { if (annotations == null) run(); }
+  {
+    if (annotations == null) {
+      run();
+      annotations = new NodeList<AnnotationExpr>();
+    }
+  }
 
   name = Name()
   [ LOOKAHEAD(2) typeArgs = TypeArguments() ]
-  { ret = enRun(new QualifiedType(annotations, null, name, typeArgs)); }
+  { ret = enRun(new QualifiedType(annotations, scope, name, NodeOption.of(typeArgs))); }
   (
     LOOKAHEAD(2)
+    { lateRun(); } "." { scope = enRun(scope.set(ret), QualifiedType.scopeShape); }
+
     { lateRun(); }
-    "." annotations = Annotations() name = Name()
+    annotations = Annotations() name = Name()
     [ LOOKAHEAD(2) typeArgs = TypeArguments() ]
-    { ret = enRun(new QualifiedType(annotations, ret, name, typeArgs)); }
+    { ret = enRun(new QualifiedType(annotations, scope, name, NodeOption.of(typeArgs))); }
   )*
 
   { return ret; }
@@ -1933,7 +1941,12 @@ WildcardType Wildcard(NodeList<AnnotationExpr> annotations):
 }
 {
   // Run may be started before annotations
-  { if (annotations == null) run(); }
+  {
+    if (annotations == null) {
+      run();
+      annotations = new NodeList<AnnotationExpr>();
+    }
+  }
 
   "?"
   [ "extends" { run(); } boundAnnotations = Annotations() ext = ReferenceType(boundAnnotations)
@@ -1947,7 +1960,12 @@ PrimitiveType PrimitiveType(NodeList<AnnotationExpr> annotations):
 }
 {
   // Run may be started before annotations
-  { if (annotations == null) run(); }
+  {
+    if (annotations == null) {
+      run();
+      annotations = new NodeList<AnnotationExpr>();
+    }
+  }
 
   ( "boolean" { primitive = PrimitiveType.Primitive.Boolean; }
   | "char"    { primitive = PrimitiveType.Primitive.Char; }
@@ -1977,7 +1995,6 @@ NodeList QualifiedTypeList():
 {
 	NodeList ret = new NodeList();
 	QualifiedType type;
-	NodeList<AnnotationExpr> annotations= null;
 }
 {
   { run(); }
