@@ -22,14 +22,18 @@ package org.jlato.tree.expr;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class FieldAccessExpr extends Expr {
@@ -48,32 +52,20 @@ public class FieldAccessExpr extends Expr {
 		super(location);
 	}
 
-	public FieldAccessExpr(Expr scope, NodeList<Type> typeArgs, Name name) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, name)))));
+	public FieldAccessExpr(NodeOption<Expr> scope, Name name) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, name)))));
 	}
 
-	public Expr scope() {
+	public NodeOption<Expr> scope() {
 		return location.nodeChild(SCOPE);
 	}
 
-	public FieldAccessExpr withScope(Expr scope) {
+	public FieldAccessExpr withScope(NodeOption<Expr> scope) {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public FieldAccessExpr withScope(Mutation<Expr> mutation) {
+	public FieldAccessExpr withScope(Mutation<NodeOption<Expr>> mutation) {
 		return location.nodeMutateChild(SCOPE, mutation);
-	}
-
-	public NodeList<Type> typeArgs() {
-		return location.nodeChild(TYPE_ARGUMENTS);
-	}
-
-	public FieldAccessExpr withTypeArgs(NodeList<Type> typeArgs) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
-	}
-
-	public FieldAccessExpr withTypeArgs(Mutation<NodeList<Type>> mutation) {
-		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
 	}
 
 	public Name name() {
@@ -89,11 +81,10 @@ public class FieldAccessExpr extends Expr {
 	}
 
 	private static final int SCOPE = 0;
-	private static final int TYPE_ARGUMENTS = 1;
-	private static final int NAME = 2;
+	private static final int NAME = 1;
 
 	public final static LexicalShape shape = composite(
-			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
+			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
 			child(NAME)
 	);
 }

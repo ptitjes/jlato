@@ -129,7 +129,7 @@ public abstract class TreeFactory {
 	}
 
 	public static FieldAccessExpr fieldAccessExpr() {
-		return new FieldAccessExpr(null, NodeList.<Type>empty(), null);
+		return new FieldAccessExpr(NodeOption.<Expr>none(), null);
 	}
 
 	public static InstanceOfExpr instanceOfExpr() {
@@ -149,7 +149,7 @@ public abstract class TreeFactory {
 	}
 
 	public static MethodInvocationExpr methodInvocationExpr() {
-		return new MethodInvocationExpr(null, NodeList.<Type>empty(), null, NodeList.<Expr>empty());
+		return new MethodInvocationExpr(NodeOption.<Expr>none(), NodeList.<Type>empty(), null, NodeList.<Expr>empty());
 	}
 
 	public static MethodReferenceExpr methodReferenceExpr() {

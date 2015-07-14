@@ -26,10 +26,13 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class MethodInvocationExpr extends Expr {
@@ -48,19 +51,19 @@ public class MethodInvocationExpr extends Expr {
 		super(location);
 	}
 
-	public MethodInvocationExpr(Expr scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
+	public MethodInvocationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, name, args)))));
 	}
 
-	public Expr scope() {
+	public NodeOption<Expr> scope() {
 		return location.nodeChild(SCOPE);
 	}
 
-	public MethodInvocationExpr withScope(Expr scope) {
+	public MethodInvocationExpr withScope(NodeOption<Expr> scope) {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public MethodInvocationExpr withScope(Mutation<Expr> mutation) {
+	public MethodInvocationExpr withScope(Mutation<NodeOption<Expr>> mutation) {
 		return location.nodeMutateChild(SCOPE, mutation);
 	}
 
@@ -106,7 +109,7 @@ public class MethodInvocationExpr extends Expr {
 	private static final int ARGUMENTS = 3;
 
 	public final static LexicalShape shape = composite(
-			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
+			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
 			child(TYPE_ARGUMENTS, Type.typeArgumentsShape),
 			child(NAME),
 			child(ARGUMENTS, Expr.argumentsShape)

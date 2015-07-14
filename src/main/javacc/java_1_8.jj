@@ -2524,14 +2524,14 @@ Expr PrimaryPrefix():
 	(
 	  { lateRun(); }
 	  "."
-	  [ typeArgs = TypeArguments() ]
+	  [ typeArgs = TypeArguments() ] // TODO Should not read type arguments for field access
 	  name = Name()
 	  [ args = Arguments() { hasArgs = true; } ]
 	  {
 	    if (hasArgs) {
-	  	  ret = enRun(new MethodInvocationExpr(ret, typeArgs, name, args));
+	  	  ret = enRun(new MethodInvocationExpr(NodeOption.of(ret), typeArgs, name, args));
 		} else {
-	  	  ret = enRun(new FieldAccessExpr(ret, null, name));
+	  	  ret = enRun(new FieldAccessExpr(NodeOption.of(ret), name));
 		}
       }
 	|
@@ -2539,12 +2539,6 @@ Expr PrimaryPrefix():
 	  "::" [typeArgs = TypeArguments() ]
       ( name = Name() | "new" { name = new Name("new"); } )
 	  { ret = enRun(new MethodReferenceExpr(ret, typeArgs, name)); }
-
-// WTF!!
-//    |
-//      args = Arguments()
-//      { new MethodInvocationExpr(ret, typeArgs, null, args); }
-
 	)
   |
     { run(); } "(" ret = Expression() ")" { ret = enRun(new ParenthesizedExpr(ret)); }
@@ -2564,7 +2558,7 @@ Expr PrimaryPrefix():
     name = Name() [ args = Arguments() { hasArgs=true; } ]
     {
       if (hasArgs) {
-        ret = enRun(new MethodInvocationExpr(null, null, name, args));
+        ret = enRun(new MethodInvocationExpr(NodeOption.<Expr>none(), NodeList.<Type>empty(), name, args));
       } else {
         ret = enRun(name);
       }
@@ -2608,14 +2602,14 @@ Expr PrimarySuffixWithoutSuper(Expr scope):
       ret = AllocationExpression(scope)
     |
       LOOKAHEAD( [ TypeArguments() ] <IDENTIFIER> )
-      [ typeArgs = TypeArguments() ]
+      [ typeArgs = TypeArguments() ] // TODO Should not read type arguments for field access
       name = Name()
       [ args = Arguments() { hasArgs=true; } ]
       {
         if (hasArgs) {
-          ret = enRun(new MethodInvocationExpr(scope, typeArgs, name, args));
+          ret = enRun(new MethodInvocationExpr(NodeOption.of(scope), typeArgs, name, args));
         } else {
-          ret = enRun(new FieldAccessExpr(scope, typeArgs, name));
+          ret = enRun(new FieldAccessExpr(NodeOption.of(scope), name));
         }
       }
     )
