@@ -80,10 +80,12 @@ public abstract class LexicalShape {
 		return alternative(LSCondition.data(index), shape, null);
 	}
 
+	@Deprecated
 	public static LexicalShape nonNullChild(int index, LexicalShape shape) {
 		return nonNullChild(index, shape, null);
 	}
 
+	@Deprecated
 	public static LexicalShape nonNullChild(int index, LexicalShape shape, LexicalShape alternative) {
 		return alternative(LSCondition.nonNullChild(index), shape, alternative);
 	}
