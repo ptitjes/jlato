@@ -124,6 +124,20 @@ public abstract class LSCondition {
 		};
 	}
 
+	public static LSCondition elementIs(final LSCondition condition) {
+		return new LSCondition() {
+			public boolean test(STree tree) {
+				final SNodeOptionState state = (SNodeOptionState) tree.state;
+				final STree element = state.element;
+				return condition.test(element);
+			}
+		};
+	}
+
+	public static LSCondition elementHas(final LSCondition condition) {
+		return elementIs(condition);
+	}
+
 	public static LSCondition some() {
 		return new LSCondition() {
 			@Override

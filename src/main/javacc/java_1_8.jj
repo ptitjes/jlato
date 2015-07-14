@@ -2967,7 +2967,7 @@ IfStmt IfStatement():
 {
   { run(); }
   "if" "(" condition = Expression() ")" thenStmt = Statement() [ LOOKAHEAD(1) "else" elseStmt = Statement() ]
-  { return enRun(new IfStmt(condition, thenStmt, elseStmt)); }
+  { return enRun(new IfStmt(condition, thenStmt, NodeOption.of(elseStmt))); }
 }
 
 WhileStmt WhileStatement():

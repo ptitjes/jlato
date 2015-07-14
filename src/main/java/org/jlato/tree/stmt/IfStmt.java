@@ -22,12 +22,15 @@ package org.jlato.tree.stmt;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
@@ -51,7 +54,7 @@ public class IfStmt extends Stmt {
 		super(location);
 	}
 
-	public IfStmt(Expr condition, Stmt thenStmt, Stmt elseStmt) {
+	public IfStmt(Expr condition, Stmt thenStmt, NodeOption<Stmt> elseStmt) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(condition, thenStmt, elseStmt)))));
 	}
 
@@ -79,15 +82,15 @@ public class IfStmt extends Stmt {
 		return location.nodeMutateChild(THEN_STMT, mutation);
 	}
 
-	public Stmt elseStmt() {
+	public NodeOption<Stmt> elseStmt() {
 		return location.nodeChild(ELSE_STMT);
 	}
 
-	public IfStmt withElseStmt(Stmt elseStmt) {
+	public IfStmt withElseStmt(NodeOption<Stmt> elseStmt) {
 		return location.nodeWithChild(ELSE_STMT, elseStmt);
 	}
 
-	public IfStmt withElseStmt(Mutation<Stmt> mutation) {
+	public IfStmt withElseStmt(Mutation<NodeOption<Stmt>> mutation) {
 		return location.nodeMutateChild(ELSE_STMT, mutation);
 	}
 
@@ -99,9 +102,9 @@ public class IfStmt extends Stmt {
 			token(LToken.If), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
 			child(CONDITION),
 			token(LToken.ParenthesisRight),
-			childKindAlternative(THEN_STMT, BlockStmt.kind,
+			alternative(childHas(THEN_STMT, kind(BlockStmt.kind)),
 					composite(none().withSpacingAfter(space()), child(THEN_STMT)),
-					childKindAlternative(THEN_STMT, ExpressionStmt.kind,
+					alternative(childHas(THEN_STMT, kind(ExpressionStmt.kind)),
 							composite(
 									none().withSpacingAfter(spacing(IfStmt_ThenExpressionStmt)).withIndentationAfter(indent(BLOCK)),
 									child(THEN_STMT),
@@ -114,24 +117,24 @@ public class IfStmt extends Stmt {
 							)
 					)
 			),
-			nonNullChild(ELSE_STMT, composite(
+			when(childIs(ELSE_STMT, some()), composite(
 					token(LToken.Else).withSpacingBefore(space()),
-					childKindAlternative(ELSE_STMT, BlockStmt.kind,
-							composite(none().withSpacingAfter(space()), child(ELSE_STMT)),
-							childKindAlternative(ELSE_STMT, IfStmt.kind,
+					alternative(childHas(ELSE_STMT, elementHas(kind(BlockStmt.kind))),
+							composite(none().withSpacingAfter(space()), child(ELSE_STMT, element())),
+							alternative(childHas(ELSE_STMT, elementHas(kind(IfStmt.kind))),
 									composite(
 											none().withSpacingAfter(spacing(IfStmt_ElseIfStmt)),
-											child(ELSE_STMT)
+											child(ELSE_STMT, element())
 									),
-									childKindAlternative(ELSE_STMT, ExpressionStmt.kind,
+									alternative(childHas(ELSE_STMT, elementHas(kind(ExpressionStmt.kind))),
 											composite(
 													none().withSpacingAfter(spacing(IfStmt_ElseExpressionStmt)).withIndentationAfter(indent(BLOCK)),
-													child(ELSE_STMT),
+													child(ELSE_STMT, element()),
 													none().withIndentationBefore(unIndent(BLOCK))
 											),
 											composite(
 													none().withSpacingAfter(spacing(IfStmt_ElseOtherStmt)).withIndentationAfter(indent(BLOCK)),
-													child(ELSE_STMT),
+													child(ELSE_STMT, element()),
 													none().withIndentationBefore(unIndent(BLOCK)).withSpacingAfter(newLine())
 											)
 									)

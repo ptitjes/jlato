@@ -245,7 +245,7 @@ public abstract class TreeFactory {
 	}
 
 	public static IfStmt ifStmt() {
-		return new IfStmt(null, null, null);
+		return new IfStmt(null, null, NodeOption.<Stmt>none());
 	}
 
 	public static LabeledStmt labeledStmt() {
