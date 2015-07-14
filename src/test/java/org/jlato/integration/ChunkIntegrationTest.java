@@ -43,19 +43,35 @@ public abstract class ChunkIntegrationTest<T extends Tree> implements BulkTestCl
 
 	public void runTest(TestResources resources) throws Exception {
 		String source = resources.getResourceAsString("source.txt");
-		String normalized = resources.getResourceAsString("normalized.txt");
-		String failure = resources.getResourceAsString("failure.txt");
 
-		if (normalized != null) {
-			T expression = parse(source);
-			String actual = NormalizedJsonWriter.write(expression);
-			Assert.assertEquals(normalized, actual);
-		} else if (failure != null) {
-			exception.expect(ParseException.class);
-			exception.expectMessage(failure);
-			parse(source);
+		if (updateMode()) {
+			try {
+				T expression = parse(source);
+				String actual = NormalizedJsonWriter.write(expression);
+				resources.updateResource("normalized.txt", actual);
+			} catch (ParseException e) {
+				resources.updateResource("failure.txt", e.getMessage());
+			}
 		} else {
-			throw new IllegalStateException("There should be either a normalized.txt or a failure.txt file");
+			String normalized = resources.getResourceAsString("normalized.txt");
+			String failure = resources.getResourceAsString("failure.txt");
+
+			if (normalized != null) {
+				T expression = parse(source);
+				String actual = NormalizedJsonWriter.write(expression);
+				Assert.assertEquals(normalized, actual);
+			} else if (failure != null) {
+				exception.expect(ParseException.class);
+				exception.expectMessage(failure);
+				parse(source);
+			} else {
+				throw new IllegalStateException("There should be either a normalized.txt or a failure.txt file");
+			}
 		}
+	}
+
+	private boolean updateMode() {
+		String updateProp = System.getProperty("updateIntegrationTests");
+		return updateProp != null && updateProp.equals("true");
 	}
 }
