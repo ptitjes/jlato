@@ -63,6 +63,7 @@
 		<javacc-maven-plugin.version>2.6</javacc-maven-plugin.version>
 		<maven-clean-plugin.version>2.5</maven-clean-plugin.version>
 		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
+		<maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
 		<maven-install-plugin.version>2.4</maven-install-plugin.version>
 		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
 		<maven-release-plugin.version>2.5.1</maven-release-plugin.version>
@@ -114,6 +115,15 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>org/jlato/wip/*</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>${maven-failsafe-plugin.version}</version>
 				<executions>
@@ -149,6 +159,11 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>${maven-compiler-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven-surefire-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

@@ -17,7 +17,7 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.tree;
+package org.jlato.unit;
 
 import org.jlato.internal.bu.STree;
 import org.jlato.parser.ParseContext;
@@ -26,6 +26,7 @@ import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
+import org.jlato.tree.Tree;
 import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.ImportDecl;
 import org.junit.Assert;
