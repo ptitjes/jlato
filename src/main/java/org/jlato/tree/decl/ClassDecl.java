@@ -22,14 +22,18 @@ package org.jlato.tree.decl;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Mutation;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
@@ -49,7 +53,7 @@ public class ClassDecl extends TypeDecl {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ClassDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParams, QualifiedType extendsClause, NodeList<QualifiedType> implementsClause, NodeList<MemberDecl> members) {
+	public <EM extends Tree & ExtendedModifier> ClassDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParams, /*NodeOption<*/QualifiedType/*>*/ extendsClause, NodeList<QualifiedType> implementsClause, NodeList<MemberDecl> members) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, typeParams, extendsClause, implementsClause, members)))));
 	}
 
@@ -93,15 +97,15 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeMutateChild(TYPE_PARAMETERS, mutation);
 	}
 
-	public QualifiedType extendsClause() {
+	public /*NodeOption<*/QualifiedType/*>*/ extendsClause() {
 		return location.nodeChild(EXTENDS_CLAUSE);
 	}
 
-	public ClassDecl withExtendsClause(QualifiedType extendsClause) {
+	public ClassDecl withExtendsClause(/*NodeOption<*/QualifiedType/*>*/ extendsClause) {
 		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
-	public ClassDecl withExtendsClause(Mutation<QualifiedType> mutation) {
+	public ClassDecl withExtendsClause(Mutation</*NodeOption<*/QualifiedType/*>*/> mutation) {
 		return location.nodeMutateChild(EXTENDS_CLAUSE, mutation);
 	}
 
@@ -145,6 +149,10 @@ public class ClassDecl extends TypeDecl {
 					token(LToken.Extends).withSpacing(space(), space()),
 					defaultShape()
 			)),
+//			when(childIs(EXTENDS_CLAUSE, some()), composite(
+//					token(LToken.Extends).withSpacing(space(), space()),
+//					child(EXTENDS_CLAUSE, element())
+//			)),
 			child(IMPLEMENTS_CLAUSE, QualifiedType.implementsClauseShape),
 			child(MEMBERS, MemberDecl.bodyShape)
 	);

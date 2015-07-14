@@ -201,6 +201,18 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
 
+	public NodeOption<T> head() {
+		final STree tree = location.tree;
+
+		final SNodeListState state = (SNodeListState) tree.state;
+		final Vector<STree> trees = state.children;
+		if (trees.size() > 1) throw new IllegalStateException();
+
+		if (trees.isEmpty()) return NodeOption.none();
+		return (NodeOption<T>) new SLocation(null, null,
+				new STree(NodeOption.kind, new SNodeOptionState(trees.first()), tree.run), false).facade;
+	}
+
 	public Iterator<T> iterator() {
 		return new ChildIterator();
 	}

@@ -53,4 +53,14 @@ public class SNodeListState extends STreeState {
 	public SNodeListState withData(int index, Object value) {
 		return new SNodeListState(children, data.set(index, value));
 	}
+
+	public void validate() {
+		super.validate();
+
+		for (STree child : children) {
+			if (child == null)
+				throw new IllegalStateException();
+			child.state.validate();
+		}
+	}
 }

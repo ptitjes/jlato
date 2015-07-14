@@ -21,7 +21,7 @@ public abstract class TreeFactory {
 	}
 
 	public static <EM extends Tree & ExtendedModifier> ClassDecl classDecl() {
-		return new <EM>ClassDecl(NodeList.<EM>empty(), null, NodeList.<TypeParameter>empty(), null, NodeList.<QualifiedType>empty(), NodeList.<MemberDecl>empty());
+		return new <EM>ClassDecl(NodeList.<EM>empty(), null, NodeList.<TypeParameter>empty(), /*NodeOption.<QualifiedType>none()*/null, NodeList.<QualifiedType>empty(), NodeList.<MemberDecl>empty());
 	}
 
 	public static CompilationUnit compilationUnit() {

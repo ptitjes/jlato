@@ -48,4 +48,14 @@ public class SNodeState extends STreeState {
 	public SNodeState withData(int index, Object value) {
 		return new SNodeState(children, data.set(index, value));
 	}
+
+	public void validate() {
+		super.validate();
+
+		for (STree child : children) {
+			if (child == null)
+				throw new IllegalStateException();
+			child.state.validate();
+		}
+	}
 }

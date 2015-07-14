@@ -209,6 +209,10 @@ abstract class ParserBase {
 		return list == null ? new NodeList<T>(element) : list.append(element);
 	}
 
+	protected <T extends Tree> NodeList<T> ensureNotNull(NodeList<T> list) {
+		return /*list == null ? NodeList.<T>empty() :*/ list;
+	}
+
 	// Debug methods
 
 	private void debugFailedPopTokens() {

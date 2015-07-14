@@ -1249,7 +1249,7 @@ TypeDecl ClassOrInterfaceDecl(NodeList modifiers):
 {
    TypeKind typeKind;
    Name name;
-   NodeList typePar = null;
+   NodeList typeParams = null;
    NodeList extendsClause = null;
    NodeList implementsClause = null;
    NodeList members;
@@ -1263,17 +1263,17 @@ TypeDecl ClassOrInterfaceDecl(NodeList modifiers):
     "interface" { typeKind = TypeKind.Interface; }
   )
   name = Name()
-  [ typePar = TypeParameters() ]
+  [ typeParams = TypeParameters() ]
   [ extendsClause = ExtendsList(typeKind) ]
   [ implementsClause = ImplementsList(typeKind) ]
   members = ClassOrInterfaceBody(typeKind)
 
   {
     if (typeKind == TypeKind.Interface)
-      return enRun(new InterfaceDecl(modifiers, name, typePar, extendsClause, members));
+      return enRun(new InterfaceDecl(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members));
     else {
       QualifiedType superClassType = extendsClause == null || extendsClause.isEmpty() ? null : (QualifiedType) extendsClause.get(0);
-      return enRun(new ClassDecl(modifiers, name, typePar, superClassType, implementsClause, members));
+      return enRun(new ClassDecl(modifiers, name, ensureNotNull(typeParams), superClassType, ensureNotNull(implementsClause), members));
     }
   }
 }
@@ -1700,7 +1700,7 @@ MethodDecl MethodDecl(NodeList modifiers):
     ";"
   )
 
-  { return enRun(new MethodDecl(modifiers, typeParameters, type, name, parameters, arrayDims, throwsClause, NodeOption.of(block))); }
+  { return enRun(new MethodDecl(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), NodeOption.of(block))); }
 }
 
 NodeList FormalParameterList():
@@ -1776,7 +1776,7 @@ ConstructorDecl ConstructorDecl(NodeList modifiers):
   "}"
   { block = enRun(new BlockStmt(stmts)); }
 
-  { return enRun(new ConstructorDecl(modifiers, typeParameters, name, parameters, throwsClause, block)); }
+  { return enRun(new ConstructorDecl(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block)); }
 }
 
 ExplicitConstructorInvocationStmt ExplicitConstructorInvocation():
@@ -1804,7 +1804,7 @@ ExplicitConstructorInvocationStmt ExplicitConstructorInvocation():
     args = Arguments() ";"
   )
 
-  { return enRun(new ExplicitConstructorInvocationStmt(typeArgs, isThis, NodeOption.of(expr), args)); }
+  { return enRun(new ExplicitConstructorInvocationStmt(ensureNotNull(typeArgs), isThis, NodeOption.of(expr), args)); }
 }
 
 NodeList Statements():
@@ -2091,11 +2091,6 @@ Expr Expression():
 	Expr ret;
 	AssignExpr.AssignOp op;
 	Expr value;
-	Stmt lambdaBody = null;
-	NodeList params = null;
-	NodeList typeArgs = null;
-	VariableDeclaratorId id = null;
-	Expr inner = null;
 }
 {
   (
@@ -2529,7 +2524,7 @@ Expr PrimaryPrefix():
 	  [ args = Arguments() { hasArgs = true; } ]
 	  {
 	    if (hasArgs) {
-	  	  ret = enRun(new MethodInvocationExpr(NodeOption.of(ret), typeArgs, name, args));
+	  	  ret = enRun(new MethodInvocationExpr(NodeOption.of(ret), ensureNotNull(typeArgs), name, args));
 		} else {
 	  	  ret = enRun(new FieldAccessExpr(NodeOption.of(ret), name));
 		}
@@ -2538,7 +2533,7 @@ Expr PrimaryPrefix():
 	  { lateRun(); }
 	  "::" [typeArgs = TypeArguments() ]
       ( name = Name() | "new" { name = new Name("new"); } )
-	  { ret = enRun(new MethodReferenceExpr(ret, typeArgs, name)); }
+	  { ret = enRun(new MethodReferenceExpr(ret, ensureNotNull(typeArgs), name)); }
 	)
   |
     { run(); } "(" ret = Expression() ")" { ret = enRun(new ParenthesizedExpr(ret)); }
@@ -2552,10 +2547,10 @@ Expr PrimaryPrefix():
     { run(); }
     type = ResultType() "::" [typeArgs = TypeArguments() ]
     ( name = Name() | "new" { name = new Name("new"); } )
-    { ret = enRun(new MethodReferenceExpr(new TypeExpr(type), typeArgs, name)); }
+    { ret = enRun(new MethodReferenceExpr(new TypeExpr(type), ensureNotNull(typeArgs), name)); }
   |
     { run(); }
-    name = Name() [ args = Arguments() { hasArgs=true; } ]
+    name = Name() [ args = Arguments() { hasArgs = true; } ]
     {
       if (hasArgs) {
         ret = enRun(new MethodInvocationExpr(NodeOption.<Expr>none(), NodeList.<Type>empty(), name, args));
@@ -2607,7 +2602,7 @@ Expr PrimarySuffixWithoutSuper(Expr scope):
       [ args = Arguments() { hasArgs=true; } ]
       {
         if (hasArgs) {
-          ret = enRun(new MethodInvocationExpr(NodeOption.of(scope), typeArgs, name, args));
+          ret = enRun(new MethodInvocationExpr(NodeOption.of(scope), ensureNotNull(typeArgs), name, args));
         } else {
           ret = enRun(new FieldAccessExpr(NodeOption.of(scope), name));
         }
@@ -2691,7 +2686,7 @@ Expr AllocationExpression(Expr scope):
 	  ret = ArrayCreationExpr(type)
 	|
 	  args = Arguments() [ LOOKAHEAD( "{" ) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
-      { ret = enRun(new ObjectCreationExpr(NodeOption.of(scope), typeArgs, (QualifiedType) type, args, NodeOption.of(anonymousBody))); }
+      { ret = enRun(new ObjectCreationExpr(NodeOption.of(scope), ensureNotNull(typeArgs), (QualifiedType) type, args, NodeOption.of(anonymousBody))); }
     )
   )
   { return ret; }
@@ -2898,8 +2893,6 @@ ExpressionStmt StatementExpression():
 	Expr expr;
 	AssignExpr.AssignOp op;
 	Expr value;
-	NodeList typeArgs = null;
-	Expr inner = null;
 }
 {
   { run(); }

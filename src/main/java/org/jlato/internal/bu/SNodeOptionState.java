@@ -49,4 +49,10 @@ public class SNodeOptionState extends STreeState {
 	public SNodeOptionState withData(int index, Object value) {
 		return new SNodeOptionState(element, data.set(index, value));
 	}
+
+	public void validate() {
+		super.validate();
+
+		if (element != null) element.state.validate();
+	}
 }
