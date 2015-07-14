@@ -1340,7 +1340,7 @@ TypeDecl EnumDecl(NodeList modifiers):
   [ ";" members = ClassOrInterfaceBodyDecls(TypeKind.Enum) ]
   "}"
 
-  { return enRun(new EnumDecl(modifiers, name, implementsClause, constants, trailingComma, members)); }
+  { return enRun(new EnumDecl(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))); }
 }
 
 EnumConstantDecl EnumConstantDecl():
@@ -2821,7 +2821,7 @@ BlockStmt Block():
 {
   { run(); }
   "{" stmts = Statements() "}"
-  { return enRun(new BlockStmt(stmts)); }
+  { return enRun(new BlockStmt(ensureNotNull(stmts))); }
 }
 
 /*
@@ -2943,7 +2943,7 @@ SwitchCase SwitchEntry():
     "default"
   )
   ":" stmts = Statements()
-  { return enRun(new SwitchCase(NodeOption.of(label), stmts)); }
+  { return enRun(new SwitchCase(NodeOption.of(label), ensureNotNull(stmts))); }
 }
 
 IfStmt IfStatement():
@@ -3251,7 +3251,7 @@ NormalAnnotationExpr NormalAnnotation():
 {
   { run(); }
   "@" name = QualifiedName() "(" [ pairs = MemberValuePairs() ] ")"
-  { return enRun(new NormalAnnotationExpr(name, pairs)); }
+  { return enRun(new NormalAnnotationExpr(name, ensureNotNull(pairs))); }
 }
 
 MarkerAnnotationExpr MarkerAnnotation():
