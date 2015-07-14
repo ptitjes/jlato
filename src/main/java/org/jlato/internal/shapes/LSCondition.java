@@ -70,13 +70,21 @@ public abstract class LSCondition {
 	}
 
 	public static LSCondition childKind(final int index, final Tree.Kind kind) {
+		return childHas(index, kind(kind));
+	}
+
+	public static LSCondition childIs(final int index, final LSCondition condition) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
 				final SNodeState state = (SNodeState) tree.state;
-				final Tree.Kind childKind = state.child(index).kind;
-				return childKind == kind;
+				final STree child = state.child(index);
+				return condition.test(child);
 			}
 		};
+	}
+
+	public static LSCondition childHas(final int index, final LSCondition condition) {
+		return childIs(index, condition);
 	}
 
 	public static LSCondition lastChildKind(final Tree.Kind kind) {

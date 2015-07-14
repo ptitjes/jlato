@@ -22,14 +22,18 @@ package org.jlato.tree.decl;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.SpacingConstraint.spacing;
@@ -50,8 +54,8 @@ public class EnumConstantDecl extends MemberDecl {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> EnumConstantDecl(NodeList<EM> modifiers, Name name, NodeList<Expr> args, NodeList<Decl> classBody/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, args, classBody/*, javadocComment*/)))));
+	public <EM extends Tree & ExtendedModifier> EnumConstantDecl(NodeList<EM> modifiers, Name name, NodeOption<NodeList<Expr>> args, NodeOption<NodeList<MemberDecl>> classBody) {
+		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, args, classBody)))));
 	}
 
 	@Override
@@ -83,52 +87,41 @@ public class EnumConstantDecl extends MemberDecl {
 		return location.nodeMutateChild(NAME, mutation);
 	}
 
-	public NodeList<Expr> args() {
+	public NodeOption<NodeList<Expr>> args() {
 		return location.nodeChild(ARGS);
 	}
 
-	public EnumConstantDecl withArgs(NodeList<Expr> args) {
+	public EnumConstantDecl withArgs(NodeOption<NodeList<Expr>> args) {
 		return location.nodeWithChild(ARGS, args);
 	}
 
-	public EnumConstantDecl withArgs(Mutation<NodeList<Expr>> mutation) {
+	public EnumConstantDecl withArgs(Mutation<NodeOption<NodeList<Expr>>> mutation) {
 		return location.nodeMutateChild(ARGS, mutation);
 	}
 
-	public NodeList<Decl> classBody() {
+	public NodeOption<NodeList<MemberDecl>> classBody() {
 		return location.nodeChild(CLASS_BODY);
 	}
 
-	public EnumConstantDecl withClassBody(NodeList<Decl> classBody) {
+	public EnumConstantDecl withClassBody(NodeOption<NodeList<MemberDecl>> classBody) {
 		return location.nodeWithChild(CLASS_BODY, classBody);
 	}
 
-	public EnumConstantDecl withClassBody(Mutation<NodeList<Decl>> mutation) {
+	public EnumConstantDecl withClassBody(Mutation<NodeOption<NodeList<MemberDecl>>> mutation) {
 		return location.nodeMutateChild(CLASS_BODY, mutation);
 	}
-/*
-
-	public JavadocComment javadocComment() {
-		return location.nodeChild(JAVADOC_COMMENT);
-	}
-
-	public EnumConstantDecl withJavadocComment(JavadocComment javadocComment) {
-		return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
-	}
-*/
 
 	private static final int MODIFIERS = 0;
 	private static final int NAME = 1;
 	private static final int ARGS = 2;
 	private static final int CLASS_BODY = 3;
-//	private static final int JAVADOC_COMMENT = 4;
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(NAME),
-			child(ARGS, Expr.argumentsShape),
-			child(CLASS_BODY, MemberDecl.bodyShape),
-			nonNullChild(CLASS_BODY, none().withSpacingAfter(spacing(EnumConstant_AfterBody)))
+			child(ARGS, when(some(), element(Expr.argumentsShape))),
+			child(CLASS_BODY, when(some(), element(MemberDecl.bodyShape))),
+			when(childIs(CLASS_BODY, some()), none().withSpacingAfter(spacing(EnumConstant_AfterBody)))
 	);
 
 	public static final LexicalShape listShape = list(

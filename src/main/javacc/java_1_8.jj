@@ -1347,8 +1347,8 @@ EnumConstantDecl EnumConstantDecl():
 {
 	NodeList modifiers = null;
 	Name name;
-	NodeList args = null;
-	NodeList classBody = null;
+	NodeList<Expr> args = null;
+	NodeList<MemberDecl> classBody = null;
 }
 {
   { run(); }
@@ -1356,7 +1356,7 @@ EnumConstantDecl EnumConstantDecl():
   modifiers = Modifiers() name = Name()
   [ args = Arguments() ] [ classBody = ClassOrInterfaceBody(TypeKind.Class) ]
 
-  { return enRun(new EnumConstantDecl(modifiers, name, args, classBody)); }
+  { return enRun(new EnumConstantDecl(modifiers, name, NodeOption.of(args), NodeOption.of(classBody))); }
 }
 
 TypeDecl AnnotationTypeDecl(NodeList modifiers):

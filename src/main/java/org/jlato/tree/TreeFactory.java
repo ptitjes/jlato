@@ -41,7 +41,7 @@ public abstract class TreeFactory {
 	}
 
 	public static <EM extends Tree & ExtendedModifier> EnumConstantDecl enumConstantDecl() {
-		return new <EM>EnumConstantDecl(NodeList.<EM>empty(), null, NodeList.<Expr>empty(), NodeList.<Decl>empty());
+		return new <EM>EnumConstantDecl(NodeList.<EM>empty(), null, NodeOption.<NodeList<Expr>>none(), NodeOption.<NodeList<MemberDecl>>none());
 	}
 
 	public static <EM extends Tree & ExtendedModifier> EnumDecl enumDecl() {
