@@ -25,8 +25,10 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class QualifiedName extends Tree {
@@ -45,7 +47,7 @@ public class QualifiedName extends Tree {
 		final String[] split = nameString.split("\\.");
 		QualifiedName name = null;
 		for (String part : split) {
-			name = new QualifiedName(name, new Name(part));
+			name = new QualifiedName(NodeOption.of(name), new Name(part));
 		}
 		return name;
 	}
@@ -54,19 +56,19 @@ public class QualifiedName extends Tree {
 		super(location);
 	}
 
-	public QualifiedName(QualifiedName qualifier, Name name) {
+	public QualifiedName(NodeOption<QualifiedName> qualifier, Name name) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(qualifier, name)))));
 	}
 
-	public QualifiedName qualifier() {
+	public NodeOption<QualifiedName> qualifier() {
 		return location.nodeChild(QUALIFIER);
 	}
 
-	public QualifiedName withQualifier(QualifiedName qualifier) {
+	public QualifiedName withQualifier(NodeOption<QualifiedName> qualifier) {
 		return location.nodeWithChild(QUALIFIER, qualifier);
 	}
 
-	public QualifiedName withQualifier(Mutation<QualifiedName> mutation) {
+	public QualifiedName withQualifier(Mutation<NodeOption<QualifiedName>> mutation) {
 		return location.nodeMutateChild(QUALIFIER, mutation);
 	}
 
@@ -83,20 +85,23 @@ public class QualifiedName extends Tree {
 	}
 
 	public boolean isQualified() {
-		return qualifier() != null;
+		return qualifier().isDefined();
 	}
 
 	@Override
 	public String toString() {
-		final QualifiedName qualifier = qualifier();
+		final NodeOption<QualifiedName> qualifier = qualifier();
 		final Name name = name();
-		return qualifier != null ? qualifier.toString() + "." + name.toString() : name.toString();
+		return qualifier.isDefined() ? qualifier.get().toString() + "." + name.toString() : name.toString();
 	}
 
 	private static final int QUALIFIER = 0;
 	private static final int NAME = 1;
 
+	public final static LexicalShape qualifierShape = composite(element(), token(LToken.Dot));
+
 	public final static LexicalShape shape = composite(
-			nonNullChild(QUALIFIER, composite(child(QUALIFIER), token(LToken.Dot))), child(NAME)
+			child(QUALIFIER, when(some(), qualifierShape)),
+			child(NAME)
 	);
 }

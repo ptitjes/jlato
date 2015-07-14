@@ -2022,12 +2022,18 @@ QualifiedType AnnotatedQualifiedType():
 
 QualifiedName QualifiedName():
 {
+    NodeOption<QualifiedName> qualifier = NodeOption.none();
 	QualifiedName ret = null;
 	Name name;
 }
 {
-  { run(); } name = Name() { ret = enRun(new QualifiedName(ret, name)); }
-  ( LOOKAHEAD("." Name()) { lateRun(); } "." name = Name() { ret = enRun(new QualifiedName(ret, name)); } )*
+  { run(); } name = Name() { ret = enRun(new QualifiedName(qualifier, name)); }
+  (
+    LOOKAHEAD("." Name())
+    { lateRun(); } "." { qualifier = enRun(qualifier.set(ret), QualifiedName.qualifierShape); }
+    { lateRun(); }
+    name = Name() { ret = enRun(new QualifiedName(qualifier, name)); }
+  )*
   { return ret; }
 }
 

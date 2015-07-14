@@ -197,7 +197,7 @@ public abstract class TreeFactory {
 	}
 
 	public static QualifiedName qualifiedName() {
-		return new QualifiedName(null, null);
+		return new QualifiedName(NodeOption.<QualifiedName>none(), null);
 	}
 
 	public static AssertStmt assertStmt() {
