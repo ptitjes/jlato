@@ -19,22 +19,31 @@
 
 package org.jlato.rewrite;
 
-import org.jlato.tree.Tree;
+import com.github.andrewoma.dexx.collection.HashSet;
 
 /**
  * @author Didier Villevalois
  */
-public abstract class Rewriter {
+class DecoratedPattern<T> extends Pattern<T> {
 
-	public abstract <T extends Tree> T rewrite(T t);
+	private final Pattern<T> pattern;
 
-	public Rewriter and(final Rewriter other) {
-		return new Rewriter() {
-			@Override
-			public <T extends Tree> T rewrite(T t) {
-				T maybeRewrote = Rewriter.this.rewrite(t);
-				return maybeRewrote != t ? maybeRewrote : other.rewrite(t);
-			}
-		};
+	public DecoratedPattern(Pattern<T> pattern) {
+		this.pattern = pattern;
+	}
+
+	@Override
+	protected HashSet<Variable<?>> collectVariables(HashSet<Variable<?>> variables) {
+		return pattern.collectVariables(variables);
+	}
+
+	@Override
+	protected Substitution match(Object object, Substitution substitution) {
+		return pattern.match(object, substitution);
+	}
+
+	@Override
+	public T build(Substitution substitution) {
+		return pattern.build(substitution);
 	}
 }

@@ -17,24 +17,11 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.rewrite;
-
-import org.jlato.tree.Tree;
+package org.jlato.tree;
 
 /**
  * @author Didier Villevalois
  */
-public abstract class Rewriter {
-
-	public abstract <T extends Tree> T rewrite(T t);
-
-	public Rewriter and(final Rewriter other) {
-		return new Rewriter() {
-			@Override
-			public <T extends Tree> T rewrite(T t) {
-				T maybeRewrote = Rewriter.this.rewrite(t);
-				return maybeRewrote != t ? maybeRewrote : other.rewrite(t);
-			}
-		};
-	}
+public interface Predicate<T> {
+	boolean test(T t);
 }

@@ -23,6 +23,7 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.HashSet;
 import com.github.andrewoma.dexx.collection.Set;
+import org.jlato.tree.Predicate;
 import org.jlato.tree.Tree;
 
 /**
@@ -61,9 +62,32 @@ public abstract class Pattern<T> {
 		return builder.build();
 	}
 
+	public Pattern<T> suchThat(final Predicate<T> predicate) {
+		return new DecoratedPattern<T>(this) {
+			@Override
+			@SuppressWarnings("unchecked")
+			public Substitution match(Object object) {
+				Substitution match = super.match(object);
+				return match != null && predicate.test((T) object) ? match : null;
+			}
+		};
+	}
+
+	public <U> Pattern<T> suchThat(final String var, final Predicate<U> predicate) {
+		return new DecoratedPattern<T>(this) {
+			@Override
+			@SuppressWarnings("unchecked")
+			public Substitution match(Object object) {
+				Substitution match = super.match(object);
+				return match != null && predicate.test((U) match.get(var)) ? match : null;
+			}
+		};
+	}
+
 	public Rewriter rewriteTo(final Pattern<T> rewrote) {
 		return new Rewriter() {
 			@Override
+			@SuppressWarnings("unchecked")
 			public <T extends Tree> T rewrite(T t) {
 				Substitution match = Pattern.this.match(t);
 				return match == null ? t : (T) rewrote.build(match);
