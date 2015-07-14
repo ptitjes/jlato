@@ -65,8 +65,8 @@ public class FieldDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> FieldDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeMutateChild(MODIFIERS, modifiers);
+	public <EM extends Tree & ExtendedModifier> FieldDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+		return location.nodeMutateChild(MODIFIERS, mutation);
 	}
 
 	public Type type() {
@@ -77,8 +77,8 @@ public class FieldDecl extends MemberDecl {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public FieldDecl withType(Mutation<Type> type) {
-		return location.nodeMutateChild(TYPE, type);
+	public FieldDecl withType(Mutation<Type> mutation) {
+		return location.nodeMutateChild(TYPE, mutation);
 	}
 
 	public NodeList<VariableDeclarator> variables() {
@@ -89,8 +89,8 @@ public class FieldDecl extends MemberDecl {
 		return location.nodeWithChild(VARIABLES, variables);
 	}
 
-	public FieldDecl withVariables(Mutation<NodeList<VariableDeclarator>> variables) {
-		return location.nodeMutateChild(VARIABLES, variables);
+	public FieldDecl withVariables(Mutation<NodeList<VariableDeclarator>> mutation) {
+		return location.nodeMutateChild(VARIABLES, mutation);
 	}
 /*
 

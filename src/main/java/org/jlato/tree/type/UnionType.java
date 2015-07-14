@@ -58,8 +58,8 @@ public class UnionType extends Type {
 		return location.nodeWithChild(TYPES, types);
 	}
 
-	public UnionType withTypes(Mutation<NodeList<Type>> types) {
-		return location.nodeMutateChild(TYPES, types);
+	public UnionType withTypes(Mutation<NodeList<Type>> mutation) {
+		return location.nodeMutateChild(TYPES, mutation);
 	}
 
 	private static final int TYPES = 0;

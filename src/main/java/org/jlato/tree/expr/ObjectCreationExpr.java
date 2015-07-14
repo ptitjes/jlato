@@ -62,8 +62,8 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public ObjectCreationExpr withScope(Mutation<Expr> scope) {
-		return location.nodeMutateChild(SCOPE, scope);
+	public ObjectCreationExpr withScope(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(SCOPE, mutation);
 	}
 
 	public NodeList<Type> typeArgs() {
@@ -74,8 +74,8 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
-	public ObjectCreationExpr withTypeArgs(Mutation<NodeList<Type>> typeArgs) {
-		return location.nodeMutateChild(TYPE_ARGUMENTS, typeArgs);
+	public ObjectCreationExpr withTypeArgs(Mutation<NodeList<Type>> mutation) {
+		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
 	}
 
 	public QualifiedType type() {
@@ -86,8 +86,8 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public ObjectCreationExpr withType(Mutation<QualifiedType> type) {
-		return location.nodeMutateChild(TYPE, type);
+	public ObjectCreationExpr withType(Mutation<QualifiedType> mutation) {
+		return location.nodeMutateChild(TYPE, mutation);
 	}
 
 	public NodeList<Expr> args() {
@@ -98,8 +98,8 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
-	public ObjectCreationExpr withArgs(Mutation<NodeList<Expr>> args) {
-		return location.nodeMutateChild(ARGUMENTS, args);
+	public ObjectCreationExpr withArgs(Mutation<NodeList<Expr>> mutation) {
+		return location.nodeMutateChild(ARGUMENTS, mutation);
 	}
 
 	public NodeList<MemberDecl> body() {
@@ -110,8 +110,8 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public ObjectCreationExpr withBody(Mutation<NodeList<MemberDecl>> body) {
-		return location.nodeMutateChild(BODY, body);
+	public ObjectCreationExpr withBody(Mutation<NodeList<MemberDecl>> mutation) {
+		return location.nodeMutateChild(BODY, mutation);
 	}
 
 	private static final int SCOPE = 0;

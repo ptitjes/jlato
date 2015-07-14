@@ -61,8 +61,8 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ClassDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeMutateChild(MODIFIERS, modifiers);
+	public <EM extends Tree & ExtendedModifier> ClassDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+		return location.nodeMutateChild(MODIFIERS, mutation);
 	}
 
 	public TypeKind typeKind() {
@@ -77,8 +77,8 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public ClassDecl withName(Mutation<Name> name) {
-		return location.nodeMutateChild(NAME, name);
+	public ClassDecl withName(Mutation<Name> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	public NodeList<TypeParameter> typeParams() {
@@ -89,8 +89,8 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
-	public ClassDecl withTypeParams(Mutation<NodeList<TypeParameter>> typeParams) {
-		return location.nodeMutateChild(TYPE_PARAMETERS, typeParams);
+	public ClassDecl withTypeParams(Mutation<NodeList<TypeParameter>> mutation) {
+		return location.nodeMutateChild(TYPE_PARAMETERS, mutation);
 	}
 
 	public QualifiedType extendsClause() {
@@ -101,8 +101,8 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
-	public ClassDecl withExtendsClause(Mutation<QualifiedType> extendsClause) {
-		return location.nodeMutateChild(EXTENDS_CLAUSE, extendsClause);
+	public ClassDecl withExtendsClause(Mutation<QualifiedType> mutation) {
+		return location.nodeMutateChild(EXTENDS_CLAUSE, mutation);
 	}
 
 	public NodeList<QualifiedType> implementsClause() {
@@ -113,8 +113,8 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
-	public ClassDecl withImplementsClause(Mutation<NodeList<QualifiedType>> implementsClause) {
-		return location.nodeMutateChild(IMPLEMENTS_CLAUSE, implementsClause);
+	public ClassDecl withImplementsClause(Mutation<NodeList<QualifiedType>> mutation) {
+		return location.nodeMutateChild(IMPLEMENTS_CLAUSE, mutation);
 	}
 
 	public NodeList<MemberDecl> members() {
@@ -125,8 +125,8 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 
-	public ClassDecl withMembers(Mutation<NodeList<MemberDecl>> members) {
-		return location.nodeMutateChild(MEMBERS, members);
+	public ClassDecl withMembers(Mutation<NodeList<MemberDecl>> mutation) {
+		return location.nodeMutateChild(MEMBERS, mutation);
 	}
 
 	private static final int MODIFIERS = 0;

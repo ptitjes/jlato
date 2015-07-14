@@ -60,8 +60,8 @@ public class MethodInvocationExpr extends Expr {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public MethodInvocationExpr withScope(Mutation<Expr> scope) {
-		return location.nodeMutateChild(SCOPE, scope);
+	public MethodInvocationExpr withScope(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(SCOPE, mutation);
 	}
 
 	public NodeList<Type> typeArgs() {
@@ -72,8 +72,8 @@ public class MethodInvocationExpr extends Expr {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
-	public MethodInvocationExpr withTypeArgs(Mutation<NodeList<Type>> typeArgs) {
-		return location.nodeMutateChild(TYPE_ARGUMENTS, typeArgs);
+	public MethodInvocationExpr withTypeArgs(Mutation<NodeList<Type>> mutation) {
+		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
 	}
 
 	public Name name() {
@@ -84,8 +84,8 @@ public class MethodInvocationExpr extends Expr {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public MethodInvocationExpr withName(Mutation<Name> name) {
-		return location.nodeMutateChild(NAME, name);
+	public MethodInvocationExpr withName(Mutation<Name> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	public NodeList<Expr> args() {
@@ -96,8 +96,8 @@ public class MethodInvocationExpr extends Expr {
 		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
-	public MethodInvocationExpr withArgs(Mutation<NodeList<Expr>> args) {
-		return location.nodeMutateChild(ARGUMENTS, args);
+	public MethodInvocationExpr withArgs(Mutation<NodeList<Expr>> mutation) {
+		return location.nodeMutateChild(ARGUMENTS, mutation);
 	}
 
 	private static final int SCOPE = 0;

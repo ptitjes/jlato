@@ -60,8 +60,8 @@ public class ForStmt extends Stmt {
 		return location.nodeWithChild(INIT, init);
 	}
 
-	public ForStmt withInit(Mutation<NodeList<Expr>> init) {
-		return location.nodeMutateChild(INIT, init);
+	public ForStmt withInit(Mutation<NodeList<Expr>> mutation) {
+		return location.nodeMutateChild(INIT, mutation);
 	}
 
 	public Expr compare() {
@@ -72,8 +72,8 @@ public class ForStmt extends Stmt {
 		return location.nodeWithChild(COMPARE, compare);
 	}
 
-	public ForStmt withCompare(Mutation<Expr> compare) {
-		return location.nodeMutateChild(COMPARE, compare);
+	public ForStmt withCompare(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(COMPARE, mutation);
 	}
 
 	public NodeList<Expr> update() {
@@ -84,8 +84,8 @@ public class ForStmt extends Stmt {
 		return location.nodeWithChild(UPDATE, update);
 	}
 
-	public ForStmt withUpdate(Mutation<NodeList<Expr>> update) {
-		return location.nodeMutateChild(UPDATE, update);
+	public ForStmt withUpdate(Mutation<NodeList<Expr>> mutation) {
+		return location.nodeMutateChild(UPDATE, mutation);
 	}
 
 	public Stmt body() {
@@ -96,8 +96,8 @@ public class ForStmt extends Stmt {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public ForStmt withBody(Mutation<Stmt> body) {
-		return location.nodeMutateChild(BODY, body);
+	public ForStmt withBody(Mutation<Stmt> mutation) {
+		return location.nodeMutateChild(BODY, mutation);
 	}
 
 	private static final int INIT = 0;

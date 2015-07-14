@@ -58,8 +58,8 @@ public class ContinueStmt extends Stmt {
 		return location.nodeWithChild(ID, id);
 	}
 
-	public ContinueStmt withId(Mutation<Name> id) {
-		return location.nodeMutateChild(ID, id);
+	public ContinueStmt withId(Mutation<Name> mutation) {
+		return location.nodeMutateChild(ID, mutation);
 	}
 
 	private static final int ID = 0;

@@ -72,8 +72,8 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeMutateChild(MODIFIERS, modifiers);
+	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+		return location.nodeMutateChild(MODIFIERS, mutation);
 	}
 
 	public NodeList<TypeParameter> typeParams() {
@@ -84,8 +84,8 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
-	public MethodDecl withTypeParams(Mutation<NodeList<TypeParameter>> typeParams) {
-		return location.nodeMutateChild(TYPE_PARAMETERS, typeParams);
+	public MethodDecl withTypeParams(Mutation<NodeList<TypeParameter>> mutation) {
+		return location.nodeMutateChild(TYPE_PARAMETERS, mutation);
 	}
 
 	public Type type() {
@@ -96,8 +96,8 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public MethodDecl withType(Mutation<Type> type) {
-		return location.nodeMutateChild(TYPE, type);
+	public MethodDecl withType(Mutation<Type> mutation) {
+		return location.nodeMutateChild(TYPE, mutation);
 	}
 
 	public Name name() {
@@ -108,8 +108,8 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public MethodDecl withName(Mutation<Name> name) {
-		return location.nodeMutateChild(NAME, name);
+	public MethodDecl withName(Mutation<Name> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	public NodeList<FormalParameter> params() {
@@ -120,8 +120,8 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(PARAMETERS, params);
 	}
 
-	public MethodDecl withParams(Mutation<NodeList<FormalParameter>> params) {
-		return location.nodeMutateChild(PARAMETERS, params);
+	public MethodDecl withParams(Mutation<NodeList<FormalParameter>> mutation) {
+		return location.nodeMutateChild(PARAMETERS, mutation);
 	}
 
 	public NodeList<ArrayDim> dims() {
@@ -132,8 +132,8 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(DIMS, dims);
 	}
 
-	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> dims) {
-		return location.nodeMutateChild(DIMS, dims);
+	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> mutation) {
+		return location.nodeMutateChild(DIMS, mutation);
 	}
 
 	public NodeList<QualifiedType> throwsClause() {
@@ -144,8 +144,8 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
 	}
 
-	public ConstructorDecl withThrowsClause(Mutation<NodeList<QualifiedType>> throwsClause) {
-		return location.nodeMutateChild(THROWS_CLAUSE, throwsClause);
+	public ConstructorDecl withThrowsClause(Mutation<NodeList<QualifiedType>> mutation) {
+		return location.nodeMutateChild(THROWS_CLAUSE, mutation);
 	}
 
 	public BlockStmt body() {
@@ -156,8 +156,8 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public MethodDecl withBody(Mutation<BlockStmt> body) {
-		return location.nodeMutateChild(BODY, body);
+	public MethodDecl withBody(Mutation<BlockStmt> mutation) {
+		return location.nodeMutateChild(BODY, mutation);
 	}
 
 	private static final int MODIFIERS = 0;

@@ -59,8 +59,8 @@ public class ArrayDim extends Tree {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
-	public ArrayDim withAnnotations(Mutation<NodeList<AnnotationExpr>> annotations) {
-		return location.nodeMutateChild(ANNOTATIONS, annotations);
+	public ArrayDim withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
+		return location.nodeMutateChild(ANNOTATIONS, mutation);
 	}
 
 	private static final int ANNOTATIONS = 0;

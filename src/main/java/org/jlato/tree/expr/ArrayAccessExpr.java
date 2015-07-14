@@ -57,8 +57,8 @@ public class ArrayAccessExpr extends Expr {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public ArrayAccessExpr withName(Mutation<Expr> name) {
-		return location.nodeMutateChild(NAME, name);
+	public ArrayAccessExpr withName(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	public Expr index() {
@@ -69,8 +69,8 @@ public class ArrayAccessExpr extends Expr {
 		return location.nodeWithChild(INDEX, index);
 	}
 
-	public ArrayAccessExpr withIndex(Mutation<Expr> index) {
-		return location.nodeMutateChild(INDEX, index);
+	public ArrayAccessExpr withIndex(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(INDEX, mutation);
 	}
 
 	private static final int NAME = 0;

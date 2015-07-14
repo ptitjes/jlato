@@ -63,8 +63,8 @@ public class VariableDeclarationExpr extends Expr {
 		return location.nodeWithChild(DECLARATION, declaration);
 	}
 
-	public VariableDeclarationExpr withDeclaration(Mutation<LocalVariableDecl> declaration) {
-		return location.nodeMutateChild(DECLARATION, declaration);
+	public VariableDeclarationExpr withDeclaration(Mutation<LocalVariableDecl> mutation) {
+		return location.nodeMutateChild(DECLARATION, mutation);
 	}
 
 	private static final int DECLARATION = 0;

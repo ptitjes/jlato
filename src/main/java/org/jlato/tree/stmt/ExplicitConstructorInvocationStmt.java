@@ -61,8 +61,8 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
-	public ExplicitConstructorInvocationStmt withTypeArgs(Mutation<NodeList<Type>> typeArgs) {
-		return location.nodeMutateChild(TYPE_ARGUMENTS, typeArgs);
+	public ExplicitConstructorInvocationStmt withTypeArgs(Mutation<NodeList<Type>> mutation) {
+		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
 	}
 
 	public boolean isThis() {
@@ -81,8 +81,8 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
-	public ExplicitConstructorInvocationStmt withExpr(Mutation<Expr> expr) {
-		return location.nodeMutateChild(EXPR, expr);
+	public ExplicitConstructorInvocationStmt withExpr(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(EXPR, mutation);
 	}
 
 	public NodeList<Expr> args() {
@@ -93,8 +93,8 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 		return location.nodeWithChild(ARGUMENTS, args);
 	}
 
-	public ExplicitConstructorInvocationStmt withArgs(Mutation<NodeList<Expr>> args) {
-		return location.nodeMutateChild(ARGUMENTS, args);
+	public ExplicitConstructorInvocationStmt withArgs(Mutation<NodeList<Expr>> mutation) {
+		return location.nodeMutateChild(ARGUMENTS, mutation);
 	}
 
 	private static final int TYPE_ARGUMENTS = 0;

@@ -58,8 +58,8 @@ public class ArrayDimExpr extends Tree {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
-	public ArrayDimExpr withAnnotations(Mutation<NodeList<AnnotationExpr>> annotations) {
-		return location.nodeMutateChild(ANNOTATIONS, annotations);
+	public ArrayDimExpr withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
+		return location.nodeMutateChild(ANNOTATIONS, mutation);
 	}
 
 	public Expr expr() {
@@ -70,8 +70,8 @@ public class ArrayDimExpr extends Tree {
 		return location.nodeWithChild(EXPRESSION, expr);
 	}
 
-	public ArrayDimExpr withExpr(Mutation<Expr> expr) {
-		return location.nodeMutateChild(EXPRESSION, expr);
+	public ArrayDimExpr withExpr(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(EXPRESSION, mutation);
 	}
 
 	private static final int ANNOTATIONS = 0;

@@ -64,8 +64,8 @@ public class CompilationUnit extends Tree {
 		return location.nodeWithChild(PACKAGE_DECL, packageDecl);
 	}
 
-	public CompilationUnit withPackageDecl(Mutation<PackageDecl> packageDecl) {
-		return location.nodeMutateChild(PACKAGE_DECL, packageDecl);
+	public CompilationUnit withPackageDecl(Mutation<PackageDecl> mutation) {
+		return location.nodeMutateChild(PACKAGE_DECL, mutation);
 	}
 
 	public NodeList<ImportDecl> imports() {
@@ -76,8 +76,8 @@ public class CompilationUnit extends Tree {
 		return location.nodeWithChild(IMPORTS, imports);
 	}
 
-	public CompilationUnit withImports(Mutation<NodeList<ImportDecl>> imports) {
-		return location.nodeMutateChild(IMPORTS, imports);
+	public CompilationUnit withImports(Mutation<NodeList<ImportDecl>> mutation) {
+		return location.nodeMutateChild(IMPORTS, mutation);
 	}
 
 	public NodeList<TypeDecl> types() {
@@ -88,8 +88,8 @@ public class CompilationUnit extends Tree {
 		return location.nodeWithChild(TYPES, types);
 	}
 
-	public CompilationUnit withTypes(Mutation<NodeList<TypeDecl>> types) {
-		return location.nodeMutateChild(TYPES, types);
+	public CompilationUnit withTypes(Mutation<NodeList<TypeDecl>> mutation) {
+		return location.nodeMutateChild(TYPES, mutation);
 	}
 
 	private static final int PACKAGE_DECL = 0;

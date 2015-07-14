@@ -60,8 +60,8 @@ public class ForeachStmt extends Stmt {
 		return location.nodeWithChild(VAR, var);
 	}
 
-	public ForeachStmt withVar(Mutation<VariableDeclarationExpr> var) {
-		return location.nodeMutateChild(VAR, var);
+	public ForeachStmt withVar(Mutation<VariableDeclarationExpr> mutation) {
+		return location.nodeMutateChild(VAR, mutation);
 	}
 
 	public Expr iterable() {
@@ -72,8 +72,8 @@ public class ForeachStmt extends Stmt {
 		return location.nodeWithChild(ITERABLE, iterable);
 	}
 
-	public ForeachStmt withIterable(Mutation<Expr> iterable) {
-		return location.nodeMutateChild(ITERABLE, iterable);
+	public ForeachStmt withIterable(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(ITERABLE, mutation);
 	}
 
 	public Stmt body() {
@@ -84,8 +84,8 @@ public class ForeachStmt extends Stmt {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public ForeachStmt withBody(Mutation<Stmt> body) {
-		return location.nodeMutateChild(BODY, body);
+	public ForeachStmt withBody(Mutation<Stmt> mutation) {
+		return location.nodeMutateChild(BODY, mutation);
 	}
 
 	private static final int VAR = 0;

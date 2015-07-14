@@ -66,8 +66,8 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeMutateChild(MODIFIERS, modifiers);
+	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+		return location.nodeMutateChild(MODIFIERS, mutation);
 	}
 
 	public Type type() {
@@ -78,8 +78,8 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(TYPE, type);
 	}
 
-	public AnnotationMemberDecl withType(Mutation<Type> type) {
-		return location.nodeMutateChild(TYPE, type);
+	public AnnotationMemberDecl withType(Mutation<Type> mutation) {
+		return location.nodeMutateChild(TYPE, mutation);
 	}
 
 	public Name name() {
@@ -90,8 +90,8 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public AnnotationMemberDecl withName(Mutation<Name> name) {
-		return location.nodeMutateChild(NAME, name);
+	public AnnotationMemberDecl withName(Mutation<Name> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	public NodeList<ArrayDim> dims() {
@@ -102,8 +102,8 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(DIMS, dims);
 	}
 
-	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> dims) {
-		return location.nodeMutateChild(DIMS, dims);
+	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> mutation) {
+		return location.nodeMutateChild(DIMS, mutation);
 	}
 
 	public Expr defaultValue() {
@@ -114,8 +114,8 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeWithChild(DEFAULT_VALUE, defaultValue);
 	}
 
-	public AnnotationMemberDecl withDefaultValue(Mutation<Expr> defaultValue) {
-		return location.nodeMutateChild(DEFAULT_VALUE, defaultValue);
+	public AnnotationMemberDecl withDefaultValue(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(DEFAULT_VALUE, mutation);
 	}
 
 	private static final int MODIFIERS = 0;

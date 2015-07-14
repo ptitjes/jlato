@@ -66,8 +66,8 @@ public class QualifiedName extends Tree {
 		return location.nodeWithChild(QUALIFIER, qualifier);
 	}
 
-	public QualifiedName withQualifier(Mutation<QualifiedName> qualifier) {
-		return location.nodeMutateChild(QUALIFIER, qualifier);
+	public QualifiedName withQualifier(Mutation<QualifiedName> mutation) {
+		return location.nodeMutateChild(QUALIFIER, mutation);
 	}
 
 	public Name name() {
@@ -78,8 +78,8 @@ public class QualifiedName extends Tree {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public QualifiedName withName(Mutation<Name> name) {
-		return location.nodeMutateChild(NAME, name);
+	public QualifiedName withName(Mutation<Name> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	public boolean isQualified() {

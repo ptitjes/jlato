@@ -58,8 +58,8 @@ public class MemberValuePair extends Tree {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public MemberValuePair withName(Mutation<Name> name) {
-		return location.nodeMutateChild(NAME, name);
+	public MemberValuePair withName(Mutation<Name> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	public Name value() {
@@ -70,8 +70,8 @@ public class MemberValuePair extends Tree {
 		return location.nodeWithChild(VALUE, value);
 	}
 
-	public MemberValuePair withValue(Mutation<Expr> value) {
-		return location.nodeMutateChild(VALUE, value);
+	public MemberValuePair withValue(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(VALUE, mutation);
 	}
 
 	private static final int NAME = 0;

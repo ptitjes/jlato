@@ -59,8 +59,8 @@ public class AnnotationDecl extends TypeDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> AnnotationDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeMutateChild(MODIFIERS, modifiers);
+	public <EM extends Tree & ExtendedModifier> AnnotationDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+		return location.nodeMutateChild(MODIFIERS, mutation);
 	}
 
 	public TypeKind typeKind() {
@@ -75,8 +75,8 @@ public class AnnotationDecl extends TypeDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public AnnotationDecl withName(Mutation<Name> name) {
-		return location.nodeMutateChild(NAME, name);
+	public AnnotationDecl withName(Mutation<Name> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	public NodeList<MemberDecl> members() {
@@ -87,8 +87,8 @@ public class AnnotationDecl extends TypeDecl {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 
-	public AnnotationDecl withMembers(Mutation<NodeList<MemberDecl>> members) {
-		return location.nodeMutateChild(MEMBERS, members);
+	public AnnotationDecl withMembers(Mutation<NodeList<MemberDecl>> mutation) {
+		return location.nodeMutateChild(MEMBERS, mutation);
 	}
 
 	private static final int MODIFIERS = 0;

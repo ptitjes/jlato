@@ -63,8 +63,8 @@ public class LabeledStmt extends Stmt {
 		return location.nodeWithChild(LABEL, label);
 	}
 
-	public LabeledStmt withLabel(Mutation<Name> label) {
-		return location.nodeMutateChild(LABEL, label);
+	public LabeledStmt withLabel(Mutation<Name> mutation) {
+		return location.nodeMutateChild(LABEL, mutation);
 	}
 
 	public Stmt stmt() {
@@ -75,8 +75,8 @@ public class LabeledStmt extends Stmt {
 		return location.nodeWithChild(STMT, stmt);
 	}
 
-	public LabeledStmt withStmt(Mutation<Stmt> stmt) {
-		return location.nodeMutateChild(STMT, stmt);
+	public LabeledStmt withStmt(Mutation<Stmt> mutation) {
+		return location.nodeMutateChild(STMT, mutation);
 	}
 
 	private static final int LABEL = 0;

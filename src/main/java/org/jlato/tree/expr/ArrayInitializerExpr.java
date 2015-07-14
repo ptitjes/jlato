@@ -59,8 +59,8 @@ public class ArrayInitializerExpr extends Expr {
 		return location.nodeWithChild(VALUES, values);
 	}
 
-	public ArrayInitializerExpr withValues(Mutation<NodeList<Expr>> values) {
-		return location.nodeMutateChild(VALUES, values);
+	public ArrayInitializerExpr withValues(Mutation<NodeList<Expr>> mutation) {
+		return location.nodeMutateChild(VALUES, mutation);
 	}
 
 	private static final int VALUES = 0;

@@ -60,8 +60,8 @@ public class PrimitiveType extends AnnotatedType {
 		return location.withData(TYPE, type);
 	}
 
-	public PrimitiveType withType(Mutation<Primitive> type) {
-		return location.mutateData(TYPE, type);
+	public PrimitiveType withType(Mutation<Primitive> mutation) {
+		return location.mutateData(TYPE, mutation);
 	}
 
 	private static final int TYPE = 0;

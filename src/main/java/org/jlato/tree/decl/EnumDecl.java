@@ -66,8 +66,8 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> EnumDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeMutateChild(MODIFIERS, modifiers);
+	public <EM extends Tree & ExtendedModifier> EnumDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+		return location.nodeMutateChild(MODIFIERS, mutation);
 	}
 
 	public TypeKind typeKind() {
@@ -82,8 +82,8 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public EnumDecl withName(Mutation<Name> name) {
-		return location.nodeMutateChild(NAME, name);
+	public EnumDecl withName(Mutation<Name> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	public NodeList<QualifiedType> implementsClause() {
@@ -94,8 +94,8 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
-	public EnumDecl withImplementsClause(Mutation<NodeList<QualifiedType>> implementsClause) {
-		return location.nodeMutateChild(IMPLEMENTS_CLAUSE, implementsClause);
+	public EnumDecl withImplementsClause(Mutation<NodeList<QualifiedType>> mutation) {
+		return location.nodeMutateChild(IMPLEMENTS_CLAUSE, mutation);
 	}
 
 	public NodeList<EnumConstantDecl> enumConstants() {
@@ -106,8 +106,8 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(ENUM_CONSTANTS, enumConstants);
 	}
 
-	public EnumDecl withEnumConstants(Mutation<NodeList<EnumConstantDecl>> enumConstants) {
-		return location.nodeMutateChild(ENUM_CONSTANTS, enumConstants);
+	public EnumDecl withEnumConstants(Mutation<NodeList<EnumConstantDecl>> mutation) {
+		return location.nodeMutateChild(ENUM_CONSTANTS, mutation);
 	}
 
 	public NodeList<MemberDecl> members() {
@@ -118,8 +118,8 @@ public class EnumDecl extends TypeDecl {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 
-	public EnumDecl withMembers(Mutation<NodeList<MemberDecl>> members) {
-		return location.nodeMutateChild(MEMBERS, members);
+	public EnumDecl withMembers(Mutation<NodeList<MemberDecl>> mutation) {
+		return location.nodeMutateChild(MEMBERS, mutation);
 	}
 
 	private static final int MODIFIERS = 0;

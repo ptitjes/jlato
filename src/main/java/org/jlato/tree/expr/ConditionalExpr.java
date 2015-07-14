@@ -58,8 +58,8 @@ public class ConditionalExpr extends Expr {
 		return location.nodeWithChild(CONDITION, condition);
 	}
 
-	public ConditionalExpr withCondition(Mutation<Expr> condition) {
-		return location.nodeMutateChild(CONDITION, condition);
+	public ConditionalExpr withCondition(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(CONDITION, mutation);
 	}
 
 	public Expr thenExpr() {
@@ -70,8 +70,8 @@ public class ConditionalExpr extends Expr {
 		return location.nodeWithChild(THEN_EXPR, thenExpr);
 	}
 
-	public ConditionalExpr withThenExpr(Mutation<Expr> thenExpr) {
-		return location.nodeMutateChild(THEN_EXPR, thenExpr);
+	public ConditionalExpr withThenExpr(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(THEN_EXPR, mutation);
 	}
 
 	public Expr elseExpr() {
@@ -82,8 +82,8 @@ public class ConditionalExpr extends Expr {
 		return location.nodeWithChild(ELSE_EXPR, elseExpr);
 	}
 
-	public ConditionalExpr withElseExpr(Mutation<Expr> elseExpr) {
-		return location.nodeMutateChild(ELSE_EXPR, elseExpr);
+	public ConditionalExpr withElseExpr(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(ELSE_EXPR, mutation);
 	}
 
 	private static final int CONDITION = 0;

@@ -59,8 +59,8 @@ public class AssertStmt extends Stmt {
 		return location.nodeWithChild(CHECK, check);
 	}
 
-	public AssertStmt withCheck(Mutation<Expr> check) {
-		return location.nodeMutateChild(CHECK, check);
+	public AssertStmt withCheck(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(CHECK, mutation);
 	}
 
 	public Expr msg() {
@@ -71,8 +71,8 @@ public class AssertStmt extends Stmt {
 		return location.nodeWithChild(MSG, msg);
 	}
 
-	public AssertStmt withMsg(Mutation<Expr> msg) {
-		return location.nodeMutateChild(MSG, msg);
+	public AssertStmt withMsg(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(MSG, mutation);
 	}
 
 	private static final int CHECK = 0;

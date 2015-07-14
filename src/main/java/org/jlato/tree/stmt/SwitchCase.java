@@ -63,8 +63,8 @@ public class SwitchCase extends Tree {
 		return location.nodeWithChild(LABEL, label);
 	}
 
-	public SwitchCase withLabel(Mutation<Expr> label) {
-		return location.nodeMutateChild(LABEL, label);
+	public SwitchCase withLabel(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(LABEL, mutation);
 	}
 
 	public NodeList<Stmt> stmts() {
@@ -75,8 +75,8 @@ public class SwitchCase extends Tree {
 		return location.nodeWithChild(STMTS, stmts);
 	}
 
-	public SwitchCase withStmts(Mutation<NodeList<Stmt>> stmts) {
-		return location.nodeMutateChild(STMTS, stmts);
+	public SwitchCase withStmts(Mutation<NodeList<Stmt>> mutation) {
+		return location.nodeMutateChild(STMTS, mutation);
 	}
 
 	private static final int LABEL = 0;

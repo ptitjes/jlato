@@ -63,8 +63,8 @@ public class IfStmt extends Stmt {
 		return location.nodeWithChild(CONDITION, condition);
 	}
 
-	public IfStmt withCondition(Mutation<Expr> condition) {
-		return location.nodeMutateChild(CONDITION, condition);
+	public IfStmt withCondition(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(CONDITION, mutation);
 	}
 
 	public Stmt thenStmt() {
@@ -75,8 +75,8 @@ public class IfStmt extends Stmt {
 		return location.nodeWithChild(THEN_STMT, thenStmt);
 	}
 
-	public IfStmt withThenStmt(Mutation<Stmt> thenStmt) {
-		return location.nodeMutateChild(THEN_STMT, thenStmt);
+	public IfStmt withThenStmt(Mutation<Stmt> mutation) {
+		return location.nodeMutateChild(THEN_STMT, mutation);
 	}
 
 	public Stmt elseStmt() {
@@ -87,8 +87,8 @@ public class IfStmt extends Stmt {
 		return location.nodeWithChild(ELSE_STMT, elseStmt);
 	}
 
-	public IfStmt withElseStmt(Mutation<Stmt> elseStmt) {
-		return location.nodeMutateChild(ELSE_STMT, elseStmt);
+	public IfStmt withElseStmt(Mutation<Stmt> mutation) {
+		return location.nodeMutateChild(ELSE_STMT, mutation);
 	}
 
 	private static final int CONDITION = 0;

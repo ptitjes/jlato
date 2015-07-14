@@ -41,8 +41,8 @@ public abstract class AnnotatedType extends Type {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
-	public Type withAnnotations(Mutation<NodeList<AnnotationExpr>> annotations) {
-		return location.nodeMutateChild(ANNOTATIONS, annotations);
+	public Type withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
+		return location.nodeMutateChild(ANNOTATIONS, mutation);
 	}
 
 	protected static final int ANNOTATIONS = 0;

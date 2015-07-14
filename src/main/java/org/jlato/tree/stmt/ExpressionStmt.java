@@ -58,8 +58,8 @@ public class ExpressionStmt extends Stmt {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
-	public ExpressionStmt withExpr(Mutation<Expr> expr) {
-		return location.nodeMutateChild(EXPR, expr);
+	public ExpressionStmt withExpr(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(EXPR, mutation);
 	}
 
 	private static final int EXPR = 0;

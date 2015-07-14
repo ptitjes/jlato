@@ -59,8 +59,8 @@ public class WhileStmt extends Stmt {
 		return location.nodeWithChild(CONDITION, condition);
 	}
 
-	public WhileStmt withCondition(Mutation<Expr> condition) {
-		return location.nodeMutateChild(CONDITION, condition);
+	public WhileStmt withCondition(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(CONDITION, mutation);
 	}
 
 	public Stmt body() {
@@ -71,8 +71,8 @@ public class WhileStmt extends Stmt {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public WhileStmt withBody(Mutation<Stmt> body) {
-		return location.nodeMutateChild(BODY, body);
+	public WhileStmt withBody(Mutation<Stmt> mutation) {
+		return location.nodeMutateChild(BODY, mutation);
 	}
 
 	private static final int CONDITION = 0;

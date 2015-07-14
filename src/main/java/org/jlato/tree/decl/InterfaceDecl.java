@@ -60,8 +60,8 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> InterfaceDecl withModifiers(Mutation<NodeList<EM>> modifiers) {
-		return location.nodeMutateChild(MODIFIERS, modifiers);
+	public <EM extends Tree & ExtendedModifier> InterfaceDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+		return location.nodeMutateChild(MODIFIERS, mutation);
 	}
 
 	public TypeKind typeKind() {
@@ -76,8 +76,8 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public InterfaceDecl withName(Mutation<Name> name) {
-		return location.nodeMutateChild(NAME, name);
+	public InterfaceDecl withName(Mutation<Name> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	public NodeList<TypeParameter> typeParams() {
@@ -88,8 +88,8 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
 	}
 
-	public InterfaceDecl withTypeParams(Mutation<NodeList<TypeParameter>> typeParams) {
-		return location.nodeMutateChild(TYPE_PARAMETERS, typeParams);
+	public InterfaceDecl withTypeParams(Mutation<NodeList<TypeParameter>> mutation) {
+		return location.nodeMutateChild(TYPE_PARAMETERS, mutation);
 	}
 
 	public NodeList<QualifiedType> extendsClause() {
@@ -100,8 +100,8 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
-	public InterfaceDecl withExtendsClause(Mutation<NodeList<QualifiedType>> extendsClause) {
-		return location.nodeMutateChild(EXTENDS_CLAUSE, extendsClause);
+	public InterfaceDecl withExtendsClause(Mutation<NodeList<QualifiedType>> mutation) {
+		return location.nodeMutateChild(EXTENDS_CLAUSE, mutation);
 	}
 
 	public NodeList<MemberDecl> members() {
@@ -112,8 +112,8 @@ public class InterfaceDecl extends TypeDecl {
 		return location.nodeWithChild(MEMBERS, members);
 	}
 
-	public InterfaceDecl withMembers(Mutation<NodeList<MemberDecl>> members) {
-		return location.nodeMutateChild(MEMBERS, members);
+	public InterfaceDecl withMembers(Mutation<NodeList<MemberDecl>> mutation) {
+		return location.nodeMutateChild(MEMBERS, mutation);
 	}
 
 	private static final int MODIFIERS = 0;

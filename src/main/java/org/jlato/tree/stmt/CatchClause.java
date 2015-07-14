@@ -59,8 +59,8 @@ public class CatchClause extends Tree {
 		return location.nodeWithChild(EXCEPT, except);
 	}
 
-	public CatchClause withExcept(Mutation<FormalParameter> except) {
-		return location.nodeMutateChild(EXCEPT, except);
+	public CatchClause withExcept(Mutation<FormalParameter> mutation) {
+		return location.nodeMutateChild(EXCEPT, mutation);
 	}
 
 	public BlockStmt catchBlock() {
@@ -71,8 +71,8 @@ public class CatchClause extends Tree {
 		return location.nodeWithChild(CATCH_BLOCK, catchBlock);
 	}
 
-	public CatchClause withCatchBlock(Mutation<BlockStmt> catchBlock) {
-		return location.nodeMutateChild(CATCH_BLOCK, catchBlock);
+	public CatchClause withCatchBlock(Mutation<BlockStmt> mutation) {
+		return location.nodeMutateChild(CATCH_BLOCK, mutation);
 	}
 
 	private static final int EXCEPT = 0;

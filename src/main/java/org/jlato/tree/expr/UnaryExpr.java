@@ -59,8 +59,8 @@ public class UnaryExpr extends Expr {
 		return location.withData(OPERATOR, operator);
 	}
 
-	public UnaryExpr withOp(Mutation<UnaryOp> operator) {
-		return location.mutateData(OPERATOR, operator);
+	public UnaryExpr withOp(Mutation<UnaryOp> mutation) {
+		return location.mutateData(OPERATOR, mutation);
 	}
 
 	public Expr expr() {
@@ -71,8 +71,8 @@ public class UnaryExpr extends Expr {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
-	public UnaryExpr withExpr(Mutation<Expr> expr) {
-		return location.nodeMutateChild(EXPR, expr);
+	public UnaryExpr withExpr(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(EXPR, mutation);
 	}
 
 	public static boolean isPrefix(UnaryOp op) {

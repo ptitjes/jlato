@@ -60,8 +60,8 @@ public class TryStmt extends Stmt {
 		return location.nodeWithChild(RESOURCES, resources);
 	}
 
-	public TryStmt withResources(Mutation<NodeList<VariableDeclarationExpr>> resources) {
-		return location.nodeMutateChild(RESOURCES, resources);
+	public TryStmt withResources(Mutation<NodeList<VariableDeclarationExpr>> mutation) {
+		return location.nodeMutateChild(RESOURCES, mutation);
 	}
 
 	public BlockStmt tryBlock() {
@@ -72,8 +72,8 @@ public class TryStmt extends Stmt {
 		return location.nodeWithChild(TRY_BLOCK, tryBlock);
 	}
 
-	public TryStmt withTryBlock(Mutation<BlockStmt> tryBlock) {
-		return location.nodeMutateChild(TRY_BLOCK, tryBlock);
+	public TryStmt withTryBlock(Mutation<BlockStmt> mutation) {
+		return location.nodeMutateChild(TRY_BLOCK, mutation);
 	}
 
 	public NodeList<CatchClause> catchs() {
@@ -84,8 +84,8 @@ public class TryStmt extends Stmt {
 		return location.nodeWithChild(CATCHS, catchs);
 	}
 
-	public TryStmt withCatchs(Mutation<NodeList<CatchClause>> catchs) {
-		return location.nodeMutateChild(CATCHS, catchs);
+	public TryStmt withCatchs(Mutation<NodeList<CatchClause>> mutation) {
+		return location.nodeMutateChild(CATCHS, mutation);
 	}
 
 	public BlockStmt finallyBlock() {
@@ -96,8 +96,8 @@ public class TryStmt extends Stmt {
 		return location.nodeWithChild(FINALLY_BLOCK, finallyBlock);
 	}
 
-	public TryStmt withFinallyBlock(Mutation<BlockStmt> finallyBlock) {
-		return location.nodeMutateChild(FINALLY_BLOCK, finallyBlock);
+	public TryStmt withFinallyBlock(Mutation<BlockStmt> mutation) {
+		return location.nodeMutateChild(FINALLY_BLOCK, mutation);
 	}
 
 	private static final int RESOURCES = 0;

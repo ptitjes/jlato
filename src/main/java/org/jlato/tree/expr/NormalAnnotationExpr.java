@@ -60,8 +60,8 @@ public class NormalAnnotationExpr extends AnnotationExpr {
 		return location.nodeWithChild(PAIRS, pairs);
 	}
 
-	public NormalAnnotationExpr withPairs(Mutation<NodeList<MemberValuePair>> pairs) {
-		return location.nodeMutateChild(PAIRS, pairs);
+	public NormalAnnotationExpr withPairs(Mutation<NodeList<MemberValuePair>> mutation) {
+		return location.nodeMutateChild(PAIRS, mutation);
 	}
 
 	private static final int PAIRS = 1;

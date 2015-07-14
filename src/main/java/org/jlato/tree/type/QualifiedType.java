@@ -61,8 +61,8 @@ public class QualifiedType extends ReferenceType {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public QualifiedType withScope(Mutation<QualifiedType> scope) {
-		return location.nodeMutateChild(SCOPE, scope);
+	public QualifiedType withScope(Mutation<QualifiedType> mutation) {
+		return location.nodeMutateChild(SCOPE, mutation);
 	}
 
 	public Name name() {
@@ -73,8 +73,8 @@ public class QualifiedType extends ReferenceType {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public QualifiedType withName(Mutation<Name> name) {
-		return location.nodeMutateChild(NAME, name);
+	public QualifiedType withName(Mutation<Name> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	public NodeList<Type> typeArgs() {
@@ -85,8 +85,8 @@ public class QualifiedType extends ReferenceType {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
-	public QualifiedType withTypeArgs(Mutation<NodeList<Type>> typeArgs) {
-		return location.nodeMutateChild(TYPE_ARGUMENTS, typeArgs);
+	public QualifiedType withTypeArgs(Mutation<NodeList<Type>> mutation) {
+		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
 	}
 
 	private static final int SCOPE = 1;

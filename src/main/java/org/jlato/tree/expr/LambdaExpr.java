@@ -69,8 +69,8 @@ public class LambdaExpr extends Expr {
 		return location.nodeWithChild(PARAMETERS, params);
 	}
 
-	public LambdaExpr withParams(Mutation<NodeList<FormalParameter>> params) {
-		return location.nodeMutateChild(PARAMETERS, params);
+	public LambdaExpr withParams(Mutation<NodeList<FormalParameter>> mutation) {
+		return location.nodeMutateChild(PARAMETERS, mutation);
 	}
 
 	public Expr expr() {
@@ -81,8 +81,8 @@ public class LambdaExpr extends Expr {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
-	public LambdaExpr withExpr(Mutation<Expr> expr) {
-		return location.nodeMutateChild(EXPR, expr);
+	public LambdaExpr withExpr(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(EXPR, mutation);
 	}
 
 	public BlockStmt block() {
@@ -93,8 +93,8 @@ public class LambdaExpr extends Expr {
 		return location.nodeWithChild(BLOCK, block);
 	}
 
-	public LambdaExpr withBlock(Mutation<BlockStmt> block) {
-		return location.nodeMutateChild(BLOCK, block);
+	public LambdaExpr withBlock(Mutation<BlockStmt> mutation) {
+		return location.nodeMutateChild(BLOCK, mutation);
 	}
 
 	private static final int PARAMETERS = 0;

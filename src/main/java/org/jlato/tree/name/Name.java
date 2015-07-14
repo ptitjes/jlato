@@ -60,8 +60,8 @@ public class Name extends Expr {
 		return location.withData(IDENTIFIER, name);
 	}
 
-	public Name withName(Mutation<String> name) {
-		return location.mutateData(IDENTIFIER, name);
+	public Name withName(Mutation<String> mutation) {
+		return location.mutateData(IDENTIFIER, mutation);
 	}
 
 	@Override

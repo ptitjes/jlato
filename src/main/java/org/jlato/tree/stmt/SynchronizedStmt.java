@@ -59,8 +59,8 @@ public class SynchronizedStmt extends Stmt {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
-	public SynchronizedStmt withExpr(Mutation<Expr> expr) {
-		return location.nodeMutateChild(EXPR, expr);
+	public SynchronizedStmt withExpr(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(EXPR, mutation);
 	}
 
 	public BlockStmt block() {
@@ -71,8 +71,8 @@ public class SynchronizedStmt extends Stmt {
 		return location.nodeWithChild(BLOCK, block);
 	}
 
-	public SynchronizedStmt withBlock(Mutation<BlockStmt> block) {
-		return location.nodeMutateChild(BLOCK, block);
+	public SynchronizedStmt withBlock(Mutation<BlockStmt> mutation) {
+		return location.nodeMutateChild(BLOCK, mutation);
 	}
 
 	private static final int EXPR = 0;

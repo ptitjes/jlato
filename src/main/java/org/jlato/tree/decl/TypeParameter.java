@@ -62,8 +62,8 @@ public class TypeParameter extends Tree {
 		return location.nodeWithChild(ANNOTATIONS, annotations);
 	}
 
-	public TypeParameter withAnnotations(Mutation<NodeList<AnnotationExpr>> annotations) {
-		return location.nodeMutateChild(ANNOTATIONS, annotations);
+	public TypeParameter withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
+		return location.nodeMutateChild(ANNOTATIONS, mutation);
 	}
 
 	public Name name() {
@@ -74,8 +74,8 @@ public class TypeParameter extends Tree {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public TypeParameter withName(Mutation<Name> name) {
-		return location.nodeMutateChild(NAME, name);
+	public TypeParameter withName(Mutation<Name> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	public NodeList<Type> bounds() {
@@ -86,8 +86,8 @@ public class TypeParameter extends Tree {
 		return location.nodeWithChild(BOUNDS, bounds);
 	}
 
-	public TypeParameter withBounds(Mutation<NodeList<Type>> bounds) {
-		return location.nodeMutateChild(BOUNDS, bounds);
+	public TypeParameter withBounds(Mutation<NodeList<Type>> mutation) {
+		return location.nodeMutateChild(BOUNDS, mutation);
 	}
 
 	private static final int ANNOTATIONS = 0;

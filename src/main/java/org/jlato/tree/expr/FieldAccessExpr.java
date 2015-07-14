@@ -60,8 +60,8 @@ public class FieldAccessExpr extends Expr {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public FieldAccessExpr withScope(Mutation<Expr> scope) {
-		return location.nodeMutateChild(SCOPE, scope);
+	public FieldAccessExpr withScope(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(SCOPE, mutation);
 	}
 
 	public NodeList<Type> typeArgs() {
@@ -72,8 +72,8 @@ public class FieldAccessExpr extends Expr {
 		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
 	}
 
-	public FieldAccessExpr withTypeArgs(Mutation<NodeList<Type>> typeArgs) {
-		return location.nodeMutateChild(TYPE_ARGUMENTS, typeArgs);
+	public FieldAccessExpr withTypeArgs(Mutation<NodeList<Type>> mutation) {
+		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
 	}
 
 	public Name name() {
@@ -84,8 +84,8 @@ public class FieldAccessExpr extends Expr {
 		return location.nodeWithChild(NAME, name);
 	}
 
-	public FieldAccessExpr withName(Mutation<Name> name) {
-		return location.nodeMutateChild(NAME, name);
+	public FieldAccessExpr withName(Mutation<Name> mutation) {
+		return location.nodeMutateChild(NAME, mutation);
 	}
 
 	private static final int SCOPE = 0;

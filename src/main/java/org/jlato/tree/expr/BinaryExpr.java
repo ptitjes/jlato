@@ -59,8 +59,8 @@ public class BinaryExpr extends Expr {
 		return location.nodeWithChild(LEFT, left);
 	}
 
-	public BinaryExpr withLeft(Mutation<Expr> left) {
-		return location.nodeMutateChild(LEFT, left);
+	public BinaryExpr withLeft(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(LEFT, mutation);
 	}
 
 	public BinaryOp op() {
@@ -71,8 +71,8 @@ public class BinaryExpr extends Expr {
 		return location.withData(OPERATOR, operator);
 	}
 
-	public BinaryExpr withOp(Mutation<BinaryOp> operator) {
-		return location.mutateData(OPERATOR, operator);
+	public BinaryExpr withOp(Mutation<BinaryOp> mutation) {
+		return location.mutateData(OPERATOR, mutation);
 	}
 
 	public Expr right() {
@@ -83,8 +83,8 @@ public class BinaryExpr extends Expr {
 		return location.nodeWithChild(RIGHT, right);
 	}
 
-	public BinaryExpr withRight(Mutation<Expr> right) {
-		return location.nodeMutateChild(RIGHT, right);
+	public BinaryExpr withRight(Mutation<Expr> mutation) {
+		return location.nodeMutateChild(RIGHT, mutation);
 	}
 
 	private static final int LEFT = 0;
