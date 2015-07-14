@@ -3117,7 +3117,7 @@ TryStmt TryStatement():
   |
     "finally" finallyBlock = Block()
   )
-  { return enRun(new TryStmt(resources, tryBlock, catchClauses, NodeOption.of(finallyBlock))); }
+  { return enRun(new TryStmt(resources, tryBlock, ensureNotNull(catchClauses), NodeOption.of(finallyBlock))); }
 }
 
 NodeList CatchClauses():
