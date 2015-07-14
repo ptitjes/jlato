@@ -206,7 +206,7 @@ abstract class ParserBase {
 	// Convenience methods for lists
 
 	protected <T extends Tree> NodeList<T> append(NodeList<T> list, T element) {
-		return list == null ? new NodeList<T>(element) : list.append(element);
+		return list == null ? NodeList.of(element) : list.append(element);
 	}
 
 	protected <T extends Tree> NodeList<T> ensureNotNull(NodeList<T> list) {
