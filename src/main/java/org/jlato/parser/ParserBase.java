@@ -210,7 +210,7 @@ abstract class ParserBase {
 	}
 
 	protected <T extends Tree> NodeList<T> ensureNotNull(NodeList<T> list) {
-		return /*list == null ? NodeList.<T>empty() :*/ list;
+		return list == null ? NodeList.<T>empty() : list;
 	}
 
 	// Debug methods

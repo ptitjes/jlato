@@ -53,7 +53,7 @@ public class ClassDecl extends TypeDecl {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ClassDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParams, /*NodeOption<*/QualifiedType/*>*/ extendsClause, NodeList<QualifiedType> implementsClause, NodeList<MemberDecl> members) {
+	public <EM extends Tree & ExtendedModifier> ClassDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParams, NodeOption<QualifiedType> extendsClause, NodeList<QualifiedType> implementsClause, NodeList<MemberDecl> members) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, typeParams, extendsClause, implementsClause, members)))));
 	}
 
@@ -97,15 +97,15 @@ public class ClassDecl extends TypeDecl {
 		return location.nodeMutateChild(TYPE_PARAMETERS, mutation);
 	}
 
-	public /*NodeOption<*/QualifiedType/*>*/ extendsClause() {
+	public NodeOption<QualifiedType> extendsClause() {
 		return location.nodeChild(EXTENDS_CLAUSE);
 	}
 
-	public ClassDecl withExtendsClause(/*NodeOption<*/QualifiedType/*>*/ extendsClause) {
+	public ClassDecl withExtendsClause(NodeOption<QualifiedType> extendsClause) {
 		return location.nodeWithChild(EXTENDS_CLAUSE, extendsClause);
 	}
 
-	public ClassDecl withExtendsClause(Mutation</*NodeOption<*/QualifiedType/*>*/> mutation) {
+	public ClassDecl withExtendsClause(Mutation<NodeOption<QualifiedType>> mutation) {
 		return location.nodeMutateChild(EXTENDS_CLAUSE, mutation);
 	}
 
@@ -145,14 +145,12 @@ public class ClassDecl extends TypeDecl {
 			token(LToken.Class),
 			child(NAME),
 			child(TYPE_PARAMETERS, TypeParameter.listShape),
-			child(EXTENDS_CLAUSE, composite(
-					token(LToken.Extends).withSpacing(space(), space()),
-					defaultShape()
-			)),
-//			when(childIs(EXTENDS_CLAUSE, some()), composite(
-//					token(LToken.Extends).withSpacing(space(), space()),
-//					child(EXTENDS_CLAUSE, element())
-//			)),
+			when(childIs(EXTENDS_CLAUSE, some()),
+					child(EXTENDS_CLAUSE, composite(
+							token(LToken.Extends).withSpacing(space(), space()),
+							element()
+					))
+			),
 			child(IMPLEMENTS_CLAUSE, QualifiedType.implementsClauseShape),
 			child(MEMBERS, MemberDecl.bodyShape)
 	);

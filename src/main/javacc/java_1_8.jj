@@ -1273,7 +1273,7 @@ TypeDecl ClassOrInterfaceDecl(NodeList modifiers):
       return enRun(new InterfaceDecl(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members));
     else {
       QualifiedType superClassType = extendsClause == null || extendsClause.isEmpty() ? null : (QualifiedType) extendsClause.get(0);
-      return enRun(new ClassDecl(modifiers, name, ensureNotNull(typeParams), superClassType, ensureNotNull(implementsClause), members));
+      return enRun(new ClassDecl(modifiers, name, ensureNotNull(typeParams), NodeOption.of(superClassType), ensureNotNull(implementsClause), members));
     }
   }
 }
