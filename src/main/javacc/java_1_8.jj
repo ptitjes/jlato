@@ -2805,7 +2805,7 @@ AssertStmt AssertStatement():
 {
   { run(); }
   "assert" check = Expression() [ ":" msg = Expression() ] ";"
-  { return enRun(new AssertStmt(check, msg));  }
+  { return enRun(new AssertStmt(check, NodeOption.of(msg)));  }
 }
 
 LabeledStmt LabeledStatement():

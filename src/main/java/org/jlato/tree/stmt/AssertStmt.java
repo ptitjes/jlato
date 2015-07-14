@@ -25,9 +25,12 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
@@ -47,7 +50,7 @@ public class AssertStmt extends Stmt {
 		super(location);
 	}
 
-	public AssertStmt(Expr check, Expr msg) {
+	public AssertStmt(Expr check, NodeOption<Expr> msg) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(check, msg)))));
 	}
 
@@ -63,15 +66,15 @@ public class AssertStmt extends Stmt {
 		return location.nodeMutateChild(CHECK, mutation);
 	}
 
-	public Expr msg() {
+	public NodeOption<Expr> msg() {
 		return location.nodeChild(MSG);
 	}
 
-	public AssertStmt withMsg(Expr msg) {
+	public AssertStmt withMsg(NodeOption<Expr> msg) {
 		return location.nodeWithChild(MSG, msg);
 	}
 
-	public AssertStmt withMsg(Mutation<Expr> mutation) {
+	public AssertStmt withMsg(Mutation<NodeOption<Expr>> mutation) {
 		return location.nodeMutateChild(MSG, mutation);
 	}
 
@@ -81,12 +84,10 @@ public class AssertStmt extends Stmt {
 	public final static LexicalShape shape = composite(
 			token(LToken.Assert),
 			child(CHECK),
-			nonNullChild(MSG,
-					composite(
-							token(LToken.Colon).withSpacing(space(), space()),
-							child(MSG)
-					)
-			),
+			when(childIs(MSG, some()), composite(
+					token(LToken.Colon).withSpacing(space(), space()),
+					child(MSG, element())
+			)),
 			token(LToken.SemiColon)
 	);
 }

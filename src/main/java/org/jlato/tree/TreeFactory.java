@@ -201,7 +201,7 @@ public abstract class TreeFactory {
 	}
 
 	public static AssertStmt assertStmt() {
-		return new AssertStmt(null, null);
+		return new AssertStmt(null, NodeOption.<Expr>none());
 	}
 
 	public static BlockStmt blockStmt() {
