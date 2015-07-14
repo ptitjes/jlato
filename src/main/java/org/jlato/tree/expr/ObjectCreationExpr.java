@@ -26,11 +26,14 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.MemberDecl;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
@@ -50,19 +53,19 @@ public class ObjectCreationExpr extends Expr {
 		super(location);
 	}
 
-	public ObjectCreationExpr(Expr scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeList<MemberDecl> body) {
+	public ObjectCreationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeOption<NodeList<MemberDecl>> body) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, type, args, body)))));
 	}
 
-	public Expr scope() {
+	public NodeOption<Expr> scope() {
 		return location.nodeChild(SCOPE);
 	}
 
-	public ObjectCreationExpr withScope(Expr scope) {
+	public ObjectCreationExpr withScope(NodeOption<Expr> scope) {
 		return location.nodeWithChild(SCOPE, scope);
 	}
 
-	public ObjectCreationExpr withScope(Mutation<Expr> mutation) {
+	public ObjectCreationExpr withScope(Mutation<NodeOption<Expr>> mutation) {
 		return location.nodeMutateChild(SCOPE, mutation);
 	}
 
@@ -102,15 +105,15 @@ public class ObjectCreationExpr extends Expr {
 		return location.nodeMutateChild(ARGUMENTS, mutation);
 	}
 
-	public NodeList<MemberDecl> body() {
+	public NodeOption<NodeList<MemberDecl>> body() {
 		return location.nodeChild(BODY);
 	}
 
-	public ObjectCreationExpr withBody(NodeList<MemberDecl> body) {
+	public ObjectCreationExpr withBody(NodeOption<NodeList<MemberDecl>> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public ObjectCreationExpr withBody(Mutation<NodeList<MemberDecl>> mutation) {
+	public ObjectCreationExpr withBody(Mutation<NodeOption<NodeList<MemberDecl>>> mutation) {
 		return location.nodeMutateChild(BODY, mutation);
 	}
 
@@ -121,13 +124,11 @@ public class ObjectCreationExpr extends Expr {
 	private static final int BODY = 4;
 
 	public final static LexicalShape shape = composite(
-			nonNullChild(SCOPE, composite(child(SCOPE), token(LToken.Dot))),
+			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
 			token(LToken.New).withSpacingAfter(space()),
 			child(TYPE_ARGUMENTS, Type.typeArgumentsShape),
 			child(TYPE),
 			child(ARGUMENTS, Expr.argumentsShape),
-			nonNullChild(BODY,
-					child(BODY, MemberDecl.bodyShape)
-			)
+			child(BODY, when(some(), element(MemberDecl.bodyShape)))
 	);
 }

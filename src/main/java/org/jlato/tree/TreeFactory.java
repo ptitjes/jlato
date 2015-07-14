@@ -161,7 +161,7 @@ public abstract class TreeFactory {
 	}
 
 	public static ObjectCreationExpr objectCreationExpr() {
-		return new ObjectCreationExpr(null, NodeList.<Type>empty(), null, NodeList.<Expr>empty(), NodeList.<MemberDecl>empty());
+		return new ObjectCreationExpr(NodeOption.<Expr>none(), NodeList.<Type>empty(), null, NodeList.<Expr>empty(), NodeOption.<NodeList<MemberDecl>>none());
 	}
 
 	public static ParenthesizedExpr parenthesizedExpr() {

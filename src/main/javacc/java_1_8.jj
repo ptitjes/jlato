@@ -2669,7 +2669,7 @@ Expr AllocationExpression(Expr scope):
 	Expr ret;
 	Type type;
 	NodeList typeArgs = null;
-	NodeList anonymousBody = null;
+	NodeList<MemberDecl> anonymousBody = null;
 	NodeList args;
 	NodeList<AnnotationExpr> annotations = null;
 }
@@ -2691,7 +2691,7 @@ Expr AllocationExpression(Expr scope):
 	  ret = ArrayCreationExpr(type)
 	|
 	  args = Arguments() [ LOOKAHEAD( "{" ) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
-      { ret = enRun(new ObjectCreationExpr(scope, typeArgs, (QualifiedType) type, args, anonymousBody)); }
+      { ret = enRun(new ObjectCreationExpr(NodeOption.of(scope), typeArgs, (QualifiedType) type, args, NodeOption.of(anonymousBody))); }
     )
   )
   { return ret; }
