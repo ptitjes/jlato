@@ -29,6 +29,7 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public class ArrayDimExpr extends Tree {
 
@@ -78,7 +79,11 @@ public class ArrayDimExpr extends Tree {
 	private static final int EXPRESSION = 1;
 
 	public final static LexicalShape shape = composite(
-			child(ANNOTATIONS, list()),
+			child(ANNOTATIONS, list(
+					none().withSpacingBefore(space()),
+					none().withSpacingBefore(space()),
+					none().withSpacingBefore(space())
+			)),
 			token(LToken.BracketLeft), child(EXPRESSION), token(LToken.BracketRight)
 	);
 

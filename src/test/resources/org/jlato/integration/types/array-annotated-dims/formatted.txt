@@ -1,1 +1,1 @@
-@D@D String@A[]@B[]@C[]
+@D String @A [] @B [] @C []

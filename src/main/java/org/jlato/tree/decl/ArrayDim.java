@@ -24,12 +24,14 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.printer.SpacingConstraint;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public class ArrayDim extends Tree {
 
@@ -66,7 +68,11 @@ public class ArrayDim extends Tree {
 	private static final int ANNOTATIONS = 0;
 
 	public final static LexicalShape shape = composite(
-			child(ANNOTATIONS, list()),
+			child(ANNOTATIONS, list(
+					none().withSpacingBefore(space()),
+					none().withSpacingBefore(space()),
+					none().withSpacingBefore(space())
+			)),
 			token(LToken.BracketLeft), token(LToken.BracketRight)
 	);
 
