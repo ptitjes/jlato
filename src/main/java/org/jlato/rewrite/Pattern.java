@@ -62,6 +62,16 @@ public abstract class Pattern<T> {
 		return builder.build();
 	}
 
+	public Pattern<T> or(final Pattern<T> other) {
+		return new DecoratedPattern<T>(this) {
+			@Override
+			public Substitution match(Object object) {
+				Substitution match = super.match(object);
+				return match != null ? match : other.match(object);
+			}
+		};
+	}
+
 	public Pattern<T> suchThat(final Predicate<T> predicate) {
 		return new DecoratedPattern<T>(this) {
 			@Override

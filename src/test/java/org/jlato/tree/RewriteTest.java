@@ -27,8 +27,9 @@ import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
 import org.jlato.tree.decl.CompilationUnit;
-import org.jlato.tree.expr.Expr;
-import org.jlato.tree.name.Name;
+import org.jlato.tree.decl.FormalParameter;
+import org.jlato.tree.type.Type;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -36,6 +37,9 @@ import org.junit.runners.JUnit4;
 import java.io.*;
 
 import static org.jlato.rewrite.Quotes.expr;
+import static org.jlato.rewrite.Quotes.param;
+import static org.jlato.rewrite.Quotes.type;
+import static org.jlato.rewrite.Traversal.forAll;
 
 /**
  * @author Didier Villevalois
@@ -43,7 +47,21 @@ import static org.jlato.rewrite.Quotes.expr;
 @RunWith(JUnit4.class)
 public class RewriteTest {
 
+	@Test
+	public void testTraverse() throws IOException, ParseException {
+		final String original = resourceAsString("org/jlato/samples/TestClass.java");
+		CompilationUnit cu = parse(original, true);
 
+		forAll(param("$t $n").or(param("$t... $n")), cu, new Traversal.Visitor<FormalParameter>() {
+			@Override
+			public FormalParameter visit(FormalParameter formalParameter) {
+				System.out.println(printToString(formalParameter, false, FormattingSettings.Default));
+				return formalParameter;
+			}
+		});
+	}
+
+	@Ignore
 	@Test
 	public void testClass() throws IOException, ParseException {
 		final String original = resourceAsString("org/jlato/samples/TestClass.java");
@@ -55,10 +73,18 @@ public class RewriteTest {
 	}
 
 	private String parseRewriteAndPrint(String original, boolean preserveWhitespaces, Rewriter rewriter, boolean format, FormattingSettings formattingSettings) throws ParseException {
-		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(preserveWhitespaces));
-		final CompilationUnit cu = parser.parse(ParseContext.CompilationUnit, original);
+		final CompilationUnit cu = parse(original, preserveWhitespaces);
 		CompilationUnit rewrote = RewriteStrategy.OutermostNeeded.rewrite(cu, rewriter);
-		return Printer.printToString(rewrote, format, formattingSettings);
+		return printToString(rewrote, format, formattingSettings);
+	}
+
+	private String printToString(Tree tree, boolean format, FormattingSettings formattingSettings) {
+		return Printer.printToString(tree, format, formattingSettings);
+	}
+
+	private CompilationUnit parse(String original, boolean preserveWhitespaces) throws ParseException {
+		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(preserveWhitespaces));
+		return parser.parse(ParseContext.CompilationUnit, original);
 	}
 
 	private String fileAsString(String name) throws IOException {

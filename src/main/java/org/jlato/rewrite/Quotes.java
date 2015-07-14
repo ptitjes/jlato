@@ -38,41 +38,46 @@ import org.jlato.tree.type.Type;
  */
 public abstract class Quotes {
 
-	public static Pattern<PackageDecl> packageDecl(String string) throws ParseException {
+	public static Pattern<PackageDecl> packageDecl(String string) {
 		return quote(ParseContext.PackageDecl, PackageDecl.class, string);
 	}
 
-	public static Pattern<ImportDecl> importDecl(String string) throws ParseException {
+	public static Pattern<ImportDecl> importDecl(String string) {
 		return quote(ParseContext.ImportDecl, ImportDecl.class, string);
 	}
 
-	public static Pattern<TypeDecl> typeDecl(String string) throws ParseException {
+	public static Pattern<TypeDecl> typeDecl(String string) {
 		return quote(ParseContext.TypeDecl, TypeDecl.class, string);
 	}
 
-	public static Pattern<MemberDecl> memberDecl(String string) throws ParseException {
+	public static Pattern<MemberDecl> memberDecl(String string) {
 		return quote(ParseContext.MemberDecl, MemberDecl.class, string);
 	}
 
-	public static Pattern<FormalParameter> param(String string) throws ParseException {
+	public static Pattern<FormalParameter> param(String string) {
 		return quote(ParseContext.Parameter, FormalParameter.class, string);
 	}
 
-	public static Pattern<Stmt> stmt(String string) throws ParseException {
+	public static Pattern<Stmt> stmt(String string) {
 		return quote(ParseContext.Statement, Stmt.class, string);
 	}
 
-	public static Pattern<Expr> expr(String string) throws ParseException {
+	public static Pattern<Expr> expr(String string) {
 		return quote(ParseContext.Expression, Expr.class, string);
 	}
 
-	public static Pattern<Type> type(String string) throws ParseException {
+	public static Pattern<Type> type(String string) {
 		return quote(ParseContext.Type, Type.class, string);
 	}
 
-	public static <T extends Tree> Pattern<T> quote(ParseContext<T> context, Class<T> treeClass, String string) throws ParseException {
+	public static <T extends Tree> Pattern<T> quote(ParseContext<T> context, Class<T> treeClass, String string) {
 		Parser parser = new Parser();
-		T expr = parser.parse(context, string);
+		T expr = null;
+		try {
+			expr = parser.parse(context, string);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException("Can't parse quote: " + string);
+		}
 		return buildTreePattern(expr, treeClass);
 	}
 
