@@ -1,0 +1,32 @@
+{
+  class: org.jlato.tree.expr.MethodReferenceExpr,
+  name: method,
+  scope: {
+    class: org.jlato.tree.expr.TypeExpr,
+    type: {
+      class: org.jlato.tree.type.QualifiedType,
+      annotations: [
+      ],
+      name: a,
+      scope: null,
+      typeArgs: null,
+    },
+  },
+  typeArgs: [
+    {
+      class: org.jlato.tree.type.QualifiedType,
+      annotations: [
+      ],
+      name: String,
+      scope: null,
+      typeArgs: null,
+    },
+    {
+      class: org.jlato.tree.type.WildcardType,
+      annotations: [
+      ],
+      ext: null,
+      sup: null,
+    },
+  ],
+}

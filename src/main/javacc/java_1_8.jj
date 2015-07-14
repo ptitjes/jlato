@@ -2506,7 +2506,7 @@ Expr PrimaryPrefix():
       }
 	|
 	  { lateRun(); }
-	  "::" [typeArgs = TypeParameters() ]
+	  "::" [typeArgs = TypeArguments() ]
       ( name = Name() | "new" { name = new Name("new"); } )
 	  { ret = enRun(new MethodReferenceExpr(ret, typeArgs, name)); }
 
@@ -2526,7 +2526,7 @@ Expr PrimaryPrefix():
   |
     LOOKAHEAD (ResultType() "::" )
     { run(); }
-    type = ResultType() "::" [typeArgs = TypeParameters() ]
+    type = ResultType() "::" [typeArgs = TypeArguments() ]
     ( name = Name() | "new" { name = new Name("new"); } )
     { ret = enRun(new MethodReferenceExpr(new TypeExpr(type), typeArgs, name)); }
   |
