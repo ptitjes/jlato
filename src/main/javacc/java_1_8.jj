@@ -2518,9 +2518,9 @@ Expr PrimaryPrefix():
   (
     ret = Literal()
   |
-    { run(); } "this" { ret = enRun(new ThisExpr(null)); }
+    { run(); } "this" { ret = enRun(new ThisExpr(NodeOption.<Expr>none())); }
   |
-    { run(); } "super" { ret = enRun(new SuperExpr(null)); }
+    { run(); } "super" { ret = enRun(new SuperExpr(NodeOption.<Expr>none())); }
 	(
 	  { lateRun(); }
 	  "."
@@ -2578,7 +2578,7 @@ Expr PrimarySuffix(Expr scope):
     LOOKAHEAD(2)
     ret = PrimarySuffixWithoutSuper(scope)
   |
-    "." "super" { ret = enRun(new SuperExpr(scope)); }
+    "." "super" { ret = enRun(new SuperExpr(NodeOption.of(scope))); }
   )
   { return ret; }
 }
@@ -2597,7 +2597,7 @@ Expr PrimarySuffixWithoutSuper(Expr scope):
   (
     "."
     (
-      "this" { ret = enRun(new ThisExpr(scope)); }
+      "this" { ret = enRun(new ThisExpr(NodeOption.of(scope))); }
     |
       ret = AllocationExpression(scope)
     |

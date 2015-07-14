@@ -173,11 +173,11 @@ public abstract class TreeFactory {
 	}
 
 	public static SuperExpr superExpr() {
-		return new SuperExpr(null);
+		return new SuperExpr(NodeOption.<Expr>none());
 	}
 
 	public static ThisExpr thisExpr() {
-		return new ThisExpr(null);
+		return new ThisExpr(NodeOption.<Expr>none());
 	}
 
 	public static TypeExpr typeExpr() {

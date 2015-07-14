@@ -22,11 +22,15 @@ package org.jlato.tree.expr;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SuperExpr extends Expr {
@@ -45,26 +49,26 @@ public class SuperExpr extends Expr {
 		super(location);
 	}
 
-	public SuperExpr(Expr classExpr) {
+	public SuperExpr(NodeOption<Expr> classExpr) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(classExpr)))));
 	}
 
-	public Expr classExpr() {
+	public NodeOption<Expr> classExpr() {
 		return location.nodeChild(CLASS_EXPR);
 	}
 
-	public SuperExpr withClassExpr(Expr classExpr) {
+	public SuperExpr withClassExpr(NodeOption<Expr> classExpr) {
 		return location.nodeWithChild(CLASS_EXPR, classExpr);
 	}
 
-	public SuperExpr withClassExpr(Mutation<Expr> mutation) {
+	public SuperExpr withClassExpr(Mutation<NodeOption<Expr>> mutation) {
 		return location.nodeMutateChild(CLASS_EXPR, mutation);
 	}
 
 	private static final int CLASS_EXPR = 0;
 
 	public final static LexicalShape shape = composite(
-			nonNullChild(CLASS_EXPR, composite(child(CLASS_EXPR), token(LToken.Dot))),
+			when(childIs(CLASS_EXPR, some()), composite(child(CLASS_EXPR, element()), token(LToken.Dot))),
 			token(LToken.Super)
 	);
 }
