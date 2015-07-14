@@ -85,7 +85,7 @@ public abstract class TreeFactory {
 	}
 
 	public static VariableDeclarator variableDeclarator() {
-		return new VariableDeclarator(null, null);
+		return new VariableDeclarator(null, NodeOption.<Expr>none());
 	}
 
 	public static VariableDeclaratorId variableDeclaratorId() {

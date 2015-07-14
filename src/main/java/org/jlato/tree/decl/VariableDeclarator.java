@@ -22,12 +22,15 @@ package org.jlato.tree.decl;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
@@ -47,7 +50,7 @@ public class VariableDeclarator extends Tree {
 		super(location);
 	}
 
-	public VariableDeclarator(VariableDeclaratorId id, Expr init) {
+	public VariableDeclarator(VariableDeclaratorId id, NodeOption<Expr> init) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(id, init)))));
 	}
 
@@ -63,29 +66,29 @@ public class VariableDeclarator extends Tree {
 		return location.nodeMutateChild(ID, mutation);
 	}
 
-	public Expr init() {
+	public NodeOption<Expr> init() {
 		return location.nodeChild(INIT);
 	}
 
-	public VariableDeclarator withInit(Expr init) {
+	public VariableDeclarator withInit(NodeOption<Expr> init) {
 		return location.nodeWithChild(INIT, init);
 	}
 
-	public VariableDeclarator withInit(Mutation<Expr> mutation) {
+	public VariableDeclarator withInit(Mutation<NodeOption<Expr>> mutation) {
 		return location.nodeMutateChild(INIT, mutation);
 	}
 
 	private static final int ID = 0;
 	private static final int INIT = 1;
 
+	public static final LexicalShape initializerShape = composite(
+			token(LToken.Assign).withSpacing(space(), space()),
+			element()
+	);
+
 	public final static LexicalShape shape = composite(
 			child(ID),
-			nonNullChild(INIT,
-					composite(
-							token(LToken.Assign).withSpacing(space(), space()),
-							child(INIT)
-					)
-			)
+			child(INIT, when(some(), initializerShape))
 	);
 
 	public final static LexicalShape listShape = list(none(), token(LToken.Comma).withSpacingAfter(space()), none());

@@ -1598,12 +1598,18 @@ NodeList VariableDeclarators():
 VariableDeclarator VariableDeclarator():
 {
 	VariableDeclaratorId id;
-	Expr init = null;
+	NodeOption<Expr> init = NodeOption.none();
+	Expr initExpr = null;
 }
 {
   { run(); }
 
-  id = VariableDeclaratorId() [ "=" init = VariableInitializer() ]
+  id = VariableDeclaratorId()
+  [
+    { run(); }
+    "=" initExpr = VariableInitializer()
+    { init = enRun(init.set(initExpr), VariableDeclarator.initializerShape); }
+  ]
 
   { return enRun(new VariableDeclarator(id, init)); }
 }
