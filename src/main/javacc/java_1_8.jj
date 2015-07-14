@@ -1871,7 +1871,7 @@ ArrayType ArrayType(NodeList<AnnotationExpr> annotations):
 
 QualifiedType QualifiedType(NodeList<AnnotationExpr> annotations):
 {
-    NodeOption<QualifiedType> scope = new NodeOption<QualifiedType>();
+    NodeOption<QualifiedType> scope = NodeOption.<QualifiedType>none();
 	QualifiedType ret;
 	Name name;
 	NodeList<Type> typeArgs = null;
@@ -1886,7 +1886,7 @@ QualifiedType QualifiedType(NodeList<AnnotationExpr> annotations):
   }
 
   name = Name()
-  [ LOOKAHEAD(2) typeArgs = TypeArguments() ]
+  [ LOOKAHEAD(2) typeArgs = TypeArgumentsOrDiamond() ]
   { ret = enRun(new QualifiedType(annotations, scope, name, NodeOption.of(typeArgs))); }
   (
     LOOKAHEAD(2)
@@ -1894,7 +1894,7 @@ QualifiedType QualifiedType(NodeList<AnnotationExpr> annotations):
 
     { lateRun(); }
     annotations = Annotations() name = Name()
-    [ LOOKAHEAD(2) typeArgs = TypeArguments() ]
+    [ LOOKAHEAD(2) typeArgs = TypeArgumentsOrDiamond() ]
     { ret = enRun(new QualifiedType(annotations, scope, name, NodeOption.of(typeArgs))); }
   )*
 
@@ -1915,6 +1915,23 @@ NodeList TypeArguments():
   ]
   ">"
   { return enRun(ret, Type.typeArgumentsShape); }
+}
+
+
+NodeList<Type> TypeArgumentsOrDiamond():
+{
+	NodeList ret = new NodeList();
+	Type type;
+}
+{
+  { run(); }
+  "<"
+  [
+    type = TypeArgument() { ret = ret.append(type); }
+    ( "," type = TypeArgument() { ret = ret.append(type); } )*
+  ]
+  ">"
+  { return enRun(ret, Type.typeArgumentsOrDiamondShape); }
 }
 
 Type TypeArgument():

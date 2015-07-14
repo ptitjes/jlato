@@ -39,7 +39,13 @@ public abstract class Type extends Tree implements Modifiable<Type> {
 		return location.replace(replacement);
 	}
 
-	public static final LexicalShape typeArgumentsShape = list(true,
+	public static final LexicalShape typeArgumentsShape = list(
+			token(LToken.Less),
+			token(LToken.Comma).withSpacingAfter(space()),
+			token(LToken.Greater)
+	);
+
+	public static final LexicalShape typeArgumentsOrDiamondShape = list(true,
 			token(LToken.Less),
 			token(LToken.Comma).withSpacingAfter(space()),
 			token(LToken.Greater)

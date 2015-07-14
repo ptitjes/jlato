@@ -102,7 +102,7 @@ public class QualifiedType extends ReferenceType {
 			child(ANNOTATIONS, AnnotationExpr.singleLineAnnotationsShape),
 			child(SCOPE, when(some(), scopeShape)),
 			child(NAME),
-			child(TYPE_ARGUMENTS, when(some(), element(Type.typeArgumentsShape)))
+			child(TYPE_ARGUMENTS, when(some(), element(Type.typeArgumentsOrDiamondShape)))
 	);
 
 	public static final LexicalShape extendsClauseShape = list(
