@@ -97,7 +97,7 @@ public abstract class TreeFactory {
 	}
 
 	public static ArrayCreationExpr arrayCreationExpr() {
-		return new ArrayCreationExpr(null, NodeList.<ArrayDimExpr>empty(), NodeList.<ArrayDim>empty(), null);
+		return new ArrayCreationExpr(null, NodeList.<ArrayDimExpr>empty(), NodeList.<ArrayDim>empty(), NodeOption.<ArrayInitializerExpr>none());
 	}
 
 	public static ArrayDimExpr arrayDimExpr() {

@@ -2716,11 +2716,11 @@ Expr ArrayCreationExpr(Type componentType):
     LOOKAHEAD( Annotations() "[" Expression() "]" )
     arrayDimExprs = ArrayDimExprsMandatory()
     arrayDims = ArrayDims()
-    { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, null)); }
+    { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, NodeOption.<ArrayInitializerExpr>none())); }
   |
     arrayDims = ArrayDimsMandatory()
     initializer = ArrayInitializer()
-    { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, initializer)); }
+    { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, NodeOption.of(initializer))); }
   )
 }
 

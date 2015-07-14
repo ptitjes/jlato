@@ -22,14 +22,18 @@ package org.jlato.tree.expr;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.type.Type;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
@@ -49,7 +53,7 @@ public class ArrayCreationExpr extends Expr {
 		super(location);
 	}
 
-	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, ArrayInitializerExpr initializer) {
+	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> initializer) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(type, dimExprs, dims, initializer)))));
 	}
 
@@ -89,15 +93,15 @@ public class ArrayCreationExpr extends Expr {
 		return location.nodeMutateChild(DIMENSIONS, mutation);
 	}
 
-	public ArrayInitializerExpr init() {
+	public NodeOption<ArrayInitializerExpr> init() {
 		return location.nodeChild(INITIALIZER);
 	}
 
-	public ArrayCreationExpr withInit(ArrayInitializerExpr initializer) {
+	public ArrayCreationExpr withInit(NodeOption<ArrayInitializerExpr> initializer) {
 		return location.nodeWithChild(INITIALIZER, initializer);
 	}
 
-	public ArrayCreationExpr withInit(Mutation<ArrayInitializerExpr> mutation) {
+	public ArrayCreationExpr withInit(Mutation<NodeOption<ArrayInitializerExpr>> mutation) {
 		return location.nodeMutateChild(INITIALIZER, mutation);
 	}
 
@@ -111,10 +115,10 @@ public class ArrayCreationExpr extends Expr {
 			child(TYPE),
 			child(DIMENSION_EXPRESSIONS, list()),
 			child(DIMENSIONS, list()),
-			nonNullChild(INITIALIZER,
+			when(childIs(INITIALIZER, some()),
 					composite(
 							none().withSpacingAfter(space()),
-							child(INITIALIZER)
+							child(INITIALIZER, element())
 					)
 			)
 	);
