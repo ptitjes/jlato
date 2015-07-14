@@ -26,9 +26,12 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.VariableDeclarationExpr;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
@@ -48,7 +51,7 @@ public class TryStmt extends Stmt {
 		super(location);
 	}
 
-	public TryStmt(NodeList<VariableDeclarationExpr> resources, BlockStmt tryBlock, NodeList<CatchClause> catchs, BlockStmt finallyBlock) {
+	public TryStmt(NodeList<VariableDeclarationExpr> resources, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(resources, tryBlock, catchs, finallyBlock)))));
 	}
 
@@ -88,15 +91,15 @@ public class TryStmt extends Stmt {
 		return location.nodeMutateChild(CATCHS, mutation);
 	}
 
-	public BlockStmt finallyBlock() {
+	public NodeOption<BlockStmt> finallyBlock() {
 		return location.nodeChild(FINALLY_BLOCK);
 	}
 
-	public TryStmt withFinallyBlock(BlockStmt finallyBlock) {
+	public TryStmt withFinallyBlock(NodeOption<BlockStmt> finallyBlock) {
 		return location.nodeWithChild(FINALLY_BLOCK, finallyBlock);
 	}
 
-	public TryStmt withFinallyBlock(Mutation<BlockStmt> mutation) {
+	public TryStmt withFinallyBlock(Mutation<NodeOption<BlockStmt>> mutation) {
 		return location.nodeMutateChild(FINALLY_BLOCK, mutation);
 	}
 
@@ -110,11 +113,9 @@ public class TryStmt extends Stmt {
 			child(RESOURCES, VariableDeclarationExpr.resourcesShape),
 			child(TRY_BLOCK),
 			child(CATCHS, CatchClause.listShape),
-			nonNullChild(FINALLY_BLOCK,
-					composite(
-							token(LToken.Finally).withSpacing(space(), space()),
-							child(FINALLY_BLOCK)
-					)
-			)
+			when(childIs(FINALLY_BLOCK, some()), composite(
+					token(LToken.Finally).withSpacing(space(), space()),
+					child(FINALLY_BLOCK, element())
+			))
 	);
 }

@@ -273,7 +273,7 @@ public abstract class TreeFactory {
 	}
 
 	public static TryStmt tryStmt() {
-		return new TryStmt(NodeList.<VariableDeclarationExpr>empty(), null, NodeList.<CatchClause>empty(), null);
+		return new TryStmt(NodeList.<VariableDeclarationExpr>empty(), null, NodeList.<CatchClause>empty(), NodeOption.<BlockStmt>none());
 	}
 
 	public static TypeDeclarationStmt typeDeclarationStmt() {
