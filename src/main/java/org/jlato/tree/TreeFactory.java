@@ -229,7 +229,7 @@ public abstract class TreeFactory {
 	}
 
 	public static ExplicitConstructorInvocationStmt explicitConstructorInvocationStmt() {
-		return new ExplicitConstructorInvocationStmt(NodeList.<Type>empty(), false, null, NodeList.<Expr>empty());
+		return new ExplicitConstructorInvocationStmt(NodeList.<Type>empty(), false, NodeOption.<Expr>none(), NodeList.<Expr>empty());
 	}
 
 	public static ExpressionStmt expressionStmt() {

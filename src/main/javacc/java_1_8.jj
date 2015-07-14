@@ -1804,7 +1804,7 @@ ExplicitConstructorInvocationStmt ExplicitConstructorInvocation():
     args = Arguments() ";"
   )
 
-  { return enRun(new ExplicitConstructorInvocationStmt(typeArgs, isThis, expr, args)); }
+  { return enRun(new ExplicitConstructorInvocationStmt(typeArgs, isThis, NodeOption.of(expr), args)); }
 }
 
 NodeList Statements():

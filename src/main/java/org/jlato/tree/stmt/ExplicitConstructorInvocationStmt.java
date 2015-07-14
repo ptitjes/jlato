@@ -27,11 +27,15 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.type.Type;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public class ExplicitConstructorInvocationStmt extends Stmt {
 
@@ -49,7 +53,7 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 		super(location);
 	}
 
-	public ExplicitConstructorInvocationStmt(NodeList<Type> typeArgs, boolean isThis, Expr expr, NodeList<Expr> args) {
+	public ExplicitConstructorInvocationStmt(NodeList<Type> typeArgs, boolean isThis, NodeOption<Expr> expr, NodeList<Expr> args) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(typeArgs, expr, args), dataOf(constructorKind(isThis))))));
 	}
 
@@ -73,15 +77,15 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 		return location.withData(CONSTRUCTOR_KIND, constructorKind(isThis));
 	}
 
-	public Expr expr() {
+	public NodeOption<Expr> expr() {
 		return location.nodeChild(EXPR);
 	}
 
-	public ExplicitConstructorInvocationStmt withExpr(Expr expr) {
+	public ExplicitConstructorInvocationStmt withExpr(NodeOption<Expr> expr) {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
-	public ExplicitConstructorInvocationStmt withExpr(Mutation<Expr> mutation) {
+	public ExplicitConstructorInvocationStmt withExpr(Mutation<NodeOption<Expr>> mutation) {
 		return location.nodeMutateChild(EXPR, mutation);
 	}
 
@@ -104,7 +108,7 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 	private static final int CONSTRUCTOR_KIND = 0;
 
 	public final static LexicalShape shape = composite(
-			nonNullChild(EXPR, composite(child(EXPR), token(LToken.Dot))),
+			when(childIs(EXPR, some()), composite(child(EXPR, element()), token(LToken.Dot))),
 			child(TYPE_ARGUMENTS, Type.typeArgumentsShape),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
