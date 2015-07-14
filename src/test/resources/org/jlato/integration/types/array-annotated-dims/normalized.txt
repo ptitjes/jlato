@@ -1,11 +1,5 @@
 {
   class: org.jlato.tree.type.ArrayType,
-  annotations: [
-    {
-      class: org.jlato.tree.expr.MarkerAnnotationExpr,
-      name: D,
-    },
-  ],
   componentType: {
     class: org.jlato.tree.type.QualifiedType,
     annotations: [

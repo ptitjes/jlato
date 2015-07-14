@@ -1,7 +1,5 @@
 {
   class: org.jlato.tree.type.ArrayType,
-  annotations: [
-  ],
   componentType: {
     class: org.jlato.tree.type.PrimitiveType,
     annotations: [
