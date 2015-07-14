@@ -22,13 +22,17 @@ package org.jlato.tree.stmt;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.IndentationConstraint.indent;
@@ -51,19 +55,19 @@ public class SwitchCase extends Tree {
 		super(location);
 	}
 
-	public SwitchCase(Expr label, NodeList<Stmt> stmts) {
+	public SwitchCase(NodeOption<Expr> label, NodeList<Stmt> stmts) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(label, stmts)))));
 	}
 
-	public Expr label() {
+	public NodeOption<Expr> label() {
 		return location.nodeChild(LABEL);
 	}
 
-	public SwitchCase withLabel(Expr label) {
+	public SwitchCase withLabel(NodeOption<Expr> label) {
 		return location.nodeWithChild(LABEL, label);
 	}
 
-	public SwitchCase withLabel(Mutation<Expr> mutation) {
+	public SwitchCase withLabel(Mutation<NodeOption<Expr>> mutation) {
 		return location.nodeMutateChild(LABEL, mutation);
 	}
 
@@ -83,18 +87,14 @@ public class SwitchCase extends Tree {
 	private static final int STMTS = 1;
 
 	public final static LexicalShape shape = composite(
-			nonNullChild(LABEL,
-					composite(token(LToken.Case), child(LABEL)),
+			alternative(childIs(LABEL, some()),
+					composite(token(LToken.Case), child(LABEL, element())),
 					token(LToken.Default)
 			),
 			token(LToken.Colon).withSpacingAfter(newLine()),
-			nonNullChild(STMTS,
-					composite(
-							none().withIndentationAfter(indent(BLOCK)),
-							child(STMTS, Stmt.listShape),
-							none().withIndentationBefore(unIndent(BLOCK))
-					)
-			)
+			none().withIndentationAfter(indent(BLOCK)),
+			child(STMTS, Stmt.listShape),
+			none().withIndentationBefore(unIndent(BLOCK))
 	);
 
 	public static final LexicalShape listShape = list(none().withSpacingAfter(newLine()));

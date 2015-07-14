@@ -257,7 +257,7 @@ public abstract class TreeFactory {
 	}
 
 	public static SwitchCase switchCase() {
-		return new SwitchCase(null, NodeList.<Stmt>empty());
+		return new SwitchCase(NodeOption.<Expr>none(), NodeList.<Stmt>empty());
 	}
 
 	public static SwitchStmt switchStmt() {
