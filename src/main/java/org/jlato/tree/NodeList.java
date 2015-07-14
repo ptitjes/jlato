@@ -54,6 +54,36 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		return new NodeList<T>();
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1) {
+		return new NodeList<T>(t1);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2) {
+		return new NodeList<T>(t1, t2);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3) {
+		return new NodeList<T>(t1, t2, t3);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4) {
+		return new NodeList<T>(t1, t2, t3, t4);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5) {
+		return new NodeList<T>(t1, t2, t3, t4, t5);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6);
+	}
+
 	private NodeList(SLocation location) {
 		super(location);
 	}
