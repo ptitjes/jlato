@@ -22,15 +22,18 @@ package org.jlato.tree.decl;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class AnnotationMemberDecl extends MemberDecl {
@@ -49,7 +52,7 @@ public class AnnotationMemberDecl extends MemberDecl {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl(NodeList<EM> modifiers, Type type, Name name, NodeList<ArrayDim> dims, Expr defaultValue) {
+	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl(NodeList<EM> modifiers, Type type, Name name, NodeList<ArrayDim> dims, NodeOption<Expr> defaultValue) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, type, name, dims, defaultValue)))));
 	}
 
@@ -106,15 +109,15 @@ public class AnnotationMemberDecl extends MemberDecl {
 		return location.nodeMutateChild(DIMS, mutation);
 	}
 
-	public Expr defaultValue() {
+	public NodeOption<Expr> defaultValue() {
 		return location.nodeChild(DEFAULT_VALUE);
 	}
 
-	public AnnotationMemberDecl withDefaultValue(Expr defaultValue) {
+	public AnnotationMemberDecl withDefaultValue(NodeOption<Expr> defaultValue) {
 		return location.nodeWithChild(DEFAULT_VALUE, defaultValue);
 	}
 
-	public AnnotationMemberDecl withDefaultValue(Mutation<Expr> mutation) {
+	public AnnotationMemberDecl withDefaultValue(Mutation<NodeOption<Expr>> mutation) {
 		return location.nodeMutateChild(DEFAULT_VALUE, mutation);
 	}
 
@@ -124,11 +127,13 @@ public class AnnotationMemberDecl extends MemberDecl {
 	private static final int DIMS = 3;
 	private static final int DEFAULT_VALUE = 4;
 
+	public static final LexicalShape defaultValShape = composite(token(LToken.Default), element());
+
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(TYPE), child(NAME),
 			token(LToken.ParenthesisLeft), token(LToken.ParenthesisRight),
-			nonNullChild(DEFAULT_VALUE, composite(token(LToken.Default), child(DEFAULT_VALUE))),
+			child(DEFAULT_VALUE, when(some(), defaultValShape)),
 			token(LToken.SemiColon)
 	);
 }

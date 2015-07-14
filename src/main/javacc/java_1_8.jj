@@ -1423,12 +1423,19 @@ AnnotationMemberDecl AnnotationTypeMemberDecl(NodeList modifiers):
 	Type type;
 	Name name;
 	NodeList dims;
-	Expr defaultVal = null;
+	NodeOption<Expr> defaultVal = NodeOption.<Expr>none();
+	Expr val = null;
 }
 {
   // Run is started before modifiers
 
-  type = Type(null) name = Name() "(" ")" dims = ArrayDims() [ "default" defaultVal = MemberValue() ] ";"
+  type = Type(null) name = Name() "(" ")" dims = ArrayDims()
+  [
+    { run(); }
+    "default" val = MemberValue()
+    { defaultVal = enRun(defaultVal.set(val), AnnotationMemberDecl.defaultValShape); }
+  ]
+  ";"
 
   { return enRun(new AnnotationMemberDecl(modifiers, type, name, dims, defaultVal)); }
 }
