@@ -24,6 +24,7 @@ import org.jlato.integration.utils.BulkTestClass;
 import org.jlato.integration.utils.BulkTestRunner;
 import org.jlato.integration.utils.NormalizedJsonWriter;
 import org.jlato.integration.utils.TestResources;
+import org.jlato.printer.Printer;
 import org.jlato.tree.Tree;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -46,20 +47,29 @@ public abstract class ChunkIntegrationTest<T extends Tree> implements BulkTestCl
 
 		if (updateMode()) {
 			try {
-				T expression = parse(source);
-				String actual = NormalizedJsonWriter.write(expression);
-				resources.updateResource("normalized.txt", actual);
+				T tree = parse(source);
+
+				String normalized = NormalizedJsonWriter.write(tree);
+				String formatted = Printer.printToString(tree, true);
+
+				resources.updateResource("normalized.txt", normalized);
+				resources.updateResource("formatted.txt", formatted);
 			} catch (ParseException e) {
 				resources.updateResource("failure.txt", e.getMessage());
 			}
 		} else {
 			String normalized = resources.getResourceAsString("normalized.txt");
+			String formatted = resources.getResourceAsString("formatted.txt");
 			String failure = resources.getResourceAsString("failure.txt");
 
 			if (normalized != null) {
-				T expression = parse(source);
-				String actual = NormalizedJsonWriter.write(expression);
-				Assert.assertEquals(normalized, actual);
+				T tree = parse(source);
+
+				String actualNormalized = NormalizedJsonWriter.write(tree);
+				String actualFormatted = Printer.printToString(tree, true);
+
+				Assert.assertEquals(normalized, actualNormalized);
+				Assert.assertEquals(formatted, actualFormatted);
 			} else if (failure != null) {
 				exception.expect(ParseException.class);
 				exception.expectMessage(failure);
