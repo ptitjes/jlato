@@ -103,6 +103,10 @@ public class NodeOption<T extends Tree> extends Tree implements Iterable<T> {
 		return location.nodeOptionMutateElement(mutation);
 	}
 
+	public NodeOption<T> setNone() {
+		return location.nodeOptionWithElement(null);
+	}
+
 	public Iterator<T> iterator() {
 		return new ElementIterator();
 	}
