@@ -50,9 +50,9 @@ public class SNodeOptionState extends STreeState {
 		return new SNodeOptionState(element, data.set(index, value));
 	}
 
-	public void validate() {
-		super.validate();
+	public void validate(STree tree) {
+		super.validate(tree);
 
-		if (element != null) element.state.validate();
+		if (element != null) element.state.validate(element);
 	}
 }

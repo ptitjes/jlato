@@ -49,13 +49,13 @@ public class SNodeState extends STreeState {
 		return new SNodeState(children, data.set(index, value));
 	}
 
-	public void validate() {
-		super.validate();
+	public void validate(STree tree) {
+		super.validate(tree);
 
 		for (STree child : children) {
-			if (child == null)
+			if (child == null) // TODO Add better error message
 				throw new IllegalStateException();
-			child.state.validate();
+			child.state.validate(child);
 		}
 	}
 }

@@ -19,7 +19,6 @@
 
 package org.jlato.internal.bu;
 
-import org.jlato.internal.td.SContext;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
 
@@ -62,5 +61,9 @@ public class STree extends LElement {
 
 	public Tree asTree() {
 		return kind.instantiate(new SLocation(this));
+	}
+
+	public void validate() {
+		state.validate(this);
 	}
 }

@@ -19,6 +19,7 @@
 
 package org.jlato.tree;
 
+import org.jlato.internal.bu.STree;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
@@ -98,7 +99,8 @@ public class BasicTest {
 	private String parseAndPrint(String original, boolean preserveWhitespaces, boolean format, FormattingSettings formattingSettings) throws ParseException {
 		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(preserveWhitespaces));
 		final CompilationUnit cu = parser.parse(ParseContext.CompilationUnit, original);
-		Tree.treeOf(cu).state.validate();
+		STree tree = Tree.treeOf(cu);
+		tree.validate();
 		return Printer.printToString(cu, format, formattingSettings);
 	}
 

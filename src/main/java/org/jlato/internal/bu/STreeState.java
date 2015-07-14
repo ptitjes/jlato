@@ -38,6 +38,6 @@ public abstract class STreeState {
 
 	public abstract STreeState withData(int index, Object value);
 
-	public void validate() {
+	public void validate(STree tree) {
 	}
 }
