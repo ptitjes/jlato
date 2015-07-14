@@ -313,6 +313,6 @@ public abstract class TreeFactory {
 	}
 
 	public static WildcardType wildcardType() {
-		return new WildcardType(NodeList.<AnnotationExpr>empty(), null, null);
+		return new WildcardType(NodeList.<AnnotationExpr>empty(), NodeOption.<ReferenceType>none(), NodeOption.<ReferenceType>none());
 	}
 }

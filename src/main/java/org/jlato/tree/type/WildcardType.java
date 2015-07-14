@@ -22,13 +22,17 @@ package org.jlato.tree.type;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
@@ -48,7 +52,7 @@ public class WildcardType extends Type {
 		super(location);
 	}
 
-	public WildcardType(NodeList<AnnotationExpr> annotations, ReferenceType ext, ReferenceType sup) {
+	public WildcardType(NodeList<AnnotationExpr> annotations, NodeOption<ReferenceType> ext, NodeOption<ReferenceType> sup) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations, ext, sup)))));
 	}
 
@@ -64,27 +68,27 @@ public class WildcardType extends Type {
 		return location.nodeMutateChild(ANNOTATIONS, mutation);
 	}
 
-	public ReferenceType ext() {
+	public NodeOption<ReferenceType> ext() {
 		return location.nodeChild(EXT);
 	}
 
-	public WildcardType withExt(ReferenceType ext) {
+	public WildcardType withExt(NodeOption<ReferenceType> ext) {
 		return location.nodeWithChild(EXT, ext);
 	}
 
-	public WildcardType withExt(Mutation<ReferenceType> mutation) {
+	public WildcardType withExt(Mutation<NodeOption<ReferenceType>> mutation) {
 		return location.nodeMutateChild(EXT, mutation);
 	}
 
-	public ReferenceType sup() {
+	public NodeOption<ReferenceType> sup() {
 		return location.nodeChild(SUP);
 	}
 
-	public WildcardType withSup(ReferenceType sup) {
+	public WildcardType withSup(NodeOption<ReferenceType> sup) {
 		return location.nodeWithChild(SUP, sup);
 	}
 
-	public WildcardType withSup(Mutation<ReferenceType> mutation) {
+	public WildcardType withSup(Mutation<NodeOption<ReferenceType>> mutation) {
 		return location.nodeMutateChild(SUP, mutation);
 	}
 
@@ -95,7 +99,7 @@ public class WildcardType extends Type {
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
 			token(LToken.QuestionMark),
-			nonNullChild(EXT, composite(token(LToken.Extends).withSpacingBefore(space()), child(EXT))),
-			nonNullChild(SUP, composite(token(LToken.Super).withSpacingBefore(space()), child(SUP)))
+			when(childIs(EXT, some()), composite(token(LToken.Extends).withSpacingBefore(space()), child(EXT, element()))),
+			when(childIs(SUP, some()), composite(token(LToken.Super).withSpacingBefore(space()), child(SUP, element())))
 	);
 }

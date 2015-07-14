@@ -1981,7 +1981,7 @@ WildcardType Wildcard(NodeList<AnnotationExpr> annotations):
   "?"
   [ "extends" { run(); } boundAnnotations = Annotations() ext = ReferenceType(boundAnnotations)
   | "super" { run(); } boundAnnotations = Annotations() sup = ReferenceType(boundAnnotations) ]
-  { return enRun(new WildcardType(annotations, ext, sup)); }
+  { return enRun(new WildcardType(annotations, NodeOption.of(ext), NodeOption.of(sup))); }
 }
 
 PrimitiveType PrimitiveType(NodeList<AnnotationExpr> annotations):
