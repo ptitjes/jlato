@@ -1700,7 +1700,7 @@ MethodDecl MethodDecl(NodeList modifiers):
     ";"
   )
 
-  { return enRun(new MethodDecl(modifiers, typeParameters, type, name, parameters, arrayDims, throwsClause, block)); }
+  { return enRun(new MethodDecl(modifiers, typeParameters, type, name, parameters, arrayDims, throwsClause, NodeOption.of(block))); }
 }
 
 NodeList FormalParameterList():

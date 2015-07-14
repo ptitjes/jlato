@@ -22,16 +22,20 @@ package org.jlato.tree.decl;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
@@ -55,7 +59,7 @@ public class MethodDecl extends MemberDecl {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(NodeList.empty(), NodeList.empty(), null, null, NodeList.empty(), NodeList.empty(), NodeList.empty(), null)))));
 	}
 
-	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, BlockStmt body) {
+	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, NodeOption<BlockStmt> body) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParams, type, name, params, dims, throwsClause, body)))));
 	}
 
@@ -148,15 +152,15 @@ public class MethodDecl extends MemberDecl {
 		return location.nodeMutateChild(THROWS_CLAUSE, mutation);
 	}
 
-	public BlockStmt body() {
+	public NodeOption<BlockStmt> body() {
 		return location.nodeChild(BODY);
 	}
 
-	public MethodDecl withBody(BlockStmt body) {
+	public MethodDecl withBody(NodeOption<BlockStmt> body) {
 		return location.nodeWithChild(BODY, body);
 	}
 
-	public MethodDecl withBody(Mutation<BlockStmt> mutation) {
+	public MethodDecl withBody(Mutation<NodeOption<BlockStmt>> mutation) {
 		return location.nodeMutateChild(BODY, mutation);
 	}
 
@@ -178,8 +182,8 @@ public class MethodDecl extends MemberDecl {
 			child(PARAMETERS, FormalParameter.listShape),
 			child(DIMS, ArrayDim.listShape),
 			child(THROWS_CLAUSE, QualifiedType.throwsClauseShape),
-			nonNullChild(BODY,
-					composite(none().withSpacingAfter(space()), child(BODY)),
+			alternative(childIs(BODY, some()),
+					composite(none().withSpacingAfter(space()), child(BODY, element())),
 					token(LToken.SemiColon)
 			)
 	);

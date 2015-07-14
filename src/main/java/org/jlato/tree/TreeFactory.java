@@ -73,7 +73,7 @@ public abstract class TreeFactory {
 	}
 
 	public static <EM extends Tree & ExtendedModifier> MethodDecl methodDecl() {
-		return new <EM>MethodDecl(NodeList.<EM>empty(), NodeList.<TypeParameter>empty(), null, null, NodeList.<FormalParameter>empty(), NodeList.<ArrayDim>empty(), NodeList.<QualifiedType>empty(), null);
+		return new <EM>MethodDecl(NodeList.<EM>empty(), NodeList.<TypeParameter>empty(), null, null, NodeList.<FormalParameter>empty(), NodeList.<ArrayDim>empty(), NodeList.<QualifiedType>empty(), NodeOption.<BlockStmt>none());
 	}
 
 	public static PackageDecl packageDecl() {
