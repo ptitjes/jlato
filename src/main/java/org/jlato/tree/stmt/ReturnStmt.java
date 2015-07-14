@@ -25,9 +25,12 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class ReturnStmt extends Stmt {
@@ -46,19 +49,19 @@ public class ReturnStmt extends Stmt {
 		super(location);
 	}
 
-	public ReturnStmt(Expr expr) {
+	public ReturnStmt(NodeOption<Expr> expr) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(expr)))));
 	}
 
-	public Expr expr() {
+	public NodeOption<Expr> expr() {
 		return location.nodeChild(EXPR);
 	}
 
-	public ReturnStmt withExpr(Expr expr) {
+	public ReturnStmt withExpr(NodeOption<Expr> expr) {
 		return location.nodeWithChild(EXPR, expr);
 	}
 
-	public ReturnStmt withExpr(Mutation<Expr> mutation) {
+	public ReturnStmt withExpr(Mutation<NodeOption<Expr>> mutation) {
 		return location.nodeMutateChild(EXPR, mutation);
 	}
 
@@ -66,7 +69,7 @@ public class ReturnStmt extends Stmt {
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Return),
-			child(EXPR),
+			when(childIs(EXPR, some()), child(EXPR, element())),
 			token(LToken.SemiColon)
 	);
 }

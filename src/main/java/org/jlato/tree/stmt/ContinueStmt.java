@@ -25,9 +25,12 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class ContinueStmt extends Stmt {
@@ -46,19 +49,19 @@ public class ContinueStmt extends Stmt {
 		super(location);
 	}
 
-	public ContinueStmt(Name id) {
+	public ContinueStmt(NodeOption<Name> id) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(id)))));
 	}
 
-	public Name id() {
+	public NodeOption<Name> id() {
 		return location.nodeChild(ID);
 	}
 
-	public ContinueStmt withId(Name id) {
+	public ContinueStmt withId(NodeOption<Name> id) {
 		return location.nodeWithChild(ID, id);
 	}
 
-	public ContinueStmt withId(Mutation<Name> mutation) {
+	public ContinueStmt withId(Mutation<NodeOption<Name>> mutation) {
 		return location.nodeMutateChild(ID, mutation);
 	}
 
@@ -66,7 +69,7 @@ public class ContinueStmt extends Stmt {
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Continue),
-			child(ID),
+			when(childIs(ID, some()), child(ID, element())),
 			token(LToken.SemiColon)
 	);
 }

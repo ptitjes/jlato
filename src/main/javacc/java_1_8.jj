@@ -3054,7 +3054,7 @@ BreakStmt BreakStatement():
 {
   { run(); }
   "break" [ id = Name() ] ";"
-  { return enRun(new BreakStmt(id)); }
+  { return enRun(new BreakStmt(NodeOption.of(id))); }
 }
 
 ContinueStmt ContinueStatement():
@@ -3064,7 +3064,7 @@ ContinueStmt ContinueStatement():
 {
   { run(); }
   "continue" [ id = Name() ] ";"
-  { return enRun(new ContinueStmt(id)); }
+  { return enRun(new ContinueStmt(NodeOption.of(id))); }
 }
 
 ReturnStmt ReturnStatement():
@@ -3074,7 +3074,7 @@ ReturnStmt ReturnStatement():
 {
   { run(); }
   "return" [ expr = Expression() ] ";"
-  { return enRun(new ReturnStmt(expr)); }
+  { return enRun(new ReturnStmt(NodeOption.of(expr))); }
 }
 
 ThrowStmt ThrowStatement():

@@ -22,12 +22,16 @@ package org.jlato.tree.stmt;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class BreakStmt extends Stmt {
@@ -46,19 +50,19 @@ public class BreakStmt extends Stmt {
 		super(location);
 	}
 
-	public BreakStmt(Name id) {
+	public BreakStmt(NodeOption<Name> id) {
 		super(new SLocation(new STree(kind, new SNodeState(treesOf(id)))));
 	}
 
-	public Name id() {
+	public NodeOption<Name> id() {
 		return location.nodeChild(ID);
 	}
 
-	public BreakStmt withId(Name id) {
+	public BreakStmt withId(NodeOption<Name> id) {
 		return location.nodeWithChild(ID, id);
 	}
 
-	public BreakStmt withId(Mutation<Name> mutation) {
+	public BreakStmt withId(Mutation<NodeOption<Name>> mutation) {
 		return location.nodeMutateChild(ID, mutation);
 	}
 
@@ -66,7 +70,7 @@ public class BreakStmt extends Stmt {
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Break),
-			child(ID),
+			when(childIs(ID, some()), child(ID, element())),
 			token(LToken.SemiColon)
 	);
 }

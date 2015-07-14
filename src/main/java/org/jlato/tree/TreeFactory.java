@@ -209,7 +209,7 @@ public abstract class TreeFactory {
 	}
 
 	public static BreakStmt breakStmt() {
-		return new BreakStmt(null);
+		return new BreakStmt(NodeOption.<Name>none());
 	}
 
 	public static CatchClause catchClause() {
@@ -217,7 +217,7 @@ public abstract class TreeFactory {
 	}
 
 	public static ContinueStmt continueStmt() {
-		return new ContinueStmt(null);
+		return new ContinueStmt(NodeOption.<Name>none());
 	}
 
 	public static DoStmt doStmt() {
@@ -253,7 +253,7 @@ public abstract class TreeFactory {
 	}
 
 	public static ReturnStmt returnStmt() {
-		return new ReturnStmt(null);
+		return new ReturnStmt(NodeOption.<Expr>none());
 	}
 
 	public static SwitchCase switchCase() {
