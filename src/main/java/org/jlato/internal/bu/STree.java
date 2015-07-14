@@ -25,7 +25,7 @@ import org.jlato.tree.Tree;
 /**
  * @author Didier Villevalois
  */
-public class STree extends LElement {
+public class STree {
 
 	public final Tree.Kind kind;
 	public final STreeState state;
@@ -41,12 +41,6 @@ public class STree extends LElement {
 		this.run = run;
 	}
 
-	@Override
-	public boolean isToken() {
-		return false;
-	}
-
-	@Override
 	public int width() {
 		return 0;
 	}

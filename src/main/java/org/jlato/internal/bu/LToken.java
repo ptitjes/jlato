@@ -24,7 +24,7 @@ import org.jlato.parser.ParserImplConstants;
 /**
  * @author Didier Villevalois
  */
-public class LToken extends LElement {
+public class LToken {
 
 	public static final LToken Ellipsis = new LToken(ParserImplConstants.ELLIPSIS, "...");
 
@@ -150,11 +150,6 @@ public class LToken extends LElement {
 	public LToken(int kind, String string) {
 		this.kind = kind;
 		this.string = string;
-	}
-
-	@Override
-	public final boolean isToken() {
-		return true;
 	}
 
 	public boolean isIdentifier() {
@@ -299,7 +294,6 @@ public class LToken extends LElement {
 		}
 	}
 
-	@Override
 	public final int width() {
 		return string.length();
 	}
