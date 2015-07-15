@@ -26,7 +26,7 @@ import com.github.andrewoma.dexx.collection.ArrayList;
  */
 public class SNodeState extends STreeState<SNodeState> {
 
-	public final ArrayList<STree<?>> children;
+	private final ArrayList<STree<?>> children;
 
 	public SNodeState(ArrayList<STree<? extends STreeState<?>>> children) {
 		this(children, ArrayList.empty());
@@ -73,6 +73,10 @@ public class SNodeState extends STreeState<SNodeState> {
 				throw new IllegalStateException();
 			child.state.validate(child);
 		}
+	}
+
+	public Iterable<STree<? extends STreeState<?>>> children() {
+		return children;
 	}
 
 	public static class ChildTraversal extends STraversal<SNodeState> {

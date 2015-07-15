@@ -107,7 +107,7 @@ public abstract class Quotes {
 			} else if (state instanceof SLeafState) {
 				return new LeafPattern<T>(tree.kind, buildDataPattern(state.data));
 			} else if (state instanceof SNodeState) {
-				return new NodePattern<T>(tree.kind, buildDataPattern(state.data), buildTreePattern(((SNodeState) state).children));
+				return new NodePattern<T>(tree.kind, buildDataPattern(state.data), buildTreePattern(((SNodeState) state).children()));
 			} else if (state instanceof SNodeListState) {
 				return new NodeListPattern<T>(tree.kind, buildDataPattern(state.data), buildTreePattern(((SNodeListState) state).children));
 			} else if (state instanceof SNodeOptionState) {
@@ -117,10 +117,9 @@ public abstract class Quotes {
 		return null;
 	}
 
-	private static ArrayList<Pattern<? extends Tree>> buildTreePattern(ArrayList<STree<?>> children) {
+	private static ArrayList<Pattern<? extends Tree>> buildTreePattern(Iterable<STree<?>> children) {
 		Builder<Pattern<? extends Tree>, ArrayList<Pattern<? extends Tree>>> builder = ArrayList.<Pattern<? extends Tree>>factory().newBuilder();
-		for (int i = 0; i < children.size(); i++) {
-			STree child = children.get(i);
+		for (STree<?> child : children) {
 			builder.add(buildTreePattern(child, Tree.class));
 		}
 		return builder.build();
@@ -128,8 +127,7 @@ public abstract class Quotes {
 
 	private static ArrayList<Pattern<? extends Tree>> buildTreePattern(Vector<STree<?>> children) {
 		Builder<Pattern<? extends Tree>, ArrayList<Pattern<? extends Tree>>> builder = ArrayList.<Pattern<? extends Tree>>factory().newBuilder();
-		for (int i = 0; i < children.size(); i++) {
-			STree child = children.get(i);
+		for (STree<?> child : children) {
 			builder.add(buildTreePattern(child, Tree.class));
 		}
 		return builder.build();

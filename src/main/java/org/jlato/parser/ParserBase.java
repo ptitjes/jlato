@@ -230,22 +230,21 @@ abstract class ParserBase {
 
 		final STreeState state = tree.state;
 
-		AbstractIndexedList<? extends STree> children =
+		Iterable<? extends STree> children =
 				state instanceof SNodeListState ? ((SNodeListState) state).children :
-						state instanceof SNodeState ? ((SNodeState) state).children :
+						state instanceof SNodeState ? ((SNodeState) state).children() :
 								Vector.<STree>empty();
-		if (!children.isEmpty()) {
-			System.out.println("With children: ");
-			for (int i = 0; i < children.size(); i++) {
-				STree child = children.get(i);
-				System.out.print("  " + i + " - ");
-				if (child == null) {
-					System.out.println("null");
-				} else {
-					System.out.print(child.kind + ": ");
-					System.out.println(Printer.printToString(child.asTree()));
-				}
+		System.out.println("With children: ");
+		int index = 0;
+		for (STree child : children) {
+			System.out.print("  " + index + " - ");
+			if (child == null) {
+				System.out.println("null");
+			} else {
+				System.out.print(child.kind + ": ");
+				System.out.println(Printer.printToString(child.asTree()));
 			}
+			index++;
 		}
 
 		System.out.println("For shape: " + shape);
