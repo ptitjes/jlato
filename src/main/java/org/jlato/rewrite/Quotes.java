@@ -105,13 +105,17 @@ public abstract class Quotes {
 					return new LeafPattern<T>(Name.kind, Pattern.termsOf(Constant.of(string)));
 				}
 			} else if (state instanceof SLeafState) {
-				return new LeafPattern<T>(tree.kind, buildDataPattern(state.data));
+				STree<SLeafState> leaf = (STree<SLeafState>) tree;
+				return new LeafPattern<T>(leaf.kind, buildDataPattern(state.data));
 			} else if (state instanceof SNodeState) {
-				return new NodePattern<T>(tree.kind, buildDataPattern(state.data), buildTreePattern(((SNodeState) state).children()));
+				STree<SNodeState> node = (STree<SNodeState>) tree;
+				return new NodePattern<T>(node.kind, buildDataPattern(state.data), buildTreePattern(((SNodeState) state).children()));
 			} else if (state instanceof SNodeListState) {
-				return new NodeListPattern<T>(tree.kind, buildDataPattern(state.data), buildTreePattern(((SNodeListState) state).children));
+				STree<SNodeListState> nodeList = (STree<SNodeListState>) tree;
+				return new NodeListPattern<T>(nodeList.kind, buildDataPattern(state.data), buildTreePattern(((SNodeListState) state).children));
 			} else if (state instanceof SNodeOptionState) {
-				return new NodeOptionPattern<T>(tree.kind, buildDataPattern(state.data), buildTreePattern(((SNodeOptionState) state).element, Tree.class));
+				STree<SNodeOptionState> nodeOption = (STree<SNodeOptionState>) tree;
+				return new NodeOptionPattern<T>(nodeOption.kind, buildDataPattern(state.data), buildTreePattern(((SNodeOptionState) state).element, Tree.class));
 			}
 		}
 		return null;

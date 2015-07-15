@@ -63,6 +63,14 @@ public abstract class TreeBase<S extends STreeState<S>> {
 		return builder.build();
 	}
 
+	protected static ArrayList<STree<? extends STreeState<?>>> arrayOf(STree<?>... trees) {
+		final Builder<STree<?>, ArrayList<STree<?>>> builder = ArrayList.<STree<?>>factory().newBuilder();
+		for (STree<?> tree : trees) {
+			builder.add(tree);
+		}
+		return builder.build();
+	}
+
 	protected static ArrayList<Object> dataOf(Object... attributes) {
 		final Builder<Object, ArrayList<Object>> builder = ArrayList.factory().newBuilder();
 		for (Object attribute : attributes) {
@@ -79,10 +87,4 @@ public abstract class TreeBase<S extends STreeState<S>> {
 		return builder.build();
 	}
 
-	public interface Kind {
-
-		Tree instantiate(SLocation location);
-
-		LexicalShape shape();
-	}
 }

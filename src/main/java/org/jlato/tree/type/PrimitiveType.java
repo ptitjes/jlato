@@ -25,6 +25,7 @@ import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
@@ -35,8 +36,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class PrimitiveType extends TreeBase<SNodeState> implements Type {
 
-	public final static TreeBase.Kind kind = new TreeBase.Kind() {
-		public PrimitiveType instantiate(SLocation location) {
+	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
+		public PrimitiveType instantiate(SLocation<SNodeState> location) {
 			return new PrimitiveType(location);
 		}
 

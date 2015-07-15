@@ -23,6 +23,7 @@ import com.github.andrewoma.dexx.collection.IndexedList;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LSDump;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
@@ -36,8 +37,8 @@ import static org.jlato.printer.SpacingConstraint.spacing;
 
 public class CompilationUnit extends TreeBase<SNodeState> implements Tree {
 
-	public final static TreeBase.Kind kind = new Kind() {
-		public CompilationUnit instantiate(SLocation location) {
+	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
+		public CompilationUnit instantiate(SLocation<SNodeState> location) {
 			return new CompilationUnit(location);
 		}
 

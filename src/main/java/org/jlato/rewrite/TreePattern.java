@@ -22,8 +22,10 @@ package org.jlato.rewrite;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.HashSet;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeState;
+import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Tree;
@@ -33,10 +35,10 @@ import org.jlato.tree.Tree;
  */
 abstract class TreePattern<T extends Tree> extends Pattern<T> {
 
-	private final TreeBase.Kind kind;
+	private final SKind<? extends STreeState<?>> kind;
 	private final ArrayList<Pattern<?>> data;
 
-	public TreePattern(TreeBase.Kind kind, ArrayList<Pattern<?>> data) {
+	public TreePattern(SKind<? extends STreeState<?>> kind, ArrayList<Pattern<?>> data) {
 		this.kind = kind;
 		this.data = data;
 	}

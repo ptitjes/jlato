@@ -24,19 +24,19 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class AnnotationDecl extends TreeBase<SNodeState> implements TypeDecl {
 
-	public final static TreeBase.Kind kind = new Kind() {
-		public AnnotationDecl instantiate(SLocation location) {
+	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
+		public AnnotationDecl instantiate(SLocation<SNodeState> location) {
 			return new AnnotationDecl(location);
 		}
 

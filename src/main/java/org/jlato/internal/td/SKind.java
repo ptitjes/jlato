@@ -17,26 +17,18 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.rewrite;
+package org.jlato.internal.td;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
-import org.jlato.internal.bu.SLeafState;
-import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.td.SKind;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
  */
-class LeafPattern<T extends Tree> extends TreePattern<T> {
+public interface SKind<S extends STreeState<S>> {
 
-	public LeafPattern(SKind<SLeafState> kind, ArrayList<Pattern<?>> data) {
-		super(kind, data);
-	}
+	Tree instantiate(SLocation<S> location);
 
-	@Override
-	protected STreeState buildState(Substitution substitution) {
-		return new SLeafState(buildData(substitution));
-	}
+	LexicalShape shape();
 }

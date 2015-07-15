@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
@@ -38,8 +39,8 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class TypeParameter extends TreeBase<SNodeState> implements Tree {
 
-	public final static TreeBase.Kind kind = new Kind() {
-		public TypeParameter instantiate(SLocation location) {
+	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
+		public TypeParameter instantiate(SLocation<SNodeState> location) {
 			return new TypeParameter(location);
 		}
 

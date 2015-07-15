@@ -23,6 +23,7 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeafState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 
@@ -30,8 +31,8 @@ import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class EmptyMemberDecl extends TreeBase<SLeafState> implements MemberDecl {
 
-	public final static TreeBase.Kind kind = new TreeBase.Kind() {
-		public EmptyMemberDecl instantiate(SLocation location) {
+	public final static SKind<SLeafState> kind = new SKind<SLeafState>() {
+		public EmptyMemberDecl instantiate(SLocation<SLeafState> location) {
 			return new EmptyMemberDecl(location);
 		}
 

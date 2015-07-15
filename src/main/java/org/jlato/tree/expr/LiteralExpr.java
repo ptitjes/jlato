@@ -25,6 +25,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Tree;
@@ -40,8 +41,8 @@ public class LiteralExpr<T> extends TreeBase<SNodeState> implements Expr {
 		return (Kind<T>) kind;
 	}
 
-	public static class Kind<T> implements TreeBase.Kind {
-		public Tree instantiate(SLocation location) {
+	public static class Kind<T> implements SKind<SNodeState> {
+		public Tree instantiate(SLocation<SNodeState> location) {
 			return new LiteralExpr<T>(location);
 		}
 

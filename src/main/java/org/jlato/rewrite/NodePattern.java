@@ -25,6 +25,7 @@ import com.github.andrewoma.dexx.collection.HashSet;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeState;
+import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Tree;
 
@@ -35,7 +36,7 @@ class NodePattern<T extends Tree> extends TreePattern<T> {
 
 	private final ArrayList<Pattern<? extends Tree>> children;
 
-	public NodePattern(TreeBase.Kind kind, ArrayList<Pattern<?>> data, ArrayList<Pattern<? extends Tree>> children) {
+	public NodePattern(SKind<SNodeState> kind, ArrayList<Pattern<?>> data, ArrayList<Pattern<? extends Tree>> children) {
 		super(kind, data);
 		this.children = children;
 	}

@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
@@ -35,8 +36,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class ThisExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static TreeBase.Kind kind = new TreeBase.Kind() {
-		public ThisExpr instantiate(SLocation location) {
+	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
+		public ThisExpr instantiate(SLocation<SNodeState> location) {
 			return new ThisExpr(location);
 		}
 

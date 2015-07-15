@@ -22,8 +22,10 @@ package org.jlato.rewrite;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.HashSet;
 import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeState;
+import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Tree;
 
@@ -34,7 +36,7 @@ class NodeOptionPattern<T extends Tree> extends TreePattern<T> {
 
 	private final Pattern<? extends Tree> elementPattern;
 
-	public NodeOptionPattern(TreeBase.Kind kind, ArrayList<Pattern<?>> data, Pattern<? extends Tree> elementPattern) {
+	public NodeOptionPattern(SKind<SNodeOptionState> kind, ArrayList<Pattern<?>> data, Pattern<? extends Tree> elementPattern) {
 		super(kind, data);
 		this.elementPattern = elementPattern;
 	}

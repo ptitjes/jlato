@@ -24,6 +24,7 @@ import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
@@ -39,8 +40,8 @@ import static org.jlato.printer.SpacingConstraint.*;
 
 public class SwitchStmt extends TreeBase<SNodeState> implements Stmt {
 
-	public final static TreeBase.Kind kind = new TreeBase.Kind() {
-		public SwitchStmt instantiate(SLocation location) {
+	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
+		public SwitchStmt instantiate(SLocation<SNodeState> location) {
 			return new SwitchStmt(location);
 		}
 

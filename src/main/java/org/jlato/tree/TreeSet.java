@@ -25,6 +25,7 @@ import com.github.andrewoma.dexx.collection.TreeMap;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeSetState;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.printer.FormattingSettings;
@@ -46,8 +47,8 @@ public class TreeSet<T extends Tree> extends TreeBase<STreeSetState> implements 
 		return (Kind<T>) kind;
 	}
 
-	public static class Kind<T extends Tree> implements TreeBase.Kind {
-		public Tree instantiate(SLocation location) {
+	public static class Kind<T extends Tree> implements SKind<STreeSetState> {
+		public Tree instantiate(SLocation<STreeSetState> location) {
 			return new TreeSet<T>(location);
 		}
 
