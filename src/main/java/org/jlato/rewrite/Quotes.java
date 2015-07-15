@@ -79,73 +79,71 @@ public abstract class Quotes {
 		} catch (ParseException e) {
 			throw new IllegalArgumentException("Can't parse quote: " + string);
 		}
-		return buildTreePattern(expr, treeClass);
+		return buildPattern(expr);
 	}
 
-	private static <T extends Tree> Pattern<T> buildTreePattern(T tree, Class<T> treeClass) {
-		return buildTreePattern(TreeBase.treeOf(tree), treeClass);
+	private static <T extends Tree> Pattern<T> buildPattern(T tree) {
+		return new TreePattern<T>(buildTreePattern(TreeBase.treeOf(tree)));
 	}
 
 	private static int lastAnnonVariable = 0;
 
-	private static <T extends Tree> Pattern<T> buildTreePattern(STree<?> tree, Class<T> treeClass) {
+	private static STree<?> buildTreePattern(STree<?> tree) {
 		if (tree == null) {
-			return new Variable<T>("___" + (lastAnnonVariable++), treeClass);
+			return null;
+//			return new STree<SVarState>(null, new SVarState("___" + (lastAnnonVariable++)));
 		} else {
+			// Temporary code until dedicated parser is operational
 			STreeState state = tree.state;
 			if (tree.kind == Name.kind) {
 				String string = (String) state.data(0);
-				if (string.startsWith("$$")) {
-					return new LeafPattern<T>(Name.kind, Pattern.termsOf(
-							new Variable<String>(string.substring(2), String.class)
-					));
-				} else if (string.startsWith("$")) {
-					return new Variable<T>(string.substring(1), treeClass);
+				if (string.startsWith("$")) {
+					return new STree<SVarState>(null, new SVarState(string.substring(1)));
 				} else {
-					return new LeafPattern<T>(Name.kind, Pattern.termsOf(Constant.of(string)));
+					return tree;
 				}
+
 			} else if (state instanceof SLeafState) {
 				STree<SLeafState> leaf = (STree<SLeafState>) tree;
-				return new LeafPattern<T>(leaf.kind, buildDataPattern(state.data));
+				return new STree<SLeafState>(leaf.kind, new SLeafState(buildDataPattern(state.data)));
+
 			} else if (state instanceof SNodeState) {
 				STree<SNodeState> node = (STree<SNodeState>) tree;
-				return new NodePattern<T>(node.kind, buildDataPattern(state.data), buildTreePattern(((SNodeState) state).children()));
+				return new STree<SNodeState>(node.kind, new SNodeState(buildDataPattern(state.data), buildTreePattern(((SNodeState) state).children)));
+
 			} else if (state instanceof SNodeListState) {
 				STree<SNodeListState> nodeList = (STree<SNodeListState>) tree;
-				return new NodeListPattern<T>(nodeList.kind, buildDataPattern(state.data), buildTreePattern(((SNodeListState) state).children));
+				return new STree<SNodeListState>(nodeList.kind, new SNodeListState(buildTreePattern(((SNodeListState) state).children)));
+
 			} else if (state instanceof SNodeOptionState) {
 				STree<SNodeOptionState> nodeOption = (STree<SNodeOptionState>) tree;
-				return new NodeOptionPattern<T>(nodeOption.kind, buildDataPattern(state.data), buildTreePattern(((SNodeOptionState) state).element, Tree.class));
+				return new STree<SNodeOptionState>(nodeOption.kind, new SNodeOptionState(buildTreePattern(((SNodeOptionState) state).element)));
 			}
 		}
 		return null;
 	}
 
-	private static ArrayList<Pattern<? extends Tree>> buildTreePattern(Iterable<STree<?>> children) {
-		Builder<Pattern<? extends Tree>, ArrayList<Pattern<? extends Tree>>> builder = ArrayList.<Pattern<? extends Tree>>factory().newBuilder();
+	private static ArrayList<STree<?>> buildTreePattern(Iterable<STree<?>> children) {
+		Builder<STree<?>, ArrayList<STree<?>>> builder = ArrayList.<STree<?>>factory().newBuilder();
 		for (STree<?> child : children) {
-			builder.add(buildTreePattern(child, Tree.class));
+			builder.add(buildTreePattern(child));
 		}
 		return builder.build();
 	}
 
-	private static ArrayList<Pattern<? extends Tree>> buildTreePattern(Vector<STree<?>> children) {
-		Builder<Pattern<? extends Tree>, ArrayList<Pattern<? extends Tree>>> builder = ArrayList.<Pattern<? extends Tree>>factory().newBuilder();
+	private static Vector<STree<?>> buildTreePattern(Vector<STree<?>> children) {
+		Builder<STree<?>, Vector<STree<?>>> builder = Vector.<STree<?>>factory().newBuilder();
 		for (STree<?> child : children) {
-			builder.add(buildTreePattern(child, Tree.class));
+			builder.add(buildTreePattern(child));
 		}
 		return builder.build();
 	}
 
-	private static ArrayList<Pattern<?>> buildDataPattern(ArrayList<Object> data) {
-		Builder<Pattern<?>, ArrayList<Pattern<?>>> builder = ArrayList.<Pattern<?>>factory().newBuilder();
+	private static ArrayList<Object> buildDataPattern(ArrayList<Object> data) {
+		Builder<Object, ArrayList<Object>> builder = ArrayList.<Object>factory().newBuilder();
 		for (Object object : data) {
-			builder.add(buildDataPattern(object));
+			builder.add(object);
 		}
 		return builder.build();
-	}
-
-	private static Pattern<?> buildDataPattern(Object object) {
-		return Constant.of(object);
 	}
 }

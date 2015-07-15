@@ -17,26 +17,37 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.rewrite;
+package org.jlato.internal.bu;
 
 import com.github.andrewoma.dexx.collection.ArrayList;
-import org.jlato.internal.bu.SLeafState;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.td.SKind;
-import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
  */
-class LeafPattern<T extends Tree> extends TreePattern<T> {
+public class SVarState extends STreeState<SVarState> {
 
-	public LeafPattern(SKind<SLeafState> kind, ArrayList<Pattern<?>> data) {
-		super(kind, data);
+	public final String name;
+
+	public SVarState(String name) {
+		this(ArrayList.empty(), name);
+	}
+
+	public SVarState(ArrayList<Object> data, String name) {
+		super(data);
+		this.name = name;
+	}
+
+	public SVarState withData(int index, Object value) {
+		return new SVarState(data.set(index, value), name);
 	}
 
 	@Override
-	protected STreeState buildState(Substitution substitution) {
-		return new SLeafState(buildData(substitution));
+	public STraversal<SVarState> firstChild() {
+		return null;
+	}
+
+	@Override
+	public STraversal<SVarState> lastChild() {
+		return null;
 	}
 }

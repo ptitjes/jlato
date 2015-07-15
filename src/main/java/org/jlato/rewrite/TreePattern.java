@@ -22,9 +22,8 @@ package org.jlato.rewrite;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.HashSet;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeState;
+import com.github.andrewoma.dexx.collection.Vector;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
@@ -33,56 +32,139 @@ import org.jlato.tree.Tree;
 /**
  * @author Didier Villevalois
  */
-abstract class TreePattern<T extends Tree> extends Pattern<T> {
+class TreePattern<T extends Tree> extends Pattern<T> {
 
-	private final SKind<? extends STreeState<?>> kind;
-	private final ArrayList<Pattern<?>> data;
+	private final STree<? extends STreeState<?>> pattern;
 
-	public TreePattern(SKind<? extends STreeState<?>> kind, ArrayList<Pattern<?>> data) {
-		this.kind = kind;
-		this.data = data;
+	public TreePattern(STree<? extends STreeState<?>> pattern) {
+		this.pattern = pattern;
 	}
 
 	@Override
-	protected HashSet<Variable<?>> collectVariables(HashSet<Variable<?>> variables) {
-		variables = collectVariables(this.data, variables);
+	protected HashSet<String> collectVariables(HashSet<String> variables) {
+		// TODO
 		return variables;
 	}
 
 	@Override
 	protected Substitution match(Object object, Substitution substitution) {
 		if (!(object instanceof Tree)) return null;
-		return matchTree(TreeBase.treeOf((Tree) object), substitution);
+		return matchTree(pattern, TreeBase.treeOf((Tree) object), substitution);
 	}
 
-	protected Substitution matchTree(STree tree, Substitution substitution) {
-		if (!(tree.kind == kind)) return null;
+	protected static Substitution matchTree(STree<?> pattern, STree<?> tree, Substitution substitution) {
+		if (pattern.kind != null && pattern.kind != tree.kind) return null;
 
-		STreeState state = tree.state;
-		for (int i = 0; i < data.size(); i++) {
-			substitution = data.get(i).match(state.data(i), substitution);
+		STreeState<?> patternState = pattern.state;
+		STreeState<?> state = tree.state;
+
+		if (patternState instanceof SVarState) {
+			String name = ((SVarState) patternState).name;
+			if (substitution.binds(name)) {
+				STree<?> expected = substitution.get(name);
+				substitution = matchTree(expected, tree, substitution);
+			} else {
+				substitution = substitution.bind(name, tree);
+			}
+		} else if (patternState instanceof SLeafState) {
+			substitution = mathData(patternState, state, substitution);
+		} else if (patternState instanceof SNodeState) {
+			substitution = mathData(patternState, state, substitution);
+			if (substitution == null) return null;
+			substitution = mathChildren((SNodeState) patternState, (SNodeState) state, substitution);
+		} else if (patternState instanceof SNodeOptionState) {
+			substitution = mathData(patternState, state, substitution);
+			if (substitution == null) return null;
+			substitution = mathChildren((SNodeOptionState) patternState, (SNodeOptionState) state, substitution);
+		} else if (patternState instanceof SNodeListState) {
+			substitution = mathData(patternState, state, substitution);
+			if (substitution == null) return null;
+			substitution = mathChildren((SNodeListState) patternState, (SNodeListState) state, substitution);
+		}
+		return substitution;
+	}
+
+	protected static Substitution mathData(STreeState<?> patternState, STreeState<?> state, Substitution substitution) {
+		for (int i = 0; i < patternState.data.size(); i++) {
+			substitution = matchConstant(patternState.data.get(i), state.data(i), substitution);
 			if (substitution == null) return null;
 		}
 		return substitution;
 	}
 
+	protected static Substitution mathChildren(SNodeState patternState, SNodeState state, Substitution substitution) {
+		ArrayList<STree<?>> patternChildren = patternState.children;
+		ArrayList<STree<?>> children = state.children;
+		for (int i = 0; i < patternChildren.size(); i++) {
+			substitution = matchTree(patternChildren.get(i), children.get(i), substitution);
+			if (substitution == null) return null;
+		}
+		return substitution;
+	}
+
+	private static Substitution mathChildren(SNodeOptionState patternState, SNodeOptionState state, Substitution substitution) {
+		STree patternElement = patternState.element;
+		STree element = state.element;
+		return patternElement == null && element == null ? substitution :
+				patternElement == null || element == null ? null :
+						matchTree(patternElement, element, substitution);
+	}
+
+	private static Substitution mathChildren(SNodeListState patternState, SNodeListState state, Substitution substitution) {
+		Vector<STree<?>> patternChildren = patternState.children;
+		Vector<STree<?>> children = state.children;
+		if (patternChildren.size() != children.size()) return null;
+
+		for (int i = 0; i < patternChildren.size(); i++) {
+			substitution = matchTree(patternChildren.get(i), children.get(i), substitution);
+			if (substitution == null) return null;
+		}
+		return substitution;
+	}
+
+	protected static Substitution matchConstant(Object expected, Object object, Substitution substitution) {
+		return (expected == null && object == null) || (expected != null && expected.equals(object)) ? substitution : null;
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public T build(Substitution substitution) {
-		return (T) new SLocation(null, buildTree(substitution)).facade;
+		return (T) new SLocation(null, buildTree(pattern, substitution)).facade;
 	}
 
-	private STree buildTree(Substitution substitution) {
-		return new STree(kind, buildState(substitution));
-	}
+	private STree<?> buildTree(STree<?> pattern, Substitution substitution) {
+		STreeState<?> patternState = pattern.state;
 
-	protected abstract STreeState buildState(Substitution substitution);
+		if (patternState instanceof SVarState) {
+			String name = ((SVarState) patternState).name;
+			return substitution.get(name);
 
-	protected ArrayList<Object> buildData(Substitution substitution) {
-		Builder<Object, ArrayList<Object>> dataBuilder = ArrayList.<Object>factory().newBuilder();
-		for (Pattern<?> term : data) {
-			dataBuilder.add(term.build(substitution));
+		} else if (patternState instanceof SLeafState) {
+			return new STree<SLeafState>((SKind<SLeafState>) pattern.kind,
+					new SLeafState(pattern.state.data));
+
+		} else if (patternState instanceof SNodeState) {
+			Builder<STree<?>, ArrayList<STree<?>>> childrenBuilder = ArrayList.<STree<?>>factory().newBuilder();
+			for (STree<?> childPattern : ((SNodeState) patternState).children) {
+				childrenBuilder.add(buildTree(childPattern, substitution));
+			}
+			return new STree<SNodeState>((SKind<SNodeState>) pattern.kind,
+					new SNodeState(pattern.state.data, childrenBuilder.build()));
+
+		} else if (patternState instanceof SNodeOptionState) {
+			STree<?> elementPattern = ((SNodeOptionState) patternState).element;
+			STree<?> element = buildTree(elementPattern, substitution);
+			return new STree<SNodeOptionState>((SKind<SNodeOptionState>) pattern.kind,
+					new SNodeOptionState(element));
+
+		} else if (patternState instanceof SNodeListState) {
+			Builder<STree<?>, Vector<STree<?>>> elementsBuilder = Vector.<STree<?>>factory().newBuilder();
+			for (STree<?> elementPattern : ((SNodeListState) patternState).children) {
+				elementsBuilder.add(buildTree(elementPattern, substitution));
+			}
+			return new STree<SNodeListState>((SKind<SNodeListState>) pattern.kind,
+					new SNodeListState(elementsBuilder.build()));
 		}
-		return dataBuilder.build();
+		return null;
 	}
 }

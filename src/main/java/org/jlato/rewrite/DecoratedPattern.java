@@ -33,7 +33,7 @@ class DecoratedPattern<T> extends Pattern<T> {
 	}
 
 	@Override
-	protected HashSet<Variable<?>> collectVariables(HashSet<Variable<?>> variables) {
+	protected HashSet<String> collectVariables(HashSet<String> variables) {
 		return pattern.collectVariables(variables);
 	}
 

@@ -41,15 +41,6 @@ public final class Substitution {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T get(Variable<T> var) {
-		return (T) bindings.get(var.name);
-	}
-
-	public <T> Substitution bind(Variable<T> var, T value) {
-		return new Substitution(bindings.put(var.name, value));
-	}
-
-	@SuppressWarnings("unchecked")
 	public <T> T get(String name) {
 		return (T) bindings.get(name);
 	}
@@ -58,7 +49,7 @@ public final class Substitution {
 		return new Substitution(bindings.put(name, value));
 	}
 
-	public <T> boolean binds(Variable<T> var) {
-		return bindings.containsKey(var.name);
+	public boolean binds(String name) {
+		return bindings.containsKey(name);
 	}
 }

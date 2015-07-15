@@ -31,25 +31,13 @@ import org.jlato.tree.Tree;
  */
 public abstract class Pattern<T> {
 
-	public Set<Variable<?>> variables() {
-		HashSet<Variable<?>> variables = HashSet.empty();
+	public Set<String> variables() {
+		HashSet<String> variables = HashSet.empty();
 		variables = collectVariables(variables);
 		return variables;
 	}
 
-	protected abstract HashSet<Variable<?>> collectVariables(HashSet<Variable<?>> variables);
-
-	protected HashSet<Variable<?>> collectVariables(ArrayList<? extends Pattern<?>> terms, HashSet<Variable<?>> variables) {
-		for (Pattern<?> term : terms) {
-			variables = collectVariables(term, variables);
-		}
-		return variables;
-	}
-
-	protected HashSet<Variable<?>> collectVariables(Pattern<?> term, HashSet<Variable<?>> variables) {
-		if (term instanceof Variable) variables = variables.add((Variable<?>) term);
-		return variables;
-	}
+	protected abstract HashSet<String> collectVariables(HashSet<String> variables);
 
 	public Substitution match(Object object) {
 		return match(object, Substitution.empty());
