@@ -65,7 +65,7 @@ public class STree<S extends STreeState<S>> {
 	}
 
 	public Tree asTree() {
-		return kind.instantiate(location());
+		return location().facade;
 	}
 
 	public SLocation<S> location() {

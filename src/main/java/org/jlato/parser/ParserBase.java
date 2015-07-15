@@ -176,8 +176,7 @@ abstract class ParserBase {
 			}
 
 			final STree newTree = tree.withRun(run);
-			final SLocation location = new SLocation(newTree);
-			return (T) newTree.kind.instantiate(location);
+			return (T) newTree.asTree();
 
 		} catch (NoSuchElementException e) {
 			debugFailedEnRun(tree, shape, tokens);
