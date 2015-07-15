@@ -54,7 +54,7 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<SNodeState> impl
 	}
 
 	public ExplicitConstructorInvocationStmt(NodeList<Type> typeArgs, boolean isThis, NodeOption<Expr> expr, NodeList<Expr> args) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(typeArgs, expr, args), dataOf(constructorKind(isThis))))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(constructorKind(isThis)), treesOf(typeArgs, expr, args)))));
 	}
 
 	public NodeList<Type> typeArgs() {

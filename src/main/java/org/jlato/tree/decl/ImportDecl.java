@@ -52,7 +52,7 @@ public class ImportDecl extends TreeBase<SNodeState> implements Tree {
 	}
 
 	public ImportDecl(QualifiedName name, boolean isStatic, boolean isOnDemand) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name), dataOf(isStatic, isOnDemand)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(isStatic, isOnDemand), treesOf(name)))));
 	}
 
 	public QualifiedName name() {

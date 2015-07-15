@@ -49,7 +49,7 @@ public class AssignExpr extends TreeBase<SNodeState> implements Expr {
 	}
 
 	public AssignExpr(Expr target, AssignOp operator, Expr value) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(target, value), dataOf(operator)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(operator), treesOf(target, value)))));
 	}
 
 	public Expr target() {

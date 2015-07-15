@@ -50,7 +50,7 @@ public class PrimitiveType extends TreeBase<SNodeState> implements Type {
 	}
 
 	public PrimitiveType(NodeList<AnnotationExpr> annotations, Primitive type) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(annotations), dataOf(type)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(type), treesOf(annotations)))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

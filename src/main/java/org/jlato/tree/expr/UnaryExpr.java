@@ -49,7 +49,7 @@ public class UnaryExpr extends TreeBase<SNodeState> implements Expr {
 	}
 
 	public UnaryExpr(UnaryOp operator, Expr expr) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(expr), dataOf(operator)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(operator), treesOf(expr)))));
 	}
 
 	public UnaryOp op() {

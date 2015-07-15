@@ -67,6 +67,6 @@ class NodePattern<T extends Tree> extends TreePattern<T> {
 		for (Pattern<? extends Tree> term : children) {
 			childrenBuilder.add(TreeBase.treeOf(term.build(substitution)));
 		}
-		return new SNodeState(childrenBuilder.build(), buildData(substitution));
+		return new SNodeState(buildData(substitution), childrenBuilder.build());
 	}
 }

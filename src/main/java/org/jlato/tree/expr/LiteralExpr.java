@@ -91,7 +91,7 @@ public class LiteralExpr<T> extends TreeBase<SNodeState> implements Expr {
 	}
 
 	public LiteralExpr(Class<T> literalClass, String literalString) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(), dataOf(literalClass, literalString)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(literalClass, literalString), treesOf()))));
 	}
 
 	@SuppressWarnings("unchecked")

@@ -51,7 +51,7 @@ public class FormalParameter extends TreeBase<SNodeState> implements Tree {
 	}
 
 	public FormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, type, id), dataOf(isVarArgs)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(isVarArgs), treesOf(modifiers, type, id)))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

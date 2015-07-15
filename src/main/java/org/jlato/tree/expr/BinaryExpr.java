@@ -49,7 +49,7 @@ public class BinaryExpr extends TreeBase<SNodeState> implements Expr {
 	}
 
 	public BinaryExpr(Expr left, BinaryOp operator, Expr right) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(left, right), dataOf(operator)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(operator), treesOf(left, right)))));
 	}
 
 	public Expr left() {

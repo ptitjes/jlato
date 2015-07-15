@@ -51,7 +51,7 @@ public class CompilationUnit extends TreeBase<SNodeState> implements Tree {
 	}
 
 	public CompilationUnit(IndexedList<WTokenRun> preamble, PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(packageDecl, imports, types), dataOf(preamble)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(preamble), treesOf(packageDecl, imports, types)))));
 	}
 
 	public PackageDecl packageDecl() {

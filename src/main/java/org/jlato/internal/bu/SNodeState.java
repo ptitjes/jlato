@@ -29,10 +29,10 @@ public class SNodeState extends STreeState<SNodeState> {
 	private final ArrayList<STree<?>> children;
 
 	public SNodeState(ArrayList<STree<? extends STreeState<?>>> children) {
-		this(children, ArrayList.empty());
+		this(ArrayList.empty(), children);
 	}
 
-	public SNodeState(ArrayList<STree<? extends STreeState<?>>> children, ArrayList<Object> data) {
+	public SNodeState(ArrayList<Object> data, ArrayList<STree<? extends STreeState<?>>> children) {
 		super(data);
 		this.children = children;
 	}
@@ -58,11 +58,11 @@ public class SNodeState extends STreeState<SNodeState> {
 	}
 
 	public SNodeState withChild(int index, STree<?> value) {
-		return new SNodeState(children.set(index, value), data);
+		return new SNodeState(data, children.set(index, value));
 	}
 
 	public SNodeState withData(int index, Object value) {
-		return new SNodeState(children, data.set(index, value));
+		return new SNodeState(data.set(index, value), children);
 	}
 
 	public void validate(STree tree) {
