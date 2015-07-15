@@ -56,19 +56,19 @@ public class EnumDecl extends TreeBase<SNodeState> implements TypeDecl {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> EnumDecl(NodeList<EM> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, boolean trailingComma, NodeList<MemberDecl> members) {
+	public EnumDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, boolean trailingComma, NodeList<MemberDecl> members) {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, name, implementsClause, enumConstants, members), dataOf(trailingComma)))));
 	}
 
-	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
+	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}
 
-	public <EM extends Tree & ExtendedModifier> EnumDecl withModifiers(NodeList<EM> modifiers) {
+	public EnumDecl withModifiers(NodeList<ExtendedModifier> modifiers) {
 		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> EnumDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+	public EnumDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 

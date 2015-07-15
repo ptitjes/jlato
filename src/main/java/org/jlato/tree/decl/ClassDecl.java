@@ -54,19 +54,19 @@ public class ClassDecl extends TreeBase<SNodeState> implements TypeDecl {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ClassDecl(NodeList<EM> modifiers, Name name, NodeList<TypeParameter> typeParams, NodeOption<QualifiedType> extendsClause, NodeList<QualifiedType> implementsClause, NodeList<MemberDecl> members) {
+	public ClassDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<TypeParameter> typeParams, NodeOption<QualifiedType> extendsClause, NodeList<QualifiedType> implementsClause, NodeList<MemberDecl> members) {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, name, typeParams, extendsClause, implementsClause, members)))));
 	}
 
-	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
+	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ClassDecl withModifiers(NodeList<EM> modifiers) {
+	public ClassDecl withModifiers(NodeList<ExtendedModifier> modifiers) {
 		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ClassDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+	public ClassDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 

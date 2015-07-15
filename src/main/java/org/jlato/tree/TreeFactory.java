@@ -9,28 +9,28 @@ import org.jlato.tree.type.*;
 
 public abstract class TreeFactory {
 
-	public static <EM extends Tree & ExtendedModifier> AnnotationDecl annotationDecl() {
-		return new <EM>AnnotationDecl(NodeList.<EM>empty(), null, NodeList.<MemberDecl>empty());
+	public static AnnotationDecl annotationDecl() {
+		return new AnnotationDecl(NodeList.<ExtendedModifier>empty(), null, NodeList.<MemberDecl>empty());
 	}
 
-	public static <EM extends Tree & ExtendedModifier> AnnotationMemberDecl annotationMemberDecl() {
-		return new <EM>AnnotationMemberDecl(NodeList.<EM>empty(), null, null, NodeList.<ArrayDim>empty(), null);
+	public static AnnotationMemberDecl annotationMemberDecl() {
+		return new AnnotationMemberDecl(NodeList.<ExtendedModifier>empty(), null, null, NodeList.<ArrayDim>empty(), null);
 	}
 
 	public static ArrayDim arrayDim() {
 		return new ArrayDim(NodeList.<AnnotationExpr>empty());
 	}
 
-	public static <EM extends Tree & ExtendedModifier> ClassDecl classDecl() {
-		return new <EM>ClassDecl(NodeList.<EM>empty(), null, NodeList.<TypeParameter>empty(), NodeOption.<QualifiedType>none(), NodeList.<QualifiedType>empty(), NodeList.<MemberDecl>empty());
+	public static ClassDecl classDecl() {
+		return new ClassDecl(NodeList.<ExtendedModifier>empty(), null, NodeList.<TypeParameter>empty(), NodeOption.<QualifiedType>none(), NodeList.<QualifiedType>empty(), NodeList.<MemberDecl>empty());
 	}
 
 	public static CompilationUnit compilationUnit() {
 		return new CompilationUnit(null, null, NodeList.<ImportDecl>empty(), NodeList.<TypeDecl>empty());
 	}
 
-	public static <EM extends Tree & ExtendedModifier> ConstructorDecl constructorDecl() {
-		return new <EM>ConstructorDecl(NodeList.<EM>empty(), NodeList.<TypeParameter>empty(), null, NodeList.<FormalParameter>empty(), NodeList.<QualifiedType>empty(), null);
+	public static ConstructorDecl constructorDecl() {
+		return new ConstructorDecl(NodeList.<ExtendedModifier>empty(), NodeList.<TypeParameter>empty(), null, NodeList.<FormalParameter>empty(), NodeList.<QualifiedType>empty(), null);
 	}
 
 	public static EmptyMemberDecl emptyMemberDecl() {
@@ -41,40 +41,40 @@ public abstract class TreeFactory {
 		return new EmptyTypeDecl();
 	}
 
-	public static <EM extends Tree & ExtendedModifier> EnumConstantDecl enumConstantDecl() {
-		return new <EM>EnumConstantDecl(NodeList.<EM>empty(), null, NodeOption.<NodeList<Expr>>none(), NodeOption.<NodeList<MemberDecl>>none());
+	public static EnumConstantDecl enumConstantDecl() {
+		return new EnumConstantDecl(NodeList.<ExtendedModifier>empty(), null, NodeOption.<NodeList<Expr>>none(), NodeOption.<NodeList<MemberDecl>>none());
 	}
 
-	public static <EM extends Tree & ExtendedModifier> EnumDecl enumDecl() {
-		return new <EM>EnumDecl(NodeList.<EM>empty(), null, NodeList.<QualifiedType>empty(), NodeList.<EnumConstantDecl>empty(), false, NodeList.<MemberDecl>empty());
+	public static EnumDecl enumDecl() {
+		return new EnumDecl(NodeList.<ExtendedModifier>empty(), null, NodeList.<QualifiedType>empty(), NodeList.<EnumConstantDecl>empty(), false, NodeList.<MemberDecl>empty());
 	}
 
-	public static <EM extends Tree & ExtendedModifier> FieldDecl fieldDecl() {
-		return new <EM>FieldDecl(NodeList.<EM>empty(), null, NodeList.<VariableDeclarator>empty());
+	public static FieldDecl fieldDecl() {
+		return new FieldDecl(NodeList.<ExtendedModifier>empty(), null, NodeList.<VariableDeclarator>empty());
 	}
 
-	public static <EM extends Tree & ExtendedModifier> FormalParameter formalParameter() {
-		return new <EM>FormalParameter(NodeList.<EM>empty(), null, false, null);
+	public static FormalParameter formalParameter() {
+		return new FormalParameter(NodeList.<ExtendedModifier>empty(), null, false, null);
 	}
 
 	public static ImportDecl importDecl() {
 		return new ImportDecl(null, false, false);
 	}
 
-	public static <EM extends Tree & ExtendedModifier> InitializerDecl initializerDecl() {
-		return new <EM>InitializerDecl(NodeList.<EM>empty(), null);
+	public static InitializerDecl initializerDecl() {
+		return new InitializerDecl(NodeList.<ExtendedModifier>empty(), null);
 	}
 
-	public static <EM extends Tree & ExtendedModifier> InterfaceDecl interfaceDecl() {
-		return new <EM>InterfaceDecl(NodeList.<EM>empty(), null, NodeList.<TypeParameter>empty(), NodeList.<QualifiedType>empty(), NodeList.<MemberDecl>empty());
+	public static InterfaceDecl interfaceDecl() {
+		return new InterfaceDecl(NodeList.<ExtendedModifier>empty(), null, NodeList.<TypeParameter>empty(), NodeList.<QualifiedType>empty(), NodeList.<MemberDecl>empty());
 	}
 
-	public static <EM extends Tree & ExtendedModifier> LocalVariableDecl localVariableDecl() {
-		return new <EM>LocalVariableDecl(NodeList.<EM>empty(), null, NodeList.<VariableDeclarator>empty());
+	public static LocalVariableDecl localVariableDecl() {
+		return new LocalVariableDecl(NodeList.<ExtendedModifier>empty(), null, NodeList.<VariableDeclarator>empty());
 	}
 
-	public static <EM extends Tree & ExtendedModifier> MethodDecl methodDecl() {
-		return new <EM>MethodDecl(NodeList.<EM>empty(), NodeList.<TypeParameter>empty(), null, null, NodeList.<FormalParameter>empty(), NodeList.<ArrayDim>empty(), NodeList.<QualifiedType>empty(), NodeOption.<BlockStmt>none());
+	public static MethodDecl methodDecl() {
+		return new MethodDecl(NodeList.<ExtendedModifier>empty(), NodeList.<TypeParameter>empty(), null, null, NodeList.<FormalParameter>empty(), NodeList.<ArrayDim>empty(), NodeList.<QualifiedType>empty(), NodeOption.<BlockStmt>none());
 	}
 
 	public static PackageDecl packageDecl() {

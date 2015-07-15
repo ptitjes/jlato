@@ -50,19 +50,19 @@ public class FormalParameter extends TreeBase<SNodeState> implements Tree {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> FormalParameter(NodeList<EM> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
+	public FormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, type, id), dataOf(isVarArgs)))));
 	}
 
-	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
+	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}
 
-	public <EM extends Tree & ExtendedModifier> FormalParameter withModifiers(NodeList<EM> modifiers) {
+	public FormalParameter withModifiers(NodeList<ExtendedModifier> modifiers) {
 		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> FormalParameter withModifiers(Mutation<NodeList<EM>> mutation) {
+	public FormalParameter withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 

@@ -51,7 +51,7 @@ public class ConstructorDecl extends TreeBase<SNodeState> implements MemberDecl 
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ConstructorDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<FormalParameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
+	public ConstructorDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<FormalParameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, typeParams, name, params, throwsClause, body)))));
 	}
 
@@ -60,15 +60,15 @@ public class ConstructorDecl extends TreeBase<SNodeState> implements MemberDecl 
 		return MemberKind.Constructor;
 	}
 
-	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
+	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ConstructorDecl withModifiers(NodeList<EM> modifiers) {
+	public ConstructorDecl withModifiers(NodeList<ExtendedModifier> modifiers) {
 		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> ConstructorDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+	public ConstructorDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 

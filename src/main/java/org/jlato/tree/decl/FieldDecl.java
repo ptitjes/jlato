@@ -50,7 +50,7 @@ public class FieldDecl extends TreeBase<SNodeState> implements MemberDecl {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> FieldDecl(NodeList<EM> modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
+	public FieldDecl(NodeList<ExtendedModifier> modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, type, variables/*, javadocComment*/)))));
 	}
 
@@ -59,15 +59,15 @@ public class FieldDecl extends TreeBase<SNodeState> implements MemberDecl {
 		return MemberKind.Field;
 	}
 
-	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
+	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}
 
-	public <EM extends Tree & ExtendedModifier> FieldDecl withModifiers(NodeList<EM> modifiers) {
+	public FieldDecl withModifiers(NodeList<ExtendedModifier> modifiers) {
 		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> FieldDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+	public FieldDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 

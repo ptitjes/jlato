@@ -49,7 +49,7 @@ public class InitializerDecl extends TreeBase<SNodeState> implements MemberDecl 
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> InitializerDecl(NodeList<EM> modifiers, BlockStmt body/*, JavadocComment javadocComment*/) {
+	public InitializerDecl(NodeList<ExtendedModifier> modifiers, BlockStmt body/*, JavadocComment javadocComment*/) {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, body/*, javadocComment*/)))));
 	}
 
@@ -58,15 +58,15 @@ public class InitializerDecl extends TreeBase<SNodeState> implements MemberDecl 
 		return MemberKind.Initializer;
 	}
 
-	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
+	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}
 
-	public <EM extends Tree & ExtendedModifier> InitializerDecl withModifiers(NodeList<EM> modifiers) {
+	public InitializerDecl withModifiers(NodeList<ExtendedModifier> modifiers) {
 		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> InitializerDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+	public InitializerDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 

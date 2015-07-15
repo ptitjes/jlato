@@ -21,6 +21,7 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.newLine;
@@ -29,7 +30,7 @@ import static org.jlato.printer.SpacingConstraint.space;
 /**
  * @author Didier Villevalois
  */
-public interface ExtendedModifier {
+public interface ExtendedModifier extends Tree {
 
 	public static final LexicalShape singleLineShape = list(
 			none().withSpacingAfter(space())

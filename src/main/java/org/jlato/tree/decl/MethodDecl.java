@@ -56,11 +56,11 @@ public class MethodDecl extends TreeBase<SNodeState> implements MemberDecl {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> MethodDecl() {
+	public MethodDecl() {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(NodeList.empty(), NodeList.empty(), null, null, NodeList.empty(), NodeList.empty(), NodeList.empty(), null)))));
 	}
 
-	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, NodeOption<BlockStmt> body) {
+	public MethodDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, NodeOption<BlockStmt> body) {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, typeParams, type, name, params, dims, throwsClause, body)))));
 	}
 
@@ -69,15 +69,15 @@ public class MethodDecl extends TreeBase<SNodeState> implements MemberDecl {
 		return MemberKind.Method;
 	}
 
-	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
+	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}
 
-	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(NodeList<EM> modifiers) {
+	public MethodDecl withModifiers(NodeList<ExtendedModifier> modifiers) {
 		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+	public MethodDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 

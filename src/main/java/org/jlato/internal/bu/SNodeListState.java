@@ -29,11 +29,11 @@ public class SNodeListState extends STreeState<SNodeListState> {
 
 	public final Vector<STree<?>> children;
 
-	public SNodeListState(Vector<STree<?>> children) {
+	public SNodeListState(Vector<STree<? extends STreeState<?>>> children) {
 		this(children, ArrayList.empty());
 	}
 
-	public SNodeListState(Vector<STree<?>> children, ArrayList<Object> data) {
+	public SNodeListState(Vector<STree<? extends STreeState<?>>> children, ArrayList<Object> data) {
 		super(data);
 		this.children = children;
 	}

@@ -50,19 +50,19 @@ public class LocalVariableDecl extends TreeBase<SNodeState> implements Decl {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> LocalVariableDecl(NodeList<EM> modifiers, Type type, NodeList<VariableDeclarator> variables) {
+	public LocalVariableDecl(NodeList<ExtendedModifier> modifiers, Type type, NodeList<VariableDeclarator> variables) {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, type, variables)))));
 	}
 
-	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
+	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}
 
-	public <EM extends Tree & ExtendedModifier> LocalVariableDecl withModifiers(NodeList<EM> modifiers) {
+	public LocalVariableDecl withModifiers(NodeList<ExtendedModifier> modifiers) {
 		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> LocalVariableDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+	public LocalVariableDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 

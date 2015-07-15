@@ -53,7 +53,7 @@ public class AnnotationMemberDecl extends TreeBase<SNodeState> implements Member
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl(NodeList<EM> modifiers, Type type, Name name, NodeList<ArrayDim> dims, NodeOption<Expr> defaultValue) {
+	public AnnotationMemberDecl(NodeList<ExtendedModifier> modifiers, Type type, Name name, NodeList<ArrayDim> dims, NodeOption<Expr> defaultValue) {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, type, name, dims, defaultValue)))));
 	}
 
@@ -62,15 +62,15 @@ public class AnnotationMemberDecl extends TreeBase<SNodeState> implements Member
 		return MemberKind.AnnotationMember;
 	}
 
-	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
+	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}
 
-	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl withModifiers(NodeList<EM> modifiers) {
+	public AnnotationMemberDecl withModifiers(NodeList<ExtendedModifier> modifiers) {
 		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+	public AnnotationMemberDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 

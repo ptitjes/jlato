@@ -55,7 +55,7 @@ public class EnumConstantDecl extends TreeBase<SNodeState> implements MemberDecl
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> EnumConstantDecl(NodeList<EM> modifiers, Name name, NodeOption<NodeList<Expr>> args, NodeOption<NodeList<MemberDecl>> classBody) {
+	public EnumConstantDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeOption<NodeList<Expr>> args, NodeOption<NodeList<MemberDecl>> classBody) {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, name, args, classBody)))));
 	}
 
@@ -64,15 +64,15 @@ public class EnumConstantDecl extends TreeBase<SNodeState> implements MemberDecl
 		return MemberKind.EnumConstant;
 	}
 
-	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
+	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}
 
-	public <EM extends Tree & ExtendedModifier> EnumConstantDecl withModifiers(NodeList<EM> modifiers) {
+	public EnumConstantDecl withModifiers(NodeList<ExtendedModifier> modifiers) {
 		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> EnumConstantDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+	public EnumConstantDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 

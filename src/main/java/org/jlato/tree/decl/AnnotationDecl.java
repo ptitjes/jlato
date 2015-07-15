@@ -49,19 +49,19 @@ public class AnnotationDecl extends TreeBase<SNodeState> implements TypeDecl {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> AnnotationDecl(NodeList<EM> modifiers, Name name, NodeList<MemberDecl> members) {
+	public AnnotationDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<MemberDecl> members) {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, name, members)))));
 	}
 
-	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
+	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}
 
-	public <EM extends Tree & ExtendedModifier> AnnotationDecl withModifiers(NodeList<EM> modifiers) {
+	public AnnotationDecl withModifiers(NodeList<ExtendedModifier> modifiers) {
 		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
-	public <EM extends Tree & ExtendedModifier> AnnotationDecl withModifiers(Mutation<NodeList<EM>> mutation) {
+	public AnnotationDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 
