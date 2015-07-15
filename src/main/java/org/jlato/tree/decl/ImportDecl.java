@@ -66,7 +66,7 @@ public class ImportDecl extends Tree {
 	}
 
 	public boolean isStatic() {
-		return location.data(STATIC);
+		return location.<Boolean>data(STATIC);
 	}
 
 	public ImportDecl setStatic(boolean isStatic) {
@@ -74,7 +74,7 @@ public class ImportDecl extends Tree {
 	}
 
 	public boolean isOnDemand() {
-		return location.data(ON_DEMAND);
+		return location.<Boolean>data(ON_DEMAND);
 	}
 
 	public ImportDecl setOnDemand(boolean isOnDemand) {

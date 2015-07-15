@@ -77,7 +77,7 @@ public class FormalParameter extends Tree {
 	}
 
 	public boolean isVarArgs() {
-		return location.data(VAR_ARG);
+		return location.<Boolean>data(VAR_ARG);
 	}
 
 	public FormalParameter setVarArgs(boolean isVarArgs) {
