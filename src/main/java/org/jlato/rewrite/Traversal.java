@@ -19,8 +19,8 @@
 
 package org.jlato.rewrite;
 
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 /**
  * @author Didier Villevalois
@@ -38,7 +38,7 @@ public abstract class Traversal<T extends Tree> {
 
 	@SuppressWarnings("unchecked")
 	public <R extends Tree> R traverse(R tree, Visitor<T> visitor) {
-		SLocation location = Tree.locationOf(tree);
+		SLocation location = TreeBase.locationOf(tree);
 		return (R) doTraverse(location, visitor).facade;
 	}
 
@@ -68,7 +68,7 @@ public abstract class Traversal<T extends Tree> {
 		private SLocation doVisit(SLocation location, Visitor<T> visitor) {
 			Tree facade = location.facade;
 			if (!accept(facade)) return location;
-			SLocation rewrote = Tree.locationOf(visitor.visit((T) facade));
+			SLocation rewrote = TreeBase.locationOf(visitor.visit((T) facade));
 			return location.withTree(rewrote.tree);
 		}
 

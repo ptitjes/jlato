@@ -19,15 +19,8 @@
 
 package org.jlato.tree;
 
-import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
-
 /**
  * @author Didier Villevalois
  */
-public abstract class Tree extends TreeBase {
-
-	protected Tree(SLocation location) {
-		super(location);
-	}
+public interface Tree {
 }

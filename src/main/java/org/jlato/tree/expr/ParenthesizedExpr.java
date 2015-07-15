@@ -21,17 +21,18 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class ParenthesizedExpr extends Expr {
+public class ParenthesizedExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public ParenthesizedExpr instantiate(SLocation location) {
 			return new ParenthesizedExpr(location);
 		}
@@ -41,27 +42,27 @@ public class ParenthesizedExpr extends Expr {
 		}
 	};
 
-	private ParenthesizedExpr(SLocation location) {
+	private ParenthesizedExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public ParenthesizedExpr(Expr inner) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(inner)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(inner)))));
 	}
 
 	public Expr inner() {
-		return location.nodeChild(INNER);
+		return location.safeTraversal(INNER);
 	}
 
 	public ParenthesizedExpr withInner(Expr inner) {
-		return location.nodeWithChild(INNER, inner);
+		return location.safeTraversalReplace(INNER, inner);
 	}
 
 	public ParenthesizedExpr withInner(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(INNER, mutation);
+		return location.safeTraversalMutate(INNER, mutation);
 	}
 
-	private static final int INNER = 0;
+	private static final STraversal<SNodeState> INNER = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft), child(INNER), token(LToken.ParenthesisRight)

@@ -21,20 +21,21 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
 public class NormalAnnotationExpr extends AnnotationExpr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public NormalAnnotationExpr instantiate(SLocation location) {
 			return new NormalAnnotationExpr(location);
 		}
@@ -44,27 +45,27 @@ public class NormalAnnotationExpr extends AnnotationExpr {
 		}
 	};
 
-	private NormalAnnotationExpr(SLocation location) {
+	private NormalAnnotationExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public NormalAnnotationExpr(QualifiedName name, NodeList<MemberValuePair> pairs) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(name, pairs)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name, pairs)))));
 	}
 
 	public NodeList<MemberValuePair> pairs() {
-		return location.nodeChild(PAIRS);
+		return location.safeTraversal(PAIRS);
 	}
 
 	public NormalAnnotationExpr withPairs(NodeList<MemberValuePair> pairs) {
-		return location.nodeWithChild(PAIRS, pairs);
+		return location.safeTraversalReplace(PAIRS, pairs);
 	}
 
 	public NormalAnnotationExpr withPairs(Mutation<NodeList<MemberValuePair>> mutation) {
-		return location.nodeMutateChild(PAIRS, mutation);
+		return location.safeTraversalMutate(PAIRS, mutation);
 	}
 
-	private static final int PAIRS = 1;
+	private static final STraversal<SNodeState> PAIRS = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME),

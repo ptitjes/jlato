@@ -21,13 +21,14 @@ package org.jlato.parser;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
+import com.github.andrewoma.dexx.collection.internal.base.AbstractIndexedList;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SContext;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.printer.Printer;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -129,7 +130,7 @@ abstract class ParserBase {
 
 			if (facade == null) return null;
 
-			final STree tree = Tree.treeOf(facade);
+			final STree tree = TreeBase.treeOf(facade);
 			final LexicalShape shape = tree.kind.shape();
 			return doEnRun(tree, shape, tokens);
 
@@ -147,7 +148,7 @@ abstract class ParserBase {
 
 			if (facade == null) return null;
 
-			final STree tree = Tree.treeOf(facade);
+			final STree tree = TreeBase.treeOf(facade);
 			return doEnRun(tree, shape, tokens);
 
 		} catch (EmptyStackException e) {
@@ -230,7 +231,7 @@ abstract class ParserBase {
 
 		final STreeState state = tree.state;
 
-		IndexedList<STree> children =
+		AbstractIndexedList<? extends STree> children =
 				state instanceof SNodeListState ? ((SNodeListState) state).children :
 						state instanceof SNodeState ? ((SNodeState) state).children :
 								Vector.<STree>empty();

@@ -21,17 +21,17 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class MarkerAnnotationExpr extends AnnotationExpr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public MarkerAnnotationExpr instantiate(SLocation location) {
 			return new MarkerAnnotationExpr(location);
 		}
@@ -41,12 +41,12 @@ public class MarkerAnnotationExpr extends AnnotationExpr {
 		}
 	};
 
-	private MarkerAnnotationExpr(SLocation location) {
+	private MarkerAnnotationExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public MarkerAnnotationExpr(QualifiedName name) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(name)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name)))));
 	}
 
 	public final static LexicalShape shape = composite(

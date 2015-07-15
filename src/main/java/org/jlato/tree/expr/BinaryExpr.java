@@ -21,19 +21,20 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class BinaryExpr extends Expr {
+public class BinaryExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public BinaryExpr instantiate(SLocation location) {
 			return new BinaryExpr(location);
 		}
@@ -43,24 +44,24 @@ public class BinaryExpr extends Expr {
 		}
 	};
 
-	private BinaryExpr(SLocation location) {
+	private BinaryExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public BinaryExpr(Expr left, BinaryOp operator, Expr right) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(left, right), dataOf(operator)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(left, right), dataOf(operator)))));
 	}
 
 	public Expr left() {
-		return location.nodeChild(LEFT);
+		return location.safeTraversal(LEFT);
 	}
 
 	public BinaryExpr withLeft(Expr left) {
-		return location.nodeWithChild(LEFT, left);
+		return location.safeTraversalReplace(LEFT, left);
 	}
 
 	public BinaryExpr withLeft(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(LEFT, mutation);
+		return location.safeTraversalMutate(LEFT, mutation);
 	}
 
 	public BinaryOp op() {
@@ -76,19 +77,19 @@ public class BinaryExpr extends Expr {
 	}
 
 	public Expr right() {
-		return location.nodeChild(RIGHT);
+		return location.safeTraversal(RIGHT);
 	}
 
 	public BinaryExpr withRight(Expr right) {
-		return location.nodeWithChild(RIGHT, right);
+		return location.safeTraversalReplace(RIGHT, right);
 	}
 
 	public BinaryExpr withRight(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(RIGHT, mutation);
+		return location.safeTraversalMutate(RIGHT, mutation);
 	}
 
-	private static final int LEFT = 0;
-	private static final int RIGHT = 1;
+	private static final STraversal<SNodeState> LEFT = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> RIGHT = SNodeState.childTraversal(1);
 
 	private static final int OPERATOR = 0;
 

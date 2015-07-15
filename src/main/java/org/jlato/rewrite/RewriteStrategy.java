@@ -19,8 +19,8 @@
 
 package org.jlato.rewrite;
 
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 /**
  * @author Didier Villevalois
@@ -29,7 +29,7 @@ public abstract class RewriteStrategy {
 
 	@SuppressWarnings("unchecked")
 	public <R extends Tree> R rewrite(R tree, Rewriter rewriter) {
-		SLocation location = Tree.locationOf(tree);
+		SLocation location = TreeBase.locationOf(tree);
 		return (R) doRewrite(location, rewriter).facade;
 	}
 
@@ -55,7 +55,7 @@ public abstract class RewriteStrategy {
 		}
 
 		private SLocation doApplyRewrite(SLocation location, Rewriter rewriter) {
-			SLocation rewrote = Tree.locationOf(rewriter.rewrite(location.facade));
+			SLocation rewrote = TreeBase.locationOf(rewriter.rewrite(location.facade));
 			return location.withTree(rewrote.tree);
 		}
 

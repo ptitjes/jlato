@@ -19,14 +19,14 @@
 
 package org.jlato.unit;
 
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.ImportDecl;
 import org.junit.Assert;
@@ -100,7 +100,7 @@ public class BasicTest {
 	private String parseAndPrint(String original, boolean preserveWhitespaces, boolean format, FormattingSettings formattingSettings) throws ParseException {
 		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(preserveWhitespaces));
 		final CompilationUnit cu = parser.parse(ParseContext.CompilationUnit, original);
-		STree tree = Tree.treeOf(cu);
+		STree tree = TreeBase.treeOf(cu);
 		tree.validate();
 		return Printer.printToString(cu, format, formattingSettings);
 	}

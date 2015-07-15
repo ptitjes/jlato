@@ -21,16 +21,16 @@ package org.jlato.tree.type;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class VoidType extends Type {
+public class VoidType extends TreeBase<SNodeState> implements Type {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public VoidType instantiate(SLocation location) {
 			return new VoidType(location);
 		}
@@ -40,12 +40,12 @@ public class VoidType extends Type {
 		}
 	};
 
-	private VoidType(SLocation location) {
+	private VoidType(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public VoidType() {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf()))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf()))));
 	}
 
 	public final static LexicalShape shape = token(LToken.Void);

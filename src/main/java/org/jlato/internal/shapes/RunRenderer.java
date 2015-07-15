@@ -19,7 +19,7 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WRun;
 import org.jlato.internal.bu.WTokenRun;

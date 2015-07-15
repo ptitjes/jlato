@@ -21,13 +21,13 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.decl.MemberDecl;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
@@ -36,10 +36,11 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class ObjectCreationExpr extends Expr {
+public class ObjectCreationExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public ObjectCreationExpr instantiate(SLocation location) {
 			return new ObjectCreationExpr(location);
 		}
@@ -49,79 +50,79 @@ public class ObjectCreationExpr extends Expr {
 		}
 	};
 
-	private ObjectCreationExpr(SLocation location) {
+	private ObjectCreationExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public ObjectCreationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeOption<NodeList<MemberDecl>> body) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, type, args, body)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(scope, typeArgs, type, args, body)))));
 	}
 
 	public NodeOption<Expr> scope() {
-		return location.nodeChild(SCOPE);
+		return location.safeTraversal(SCOPE);
 	}
 
 	public ObjectCreationExpr withScope(NodeOption<Expr> scope) {
-		return location.nodeWithChild(SCOPE, scope);
+		return location.safeTraversalReplace(SCOPE, scope);
 	}
 
 	public ObjectCreationExpr withScope(Mutation<NodeOption<Expr>> mutation) {
-		return location.nodeMutateChild(SCOPE, mutation);
+		return location.safeTraversalMutate(SCOPE, mutation);
 	}
 
 	public NodeList<Type> typeArgs() {
-		return location.nodeChild(TYPE_ARGUMENTS);
+		return location.safeTraversal(TYPE_ARGUMENTS);
 	}
 
 	public ObjectCreationExpr withTypeArgs(NodeList<Type> typeArgs) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
+		return location.safeTraversalReplace(TYPE_ARGUMENTS, typeArgs);
 	}
 
 	public ObjectCreationExpr withTypeArgs(Mutation<NodeList<Type>> mutation) {
-		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
+		return location.safeTraversalMutate(TYPE_ARGUMENTS, mutation);
 	}
 
 	public QualifiedType type() {
-		return location.nodeChild(TYPE);
+		return location.safeTraversal(TYPE);
 	}
 
 	public ObjectCreationExpr withType(QualifiedType type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.safeTraversalReplace(TYPE, type);
 	}
 
 	public ObjectCreationExpr withType(Mutation<QualifiedType> mutation) {
-		return location.nodeMutateChild(TYPE, mutation);
+		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
 	public NodeList<Expr> args() {
-		return location.nodeChild(ARGUMENTS);
+		return location.safeTraversal(ARGUMENTS);
 	}
 
 	public ObjectCreationExpr withArgs(NodeList<Expr> args) {
-		return location.nodeWithChild(ARGUMENTS, args);
+		return location.safeTraversalReplace(ARGUMENTS, args);
 	}
 
 	public ObjectCreationExpr withArgs(Mutation<NodeList<Expr>> mutation) {
-		return location.nodeMutateChild(ARGUMENTS, mutation);
+		return location.safeTraversalMutate(ARGUMENTS, mutation);
 	}
 
 	public NodeOption<NodeList<MemberDecl>> body() {
-		return location.nodeChild(BODY);
+		return location.safeTraversal(BODY);
 	}
 
 	public ObjectCreationExpr withBody(NodeOption<NodeList<MemberDecl>> body) {
-		return location.nodeWithChild(BODY, body);
+		return location.safeTraversalReplace(BODY, body);
 	}
 
 	public ObjectCreationExpr withBody(Mutation<NodeOption<NodeList<MemberDecl>>> mutation) {
-		return location.nodeMutateChild(BODY, mutation);
+		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final int SCOPE = 0;
-	private static final int TYPE_ARGUMENTS = 1;
-	private static final int TYPE = 2;
-	private static final int ARGUMENTS = 3;
-	private static final int BODY = 4;
+	private static final STraversal<SNodeState> SCOPE = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> TYPE_ARGUMENTS = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(2);
+	private static final STraversal<SNodeState> ARGUMENTS = SNodeState.childTraversal(3);
+	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(4);
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),

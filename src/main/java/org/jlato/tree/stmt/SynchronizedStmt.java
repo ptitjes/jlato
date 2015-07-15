@@ -21,19 +21,20 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class SynchronizedStmt extends Stmt {
+public class SynchronizedStmt extends TreeBase<SNodeState> implements Stmt {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public SynchronizedStmt instantiate(SLocation location) {
 			return new SynchronizedStmt(location);
 		}
@@ -43,40 +44,40 @@ public class SynchronizedStmt extends Stmt {
 		}
 	};
 
-	private SynchronizedStmt(SLocation location) {
+	private SynchronizedStmt(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public SynchronizedStmt(Expr expr, BlockStmt block) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(expr, block)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(expr, block)))));
 	}
 
 	public Expr expr() {
-		return location.nodeChild(EXPR);
+		return location.safeTraversal(EXPR);
 	}
 
 	public SynchronizedStmt withExpr(Expr expr) {
-		return location.nodeWithChild(EXPR, expr);
+		return location.safeTraversalReplace(EXPR, expr);
 	}
 
 	public SynchronizedStmt withExpr(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(EXPR, mutation);
+		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
 	public BlockStmt block() {
-		return location.nodeChild(BLOCK);
+		return location.safeTraversal(BLOCK);
 	}
 
 	public SynchronizedStmt withBlock(BlockStmt block) {
-		return location.nodeWithChild(BLOCK, block);
+		return location.safeTraversalReplace(BLOCK, block);
 	}
 
 	public SynchronizedStmt withBlock(Mutation<BlockStmt> mutation) {
-		return location.nodeMutateChild(BLOCK, mutation);
+		return location.safeTraversalMutate(BLOCK, mutation);
 	}
 
-	private static final int EXPR = 0;
-	private static final int BLOCK = 1;
+	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> BLOCK = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Synchronized),

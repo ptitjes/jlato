@@ -21,14 +21,14 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.type.Type;
 
@@ -36,10 +36,11 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class ExplicitConstructorInvocationStmt extends Stmt {
+public class ExplicitConstructorInvocationStmt extends TreeBase<SNodeState> implements Stmt {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public ExplicitConstructorInvocationStmt instantiate(SLocation location) {
 			return new ExplicitConstructorInvocationStmt(location);
 		}
@@ -49,24 +50,24 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 		}
 	};
 
-	private ExplicitConstructorInvocationStmt(SLocation location) {
+	private ExplicitConstructorInvocationStmt(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public ExplicitConstructorInvocationStmt(NodeList<Type> typeArgs, boolean isThis, NodeOption<Expr> expr, NodeList<Expr> args) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(typeArgs, expr, args), dataOf(constructorKind(isThis))))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(typeArgs, expr, args), dataOf(constructorKind(isThis))))));
 	}
 
 	public NodeList<Type> typeArgs() {
-		return location.nodeChild(TYPE_ARGUMENTS);
+		return location.safeTraversal(TYPE_ARGUMENTS);
 	}
 
 	public ExplicitConstructorInvocationStmt withTypeArgs(NodeList<Type> typeArgs) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
+		return location.safeTraversalReplace(TYPE_ARGUMENTS, typeArgs);
 	}
 
 	public ExplicitConstructorInvocationStmt withTypeArgs(Mutation<NodeList<Type>> mutation) {
-		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
+		return location.safeTraversalMutate(TYPE_ARGUMENTS, mutation);
 	}
 
 	public boolean isThis() {
@@ -78,32 +79,32 @@ public class ExplicitConstructorInvocationStmt extends Stmt {
 	}
 
 	public NodeOption<Expr> expr() {
-		return location.nodeChild(EXPR);
+		return location.safeTraversal(EXPR);
 	}
 
 	public ExplicitConstructorInvocationStmt withExpr(NodeOption<Expr> expr) {
-		return location.nodeWithChild(EXPR, expr);
+		return location.safeTraversalReplace(EXPR, expr);
 	}
 
 	public ExplicitConstructorInvocationStmt withExpr(Mutation<NodeOption<Expr>> mutation) {
-		return location.nodeMutateChild(EXPR, mutation);
+		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
 	public NodeList<Expr> args() {
-		return location.nodeChild(ARGUMENTS);
+		return location.safeTraversal(ARGUMENTS);
 	}
 
 	public ExplicitConstructorInvocationStmt withArgs(NodeList<Expr> args) {
-		return location.nodeWithChild(ARGUMENTS, args);
+		return location.safeTraversalReplace(ARGUMENTS, args);
 	}
 
 	public ExplicitConstructorInvocationStmt withArgs(Mutation<NodeList<Expr>> mutation) {
-		return location.nodeMutateChild(ARGUMENTS, mutation);
+		return location.safeTraversalMutate(ARGUMENTS, mutation);
 	}
 
-	private static final int TYPE_ARGUMENTS = 0;
-	private static final int EXPR = 1;
-	private static final int ARGUMENTS = 2;
+	private static final STraversal<SNodeState> TYPE_ARGUMENTS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> ARGUMENTS = SNodeState.childTraversal(2);
 
 	private static final int CONSTRUCTOR_KIND = 0;
 

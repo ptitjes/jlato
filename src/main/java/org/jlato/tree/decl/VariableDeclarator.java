@@ -21,22 +21,23 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class VariableDeclarator extends Tree {
+public class VariableDeclarator extends TreeBase<SNodeState> implements Tree {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public VariableDeclarator instantiate(SLocation location) {
 			return new VariableDeclarator(location);
 		}
@@ -46,40 +47,40 @@ public class VariableDeclarator extends Tree {
 		}
 	};
 
-	private VariableDeclarator(SLocation location) {
+	private VariableDeclarator(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public VariableDeclarator(VariableDeclaratorId id, NodeOption<Expr> init) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(id, init)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(id, init)))));
 	}
 
 	public VariableDeclaratorId id() {
-		return location.nodeChild(ID);
+		return location.safeTraversal(ID);
 	}
 
 	public VariableDeclarator withId(VariableDeclaratorId id) {
-		return location.nodeWithChild(ID, id);
+		return location.safeTraversalReplace(ID, id);
 	}
 
 	public VariableDeclarator withId(Mutation<VariableDeclaratorId> mutation) {
-		return location.nodeMutateChild(ID, mutation);
+		return location.safeTraversalMutate(ID, mutation);
 	}
 
 	public NodeOption<Expr> init() {
-		return location.nodeChild(INIT);
+		return location.safeTraversal(INIT);
 	}
 
 	public VariableDeclarator withInit(NodeOption<Expr> init) {
-		return location.nodeWithChild(INIT, init);
+		return location.safeTraversalReplace(INIT, init);
 	}
 
 	public VariableDeclarator withInit(Mutation<NodeOption<Expr>> mutation) {
-		return location.nodeMutateChild(INIT, mutation);
+		return location.safeTraversalMutate(INIT, mutation);
 	}
 
-	private static final int ID = 0;
-	private static final int INIT = 1;
+	private static final STraversal<SNodeState> ID = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> INIT = SNodeState.childTraversal(1);
 
 	public static final LexicalShape initializerShape = composite(
 			token(LToken.Assign).withSpacing(space(), space()),

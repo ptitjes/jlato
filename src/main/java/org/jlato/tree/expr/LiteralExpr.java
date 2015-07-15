@@ -22,15 +22,15 @@ package org.jlato.tree.expr;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.Literals;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class LiteralExpr<T> extends Expr {
+public class LiteralExpr<T> extends TreeBase<SNodeState> implements Expr {
 
 	public final static Kind<Tree> kind = new Kind<Tree>();
 
@@ -39,7 +39,7 @@ public class LiteralExpr<T> extends Expr {
 		return (Kind<T>) kind;
 	}
 
-	public static class Kind<T> implements Tree.Kind {
+	public static class Kind<T> implements TreeBase.Kind {
 		public Tree instantiate(SLocation location) {
 			return new LiteralExpr<T>(location);
 		}
@@ -85,12 +85,12 @@ public class LiteralExpr<T> extends Expr {
 		return new LiteralExpr<T>(literalClass, Literals.from(literalClass, literalValue));
 	}
 
-	protected LiteralExpr(SLocation location) {
+	protected LiteralExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public LiteralExpr(Class<T> literalClass, String literalString) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(), dataOf(literalClass, literalString)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(), dataOf(literalClass, literalString)))));
 	}
 
 	@SuppressWarnings("unchecked")

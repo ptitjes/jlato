@@ -21,18 +21,19 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class ThrowStmt extends Stmt {
+public class ThrowStmt extends TreeBase<SNodeState> implements Stmt {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public ThrowStmt instantiate(SLocation location) {
 			return new ThrowStmt(location);
 		}
@@ -42,27 +43,27 @@ public class ThrowStmt extends Stmt {
 		}
 	};
 
-	private ThrowStmt(SLocation location) {
+	private ThrowStmt(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public ThrowStmt(Expr expr) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(expr)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(expr)))));
 	}
 
 	public Expr expr() {
-		return location.nodeChild(EXPR);
+		return location.safeTraversal(EXPR);
 	}
 
 	public ThrowStmt withExpr(Expr expr) {
-		return location.nodeWithChild(EXPR, expr);
+		return location.safeTraversalReplace(EXPR, expr);
 	}
 
 	public ThrowStmt withExpr(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(EXPR, mutation);
+		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final int EXPR = 0;
+	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Throw), child(EXPR), token(LToken.SemiColon)

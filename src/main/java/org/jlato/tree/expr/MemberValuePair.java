@@ -21,18 +21,19 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class MemberValuePair extends Tree {
+public class MemberValuePair extends TreeBase<SNodeState> implements Tree {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public MemberValuePair instantiate(SLocation location) {
 			return new MemberValuePair(location);
 		}
@@ -42,40 +43,40 @@ public class MemberValuePair extends Tree {
 		}
 	};
 
-	private MemberValuePair(SLocation location) {
+	private MemberValuePair(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public MemberValuePair(Name name, Expr value) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(name, value)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name, value)))));
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public MemberValuePair withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public MemberValuePair withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public Name value() {
-		return location.nodeChild(VALUE);
+		return location.safeTraversal(VALUE);
 	}
 
 	public MemberValuePair withValue(Expr value) {
-		return location.nodeWithChild(VALUE, value);
+		return location.safeTraversalReplace(VALUE, value);
 	}
 
 	public MemberValuePair withValue(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(VALUE, mutation);
+		return location.safeTraversalMutate(VALUE, mutation);
 	}
 
-	private static final int NAME = 0;
-	private static final int VALUE = 1;
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> VALUE = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(NAME), token(LToken.Assign), child(VALUE)

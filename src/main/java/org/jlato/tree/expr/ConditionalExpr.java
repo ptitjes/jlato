@@ -21,18 +21,19 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class ConditionalExpr extends Expr {
+public class ConditionalExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public ConditionalExpr instantiate(SLocation location) {
 			return new ConditionalExpr(location);
 		}
@@ -42,53 +43,53 @@ public class ConditionalExpr extends Expr {
 		}
 	};
 
-	private ConditionalExpr(SLocation location) {
+	private ConditionalExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public ConditionalExpr(Expr condition, Expr thenExpr, Expr elseExpr) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(condition, thenExpr, elseExpr)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(condition, thenExpr, elseExpr)))));
 	}
 
 	public Expr condition() {
-		return location.nodeChild(CONDITION);
+		return location.safeTraversal(CONDITION);
 	}
 
 	public ConditionalExpr withCondition(Expr condition) {
-		return location.nodeWithChild(CONDITION, condition);
+		return location.safeTraversalReplace(CONDITION, condition);
 	}
 
 	public ConditionalExpr withCondition(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(CONDITION, mutation);
+		return location.safeTraversalMutate(CONDITION, mutation);
 	}
 
 	public Expr thenExpr() {
-		return location.nodeChild(THEN_EXPR);
+		return location.safeTraversal(THEN_EXPR);
 	}
 
 	public ConditionalExpr withThenExpr(Expr thenExpr) {
-		return location.nodeWithChild(THEN_EXPR, thenExpr);
+		return location.safeTraversalReplace(THEN_EXPR, thenExpr);
 	}
 
 	public ConditionalExpr withThenExpr(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(THEN_EXPR, mutation);
+		return location.safeTraversalMutate(THEN_EXPR, mutation);
 	}
 
 	public Expr elseExpr() {
-		return location.nodeChild(ELSE_EXPR);
+		return location.safeTraversal(ELSE_EXPR);
 	}
 
 	public ConditionalExpr withElseExpr(Expr elseExpr) {
-		return location.nodeWithChild(ELSE_EXPR, elseExpr);
+		return location.safeTraversalReplace(ELSE_EXPR, elseExpr);
 	}
 
 	public ConditionalExpr withElseExpr(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(ELSE_EXPR, mutation);
+		return location.safeTraversalMutate(ELSE_EXPR, mutation);
 	}
 
-	private static final int CONDITION = 0;
-	private static final int THEN_EXPR = 1;
-	private static final int ELSE_EXPR = 2;
+	private static final STraversal<SNodeState> CONDITION = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> THEN_EXPR = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> ELSE_EXPR = SNodeState.childTraversal(2);
 
 	public final static LexicalShape shape = composite(
 			child(CONDITION),

@@ -21,37 +21,27 @@ package org.jlato.tree.type;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Modifiable;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.token;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public abstract class Type extends Tree implements Modifiable<Type> {
+public interface Type extends Tree {
 
-	protected Type(SLocation location) {
-		super(location);
-	}
-
-	public Type replace(Type replacement) {
-		return location.replace(replacement);
-	}
-
-	public static final LexicalShape typeArgumentsShape = list(
+	LexicalShape typeArgumentsShape = list(
 			token(LToken.Less),
 			token(LToken.Comma).withSpacingAfter(space()),
 			token(LToken.Greater)
 	);
 
-	public static final LexicalShape typeArgumentsOrDiamondShape = list(true,
+	LexicalShape typeArgumentsOrDiamondShape = list(true,
 			token(LToken.Less),
 			token(LToken.Comma).withSpacingAfter(space()),
 			token(LToken.Greater)
 	);
 
-	public static LexicalShape intersectionShape = list(token(LToken.BinAnd).withSpacing(space(), space()));
+	LexicalShape intersectionShape = list(token(LToken.BinAnd).withSpacing(space(), space()));
 
-	public static LexicalShape unionShape = list(token(LToken.BinOr).withSpacing(space(), space()));
+	LexicalShape unionShape = list(token(LToken.BinOr).withSpacing(space(), space()));
 }

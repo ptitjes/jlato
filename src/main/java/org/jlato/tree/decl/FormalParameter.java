@@ -21,20 +21,21 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class FormalParameter extends Tree {
+public class FormalParameter extends TreeBase<SNodeState> implements Tree {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public FormalParameter instantiate(SLocation location) {
 			return new FormalParameter(location);
 		}
@@ -44,36 +45,36 @@ public class FormalParameter extends Tree {
 		}
 	};
 
-	private FormalParameter(SLocation location) {
+	private FormalParameter(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public <EM extends Tree & ExtendedModifier> FormalParameter(NodeList<EM> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, type, id), dataOf(isVarArgs)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, type, id), dataOf(isVarArgs)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
-		return location.nodeChild(MODIFIERS);
+		return location.safeTraversal(MODIFIERS);
 	}
 
 	public <EM extends Tree & ExtendedModifier> FormalParameter withModifiers(NodeList<EM> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
 	public <EM extends Tree & ExtendedModifier> FormalParameter withModifiers(Mutation<NodeList<EM>> mutation) {
-		return location.nodeMutateChild(MODIFIERS, mutation);
+		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 
 	public Type type() {
-		return location.nodeChild(TYPE);
+		return location.safeTraversal(TYPE);
 	}
 
 	public FormalParameter withType(Type type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.safeTraversalReplace(TYPE, type);
 	}
 
 	public FormalParameter withType(Mutation<Type> mutation) {
-		return location.nodeMutateChild(TYPE, mutation);
+		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
 	public boolean isVarArgs() {
@@ -85,20 +86,20 @@ public class FormalParameter extends Tree {
 	}
 
 	public VariableDeclaratorId id() {
-		return location.nodeChild(ID);
+		return location.safeTraversal(ID);
 	}
 
 	public FormalParameter withId(VariableDeclaratorId id) {
-		return location.nodeWithChild(ID, id);
+		return location.safeTraversalReplace(ID, id);
 	}
 
 	public FormalParameter withId(Mutation<VariableDeclaratorId> mutation) {
-		return location.nodeMutateChild(ID, mutation);
+		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final int MODIFIERS = 0;
-	private static final int TYPE = 1;
-	private static final int ID = 2;
+	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> ID = SNodeState.childTraversal(2);
 
 	private static final int VAR_ARG = 0;
 

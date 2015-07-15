@@ -21,19 +21,20 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class CastExpr extends Expr {
+public class CastExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public CastExpr instantiate(SLocation location) {
 			return new CastExpr(location);
 		}
@@ -43,40 +44,40 @@ public class CastExpr extends Expr {
 		}
 	};
 
-	private CastExpr(SLocation location) {
+	private CastExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public CastExpr(Type type, Expr expr) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(type, expr)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(type, expr)))));
 	}
 
 	public Type type() {
-		return location.nodeChild(TYPE);
+		return location.safeTraversal(TYPE);
 	}
 
 	public CastExpr withType(Type type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.safeTraversalReplace(TYPE, type);
 	}
 
 	public CastExpr withType(Mutation<Type> mutation) {
-		return location.nodeMutateChild(TYPE, mutation);
+		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
 	public Expr expr() {
-		return location.nodeChild(EXPR);
+		return location.safeTraversal(EXPR);
 	}
 
 	public CastExpr withExpr(Expr expr) {
-		return location.nodeWithChild(EXPR, expr);
+		return location.safeTraversalReplace(EXPR, expr);
 	}
 
 	public CastExpr withExpr(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(EXPR, mutation);
+		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final int TYPE = 0;
-	private static final int EXPR = 1;
+	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft), child(TYPE), token(LToken.ParenthesisRight).withSpacingAfter(space()), child(EXPR)

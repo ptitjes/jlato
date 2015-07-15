@@ -25,28 +25,44 @@ import com.github.andrewoma.dexx.collection.Vector;
 /**
  * @author Didier Villevalois
  */
-public class SNodeListState extends STreeState {
+public class SNodeListState extends STreeState<SNodeListState> {
 
-	public final Vector<STree> children;
+	public final Vector<STree<?>> children;
 
-	public SNodeListState(Vector<STree> children) {
+	public SNodeListState(Vector<STree<?>> children) {
 		this(children, ArrayList.empty());
 	}
 
-	public SNodeListState(Vector<STree> children, ArrayList<Object> data) {
+	public SNodeListState(Vector<STree<?>> children, ArrayList<Object> data) {
 		super(data);
 		this.children = children;
 	}
 
-	public STree child(int index) {
+	public static STraversal<SNodeListState> elementTraversal(int index) {
+		return new ElementTraversal(index);
+	}
+
+	@Override
+	public STraversal<SNodeListState> firstChild() {
+		if (children.isEmpty()) return null;
+		return elementTraversal(-1).rightSibling(this);
+	}
+
+	@Override
+	public STraversal<SNodeListState> lastChild() {
+		if (children.isEmpty()) return null;
+		return elementTraversal(children.size()).leftSibling(this);
+	}
+
+	public STree<?> child(int index) {
 		return children.get(index);
 	}
 
-	public SNodeListState withChild(int index, STree value) {
+	public SNodeListState withChild(int index, STree<?> value) {
 		return new SNodeListState(children.set(index, value), data);
 	}
 
-	public SNodeListState withChildren(Vector<STree> children) {
+	public SNodeListState withChildren(Vector<STree<?>> children) {
 		return new SNodeListState(children, data);
 	}
 
@@ -61,6 +77,45 @@ public class SNodeListState extends STreeState {
 			if (child == null) // TODO Add better error message
 				throw new IllegalStateException();
 			child.state.validate(child);
+		}
+	}
+
+	public static class ElementTraversal extends STraversal<SNodeListState> {
+
+		private final int index;
+
+		public ElementTraversal(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public STree<?> traverse(SNodeListState state) {
+			return state.child(index);
+		}
+
+		@Override
+		public SNodeListState rebuildParentState(SNodeListState state, STree<?> child) {
+			return state.withChild(index, child);
+		}
+
+		@Override
+		public STraversal<SNodeListState> leftSibling(SNodeListState state) {
+			int previousIndex = index - 1;
+			while (previousIndex >= 0) {
+				if (state.child(previousIndex) != null) return new ElementTraversal(previousIndex);
+				previousIndex--;
+			}
+			return null;
+		}
+
+		@Override
+		public STraversal<SNodeListState> rightSibling(SNodeListState state) {
+			int nextIndex = index + 1;
+			while (nextIndex < state.children.size()) {
+				if (state.child(nextIndex) != null) return new ElementTraversal(nextIndex);
+				nextIndex++;
+			}
+			return null;
 		}
 	}
 }

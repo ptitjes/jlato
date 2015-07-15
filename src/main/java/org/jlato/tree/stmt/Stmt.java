@@ -20,9 +20,7 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Modifiable;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.none;
@@ -31,15 +29,7 @@ import static org.jlato.printer.SpacingConstraint.newLine;
 /**
  * @author Didier Villevalois
  */
-public abstract class Stmt extends Tree implements Modifiable<Stmt> {
+public interface Stmt extends Tree {
 
-	protected Stmt(SLocation location) {
-		super(location);
-	}
-
-	public  Stmt replace(Stmt replacement) {
-		return location.replace(replacement);
-	}
-
-	public static final LexicalShape listShape = list(none().withSpacingAfter(newLine()));
+	LexicalShape listShape = list(none().withSpacingAfter(newLine()));
 }

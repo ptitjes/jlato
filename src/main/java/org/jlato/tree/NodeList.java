@@ -23,14 +23,14 @@ import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase;
 
 import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
  */
-public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
+public class NodeList<T extends Tree> extends TreeBase<SNodeListState> implements Tree, Iterable<T> {
 
 	public final static Kind<Tree> kind = new Kind<Tree>();
 
@@ -39,7 +39,7 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		return (Kind<T>) kind;
 	}
 
-	public static class Kind<T extends Tree> implements Tree.Kind {
+	public static class Kind<T extends Tree> implements TreeBase.Kind {
 		public Tree instantiate(SLocation location) {
 			return new NodeList<T>(location);
 		}
@@ -84,40 +84,40 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		return new NodeList<T>(t1, t2, t3, t4, t5, t6);
 	}
 
-	private NodeList(SLocation location) {
+	private NodeList(SLocation<SNodeListState> location) {
 		super(location);
 	}
 
 	public NodeList(T... elements) {
-		super(new SLocation(new STree(kind, new SNodeListState(treeListOf(elements)))));
+		super(new SLocation<SNodeListState>(new STree<SNodeListState>(kind, new SNodeListState(treeListOf(elements)))));
 	}
 
 	public boolean isEmpty() {
-		return location.nodeListChildren().isEmpty();
+		return location.tree.state.children.isEmpty();
 	}
 
 	public int size() {
-		return location.nodeListChildren().size();
+		return location.tree.state.children.size();
 	}
 
 	public boolean contains(T element) {
-		return location.nodeListChildren().indexOf(treeOf(element)) != -1;
+		return location.tree.state.children.indexOf(treeOf(element)) != -1;
 	}
 
 	public T get(final int index) {
-		return location.nodeListChild(index);
+		return location.safeTraversal(SNodeListState.elementTraversal(index));
 	}
 
 	public NodeList<T> set(int index, T element) {
-		return location.nodeListWithChild(index, element);
+		return location.safeTraversalReplace(SNodeListState.elementTraversal(index), element);
 	}
 
 	@SuppressWarnings("unchecked")
 	public NodeList<T> prepend(T element) {
-		final STree tree = location.tree;
+		final STree<SNodeListState> tree = location.tree;
 
-		final SNodeListState state = (SNodeListState) tree.state;
-		final Vector<STree> trees = state.children;
+		final SNodeListState state = tree.state;
+		final Vector<STree<?>> trees = state.children;
 
 		final SNodeListState newState = state.withChildren(trees.prepend(treeOf(element)));
 		STree newTree = tree.withState(newState);
@@ -130,10 +130,10 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 
 	@SuppressWarnings("unchecked")
 	public NodeList<T> append(T element) {
-		final STree tree = location.tree;
+		final STree<SNodeListState> tree = location.tree;
 
-		final SNodeListState state = (SNodeListState) tree.state;
-		final Vector<STree> trees = state.children;
+		final SNodeListState state = tree.state;
+		final Vector<STree<?>> trees = state.children;
 
 		final SNodeListState newState = state.withChildren(trees.append(treeOf(element)));
 		STree newTree = tree.withState(newState);
@@ -146,10 +146,10 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 
 	@SuppressWarnings("unchecked")
 	public NodeList<T> insert(int index, T element) {
-		final STree tree = location.tree;
+		final STree<SNodeListState> tree = location.tree;
 
-		final SNodeListState state = (SNodeListState) tree.state;
-		final Vector<STree> trees = state.children;
+		final SNodeListState state = tree.state;
+		final Vector<STree<?>> trees = state.children;
 
 		if (index < 0 || index > trees.size())
 			throw new IllegalArgumentException();
@@ -163,11 +163,11 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
 
-	private Vector<STree> insertAt(Vector<STree> trees, int index, STree element) {
-		Vector<STree> leftTrees = trees.take(index);
-		Vector<STree> rightTrees = trees.drop(index);
-		Vector<STree> newTrees = leftTrees.append(element);
-		for (STree rightTree : rightTrees) {
+	private Vector<STree<?>> insertAt(Vector<STree<?>> trees, int index, STree<?> element) {
+		Vector<STree<?>> leftTrees = trees.take(index);
+		Vector<STree<?>> rightTrees = trees.drop(index);
+		Vector<STree<?>> newTrees = leftTrees.append(element);
+		for (STree<?> rightTree : rightTrees) {
 			newTrees = newTrees.append(rightTree);
 		}
 		return newTrees;
@@ -181,23 +181,23 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 
 	@SuppressWarnings("unchecked")
 	public NodeList<T> rewriteAll(Mutation<T> mutator) {
-		final STree tree = location.tree;
+		final STree<SNodeListState> tree = location.tree;
 
-		final SNodeListState state = (SNodeListState) tree.state;
-		final Vector<STree> trees = state.children;
+		final SNodeListState state = tree.state;
+		final Vector<STree<?>> trees = state.children;
 		if (trees.isEmpty()) return this;
 
-		Builder<STree, Vector<STree>> newTrees = Vector.<STree>factory().newBuilder();
+		Builder<STree<?>, Vector<STree<?>>> newTrees = Vector.<STree<?>>factory().newBuilder();
 		for (int i = 0; i < trees.size(); i++) {
 			T rewrote = mutator.mutate(get(i));
-			SLocation location = Tree.locationOf(rewrote);
+			SLocation location = TreeBase.locationOf(rewrote);
 
 			// TODO Handle change in the node-list run (leading comments and trailing comment)
 
 			newTrees.add(location.tree);
 		}
 
-		STree newTree = tree.withState(state.withChildren(newTrees.build()));
+		STree<SNodeListState> newTree = tree.withState(state.withChildren(newTrees.build()));
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
 
@@ -210,11 +210,11 @@ public class NodeList<T extends Tree> extends Tree implements Iterable<T> {
 		builder.append(start);
 
 		boolean first = true;
-		for (STree tree : location.nodeListChildren()) {
+		for (STree<?> tree : location.tree.state.children) {
 			if (!first) builder.append(sep);
 			else first = false;
 
-			Tree next = new SLocation(tree).facade;
+			Tree next = tree.asTree();
 			builder.append(next.toString());
 		}
 

@@ -20,31 +20,22 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.none;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_BetweenTopLevelDecl;
 import static org.jlato.printer.SpacingConstraint.spacing;
 
-public abstract class TypeDecl extends MemberDecl {
+public interface TypeDecl extends MemberDecl {
 
-	protected TypeDecl(SLocation location) {
-		super(location);
-	}
+	TypeKind typeKind();
 
-	@Override
-	public MemberKind memberKind() {
-		return MemberKind.Type;
-	}
-
-	public abstract TypeKind typeKind();
-
-	public static final LexicalShape listShape = list(
+	LexicalShape listShape = list(
 			none().withSpacingAfter(spacing(CompilationUnit_BetweenTopLevelDecl))
 	);
 
-	public enum TypeKind {
+	enum TypeKind {
 		Empty,
 		Class,
 		Interface,

@@ -20,19 +20,20 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
+import org.jlato.internal.bu.STraversal;
 
-public class IntersectionType extends Type {
+public class IntersectionType extends TreeBase<SNodeState> implements Type {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public IntersectionType instantiate(SLocation location) {
 			return new IntersectionType(location);
 		}
@@ -42,27 +43,27 @@ public class IntersectionType extends Type {
 		}
 	};
 
-	private IntersectionType(SLocation location) {
+	private IntersectionType(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public IntersectionType(NodeList<Type> types) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(types)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(types)))));
 	}
 
 	public NodeList<Type> types() {
-		return location.nodeChild(TYPES);
+		return location.safeTraversal(TYPES);
 	}
 
 	public IntersectionType withTypes(NodeList<Type> types) {
-		return location.nodeWithChild(TYPES, types);
+		return location.safeTraversalReplace(TYPES, types);
 	}
 
 	public IntersectionType withTypes(Mutation<NodeList<Type>> mutation) {
-		return location.nodeMutateChild(TYPES, mutation);
+		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final int TYPES = 0;
+	private static final STraversal<SNodeState> TYPES = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			child(TYPES, Type.intersectionShape)

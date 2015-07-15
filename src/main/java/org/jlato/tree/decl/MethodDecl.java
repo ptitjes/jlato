@@ -21,14 +21,14 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.QualifiedType;
@@ -38,10 +38,11 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class MethodDecl extends MemberDecl {
+public class MethodDecl extends TreeBase<SNodeState> implements MemberDecl {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public MethodDecl instantiate(SLocation location) {
 			return new MethodDecl(location);
 		}
@@ -51,16 +52,16 @@ public class MethodDecl extends MemberDecl {
 		}
 	};
 
-	private MethodDecl(SLocation location) {
+	private MethodDecl(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public <EM extends Tree & ExtendedModifier> MethodDecl() {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(NodeList.empty(), NodeList.empty(), null, null, NodeList.empty(), NodeList.empty(), NodeList.empty(), null)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(NodeList.empty(), NodeList.empty(), null, null, NodeList.empty(), NodeList.empty(), NodeList.empty(), null)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> MethodDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, NodeOption<BlockStmt> body) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParams, type, name, params, dims, throwsClause, body)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, typeParams, type, name, params, dims, throwsClause, body)))));
 	}
 
 	@Override
@@ -69,109 +70,109 @@ public class MethodDecl extends MemberDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
-		return location.nodeChild(MODIFIERS);
+		return location.safeTraversal(MODIFIERS);
 	}
 
 	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(NodeList<EM> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
 	public <EM extends Tree & ExtendedModifier> MethodDecl withModifiers(Mutation<NodeList<EM>> mutation) {
-		return location.nodeMutateChild(MODIFIERS, mutation);
+		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 
 	public NodeList<TypeParameter> typeParams() {
-		return location.nodeChild(TYPE_PARAMETERS);
+		return location.safeTraversal(TYPE_PARAMETERS);
 	}
 
 	public MethodDecl withTypeParams(NodeList<TypeParameter> typeParams) {
-		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
+		return location.safeTraversalReplace(TYPE_PARAMETERS, typeParams);
 	}
 
 	public MethodDecl withTypeParams(Mutation<NodeList<TypeParameter>> mutation) {
-		return location.nodeMutateChild(TYPE_PARAMETERS, mutation);
+		return location.safeTraversalMutate(TYPE_PARAMETERS, mutation);
 	}
 
 	public Type type() {
-		return location.nodeChild(TYPE);
+		return location.safeTraversal(TYPE);
 	}
 
 	public MethodDecl withType(Type type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.safeTraversalReplace(TYPE, type);
 	}
 
 	public MethodDecl withType(Mutation<Type> mutation) {
-		return location.nodeMutateChild(TYPE, mutation);
+		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public MethodDecl withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public MethodDecl withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public NodeList<FormalParameter> params() {
-		return location.nodeChild(PARAMETERS);
+		return location.safeTraversal(PARAMETERS);
 	}
 
 	public MethodDecl withParams(NodeList<FormalParameter> params) {
-		return location.nodeWithChild(PARAMETERS, params);
+		return location.safeTraversalReplace(PARAMETERS, params);
 	}
 
 	public MethodDecl withParams(Mutation<NodeList<FormalParameter>> mutation) {
-		return location.nodeMutateChild(PARAMETERS, mutation);
+		return location.safeTraversalMutate(PARAMETERS, mutation);
 	}
 
 	public NodeList<ArrayDim> dims() {
-		return location.nodeChild(DIMS);
+		return location.safeTraversal(DIMS);
 	}
 
 	public VariableDeclaratorId withDims(NodeList<ArrayDim> dims) {
-		return location.nodeWithChild(DIMS, dims);
+		return location.safeTraversalReplace(DIMS, dims);
 	}
 
 	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> mutation) {
-		return location.nodeMutateChild(DIMS, mutation);
+		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
 	public NodeList<QualifiedType> throwsClause() {
-		return location.nodeChild(THROWS_CLAUSE);
+		return location.safeTraversal(THROWS_CLAUSE);
 	}
 
 	public ConstructorDecl withThrowsClause(NodeList<QualifiedType> throwsClause) {
-		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
+		return location.safeTraversalReplace(THROWS_CLAUSE, throwsClause);
 	}
 
 	public ConstructorDecl withThrowsClause(Mutation<NodeList<QualifiedType>> mutation) {
-		return location.nodeMutateChild(THROWS_CLAUSE, mutation);
+		return location.safeTraversalMutate(THROWS_CLAUSE, mutation);
 	}
 
 	public NodeOption<BlockStmt> body() {
-		return location.nodeChild(BODY);
+		return location.safeTraversal(BODY);
 	}
 
 	public MethodDecl withBody(NodeOption<BlockStmt> body) {
-		return location.nodeWithChild(BODY, body);
+		return location.safeTraversalReplace(BODY, body);
 	}
 
 	public MethodDecl withBody(Mutation<NodeOption<BlockStmt>> mutation) {
-		return location.nodeMutateChild(BODY, mutation);
+		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final int MODIFIERS = 0;
-	private static final int TYPE_PARAMETERS = 1;
-	private static final int TYPE = 2;
-	private static final int NAME = 3;
-	private static final int PARAMETERS = 4;
-	private static final int DIMS = 5;
-	private static final int THROWS_CLAUSE = 6;
-	private static final int BODY = 7;
+	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> TYPE_PARAMETERS = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(2);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(3);
+	private static final STraversal<SNodeState> PARAMETERS = SNodeState.childTraversal(4);
+	private static final STraversal<SNodeState> DIMS = SNodeState.childTraversal(5);
+	private static final STraversal<SNodeState> THROWS_CLAUSE = SNodeState.childTraversal(6);
+	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(7);
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

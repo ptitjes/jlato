@@ -24,157 +24,40 @@ import org.jlato.internal.bu.*;
 /**
  * @author Didier Villevalois
  */
-public abstract class SContext {
+public final class SContext<P extends STreeState<P>> {
 
-	public abstract STree peruse(STree parent);
+	public final SLocation<P> parent;
+	public final STraversal<P> traversal;
 
-	public abstract STree rebuildParent(STree parent, STree child);
-
-	public abstract SContext leftSibling(STree parent);
-
-	public abstract SContext rightSibling(STree parent);
-
-	public static class NodeChild extends SContext {
-
-		private final int index;
-
-		public NodeChild(int index) {
-			this.index = index;
-		}
-
-		@Override
-		public STree peruse(STree parent) {
-			final SNodeState state = (SNodeState) parent.state;
-			return state.child(index);
-		}
-
-		public STree rebuildParent(STree parent, STree child) {
-			final SNodeState state = (SNodeState) parent.state;
-			return parent.withState(state.withChild(index, child));
-		}
-
-		@Override
-		public SContext leftSibling(STree parent) {
-			final SNodeState state = (SNodeState) parent.state;
-			int previousIndex = index - 1;
-			while (previousIndex >= 0) {
-				if (state.child(previousIndex) != null) return new NodeChild(previousIndex);
-				previousIndex--;
-			}
-			return null;
-		}
-
-		@Override
-		public SContext rightSibling(STree parent) {
-			final SNodeState state = (SNodeState) parent.state;
-			int nextIndex = index + 1;
-			while (nextIndex < state.children.size()) {
-				if (state.child(nextIndex) != null) return new NodeChild(nextIndex);
-				nextIndex++;
-			}
-			return null;
-		}
+	public SContext(SLocation<P> parent, STraversal<P> traversal) {
+		this.parent = parent;
+		this.traversal = traversal;
 	}
 
-	public static class NodeListChild extends SContext {
-
-		private final int index;
-
-		public NodeListChild(int index) {
-			this.index = index;
-		}
-
-		@Override
-		public STree peruse(STree parent) {
-			final SNodeListState state = (SNodeListState) parent.state;
-			return state.child(index);
-		}
-
-		@Override
-		public STree rebuildParent(STree parent, STree child) {
-			final SNodeListState state = (SNodeListState) parent.state;
-			return parent.withState(state.withChild(index, child));
-		}
-
-		@Override
-		public SContext leftSibling(STree parent) {
-			final SNodeListState state = (SNodeListState) parent.state;
-			int previousIndex = index - 1;
-			while (previousIndex >= 0) {
-				if (state.child(previousIndex) != null) return new NodeListChild(previousIndex);
-				previousIndex--;
-			}
-			return null;
-		}
-
-		@Override
-		public SContext rightSibling(STree parent) {
-			final SNodeListState state = (SNodeListState) parent.state;
-			int nextIndex = index + 1;
-			while (nextIndex < state.children.size()) {
-				if (state.child(nextIndex) != null) return new NodeListChild(nextIndex);
-				nextIndex++;
-			}
-			return null;
-		}
+	public SContext<P> rebuilt(STree<?> child) {
+		return new SContext<P>(rebuiltParent(child), traversal);
 	}
 
-	public static class NodeOptionElement extends SContext {
-
-		public NodeOptionElement() {
-		}
-
-		@Override
-		public STree peruse(STree parent) {
-			final SNodeOptionState state = (SNodeOptionState) parent.state;
-			return state.element;
-		}
-
-		@Override
-		public STree rebuildParent(STree parent, STree child) {
-			final SNodeOptionState state = (SNodeOptionState) parent.state;
-			return parent.withState(state.withElement(child));
-		}
-
-		@Override
-		public SContext leftSibling(STree parent) {
-			return null;
-		}
-
-		@Override
-		public SContext rightSibling(STree parent) {
-			return null;
-		}
+	private SLocation<P> rebuiltParent(STree<?> child) {
+		return parent.withTree(parent.tree.withState(traversal.rebuildParentState(parent.tree.state, child)));
 	}
 
-	public static class TreeSetTree extends SContext {
+	public STree<?> peruse() {
+		return traversal.traverse(parent.tree.state);
+	}
 
-		private final String path;
+	public SLocation<?> newLocation() {
+		STree<?> tree = peruse();
+		return tree == null ? null : tree.locationIn(this);
+	}
 
-		public TreeSetTree(String path) {
-			this.path = path;
-		}
+	public SContext<P> leftSibling() {
+		STraversal<P> leftSibling = traversal.leftSibling(parent.tree.state);
+		return leftSibling == null ? null : new SContext<P>(parent, leftSibling);
+	}
 
-		@Override
-		public STree peruse(STree parent) {
-			final STreeSetState state = (STreeSetState) parent.state;
-			return state.tree(path);
-		}
-
-		@Override
-		public STree rebuildParent(STree parent, STree child) {
-			final STreeSetState state = (STreeSetState) parent.state;
-			return parent.withState(state.withTree(path, child));
-		}
-
-		@Override
-		public SContext leftSibling(STree parent) {
-			return null;
-		}
-
-		@Override
-		public SContext rightSibling(STree parent) {
-			return null;
-		}
+	public SContext<P> rightSibling() {
+		STraversal<P> rightSibling = traversal.rightSibling(parent.tree.state);
+		return rightSibling == null ? null : new SContext<P>(parent, rightSibling);
 	}
 }

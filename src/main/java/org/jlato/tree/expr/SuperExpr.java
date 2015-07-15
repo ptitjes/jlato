@@ -21,21 +21,22 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class SuperExpr extends Expr {
+public class SuperExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public SuperExpr instantiate(SLocation location) {
 			return new SuperExpr(location);
 		}
@@ -45,27 +46,27 @@ public class SuperExpr extends Expr {
 		}
 	};
 
-	private SuperExpr(SLocation location) {
+	private SuperExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public SuperExpr(NodeOption<Expr> classExpr) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(classExpr)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(classExpr)))));
 	}
 
 	public NodeOption<Expr> classExpr() {
-		return location.nodeChild(CLASS_EXPR);
+		return location.safeTraversal(CLASS_EXPR);
 	}
 
 	public SuperExpr withClassExpr(NodeOption<Expr> classExpr) {
-		return location.nodeWithChild(CLASS_EXPR, classExpr);
+		return location.safeTraversalReplace(CLASS_EXPR, classExpr);
 	}
 
 	public SuperExpr withClassExpr(Mutation<NodeOption<Expr>> mutation) {
-		return location.nodeMutateChild(CLASS_EXPR, mutation);
+		return location.safeTraversalMutate(CLASS_EXPR, mutation);
 	}
 
-	private static final int CLASS_EXPR = 0;
+	private static final STraversal<SNodeState> CLASS_EXPR = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			when(childIs(CLASS_EXPR, some()), composite(child(CLASS_EXPR, element()), token(LToken.Dot))),

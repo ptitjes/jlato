@@ -21,20 +21,21 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class PackageDecl extends Tree {
+public class PackageDecl extends TreeBase<SNodeState> implements Tree {
 
-	public final static Kind kind = new Kind() {
+	public final static TreeBase.Kind kind = new Kind() {
 		public PackageDecl instantiate(SLocation location) {
 			return new PackageDecl(location);
 		}
@@ -44,40 +45,40 @@ public class PackageDecl extends Tree {
 		}
 	};
 
-	private PackageDecl(SLocation location) {
+	private PackageDecl(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public PackageDecl(NodeList<AnnotationExpr> annotations, QualifiedName name) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations, name)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(annotations, name)))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
-		return location.nodeChild(ANNOTATIONS);
+		return location.safeTraversal(ANNOTATIONS);
 	}
 
 	public PackageDecl withAnnotations(NodeList<AnnotationExpr> annotations) {
-		return location.nodeWithChild(ANNOTATIONS, annotations);
+		return location.safeTraversalReplace(ANNOTATIONS, annotations);
 	}
 
 	public PackageDecl withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
-		return location.nodeMutateChild(ANNOTATIONS, mutation);
+		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 
 	public QualifiedName name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public PackageDecl withName(QualifiedName name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public PackageDecl withName(Mutation<QualifiedName> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final int ANNOTATIONS = 0;
-	private static final int NAME = 1;
+	private static final STraversal<SNodeState> ANNOTATIONS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),

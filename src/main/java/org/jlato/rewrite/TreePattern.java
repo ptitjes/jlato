@@ -22,11 +22,11 @@ package org.jlato.rewrite;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.HashSet;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 /**
  * @author Didier Villevalois
@@ -50,7 +50,7 @@ abstract class TreePattern<T extends Tree> extends Pattern<T> {
 	@Override
 	protected Substitution match(Object object, Substitution substitution) {
 		if (!(object instanceof Tree)) return null;
-		return matchTree(Tree.treeOf((Tree) object), substitution);
+		return matchTree(TreeBase.treeOf((Tree) object), substitution);
 	}
 
 	protected Substitution matchTree(STree tree, Substitution substitution) {
@@ -67,7 +67,7 @@ abstract class TreePattern<T extends Tree> extends Pattern<T> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public T build(Substitution substitution) {
-		return (T) new SLocation(null, null, buildTree(substitution)).facade;
+		return (T) new SLocation(null, buildTree(substitution)).facade;
 	}
 
 	private STree buildTree(Substitution substitution) {

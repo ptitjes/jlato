@@ -17,26 +17,18 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.internal.shapes;
-
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.SNodeState.ChildTraversal;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
+package org.jlato.internal.bu;
 
 /**
  * @author Didier Villevalois
  */
-public final class LSNodeChild extends LSTraversal {
+public abstract class STraversal<P extends STreeState<P>> {
 
-	private final STraversal<SNodeState> traversal;
+	public abstract STree<?> traverse(P state);
 
-	public LSNodeChild(STraversal<SNodeState> traversal, LexicalShape shape) {
-		super(shape);
-		this.traversal = traversal;
-	}
+	public abstract P rebuildParentState(P state, STree<?> child);
 
-	protected STree traverse(STree tree) {
-		return tree.traverse(traversal);
-	}
+	public abstract STraversal<P> leftSibling(P state);
+
+	public abstract STraversal<P> rightSibling(P state);
 }

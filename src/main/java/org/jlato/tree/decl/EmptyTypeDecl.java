@@ -21,16 +21,16 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeafState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class EmptyTypeDecl extends TypeDecl {
+public class EmptyTypeDecl extends TreeBase<SLeafState> implements TypeDecl {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public EmptyTypeDecl instantiate(SLocation location) {
 			return new EmptyTypeDecl(location);
 		}
@@ -40,12 +40,17 @@ public class EmptyTypeDecl extends TypeDecl {
 		}
 	};
 
-	private EmptyTypeDecl(SLocation location) {
+	private EmptyTypeDecl(SLocation<SLeafState> location) {
 		super(location);
 	}
 
 	public EmptyTypeDecl() {
-		super(new SLocation(new STree(kind, new SLeafState(dataOf()))));
+		super(new SLocation<SLeafState>(new STree<SLeafState>(kind, new SLeafState(dataOf()))));
+	}
+
+	@Override
+	public MemberKind memberKind() {
+		return MemberKind.Type;
 	}
 
 	@Override

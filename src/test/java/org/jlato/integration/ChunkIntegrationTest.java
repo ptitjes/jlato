@@ -25,7 +25,7 @@ import org.jlato.integration.utils.BulkTestRunner;
 import org.jlato.integration.utils.NormalizedJsonWriter;
 import org.jlato.integration.utils.TestResources;
 import org.jlato.printer.Printer;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;

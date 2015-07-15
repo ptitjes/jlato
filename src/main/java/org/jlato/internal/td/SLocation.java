@@ -24,145 +24,93 @@ import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.SNodeState;
 
 /**
  * @author Didier Villevalois
  */
-public class SLocation {
+public class SLocation<S extends STreeState<S>> {
 
-	private final SLocation parent;
-	private final SContext context;
-	public final STree tree;
+	private final SContext<?> context;
+	public final STree<S> tree;
 	public final boolean changed;
 	public final Tree facade;
 
-	public SLocation(STree tree) {
-		this(null, null, tree, false);
+	public SLocation(STree<S> tree) {
+		this(null, tree, false);
 	}
 
-	public SLocation(SLocation parent, SContext context, STree tree) {
-		this(parent, context, tree, false);
+	public SLocation(SContext<?> context, STree<S> tree) {
+		this(context, tree, false);
 	}
 
-	public SLocation(SLocation parent, SContext context, STree tree, boolean changed) {
-		this.parent = parent;
+	public SLocation(SContext<?> context, STree<S> tree, boolean changed) {
 		this.context = context;
 		this.tree = tree;
 		this.changed = changed;
 		this.facade = tree.kind.instantiate(this);
 	}
 
-	public SLocation withTree(STree newTree) {
-		return newTree == tree ? this : new SLocation(parent, context, newTree, true);
+	public SLocation<S> withTree(STree<S> newTree) {
+		return newTree == tree ? this : new SLocation<S>(context, newTree, true);
 	}
 
-	public SLocation parent() {
-		if (parent == null) return null;
-		return changed ? parent.withTree(context.rebuildParent(parent.tree, tree)) : parent;
+	public SContext<?> context() {
+		if (context == null) return null;
+		return changed ? context.rebuilt(tree) : context;
 	}
 
-	public SLocation root() {
+	public SLocation<?> parent() {
+		SContext<?> context = context();
+		return context == null ? null : context.parent;
+	}
+
+	public SLocation<?> root() {
 		final SLocation parent = parent();
 		return parent == null ? this : parent.root();
 	}
 
-	public SLocation firstChild() {
-		if (tree.state instanceof SLeafState) return null;
-		else if (tree.state instanceof SNodeState) {
-			final SNodeState state = (SNodeState) tree.state;
-			if (state.children.isEmpty()) return null;
-			SContext first = new SContext.NodeChild(-1).rightSibling(tree);
-			return first == null ? null : new SLocation(this, first, first.peruse(tree));
-		} else if (tree.state instanceof SNodeListState) {
-			final SNodeListState state = (SNodeListState) tree.state;
-			if (state.children.isEmpty()) return null;
-			SContext first = new SContext.NodeListChild(-1).rightSibling(tree);
-			return first == null ? null : new SLocation(this, first, first.peruse(tree));
-		} else if (tree.state instanceof SNodeOptionState) {
-			final SNodeOptionState state = (SNodeOptionState) tree.state;
-			if (state.element == null) return null;
-			SContext first = new SContext.NodeOptionElement();
-			return new SLocation(this, first, first.peruse(tree));
-		} else if (tree.state instanceof STreeSetState) {
-			return null; // For now
-		} else throw new IllegalStateException();
+	public SLocation<?> firstChild() {
+		STraversal<S> traversal = tree.state.firstChild();
+		return traversal == null ? null : traverse(traversal);
 	}
 
-	public SLocation lastChild() {
-		if (tree.state instanceof SLeafState) return null;
-		else if (tree.state instanceof SNodeState) {
-			final SNodeState state = (SNodeState) tree.state;
-			if (state.children.isEmpty()) return null;
-			SContext last = new SContext.NodeChild(state.children.size()).leftSibling(tree);
-			return last == null ? null : new SLocation(this, last, last.peruse(tree));
-		} else if (tree.state instanceof SNodeListState) {
-			final SNodeListState state = (SNodeListState) tree.state;
-			if (state.children.isEmpty()) return null;
-			SContext last = new SContext.NodeListChild(state.children.size()).leftSibling(tree);
-			return last == null ? null : new SLocation(this, last, last.peruse(tree));
-		} else if (tree.state instanceof SNodeOptionState) {
-			final SNodeOptionState state = (SNodeOptionState) tree.state;
-			if (state.element == null) return null;
-			SContext last = new SContext.NodeOptionElement();
-			return new SLocation(this, last, last.peruse(tree));
-		} else if (tree.state instanceof STreeSetState) {
-			return null; // For now
-		} else throw new IllegalStateException();
+	public SLocation<?> lastChild() {
+		STraversal<S> traversal = tree.state.lastChild();
+		return traversal == null ? null : traverse(traversal);
 	}
 
-	public SLocation leftSibling() {
-		SLocation parent = parent();
-		SContext sibling = context.leftSibling(parent.tree);
-		return sibling == null ? null : new SLocation(parent, sibling, sibling.peruse(parent.tree), false);
+	public SLocation<?> traverse(STraversal<S> traversal) {
+		return new SContext<S>(this, traversal).newLocation();
 	}
 
-	public SLocation rightSibling() {
-		SLocation parent = parent();
-		SContext sibling = context.rightSibling(parent.tree);
-		return sibling == null ? null : new SLocation(parent, sibling, sibling.peruse(parent.tree), false);
+	public SLocation<?> leftSibling() {
+		SContext<? extends STreeState<?>> leftSibling = context().leftSibling();
+		return leftSibling == null ? null : leftSibling.newLocation();
+	}
+
+	public SLocation<?> rightSibling() {
+		SContext<? extends STreeState<?>> rightSibling = context().rightSibling();
+		return rightSibling == null ? null : rightSibling.newLocation();
 	}
 
 	@SuppressWarnings("unchecked")
 	public <S extends Tree, T extends S> T replace(T replacement) {
-		final STree newTree = Tree.treeOf(replacement);
+		final STree newTree = TreeBase.treeOf(replacement);
 		return (T) withTree(newTree).facade;
-	}
-
-	/* Node methods */
-
-	@SuppressWarnings("unchecked")
-	public <C extends Tree> C nodeChild(final int index) {
-		final SNodeState state = (SNodeState) tree.state;
-		final STree childTree = state.child(index);
-		if (childTree == null) return null;
-
-		final SContext childContext = new SContext.NodeChild(index);
-		final SLocation childLocation = new SLocation(this, childContext, childTree);
-		return (C) childLocation.facade;
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends Tree, C extends Tree> T nodeWithChild(int index, C child) {
-		final SNodeState state = (SNodeState) tree.state;
-		final STree newNode = tree.withState(state.withChild(index, Tree.treeOf(child)));
-		return (T) withTree(newNode).facade;
-	}
-
-	public <T extends Tree, C extends Tree> T nodeMutateChild(int index, Mutation<C> mutation) {
-		return nodeWithChild(index, mutation.mutate(this.<C>nodeChild(index)));
 	}
 
 	/* Tree methods */
 
 	@SuppressWarnings("unchecked")
 	public <A> A data(final int index) {
-		final STreeState state = tree.state;
+		final S state = tree.state;
 		return (A) state.data(index);
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T extends Tree, A> T withData(int index, A attribute) {
-		final STreeState state = tree.state;
+		final S state = tree.state;
 		final STree newTree = tree.withState(state.withData(index, attribute));
 		return (T) withTree(newTree).facade;
 	}
@@ -171,92 +119,19 @@ public class SLocation {
 		return withData(index, mutation.mutate(this.<A>data(index)));
 	}
 
-	/* NodeList methods */
+	/* Node methods */
 
 	@SuppressWarnings("unchecked")
-	public <C extends Tree> C nodeListChild(final int index) {
-		final SNodeListState state = (SNodeListState) tree.state;
-		final STree childTree = state.child(index);
-		if (childTree == null) return null;
-
-		final SContext childContext = new SContext.NodeListChild(index);
-		final SLocation childLocation = new SLocation(this, childContext, childTree);
-		return (C) childLocation.facade;
+	public <C extends Tree> C safeTraversal(STraversal<S> traversal) {
+		return (C) traverse(traversal).facade;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Tree, C extends Tree> T nodeListWithChild(int index, C newChild) {
-		final SNodeListState state = (SNodeListState) tree.state;
-		final STree newTree = tree.withState(state.withChild(index, Tree.treeOf(newChild)));
-		return (T) withTree(newTree).facade;
+	public <T extends Tree, C extends Tree> T safeTraversalReplace(STraversal<S> traversal, C child) {
+		return (T) withTree(tree.traverseReplace(traversal, TreeBase.treeOf(child))).facade;
 	}
 
-	public Vector<STree> nodeListChildren() {
-		final SNodeListState state = (SNodeListState) tree.state;
-		return state.children;
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends Tree, C extends Tree> T nodeListWithChildren(Vector<STree> children) {
-		final SNodeListState state = (SNodeListState) tree.state;
-		final STree newTree = tree.withState(state.withChildren(children));
-		return (T) withTree(newTree).facade;
-	}
-
-	/* NodeOption methods */
-
-	@SuppressWarnings("unchecked")
-	public <C extends Tree> C nodeOptionElement() {
-		final SNodeOptionState state = (SNodeOptionState) tree.state;
-		final STree element = state.element;
-		if (element == null) return null;
-
-		final SContext childContext = new SContext.NodeOptionElement();
-		final SLocation childLocation = new SLocation(this, childContext, element);
-		return (C) childLocation.facade;
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends Tree, C extends Tree> T nodeOptionWithElement(C newElement) {
-		final SNodeOptionState state = (SNodeOptionState) tree.state;
-		final STree newTree = tree.withState(state.withElement(Tree.treeOf(newElement)));
-		return (T) withTree(newTree).facade;
-	}
-
-	public <T extends Tree, C extends Tree> T nodeOptionMutateElement(Mutation<C> mutation) {
-		C tree = this.<C>nodeOptionElement();
-		return nodeOptionWithElement(tree != null ? mutation.mutate(tree) : null);
-	}
-
-	/* TreeSet methods */
-
-	@SuppressWarnings("unchecked")
-	public <C extends Tree> C treeSetTree(final String path) {
-		final STreeSetState state = (STreeSetState) tree.state;
-		final STree childTree = state.tree(path);
-		if (childTree == null) return null;
-
-		final SContext childContext = new SContext.TreeSetTree(path);
-		final SLocation childLocation = new SLocation(this, childContext, childTree);
-		return (C) childLocation.facade;
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends Tree, C extends Tree> T treeSetWithTree(String path, C newChild) {
-		final STreeSetState state = (STreeSetState) tree.state;
-		final STree newTree = tree.withState(state.withTree(path, Tree.treeOf(newChild)));
-		return (T) withTree(newTree).facade;
-	}
-
-	public TreeMap<String, STree> treeSetTrees() {
-		final STreeSetState state = (STreeSetState) tree.state;
-		return state.trees;
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends Tree, C extends Tree> T treeSetWithTrees(TreeMap<String, STree> trees) {
-		final STreeSetState state = (STreeSetState) tree.state;
-		final STree newTree = tree.withState(state.withTrees(trees));
-		return (T) withTree(newTree).facade;
+	public <T extends Tree, C extends Tree> T safeTraversalMutate(STraversal<S> traversal, Mutation<C> mutation) {
+		return safeTraversalReplace(traversal, mutation.mutate(this.<C>safeTraversal(traversal)));
 	}
 }

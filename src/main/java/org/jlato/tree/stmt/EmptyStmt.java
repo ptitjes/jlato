@@ -21,16 +21,16 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeafState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class EmptyStmt extends Stmt {
+public class EmptyStmt extends TreeBase<SLeafState> implements Stmt {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public EmptyStmt instantiate(SLocation location) {
 			return new EmptyStmt(location);
 		}
@@ -40,12 +40,12 @@ public class EmptyStmt extends Stmt {
 		}
 	};
 
-	private EmptyStmt(SLocation location) {
+	private EmptyStmt(SLocation<SLeafState> location) {
 		super(location);
 	}
 
 	public EmptyStmt() {
-		super(new SLocation(new STree(kind, new SLeafState(dataOf()))));
+		super(new SLocation<SLeafState>(new STree<SLeafState>(kind, new SLeafState(dataOf()))));
 	}
 
 	public final static LexicalShape shape = token(LToken.SemiColon);

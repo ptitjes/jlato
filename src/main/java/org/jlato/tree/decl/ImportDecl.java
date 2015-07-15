@@ -21,21 +21,22 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterImports;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
+import org.jlato.internal.bu.STraversal;
 
-public class ImportDecl extends Tree {
+public class ImportDecl extends TreeBase<SNodeState> implements Tree {
 
-	public final static Kind kind = new Kind() {
+	public final static TreeBase.Kind kind = new Kind() {
 		public ImportDecl instantiate(SLocation location) {
 			return new ImportDecl(location);
 		}
@@ -45,24 +46,24 @@ public class ImportDecl extends Tree {
 		}
 	};
 
-	private ImportDecl(SLocation location) {
+	private ImportDecl(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public ImportDecl(QualifiedName name, boolean isStatic, boolean isOnDemand) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(name), dataOf(isStatic, isOnDemand)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name), dataOf(isStatic, isOnDemand)))));
 	}
 
 	public QualifiedName name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public ImportDecl withName(QualifiedName name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public ImportDecl withName(Mutation<QualifiedName> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public boolean isStatic() {
@@ -81,7 +82,7 @@ public class ImportDecl extends Tree {
 		return location.withData(ON_DEMAND, isOnDemand);
 	}
 
-	private static final int NAME = 0;
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
 
 	private static final int STATIC = 0;
 	private static final int ON_DEMAND = 1;

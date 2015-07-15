@@ -21,13 +21,13 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LSCondition.*;
@@ -37,10 +37,11 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
+import org.jlato.internal.bu.STraversal;
 
-public class IfStmt extends Stmt {
+public class IfStmt extends TreeBase<SNodeState> implements Stmt {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public IfStmt instantiate(SLocation location) {
 			return new IfStmt(location);
 		}
@@ -50,53 +51,53 @@ public class IfStmt extends Stmt {
 		}
 	};
 
-	private IfStmt(SLocation location) {
+	private IfStmt(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public IfStmt(Expr condition, Stmt thenStmt, NodeOption<Stmt> elseStmt) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(condition, thenStmt, elseStmt)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(condition, thenStmt, elseStmt)))));
 	}
 
 	public Expr condition() {
-		return location.nodeChild(CONDITION);
+		return location.safeTraversal(CONDITION);
 	}
 
 	public IfStmt withCondition(Expr condition) {
-		return location.nodeWithChild(CONDITION, condition);
+		return location.safeTraversalReplace(CONDITION, condition);
 	}
 
 	public IfStmt withCondition(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(CONDITION, mutation);
+		return location.safeTraversalMutate(CONDITION, mutation);
 	}
 
 	public Stmt thenStmt() {
-		return location.nodeChild(THEN_STMT);
+		return location.safeTraversal(THEN_STMT);
 	}
 
 	public IfStmt withThenStmt(Stmt thenStmt) {
-		return location.nodeWithChild(THEN_STMT, thenStmt);
+		return location.safeTraversalReplace(THEN_STMT, thenStmt);
 	}
 
 	public IfStmt withThenStmt(Mutation<Stmt> mutation) {
-		return location.nodeMutateChild(THEN_STMT, mutation);
+		return location.safeTraversalMutate(THEN_STMT, mutation);
 	}
 
 	public NodeOption<Stmt> elseStmt() {
-		return location.nodeChild(ELSE_STMT);
+		return location.safeTraversal(ELSE_STMT);
 	}
 
 	public IfStmt withElseStmt(NodeOption<Stmt> elseStmt) {
-		return location.nodeWithChild(ELSE_STMT, elseStmt);
+		return location.safeTraversalReplace(ELSE_STMT, elseStmt);
 	}
 
 	public IfStmt withElseStmt(Mutation<NodeOption<Stmt>> mutation) {
-		return location.nodeMutateChild(ELSE_STMT, mutation);
+		return location.safeTraversalMutate(ELSE_STMT, mutation);
 	}
 
-	private static final int CONDITION = 0;
-	private static final int THEN_STMT = 1;
-	private static final int ELSE_STMT = 2;
+	private static final STraversal<SNodeState> CONDITION = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> THEN_STMT = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> ELSE_STMT = SNodeState.childTraversal(2);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.If), token(LToken.ParenthesisLeft).withSpacingBefore(space()),

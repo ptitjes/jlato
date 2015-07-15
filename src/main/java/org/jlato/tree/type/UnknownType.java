@@ -20,16 +20,16 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.none;
 
-public class UnknownType extends Type {
+public class UnknownType extends TreeBase<SNodeState> implements Type {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public UnknownType instantiate(SLocation location) {
 			return new UnknownType(location);
 		}
@@ -39,12 +39,12 @@ public class UnknownType extends Type {
 		}
 	};
 
-	private UnknownType(SLocation location) {
+	private UnknownType(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public UnknownType() {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf()))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf()))));
 	}
 
 	public final static LexicalShape shape = none();

@@ -19,7 +19,7 @@
 
 package org.jlato.rewrite;
 
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 /**
  * @author Didier Villevalois

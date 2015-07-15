@@ -22,23 +22,24 @@ package org.jlato.tree.decl;
 import com.github.andrewoma.dexx.collection.IndexedList;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.WTokenRun;
 import org.jlato.internal.shapes.LSDump;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterPackageDecl;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
+import org.jlato.internal.bu.STraversal;
 
-public class CompilationUnit extends Tree {
+public class CompilationUnit extends TreeBase<SNodeState> implements Tree {
 
-	public final static Kind kind = new Kind() {
+	public final static TreeBase.Kind kind = new Kind() {
 		public CompilationUnit instantiate(SLocation location) {
 			return new CompilationUnit(location);
 		}
@@ -48,53 +49,53 @@ public class CompilationUnit extends Tree {
 		}
 	};
 
-	private CompilationUnit(SLocation location) {
+	private CompilationUnit(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public CompilationUnit(IndexedList<WTokenRun> preamble, PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(packageDecl, imports, types), dataOf(preamble)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(packageDecl, imports, types), dataOf(preamble)))));
 	}
 
 	public PackageDecl packageDecl() {
-		return location.nodeChild(PACKAGE_DECL);
+		return location.safeTraversal(PACKAGE_DECL);
 	}
 
 	public CompilationUnit withPackageDecl(PackageDecl packageDecl) {
-		return location.nodeWithChild(PACKAGE_DECL, packageDecl);
+		return location.safeTraversalReplace(PACKAGE_DECL, packageDecl);
 	}
 
 	public CompilationUnit withPackageDecl(Mutation<PackageDecl> mutation) {
-		return location.nodeMutateChild(PACKAGE_DECL, mutation);
+		return location.safeTraversalMutate(PACKAGE_DECL, mutation);
 	}
 
 	public NodeList<ImportDecl> imports() {
-		return location.nodeChild(IMPORTS);
+		return location.safeTraversal(IMPORTS);
 	}
 
 	public CompilationUnit withImports(NodeList<ImportDecl> imports) {
-		return location.nodeWithChild(IMPORTS, imports);
+		return location.safeTraversalReplace(IMPORTS, imports);
 	}
 
 	public CompilationUnit withImports(Mutation<NodeList<ImportDecl>> mutation) {
-		return location.nodeMutateChild(IMPORTS, mutation);
+		return location.safeTraversalMutate(IMPORTS, mutation);
 	}
 
 	public NodeList<TypeDecl> types() {
-		return location.nodeChild(TYPES);
+		return location.safeTraversal(TYPES);
 	}
 
 	public CompilationUnit withTypes(NodeList<TypeDecl> types) {
-		return location.nodeWithChild(TYPES, types);
+		return location.safeTraversalReplace(TYPES, types);
 	}
 
 	public CompilationUnit withTypes(Mutation<NodeList<TypeDecl>> mutation) {
-		return location.nodeMutateChild(TYPES, mutation);
+		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final int PACKAGE_DECL = 0;
-	private static final int IMPORTS = 1;
-	private static final int TYPES = 2;
+	private static final STraversal<SNodeState> PACKAGE_DECL = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> IMPORTS = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> TYPES = SNodeState.childTraversal(2);
 
 	private static final int PREAMBLE = 0;
 

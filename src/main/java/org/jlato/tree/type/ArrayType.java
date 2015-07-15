@@ -20,21 +20,22 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.decl.VariableDeclaratorId;
 import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
 public class ArrayType extends ReferenceType {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public ArrayType instantiate(SLocation location) {
 			return new ArrayType(location);
 		}
@@ -44,40 +45,40 @@ public class ArrayType extends ReferenceType {
 		}
 	};
 
-	private ArrayType(SLocation location) {
+	private ArrayType(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public ArrayType(Type componentType, NodeList<ArrayDim> dims) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(componentType, dims)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(componentType, dims)))));
 	}
 
 	public Type componentType() {
-		return location.nodeChild(COMPONENT_TYPE);
+		return location.safeTraversal(COMPONENT_TYPE);
 	}
 
 	public ArrayType withComponentType(Type componentType) {
-		return location.nodeWithChild(COMPONENT_TYPE, componentType);
+		return location.safeTraversalReplace(COMPONENT_TYPE, componentType);
 	}
 
 	public ArrayType withComponentType(Mutation<Type> mutation) {
-		return location.nodeMutateChild(COMPONENT_TYPE, mutation);
+		return location.safeTraversalMutate(COMPONENT_TYPE, mutation);
 	}
 
 	public NodeList<ArrayDim> dims() {
-		return location.nodeChild(DIMS);
+		return location.safeTraversal(DIMS);
 	}
 
 	public VariableDeclaratorId withDims(NodeList<ArrayDim> dims) {
-		return location.nodeWithChild(DIMS, dims);
+		return location.safeTraversalReplace(DIMS, dims);
 	}
 
 	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> mutation) {
-		return location.nodeMutateChild(DIMS, mutation);
+		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
-	private static final int COMPONENT_TYPE = 0;
-	private static final int DIMS = 1;
+	private static final STraversal<SNodeState> COMPONENT_TYPE = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> DIMS = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(COMPONENT_TYPE),

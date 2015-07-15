@@ -22,14 +22,15 @@ package org.jlato.tree;
 import com.github.andrewoma.dexx.collection.IndexedLists;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.TreeBase;
 
 import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
  */
-public class NodeOption<T extends Tree> extends Tree implements Iterable<T> {
+public class NodeOption<T extends Tree> extends TreeBase<SNodeOptionState> implements Tree, Iterable<T> {
 
 	public final static Kind<Tree> kind = new Kind<Tree>();
 
@@ -38,7 +39,7 @@ public class NodeOption<T extends Tree> extends Tree implements Iterable<T> {
 		return (Kind<T>) kind;
 	}
 
-	public static class Kind<T extends Tree> implements Tree.Kind {
+	public static class Kind<T extends Tree> implements TreeBase.Kind {
 		public Tree instantiate(SLocation location) {
 			return new NodeOption<T>(location);
 		}
@@ -63,16 +64,16 @@ public class NodeOption<T extends Tree> extends Tree implements Iterable<T> {
 		return new NodeOption<T>(tree);
 	}
 
-	private NodeOption(SLocation location) {
+	private NodeOption(SLocation<SNodeOptionState> location) {
 		super(location);
 	}
 
 	public NodeOption() {
-		super(new SLocation(new STree(kind, new SNodeOptionState(treeOf(null)))));
+		super(new SLocation<SNodeOptionState>(new STree<SNodeOptionState>(kind, new SNodeOptionState(treeOf(null)))));
 	}
 
 	public NodeOption(T element) {
-		super(new SLocation(new STree(kind, new SNodeOptionState(treeOf(element)))));
+		super(new SLocation<SNodeOptionState>(new STree<SNodeOptionState>(kind, new SNodeOptionState(treeOf(element)))));
 	}
 
 	public boolean isDefined() {
@@ -80,31 +81,31 @@ public class NodeOption<T extends Tree> extends Tree implements Iterable<T> {
 	}
 
 	public boolean isNone() {
-		return location.nodeOptionElement() == null;
+		return location.tree.state.element == null;
 	}
 
 	public boolean isSome() {
-		return location.nodeOptionElement() != null;
+		return location.tree.state.element != null;
 	}
 
 	public boolean contains(T element) {
-		return treeOf(location.nodeOptionElement()) == treeOf(element);
+		return location.tree.state.element == treeOf(element);
 	}
 
 	public T get() {
-		return location.nodeOptionElement();
+		return location.safeTraversal(SNodeOptionState.elementTraversal());
 	}
 
 	public NodeOption<T> set(T element) {
-		return location.nodeOptionWithElement(element);
+		return location.safeTraversalReplace(SNodeOptionState.elementTraversal(), element);
 	}
 
 	public NodeOption<T> set(Mutation<T> mutation) {
-		return location.nodeOptionMutateElement(mutation);
+		return location.safeTraversalMutate(SNodeOptionState.elementTraversal(), mutation);
 	}
 
 	public NodeOption<T> setNone() {
-		return location.nodeOptionWithElement(null);
+		return set((T) null);
 	}
 
 	public Iterator<T> iterator() {
@@ -115,7 +116,7 @@ public class NodeOption<T extends Tree> extends Tree implements Iterable<T> {
 		StringBuilder builder = new StringBuilder();
 		builder.append(start);
 
-		Tree tree = location.nodeOptionElement();
+		Tree tree = location.safeTraversal(SNodeOptionState.elementTraversal());
 		if (tree != null) builder.append(tree.toString());
 
 		builder.append(end);

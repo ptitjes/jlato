@@ -27,28 +27,44 @@ import java.util.Comparator;
 /**
  * @author Didier Villevalois
  */
-public class STreeSetState extends STreeState {
+public class STreeSetState extends STreeState<STreeSetState> {
 
-	public final TreeMap<String, STree> trees;
+	public final TreeMap<String, STree<?>> trees;
 
 	public STreeSetState(ArrayList<Object> data) {
-		this(new TreeMap<String, STree>(STRING_COMPARATOR, null), data);
+		this(new TreeMap<String, STree<?>>(STRING_COMPARATOR, null), data);
 	}
 
-	public STreeSetState(TreeMap<String, STree> trees) {
+	public STreeSetState(TreeMap<String, STree<?>> trees) {
 		this(trees, ArrayList.empty());
 	}
 
-	public STreeSetState(TreeMap<String, STree> trees, ArrayList<Object> data) {
+	public STreeSetState(TreeMap<String, STree<?>> trees, ArrayList<Object> data) {
 		super(data);
 		this.trees = trees;
+	}
+
+	public static STraversal<STreeSetState> treeTraversal(String path) {
+		return new TreeTraversal(path);
+	}
+
+	@Override
+	public STraversal<STreeSetState> firstChild() {
+		// TODO
+		return null;
+	}
+
+	@Override
+	public STraversal<STreeSetState> lastChild() {
+		// TODO
+		return null;
 	}
 
 	public STree tree(String path) {
 		return trees.get(path);
 	}
 
-	public STreeSetState withTree(String path, STree value) {
+	public STreeSetState withTree(String path, STree<?> value) {
 		return new STreeSetState(trees.put(path, value), data);
 	}
 
@@ -56,7 +72,7 @@ public class STreeSetState extends STreeState {
 		return new STreeSetState(trees, data.set(index, value));
 	}
 
-	public STreeState withTrees(TreeMap<String, STree> trees) {
+	public STreeState withTrees(TreeMap<String, STree<?>> trees) {
 		return new STreeSetState(trees, data);
 	}
 
@@ -66,4 +82,35 @@ public class STreeSetState extends STreeState {
 			return s1.compareTo(s2);
 		}
 	};
+
+	public static class TreeTraversal extends STraversal<STreeSetState> {
+
+		private final String path;
+
+		public TreeTraversal(String path) {
+			this.path = path;
+		}
+
+		@Override
+		public STree<?> traverse(STreeSetState state) {
+			return state.tree(path);
+		}
+
+		@Override
+		public STreeSetState rebuildParentState(STreeSetState state, STree<?> child) {
+			return state.withTree(path, child);
+		}
+
+		@Override
+		public STraversal<STreeSetState> leftSibling(STreeSetState state) {
+			// TODO
+			return null;
+		}
+
+		@Override
+		public STraversal<STreeSetState> rightSibling(STreeSetState state) {
+			// TODO
+			return null;
+		}
+	}
 }

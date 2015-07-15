@@ -20,12 +20,14 @@
 package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.SNodeState.ChildTraversal;
 import org.jlato.printer.IndentationConstraint;
 import org.jlato.printer.Printer;
 import org.jlato.printer.SpacingConstraint;
-import org.jlato.tree.Tree;
 
 import java.util.Iterator;
+
+import static org.jlato.internal.shapes.LSCondition.*;
 
 /**
  * @author Didier Villevalois
@@ -72,38 +74,29 @@ public abstract class LexicalShape {
 		return new LSAlternative(condition, shape, alternative);
 	}
 
-	public static LexicalShape childKindAlternative(int index, Tree.Kind kind, LexicalShape shape, LexicalShape alternative) {
-		return alternative(LSCondition.childKind(index, kind), shape, alternative);
-	}
-
 	public static LexicalShape dataOption(int index, LexicalShape shape) {
 		return alternative(LSCondition.data(index), shape, null);
 	}
 
 	@Deprecated
-	public static LexicalShape nonNullChild(int index, LexicalShape shape) {
-		return nonNullChild(index, shape, null);
+	public static LexicalShape nonNullChild(STraversal<SNodeState> traversal, LexicalShape shape, LexicalShape alternative) {
+		return alternative(childIs(traversal, nonNull()), shape, alternative);
 	}
 
-	@Deprecated
-	public static LexicalShape nonNullChild(int index, LexicalShape shape, LexicalShape alternative) {
-		return alternative(LSCondition.nonNullChild(index), shape, alternative);
+	public static LexicalShape nonEmptyChildren(STraversal<SNodeState> traversal, LexicalShape shape) {
+		return alternative(childIs(traversal, not(emptyList())), shape, null);
 	}
 
-	public static LexicalShape nonEmptyChildren(int index, LexicalShape shape) {
-		return nonEmptyChildren(index, shape, null);
+	public static LexicalShape nonEmptyChildren(STraversal<SNodeState> traversal, LexicalShape shape, LexicalShape alternative) {
+		return alternative(childIs(traversal, not(emptyList())), shape, alternative);
 	}
 
-	public static LexicalShape nonEmptyChildren(int index, LexicalShape shape, LexicalShape alternative) {
-		return alternative(LSCondition.not(LSCondition.emptyList(index)), shape, alternative);
+	public static LexicalShape emptyChildren(STraversal<SNodeState> traversal, LexicalShape shape) {
+		return nonEmptyChildren(traversal, null, shape);
 	}
 
-	public static LexicalShape emptyChildren(int index, LexicalShape shape) {
-		return nonEmptyChildren(index, null, shape);
-	}
-
-	public static LexicalShape emptyChildren(int index, LexicalShape shape, LexicalShape alternative) {
-		return nonEmptyChildren(index, alternative, shape);
+	public static LexicalShape emptyChildren(STraversal<SNodeState> traversal, LexicalShape shape, LexicalShape alternative) {
+		return nonEmptyChildren(traversal, alternative, shape);
 	}
 
 	public static LexicalShape composite(LexicalShape... shapes) {
@@ -126,12 +119,12 @@ public abstract class LexicalShape {
 		return new LSNodeOptionElement(shape);
 	}
 
-	public static LexicalShape child(int index) {
-		return child(index, defaultShape());
+	public static LexicalShape child(STraversal<SNodeState> traversal) {
+		return child(traversal, defaultShape());
 	}
 
-	public static LexicalShape child(int index, LexicalShape shape) {
-		return new LSNodeChild(index, shape);
+	public static LexicalShape child(STraversal<SNodeState> traversal, LexicalShape shape) {
+		return new LSNodeChild(traversal, shape);
 	}
 
 	public static LexicalShape list() {

@@ -44,7 +44,7 @@ public final class LSList extends LexicalShape {
 	@Override
 	public boolean isDefined(STree tree) {
 		final SNodeListState state = (SNodeListState) tree.state;
-		final Vector<STree> children = state.children;
+		final Vector<STree<?>> children = state.children;
 		return !children.isEmpty() || (renderIfEmpty &&
 				((before != null && before.isDefined(tree)) ||
 						(after != null && after.isDefined(tree))));
@@ -55,7 +55,7 @@ public final class LSList extends LexicalShape {
 		final RunBuilder builder = new RunBuilder(tokenIterator);
 
 		final SNodeListState state = (SNodeListState) tree.state;
-		final Vector<STree> children = state.children;
+		final Vector<STree<?>> children = state.children;
 		final boolean isEmpty = children.isEmpty();
 
 		builder.handleNext(isEmpty && !renderIfEmpty ? none() : before, tree);
@@ -81,7 +81,7 @@ public final class LSList extends LexicalShape {
 
 	public void render(STree tree, WRunRun run, Printer printer) {
 		final SNodeListState state = (SNodeListState) tree.state;
-		final Vector<STree> children = state.children;
+		final Vector<STree<?>> children = state.children;
 		final boolean isEmpty = children.isEmpty();
 
 		final RunRenderer renderer = new RunRenderer(run);

@@ -21,14 +21,14 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.type.Type;
 
@@ -36,10 +36,11 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class ArrayCreationExpr extends Expr {
+public class ArrayCreationExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public ArrayCreationExpr instantiate(SLocation location) {
 			return new ArrayCreationExpr(location);
 		}
@@ -49,66 +50,66 @@ public class ArrayCreationExpr extends Expr {
 		}
 	};
 
-	private ArrayCreationExpr(SLocation location) {
+	private ArrayCreationExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> initializer) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(type, dimExprs, dims, initializer)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(type, dimExprs, dims, initializer)))));
 	}
 
 	public Type type() {
-		return location.nodeChild(TYPE);
+		return location.safeTraversal(TYPE);
 	}
 
 	public ArrayCreationExpr withType(Type type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.safeTraversalReplace(TYPE, type);
 	}
 
 	public ArrayCreationExpr withType(Mutation<Type> mutation) {
-		return location.nodeMutateChild(TYPE, mutation);
+		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
 	public NodeList<ArrayDimExpr> dimExprs() {
-		return location.nodeChild(DIMENSION_EXPRESSIONS);
+		return location.safeTraversal(DIMENSION_EXPRESSIONS);
 	}
 
 	public ArrayCreationExpr withDimExprs(NodeList<ArrayDimExpr> dimExprs) {
-		return location.nodeWithChild(DIMENSION_EXPRESSIONS, dimExprs);
+		return location.safeTraversalReplace(DIMENSION_EXPRESSIONS, dimExprs);
 	}
 
 	public ArrayCreationExpr withDimExprs(Mutation<NodeList<ArrayDimExpr>> mutation) {
-		return location.nodeMutateChild(DIMENSION_EXPRESSIONS, mutation);
+		return location.safeTraversalMutate(DIMENSION_EXPRESSIONS, mutation);
 	}
 
 	public NodeList<ArrayDim> dims() {
-		return location.nodeChild(DIMENSIONS);
+		return location.safeTraversal(DIMENSIONS);
 	}
 
 	public ArrayCreationExpr withDims(NodeList<ArrayDim> dims) {
-		return location.nodeWithChild(DIMENSIONS, dims);
+		return location.safeTraversalReplace(DIMENSIONS, dims);
 	}
 
 	public ArrayCreationExpr withDims(Mutation<NodeList<ArrayDim>> mutation) {
-		return location.nodeMutateChild(DIMENSIONS, mutation);
+		return location.safeTraversalMutate(DIMENSIONS, mutation);
 	}
 
 	public NodeOption<ArrayInitializerExpr> init() {
-		return location.nodeChild(INITIALIZER);
+		return location.safeTraversal(INITIALIZER);
 	}
 
 	public ArrayCreationExpr withInit(NodeOption<ArrayInitializerExpr> initializer) {
-		return location.nodeWithChild(INITIALIZER, initializer);
+		return location.safeTraversalReplace(INITIALIZER, initializer);
 	}
 
 	public ArrayCreationExpr withInit(Mutation<NodeOption<ArrayInitializerExpr>> mutation) {
-		return location.nodeMutateChild(INITIALIZER, mutation);
+		return location.safeTraversalMutate(INITIALIZER, mutation);
 	}
 
-	private static final int TYPE = 0;
-	private static final int DIMENSION_EXPRESSIONS = 1;
-	private static final int DIMENSIONS = 2;
-	private static final int INITIALIZER = 3;
+	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> DIMENSION_EXPRESSIONS = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> DIMENSIONS = SNodeState.childTraversal(2);
+	private static final STraversal<SNodeState> INITIALIZER = SNodeState.childTraversal(3);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.New),

@@ -21,19 +21,20 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class DoStmt extends Stmt {
+public class DoStmt extends TreeBase<SNodeState> implements Stmt {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public DoStmt instantiate(SLocation location) {
 			return new DoStmt(location);
 		}
@@ -43,40 +44,40 @@ public class DoStmt extends Stmt {
 		}
 	};
 
-	private DoStmt(SLocation location) {
+	private DoStmt(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public DoStmt(Stmt body, Expr condition) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(body, condition)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(body, condition)))));
 	}
 
 	public Stmt body() {
-		return location.nodeChild(BODY);
+		return location.safeTraversal(BODY);
 	}
 
 	public DoStmt withBody(Stmt body) {
-		return location.nodeWithChild(BODY, body);
+		return location.safeTraversalReplace(BODY, body);
 	}
 
 	public DoStmt withBody(Mutation<Stmt> mutation) {
-		return location.nodeMutateChild(BODY, mutation);
+		return location.safeTraversalMutate(BODY, mutation);
 	}
 
 	public Expr condition() {
-		return location.nodeChild(CONDITION);
+		return location.safeTraversal(CONDITION);
 	}
 
 	public DoStmt withCondition(Expr condition) {
-		return location.nodeWithChild(CONDITION, condition);
+		return location.safeTraversalReplace(CONDITION, condition);
 	}
 
 	public DoStmt withCondition(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(CONDITION, mutation);
+		return location.safeTraversalMutate(CONDITION, mutation);
 	}
 
-	private static final int BODY = 0;
-	private static final int CONDITION = 1;
+	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> CONDITION = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Do).withSpacingAfter(space()),

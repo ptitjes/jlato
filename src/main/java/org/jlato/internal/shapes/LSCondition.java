@@ -20,11 +20,13 @@
 package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.SNodeState.ChildTraversal;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
 import org.jlato.tree.Tree;
+import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.bu.SNodeState;
 
 /**
  * @author Didier Villevalois
@@ -50,49 +52,40 @@ public abstract class LSCondition {
 		};
 	}
 
-	public static LSCondition nonNullChild(final int index) {
+	public static LSCondition nonNull() {
 		return new LSCondition() {
 			public boolean test(STree tree) {
-				final SNodeState state = (SNodeState) tree.state;
-				final STree child = state.child(index);
-				return child != null;
+				return tree != null;
 			}
 		};
 	}
 
-	public static LSCondition kind(final Tree.Kind kind) {
+	public static LSCondition kind(final TreeBase.Kind kind) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
-				final Tree.Kind actualKind = tree.kind;
-				return actualKind == kind;
+				return tree.kind == kind;
 			}
 		};
 	}
 
-	public static LSCondition childKind(final int index, final Tree.Kind kind) {
-		return childHas(index, kind(kind));
-	}
-
-	public static LSCondition childIs(final int index, final LSCondition condition) {
+	public static LSCondition childIs(final STraversal<SNodeState> traversal, final LSCondition condition) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
-				final SNodeState state = (SNodeState) tree.state;
-				final STree child = state.child(index);
-				return condition.test(child);
+				return condition.test(tree.traverse(traversal));
 			}
 		};
 	}
 
-	public static LSCondition childHas(final int index, final LSCondition condition) {
-		return childIs(index, condition);
+	public static LSCondition childHas(STraversal<SNodeState> traversal, LSCondition condition) {
+		return childIs(traversal, condition);
 	}
 
-	public static LSCondition lastChildKind(final Tree.Kind kind) {
+	public static LSCondition lastChildKind(final TreeBase.Kind kind) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
 				final SNodeListState state = (SNodeListState) tree.state;
-				final Vector<STree> children = state.children;
-				final Tree.Kind childKind = children.last().kind;
+				final Vector<STree<?>> children = state.children;
+				final TreeBase.Kind childKind = children.last().kind;
 				return childKind == kind;
 			}
 		};
@@ -103,22 +96,7 @@ public abstract class LSCondition {
 			@Override
 			public boolean test(STree tree) {
 				final SNodeListState state = (SNodeListState) tree.state;
-				final Vector<STree> children = state.children;
-				return children == null || children.isEmpty();
-			}
-		};
-	}
-
-	public static LSCondition emptyList(final int index) {
-		return new LSCondition() {
-			@Override
-			public boolean test(STree tree) {
-				final SNodeState state = (SNodeState) tree.state;
-				final STree nodeList = state.child(index);
-				if (nodeList == null) return true;
-
-				final SNodeListState nodeListState = (SNodeListState) nodeList.state;
-				final Vector<STree> children = nodeListState.children;
+				final Vector<STree<?>> children = state.children;
 				return children == null || children.isEmpty();
 			}
 		};

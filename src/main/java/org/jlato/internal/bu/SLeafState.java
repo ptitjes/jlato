@@ -20,11 +20,13 @@
 package org.jlato.internal.bu;
 
 import com.github.andrewoma.dexx.collection.ArrayList;
+import org.jlato.internal.td.SContext;
+import org.jlato.internal.td.SLocation;
 
 /**
  * @author Didier Villevalois
  */
-public class SLeafState extends STreeState {
+public class SLeafState extends STreeState<SLeafState> {
 
 	public SLeafState(ArrayList<Object> data) {
 		super(data);
@@ -32,5 +34,15 @@ public class SLeafState extends STreeState {
 
 	public SLeafState withData(int index, Object value) {
 		return new SLeafState(data.set(index, value));
+	}
+
+	@Override
+	public STraversal<SLeafState> firstChild() {
+		return null;
+	}
+
+	@Override
+	public STraversal<SLeafState> lastChild() {
+		return null;
 	}
 }

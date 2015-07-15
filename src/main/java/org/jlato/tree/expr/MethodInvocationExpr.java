@@ -21,23 +21,24 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class MethodInvocationExpr extends Expr {
+public class MethodInvocationExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public MethodInvocationExpr instantiate(SLocation location) {
 			return new MethodInvocationExpr(location);
 		}
@@ -47,66 +48,66 @@ public class MethodInvocationExpr extends Expr {
 		}
 	};
 
-	private MethodInvocationExpr(SLocation location) {
+	private MethodInvocationExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public MethodInvocationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, name, args)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(scope, typeArgs, name, args)))));
 	}
 
 	public NodeOption<Expr> scope() {
-		return location.nodeChild(SCOPE);
+		return location.safeTraversal(SCOPE);
 	}
 
 	public MethodInvocationExpr withScope(NodeOption<Expr> scope) {
-		return location.nodeWithChild(SCOPE, scope);
+		return location.safeTraversalReplace(SCOPE, scope);
 	}
 
 	public MethodInvocationExpr withScope(Mutation<NodeOption<Expr>> mutation) {
-		return location.nodeMutateChild(SCOPE, mutation);
+		return location.safeTraversalMutate(SCOPE, mutation);
 	}
 
 	public NodeList<Type> typeArgs() {
-		return location.nodeChild(TYPE_ARGUMENTS);
+		return location.safeTraversal(TYPE_ARGUMENTS);
 	}
 
 	public MethodInvocationExpr withTypeArgs(NodeList<Type> typeArgs) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
+		return location.safeTraversalReplace(TYPE_ARGUMENTS, typeArgs);
 	}
 
 	public MethodInvocationExpr withTypeArgs(Mutation<NodeList<Type>> mutation) {
-		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
+		return location.safeTraversalMutate(TYPE_ARGUMENTS, mutation);
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public MethodInvocationExpr withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public MethodInvocationExpr withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public NodeList<Expr> args() {
-		return location.nodeChild(ARGUMENTS);
+		return location.safeTraversal(ARGUMENTS);
 	}
 
 	public MethodInvocationExpr withArgs(NodeList<Expr> args) {
-		return location.nodeWithChild(ARGUMENTS, args);
+		return location.safeTraversalReplace(ARGUMENTS, args);
 	}
 
 	public MethodInvocationExpr withArgs(Mutation<NodeList<Expr>> mutation) {
-		return location.nodeMutateChild(ARGUMENTS, mutation);
+		return location.safeTraversalMutate(ARGUMENTS, mutation);
 	}
 
-	private static final int SCOPE = 0;
-	private static final int TYPE_ARGUMENTS = 1;
-	private static final int NAME = 2;
-	private static final int ARGUMENTS = 3;
+	private static final STraversal<SNodeState> SCOPE = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> TYPE_ARGUMENTS = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(2);
+	private static final STraversal<SNodeState> ARGUMENTS = SNodeState.childTraversal(3);
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),

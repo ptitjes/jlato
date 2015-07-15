@@ -23,22 +23,27 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Tree;
+import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.bu.SNodeState;
 
 /**
  * @author Didier Villevalois
  */
-public abstract class TreeBase {
+public abstract class TreeBase<S extends STreeState<S>> {
 
-	protected final SLocation location;
+	protected final SLocation<S> location;
 
-	protected TreeBase(SLocation location) {
+	protected TreeBase(SLocation<S> location) {
 		this.location = location;
 	}
 
 	public Tree parent() {
-		SLocation parentLocation = location.parent();
+		SLocation<?> parentLocation = location.parent();
 		return parentLocation == null ? null : parentLocation.facade;
 	}
 
@@ -46,17 +51,17 @@ public abstract class TreeBase {
 		return location.root().facade;
 	}
 
-	public static SLocation locationOf(TreeBase facade) {
-		return facade == null ? null : facade.location;
+	public static SLocation<? extends STreeState> locationOf(Tree facade) {
+		return facade == null ? null : ((TreeBase<?>) facade).location;
 	}
 
-	public static STree treeOf(TreeBase facade) {
-		return facade == null ? null : facade.location.tree;
+	public static STree<? extends STreeState<?>> treeOf(Tree facade) {
+		return facade == null ? null : ((TreeBase<?>) facade).location.tree;
 	}
 
-	protected static ArrayList<STree> treesOf(TreeBase... facades) {
-		final Builder<STree, ArrayList<STree>> builder = ArrayList.<STree>factory().newBuilder();
-		for (TreeBase facade : facades) {
+	protected static ArrayList<STree<? extends STreeState<?>>> treesOf(Tree... facades) {
+		final Builder<STree<?>, ArrayList<STree<?>>> builder = ArrayList.<STree<?>>factory().newBuilder();
+		for (Tree facade : facades) {
 			builder.add(treeOf(facade));
 		}
 		return builder.build();
@@ -70,9 +75,9 @@ public abstract class TreeBase {
 		return builder.build();
 	}
 
-	protected static Vector<STree> treeListOf(TreeBase... facades) {
-		final Builder<STree, Vector<STree>> builder = Vector.<STree>factory().newBuilder();
-		for (TreeBase facade : facades) {
+	protected static Vector<STree<? extends STreeState<?>>> treeListOf(Tree... facades) {
+		final Builder<STree<?>, Vector<STree<?>>> builder = Vector.<STree<?>>factory().newBuilder();
+		for (Tree facade : facades) {
 			builder.add(treeOf(facade));
 		}
 		return builder.build();

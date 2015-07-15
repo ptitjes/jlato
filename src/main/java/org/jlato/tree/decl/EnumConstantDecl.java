@@ -21,14 +21,14 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
 
@@ -37,10 +37,11 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.SpacingConstraint.spacing;
+import org.jlato.internal.bu.STraversal;
 
-public class EnumConstantDecl extends MemberDecl {
+public class EnumConstantDecl extends TreeBase<SNodeState> implements MemberDecl {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public EnumConstantDecl instantiate(SLocation location) {
 			return new EnumConstantDecl(location);
 		}
@@ -50,12 +51,12 @@ public class EnumConstantDecl extends MemberDecl {
 		}
 	};
 
-	private EnumConstantDecl(SLocation location) {
+	private EnumConstantDecl(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public <EM extends Tree & ExtendedModifier> EnumConstantDecl(NodeList<EM> modifiers, Name name, NodeOption<NodeList<Expr>> args, NodeOption<NodeList<MemberDecl>> classBody) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, args, classBody)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, name, args, classBody)))));
 	}
 
 	@Override
@@ -64,57 +65,57 @@ public class EnumConstantDecl extends MemberDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
-		return location.nodeChild(MODIFIERS);
+		return location.safeTraversal(MODIFIERS);
 	}
 
 	public <EM extends Tree & ExtendedModifier> EnumConstantDecl withModifiers(NodeList<EM> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
 	public <EM extends Tree & ExtendedModifier> EnumConstantDecl withModifiers(Mutation<NodeList<EM>> mutation) {
-		return location.nodeMutateChild(MODIFIERS, mutation);
+		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public EnumConstantDecl withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public EnumConstantDecl withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public NodeOption<NodeList<Expr>> args() {
-		return location.nodeChild(ARGS);
+		return location.safeTraversal(ARGS);
 	}
 
 	public EnumConstantDecl withArgs(NodeOption<NodeList<Expr>> args) {
-		return location.nodeWithChild(ARGS, args);
+		return location.safeTraversalReplace(ARGS, args);
 	}
 
 	public EnumConstantDecl withArgs(Mutation<NodeOption<NodeList<Expr>>> mutation) {
-		return location.nodeMutateChild(ARGS, mutation);
+		return location.safeTraversalMutate(ARGS, mutation);
 	}
 
 	public NodeOption<NodeList<MemberDecl>> classBody() {
-		return location.nodeChild(CLASS_BODY);
+		return location.safeTraversal(CLASS_BODY);
 	}
 
 	public EnumConstantDecl withClassBody(NodeOption<NodeList<MemberDecl>> classBody) {
-		return location.nodeWithChild(CLASS_BODY, classBody);
+		return location.safeTraversalReplace(CLASS_BODY, classBody);
 	}
 
 	public EnumConstantDecl withClassBody(Mutation<NodeOption<NodeList<MemberDecl>>> mutation) {
-		return location.nodeMutateChild(CLASS_BODY, mutation);
+		return location.safeTraversalMutate(CLASS_BODY, mutation);
 	}
 
-	private static final int MODIFIERS = 0;
-	private static final int NAME = 1;
-	private static final int ARGS = 2;
-	private static final int CLASS_BODY = 3;
+	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> ARGS = SNodeState.childTraversal(2);
+	private static final STraversal<SNodeState> CLASS_BODY = SNodeState.childTraversal(3);
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

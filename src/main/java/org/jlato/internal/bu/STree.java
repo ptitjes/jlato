@@ -19,23 +19,25 @@
 
 package org.jlato.internal.bu;
 
+import org.jlato.internal.td.SContext;
 import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
  */
-public class STree {
+public class STree<S extends STreeState<S>> {
 
-	public final Tree.Kind kind;
-	public final STreeState state;
+	public final TreeBase.Kind kind;
+	public final S state;
 	public final WRunRun run;
 
-	public STree(Tree.Kind kind, STreeState state) {
+	public STree(TreeBase.Kind kind, S state) {
 		this(kind, state, null);
 	}
 
-	public STree(Tree.Kind kind, STreeState state, WRunRun run) {
+	public STree(TreeBase.Kind kind, S state, WRunRun run) {
 		this.kind = kind;
 		this.state = state;
 		this.run = run;
@@ -45,16 +47,33 @@ public class STree {
 		return 0;
 	}
 
-	public STree withState(STreeState state) {
-		return new STree(kind, state, run);
+	public STree<S> withState(S state) {
+		return new STree<S>(kind, state, run);
 	}
 
-	public STree withRun(WRunRun run) {
-		return new STree(kind, state, run);
+	public STree<S> withRun(WRunRun run) {
+		return new STree<S>(kind, state, run);
+	}
+
+	public STree<?> traverse(STraversal<S> traversal) {
+		return traversal.traverse(state);
+	}
+
+	public STree<S> traverseReplace(STraversal<S> traversal, STree<?> child) {
+		final S newState = traversal.rebuildParentState(state, child);
+		return withState(newState);
 	}
 
 	public Tree asTree() {
-		return kind.instantiate(new SLocation(this));
+		return kind.instantiate(location());
+	}
+
+	public SLocation<S> location() {
+		return new SLocation<S>(this);
+	}
+
+	public SLocation<S> locationIn(SContext<?> context) {
+		return new SLocation<S>(context, this);
 	}
 
 	public void validate() {

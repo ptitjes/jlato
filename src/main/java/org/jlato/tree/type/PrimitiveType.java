@@ -21,20 +21,21 @@ package org.jlato.tree.type;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class PrimitiveType extends Type {
+public class PrimitiveType extends TreeBase<SNodeState> implements Type {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public PrimitiveType instantiate(SLocation location) {
 			return new PrimitiveType(location);
 		}
@@ -44,24 +45,24 @@ public class PrimitiveType extends Type {
 		}
 	};
 
-	private PrimitiveType(SLocation location) {
+	private PrimitiveType(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public PrimitiveType(NodeList<AnnotationExpr> annotations, Primitive type) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations), dataOf(type)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(annotations), dataOf(type)))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
-		return location.nodeChild(ANNOTATIONS);
+		return location.safeTraversal(ANNOTATIONS);
 	}
 
 	public Type withAnnotations(NodeList<AnnotationExpr> annotations) {
-		return location.nodeWithChild(ANNOTATIONS, annotations);
+		return location.safeTraversalReplace(ANNOTATIONS, annotations);
 	}
 
 	public Type withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
-		return location.nodeMutateChild(ANNOTATIONS, mutation);
+		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 
 	public Primitive type() {
@@ -76,7 +77,7 @@ public class PrimitiveType extends Type {
 		return location.mutateData(PRIMITIVE, mutation);
 	}
 
-	private static final int ANNOTATIONS = 0;
+	private static final STraversal<SNodeState> ANNOTATIONS = SNodeState.childTraversal(0);
 
 	private static final int PRIMITIVE = 0;
 

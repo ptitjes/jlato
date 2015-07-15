@@ -21,23 +21,24 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.VariableDeclarationExpr;
 
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class TryStmt extends Stmt {
+public class TryStmt extends TreeBase<SNodeState> implements Stmt {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public TryStmt instantiate(SLocation location) {
 			return new TryStmt(location);
 		}
@@ -47,66 +48,66 @@ public class TryStmt extends Stmt {
 		}
 	};
 
-	private TryStmt(SLocation location) {
+	private TryStmt(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public TryStmt(NodeList<VariableDeclarationExpr> resources, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(resources, tryBlock, catchs, finallyBlock)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(resources, tryBlock, catchs, finallyBlock)))));
 	}
 
 	public NodeList<VariableDeclarationExpr> resources() {
-		return location.nodeChild(RESOURCES);
+		return location.safeTraversal(RESOURCES);
 	}
 
 	public TryStmt withResources(NodeList<VariableDeclarationExpr> resources) {
-		return location.nodeWithChild(RESOURCES, resources);
+		return location.safeTraversalReplace(RESOURCES, resources);
 	}
 
 	public TryStmt withResources(Mutation<NodeList<VariableDeclarationExpr>> mutation) {
-		return location.nodeMutateChild(RESOURCES, mutation);
+		return location.safeTraversalMutate(RESOURCES, mutation);
 	}
 
 	public BlockStmt tryBlock() {
-		return location.nodeChild(TRY_BLOCK);
+		return location.safeTraversal(TRY_BLOCK);
 	}
 
 	public TryStmt withTryBlock(BlockStmt tryBlock) {
-		return location.nodeWithChild(TRY_BLOCK, tryBlock);
+		return location.safeTraversalReplace(TRY_BLOCK, tryBlock);
 	}
 
 	public TryStmt withTryBlock(Mutation<BlockStmt> mutation) {
-		return location.nodeMutateChild(TRY_BLOCK, mutation);
+		return location.safeTraversalMutate(TRY_BLOCK, mutation);
 	}
 
 	public NodeList<CatchClause> catchs() {
-		return location.nodeChild(CATCHS);
+		return location.safeTraversal(CATCHS);
 	}
 
 	public TryStmt withCatchs(NodeList<CatchClause> catchs) {
-		return location.nodeWithChild(CATCHS, catchs);
+		return location.safeTraversalReplace(CATCHS, catchs);
 	}
 
 	public TryStmt withCatchs(Mutation<NodeList<CatchClause>> mutation) {
-		return location.nodeMutateChild(CATCHS, mutation);
+		return location.safeTraversalMutate(CATCHS, mutation);
 	}
 
 	public NodeOption<BlockStmt> finallyBlock() {
-		return location.nodeChild(FINALLY_BLOCK);
+		return location.safeTraversal(FINALLY_BLOCK);
 	}
 
 	public TryStmt withFinallyBlock(NodeOption<BlockStmt> finallyBlock) {
-		return location.nodeWithChild(FINALLY_BLOCK, finallyBlock);
+		return location.safeTraversalReplace(FINALLY_BLOCK, finallyBlock);
 	}
 
 	public TryStmt withFinallyBlock(Mutation<NodeOption<BlockStmt>> mutation) {
-		return location.nodeMutateChild(FINALLY_BLOCK, mutation);
+		return location.safeTraversalMutate(FINALLY_BLOCK, mutation);
 	}
 
-	private static final int RESOURCES = 0;
-	private static final int TRY_BLOCK = 1;
-	private static final int CATCHS = 2;
-	private static final int FINALLY_BLOCK = 3;
+	private static final STraversal<SNodeState> RESOURCES = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> TRY_BLOCK = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> CATCHS = SNodeState.childTraversal(2);
+	private static final STraversal<SNodeState> FINALLY_BLOCK = SNodeState.childTraversal(3);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Try).withSpacingAfter(space()),

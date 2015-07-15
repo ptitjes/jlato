@@ -21,11 +21,11 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.decl.LocalVariableDecl;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -34,10 +34,11 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class VariableDeclarationExpr extends Expr {
+public class VariableDeclarationExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public VariableDeclarationExpr instantiate(SLocation location) {
 			return new VariableDeclarationExpr(location);
 		}
@@ -47,27 +48,27 @@ public class VariableDeclarationExpr extends Expr {
 		}
 	};
 
-	private VariableDeclarationExpr(SLocation location) {
+	private VariableDeclarationExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public VariableDeclarationExpr(LocalVariableDecl declaration) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(declaration)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(declaration)))));
 	}
 
 	public LocalVariableDecl declaration() {
-		return location.nodeChild(DECLARATION);
+		return location.safeTraversal(DECLARATION);
 	}
 
 	public VariableDeclarationExpr withDeclaration(LocalVariableDecl declaration) {
-		return location.nodeWithChild(DECLARATION, declaration);
+		return location.safeTraversalReplace(DECLARATION, declaration);
 	}
 
 	public VariableDeclarationExpr withDeclaration(Mutation<LocalVariableDecl> mutation) {
-		return location.nodeMutateChild(DECLARATION, mutation);
+		return location.safeTraversalMutate(DECLARATION, mutation);
 	}
 
-	private static final int DECLARATION = 0;
+	private static final STraversal<SNodeState> DECLARATION = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = child(DECLARATION);
 

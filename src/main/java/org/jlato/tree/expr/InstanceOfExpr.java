@@ -21,18 +21,19 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class InstanceOfExpr extends Expr {
+public class InstanceOfExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public InstanceOfExpr instantiate(SLocation location) {
 			return new InstanceOfExpr(location);
 		}
@@ -42,40 +43,40 @@ public class InstanceOfExpr extends Expr {
 		}
 	};
 
-	private InstanceOfExpr(SLocation location) {
+	private InstanceOfExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public InstanceOfExpr(Expr expr, Type type) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(expr, type)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(expr, type)))));
 	}
 
 	public Expr expr() {
-		return location.nodeChild(EXPR);
+		return location.safeTraversal(EXPR);
 	}
 
 	public InstanceOfExpr withExpr(Expr expr) {
-		return location.nodeWithChild(EXPR, expr);
+		return location.safeTraversalReplace(EXPR, expr);
 	}
 
 	public InstanceOfExpr withExpr(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(EXPR, mutation);
+		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
 	public Type type() {
-		return location.nodeChild(TYPE);
+		return location.safeTraversal(TYPE);
 	}
 
 	public InstanceOfExpr withType(Type type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.safeTraversalReplace(TYPE, type);
 	}
 
 	public InstanceOfExpr withType(Mutation<Type> mutation) {
-		return location.nodeMutateChild(TYPE, mutation);
+		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
-	private static final int EXPR = 0;
-	private static final int TYPE = 1;
+	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(EXPR),

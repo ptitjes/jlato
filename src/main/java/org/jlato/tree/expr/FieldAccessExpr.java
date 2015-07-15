@@ -21,24 +21,25 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class FieldAccessExpr extends Expr {
+public class FieldAccessExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public FieldAccessExpr instantiate(SLocation location) {
 			return new FieldAccessExpr(location);
 		}
@@ -48,40 +49,40 @@ public class FieldAccessExpr extends Expr {
 		}
 	};
 
-	private FieldAccessExpr(SLocation location) {
+	private FieldAccessExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public FieldAccessExpr(NodeOption<Expr> scope, Name name) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, name)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(scope, name)))));
 	}
 
 	public NodeOption<Expr> scope() {
-		return location.nodeChild(SCOPE);
+		return location.safeTraversal(SCOPE);
 	}
 
 	public FieldAccessExpr withScope(NodeOption<Expr> scope) {
-		return location.nodeWithChild(SCOPE, scope);
+		return location.safeTraversalReplace(SCOPE, scope);
 	}
 
 	public FieldAccessExpr withScope(Mutation<NodeOption<Expr>> mutation) {
-		return location.nodeMutateChild(SCOPE, mutation);
+		return location.safeTraversalMutate(SCOPE, mutation);
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public FieldAccessExpr withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public FieldAccessExpr withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final int SCOPE = 0;
-	private static final int NAME = 1;
+	private static final STraversal<SNodeState> SCOPE = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),

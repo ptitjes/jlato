@@ -21,7 +21,7 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LSCondition.emptyList;
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -31,15 +31,11 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 
-public abstract class MemberDecl extends Decl {
+public interface MemberDecl extends Decl {
 
-	protected MemberDecl(SLocation location) {
-		super(location);
-	}
+	MemberKind memberKind();
 
-	public abstract MemberKind memberKind();
-
-	public static final LexicalShape bodyShape = list(true,
+	LexicalShape bodyShape = list(true,
 			alternative(emptyList(),
 					token(LToken.BraceLeft)
 							.withSpacing(space(), newLine())
@@ -58,13 +54,13 @@ public abstract class MemberDecl extends Decl {
 			)
 	);
 
-	public static final LexicalShape membersShape = list(
+	LexicalShape membersShape = list(
 			none().withSpacingAfter(spacing(ClassBody_BeforeMembers)),
 			none().withSpacingAfter(spacing(ClassBody_BetweenMembers)),
 			none().withSpacingAfter(spacing(ClassBody_AfterMembers))
 	);
 
-	public enum MemberKind {
+	enum MemberKind {
 		Empty,
 		Initializer,
 		Constructor,

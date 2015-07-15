@@ -21,24 +21,25 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class AnnotationMemberDecl extends MemberDecl {
+public class AnnotationMemberDecl extends TreeBase<SNodeState> implements MemberDecl {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public AnnotationMemberDecl instantiate(SLocation location) {
 			return new AnnotationMemberDecl(location);
 		}
@@ -48,12 +49,12 @@ public class AnnotationMemberDecl extends MemberDecl {
 		}
 	};
 
-	private AnnotationMemberDecl(SLocation location) {
+	private AnnotationMemberDecl(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl(NodeList<EM> modifiers, Type type, Name name, NodeList<ArrayDim> dims, NodeOption<Expr> defaultValue) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, type, name, dims, defaultValue)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, type, name, dims, defaultValue)))));
 	}
 
 	@Override
@@ -62,70 +63,70 @@ public class AnnotationMemberDecl extends MemberDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
-		return location.nodeChild(MODIFIERS);
+		return location.safeTraversal(MODIFIERS);
 	}
 
 	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl withModifiers(NodeList<EM> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
 	public <EM extends Tree & ExtendedModifier> AnnotationMemberDecl withModifiers(Mutation<NodeList<EM>> mutation) {
-		return location.nodeMutateChild(MODIFIERS, mutation);
+		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 
 	public Type type() {
-		return location.nodeChild(TYPE);
+		return location.safeTraversal(TYPE);
 	}
 
 	public AnnotationMemberDecl withType(Type type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.safeTraversalReplace(TYPE, type);
 	}
 
 	public AnnotationMemberDecl withType(Mutation<Type> mutation) {
-		return location.nodeMutateChild(TYPE, mutation);
+		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public AnnotationMemberDecl withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public AnnotationMemberDecl withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public NodeList<ArrayDim> dims() {
-		return location.nodeChild(DIMS);
+		return location.safeTraversal(DIMS);
 	}
 
 	public VariableDeclaratorId withDims(NodeList<ArrayDim> dims) {
-		return location.nodeWithChild(DIMS, dims);
+		return location.safeTraversalReplace(DIMS, dims);
 	}
 
 	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> mutation) {
-		return location.nodeMutateChild(DIMS, mutation);
+		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
 	public NodeOption<Expr> defaultValue() {
-		return location.nodeChild(DEFAULT_VALUE);
+		return location.safeTraversal(DEFAULT_VALUE);
 	}
 
 	public AnnotationMemberDecl withDefaultValue(NodeOption<Expr> defaultValue) {
-		return location.nodeWithChild(DEFAULT_VALUE, defaultValue);
+		return location.safeTraversalReplace(DEFAULT_VALUE, defaultValue);
 	}
 
 	public AnnotationMemberDecl withDefaultValue(Mutation<NodeOption<Expr>> mutation) {
-		return location.nodeMutateChild(DEFAULT_VALUE, mutation);
+		return location.safeTraversalMutate(DEFAULT_VALUE, mutation);
 	}
 
-	private static final int MODIFIERS = 0;
-	private static final int TYPE = 1;
-	private static final int NAME = 2;
-	private static final int DIMS = 3;
-	private static final int DEFAULT_VALUE = 4;
+	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(2);
+	private static final STraversal<SNodeState> DIMS = SNodeState.childTraversal(3);
+	private static final STraversal<SNodeState> DEFAULT_VALUE = SNodeState.childTraversal(4);
 
 	public static final LexicalShape defaultValShape = composite(token(LToken.Default), element());
 

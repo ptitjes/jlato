@@ -20,19 +20,20 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.decl.TypeDecl;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
+import org.jlato.internal.bu.STraversal;
 
-public class TypeDeclarationStmt extends Stmt {
+public class TypeDeclarationStmt extends TreeBase<SNodeState> implements Stmt {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public TypeDeclarationStmt instantiate(SLocation location) {
 			return new TypeDeclarationStmt(location);
 		}
@@ -42,27 +43,27 @@ public class TypeDeclarationStmt extends Stmt {
 		}
 	};
 
-	private TypeDeclarationStmt(SLocation location) {
+	private TypeDeclarationStmt(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public TypeDeclarationStmt(TypeDecl typeDecl) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(typeDecl)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(typeDecl)))));
 	}
 
 	public TypeDecl typeDecl() {
-		return location.nodeChild(TYPE_DECL);
+		return location.safeTraversal(TYPE_DECL);
 	}
 
 	public TypeDeclarationStmt withTypeDecl(TypeDecl typeDecl) {
-		return location.nodeWithChild(TYPE_DECL, typeDecl);
+		return location.safeTraversalReplace(TYPE_DECL, typeDecl);
 	}
 
 	public TypeDeclarationStmt withTypeDecl(Mutation<TypeDecl> mutation) {
-		return location.nodeMutateChild(TYPE_DECL, mutation);
+		return location.safeTraversalMutate(TYPE_DECL, mutation);
 	}
 
-	private static final int TYPE_DECL = 0;
+	private static final STraversal<SNodeState> TYPE_DECL = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			child(TYPE_DECL)

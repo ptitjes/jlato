@@ -20,29 +20,42 @@
 package org.jlato.internal.bu;
 
 import com.github.andrewoma.dexx.collection.ArrayList;
-import com.github.andrewoma.dexx.collection.Vector;
 
 /**
  * @author Didier Villevalois
  */
-public class SNodeOptionState extends STreeState {
+public class SNodeOptionState extends STreeState<SNodeOptionState> {
 
-	public final STree element;
+	public final STree<?> element;
 
-	public SNodeOptionState(STree element) {
+	public SNodeOptionState(STree<?> element) {
 		this(element, ArrayList.empty());
 	}
 
-	public SNodeOptionState(STree element, ArrayList<Object> data) {
+	public SNodeOptionState(STree<?> element, ArrayList<Object> data) {
 		super(data);
 		this.element = element;
 	}
 
-	public STree element() {
+	public static STraversal<SNodeOptionState> elementTraversal() {
+		return new ElementTraversal();
+	}
+
+	@Override
+	public STraversal<SNodeOptionState> firstChild() {
+		return elementTraversal();
+	}
+
+	@Override
+	public STraversal<SNodeOptionState> lastChild() {
+		return elementTraversal();
+	}
+
+	public STree<?> element() {
 		return element;
 	}
 
-	public SNodeOptionState withElement(STree element) {
+	public SNodeOptionState withElement(STree<?> element) {
 		return new SNodeOptionState(element, data);
 	}
 
@@ -54,5 +67,32 @@ public class SNodeOptionState extends STreeState {
 		super.validate(tree);
 
 		if (element != null) element.state.validate(element);
+	}
+
+
+	public static class ElementTraversal extends STraversal<SNodeOptionState> {
+
+		public ElementTraversal() {
+		}
+
+		@Override
+		public STree<?> traverse(SNodeOptionState state) {
+			return state.element;
+		}
+
+		@Override
+		public SNodeOptionState rebuildParentState(SNodeOptionState state, STree<?> child) {
+			return state.withElement(child);
+		}
+
+		@Override
+		public STraversal<SNodeOptionState> leftSibling(SNodeOptionState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal<SNodeOptionState> rightSibling(SNodeOptionState state) {
+			return null;
+		}
 	}
 }

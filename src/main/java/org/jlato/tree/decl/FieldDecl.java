@@ -21,20 +21,21 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class FieldDecl extends MemberDecl {
+public class FieldDecl extends TreeBase<SNodeState> implements MemberDecl {
 
-	public final static Kind kind = new Kind() {
+	public final static TreeBase.Kind kind = new Kind() {
 		public FieldDecl instantiate(SLocation location) {
 			return new FieldDecl(location);
 		}
@@ -44,12 +45,12 @@ public class FieldDecl extends MemberDecl {
 		}
 	};
 
-	private FieldDecl(SLocation location) {
+	private FieldDecl(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public <EM extends Tree & ExtendedModifier> FieldDecl(NodeList<EM> modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, type, variables/*, javadocComment*/)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, type, variables/*, javadocComment*/)))));
 	}
 
 	@Override
@@ -58,39 +59,39 @@ public class FieldDecl extends MemberDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
-		return location.nodeChild(MODIFIERS);
+		return location.safeTraversal(MODIFIERS);
 	}
 
 	public <EM extends Tree & ExtendedModifier> FieldDecl withModifiers(NodeList<EM> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
 	public <EM extends Tree & ExtendedModifier> FieldDecl withModifiers(Mutation<NodeList<EM>> mutation) {
-		return location.nodeMutateChild(MODIFIERS, mutation);
+		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 
 	public Type type() {
-		return location.nodeChild(TYPE);
+		return location.safeTraversal(TYPE);
 	}
 
 	public FieldDecl withType(Type type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.safeTraversalReplace(TYPE, type);
 	}
 
 	public FieldDecl withType(Mutation<Type> mutation) {
-		return location.nodeMutateChild(TYPE, mutation);
+		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
 	public NodeList<VariableDeclarator> variables() {
-		return location.nodeChild(VARIABLES);
+		return location.safeTraversal(VARIABLES);
 	}
 
 	public FieldDecl withVariables(NodeList<VariableDeclarator> variables) {
-		return location.nodeWithChild(VARIABLES, variables);
+		return location.safeTraversalReplace(VARIABLES, variables);
 	}
 
 	public FieldDecl withVariables(Mutation<NodeList<VariableDeclarator>> mutation) {
-		return location.nodeMutateChild(VARIABLES, mutation);
+		return location.safeTraversalMutate(VARIABLES, mutation);
 	}
 /*
 
@@ -103,9 +104,9 @@ public class FieldDecl extends MemberDecl {
 	}
 */
 
-	private static final int MODIFIERS = 0;
-	private static final int TYPE = 1;
-	private static final int VARIABLES = 2;
+	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> VARIABLES = SNodeState.childTraversal(2);
 //	private static final int JAVADOC_COMMENT = 4;
 
 	public final static LexicalShape shape = composite(

@@ -20,7 +20,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Mutation;
@@ -32,10 +32,11 @@ import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class ConstructorDecl extends MemberDecl {
+public class ConstructorDecl extends TreeBase<SNodeState> implements MemberDecl {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public ConstructorDecl instantiate(SLocation location) {
 			return new ConstructorDecl(location);
 		}
@@ -45,12 +46,12 @@ public class ConstructorDecl extends MemberDecl {
 		}
 	};
 
-	private ConstructorDecl(SLocation location) {
+	private ConstructorDecl(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public <EM extends Tree & ExtendedModifier> ConstructorDecl(NodeList<EM> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<FormalParameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, typeParams, name, params, throwsClause, body)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, typeParams, name, params, throwsClause, body)))));
 	}
 
 	@Override
@@ -59,83 +60,83 @@ public class ConstructorDecl extends MemberDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
-		return location.nodeChild(MODIFIERS);
+		return location.safeTraversal(MODIFIERS);
 	}
 
 	public <EM extends Tree & ExtendedModifier> ConstructorDecl withModifiers(NodeList<EM> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
 	public <EM extends Tree & ExtendedModifier> ConstructorDecl withModifiers(Mutation<NodeList<EM>> mutation) {
-		return location.nodeMutateChild(MODIFIERS, mutation);
+		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 
 	public NodeList<TypeParameter> typeParams() {
-		return location.nodeChild(TYPE_PARAMETERS);
+		return location.safeTraversal(TYPE_PARAMETERS);
 	}
 
 	public ConstructorDecl withTypeParams(NodeList<TypeParameter> typeParams) {
-		return location.nodeWithChild(TYPE_PARAMETERS, typeParams);
+		return location.safeTraversalReplace(TYPE_PARAMETERS, typeParams);
 	}
 
 	public ConstructorDecl withTypeParams(Mutation<NodeList<TypeParameter>> mutation) {
-		return location.nodeMutateChild(TYPE_PARAMETERS, mutation);
+		return location.safeTraversalMutate(TYPE_PARAMETERS, mutation);
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public ConstructorDecl withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public ConstructorDecl withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public NodeList<FormalParameter> params() {
-		return location.nodeChild(PARAMETERS);
+		return location.safeTraversal(PARAMETERS);
 	}
 
 	public ConstructorDecl withParams(NodeList<FormalParameter> params) {
-		return location.nodeWithChild(PARAMETERS, params);
+		return location.safeTraversalReplace(PARAMETERS, params);
 	}
 
 	public ConstructorDecl withParams(Mutation<NodeList<FormalParameter>> mutation) {
-		return location.nodeMutateChild(PARAMETERS, mutation);
+		return location.safeTraversalMutate(PARAMETERS, mutation);
 	}
 
 	public NodeList<QualifiedType> throwsClause() {
-		return location.nodeChild(THROWS_CLAUSE);
+		return location.safeTraversal(THROWS_CLAUSE);
 	}
 
 	public ConstructorDecl withThrowsClause(NodeList<QualifiedType> throwsClause) {
-		return location.nodeWithChild(THROWS_CLAUSE, throwsClause);
+		return location.safeTraversalReplace(THROWS_CLAUSE, throwsClause);
 	}
 
 	public ConstructorDecl withThrowsClause(Mutation<NodeList<QualifiedType>> mutation) {
-		return location.nodeMutateChild(THROWS_CLAUSE, mutation);
+		return location.safeTraversalMutate(THROWS_CLAUSE, mutation);
 	}
 
 	public BlockStmt body() {
-		return location.nodeChild(BODY);
+		return location.safeTraversal(BODY);
 	}
 
 	public ConstructorDecl withBody(BlockStmt body) {
-		return location.nodeWithChild(BODY, body);
+		return location.safeTraversalReplace(BODY, body);
 	}
 
 	public ConstructorDecl withBody(Mutation<BlockStmt> mutation) {
-		return location.nodeMutateChild(BODY, mutation);
+		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final int MODIFIERS = 0;
-	private static final int TYPE_PARAMETERS = 1;
-	private static final int NAME = 2;
-	private static final int PARAMETERS = 3;
-	private static final int THROWS_CLAUSE = 4;
-	private static final int BODY = 5;
+	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> TYPE_PARAMETERS = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(2);
+	private static final STraversal<SNodeState> PARAMETERS = SNodeState.childTraversal(3);
+	private static final STraversal<SNodeState> THROWS_CLAUSE = SNodeState.childTraversal(4);
+	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(5);
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

@@ -20,20 +20,21 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.stmt.BlockStmt;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
+import org.jlato.internal.bu.STraversal;
 
-public class InitializerDecl extends MemberDecl {
+public class InitializerDecl extends TreeBase<SNodeState> implements MemberDecl {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public InitializerDecl instantiate(SLocation location) {
 			return new InitializerDecl(location);
 		}
@@ -43,12 +44,12 @@ public class InitializerDecl extends MemberDecl {
 		}
 	};
 
-	private InitializerDecl(SLocation location) {
+	private InitializerDecl(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public <EM extends Tree & ExtendedModifier> InitializerDecl(NodeList<EM> modifiers, BlockStmt body/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, body/*, javadocComment*/)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, body/*, javadocComment*/)))));
 	}
 
 	@Override
@@ -57,27 +58,27 @@ public class InitializerDecl extends MemberDecl {
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
-		return location.nodeChild(MODIFIERS);
+		return location.safeTraversal(MODIFIERS);
 	}
 
 	public <EM extends Tree & ExtendedModifier> InitializerDecl withModifiers(NodeList<EM> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
 	public <EM extends Tree & ExtendedModifier> InitializerDecl withModifiers(Mutation<NodeList<EM>> mutation) {
-		return location.nodeMutateChild(MODIFIERS, mutation);
+		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 
 	public BlockStmt body() {
-		return location.nodeChild(BODY);
+		return location.safeTraversal(BODY);
 	}
 
 	public InitializerDecl withBody(BlockStmt body) {
-		return location.nodeWithChild(BODY, body);
+		return location.safeTraversalReplace(BODY, body);
 	}
 
 	public InitializerDecl withBody(Mutation<BlockStmt> mutation) {
-		return location.nodeMutateChild(BODY, mutation);
+		return location.safeTraversalMutate(BODY, mutation);
 	}
 
 	/*
@@ -89,8 +90,8 @@ public class InitializerDecl extends MemberDecl {
 			return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
 		}
 	*/
-	private static final int MODIFIERS = 0;
-	private static final int BODY = 1;
+	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(1);
 //	private static final int JAVADOC_COMMENT = 3;
 
 	public final static LexicalShape shape = composite(

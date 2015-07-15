@@ -19,12 +19,7 @@
 
 package org.jlato.tree.decl;
 
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
-public abstract class Decl extends Tree {
-
-	protected Decl(SLocation location) {
-		super(location);
-	}
+public interface Decl extends Tree {
 }

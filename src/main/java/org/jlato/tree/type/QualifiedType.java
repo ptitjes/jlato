@@ -21,24 +21,25 @@ package org.jlato.tree.type;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
 public class QualifiedType extends ReferenceType {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public QualifiedType instantiate(SLocation location) {
 			return new QualifiedType(location);
 		}
@@ -48,66 +49,66 @@ public class QualifiedType extends ReferenceType {
 		}
 	};
 
-	private QualifiedType(SLocation location) {
+	private QualifiedType(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public QualifiedType(NodeList<AnnotationExpr> annotations, NodeOption<QualifiedType> scope, Name name, NodeOption<NodeList<Type>> typeArgs) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations, scope, name, typeArgs)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(annotations, scope, name, typeArgs)))));
 	}
 
 	public NodeOption<QualifiedType> scope() {
-		return location.nodeChild(SCOPE);
+		return location.safeTraversal(SCOPE);
 	}
 
 	public QualifiedType withScope(NodeOption<QualifiedType> scope) {
-		return location.nodeWithChild(SCOPE, scope);
+		return location.safeTraversalReplace(SCOPE, scope);
 	}
 
 	public QualifiedType withScope(Mutation<NodeOption<QualifiedType>> mutation) {
-		return location.nodeMutateChild(SCOPE, mutation);
+		return location.safeTraversalMutate(SCOPE, mutation);
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
-		return location.nodeChild(ANNOTATIONS);
+		return location.safeTraversal(ANNOTATIONS);
 	}
 
 	public Type withAnnotations(NodeList<AnnotationExpr> annotations) {
-		return location.nodeWithChild(ANNOTATIONS, annotations);
+		return location.safeTraversalReplace(ANNOTATIONS, annotations);
 	}
 
 	public Type withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
-		return location.nodeMutateChild(ANNOTATIONS, mutation);
+		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public QualifiedType withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public QualifiedType withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public NodeOption<NodeList<Type>> typeArgs() {
-		return location.nodeChild(TYPE_ARGUMENTS);
+		return location.safeTraversal(TYPE_ARGUMENTS);
 	}
 
 	public QualifiedType withTypeArgs(NodeOption<NodeList<Type>> typeArgs) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
+		return location.safeTraversalReplace(TYPE_ARGUMENTS, typeArgs);
 	}
 
 	public QualifiedType withTypeArgs(Mutation<NodeOption<NodeList<Type>>> mutation) {
-		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
+		return location.safeTraversalMutate(TYPE_ARGUMENTS, mutation);
 	}
 
-	private static final int ANNOTATIONS = 0;
-	private static final int SCOPE = 1;
-	private static final int NAME = 2;
-	private static final int TYPE_ARGUMENTS = 3;
+	private static final STraversal<SNodeState> ANNOTATIONS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> SCOPE = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(2);
+	private static final STraversal<SNodeState> TYPE_ARGUMENTS = SNodeState.childTraversal(3);
 
 	public static final LexicalShape scopeShape = composite(element(), token(LToken.Dot));
 

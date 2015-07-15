@@ -21,17 +21,17 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeafState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Tree;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class Modifier extends Tree implements ExtendedModifier {
+public class Modifier extends TreeBase<SLeafState> implements Tree, ExtendedModifier {
 
-	public final static Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public Tree instantiate(SLocation location) {
 			return new Modifier(location);
 		}
@@ -54,12 +54,12 @@ public class Modifier extends Tree implements ExtendedModifier {
 	public static final Modifier Native = new Modifier(LToken.Native);
 	public static final Modifier StrictFP = new Modifier(LToken.StrictFP);
 
-	protected Modifier(SLocation location) {
+	protected Modifier(SLocation<SLeafState> location) {
 		super(location);
 	}
 
 	private Modifier(LToken keyword) {
-		super(new SLocation(new STree(kind, new SLeafState(dataOf(keyword)))));
+		super(new SLocation<SLeafState>(new STree<SLeafState>(kind, new SLeafState(dataOf(keyword)))));
 	}
 
 	public String toString() {

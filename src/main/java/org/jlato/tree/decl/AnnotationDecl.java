@@ -21,19 +21,20 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class AnnotationDecl extends TypeDecl {
+public class AnnotationDecl extends TreeBase<SNodeState> implements TypeDecl {
 
-	public final static Kind kind = new Kind() {
+	public final static TreeBase.Kind kind = new Kind() {
 		public AnnotationDecl instantiate(SLocation location) {
 			return new AnnotationDecl(location);
 		}
@@ -43,24 +44,29 @@ public class AnnotationDecl extends TypeDecl {
 		}
 	};
 
-	protected AnnotationDecl(SLocation location) {
+	protected AnnotationDecl(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public <EM extends Tree & ExtendedModifier> AnnotationDecl(NodeList<EM> modifiers, Name name, NodeList<MemberDecl> members) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, members)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, name, members)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
-		return location.nodeChild(MODIFIERS);
+		return location.safeTraversal(MODIFIERS);
 	}
 
 	public <EM extends Tree & ExtendedModifier> AnnotationDecl withModifiers(NodeList<EM> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
 	public <EM extends Tree & ExtendedModifier> AnnotationDecl withModifiers(Mutation<NodeList<EM>> mutation) {
-		return location.nodeMutateChild(MODIFIERS, mutation);
+		return location.safeTraversalMutate(MODIFIERS, mutation);
+	}
+
+	@Override
+	public MemberKind memberKind() {
+		return MemberKind.Type;
 	}
 
 	public TypeKind typeKind() {
@@ -68,32 +74,32 @@ public class AnnotationDecl extends TypeDecl {
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public AnnotationDecl withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public AnnotationDecl withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public NodeList<MemberDecl> members() {
-		return location.nodeChild(MEMBERS);
+		return location.safeTraversal(MEMBERS);
 	}
 
 	public AnnotationDecl withMembers(NodeList<MemberDecl> members) {
-		return location.nodeWithChild(MEMBERS, members);
+		return location.safeTraversalReplace(MEMBERS, members);
 	}
 
 	public AnnotationDecl withMembers(Mutation<NodeList<MemberDecl>> mutation) {
-		return location.nodeMutateChild(MEMBERS, mutation);
+		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
 
-	private static final int MODIFIERS = 0;
-	private static final int NAME = 1;
-	private static final int MEMBERS = 6;
+	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> MEMBERS = SNodeState.childTraversal(6);
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS),

@@ -21,10 +21,13 @@ package org.jlato.tree;
 
 import com.github.andrewoma.dexx.collection.*;
 import com.github.andrewoma.dexx.collection.Iterable;
+import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STreeSetState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
 
@@ -35,7 +38,7 @@ import java.io.PrintWriter;
 /**
  * @author Didier Villevalois
  */
-public class TreeSet<T extends Tree> extends Tree {
+public class TreeSet<T extends Tree> extends TreeBase<STreeSetState> implements Tree {
 
 	public final static Kind<Tree> kind = new Kind<Tree>();
 
@@ -44,7 +47,7 @@ public class TreeSet<T extends Tree> extends Tree {
 		return (Kind<T>) kind;
 	}
 
-	public static class Kind<T extends Tree> implements Tree.Kind {
+	public static class Kind<T extends Tree> implements TreeBase.Kind {
 		public Tree instantiate(SLocation location) {
 			return new TreeSet<T>(location);
 		}
@@ -54,32 +57,28 @@ public class TreeSet<T extends Tree> extends Tree {
 		}
 	}
 
-	private TreeSet(SLocation location) {
+	private TreeSet(SLocation<STreeSetState> location) {
 		super(location);
 	}
 
 	public TreeSet(String rootPath) {
-		this(new SLocation(new STree(kind, new STreeSetState(dataOf(rootPath)))));
+		this(new SLocation<STreeSetState>(new STree<STreeSetState>(kind, new STreeSetState(dataOf(rootPath)))));
 	}
 
-	public TreeSet(String rootPath, TreeMap<String, STree> trees) {
-		this(new SLocation(new STree(kind, new STreeSetState(trees, dataOf(rootPath)))));
+	public TreeSet(String rootPath, TreeMap<String, STree<?>> trees) {
+		this(new SLocation<STreeSetState>(new STree<STreeSetState>(kind, new STreeSetState(trees, dataOf(rootPath)))));
 	}
 
 	public T get(String path) {
-		return location.treeSetTree(path);
+		return location.safeTraversal(STreeSetState.treeTraversal(path));
 	}
 
 	public TreeSet<T> put(String path, T tree) {
-		return location.treeSetWithTree(path, tree);
+		return location.safeTraversalReplace(STreeSetState.treeTraversal(path), tree);
 	}
 
 	public Iterable<String> paths() {
-		return location.treeSetTrees().keys();
-	}
-
-	public Iterable<STree> getAll() {
-		return location.treeSetTrees().values();
+		return location.tree.state.trees.keys();
 	}
 
 	public void updateOnDisk() throws IOException {
@@ -88,7 +87,7 @@ public class TreeSet<T extends Tree> extends Tree {
 
 	public void updateOnDisk(boolean format, FormattingSettings formattingSettings) throws IOException {
 		final String rootPath = location.data(ROOT_PATH);
-		for (Pair<String, STree> pair : location.treeSetTrees()) {
+		for (Pair<String, STree<?>> pair : location.tree.state.trees) {
 			final String path = pair.component1();
 			final STree tree = pair.component2();
 

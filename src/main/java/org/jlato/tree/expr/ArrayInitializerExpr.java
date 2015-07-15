@@ -21,19 +21,20 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class ArrayInitializerExpr extends Expr {
+public class ArrayInitializerExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public ArrayInitializerExpr instantiate(SLocation location) {
 			return new ArrayInitializerExpr(location);
 		}
@@ -43,27 +44,27 @@ public class ArrayInitializerExpr extends Expr {
 		}
 	};
 
-	private ArrayInitializerExpr(SLocation location) {
+	private ArrayInitializerExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public ArrayInitializerExpr(NodeList<Expr> values) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(values)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(values)))));
 	}
 
 	public NodeList<Expr> values() {
-		return location.nodeChild(VALUES);
+		return location.safeTraversal(VALUES);
 	}
 
 	public ArrayInitializerExpr withValues(NodeList<Expr> values) {
-		return location.nodeWithChild(VALUES, values);
+		return location.safeTraversalReplace(VALUES, values);
 	}
 
 	public ArrayInitializerExpr withValues(Mutation<NodeList<Expr>> mutation) {
-		return location.nodeMutateChild(VALUES, mutation);
+		return location.safeTraversalMutate(VALUES, mutation);
 	}
 
-	private static final int VALUES = 0;
+	private static final STraversal<SNodeState> VALUES = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			nonEmptyChildren(VALUES,

@@ -21,20 +21,23 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class LocalVariableDecl extends Decl {
+public class LocalVariableDecl extends TreeBase<SNodeState> implements Decl {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public LocalVariableDecl instantiate(SLocation location) {
 			return new LocalVariableDecl(location);
 		}
@@ -44,64 +47,53 @@ public class LocalVariableDecl extends Decl {
 		}
 	};
 
-	protected LocalVariableDecl(SLocation location) {
+	protected LocalVariableDecl(SLocation<SNodeState> location) {
 		super(location);
 	}
 
-	public <EM extends Tree & ExtendedModifier> LocalVariableDecl(NodeList<EM> modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, type, variables/*, javadocComment*/)))));
+	public <EM extends Tree & ExtendedModifier> LocalVariableDecl(NodeList<EM> modifiers, Type type, NodeList<VariableDeclarator> variables) {
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, type, variables)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
-		return location.nodeChild(MODIFIERS);
+		return location.safeTraversal(MODIFIERS);
 	}
 
 	public <EM extends Tree & ExtendedModifier> LocalVariableDecl withModifiers(NodeList<EM> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
 	public <EM extends Tree & ExtendedModifier> LocalVariableDecl withModifiers(Mutation<NodeList<EM>> mutation) {
-		return location.nodeMutateChild(MODIFIERS, mutation);
+		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 
 	public Type type() {
-		return location.nodeChild(TYPE);
+		return location.safeTraversal(TYPE);
 	}
 
 	public LocalVariableDecl withType(Type type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.safeTraversalReplace(TYPE, type);
 	}
 
 	public LocalVariableDecl withType(Mutation<Type> mutation) {
-		return location.nodeMutateChild(TYPE, mutation);
+		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
 	public NodeList<VariableDeclarator> variables() {
-		return location.nodeChild(VARIABLES);
+		return location.safeTraversal(VARIABLES);
 	}
 
 	public LocalVariableDecl withVariables(NodeList<VariableDeclarator> variables) {
-		return location.nodeWithChild(VARIABLES, variables);
+		return location.safeTraversalReplace(VARIABLES, variables);
 	}
 
 	public LocalVariableDecl withVariables(Mutation<NodeList<VariableDeclarator>> mutation) {
-		return location.nodeMutateChild(VARIABLES, mutation);
-	}
-/*
-
-	public JavadocComment javadocComment() {
-		return location.nodeChild(JAVADOC_COMMENT);
+		return location.safeTraversalMutate(VARIABLES, mutation);
 	}
 
-	public FieldDecl withJavadocComment(JavadocComment javadocComment) {
-		return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
-	}
-*/
-
-	private static final int MODIFIERS = 0;
-	private static final int TYPE = 1;
-	private static final int VARIABLES = 2;
-//	private static final int JAVADOC_COMMENT = 4;
+	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> VARIABLES = SNodeState.childTraversal(2);
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.singleLineShape),

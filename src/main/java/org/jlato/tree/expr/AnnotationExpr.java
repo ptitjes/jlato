@@ -19,8 +19,10 @@
 
 package org.jlato.tree.expr;
 
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.name.QualifiedName;
@@ -29,26 +31,27 @@ import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.none;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public abstract class AnnotationExpr extends Expr implements ExtendedModifier {
+public abstract class AnnotationExpr extends TreeBase<SNodeState> implements Expr, ExtendedModifier {
 
-	protected AnnotationExpr(SLocation location) {
+	protected AnnotationExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public QualifiedName name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public AnnotationExpr withName(QualifiedName name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public AnnotationExpr withName(Mutation<QualifiedName> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	protected static final int NAME = 0;
+	protected static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
 
 	public static final LexicalShape singleLineAnnotationsShape = list(
 			none(),

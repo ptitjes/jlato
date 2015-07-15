@@ -24,24 +24,40 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 /**
  * @author Didier Villevalois
  */
-public class SNodeState extends STreeState {
+public class SNodeState extends STreeState<SNodeState> {
 
-	public final ArrayList<STree> children;
+	public final ArrayList<STree<?>> children;
 
-	public SNodeState(ArrayList<STree> children) {
+	public SNodeState(ArrayList<STree<? extends STreeState<?>>> children) {
 		this(children, ArrayList.empty());
 	}
 
-	public SNodeState(ArrayList<STree> children, ArrayList<Object> data) {
+	public SNodeState(ArrayList<STree<? extends STreeState<?>>> children, ArrayList<Object> data) {
 		super(data);
 		this.children = children;
 	}
 
-	public STree child(int index) {
+	public static STraversal<SNodeState> childTraversal(int index) {
+		return new ChildTraversal(index);
+	}
+
+	@Override
+	public STraversal<SNodeState> firstChild() {
+		if (children.isEmpty()) return null;
+		return childTraversal(-1).rightSibling(this);
+	}
+
+	@Override
+	public STraversal<SNodeState> lastChild() {
+		if (children.isEmpty()) return null;
+		return childTraversal(children.size()).leftSibling(this);
+	}
+
+	public STree<?> child(int index) {
 		return children.get(index);
 	}
 
-	public SNodeState withChild(int index, STree value) {
+	public SNodeState withChild(int index, STree<?> value) {
 		return new SNodeState(children.set(index, value), data);
 	}
 
@@ -58,4 +74,44 @@ public class SNodeState extends STreeState {
 			child.state.validate(child);
 		}
 	}
+
+	public static class ChildTraversal extends STraversal<SNodeState> {
+
+		private final int index;
+
+		public ChildTraversal(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public STree<?> traverse(SNodeState state) {
+			return state.child(index);
+		}
+
+		@Override
+		public SNodeState rebuildParentState(SNodeState state, STree<?> child) {
+			return state.withChild(index, child);
+		}
+
+		@Override
+		public STraversal<SNodeState> leftSibling(SNodeState state) {
+			int previousIndex = index - 1;
+			while (previousIndex >= 0) {
+				if (state.child(previousIndex) != null) return new ChildTraversal(previousIndex);
+				previousIndex--;
+			}
+			return null;
+		}
+
+		@Override
+		public STraversal<SNodeState> rightSibling(SNodeState state) {
+			int nextIndex = index + 1;
+			while (nextIndex < state.children.size()) {
+				if (state.child(nextIndex) != null) return new ChildTraversal(nextIndex);
+				nextIndex++;
+			}
+			return null;
+		}
+	}
+
 }

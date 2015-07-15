@@ -24,7 +24,7 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 /**
  * @author Didier Villevalois
  */
-public abstract class STreeState {
+public abstract class STreeState<S extends STreeState<S>> {
 
 	public final ArrayList<Object> data;
 
@@ -36,7 +36,11 @@ public abstract class STreeState {
 		return data.get(index);
 	}
 
-	public abstract STreeState withData(int index, Object value);
+	public abstract S withData(int index, Object value);
+
+	public abstract STraversal<S> firstChild();
+
+	public abstract STraversal<S> lastChild();
 
 	public void validate(STree tree) {
 	}

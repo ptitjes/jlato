@@ -21,19 +21,20 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.decl.FormalParameter;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class CatchClause extends Tree {
+public class CatchClause extends TreeBase<SNodeState> implements Tree {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public CatchClause instantiate(SLocation location) {
 			return new CatchClause(location);
 		}
@@ -43,40 +44,40 @@ public class CatchClause extends Tree {
 		}
 	};
 
-	private CatchClause(SLocation location) {
+	private CatchClause(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public CatchClause(FormalParameter except, BlockStmt catchBlock) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(except, catchBlock)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(except, catchBlock)))));
 	}
 
 	public FormalParameter except() {
-		return location.nodeChild(EXCEPT);
+		return location.safeTraversal(EXCEPT);
 	}
 
 	public CatchClause withExcept(FormalParameter except) {
-		return location.nodeWithChild(EXCEPT, except);
+		return location.safeTraversalReplace(EXCEPT, except);
 	}
 
 	public CatchClause withExcept(Mutation<FormalParameter> mutation) {
-		return location.nodeMutateChild(EXCEPT, mutation);
+		return location.safeTraversalMutate(EXCEPT, mutation);
 	}
 
 	public BlockStmt catchBlock() {
-		return location.nodeChild(CATCH_BLOCK);
+		return location.safeTraversal(CATCH_BLOCK);
 	}
 
 	public CatchClause withCatchBlock(BlockStmt catchBlock) {
-		return location.nodeWithChild(CATCH_BLOCK, catchBlock);
+		return location.safeTraversalReplace(CATCH_BLOCK, catchBlock);
 	}
 
 	public CatchClause withCatchBlock(Mutation<BlockStmt> mutation) {
-		return location.nodeMutateChild(CATCH_BLOCK, mutation);
+		return location.safeTraversalMutate(CATCH_BLOCK, mutation);
 	}
 
-	private static final int EXCEPT = 0;
-	private static final int CATCH_BLOCK = 1;
+	private static final STraversal<SNodeState> EXCEPT = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> CATCH_BLOCK = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Catch).withSpacingBefore(space()),

@@ -21,19 +21,20 @@ package org.jlato.tree.name;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class QualifiedName extends Tree {
+public class QualifiedName extends TreeBase<SNodeState> implements Tree {
 
-	public final static Kind kind = new Kind() {
+	public final static TreeBase.Kind kind = new Kind() {
 		public QualifiedName instantiate(SLocation location) {
 			return new QualifiedName(location);
 		}
@@ -52,36 +53,36 @@ public class QualifiedName extends Tree {
 		return name;
 	}
 
-	private QualifiedName(SLocation location) {
+	private QualifiedName(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public QualifiedName(NodeOption<QualifiedName> qualifier, Name name) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(qualifier, name)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(qualifier, name)))));
 	}
 
 	public NodeOption<QualifiedName> qualifier() {
-		return location.nodeChild(QUALIFIER);
+		return location.safeTraversal(QUALIFIER);
 	}
 
 	public QualifiedName withQualifier(NodeOption<QualifiedName> qualifier) {
-		return location.nodeWithChild(QUALIFIER, qualifier);
+		return location.safeTraversalReplace(QUALIFIER, qualifier);
 	}
 
 	public QualifiedName withQualifier(Mutation<NodeOption<QualifiedName>> mutation) {
-		return location.nodeMutateChild(QUALIFIER, mutation);
+		return location.safeTraversalMutate(QUALIFIER, mutation);
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public QualifiedName withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public QualifiedName withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public boolean isQualified() {
@@ -95,8 +96,8 @@ public class QualifiedName extends Tree {
 		return qualifier.isDefined() ? qualifier.get().toString() + "." + name.toString() : name.toString();
 	}
 
-	private static final int QUALIFIER = 0;
-	private static final int NAME = 1;
+	private static final STraversal<SNodeState> QUALIFIER = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
 
 	public final static LexicalShape qualifierShape = composite(element(), token(LToken.Dot));
 

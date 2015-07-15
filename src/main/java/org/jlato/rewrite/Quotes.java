@@ -26,7 +26,7 @@ import org.jlato.internal.bu.*;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
@@ -82,12 +82,12 @@ public abstract class Quotes {
 	}
 
 	private static <T extends Tree> Pattern<T> buildTreePattern(T tree, Class<T> treeClass) {
-		return buildTreePattern(Tree.treeOf(tree), treeClass);
+		return buildTreePattern(TreeBase.treeOf(tree), treeClass);
 	}
 
 	private static int lastAnnonVariable = 0;
 
-	private static <T extends Tree> Pattern<T> buildTreePattern(STree tree, Class<T> treeClass) {
+	private static <T extends Tree> Pattern<T> buildTreePattern(STree<?> tree, Class<T> treeClass) {
 		if (tree == null) {
 			return new Variable<T>("___" + (lastAnnonVariable++), treeClass);
 		} else {
@@ -116,7 +116,7 @@ public abstract class Quotes {
 		return null;
 	}
 
-	private static ArrayList<Pattern<? extends Tree>> buildTreePattern(ArrayList<STree> children) {
+	private static ArrayList<Pattern<? extends Tree>> buildTreePattern(ArrayList<STree<?>> children) {
 		Builder<Pattern<? extends Tree>, ArrayList<Pattern<? extends Tree>>> builder = ArrayList.<Pattern<? extends Tree>>factory().newBuilder();
 		for (int i = 0; i < children.size(); i++) {
 			STree child = children.get(i);
@@ -125,7 +125,7 @@ public abstract class Quotes {
 		return builder.build();
 	}
 
-	private static ArrayList<Pattern<? extends Tree>> buildTreePattern(Vector<STree> children) {
+	private static ArrayList<Pattern<? extends Tree>> buildTreePattern(Vector<STree<?>> children) {
 		Builder<Pattern<? extends Tree>, ArrayList<Pattern<? extends Tree>>> builder = ArrayList.<Pattern<? extends Tree>>factory().newBuilder();
 		for (int i = 0; i < children.size(); i++) {
 			STree child = children.get(i);

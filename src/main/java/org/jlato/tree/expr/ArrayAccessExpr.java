@@ -21,17 +21,18 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class ArrayAccessExpr extends Expr {
+public class ArrayAccessExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public ArrayAccessExpr instantiate(SLocation location) {
 			return new ArrayAccessExpr(location);
 		}
@@ -41,40 +42,40 @@ public class ArrayAccessExpr extends Expr {
 		}
 	};
 
-	private ArrayAccessExpr(SLocation location) {
+	private ArrayAccessExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public ArrayAccessExpr(Expr name, Expr index) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(name, index)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name, index)))));
 	}
 
 	public Expr name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public ArrayAccessExpr withName(Expr name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public ArrayAccessExpr withName(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public Expr index() {
-		return location.nodeChild(INDEX);
+		return location.safeTraversal(INDEX);
 	}
 
 	public ArrayAccessExpr withIndex(Expr index) {
-		return location.nodeWithChild(INDEX, index);
+		return location.safeTraversalReplace(INDEX, index);
 	}
 
 	public ArrayAccessExpr withIndex(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(INDEX, mutation);
+		return location.safeTraversalMutate(INDEX, mutation);
 	}
 
-	private static final int NAME = 0;
-	private static final int INDEX = 1;
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> INDEX = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(NAME),

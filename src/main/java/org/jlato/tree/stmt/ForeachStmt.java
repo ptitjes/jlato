@@ -21,20 +21,21 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.VariableDeclarationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class ForeachStmt extends Stmt {
+public class ForeachStmt extends TreeBase<SNodeState> implements Stmt {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public ForeachStmt instantiate(SLocation location) {
 			return new ForeachStmt(location);
 		}
@@ -44,53 +45,53 @@ public class ForeachStmt extends Stmt {
 		}
 	};
 
-	private ForeachStmt(SLocation location) {
+	private ForeachStmt(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public ForeachStmt(VariableDeclarationExpr var, Expr iterable, Stmt body) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(var, iterable, body)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(var, iterable, body)))));
 	}
 
 	public VariableDeclarationExpr var() {
-		return location.nodeChild(VAR);
+		return location.safeTraversal(VAR);
 	}
 
 	public ForeachStmt withVar(VariableDeclarationExpr var) {
-		return location.nodeWithChild(VAR, var);
+		return location.safeTraversalReplace(VAR, var);
 	}
 
 	public ForeachStmt withVar(Mutation<VariableDeclarationExpr> mutation) {
-		return location.nodeMutateChild(VAR, mutation);
+		return location.safeTraversalMutate(VAR, mutation);
 	}
 
 	public Expr iterable() {
-		return location.nodeChild(ITERABLE);
+		return location.safeTraversal(ITERABLE);
 	}
 
 	public ForeachStmt withIterable(Expr iterable) {
-		return location.nodeWithChild(ITERABLE, iterable);
+		return location.safeTraversalReplace(ITERABLE, iterable);
 	}
 
 	public ForeachStmt withIterable(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(ITERABLE, mutation);
+		return location.safeTraversalMutate(ITERABLE, mutation);
 	}
 
 	public Stmt body() {
-		return location.nodeChild(BODY);
+		return location.safeTraversal(BODY);
 	}
 
 	public ForeachStmt withBody(Stmt body) {
-		return location.nodeWithChild(BODY, body);
+		return location.safeTraversalReplace(BODY, body);
 	}
 
 	public ForeachStmt withBody(Mutation<Stmt> mutation) {
-		return location.nodeMutateChild(BODY, mutation);
+		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final int VAR = 0;
-	private static final int ITERABLE = 1;
-	private static final int BODY = 2;
+	private static final STraversal<SNodeState> VAR = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> ITERABLE = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(2);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),

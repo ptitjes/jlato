@@ -21,22 +21,23 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class BreakStmt extends Stmt {
+public class BreakStmt extends TreeBase<SNodeState> implements Stmt {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public BreakStmt instantiate(SLocation location) {
 			return new BreakStmt(location);
 		}
@@ -46,27 +47,27 @@ public class BreakStmt extends Stmt {
 		}
 	};
 
-	private BreakStmt(SLocation location) {
+	private BreakStmt(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public BreakStmt(NodeOption<Name> id) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(id)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(id)))));
 	}
 
 	public NodeOption<Name> id() {
-		return location.nodeChild(ID);
+		return location.safeTraversal(ID);
 	}
 
 	public BreakStmt withId(NodeOption<Name> id) {
-		return location.nodeWithChild(ID, id);
+		return location.safeTraversalReplace(ID, id);
 	}
 
 	public BreakStmt withId(Mutation<NodeOption<Name>> mutation) {
-		return location.nodeMutateChild(ID, mutation);
+		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final int ID = 0;
+	private static final STraversal<SNodeState> ID = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Break),

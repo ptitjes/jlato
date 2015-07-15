@@ -23,7 +23,7 @@ import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.parser.ParserImplConstants;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -186,7 +186,7 @@ public class Printer {
 	 */
 	public void print(Tree tree) {
 		reset();
-		final STree sTree = Tree.treeOf(tree);
+		final STree sTree = TreeBase.treeOf(tree);
 		final LexicalShape shape = sTree.kind.shape();
 		shape.render(sTree, sTree.run, this);
 	}
@@ -198,7 +198,7 @@ public class Printer {
 	 */
 	public void print(NodeList<? extends Tree> trees) {
 		reset();
-		final STree sTree = Tree.treeOf(trees);
+		final STree sTree = TreeBase.treeOf(trees);
 		final LexicalShape shape = LexicalShape.list();
 		shape.render(sTree, sTree.run, this);
 	}

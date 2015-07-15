@@ -20,18 +20,19 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
+import org.jlato.internal.bu.STraversal;
 
-public class TypeExpr extends Expr {
+public class TypeExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public TypeExpr instantiate(SLocation location) {
 			return new TypeExpr(location);
 		}
@@ -41,27 +42,27 @@ public class TypeExpr extends Expr {
 		}
 	};
 
-	private TypeExpr(SLocation location) {
+	private TypeExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public TypeExpr(Type type) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(type)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(type)))));
 	}
 
 	public Type type() {
-		return location.nodeChild(TYPE);
+		return location.safeTraversal(TYPE);
 	}
 
 	public TypeExpr withType(Type type) {
-		return location.nodeWithChild(TYPE, type);
+		return location.safeTraversalReplace(TYPE, type);
 	}
 
 	public TypeExpr withType(Mutation<Type> mutation) {
-		return location.nodeMutateChild(TYPE, mutation);
+		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
-	private static final int TYPE = 0;
+	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = child(TYPE);
 }

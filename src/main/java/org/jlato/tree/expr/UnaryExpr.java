@@ -21,19 +21,20 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.STraversal;
 
-public class UnaryExpr extends Expr {
+public class UnaryExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public UnaryExpr instantiate(SLocation location) {
 			return new UnaryExpr(location);
 		}
@@ -43,12 +44,12 @@ public class UnaryExpr extends Expr {
 		}
 	};
 
-	private UnaryExpr(SLocation location) {
+	private UnaryExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public UnaryExpr(UnaryOp operator, Expr expr) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(expr), dataOf(operator)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(expr), dataOf(operator)))));
 	}
 
 	public UnaryOp op() {
@@ -64,15 +65,15 @@ public class UnaryExpr extends Expr {
 	}
 
 	public Expr expr() {
-		return location.nodeChild(EXPR);
+		return location.safeTraversal(EXPR);
 	}
 
 	public UnaryExpr withExpr(Expr expr) {
-		return location.nodeWithChild(EXPR, expr);
+		return location.safeTraversalReplace(EXPR, expr);
 	}
 
 	public UnaryExpr withExpr(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(EXPR, mutation);
+		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
 	public static boolean isPrefix(UnaryOp op) {
@@ -83,7 +84,7 @@ public class UnaryExpr extends Expr {
 		return op == UnaryOp.PostIncrement || op == UnaryOp.PostDecrement;
 	}
 
-	private static final int EXPR = 0;
+	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(0);
 
 	private static final int OPERATOR = 0;
 

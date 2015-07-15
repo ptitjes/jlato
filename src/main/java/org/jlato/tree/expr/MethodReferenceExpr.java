@@ -21,21 +21,22 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class MethodReferenceExpr extends Expr {
+public class MethodReferenceExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public MethodReferenceExpr instantiate(SLocation location) {
 			return new MethodReferenceExpr(location);
 		}
@@ -45,53 +46,53 @@ public class MethodReferenceExpr extends Expr {
 		}
 	};
 
-	private MethodReferenceExpr(SLocation location) {
+	private MethodReferenceExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public MethodReferenceExpr(Expr scope, NodeList<Type> typeArgs, Name name) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(scope, typeArgs, name)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(scope, typeArgs, name)))));
 	}
 
 	public Expr scope() {
-		return location.nodeChild(SCOPE);
+		return location.safeTraversal(SCOPE);
 	}
 
 	public MethodReferenceExpr withScope(Expr scope) {
-		return location.nodeWithChild(SCOPE, scope);
+		return location.safeTraversalReplace(SCOPE, scope);
 	}
 
 	public MethodReferenceExpr withScope(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(SCOPE, mutation);
+		return location.safeTraversalMutate(SCOPE, mutation);
 	}
 
 	public NodeList<Type> typeArgs() {
-		return location.nodeChild(TYPE_ARGUMENTS);
+		return location.safeTraversal(TYPE_ARGUMENTS);
 	}
 
 	public MethodReferenceExpr withTypeArgs(NodeList<Type> typeArgs) {
-		return location.nodeWithChild(TYPE_ARGUMENTS, typeArgs);
+		return location.safeTraversalReplace(TYPE_ARGUMENTS, typeArgs);
 	}
 
 	public MethodReferenceExpr withTypeArgs(Mutation<NodeList<Type>> mutation) {
-		return location.nodeMutateChild(TYPE_ARGUMENTS, mutation);
+		return location.safeTraversalMutate(TYPE_ARGUMENTS, mutation);
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public MethodReferenceExpr withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public MethodReferenceExpr withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final int SCOPE = 0;
-	private static final int TYPE_ARGUMENTS = 1;
-	private static final int NAME = 2;
+	private static final STraversal<SNodeState> SCOPE = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> TYPE_ARGUMENTS = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(2);
 
 	public final static LexicalShape shape = composite(
 			child(SCOPE),

@@ -21,21 +21,22 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.printer.SpacingConstraint;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class ArrayDim extends Tree {
+public class ArrayDim extends TreeBase<SNodeState> implements Tree {
 
-	public final static Kind kind = new Kind() {
+	public final static TreeBase.Kind kind = new Kind() {
 		public ArrayDim instantiate(SLocation location) {
 			return new ArrayDim(location);
 		}
@@ -45,27 +46,27 @@ public class ArrayDim extends Tree {
 		}
 	};
 
-	private ArrayDim(SLocation location) {
+	private ArrayDim(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public ArrayDim(NodeList<AnnotationExpr> annotations) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(annotations)))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
-		return location.nodeChild(ANNOTATIONS);
+		return location.safeTraversal(ANNOTATIONS);
 	}
 
 	public ArrayDim withAnnotations(NodeList<AnnotationExpr> annotations) {
-		return location.nodeWithChild(ANNOTATIONS, annotations);
+		return location.safeTraversalReplace(ANNOTATIONS, annotations);
 	}
 
 	public ArrayDim withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
-		return location.nodeMutateChild(ANNOTATIONS, mutation);
+		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 
-	private static final int ANNOTATIONS = 0;
+	private static final STraversal<SNodeState> ANNOTATIONS = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list(

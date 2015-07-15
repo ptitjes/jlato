@@ -21,12 +21,12 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 
@@ -37,10 +37,11 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_Betw
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
+import org.jlato.internal.bu.STraversal;
 
-public class EnumDecl extends TypeDecl {
+public class EnumDecl extends TreeBase<SNodeState> implements TypeDecl {
 
-	public final static Kind kind = new Kind() {
+	public final static TreeBase.Kind kind = new Kind() {
 		public EnumDecl instantiate(SLocation location) {
 			return new EnumDecl(location);
 		}
@@ -50,24 +51,29 @@ public class EnumDecl extends TypeDecl {
 		}
 	};
 
-	protected EnumDecl(SLocation location) {
+	protected EnumDecl(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public <EM extends Tree & ExtendedModifier> EnumDecl(NodeList<EM> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, boolean trailingComma, NodeList<MemberDecl> members) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(modifiers, name, implementsClause, enumConstants, members), dataOf(trailingComma)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, name, implementsClause, enumConstants, members), dataOf(trailingComma)))));
 	}
 
 	public <EM extends Tree & ExtendedModifier> NodeList<EM> modifiers() {
-		return location.nodeChild(MODIFIERS);
+		return location.safeTraversal(MODIFIERS);
 	}
 
 	public <EM extends Tree & ExtendedModifier> EnumDecl withModifiers(NodeList<EM> modifiers) {
-		return location.nodeWithChild(MODIFIERS, modifiers);
+		return location.safeTraversalReplace(MODIFIERS, modifiers);
 	}
 
 	public <EM extends Tree & ExtendedModifier> EnumDecl withModifiers(Mutation<NodeList<EM>> mutation) {
-		return location.nodeMutateChild(MODIFIERS, mutation);
+		return location.safeTraversalMutate(MODIFIERS, mutation);
+	}
+
+	@Override
+	public MemberKind memberKind() {
+		return MemberKind.Type;
 	}
 
 	public TypeKind typeKind() {
@@ -75,58 +81,58 @@ public class EnumDecl extends TypeDecl {
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public EnumDecl withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public EnumDecl withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public NodeList<QualifiedType> implementsClause() {
-		return location.nodeChild(IMPLEMENTS_CLAUSE);
+		return location.safeTraversal(IMPLEMENTS_CLAUSE);
 	}
 
 	public EnumDecl withImplementsClause(NodeList<QualifiedType> implementsClause) {
-		return location.nodeWithChild(IMPLEMENTS_CLAUSE, implementsClause);
+		return location.safeTraversalReplace(IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
 	public EnumDecl withImplementsClause(Mutation<NodeList<QualifiedType>> mutation) {
-		return location.nodeMutateChild(IMPLEMENTS_CLAUSE, mutation);
+		return location.safeTraversalMutate(IMPLEMENTS_CLAUSE, mutation);
 	}
 
 	public NodeList<EnumConstantDecl> enumConstants() {
-		return location.nodeChild(ENUM_CONSTANTS);
+		return location.safeTraversal(ENUM_CONSTANTS);
 	}
 
 	public EnumDecl withEnumConstants(NodeList<EnumConstantDecl> enumConstants) {
-		return location.nodeWithChild(ENUM_CONSTANTS, enumConstants);
+		return location.safeTraversalReplace(ENUM_CONSTANTS, enumConstants);
 	}
 
 	public EnumDecl withEnumConstants(Mutation<NodeList<EnumConstantDecl>> mutation) {
-		return location.nodeMutateChild(ENUM_CONSTANTS, mutation);
+		return location.safeTraversalMutate(ENUM_CONSTANTS, mutation);
 	}
 
 	public NodeList<MemberDecl> members() {
-		return location.nodeChild(MEMBERS);
+		return location.safeTraversal(MEMBERS);
 	}
 
 	public EnumDecl withMembers(NodeList<MemberDecl> members) {
-		return location.nodeWithChild(MEMBERS, members);
+		return location.safeTraversalReplace(MEMBERS, members);
 	}
 
 	public EnumDecl withMembers(Mutation<NodeList<MemberDecl>> mutation) {
-		return location.nodeMutateChild(MEMBERS, mutation);
+		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
 
-	private static final int MODIFIERS = 0;
-	private static final int NAME = 1;
-	private static final int IMPLEMENTS_CLAUSE = 2;
-	private static final int ENUM_CONSTANTS = 3;
-	private static final int MEMBERS = 4;
+	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> IMPLEMENTS_CLAUSE = SNodeState.childTraversal(2);
+	private static final STraversal<SNodeState> ENUM_CONSTANTS = SNodeState.childTraversal(3);
+	private static final STraversal<SNodeState> MEMBERS = SNodeState.childTraversal(4);
 
 	private static final int TRAILING_COMMA = 0;
 

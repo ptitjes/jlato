@@ -21,22 +21,23 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class TypeParameter extends Tree {
+public class TypeParameter extends TreeBase<SNodeState> implements Tree {
 
-	public final static Kind kind = new Kind() {
+	public final static TreeBase.Kind kind = new Kind() {
 		public TypeParameter instantiate(SLocation location) {
 			return new TypeParameter(location);
 		}
@@ -46,53 +47,53 @@ public class TypeParameter extends Tree {
 		}
 	};
 
-	private TypeParameter(SLocation location) {
+	private TypeParameter(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public TypeParameter(NodeList<AnnotationExpr> annotations, Name name, NodeList<Type> bounds) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(annotations, name, bounds)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(annotations, name, bounds)))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
-		return location.nodeChild(ANNOTATIONS);
+		return location.safeTraversal(ANNOTATIONS);
 	}
 
 	public TypeParameter withAnnotations(NodeList<AnnotationExpr> annotations) {
-		return location.nodeWithChild(ANNOTATIONS, annotations);
+		return location.safeTraversalReplace(ANNOTATIONS, annotations);
 	}
 
 	public TypeParameter withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
-		return location.nodeMutateChild(ANNOTATIONS, mutation);
+		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 
 	public Name name() {
-		return location.nodeChild(NAME);
+		return location.safeTraversal(NAME);
 	}
 
 	public TypeParameter withName(Name name) {
-		return location.nodeWithChild(NAME, name);
+		return location.safeTraversalReplace(NAME, name);
 	}
 
 	public TypeParameter withName(Mutation<Name> mutation) {
-		return location.nodeMutateChild(NAME, mutation);
+		return location.safeTraversalMutate(NAME, mutation);
 	}
 
 	public NodeList<Type> bounds() {
-		return location.nodeChild(BOUNDS);
+		return location.safeTraversal(BOUNDS);
 	}
 
 	public TypeParameter withBounds(NodeList<Type> bounds) {
-		return location.nodeWithChild(BOUNDS, bounds);
+		return location.safeTraversalReplace(BOUNDS, bounds);
 	}
 
 	public TypeParameter withBounds(Mutation<NodeList<Type>> mutation) {
-		return location.nodeMutateChild(BOUNDS, mutation);
+		return location.safeTraversalMutate(BOUNDS, mutation);
 	}
 
-	private static final int ANNOTATIONS = 0;
-	private static final int NAME = 1;
-	private static final int BOUNDS = 2;
+	private static final STraversal<SNodeState> ANNOTATIONS = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<SNodeState> BOUNDS = SNodeState.childTraversal(2);
 
 	public static final LexicalShape boundsShape = list(
 			token(LToken.Extends).withSpacingBefore(space()),

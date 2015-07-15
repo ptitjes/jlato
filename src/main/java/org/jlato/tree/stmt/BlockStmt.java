@@ -21,22 +21,23 @@ package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
+import org.jlato.internal.bu.STraversal;
 
-public class BlockStmt extends Stmt {
+public class BlockStmt extends TreeBase<SNodeState> implements Stmt {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public BlockStmt instantiate(SLocation location) {
 			return new BlockStmt(location);
 		}
@@ -46,27 +47,27 @@ public class BlockStmt extends Stmt {
 		}
 	};
 
-	private BlockStmt(SLocation location) {
+	private BlockStmt(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public BlockStmt(NodeList<Stmt> stmts) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(stmts)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(stmts)))));
 	}
 
 	public NodeList<Stmt> stmts() {
-		return location.nodeChild(STMTS);
+		return location.safeTraversal(STMTS);
 	}
 
 	public BlockStmt withStmts(NodeList<Stmt> stmts) {
-		return location.nodeWithChild(STMTS, stmts);
+		return location.safeTraversalReplace(STMTS, stmts);
 	}
 
 	public BlockStmt withStmts(Mutation<NodeList<Stmt>> mutation) {
-		return location.nodeMutateChild(STMTS, mutation);
+		return location.safeTraversalMutate(STMTS, mutation);
 	}
 
-	private static final int STMTS = 0;
+	private static final STraversal<SNodeState> STMTS = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			nonEmptyChildren(STMTS,

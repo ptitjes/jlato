@@ -23,10 +23,10 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.HashSet;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 /**
  * @author Didier Villevalois
@@ -63,9 +63,9 @@ class NodePattern<T extends Tree> extends TreePattern<T> {
 
 	@Override
 	protected STreeState buildState(Substitution substitution) {
-		Builder<STree, ArrayList<STree>> childrenBuilder = ArrayList.<STree>factory().newBuilder();
+		Builder<STree<?>, ArrayList<STree<?>>> childrenBuilder = ArrayList.<STree<?>>factory().newBuilder();
 		for (Pattern<? extends Tree> term : children) {
-			childrenBuilder.add(Tree.treeOf(term.build(substitution)));
+			childrenBuilder.add(TreeBase.treeOf(term.build(substitution)));
 		}
 		return new SNodeState(childrenBuilder.build(), buildData(substitution));
 	}

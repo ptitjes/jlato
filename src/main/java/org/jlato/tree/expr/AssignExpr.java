@@ -21,19 +21,20 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.STraversal;
 
-public class AssignExpr extends Expr {
+public class AssignExpr extends TreeBase<SNodeState> implements Expr {
 
-	public final static Tree.Kind kind = new Tree.Kind() {
+	public final static TreeBase.Kind kind = new TreeBase.Kind() {
 		public AssignExpr instantiate(SLocation location) {
 			return new AssignExpr(location);
 		}
@@ -43,24 +44,24 @@ public class AssignExpr extends Expr {
 		}
 	};
 
-	private AssignExpr(SLocation location) {
+	private AssignExpr(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public AssignExpr(Expr target, AssignOp operator, Expr value) {
-		super(new SLocation(new STree(kind, new SNodeState(treesOf(target, value), dataOf(operator)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(target, value), dataOf(operator)))));
 	}
 
 	public Expr target() {
-		return location.nodeChild(TARGET);
+		return location.safeTraversal(TARGET);
 	}
 
 	public AssignExpr withTarget(Expr target) {
-		return location.nodeWithChild(TARGET, target);
+		return location.safeTraversalReplace(TARGET, target);
 	}
 
 	public AssignExpr withTarget(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(TARGET, mutation);
+		return location.safeTraversalMutate(TARGET, mutation);
 	}
 
 	public AssignOp op() {
@@ -76,19 +77,19 @@ public class AssignExpr extends Expr {
 	}
 
 	public Expr value() {
-		return location.nodeChild(VALUE);
+		return location.safeTraversal(VALUE);
 	}
 
 	public AssignExpr withValue(Expr value) {
-		return location.nodeWithChild(VALUE, value);
+		return location.safeTraversalReplace(VALUE, value);
 	}
 
 	public AssignExpr withValue(Mutation<Expr> mutation) {
-		return location.nodeMutateChild(VALUE, mutation);
+		return location.safeTraversalMutate(VALUE, mutation);
 	}
 
-	private static final int TARGET = 0;
-	private static final int VALUE = 1;
+	private static final STraversal<SNodeState> TARGET = SNodeState.childTraversal(0);
+	private static final STraversal<SNodeState> VALUE = SNodeState.childTraversal(1);
 
 	private static final int OPERATOR = 0;
 
