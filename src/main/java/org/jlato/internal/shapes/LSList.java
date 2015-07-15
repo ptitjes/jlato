@@ -20,7 +20,10 @@
 package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.WRunRun;
+import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
 
 import java.util.Iterator;

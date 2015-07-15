@@ -21,7 +21,10 @@ package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.WRun;
+import org.jlato.internal.bu.WRunRun;
+import org.jlato.internal.bu.WTokenRun;
 
 import java.util.Iterator;
 

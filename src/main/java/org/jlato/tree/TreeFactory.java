@@ -2,7 +2,8 @@ package org.jlato.tree;
 
 import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.*;
-import org.jlato.tree.name.*;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.name.QualifiedName;
 import org.jlato.tree.stmt.*;
 import org.jlato.tree.type.*;
 

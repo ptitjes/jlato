@@ -20,7 +20,6 @@
 package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.*;
-import org.jlato.internal.bu.SNodeState.ChildTraversal;
 import org.jlato.printer.IndentationConstraint;
 import org.jlato.printer.Printer;
 import org.jlato.printer.SpacingConstraint;

@@ -19,7 +19,9 @@
 
 package org.jlato.internal.td;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STreeState;
 
 /**
  * @author Didier Villevalois

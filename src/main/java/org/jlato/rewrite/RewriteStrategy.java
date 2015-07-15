@@ -19,8 +19,9 @@
 
 package org.jlato.rewrite;
 
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
+import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois

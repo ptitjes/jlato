@@ -19,12 +19,11 @@
 
 package org.jlato.internal.td;
 
-import com.github.andrewoma.dexx.collection.TreeMap;
-import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STreeState;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
-import org.jlato.internal.bu.SNodeState;
 
 /**
  * @author Didier Villevalois

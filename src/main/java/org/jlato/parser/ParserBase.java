@@ -24,11 +24,11 @@ import com.github.andrewoma.dexx.collection.Vector;
 import com.github.andrewoma.dexx.collection.internal.base.AbstractIndexedList;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SContext;
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.printer.Printer;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree;
 
 import java.io.InputStream;
 import java.io.Reader;

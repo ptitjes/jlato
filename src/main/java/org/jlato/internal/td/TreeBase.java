@@ -23,13 +23,9 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.td.TreeBase;
-import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Tree;
-import org.jlato.internal.td.TreeBase;
-import org.jlato.internal.bu.SNodeState;
 
 /**
  * @author Didier Villevalois

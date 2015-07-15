@@ -21,7 +21,6 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LSCondition.emptyList;
 import static org.jlato.internal.shapes.LexicalShape.*;

@@ -21,12 +21,14 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 
@@ -37,7 +39,6 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_Betw
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
-import org.jlato.internal.bu.STraversal;
 
 public class EnumDecl extends TreeBase<SNodeState> implements TypeDecl {
 

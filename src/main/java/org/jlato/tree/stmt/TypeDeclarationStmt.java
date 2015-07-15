@@ -20,16 +20,16 @@
 package org.jlato.tree.stmt;
 
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.decl.TypeDecl;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
-import org.jlato.internal.bu.STraversal;
 
 public class TypeDeclarationStmt extends TreeBase<SNodeState> implements Stmt {
 

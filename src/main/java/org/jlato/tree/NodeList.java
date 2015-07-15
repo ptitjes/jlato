@@ -21,9 +21,12 @@ package org.jlato.tree;
 
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 
 import java.util.Iterator;
 

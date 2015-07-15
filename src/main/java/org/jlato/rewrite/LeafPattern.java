@@ -23,7 +23,7 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 import org.jlato.internal.bu.SLeafState;
 import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois

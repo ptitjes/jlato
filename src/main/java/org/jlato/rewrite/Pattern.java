@@ -24,7 +24,7 @@ import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.HashSet;
 import com.github.andrewoma.dexx.collection.Set;
 import org.jlato.tree.Predicate;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois

@@ -20,7 +20,6 @@
 package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.SNodeState.ChildTraversal;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
 

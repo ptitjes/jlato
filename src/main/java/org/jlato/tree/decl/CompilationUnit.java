@@ -20,22 +20,19 @@
 package org.jlato.tree.decl;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.WTokenRun;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LSDump;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterPackageDecl;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
-import org.jlato.internal.bu.STraversal;
 
 public class CompilationUnit extends TreeBase<SNodeState> implements Tree {
 

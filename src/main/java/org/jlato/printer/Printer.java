@@ -19,11 +19,15 @@
 
 package org.jlato.printer;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.WToken;
+import org.jlato.internal.bu.WTokenRun;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.parser.ParserImplConstants;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

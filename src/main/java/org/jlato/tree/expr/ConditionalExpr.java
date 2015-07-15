@@ -21,15 +21,15 @@ package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.STraversal;
 
 public class ConditionalExpr extends TreeBase<SNodeState> implements Expr {
 

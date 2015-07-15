@@ -20,8 +20,9 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.decl.ExtendedModifier;
@@ -31,7 +32,6 @@ import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.none;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.STraversal;
 
 public abstract class AnnotationExpr extends TreeBase<SNodeState> implements Expr, ExtendedModifier {
 

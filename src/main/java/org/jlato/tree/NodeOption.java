@@ -19,10 +19,10 @@
 
 package org.jlato.tree;
 
-import com.github.andrewoma.dexx.collection.IndexedLists;
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 
 import java.util.Iterator;

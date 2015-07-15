@@ -24,11 +24,10 @@ import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.HashSet;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois

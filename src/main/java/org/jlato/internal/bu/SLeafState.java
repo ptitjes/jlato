@@ -20,8 +20,6 @@
 package org.jlato.internal.bu;
 
 import com.github.andrewoma.dexx.collection.ArrayList;
-import org.jlato.internal.td.SContext;
-import org.jlato.internal.td.SLocation;
 
 /**
  * @author Didier Villevalois

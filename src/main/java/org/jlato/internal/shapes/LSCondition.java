@@ -21,12 +21,7 @@ package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.bu.SNodeState.ChildTraversal;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.tree.Tree;
-import org.jlato.internal.td.TreeBase;
-import org.jlato.internal.bu.SNodeState;
 
 /**
  * @author Didier Villevalois

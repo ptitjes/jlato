@@ -21,11 +21,12 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SLeafState;
-import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
+import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 

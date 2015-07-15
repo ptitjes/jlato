@@ -20,18 +20,17 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.decl.VariableDeclaratorId;
-import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import org.jlato.internal.bu.STraversal;
 
 public class ArrayType extends ReferenceType {
 

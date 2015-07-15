@@ -19,15 +19,14 @@
 
 package org.jlato.tree;
 
-import com.github.andrewoma.dexx.collection.*;
 import com.github.andrewoma.dexx.collection.Iterable;
-import org.jlato.internal.bu.SNodeListState;
+import com.github.andrewoma.dexx.collection.Pair;
+import com.github.andrewoma.dexx.collection.TreeMap;
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.td.TreeBase;
-import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STreeSetState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
 

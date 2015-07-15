@@ -22,10 +22,10 @@ package org.jlato.rewrite;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.HashSet;
 import org.jlato.internal.bu.SNodeOptionState;
-import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois

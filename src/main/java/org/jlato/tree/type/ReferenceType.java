@@ -19,7 +19,9 @@
 
 package org.jlato.tree.type;
 
-import org.jlato.internal.td.SLocation; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 
 public abstract class ReferenceType extends TreeBase<SNodeState> implements Type {
 
