@@ -88,6 +88,14 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		return new NodeList<T>(t1, t2, t3, t4, t5, t6);
 	}
 
+	public static <T extends Tree> NodeList<T> of(Iterable<T> ts) {
+		NodeList<T> list = empty();
+		for (T t : ts) {
+			list.append(t);
+		}
+		return list;
+	}
+
 	private NodeList(SLocation<SNodeListState> location) {
 		super(location);
 	}
