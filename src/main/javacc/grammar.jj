@@ -1737,12 +1737,12 @@ MethodDecl MethodDecl(NodeList modifiers):
   [ throwsClause = ThrowsClause() ]
   (
     block = Block()
+  |
+    ";"
     {
       if(modifiers != null && modifiers.contains(Modifier.Default))
 	    throwParseException(token, "\"default\" methods must have a body");
 	}
-  |
-    ";"
   )
 
   { return enRun(new MethodDecl(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), NodeOption.of(block))); }
