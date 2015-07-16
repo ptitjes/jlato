@@ -80,7 +80,7 @@ public abstract class Quotes {
 		try {
 			expr = parser.parse(context, string);
 		} catch (ParseException e) {
-			throw new IllegalArgumentException("Can't parse quote: " + string);
+			throw new IllegalArgumentException("Can't parse quote: " + string, e);
 		}
 		return buildPattern(expr);
 	}
