@@ -23,10 +23,19 @@ import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SKind;
+import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.printer.Printer;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
+import org.jlato.tree.decl.*;
+import org.jlato.tree.decl.TypeDecl.TypeKind;
+import org.jlato.tree.expr.AnnotationExpr;
+import org.jlato.tree.expr.Expr;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.stmt.Stmt;
+import org.jlato.tree.type.Type;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -42,14 +51,18 @@ abstract class ParserBase {
 
 	public static ParserImpl newInstance(InputStream in, String encoding, ParserConfiguration configuration) {
 		ParserImpl parser = new ParserImpl(in, encoding);
-		parser.configuration = configuration;
+		parser.configure(configuration);
 		return parser;
 	}
 
 	public static ParserImpl newInstance(Reader in, ParserConfiguration configuration) {
 		ParserImpl parser = new ParserImpl(in);
-		parser.configuration = configuration;
+		parser.configure(configuration);
 		return parser;
+	}
+
+	public void configure(ParserConfiguration configuration) {
+		this.configuration = configuration;
 	}
 
 	protected ParserConfiguration configuration;
@@ -182,6 +195,19 @@ abstract class ParserBase {
 		}
 	}
 
+	// TODO This is really dirty and temporary until the parser parses STrees directly
+	protected <T extends Tree> T makeVar(Token token) {
+		return (T) new SLocation(doMakeVar(token)).facade;
+	}
+
+	protected STree<?> doMakeVar(Token token) {
+		String image = token.image;
+		boolean nodeListVar = image.startsWith("..$");
+		String name = nodeListVar ? image.substring(3) : image.substring(1);
+		SKind<?> kind = nodeListVar ? NodeList.kind : Name.kind;
+		return new STree(kind, new SVarState(name));
+	}
+
 	// Interface with ParserImpl
 	protected void postProcessToken(Token token) {
 		if (!configuration.preserveWhitespaces) return;
@@ -194,6 +220,40 @@ abstract class ParserBase {
 			return buildWhitespaceRunPart(token.specialToken).append(new WToken(token.kind, token.image));
 		else return new WTokenRun(Vector.<WToken>empty());
 	}
+
+	public abstract CompilationUnit CompilationUnit() throws ParseException;
+
+	public abstract PackageDecl PackageDecl() throws ParseException;
+
+	public abstract ImportDecl ImportDecl() throws ParseException;
+
+	public abstract TypeDecl TypeDecl() throws ParseException;
+
+	public abstract MemberDecl ClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
+
+	public abstract MemberDecl AnnotationTypeBodyDecl() throws ParseException;
+
+	public abstract NodeList Modifiers() throws ParseException;
+
+	public abstract MethodDecl MethodDecl(NodeList modifiers) throws ParseException;
+
+	public abstract FieldDecl FieldDecl(NodeList modifiers) throws ParseException;
+
+	public abstract AnnotationMemberDecl AnnotationTypeMemberDecl(NodeList modifiers) throws ParseException;
+
+	public abstract EnumConstantDecl EnumConstantDecl() throws ParseException;
+
+	public abstract FormalParameter FormalParameter() throws ParseException;
+
+	public abstract TypeParameter TypeParameter() throws ParseException;
+
+	public abstract Stmt Statement() throws ParseException;
+
+	public abstract Expr Expression() throws ParseException;
+
+	public abstract NodeList<AnnotationExpr> Annotations() throws ParseException;
+
+	public abstract Type Type(NodeList<AnnotationExpr> annotations) throws ParseException;
 
 	static class TokenBase {
 

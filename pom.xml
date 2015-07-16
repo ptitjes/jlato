@@ -60,6 +60,7 @@
 		<junit.version>4.11</junit.version>
 
 		<!-- Maven Plugins -->
+		<fileweaver.version>1.0</fileweaver.version>
 		<javacc-maven-plugin.version>2.6</javacc-maven-plugin.version>
 		<maven-clean-plugin.version>2.5</maven-clean-plugin.version>
 		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
@@ -92,6 +93,50 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>edu.iu.ul.maven.plugins</groupId>
+				<artifactId>fileweaver</artifactId>
+				<executions>
+					<execution>
+						<id>weave-grammars</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>weave</goal>
+						</goals>
+						<configuration>
+							<outputPath>target/generated-grammars</outputPath>
+							<outputs>
+								<output>
+									<name>sources.jj</name>
+									<parts>
+										<part><path>src/main/javacc/java_header.jj.part</path></part>
+										<part><path>src/main/javacc/java_standard_identifier_tokens.jj.part</path></part>
+										<part><path>src/main/javacc/java_quotes_additional_tokens.jj.part</path></part>
+										<part><path>src/main/javacc/java_main.jj.part</path></part>
+									</parts>
+									<properties>
+										<parser.name>Parser</parser.name>
+										<quotes>false</quotes>
+									</properties>
+								</output>
+								<output>
+									<name>quotes.jj</name>
+									<parts>
+										<part><path>src/main/javacc/java_header.jj.part</path></part>
+										<part><path>src/main/javacc/java_quotes_identifier_tokens.jj.part</path></part>
+										<part><path>src/main/javacc/java_quotes_additional_tokens.jj.part</path></part>
+										<part><path>src/main/javacc/java_main.jj.part</path></part>
+									</parts>
+									<properties>
+										<parser.name>QuotesParser</parser.name>
+										<quotes>true</quotes>
+									</properties>
+								</output>
+							</outputs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>javacc-maven-plugin</artifactId>
 				<executions>
@@ -103,6 +148,7 @@
 						<configuration>
 							<grammarEncoding>${project.build.sourceEncoding}</grammarEncoding>
 							<jdkVersion>${java.version}</jdkVersion>
+							<sourceDirectory>target/generated-grammars</sourceDirectory>
 						</configuration>
 					</execution>
 				</executions>
@@ -165,6 +211,11 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>edu.iu.ul.maven.plugins</groupId>
+					<artifactId>fileweaver</artifactId>
+					<version>${fileweaver.version}</version>
+				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>javacc-maven-plugin</artifactId>

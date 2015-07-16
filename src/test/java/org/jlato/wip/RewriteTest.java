@@ -20,30 +20,37 @@
 package org.jlato.wip;
 
 import org.jlato.internal.td.RewriteStrategy;
-import org.jlato.rewrite.*;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
+import org.jlato.rewrite.MatchVisitor;
+import org.jlato.rewrite.Pattern;
+import org.jlato.rewrite.RewriteRules;
+import org.jlato.rewrite.Substitution;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.FormalParameter;
+import org.jlato.tree.expr.Expr;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-import static org.jlato.rewrite.Quotes.expr;
-import static org.jlato.rewrite.Quotes.param;
-import static org.jlato.rewrite.Quotes.type;
 import static org.jlato.internal.td.Traversal.forAll;
+import static org.jlato.rewrite.Quotes.*;
 
 /**
  * @author Didier Villevalois
@@ -82,21 +89,39 @@ public class RewriteTest {
 		System.out.println();
 		System.out.println();
 
-		final Pattern<Type> parameteredTypePattern = type("$t<$tps$>");
+		final Pattern<Type> parameteredTypePattern = type("$t<..$tps>");
 		cu.forAll(parameteredTypePattern, new MatchVisitor<Type>() {
 			@Override
 			public Type visit(Type type, Substitution s) {
 				debug("Type", type);
-				NodeList<Type> tps = ((QualifiedType) type).typeArgs().get();
-				for (Type tp : tps) {
-					debug("With type parameter", tp);
+				NodeOption<NodeList<Type>> typeArgs = ((QualifiedType) type).typeArgs();
+				if (typeArgs.isDefined()) {
+					NodeList<Type> tps = typeArgs.get();
+					for (Type tp : tps) {
+						debug("With type parameter", tp);
+					}
+					System.out.println();
 				}
-				System.out.println();
 				return type;
 			}
 		});
 	}
 
+	@Test
+	public void testQuotes() throws IOException, ParseException {
+		final String original = resourceAsString("org/jlato/samples/TestClass.java");
+		CompilationUnit cu = parse(original, true);
+
+		final Pattern<Expr> callPattern =
+				expr("$n(..$args)").or(expr("$s.<..$tas>$n(..$args)"));
+
+		Iterable<Expr> allCalls = cu.findAll(callPattern);
+		int count = 0;
+		for (Expr call : allCalls) {
+			count++;
+		}
+		Assert.assertEquals(16, count);
+	}
 
 	private static void debug(String header, Tree tree) {
 		System.out.println(header + ": " + printToString(tree, false, FormattingSettings.Default));

@@ -49,12 +49,13 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	}
 
 	protected static Substitution matchTree(STree<?> pattern, STree<?> tree, Substitution substitution) {
-		if (pattern.kind != null && pattern.kind != tree.kind) return null;
-
 		STreeState<?> patternState = pattern.state;
 		STreeState<?> state = tree.state;
+		boolean isVariable = patternState instanceof SVarState;
 
-		if (patternState instanceof SVarState) {
+		if (!isVariable && pattern.kind != tree.kind) return null;
+
+		if (isVariable) {
 			String name = ((SVarState) patternState).name;
 			// Not an anonymous var
 			if (!name.equals("_")) {

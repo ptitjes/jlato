@@ -1,0 +1,2284 @@
+
+/*****************************************
+ * THE JAVA LANGUAGE GRAMMAR STARTS HERE *
+ *****************************************/
+
+CompilationUnit CompilationUnit():
+{
+	PackageDecl packageDecl = null;
+	NodeList imports;
+	NodeList types;
+}
+{
+  { run(); }
+
+  [ LOOKAHEAD(PackageDecl()) packageDecl = PackageDecl() ]
+  imports = ImportDecls()
+  types = TypeDecls()
+  (<EOF> | "\u001A" /** ctrl+z char **/)
+
+  { return enRun(new CompilationUnit(preamble, packageDecl, imports, types)); }
+}
+
+/**********************************************************************************************************************
+ * Declarations
+ **********************************************************************************************************************/
+
+PackageDecl PackageDecl():
+{
+	NodeList<AnnotationExpr> annotations = null;
+	QualifiedName name;
+}
+{
+  { run(); }
+
+  annotations = Annotations() "package" name = QualifiedName() ";"
+
+  { return enRun(new PackageDecl(annotations, name)); }
+}
+
+NodeList ImportDecls():
+{
+	NodeList imports = new NodeList();
+	ImportDecl importDecl = null;
+}
+{
+  { run(); }
+  ( importDecl = ImportDecl() { imports = imports.append(importDecl); } )*
+  { return enRun(imports, ImportDecl.listShape); }
+}
+
+ImportDecl ImportDecl():
+{
+	QualifiedName name;
+	boolean isStatic = false;
+	boolean isAsterisk = false;
+}
+{
+  { run(); }
+  "import" [ "static" { isStatic = true; } ] name = QualifiedName() [ "." "*" { isAsterisk = true; } ] ";"
+  { return enRun(new ImportDecl(name, isStatic, isAsterisk)); }
+}
+
+NodeList TypeDecls():
+{
+	NodeList types = new NodeList();
+	TypeDecl typeDecl = null;
+}
+{
+  { run(); }
+  ( typeDecl = TypeDecl() { types = types.append(typeDecl); } )*
+  { return enRun(types, TypeDecl.listShape); }
+}
+
+/*
+ * Modifiers. We match all modifiers in a single rule to reduce the chances of
+ * syntax errors for simple modifier mistakes. It will also enable us to give
+ * better error messages.
+ */
+
+NodeList Modifiers():
+{
+    NodeList modifiers = new NodeList();
+    AnnotationExpr ann;
+}
+{
+  { run(); }
+
+  (
+    LOOKAHEAD(2)
+    (
+      "public" { modifiers = modifiers.append(Modifier.Public); }
+    |
+      "protected" { modifiers = modifiers.append(Modifier.Protected); }
+    |
+      "private" { modifiers = modifiers.append(Modifier.Private); }
+    |
+      "abstract" { modifiers = modifiers.append(Modifier.Abstract); }
+    |
+      "default" { modifiers = modifiers.append(Modifier.Default); }
+    |
+      "static" { modifiers = modifiers.append(Modifier.Static); }
+    |
+      "final" { modifiers = modifiers.append(Modifier.Final); }
+    |
+      "transient" { modifiers = modifiers.append(Modifier.Transient); }
+    |
+      "volatile" { modifiers = modifiers.append(Modifier.Volatile); }
+    |
+      "synchronized" { modifiers = modifiers.append(Modifier.Synchronized); }
+    |
+      "native" { modifiers = modifiers.append(Modifier.Native); }
+    |
+      "strictfp" { modifiers = modifiers.append(Modifier.StrictFP); }
+    |
+      ann = Annotation() { modifiers = modifiers.append(ann); }
+    )
+  )*
+
+  { return enRun(modifiers, ExtendedModifier.singleLineShape); }
+}
+
+/*
+ * Decl syntax follows.
+ */
+TypeDecl TypeDecl():
+{
+   NodeList modifiers;
+   TypeDecl ret;
+}
+{
+  { run(); }
+
+  (
+    ";" { ret = enRun(new EmptyTypeDecl()); }
+  |
+    modifiers = Modifiers()
+    (
+      ret = ClassOrInterfaceDecl(modifiers)
+    |
+      ret = EnumDecl(modifiers)
+    |
+      ret = AnnotationTypeDecl(modifiers)
+    )
+  )
+
+  { return ret; }
+}
+
+
+TypeDecl ClassOrInterfaceDecl(NodeList modifiers):
+{
+   TypeKind typeKind;
+   Name name;
+   NodeList typeParams = null;
+   NodeList extendsClause = null;
+   NodeList implementsClause = null;
+   NodeList members;
+}
+{
+  // Run is started before modifiers
+
+  (
+    "class" { typeKind = TypeKind.Class; }
+  |
+    "interface" { typeKind = TypeKind.Interface; }
+  )
+  name = Name()
+  [ typeParams = TypeParameters() ]
+  [ extendsClause = ExtendsList(typeKind) ]
+  [ implementsClause = ImplementsList(typeKind) ]
+  members = ClassOrInterfaceBody(typeKind)
+
+  {
+    if (typeKind == TypeKind.Interface)
+      return enRun(new InterfaceDecl(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members));
+    else {
+      QualifiedType superClassType = extendsClause == null || extendsClause.isEmpty() ? null : (QualifiedType) extendsClause.get(0);
+      return enRun(new ClassDecl(modifiers, name, ensureNotNull(typeParams), NodeOption.of(superClassType), ensureNotNull(implementsClause), members));
+    }
+  }
+}
+
+NodeList ExtendsList(TypeKind typeKind):
+{
+   NodeList ret = new NodeList();
+   QualifiedType cit;
+   NodeList<AnnotationExpr> annotations = null;
+}
+{
+  { run(); }
+  "extends"
+  (
+    cit = AnnotatedQualifiedType() { ret = ret.append(cit); }
+    ( "," cit = AnnotatedQualifiedType() { ret = ret.append(cit); } )*
+    {
+      if (ret.size() > 1 && typeKind == TypeKind.Class)
+        throwParseException(token, "A class cannot extend more than one other class");
+    }
+  |
+    LOOKAHEAD({${quotes}})
+    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+  )
+  { return enRun(ret, QualifiedType.extendsClauseShape); }
+}
+
+NodeList ImplementsList(TypeKind typeKind):
+{
+   NodeList ret = new NodeList();
+   QualifiedType cit;
+   NodeList<AnnotationExpr> annotations = null;
+}
+{
+  { run(); }
+  "implements"
+  (
+    cit = AnnotatedQualifiedType() { ret = ret.append(cit); }
+    ( "," cit = AnnotatedQualifiedType() { ret = ret.append(cit); } )*
+    {
+      if (typeKind == TypeKind.Interface)
+        throwParseException(token, "An interface cannot implement other interfaces");
+    }
+  |
+    LOOKAHEAD({${quotes}})
+    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+  )
+  { return enRun(ret, QualifiedType.implementsClauseShape); }
+}
+
+TypeDecl EnumDecl(NodeList modifiers):
+{
+	Name name;
+	NodeList implementsClause = new NodeList();
+	EnumConstantDecl entry;
+	NodeList<EnumConstantDecl> constants = new NodeList<EnumConstantDecl>();
+	boolean trailingComma = false;
+	NodeList members = null;
+}
+{
+  // Run is started before modifiers
+
+  "enum" name = Name() [ implementsClause = ImplementsList(TypeKind.Enum) ]
+  "{"
+  [
+    { run(); }
+    entry = EnumConstantDecl() { constants = constants.append(entry); }
+    ( LOOKAHEAD(2) "," entry = EnumConstantDecl() { constants = constants.append(entry); } )*
+    { constants = enRun(constants, EnumConstantDecl.listShape); }
+  ]
+  [ "," { trailingComma = true; } ] // TODO Add syntactic data about comma presence in EnumDecl
+  [ ";" members = ClassOrInterfaceBodyDecls(TypeKind.Enum) ]
+  "}"
+
+  { return enRun(new EnumDecl(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))); }
+}
+
+EnumConstantDecl EnumConstantDecl():
+{
+	NodeList modifiers = null;
+	Name name;
+	NodeList<Expr> args = null;
+	NodeList<MemberDecl> classBody = null;
+}
+{
+  { run(); }
+
+  modifiers = Modifiers() name = Name()
+  [ args = Arguments() ] [ classBody = ClassOrInterfaceBody(TypeKind.Class) ]
+
+  { return enRun(new EnumConstantDecl(modifiers, name, NodeOption.of(args), NodeOption.of(classBody))); }
+}
+
+TypeDecl AnnotationTypeDecl(NodeList modifiers):
+{
+	Name name;
+	NodeList members;
+}
+{
+  // Run is started before modifiers
+
+  "@" "interface" name = Name()
+  members = AnnotationTypeBody()
+
+  { return enRun(new AnnotationDecl(modifiers, name, members)); }
+}
+
+// TODO Merge with ClassOrInterfaceBody production and do later checks programmaticaly
+NodeList AnnotationTypeBody():
+{
+	NodeList ret = new NodeList();
+	MemberDecl member;
+}
+{
+  { run(); }
+  "{"
+  (
+    LOOKAHEAD({${quotes}})
+    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+  |
+    ( member = AnnotationTypeBodyDecl() { ret = ret.append(member); } )*
+  )
+  "}"
+  { return enRun(ret, MemberDecl.bodyShape); }
+}
+
+// TODO Merge with ClassOrInterfaceDecl production and do later checks programmaticaly
+MemberDecl AnnotationTypeBodyDecl():
+{
+   NodeList modifiers;
+   MemberDecl ret;
+}
+{
+  { run(); }
+
+  (
+	";" { ret = enRun(new EmptyTypeDecl()); }
+  |
+    modifiers = Modifiers()
+    (
+      LOOKAHEAD(Type() Name() "(")
+      ret = AnnotationTypeMemberDecl(modifiers)
+    |
+      ret = ClassOrInterfaceDecl(modifiers)
+    |
+      ret = EnumDecl(modifiers)
+    |
+      ret = AnnotationTypeDecl(modifiers)
+    |
+      ret = FieldDecl(modifiers)
+    )
+  )
+
+  { return ret; }
+}
+
+// TODO Merge with MethodDecl production and do later checks programmaticaly
+AnnotationMemberDecl AnnotationTypeMemberDecl(NodeList modifiers):
+{
+	Type type;
+	Name name;
+	NodeList dims;
+	NodeOption<Expr> defaultVal = NodeOption.<Expr>none();
+	Expr val = null;
+}
+{
+  // Run is started before modifiers
+
+  type = Type(null) name = Name() "(" ")" dims = ArrayDims()
+  [
+    { run(); }
+    "default" val = MemberValue()
+    { defaultVal = enRun(defaultVal.set(val), AnnotationMemberDecl.defaultValShape); }
+  ]
+  ";"
+
+  { return enRun(new AnnotationMemberDecl(modifiers, type, name, dims, defaultVal)); }
+}
+
+NodeList TypeParameters():
+{
+	NodeList ret = new NodeList();
+	TypeParameter tp;
+}
+{
+  { run(); }
+
+  "<"
+  (
+    tp = TypeParameter() { ret = ret.append(tp); }
+    ( "," tp = TypeParameter() { ret = ret.append(tp); } )*
+  |
+    LOOKAHEAD({${quotes}})
+    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+  )
+  ">"
+
+  { return enRun(ret, TypeParameter.listShape); }
+}
+
+TypeParameter TypeParameter():
+{
+	NodeList<AnnotationExpr> annotations = null;
+	Name name;
+	NodeList typeBounds = null;
+}
+{
+  { run(); }
+  annotations = Annotations() name = Name() [ typeBounds = TypeBounds() ]
+  { return enRun(new TypeParameter(annotations, name, ensureNotNull(typeBounds))); }
+}
+
+NodeList TypeBounds():
+{
+	NodeList ret = new NodeList();
+	QualifiedType cit;
+	NodeList<AnnotationExpr> annotations = null;
+}
+{
+  { run(); }
+  "extends"
+  (
+    cit = AnnotatedQualifiedType() { ret = ret.append(cit); }
+    ( "&" cit = AnnotatedQualifiedType() { ret = ret.append(cit); } )*
+  |
+    LOOKAHEAD({${quotes}})
+    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+  )
+  { return enRun(ret, TypeParameter.boundsShape); }
+}
+
+NodeList ClassOrInterfaceBody(TypeKind typeKind):
+{
+	NodeList ret = new NodeList();
+	MemberDecl member;
+}
+{
+  { run(); }
+  "{"
+  ( member = ClassOrInterfaceBodyDecl(typeKind) { ret = ret.append(member); }  )*
+  "}"
+  { return enRun(ret, MemberDecl.bodyShape); }
+}
+
+NodeList ClassOrInterfaceBodyDecls(TypeKind typeKind):
+{
+	MemberDecl member;
+	NodeList ret = new NodeList();
+}
+{
+  { run(); }
+  (
+    LOOKAHEAD({${quotes}})
+    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+  |
+    ( member = ClassOrInterfaceBodyDecl(typeKind) { ret = ret.append(member); } )*
+  )
+  { return enRun(ret, MemberDecl.membersShape); }
+}
+
+MemberDecl ClassOrInterfaceBodyDecl(TypeKind typeKind):
+{
+   NodeList modifiers;
+   MemberDecl ret;
+}
+{
+  { run(); }
+
+  (
+    ";" { ret = enRun(new EmptyMemberDecl()); }
+  |
+    modifiers = Modifiers()
+    {
+      if (modifiers != null && modifiers.contains(Modifier.Default) && typeKind != TypeKind.Interface)
+        throwParseException(token, "Only interfaces can have default members");
+    }
+    (
+      LOOKAHEAD( "{" )
+      ret = InitializerDecl(modifiers)
+      {
+        if (typeKind == TypeKind.Interface)
+	      throwParseException(token, "An interface cannot have initializers");
+	  }
+    |
+      ret = ClassOrInterfaceDecl(modifiers)
+    |
+      ret = EnumDecl(modifiers)
+    |
+      ret = AnnotationTypeDecl(modifiers)
+    |
+      LOOKAHEAD( [ TypeParameters() ] Name() "(" )
+      ret = ConstructorDecl(modifiers)
+      {
+        if (typeKind == TypeKind.Interface)
+	      throwParseException(token, "An interface cannot have constructors");
+	  }
+    |
+      LOOKAHEAD( Type() Name() ( "[" "]" )* ( "," | "=" | ";" ) )
+      ret = FieldDecl(modifiers)
+    |
+      ret = MethodDecl(modifiers)
+    )
+  )
+
+  { return ret; }
+}
+
+FieldDecl FieldDecl(NodeList modifiers):
+{
+	Type type;
+	NodeList variables = new NodeList();
+	VariableDeclarator val;
+}
+{
+  // Run is started before modifiers
+
+  type = Type(null) variables = VariableDeclarators() ";"
+
+  { return enRun(new FieldDecl(modifiers, type, variables)); }
+}
+
+LocalVariableDecl VariableDecl(NodeList modifiers):
+{
+	Type type;
+	NodeList variables = new NodeList();
+}
+{
+  // Run is started before modifiers
+
+  type = Type(null) variables = VariableDeclarators()
+
+  { return enRun(new LocalVariableDecl(modifiers, type, variables)); }
+}
+
+NodeList VariableDeclarators():
+{
+	NodeList variables = new NodeList();
+	VariableDeclarator val;
+}
+{
+  { run(); }
+
+        val = VariableDeclarator() { variables = variables.append(val); }
+  ( "," val = VariableDeclarator() { variables = variables.append(val); } )*
+
+  { return enRun(variables, VariableDeclarator.listShape); }
+}
+
+VariableDeclarator VariableDeclarator():
+{
+	VariableDeclaratorId id;
+	NodeOption<Expr> init = NodeOption.none();
+	Expr initExpr = null;
+}
+{
+  { run(); }
+
+  id = VariableDeclaratorId()
+  [
+    { run(); }
+    "=" initExpr = VariableInitializer()
+    { init = enRun(init.set(initExpr), VariableDeclarator.initializerShape); }
+  ]
+
+  { return enRun(new VariableDeclarator(id, init)); }
+}
+
+VariableDeclaratorId VariableDeclaratorId():
+{
+	Name name;
+	NodeList arrayDims;
+}
+{
+  { run(); }
+
+  name = Name() arrayDims = ArrayDims()
+
+  { return enRun(new VariableDeclaratorId(name, arrayDims)); }
+}
+
+NodeList ArrayDims():
+{
+	NodeList arrayDims = new NodeList();
+	NodeList<AnnotationExpr> annotations;
+}
+{
+  { run(); }
+  (
+    LOOKAHEAD( Annotations() "[" "]" )
+    { run(); }
+    annotations = Annotations() "[" "]"
+    { arrayDims = arrayDims.append(enRun(new ArrayDim(annotations))); }
+  )*
+  { return enRun(arrayDims, ArrayDim.listShape); }
+}
+
+Expr VariableInitializer():
+{
+	Expr ret;
+}
+{
+  ( ret = ArrayInitializer() | ret = Expression() )
+  { return ret; }
+}
+
+ArrayInitializerExpr ArrayInitializer():
+{
+	NodeList values = new NodeList();
+	Expr val;
+}
+{
+  { run(); }
+
+  "{"
+  [
+    { run(); }
+    val = VariableInitializer() { values = values.append(val); }
+    ( LOOKAHEAD(2) "," val = VariableInitializer() { values = values.append(val); } )*
+    { values = enRun(values, Expr.listShape); }
+  ]
+  [ "," ] // TODO Add syntactic data about comma presence in ArrayInitializerExpr
+  "}"
+
+  { return enRun(new ArrayInitializerExpr(values)); }
+}
+
+MethodDecl MethodDecl(NodeList modifiers):
+{
+	NodeList typeParameters = null;
+	Type type;
+	Name name;
+	NodeList parameters;
+	NodeList arrayDims;
+	NodeList throwsClause = null;
+	BlockStmt block = null;
+}
+{
+  // Run is started before modifiers
+
+  [ typeParameters = TypeParameters() ]
+  type = ResultType()
+  name = Name() parameters = FormalParameterList() arrayDims = ArrayDims()
+  [ throwsClause = ThrowsClause() ]
+  (
+    block = Block()
+    {
+      if(modifiers != null && modifiers.contains(Modifier.Default))
+	    throwParseException(token, "\"default\" methods must have a body");
+	}
+  |
+    ";"
+  )
+
+  { return enRun(new MethodDecl(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), NodeOption.of(block))); }
+}
+
+NodeList FormalParameterList():
+{
+	NodeList ret = new NodeList();
+	FormalParameter par;
+}
+{
+  { run(); }
+  "("
+  [
+    par = FormalParameter() { ret = ret.append(par); }
+    ( "," par = FormalParameter() { ret = ret.append(par); } )*
+  |
+    LOOKAHEAD({${quotes}})
+    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+  ]
+  ")"
+  { return enRun(ret, FormalParameter.listShape); }
+}
+
+FormalParameter FormalParameter():
+{
+	NodeList modifiers;
+	Type type;
+	boolean isVarArg = false;
+	VariableDeclaratorId id;
+}
+{
+  { run(); }
+
+  modifiers = Modifiers() type = Type(null) [ "..." { isVarArg = true; } ] id = VariableDeclaratorId()
+
+  { return enRun(new FormalParameter(modifiers, type, isVarArg, id)); }
+}
+
+
+NodeList ThrowsClause():
+{
+   NodeList ret = new NodeList();
+   QualifiedType cit;
+}
+{
+  { run(); }
+
+  "throws" cit = AnnotatedQualifiedType() { ret = ret.append(cit); }
+  ( "," cit = AnnotatedQualifiedType() { ret = ret.append(cit); } )*
+
+  { return enRun(ret, QualifiedType.throwsClauseShape); }
+}
+
+ConstructorDecl ConstructorDecl(NodeList modifiers):
+{
+	NodeList typeParameters = null;
+	Name name;
+	NodeList parameters;
+	NodeList throwsClause = null;
+	ExplicitConstructorInvocationStmt exConsInv = null;
+	BlockStmt block;
+	NodeList stmts = new NodeList();
+	Stmt stmt;
+}
+{
+  // Run is started before modifiers
+
+  [ typeParameters = TypeParameters() ]
+  name = Name() parameters = FormalParameterList()
+  [ throwsClause = ThrowsClause() ]
+
+  { run(); }
+  "{"
+  { run(); }
+  [ LOOKAHEAD(ExplicitConstructorInvocation()) stmt = ExplicitConstructorInvocation() { stmts = stmts.append(stmt); } ]
+  ( LOOKAHEAD(2) stmt = BlockStatement() { stmts = stmts.append(stmt); } )*
+  { stmts = enRun(stmts, Stmt.listShape); }
+  "}"
+  { block = enRun(new BlockStmt(stmts)); }
+
+  { return enRun(new ConstructorDecl(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block)); }
+}
+
+ExplicitConstructorInvocationStmt ExplicitConstructorInvocation():
+{
+	boolean isThis = false;
+	NodeList args;
+	Expr expr = null;
+	NodeList typeArgs = null;
+}
+{
+  { run(); }
+
+  (
+    LOOKAHEAD([ TypeArguments() ] <THIS> "(")
+    [ typeArgs = TypeArguments() ]
+    <THIS> { isThis = true; }
+    args = Arguments() ";"
+  |
+    [
+      LOOKAHEAD( PrimaryExpressionWithoutSuperSuffix() "." )
+      expr = PrimaryExpressionWithoutSuperSuffix() "."
+    ]
+    [ typeArgs = TypeArguments() ]
+    <SUPER>
+    args = Arguments() ";"
+  )
+
+  { return enRun(new ExplicitConstructorInvocationStmt(ensureNotNull(typeArgs), isThis, NodeOption.of(expr), args)); }
+}
+
+NodeList Statements():
+{
+	NodeList ret = null;
+	Stmt stmt;
+}
+{
+  { run(); }
+  ( LOOKAHEAD(2) stmt = BlockStatement() { ret = append(ret, stmt); } )*
+  { return enRun(ret, Stmt.listShape); }
+}
+
+InitializerDecl InitializerDecl(NodeList modifiers):
+{
+	BlockStmt block;
+}
+{
+  // Run is started before modifiers
+
+  block = Block()
+
+  { return enRun(new InitializerDecl(modifiers, block)); }
+}
+
+
+/**********************************************************************************************************************
+ * Types
+ **********************************************************************************************************************/
+
+Type Type(NodeList<AnnotationExpr> annotations):
+{
+	Type ret;
+}
+{
+  // Run may be started before annotations
+
+  (
+    LOOKAHEAD(2) ret = ReferenceType(annotations)
+  |
+    ret = PrimitiveType(annotations)
+  )
+  { return ret; }
+}
+
+ReferenceType ReferenceType(NodeList<AnnotationExpr> annotations):
+{
+	ReferenceType type;
+}
+{
+  // Run may be started before annotations
+
+  (
+    LOOKAHEAD( ( PrimitiveType() | QualifiedType() ) ArrayDimsMandatory() )
+    type = ArrayType(annotations)
+  |
+    type = QualifiedType(annotations)
+  )
+
+  { return type; }
+}
+
+ArrayType ArrayType(NodeList<AnnotationExpr> annotations):
+{
+	Type type;
+	NodeList arrayDims;
+}
+{
+  // Run may be started before annotations
+
+  ( type = PrimitiveType(annotations) | type = QualifiedType(annotations) )
+  { lateRun(); }
+  arrayDims = ArrayDimsMandatory()
+
+  { return enRun(new ArrayType(type, arrayDims)); }
+}
+
+QualifiedType QualifiedType(NodeList<AnnotationExpr> annotations):
+{
+    NodeOption<QualifiedType> scope = NodeOption.<QualifiedType>none();
+	QualifiedType ret;
+	Name name;
+	NodeList<Type> typeArgs = null;
+}
+{
+  // Run may be started before annotations
+  {
+    if (annotations == null) {
+      run();
+      annotations = new NodeList<AnnotationExpr>();
+    }
+  }
+
+  name = Name()
+  [ LOOKAHEAD(2) typeArgs = TypeArgumentsOrDiamond() ]
+  { ret = enRun(new QualifiedType(annotations, scope, name, NodeOption.of(typeArgs))); }
+  (
+    LOOKAHEAD(2)
+    { lateRun(); } "." { scope = enRun(scope.set(ret), QualifiedType.scopeShape); }
+
+    { lateRun(); }
+    annotations = Annotations() name = Name()
+    [ LOOKAHEAD(2) typeArgs = TypeArgumentsOrDiamond() ]
+    { ret = enRun(new QualifiedType(annotations, scope, name, NodeOption.of(typeArgs))); }
+  )*
+
+  { return ret; }
+}
+
+NodeList TypeArguments():
+{
+	NodeList ret = new NodeList();
+	Type type;
+}
+{
+  { run(); }
+  "<"
+  [ ret = TypeArgumentList() ]
+  ">"
+  { return enRun(ret, Type.typeArgumentsShape); }
+}
+
+
+NodeList<Type> TypeArgumentsOrDiamond():
+{
+	NodeList ret = new NodeList();
+	Type type;
+}
+{
+  { run(); }
+  "<"
+  [ ret = TypeArgumentList() ]
+  ">"
+  { return enRun(ret, Type.typeArgumentsOrDiamondShape); }
+}
+
+NodeList TypeArgumentList():
+{
+	NodeList ret = new NodeList();
+	Type type;
+}
+{
+  type = TypeArgument() { ret = ret.append(type); }
+  ( "," type = TypeArgument() { ret = ret.append(type); } )*
+  { return ret; }
+|
+  LOOKAHEAD({${quotes}})
+  <NODE_LIST_VARIABLE> { return makeVar(getToken(0)); }
+}
+
+Type TypeArgument():
+{
+	Type ret;
+	NodeList<AnnotationExpr> annotations = null;
+}
+{
+  { run(); }
+  annotations = Annotations()
+  (
+    ret = ReferenceType(annotations)
+  |
+    ret = Wildcard(annotations)
+  )
+  { return ret; }
+}
+
+WildcardType Wildcard(NodeList<AnnotationExpr> annotations):
+{
+	ReferenceType ext = null;
+	ReferenceType sup = null;
+	NodeList boundAnnotations = null;
+}
+{
+  // Run may be started before annotations
+  {
+    if (annotations == null) {
+      run();
+      annotations = new NodeList<AnnotationExpr>();
+    }
+  }
+
+  "?"
+  [ "extends" { run(); } boundAnnotations = Annotations() ext = ReferenceType(boundAnnotations)
+  | "super" { run(); } boundAnnotations = Annotations() sup = ReferenceType(boundAnnotations) ]
+  { return enRun(new WildcardType(annotations, NodeOption.of(ext), NodeOption.of(sup))); }
+}
+
+PrimitiveType PrimitiveType(NodeList<AnnotationExpr> annotations):
+{
+	PrimitiveType.Primitive primitive;
+}
+{
+  // Run may be started before annotations
+  {
+    if (annotations == null) {
+      run();
+      annotations = new NodeList<AnnotationExpr>();
+    }
+  }
+
+  ( "boolean" { primitive = PrimitiveType.Primitive.Boolean; }
+  | "char"    { primitive = PrimitiveType.Primitive.Char; }
+  | "byte"    { primitive = PrimitiveType.Primitive.Byte; }
+  | "short"   { primitive = PrimitiveType.Primitive.Short; }
+  | "int"     { primitive = PrimitiveType.Primitive.Int; }
+  | "long"    { primitive = PrimitiveType.Primitive.Long; }
+  | "float"   { primitive = PrimitiveType.Primitive.Float; }
+  | "double"  { primitive = PrimitiveType.Primitive.Double; } )
+  { return enRun(new PrimitiveType(annotations, primitive)); }
+}
+
+Type ResultType():
+{
+	Type ret;
+}
+{
+  (
+    { run(); } "void" { ret = enRun(new VoidType()); }
+  |
+    ret = Type(null)
+  )
+  { return ret; }
+}
+
+NodeList QualifiedTypeList():
+{
+	NodeList ret = new NodeList();
+	QualifiedType type;
+}
+{
+  { run(); }
+
+  type = AnnotatedQualifiedType() { ret = ret.append(type); }
+  ( "," type = AnnotatedQualifiedType() { ret = ret.append(type); } )*
+
+  { return enRun(ret); }
+}
+
+QualifiedType AnnotatedQualifiedType():
+{
+    NodeList<AnnotationExpr> annotations;
+	QualifiedType ret;
+}
+{
+  { run(); }
+  annotations = Annotations() ret = QualifiedType(annotations)
+  { return ret; }
+}
+
+/**********************************************************************************************************************
+ * Names
+ **********************************************************************************************************************/
+
+QualifiedName QualifiedName():
+{
+    NodeOption<QualifiedName> qualifier = NodeOption.none();
+	QualifiedName ret = null;
+	Name name;
+}
+{
+  { run(); } name = Name() { ret = enRun(new QualifiedName(qualifier, name)); }
+  (
+    LOOKAHEAD("." Name())
+    { lateRun(); } "." { qualifier = enRun(qualifier.set(ret), QualifiedName.qualifierShape); }
+    { lateRun(); }
+    name = Name() { ret = enRun(new QualifiedName(qualifier, name)); }
+  )*
+  { return ret; }
+}
+
+Name Name():
+{
+  Name name;
+}
+{
+  (
+    { run(); }
+    <IDENTIFIER>
+    { name = enRun(new Name(token.image)); }
+  |
+    LOOKAHEAD({${quotes}})
+    <NODE_VARIABLE> { name = makeVar(token); }
+  )
+  { return name; }
+}
+
+/**********************************************************************************************************************
+ * Expressions
+ **********************************************************************************************************************/
+
+Expr Expression():
+// FIXME
+// This expansion has been written this way instead of :
+//   Assignment() | ConditionalExpression()
+// for performance reasons.
+// However, it is a weakening of the grammar for it allows the LHS of
+// assignments to be any conditional Expr whereas it can only be
+// a primary Expr.  Consider adding a semantic predicate to work
+// around this.
+{
+	Expr ret;
+	AssignExpr.AssignOp op;
+	Expr value;
+}
+{
+  (
+    LOOKAHEAD( LambdaParameters() "->" ) ret = LambdaExpression()
+  |
+    ret = ConditionalExpression()
+    [
+      LOOKAHEAD(2) { lateRun(); } op = AssignmentOperator() value = Expression()
+      { ret = enRun(new AssignExpr(ret, op, value)); }
+    ]
+  )
+  { return ret; }
+}
+
+LambdaExpr LambdaExpression():
+{
+  NodeList parameters;
+  BlockStmt block;
+  Expr expr;
+  LambdaExpr ret;
+}
+{
+  { run(); }
+  parameters = LambdaParameters()
+  "->"
+  (
+    expr = Expression() { ret = enRun(new LambdaExpr(parameters, expr)); }
+  |
+    block = Block() { ret = enRun(new LambdaExpr(parameters, block)); }
+  )
+  { return ret; }
+}
+
+NodeList LambdaParameters():
+{
+  NodeList ret;
+  FormalParameter param;
+}
+{
+  (
+    { run(); }
+    param = InferredFormalParameter()
+    { ret = enRun(new NodeList(param)); }
+  |
+    (
+      LOOKAHEAD(InferredFormalParameterList()) ret = InferredFormalParameterList()
+    |
+      ret = FormalParameterList()
+    )
+  )
+  { return ret; }
+}
+
+NodeList InferredFormalParameterList():
+{
+  NodeList ret = new NodeList();
+  FormalParameter param;
+}
+{
+  { run(); }
+  "("
+  param = InferredFormalParameter() { ret = ret.append(param); }
+  ( "," param = InferredFormalParameter() { ret = ret.append(param); } )*
+  ")"
+  { return enRun(ret); }
+}
+
+FormalParameter InferredFormalParameter():
+{
+  Name name;
+}
+{
+  { run(); }
+  name = Name()
+  { return enRun(new FormalParameter(null, new UnknownType(), false, new VariableDeclaratorId(name, null))); }
+}
+
+AssignExpr.AssignOp AssignmentOperator():
+{
+	AssignExpr.AssignOp ret;
+}
+{
+  ( "="    { ret = AssignExpr.AssignOp.Normal; }
+  | "*="   { ret = AssignExpr.AssignOp.Times; }
+  | "/="   { ret = AssignExpr.AssignOp.Divide; }
+  | "%="   { ret = AssignExpr.AssignOp.Remainder; }
+  | "+="   { ret = AssignExpr.AssignOp.Plus; }
+  | "-="   { ret = AssignExpr.AssignOp.Minus; }
+  | "<<="  { ret = AssignExpr.AssignOp.LeftShift; }
+  | ">>="  { ret = AssignExpr.AssignOp.RightSignedShift; }
+  | ">>>=" { ret = AssignExpr.AssignOp.RightUnsignedShift; }
+  | "&="   { ret = AssignExpr.AssignOp.And; }
+  | "^="   { ret = AssignExpr.AssignOp.XOr; }
+  | "|="   { ret = AssignExpr.AssignOp.Or; } )
+  { return ret; }
+}
+
+Expr ConditionalExpression():
+{
+	Expr ret;
+	Expr left;
+	Expr right;
+}
+{
+  ret = ConditionalOrExpression()
+  [ { lateRun(); } "?" left = Expression() ":" right = ConditionalExpression() { ret = enRun(new ConditionalExpr(ret, left, right)); } ]
+  { return ret; }
+}
+
+Expr ConditionalOrExpression():
+{
+	Expr ret;
+	Expr right;
+}
+{
+  ret = ConditionalAndExpression()
+  ( { lateRun(); } "||" right = ConditionalAndExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.Or, right)); } )*
+  { return ret; }
+}
+
+Expr ConditionalAndExpression():
+{
+	Expr ret;
+	Expr right;
+}
+{
+  ret = InclusiveOrExpression()
+  ( { lateRun(); } "&&" right = InclusiveOrExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.And, right)); } )*
+  { return ret; }
+}
+
+Expr InclusiveOrExpression():
+{
+	Expr ret;
+	Expr right;
+}
+{
+  ret = ExclusiveOrExpression()
+  ( { lateRun(); } "|" right = ExclusiveOrExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.BinOr, right)); } )*
+  { return ret; }
+}
+
+Expr ExclusiveOrExpression():
+{
+	Expr ret;
+	Expr right;
+}
+{
+  ret = AndExpression()
+  ( { lateRun(); } "^" right = AndExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.XOr, right)); } )*
+  { return ret; }
+}
+
+Expr AndExpression():
+{
+	Expr ret;
+	Expr right;
+}
+{
+  ret = EqualityExpression()
+  ( { lateRun(); } "&" right = EqualityExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.BinAnd, right)); } )*
+  { return ret; }
+}
+
+Expr EqualityExpression():
+{
+	Expr ret;
+	Expr right;
+	BinaryExpr.BinaryOp op;
+}
+{
+  ret = InstanceOfExpression()
+  (
+    { lateRun(); }
+    ( "==" { op = BinaryExpr.BinaryOp.Equal; } |
+      "!=" { op = BinaryExpr.BinaryOp.NotEqual; } )
+    right = InstanceOfExpression()
+    { ret = enRun(new BinaryExpr(ret, op, right)); }
+  )*
+  { return ret; }
+}
+
+Expr InstanceOfExpression():
+{
+	Expr ret;
+	NodeList<AnnotationExpr> annotations;
+	Type type;
+}
+{
+  ret = RelationalExpression()
+  [
+    { lateRun(); } "instanceof"
+    { run(); } annotations = Annotations() type = Type(annotations)
+    { ret = enRun(new InstanceOfExpr(ret, type)); }
+  ]
+  { return ret; }
+}
+
+Expr RelationalExpression():
+{
+	Expr ret;
+	Expr right;
+	BinaryExpr.BinaryOp op;
+}
+{
+  ret = ShiftExpression()
+  (
+    { lateRun(); }
+  	( "<"  { op = BinaryExpr.BinaryOp.Less; } |
+  	  ">"  { op = BinaryExpr.BinaryOp.Greater; } |
+  	  "<=" { op = BinaryExpr.BinaryOp.LessOrEqual; } |
+  	  ">=" { op = BinaryExpr.BinaryOp.GreaterOrEqual; } )
+  	right = ShiftExpression()
+  	{ ret = enRun(new BinaryExpr(ret, op, right)); }
+  )*
+  { return ret; }
+}
+
+Expr ShiftExpression():
+{
+	Expr ret;
+	Expr right;
+	BinaryExpr.BinaryOp op;
+}
+{
+  ret = AdditiveExpression()
+  (
+    { lateRun(); }
+  	( "<<"             { op = BinaryExpr.BinaryOp.LeftShift; } |
+  	  RSIGNEDSHIFT()   { op = BinaryExpr.BinaryOp.RightSignedShift; } |
+  	  RUNSIGNEDSHIFT() { op = BinaryExpr.BinaryOp.RightUnsignedShift; } )
+  	right = AdditiveExpression()
+  	{ ret = enRun(new BinaryExpr(ret, op, right)); }
+  )*
+  { return ret; }
+}
+
+Expr AdditiveExpression():
+{
+	Expr ret;
+	Expr right;
+	BinaryExpr.BinaryOp op;
+}
+{
+  ret = MultiplicativeExpression()
+  (
+    { lateRun(); }
+  	( "+" { op = BinaryExpr.BinaryOp.Plus; } |
+  	  "-" { op = BinaryExpr.BinaryOp.Minus; } )
+  	right = MultiplicativeExpression()
+  	{ ret = enRun(new BinaryExpr(ret, op, right)); }
+  )*
+  { return ret; }
+}
+
+Expr MultiplicativeExpression():
+{
+	Expr ret;
+	Expr right;
+	BinaryExpr.BinaryOp op;
+}
+{
+  ret = UnaryExpression()
+  (
+    { lateRun(); }
+  	( "*" { op = BinaryExpr.BinaryOp.Times; } |
+  	  "/" { op = BinaryExpr.BinaryOp.Divide; } |
+  	  "%" { op = BinaryExpr.BinaryOp.Remainder; } )
+  	right = UnaryExpression()
+  	{ ret = enRun(new BinaryExpr(ret, op, right)); }
+  )*
+  { return ret; }
+}
+
+Expr UnaryExpression():
+{
+	Expr ret;
+	UnaryExpr.UnaryOp op;
+}
+{
+  (
+	  ret = PreIncrementExpression()
+	|
+	  ret = PreDecrementExpression()
+	|
+	  { run(); }
+	  ( "+" { op = UnaryExpr.UnaryOp.Positive; } |
+	    "-" { op = UnaryExpr.UnaryOp.Negative; } )
+	  ret = UnaryExpression()
+	  { ret = enRun(new UnaryExpr(op, ret)); }
+	|
+	  ret = UnaryExpressionNotPlusMinus()
+  )
+  { return ret; }
+}
+
+Expr PreIncrementExpression():
+{
+	Expr ret;
+}
+{
+  { run(); }
+  "++" ret = UnaryExpression()
+  { return enRun(new UnaryExpr(UnaryExpr.UnaryOp.PreIncrement, ret)); }
+}
+
+Expr PreDecrementExpression():
+{
+	Expr ret;
+}
+{
+  { run(); }
+  "--" ret = UnaryExpression()
+  { return enRun(new UnaryExpr(UnaryExpr.UnaryOp.PreDecrement, ret)); }
+}
+
+Expr UnaryExpressionNotPlusMinus():
+{
+	Expr ret;
+	UnaryExpr.UnaryOp op;
+}
+{
+  (
+    { run(); }
+	( "~" { op = UnaryExpr.UnaryOp.Inverse; } |
+	  "!" { op = UnaryExpr.UnaryOp.Not; } )
+	ret = UnaryExpression()
+	{ ret = enRun(new UnaryExpr(op, ret)); }
+  |
+    LOOKAHEAD( CastExpression() )
+    ret = CastExpression()
+  |
+    ret = PostfixExpression()
+  )
+  { return ret; }
+}
+
+Expr PostfixExpression():
+{
+	Expr ret;
+	UnaryExpr.UnaryOp op;
+}
+{
+  ret = PrimaryExpression()
+  [
+  	LOOKAHEAD(2)
+    { lateRun(); }
+    ( "++" { op = UnaryExpr.UnaryOp.PostIncrement; } |
+      "--" { op = UnaryExpr.UnaryOp.PostDecrement; } )
+    { ret = enRun(new UnaryExpr(op, ret)); }
+  ]
+  { return ret; }
+}
+
+Expr CastExpression():
+{
+	Expr ret;
+	Type type;
+	NodeList types = new NodeList();
+	NodeList<AnnotationExpr> annotations = null;
+}
+{
+  { run(); }
+  "("
+  { run(); } annotations = Annotations()
+  (
+    LOOKAHEAD(2)
+    type = PrimitiveType(annotations)
+    ")" ret = UnaryExpression()
+    { ret = enRun(new CastExpr(type, ret)); }
+  |
+    type = ReferenceType(annotations) { types = types.append(type); }
+    [
+      LOOKAHEAD("&")
+      ( { lateRun(); } "&" annotations = Annotations() type = ReferenceType(annotations) { types = types.append(type); } )+
+      {
+        types = enRun(types, Type.intersectionShape);
+        type = new IntersectionType(types);
+      }
+    ]
+    ")" ret = UnaryExpressionNotPlusMinus()
+    { ret = enRun(new CastExpr(type, ret)); }
+  )
+  { return ret; }
+}
+
+Expr PrimaryExpression():
+{
+	Expr ret;
+	Expr inner;
+}
+{
+  ret = PrimaryPrefix() ( LOOKAHEAD(2) { lateRun(); } ret = PrimarySuffix(ret) )*
+  { return ret; }
+}
+
+Expr PrimaryExpressionWithoutSuperSuffix():
+{
+	Expr ret;
+	Expr inner;
+}
+{
+  ret = PrimaryPrefix() ( LOOKAHEAD( PrimarySuffixWithoutSuper() ) { lateRun(); } ret = PrimarySuffixWithoutSuper(ret) )*
+  { return ret; }
+}
+
+Expr PrimaryPrefix():
+{
+	Expr ret = null;
+	Name name;
+	NodeList typeArgs = null;
+	NodeList args = null;
+	boolean hasArgs = false;
+	boolean isLambda = false;
+	Type type;
+	FormalParameter p = null;
+	VariableDeclaratorId id = null;
+}
+{
+  (
+    ret = Literal()
+  |
+    { run(); } "this" { ret = enRun(new ThisExpr(NodeOption.<Expr>none())); }
+  |
+    { run(); } "super" { ret = enRun(new SuperExpr(NodeOption.<Expr>none())); }
+	(
+	  { lateRun(); }
+	  "."
+	  [ typeArgs = TypeArguments() ] // TODO Should not read type arguments for field access
+	  name = Name()
+	  [ args = Arguments() { hasArgs = true; } ]
+	  {
+	    if (hasArgs) {
+	  	  ret = enRun(new MethodInvocationExpr(NodeOption.of(ret), ensureNotNull(typeArgs), name, args));
+		} else {
+	  	  ret = enRun(new FieldAccessExpr(NodeOption.of(ret), name));
+		}
+      }
+	|
+	  { lateRun(); }
+	  "::" [typeArgs = TypeArguments() ]
+      ( name = Name() | "new" { name = new Name("new"); } )
+	  { ret = enRun(new MethodReferenceExpr(ret, ensureNotNull(typeArgs), name)); }
+	)
+  |
+    { run(); } "(" ret = Expression() ")" { ret = enRun(new ParenthesizedExpr(ret)); }
+  |
+    ret = AllocationExpression(null)
+  |
+    LOOKAHEAD( ResultType() "." "class" )
+    { run(); } type = ResultType()  "." "class" { ret = enRun(new ClassExpr(type)); }
+  |
+    LOOKAHEAD (ResultType() "::" )
+    { run(); }
+    type = ResultType() "::" [typeArgs = TypeArguments() ]
+    ( name = Name() | "new" { name = new Name("new"); } )
+    { ret = enRun(new MethodReferenceExpr(new TypeExpr(type), ensureNotNull(typeArgs), name)); }
+  |
+    { run(); }
+    name = Name() [ args = Arguments() { hasArgs = true; } ]
+    {
+      if (hasArgs) {
+        ret = enRun(new MethodInvocationExpr(NodeOption.<Expr>none(), NodeList.<Type>empty(), name, args));
+      } else {
+        ret = enRun(name);
+      }
+    }
+  )
+  { return ret; }
+}
+
+Expr PrimarySuffix(Expr scope):
+{
+	Expr ret;
+}
+{
+  // Run is started before scope
+
+  (
+    LOOKAHEAD(2)
+    ret = PrimarySuffixWithoutSuper(scope)
+  |
+    "." "super" { ret = enRun(new SuperExpr(NodeOption.of(scope))); }
+  )
+  { return ret; }
+}
+
+Expr PrimarySuffixWithoutSuper(Expr scope):
+{
+	Expr ret;
+	NodeList typeArgs = null;
+	NodeList args = null;
+	boolean hasArgs = false;
+	Name name;
+}
+{
+  // Run is started before scope
+
+  (
+    "."
+    (
+      "this" { ret = enRun(new ThisExpr(NodeOption.of(scope))); }
+    |
+      ret = AllocationExpression(scope)
+    |
+      LOOKAHEAD( [ TypeArguments() ] Name() )
+      [ typeArgs = TypeArguments() ] // TODO Should not read type arguments for field access
+      name = Name()
+      [ args = Arguments() { hasArgs=true; } ]
+      {
+        if (hasArgs) {
+          ret = enRun(new MethodInvocationExpr(NodeOption.of(scope), ensureNotNull(typeArgs), name, args));
+        } else {
+          ret = enRun(new FieldAccessExpr(NodeOption.of(scope), name));
+        }
+      }
+    )
+  |
+    "[" ret = Expression() "]" { ret = enRun(new ArrayAccessExpr(scope, ret)); }
+  )
+
+  { return ret; }
+}
+
+Expr Literal():
+{
+	Expr ret;
+}
+{
+  { run(); }
+  (
+    <INTEGER_LITERAL>   { ret = new LiteralExpr<Integer>(Integer.class, token.image); }
+  |
+    <LONG_LITERAL>      { ret = new LiteralExpr<Long>(Long.class, token.image); }
+  |
+    <FLOAT_LITERAL>     { ret = new LiteralExpr<Float>(Float.class, token.image); }
+  |
+    <DOUBLE_LITERAL>    { ret = new LiteralExpr<Double>(Double.class, token.image); }
+  |
+    <CHARACTER_LITERAL> { ret = new LiteralExpr<Character>(Character.class, token.image); }
+  |
+    <STRING_LITERAL>    { ret = new LiteralExpr<String>(String.class, token.image); }
+  |
+    "true"  { ret = new LiteralExpr<Boolean>(Boolean.class, token.image); }
+  |
+    "false" { ret = new LiteralExpr<Boolean>(Boolean.class, token.image); }
+  |
+    "null"  { ret = new LiteralExpr<Void>(Void.class, token.image); }
+  )
+  { return enRun(ret); }
+}
+
+NodeList Arguments():
+{
+	NodeList ret = new NodeList();
+	Expr expr;
+}
+{
+  { run(); }
+  "("
+  [
+    expr = Expression() { ret = ret.append(expr); }
+    ( "," expr = Expression() { ret = ret.append(expr); } )*
+  |
+    LOOKAHEAD({${quotes}})
+    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+  ]
+  ")"
+  { return enRun(ret, Expr.argumentsShape); }
+}
+
+Expr AllocationExpression(Expr scope):
+{
+	Expr ret;
+	Type type;
+	NodeList typeArgs = null;
+	NodeList<MemberDecl> anonymousBody = null;
+	NodeList args;
+	NodeList<AnnotationExpr> annotations = null;
+}
+{
+  // Run may be started before scope
+  { if (scope == null) run(); }
+
+  "new"
+  [ typeArgs = TypeArguments() ]
+
+  { run(); }
+  annotations = Annotations()
+  (
+    type = PrimitiveType(annotations)
+    ret = ArrayCreationExpr(type)
+  |
+	type = QualifiedType(annotations)
+    (
+	  ret = ArrayCreationExpr(type)
+	|
+	  args = Arguments() [ LOOKAHEAD( "{" ) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
+      { ret = enRun(new ObjectCreationExpr(NodeOption.of(scope), ensureNotNull(typeArgs), (QualifiedType) type, args, NodeOption.of(anonymousBody))); }
+    )
+  )
+  { return ret; }
+}
+
+Expr ArrayCreationExpr(Type componentType):
+{
+	Expr expr;
+	NodeList arrayDimExprs = new NodeList();
+	NodeList arrayDims = new NodeList();
+	NodeList<AnnotationExpr> annotations = null;
+	ArrayInitializerExpr initializer;
+}
+{
+  (
+    LOOKAHEAD( Annotations() "[" Expression() "]" )
+    arrayDimExprs = ArrayDimExprsMandatory()
+    arrayDims = ArrayDims()
+    { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, NodeOption.<ArrayInitializerExpr>none())); }
+  |
+    arrayDims = ArrayDimsMandatory()
+    initializer = ArrayInitializer()
+    { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, NodeOption.of(initializer))); }
+  )
+}
+
+NodeList ArrayDimExprsMandatory():
+{
+	NodeList arrayDimExprs = new NodeList();
+	NodeList<AnnotationExpr> annotations;
+	Expr expr;
+}
+{
+  { run(); }
+  (
+    LOOKAHEAD( Annotations() "[" Expression() "]" )
+    { run(); }
+    annotations = Annotations() "[" expr = Expression() "]"
+    { arrayDimExprs = arrayDimExprs.append(enRun(new ArrayDimExpr(annotations, expr))); }
+  )+
+  { return enRun(arrayDimExprs, ArrayDimExpr.listShape); }
+}
+
+NodeList ArrayDimsMandatory():
+{
+	NodeList arrayDims = new NodeList();
+	NodeList<AnnotationExpr> annotations;
+}
+{
+  { run(); }
+  (
+    LOOKAHEAD( Annotations() "[" "]" )
+    { run(); }
+    annotations = Annotations() "[" "]"
+    { arrayDims = arrayDims.append(enRun(new ArrayDim(annotations))); }
+  )+
+  { return enRun(arrayDims, ArrayDim.listShape); }
+}
+
+/**********************************************************************************************************************
+ * Statements
+ **********************************************************************************************************************/
+
+Stmt Statement():
+{
+	Stmt ret;
+}
+{
+  (
+	  LOOKAHEAD(2)
+	  ret = LabeledStatement()
+	|
+	  ret = AssertStatement()
+	|
+	  ret = Block()
+	|
+	  ret = EmptyStatement()
+	|
+	  ret = StatementExpression()
+	|
+	  ret = SwitchStatement()
+	|
+	  ret = IfStatement()
+	|
+	  ret = WhileStatement()
+	|
+	  ret = DoStatement()
+	|
+	  ret = ForStatement()
+	|
+	  ret = BreakStatement()
+	|
+	  ret = ContinueStatement()
+	|
+	  ret = ReturnStatement()
+	|
+	  ret = ThrowStatement()
+	|
+	  ret = SynchronizedStatement()
+	|
+	  ret = TryStatement()
+  )
+  { return ret; }
+}
+
+AssertStmt AssertStatement():
+{
+	Expr check;
+	Expr msg = null;
+}
+{
+  { run(); }
+  "assert" check = Expression() [ ":" msg = Expression() ] ";"
+  { return enRun(new AssertStmt(check, NodeOption.of(msg)));  }
+}
+
+LabeledStmt LabeledStatement():
+{
+	Name label;
+	Stmt stmt;
+}
+{
+  { run(); }
+  label = Name() ":" stmt = Statement()
+  { return enRun(new LabeledStmt(label, stmt)); }
+}
+
+BlockStmt Block():
+{
+	NodeList stmts;
+}
+{
+  { run(); }
+  "{" stmts = Statements() "}"
+  { return enRun(new BlockStmt(ensureNotNull(stmts))); }
+}
+
+/*
+ * Classes inside block stametents can only be abstract or final. The semantic must check it.
+ */
+Stmt BlockStatement():
+{
+	Stmt ret;
+	Expr expr;
+	TypeDecl typeDecl;
+	NodeList modifiers;
+}
+{
+  (
+    LOOKAHEAD( Modifiers() ("class" | "interface") )
+    { run(); }
+    { run(); } modifiers = Modifiers() typeDecl = ClassOrInterfaceDecl(modifiers)
+    { ret = enRun(new TypeDeclarationStmt(typeDecl)); }
+  |
+    LOOKAHEAD( VariableDeclExpression() )
+    { run(); }
+    expr = VariableDeclExpression() ";"
+    { ret = enRun(new ExpressionStmt(expr)); }
+  |
+    ret = Statement()
+  )
+  { return ret; }
+}
+
+VariableDeclarationExpr VariableDeclExpression():
+{
+	NodeList modifiers;
+	LocalVariableDecl variableDecl;
+}
+{
+  { run(); }
+  { run(); } modifiers = Modifiers() variableDecl = VariableDecl(modifiers)
+  { return enRun(new VariableDeclarationExpr(variableDecl)); }
+}
+
+EmptyStmt EmptyStatement():
+{}
+{
+  { run(); }
+  ";"
+  { return enRun(new EmptyStmt()); }
+}
+
+Stmt LambdaBody():
+{
+  Expr expr;
+  Stmt n = null;
+}
+{
+  (
+    { run(); } expr = Expression() { n = enRun(new ExpressionStmt(expr)); }
+  |
+    n = Block()
+  )
+  { return n; }
+}
+
+ExpressionStmt StatementExpression():
+// FIXME
+// The last expansion of this production accepts more than the legal
+// Java expansions for StatementExpression.  This expansion does not
+// use PostfixExpression for performance reasons.
+{
+	Expr expr;
+	AssignExpr.AssignOp op;
+	Expr value;
+}
+{
+  { run(); }
+  (
+    LOOKAHEAD(2) expr = PreIncrementExpression()
+  |
+    expr = PreDecrementExpression()
+  |
+    expr = PrimaryExpression()
+    [
+      { lateRun(); } "++" { expr = enRun(new UnaryExpr(UnaryExpr.UnaryOp.PostIncrement, expr));  }
+    |
+      { lateRun(); } "--" { expr = enRun(new UnaryExpr(UnaryExpr.UnaryOp.PostDecrement, expr));  }
+    |
+      { lateRun(); } op = AssignmentOperator() value = Expression() { expr = enRun(new AssignExpr(expr, op, value)); }
+	]
+  )
+  ";"
+  { return enRun(new ExpressionStmt(expr)); }
+}
+
+SwitchStmt SwitchStatement():
+{
+	Expr selector;
+	SwitchCase entry;
+	NodeList entries = new NodeList();
+}
+{
+  { run(); }
+  "switch" "(" selector = Expression() ")" "{"
+  { run(); }
+  ( entry = SwitchEntry() { entries = entries.append(entry); } )*
+  { entries = enRun(entries, SwitchCase.listShape); }
+  "}"
+  { return enRun(new SwitchStmt(selector, entries)); }
+}
+
+SwitchCase SwitchEntry():
+{
+	Expr label = null;
+	NodeList stmts;
+}
+{
+  { run(); }
+  (
+    "case" label = Expression()
+  |
+    "default"
+  )
+  ":" stmts = Statements()
+  { return enRun(new SwitchCase(NodeOption.of(label), ensureNotNull(stmts))); }
+}
+
+IfStmt IfStatement():
+/*
+ * The disambiguating algorithm of JavaCC automatically binds dangling
+ * else's to the innermost if Stmt.  The LOOKAHEAD specification
+ * is to tell JavaCC that we know what we are doing.
+ */
+{
+	Expr condition;
+	Stmt thenStmt;
+	Stmt elseStmt = null;
+}
+{
+  { run(); }
+  "if" "(" condition = Expression() ")" thenStmt = Statement() [ LOOKAHEAD(1) "else" elseStmt = Statement() ]
+  { return enRun(new IfStmt(condition, thenStmt, NodeOption.of(elseStmt))); }
+}
+
+WhileStmt WhileStatement():
+{
+	Expr condition;
+	Stmt body;
+}
+{
+  { run(); }
+  "while" "(" condition = Expression() ")" body = Statement()
+  { return enRun(new WhileStmt(condition, body)); }
+}
+
+DoStmt DoStatement():
+{
+	Expr condition;
+	Stmt body;
+}
+{
+  { run(); }
+  "do" body = Statement() "while" "(" condition = Expression() ")" ";"
+  { return enRun(new DoStmt(body, condition)); }
+}
+
+Stmt ForStatement():
+{
+	String id = null;
+	VariableDeclarationExpr varExpr = null;
+	Expr expr = null;
+	NodeList init = null;
+	NodeList update = null;
+	Stmt body;
+}
+{
+  { run(); }
+  "for" "("
+  (
+    LOOKAHEAD(VariableDeclExpression() ":")
+    varExpr = VariableDeclExpression() ":" expr = Expression()
+  |
+    [ init = ForInit() ] ";" [ expr = Expression() ] ";" [ update = ForUpdate() ]
+  )
+  ")" body = Statement()
+  {
+  	if (varExpr != null) return enRun(new ForeachStmt(varExpr, expr, body));
+  	else return enRun(new ForStmt(init, expr, update, body));
+  }
+}
+
+NodeList ForInit():
+{
+	NodeList ret;
+	Expr expr;
+}
+{
+  (
+    LOOKAHEAD( Modifiers() Type() Name() )
+    { run(); }
+    expr = VariableDeclExpression() { ret = new NodeList(); ret = ret.append(expr); }
+    { ret = enRun(ret, Expr.listShape); }
+  |
+    ret = ExpressionList()
+  )
+  { return ret; }
+}
+
+NodeList ExpressionList():
+{
+	NodeList ret = new NodeList();
+	Expr expr;
+}
+{
+  { run(); }
+  expr = Expression() { ret = ret.append(expr); } ( "," expr = Expression()  { ret = ret.append(expr); } )*
+  { return enRun(ret, Expr.listShape); }
+}
+
+NodeList ForUpdate():
+{
+	NodeList ret;
+}
+{
+  ret = ExpressionList()
+  { return ret; }
+}
+
+BreakStmt BreakStatement():
+{
+	Name id = null;
+}
+{
+  { run(); }
+  "break" [ id = Name() ] ";"
+  { return enRun(new BreakStmt(NodeOption.of(id))); }
+}
+
+ContinueStmt ContinueStatement():
+{
+	Name id = null;
+}
+{
+  { run(); }
+  "continue" [ id = Name() ] ";"
+  { return enRun(new ContinueStmt(NodeOption.of(id))); }
+}
+
+ReturnStmt ReturnStatement():
+{
+	Expr expr = null;
+}
+{
+  { run(); }
+  "return" [ expr = Expression() ] ";"
+  { return enRun(new ReturnStmt(NodeOption.of(expr))); }
+}
+
+ThrowStmt ThrowStatement():
+{
+	Expr expr;
+}
+{
+  { run(); }
+  "throw" expr = Expression() ";"
+  { return enRun(new ThrowStmt(expr)); }
+}
+
+SynchronizedStmt SynchronizedStatement():
+{
+	Expr expr;
+	BlockStmt block;
+}
+{
+  { run(); }
+  "synchronized" "(" expr = Expression() ")" block = Block()
+  { return enRun(new SynchronizedStmt(expr, block)); }
+}
+
+TryStmt TryStatement():
+// TODO Make catchClauses/finallyClause counts less fatal
+{
+	NodeList resources = new NodeList();
+	BlockStmt tryBlock;
+	BlockStmt finallyBlock = null;
+	NodeList catchClauses = null;
+}
+{
+  { run(); }
+  "try" 
+  ( resources = ResourceSpecification() )?
+  tryBlock = Block()
+  (
+    catchClauses = CatchClauses()
+    [ "finally" finallyBlock = Block() ]
+  |
+    "finally" finallyBlock = Block()
+  )
+  { return enRun(new TryStmt(resources, tryBlock, ensureNotNull(catchClauses), NodeOption.of(finallyBlock))); }
+}
+
+NodeList CatchClauses():
+{
+	NodeList catchClauses = new NodeList();
+	CatchClause catchClause;
+}
+{
+  { run(); }
+  (
+    catchClause = CatchClause() { catchClauses = catchClauses.append(catchClause); }
+  )+
+  { return enRun(catchClauses, CatchClause.listShape); }
+}
+
+CatchClause CatchClause():
+{
+	FormalParameter param;
+	BlockStmt catchBlock;
+}
+{
+  { run(); }
+  "catch" "(" param = CatchFormalParameter() ")" catchBlock = Block()
+  { return enRun(new CatchClause(param, catchBlock)); }
+}
+
+FormalParameter CatchFormalParameter():
+{
+	NodeList modifiers;
+	Type exceptType;
+	NodeList<Type> exceptTypes = new NodeList<Type>();
+	VariableDeclaratorId exceptId;
+}
+{
+  { run(); }
+  modifiers = Modifiers()
+
+  exceptType = QualifiedType(null) { exceptTypes = exceptTypes.append(exceptType); }
+  [
+    LOOKAHEAD("|")
+    { lateRun(); }
+    ( "|" exceptType = AnnotatedQualifiedType() { exceptTypes = exceptTypes.append(exceptType); } )+
+    {
+      exceptTypes = enRun(exceptTypes, Type.unionShape);
+      exceptType = new UnionType(exceptTypes);
+    }
+  ]
+
+  exceptId = VariableDeclaratorId()
+  { return enRun(new FormalParameter(modifiers, exceptType, false, exceptId)); }
+}
+
+NodeList ResourceSpecification() :
+{
+	NodeList vars = new NodeList();
+	VariableDeclarationExpr var;
+}
+{
+  { run(); }
+  "("
+  // FIXME this is a bit more lenient than we need to be, eg allowing access modifiers like private
+  var = VariableDeclExpression() { vars = vars.append(var); }
+  ( LOOKAHEAD(2) ";" var = VariableDeclExpression() {vars = vars.append(var);} )*
+  [ LOOKAHEAD(2) ";" ] // TODO Add syntactic data about semi-colon presence in NodeList
+  ")"
+  { return enRun(vars, VariableDeclarationExpr.resourcesShape); }
+}
+
+
+/* We use productions to match >>>, >> and > so that we can keep the
+ * type Decl syntax with generics clean
+ */
+
+void RUNSIGNEDSHIFT():
+{}
+{
+  ( LOOKAHEAD({ getToken(1).kind == GT &&
+                getToken(1).realKind == RUNSIGNEDSHIFT } )
+   ">" ">" ">" { popNewWhitespaces(); }
+  )
+}
+
+void RSIGNEDSHIFT():
+{}
+{
+  ( LOOKAHEAD({ getToken(1).kind == GT &&
+                getToken(1).realKind == RSIGNEDSHIFT } )
+  ">" ">" { popNewWhitespaces(); }
+  )
+}
+
+
+/**********************************************************************************************************************
+ * Annotations
+ **********************************************************************************************************************/
+
+NodeList<AnnotationExpr> Annotations():
+{
+	NodeList<AnnotationExpr> annotations = new NodeList<AnnotationExpr>();
+	AnnotationExpr annotation;
+}
+{
+  { run(); }
+  ( annotation = Annotation() { annotations = annotations.append(annotation); } )*
+  { return enRun(annotations, AnnotationExpr.singleLineAnnotationsShape); }
+}
+
+AnnotationExpr Annotation():
+{
+	AnnotationExpr ret;
+}
+{
+  (
+    LOOKAHEAD( "@" QualifiedName() "(" ( Name() "=" | ")" ))
+    ret = NormalAnnotation()
+  |
+    LOOKAHEAD( "@" QualifiedName() "(" )
+    ret = SingleMemberAnnotation()
+  |
+    LOOKAHEAD( "@" QualifiedName() )
+    ret = MarkerAnnotation()
+  )
+  { return ret; }
+}
+
+NormalAnnotationExpr NormalAnnotation():
+{
+	QualifiedName name;
+	NodeList pairs = null;
+}
+{
+  { run(); }
+  "@" name = QualifiedName() "(" [ pairs = MemberValuePairs() ] ")"
+  { return enRun(new NormalAnnotationExpr(name, ensureNotNull(pairs))); }
+}
+
+MarkerAnnotationExpr MarkerAnnotation():
+{
+	QualifiedName name;
+}
+{
+  { run(); }
+  "@" name = QualifiedName()
+  { return enRun(new MarkerAnnotationExpr(name)); }
+}
+
+SingleMemberAnnotationExpr SingleMemberAnnotation():
+{
+	QualifiedName name;
+	Expr memberVal;
+}
+{
+  { run(); }
+  "@" name = QualifiedName() "(" memberVal = MemberValue() ")"
+  { return enRun(new SingleMemberAnnotationExpr(name, memberVal)); }
+}
+
+NodeList MemberValuePairs():
+{
+	NodeList ret = new NodeList();
+	MemberValuePair pair;
+}
+{
+  { run(); }
+  pair = MemberValuePair() { ret = ret.append(pair); } ( "," pair = MemberValuePair() { ret = ret.append(pair); } )*
+  { return enRun(ret); }
+}
+
+MemberValuePair MemberValuePair():
+{
+	Name name;
+	Expr value;
+}
+{
+  { run(); }
+  name = Name() "=" value = MemberValue()
+  { return enRun(new MemberValuePair(name, value)); }
+}
+
+Expr MemberValue():
+{
+	Expr ret;
+}
+{
+  (
+    ret = Annotation()
+  |
+    ret = MemberValueArrayInitializer()
+  |
+    ret = ConditionalExpression()
+  )
+  { return ret; }
+}
+
+Expr MemberValueArrayInitializer():
+{
+	NodeList ret = new NodeList();
+	Expr member;
+}
+{
+  { run(); }
+  "{"
+  [
+    { run(); }
+    member = MemberValue() { ret = ret.append(member); }
+    ( LOOKAHEAD(2) "," member = MemberValue() { ret = ret.append(member); } )*
+    { ret = enRun(ret, Expr.listShape); }
+  ]
+  [ "," ] // TODO Add syntactic data about comma presence in ArrayInitializerExpr
+  "}"
+  { return enRun(new ArrayInitializerExpr(ret)); }
+}

@@ -36,35 +36,35 @@ public abstract class ParseContext<T extends Tree> {
 
 	public final static ParseContext<CompilationUnit> CompilationUnit = new ParseContext<CompilationUnit>() {
 		@Override
-		protected CompilationUnit callProduction(ParserImpl parser) throws ParseException {
+		protected CompilationUnit callProduction(ParserBase parser) throws ParseException {
 			return parser.CompilationUnit();
 		}
 	};
 
 	public final static ParseContext<PackageDecl> PackageDecl = new ParseContext<PackageDecl>() {
 		@Override
-		protected PackageDecl callProduction(ParserImpl parser) throws ParseException {
+		protected PackageDecl callProduction(ParserBase parser) throws ParseException {
 			return parser.PackageDecl();
 		}
 	};
 
 	public final static ParseContext<ImportDecl> ImportDecl = new ParseContext<ImportDecl>() {
 		@Override
-		protected ImportDecl callProduction(ParserImpl parser) throws ParseException {
+		protected ImportDecl callProduction(ParserBase parser) throws ParseException {
 			return parser.ImportDecl();
 		}
 	};
 
 	public final static ParseContext<TypeDecl> TypeDecl = new ParseContext<TypeDecl>() {
 		@Override
-		protected TypeDecl callProduction(ParserImpl parser) throws ParseException {
+		protected TypeDecl callProduction(ParserBase parser) throws ParseException {
 			return parser.TypeDecl();
 		}
 	};
 
 	public final static ParseContext<MemberDecl> MemberDecl = new ParseContext<MemberDecl>() {
 		@Override
-		protected MemberDecl callProduction(ParserImpl parser) throws ParseException {
+		protected MemberDecl callProduction(ParserBase parser) throws ParseException {
 			return parser.ClassOrInterfaceBodyDecl(TypeKind.Class);
 		}
 	};
@@ -77,14 +77,14 @@ public abstract class ParseContext<T extends Tree> {
 
 	public final static ParseContext<MemberDecl> Annotation_MemberDecl = new ParseContext<MemberDecl>() {
 		@Override
-		protected MemberDecl callProduction(ParserImpl parser) throws ParseException {
+		protected MemberDecl callProduction(ParserBase parser) throws ParseException {
 			return parser.AnnotationTypeBodyDecl();
 		}
 	};
 
 	public final static ParseContext<MethodDecl> MethodDecl = new ParseContext<org.jlato.tree.decl.MethodDecl>() {
 		@Override
-		protected MethodDecl callProduction(ParserImpl parser) throws ParseException {
+		protected MethodDecl callProduction(ParserBase parser) throws ParseException {
 			NodeList modifiers = parser.Modifiers();
 			return parser.MethodDecl(modifiers);
 		}
@@ -92,7 +92,7 @@ public abstract class ParseContext<T extends Tree> {
 
 	public final static ParseContext<FieldDecl> FieldDecl = new ParseContext<org.jlato.tree.decl.FieldDecl>() {
 		@Override
-		protected FieldDecl callProduction(ParserImpl parser) throws ParseException {
+		protected FieldDecl callProduction(ParserBase parser) throws ParseException {
 			NodeList modifiers = parser.Modifiers();
 			return parser.FieldDecl(modifiers);
 		}
@@ -100,7 +100,7 @@ public abstract class ParseContext<T extends Tree> {
 
 	public final static ParseContext<AnnotationMemberDecl> AnnotationMemberDecl = new ParseContext<org.jlato.tree.decl.AnnotationMemberDecl>() {
 		@Override
-		protected AnnotationMemberDecl callProduction(ParserImpl parser) throws ParseException {
+		protected AnnotationMemberDecl callProduction(ParserBase parser) throws ParseException {
 			NodeList modifiers = parser.Modifiers();
 			return parser.AnnotationTypeMemberDecl(modifiers);
 		}
@@ -108,46 +108,46 @@ public abstract class ParseContext<T extends Tree> {
 
 	public final static ParseContext<EnumConstantDecl> EnumConstantDecl = new ParseContext<org.jlato.tree.decl.EnumConstantDecl>() {
 		@Override
-		protected EnumConstantDecl callProduction(ParserImpl parser) throws ParseException {
+		protected EnumConstantDecl callProduction(ParserBase parser) throws ParseException {
 			return parser.EnumConstantDecl();
 		}
 	};
 
 	public final static ParseContext<FormalParameter> Parameter = new ParseContext<FormalParameter>() {
 		@Override
-		protected FormalParameter callProduction(ParserImpl parser) throws ParseException {
+		protected FormalParameter callProduction(ParserBase parser) throws ParseException {
 			return parser.FormalParameter();
 		}
 	};
 
 	public final static ParseContext<TypeParameter> TypeParameter = new ParseContext<org.jlato.tree.decl.TypeParameter>() {
 		@Override
-		protected TypeParameter callProduction(ParserImpl parser) throws ParseException {
+		protected TypeParameter callProduction(ParserBase parser) throws ParseException {
 			return parser.TypeParameter();
 		}
 	};
 
 	public final static ParseContext<Stmt> Statement = new ParseContext<Stmt>() {
 		@Override
-		protected Stmt callProduction(ParserImpl parser) throws ParseException {
+		protected Stmt callProduction(ParserBase parser) throws ParseException {
 			return parser.Statement();
 		}
 	};
 
 	public final static ParseContext<Expr> Expression = new ParseContext<Expr>() {
 		@Override
-		protected Expr callProduction(ParserImpl parser) throws ParseException {
+		protected Expr callProduction(ParserBase parser) throws ParseException {
 			return parser.Expression();
 		}
 	};
 
 	public final static ParseContext<Type> Type = new ParseContext<Type>() {
 		@Override
-		protected Type callProduction(ParserImpl parser) throws ParseException {
+		protected Type callProduction(ParserBase parser) throws ParseException {
 			final NodeList<AnnotationExpr> annotations = parser.Annotations();
 			return parser.Type(annotations);
 		}
 	};
 
-	protected abstract T callProduction(ParserImpl parser) throws ParseException;
+	protected abstract T callProduction(ParserBase parser) throws ParseException;
 }

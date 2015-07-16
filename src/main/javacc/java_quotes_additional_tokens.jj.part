@@ -1,0 +1,17 @@
+/* IDENTIFIERS */
+
+/* QUOTE IDENTIFIERS */
+
+TOKEN :
+{
+  < NODE_VARIABLE:
+    "\u0024"          // "$"
+    (<PART_LETTER>)*
+  >
+|
+  < NODE_LIST_VARIABLE:
+    ".."
+    "\u0024"          // "$"
+    (<PART_LETTER>)*
+  >
+}
