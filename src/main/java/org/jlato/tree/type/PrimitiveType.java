@@ -34,7 +34,7 @@ import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class PrimitiveType extends TreeBase<SNodeState> implements Type {
+public class PrimitiveType extends TreeBase<SNodeState, Type, PrimitiveType> implements Type {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public PrimitiveType instantiate(SLocation<SNodeState> location) {

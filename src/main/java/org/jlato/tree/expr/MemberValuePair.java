@@ -33,7 +33,7 @@ import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class MemberValuePair extends TreeBase<SNodeState> implements Tree {
+public class MemberValuePair extends TreeBase<SNodeState, Tree, MemberValuePair> implements Tree {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public MemberValuePair instantiate(SLocation<SNodeState> location) {

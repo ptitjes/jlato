@@ -32,7 +32,7 @@ import org.jlato.tree.Mutation;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class ConditionalExpr extends TreeBase<SNodeState> implements Expr {
+public class ConditionalExpr extends TreeBase<SNodeState, Expr, ConditionalExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public ConditionalExpr instantiate(SLocation<SNodeState> location) {

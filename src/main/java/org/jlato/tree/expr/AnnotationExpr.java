@@ -33,7 +33,7 @@ import static org.jlato.internal.shapes.LexicalShape.none;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public abstract class AnnotationExpr extends TreeBase<SNodeState> implements Expr, ExtendedModifier {
+public abstract class AnnotationExpr extends TreeBase<SNodeState, Expr, AnnotationExpr> implements Expr, ExtendedModifier {
 
 	protected AnnotationExpr(SLocation<SNodeState> location) {
 		super(location);

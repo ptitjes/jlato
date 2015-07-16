@@ -35,7 +35,7 @@ import org.jlato.tree.expr.AnnotationExpr;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class ArrayDim extends TreeBase<SNodeState> implements Tree {
+public class ArrayDim extends TreeBase<SNodeState, Tree, ArrayDim> implements Tree {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public ArrayDim instantiate(SLocation<SNodeState> location) {

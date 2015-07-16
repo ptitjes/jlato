@@ -38,7 +38,7 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class ExplicitConstructorInvocationStmt extends TreeBase<SNodeState> implements Stmt {
+public class ExplicitConstructorInvocationStmt extends TreeBase<SNodeState, Stmt, ExplicitConstructorInvocationStmt> implements Stmt {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public ExplicitConstructorInvocationStmt instantiate(SLocation<SNodeState> location) {

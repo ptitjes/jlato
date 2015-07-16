@@ -36,7 +36,7 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class VariableDeclarator extends TreeBase<SNodeState> implements Tree {
+public class VariableDeclarator extends TreeBase<SNodeState, Tree, VariableDeclarator> implements Tree {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public VariableDeclarator instantiate(SLocation<SNodeState> location) {

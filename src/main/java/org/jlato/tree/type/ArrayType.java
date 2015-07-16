@@ -33,7 +33,7 @@ import org.jlato.tree.decl.VariableDeclaratorId;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class ArrayType extends TreeBase<SNodeState> implements ReferenceType {
+public class ArrayType extends TreeBase<SNodeState, ReferenceType, ArrayType> implements ReferenceType {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public ArrayType instantiate(SLocation<SNodeState> location) {

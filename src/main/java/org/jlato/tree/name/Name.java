@@ -33,7 +33,7 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class Name extends TreeBase<SLeafState> implements Expr {
+public class Name extends TreeBase<SLeafState, Expr, Name> implements Expr {
 
 	public final static SKind<SLeafState> kind = new SKind<SLeafState>() {
 		public Name instantiate(SLocation<SLeafState> location) {

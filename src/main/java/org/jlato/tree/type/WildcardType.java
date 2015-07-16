@@ -37,7 +37,7 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class WildcardType extends TreeBase<SNodeState> implements Type {
+public class WildcardType extends TreeBase<SNodeState, Type, WildcardType> implements Type {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public WildcardType instantiate(SLocation<SNodeState> location) {

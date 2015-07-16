@@ -36,7 +36,7 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class AssertStmt extends TreeBase<SNodeState> implements Stmt {
+public class AssertStmt extends TreeBase<SNodeState, Stmt, AssertStmt> implements Stmt {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public AssertStmt instantiate(SLocation<SNodeState> location) {

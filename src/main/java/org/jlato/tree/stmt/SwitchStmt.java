@@ -38,7 +38,7 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 
-public class SwitchStmt extends TreeBase<SNodeState> implements Stmt {
+public class SwitchStmt extends TreeBase<SNodeState, Stmt, SwitchStmt> implements Stmt {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public SwitchStmt instantiate(SLocation<SNodeState> location) {

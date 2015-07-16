@@ -33,7 +33,7 @@ import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class AnnotationDecl extends TreeBase<SNodeState> implements TypeDecl {
+public class AnnotationDecl extends TreeBase<SNodeState, TypeDecl, AnnotationDecl> implements TypeDecl {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public AnnotationDecl instantiate(SLocation<SNodeState> location) {

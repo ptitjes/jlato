@@ -29,7 +29,7 @@ import org.jlato.internal.td.TreeBase;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class VoidType extends TreeBase<SNodeState> implements Type {
+public class VoidType extends TreeBase<SNodeState, Type, VoidType> implements Type {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public VoidType instantiate(SLocation<SNodeState> location) {

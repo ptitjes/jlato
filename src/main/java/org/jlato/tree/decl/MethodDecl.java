@@ -40,7 +40,7 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class MethodDecl extends TreeBase<SNodeState> implements MemberDecl {
+public class MethodDecl extends TreeBase<SNodeState, MemberDecl, MethodDecl> implements MemberDecl {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public MethodDecl instantiate(SLocation<SNodeState> location) {

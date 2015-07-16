@@ -36,7 +36,7 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUn
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
 
-public class ImportDecl extends TreeBase<SNodeState> implements Tree {
+public class ImportDecl extends TreeBase<SNodeState, Tree, ImportDecl> implements Tree {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public ImportDecl instantiate(SLocation<SNodeState> location) {

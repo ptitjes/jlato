@@ -37,7 +37,7 @@ import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class VariableDeclarationExpr extends TreeBase<SNodeState> implements Expr {
+public class VariableDeclarationExpr extends TreeBase<SNodeState, Expr, VariableDeclarationExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public VariableDeclarationExpr instantiate(SLocation<SNodeState> location) {

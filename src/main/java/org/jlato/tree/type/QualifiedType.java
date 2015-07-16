@@ -37,7 +37,7 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class QualifiedType extends TreeBase<SNodeState> implements ReferenceType {
+public class QualifiedType extends TreeBase<SNodeState, ReferenceType, QualifiedType> implements ReferenceType {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public QualifiedType instantiate(SLocation<SNodeState> location) {

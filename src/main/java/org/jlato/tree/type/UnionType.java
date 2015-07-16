@@ -32,7 +32,7 @@ import org.jlato.tree.NodeList;
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 
-public class UnionType extends TreeBase<SNodeState> implements Type {
+public class UnionType extends TreeBase<SNodeState, Type, UnionType> implements Type {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public UnionType instantiate(SLocation<SNodeState> location) {

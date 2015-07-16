@@ -39,7 +39,7 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.SpacingConstraint.spacing;
 
-public class EnumConstantDecl extends TreeBase<SNodeState> implements MemberDecl {
+public class EnumConstantDecl extends TreeBase<SNodeState, MemberDecl, EnumConstantDecl> implements MemberDecl {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public EnumConstantDecl instantiate(SLocation<SNodeState> location) {

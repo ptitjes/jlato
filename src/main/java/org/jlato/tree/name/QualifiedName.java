@@ -34,7 +34,7 @@ import org.jlato.tree.Tree;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class QualifiedName extends TreeBase<SNodeState> implements Tree {
+public class QualifiedName extends TreeBase<SNodeState, Tree, QualifiedName> implements Tree {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public QualifiedName instantiate(SLocation<SNodeState> location) {

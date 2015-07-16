@@ -35,7 +35,7 @@ import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class PackageDecl extends TreeBase<SNodeState> implements Tree {
+public class PackageDecl extends TreeBase<SNodeState, Tree, PackageDecl> implements Tree {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public PackageDecl instantiate(SLocation<SNodeState> location) {

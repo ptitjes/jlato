@@ -34,7 +34,7 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SuperExpr extends TreeBase<SNodeState> implements Expr {
+public class SuperExpr extends TreeBase<SNodeState, Expr, SuperExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public SuperExpr instantiate(SLocation<SNodeState> location) {

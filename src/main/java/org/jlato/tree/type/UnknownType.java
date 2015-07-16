@@ -28,7 +28,7 @@ import org.jlato.internal.td.TreeBase;
 
 import static org.jlato.internal.shapes.LexicalShape.none;
 
-public class UnknownType extends TreeBase<SNodeState> implements Type {
+public class UnknownType extends TreeBase<SNodeState, Type, UnknownType> implements Type {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public UnknownType instantiate(SLocation<SNodeState> location) {

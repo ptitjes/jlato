@@ -37,7 +37,7 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class TryStmt extends TreeBase<SNodeState> implements Stmt {
+public class TryStmt extends TreeBase<SNodeState, Stmt, TryStmt> implements Stmt {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public TryStmt instantiate(SLocation<SNodeState> location) {

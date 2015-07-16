@@ -34,7 +34,7 @@ import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class MethodReferenceExpr extends TreeBase<SNodeState> implements Expr {
+public class MethodReferenceExpr extends TreeBase<SNodeState, Expr, MethodReferenceExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public MethodReferenceExpr instantiate(SLocation<SNodeState> location) {

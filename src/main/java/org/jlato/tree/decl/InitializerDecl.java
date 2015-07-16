@@ -33,7 +33,7 @@ import org.jlato.tree.stmt.BlockStmt;
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 
-public class InitializerDecl extends TreeBase<SNodeState> implements MemberDecl {
+public class InitializerDecl extends TreeBase<SNodeState, MemberDecl, InitializerDecl> implements MemberDecl {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public InitializerDecl instantiate(SLocation<SNodeState> location) {

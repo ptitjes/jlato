@@ -32,7 +32,7 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class LiteralExpr<T> extends TreeBase<SNodeState> implements Expr {
+public class LiteralExpr<T> extends TreeBase<SNodeState, Expr, LiteralExpr> implements Expr {
 
 	public final static Kind<Tree> kind = new Kind<Tree>();
 

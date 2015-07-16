@@ -39,7 +39,7 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class ObjectCreationExpr extends TreeBase<SNodeState> implements Expr {
+public class ObjectCreationExpr extends TreeBase<SNodeState, Expr, ObjectCreationExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public ObjectCreationExpr instantiate(SLocation<SNodeState> location) {

@@ -37,7 +37,7 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class AnnotationMemberDecl extends TreeBase<SNodeState> implements MemberDecl {
+public class AnnotationMemberDecl extends TreeBase<SNodeState, MemberDecl, AnnotationMemberDecl> implements MemberDecl {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public AnnotationMemberDecl instantiate(SLocation<SNodeState> location) {

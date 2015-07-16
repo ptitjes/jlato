@@ -35,7 +35,7 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class BreakStmt extends TreeBase<SNodeState> implements Stmt {
+public class BreakStmt extends TreeBase<SNodeState, Stmt, BreakStmt> implements Stmt {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public BreakStmt instantiate(SLocation<SNodeState> location) {

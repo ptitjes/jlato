@@ -32,7 +32,7 @@ import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class InstanceOfExpr extends TreeBase<SNodeState> implements Expr {
+public class InstanceOfExpr extends TreeBase<SNodeState, Expr, InstanceOfExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public InstanceOfExpr instantiate(SLocation<SNodeState> location) {

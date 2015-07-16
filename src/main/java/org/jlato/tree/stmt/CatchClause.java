@@ -34,7 +34,7 @@ import org.jlato.tree.decl.FormalParameter;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class CatchClause extends TreeBase<SNodeState> implements Tree {
+public class CatchClause extends TreeBase<SNodeState, Tree, CatchClause> implements Tree {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public CatchClause instantiate(SLocation<SNodeState> location) {

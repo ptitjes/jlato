@@ -31,7 +31,7 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class Modifier extends TreeBase<SLeafState> implements Tree, ExtendedModifier {
+public class Modifier extends TreeBase<SLeafState, Tree, Modifier> implements Tree, ExtendedModifier {
 
 	public final static SKind<SLeafState> kind = new SKind<SLeafState>() {
 		public Tree instantiate(SLocation<SLeafState> location) {

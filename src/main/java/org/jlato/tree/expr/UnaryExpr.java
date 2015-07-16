@@ -33,7 +33,7 @@ import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class UnaryExpr extends TreeBase<SNodeState> implements Expr {
+public class UnaryExpr extends TreeBase<SNodeState, Expr, UnaryExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public UnaryExpr instantiate(SLocation<SNodeState> location) {

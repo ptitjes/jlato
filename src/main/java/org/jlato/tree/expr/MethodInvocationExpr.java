@@ -37,7 +37,7 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class MethodInvocationExpr extends TreeBase<SNodeState> implements Expr {
+public class MethodInvocationExpr extends TreeBase<SNodeState, Expr, MethodInvocationExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public MethodInvocationExpr instantiate(SLocation<SNodeState> location) {

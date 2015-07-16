@@ -35,7 +35,7 @@ import org.jlato.tree.type.QualifiedType;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class ConstructorDecl extends TreeBase<SNodeState> implements MemberDecl {
+public class ConstructorDecl extends TreeBase<SNodeState, MemberDecl, ConstructorDecl> implements MemberDecl {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public ConstructorDecl instantiate(SLocation<SNodeState> location) {

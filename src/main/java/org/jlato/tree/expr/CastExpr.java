@@ -33,7 +33,7 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class CastExpr extends TreeBase<SNodeState> implements Expr {
+public class CastExpr extends TreeBase<SNodeState, Expr, CastExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public CastExpr instantiate(SLocation<SNodeState> location) {

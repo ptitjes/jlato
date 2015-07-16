@@ -31,7 +31,7 @@ import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class ParenthesizedExpr extends TreeBase<SNodeState> implements Expr {
+public class ParenthesizedExpr extends TreeBase<SNodeState, Expr, ParenthesizedExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public ParenthesizedExpr instantiate(SLocation<SNodeState> location) {

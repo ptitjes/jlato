@@ -33,7 +33,7 @@ import org.jlato.tree.expr.Expr;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SynchronizedStmt extends TreeBase<SNodeState> implements Stmt {
+public class SynchronizedStmt extends TreeBase<SNodeState, Stmt, SynchronizedStmt> implements Stmt {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public SynchronizedStmt instantiate(SLocation<SNodeState> location) {

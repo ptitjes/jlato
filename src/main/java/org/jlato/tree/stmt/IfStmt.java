@@ -39,7 +39,7 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 
-public class IfStmt extends TreeBase<SNodeState> implements Stmt {
+public class IfStmt extends TreeBase<SNodeState, Stmt, IfStmt> implements Stmt {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public IfStmt instantiate(SLocation<SNodeState> location) {

@@ -31,7 +31,7 @@ import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class ArrayAccessExpr extends TreeBase<SNodeState> implements Expr {
+public class ArrayAccessExpr extends TreeBase<SNodeState, Expr, ArrayAccessExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public ArrayAccessExpr instantiate(SLocation<SNodeState> location) {

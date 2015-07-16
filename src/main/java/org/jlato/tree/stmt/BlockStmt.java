@@ -36,7 +36,7 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
 
-public class BlockStmt extends TreeBase<SNodeState> implements Stmt {
+public class BlockStmt extends TreeBase<SNodeState, Stmt, BlockStmt> implements Stmt {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public BlockStmt instantiate(SLocation<SNodeState> location) {

@@ -37,7 +37,7 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class TypeParameter extends TreeBase<SNodeState> implements Tree {
+public class TypeParameter extends TreeBase<SNodeState, Tree, TypeParameter> implements Tree {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public TypeParameter instantiate(SLocation<SNodeState> location) {

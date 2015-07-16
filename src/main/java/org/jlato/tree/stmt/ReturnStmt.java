@@ -35,7 +35,7 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class ReturnStmt extends TreeBase<SNodeState> implements Stmt {
+public class ReturnStmt extends TreeBase<SNodeState, Stmt, ReturnStmt> implements Stmt {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public ReturnStmt instantiate(SLocation<SNodeState> location) {

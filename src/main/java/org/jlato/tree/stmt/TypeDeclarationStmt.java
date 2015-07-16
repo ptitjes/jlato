@@ -32,7 +32,7 @@ import org.jlato.tree.decl.TypeDecl;
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 
-public class TypeDeclarationStmt extends TreeBase<SNodeState> implements Stmt {
+public class TypeDeclarationStmt extends TreeBase<SNodeState, Stmt, TypeDeclarationStmt> implements Stmt {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public TypeDeclarationStmt instantiate(SLocation<SNodeState> location) {

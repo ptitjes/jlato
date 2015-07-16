@@ -41,7 +41,7 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
 
-public class SwitchCase extends TreeBase<SNodeState> implements Tree {
+public class SwitchCase extends TreeBase<SNodeState, Tree, SwitchCase> implements Tree {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public SwitchCase instantiate(SLocation<SNodeState> location) {

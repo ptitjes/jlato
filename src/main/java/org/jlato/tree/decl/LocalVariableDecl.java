@@ -34,7 +34,7 @@ import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class LocalVariableDecl extends TreeBase<SNodeState> implements Decl {
+public class LocalVariableDecl extends TreeBase<SNodeState, Decl, LocalVariableDecl> implements Decl {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public LocalVariableDecl instantiate(SLocation<SNodeState> location) {

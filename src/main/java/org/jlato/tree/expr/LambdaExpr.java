@@ -35,7 +35,7 @@ import org.jlato.tree.stmt.BlockStmt;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class LambdaExpr extends TreeBase<SNodeState> implements Expr {
+public class LambdaExpr extends TreeBase<SNodeState, Expr, LambdaExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public LambdaExpr instantiate(SLocation<SNodeState> location) {

@@ -31,7 +31,7 @@ import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
 
-public class TypeExpr extends TreeBase<SNodeState> implements Expr {
+public class TypeExpr extends TreeBase<SNodeState, Expr, TypeExpr> implements Expr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public TypeExpr instantiate(SLocation<SNodeState> location) {

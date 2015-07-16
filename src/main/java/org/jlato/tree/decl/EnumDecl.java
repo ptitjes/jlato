@@ -40,7 +40,7 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 
-public class EnumDecl extends TreeBase<SNodeState> implements TypeDecl {
+public class EnumDecl extends TreeBase<SNodeState, TypeDecl, EnumDecl> implements TypeDecl {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public EnumDecl instantiate(SLocation<SNodeState> location) {

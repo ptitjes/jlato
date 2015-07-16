@@ -29,7 +29,7 @@ import org.jlato.internal.td.TreeBase;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class EmptyMemberDecl extends TreeBase<SLeafState> implements MemberDecl {
+public class EmptyMemberDecl extends TreeBase<SLeafState, MemberDecl, EmptyMemberDecl> implements MemberDecl {
 
 	public final static SKind<SLeafState> kind = new SKind<SLeafState>() {
 		public EmptyMemberDecl instantiate(SLocation<SLeafState> location) {
