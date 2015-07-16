@@ -27,7 +27,7 @@ import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree;
 import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.type.QualifiedType;
@@ -59,14 +59,14 @@ public class RewriteTest {
 		final Pattern<FormalParameter> paramPattern = param("$t $n").or(param("$t... $n"));
 		final Pattern<Type> typePattern = type("$t");
 
-		forAll(paramPattern, cu, new Traversal.Visitor<FormalParameter>() {
+		forAll(cu, paramPattern, new MatchVisitor<FormalParameter>() {
 			@Override
-			public FormalParameter visit(FormalParameter formalParameter) {
+			public FormalParameter visit(FormalParameter formalParameter, Substitution s) {
 				debug("Formal parameter", formalParameter);
 
-				forAll(typePattern, formalParameter, new Traversal.Visitor<Type>() {
+				forAll(formalParameter, typePattern, new MatchVisitor<Type>() {
 					@Override
-					public Type visit(Type type) {
+					public Type visit(Type type, Substitution s) {
 						debug("Type", type);
 						return type;
 					}
@@ -80,9 +80,9 @@ public class RewriteTest {
 		System.out.println();
 
 		final Pattern<Type> parameteredTypePattern = type("$t<$tps$>");
-		forAll(parameteredTypePattern, cu, new Traversal.Visitor<Type>() {
+		forAll(cu, parameteredTypePattern, new MatchVisitor<Type>() {
 			@Override
-			public Type visit(Type type) {
+			public Type visit(Type type, Substitution s) {
 				debug("Type", type);
 				NodeList<Type> tps = ((QualifiedType) type).typeArgs().get();
 				for (Type tp : tps) {
@@ -96,7 +96,7 @@ public class RewriteTest {
 
 
 	private static void debug(String header, Tree tree) {
-		System.out.println(header + ": " +printToString(tree, false, FormattingSettings.Default));
+		System.out.println(header + ": " + printToString(tree, false, FormattingSettings.Default));
 	}
 
 	@Ignore

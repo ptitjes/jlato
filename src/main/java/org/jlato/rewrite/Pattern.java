@@ -29,7 +29,7 @@ import org.jlato.tree.Tree;
 /**
  * @author Didier Villevalois
  */
-public abstract class Pattern<T> {
+public abstract class Pattern<T> implements TypeSafeMatcher<T> {
 
 	public Set<String> variables() {
 		HashSet<String> variables = HashSet.empty();
