@@ -59,10 +59,10 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 			// Not an anonymous var
 			if (!name.equals("_")) {
 				if (substitution.binds(name)) {
-					STree<?> expected = substitution.get(name);
+					STree<?> expected = TreeBase.treeOf((Tree) substitution.get(name));
 					substitution = matchTree(expected, tree, substitution);
 				} else {
-					substitution = substitution.bind(name, tree);
+					substitution = substitution.bind(name, tree.asTree());
 				}
 			}
 		} else if (patternState instanceof SLeafState) {
