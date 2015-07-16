@@ -24,13 +24,18 @@ import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.rewrite.MatchVisitor;
+import org.jlato.rewrite.Matcher;
+import org.jlato.rewrite.Substitution;
+import org.jlato.rewrite.TypeSafeMatcher;
 import org.jlato.tree.Tree;
+
+import java.util.LinkedList;
 
 /**
  * @author Didier Villevalois
  */
-public abstract class TreeBase<S extends STreeState<S>, ST extends Tree, T extends ST> {
+public abstract class TreeBase<S extends STreeState<S>, ST extends Tree, T extends ST> implements Tree {
 
 	protected final SLocation<S> location;
 
@@ -46,6 +51,45 @@ public abstract class TreeBase<S extends STreeState<S>, ST extends Tree, T exten
 	public Tree root() {
 		return location.root().facade;
 	}
+
+	@SuppressWarnings("unchecked")
+	private T self() {
+		return (T) this;
+	}
+
+	// Combinators
+
+	public <U extends Tree> T forAll(TypeSafeMatcher<U> matcher, MatchVisitor<U> visitor) {
+		return Traversal.forAll(self(), matcher, visitor);
+	}
+
+	public Substitution match(Matcher matcher) {
+		return matcher.match(this);
+	}
+
+	public boolean matches(Matcher matcher) {
+		return matcher.match(this) != null;
+	}
+
+	public T match(TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
+		Substitution match = matcher.match(this);
+		return match == null ? self() : visitor.visit(self(), match);
+	}
+
+	public <U extends Tree> Iterable<U> findAll(TypeSafeMatcher<U> matcher) {
+		final LinkedList<U> list = new LinkedList<U>();
+		forAll(matcher, new MatchVisitor<U>() {
+			@Override
+			public U visit(U t, Substitution s) {
+				list.add(t);
+				return t;
+			}
+		});
+		return list;
+	}
+
+	// Convenience conversion helper methods
+	// TODO Move that elsewhere
 
 	public static SLocation<? extends STreeState> locationOf(Tree facade) {
 		return facade == null ? null : ((TreeBase<?, ?, ?>) facade).location;
@@ -86,5 +130,4 @@ public abstract class TreeBase<S extends STreeState<S>, ST extends Tree, T exten
 		}
 		return builder.build();
 	}
-
 }

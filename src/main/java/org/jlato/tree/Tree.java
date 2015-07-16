@@ -19,11 +19,24 @@
 
 package org.jlato.tree;
 
+import org.jlato.rewrite.Matcher;
+import org.jlato.rewrite.Substitution;
+import org.jlato.rewrite.TypeSafeMatcher;
+
 /**
  * @author Didier Villevalois
  */
 public interface Tree {
+
 	Tree parent();
 
 	Tree root();
+
+	// Non-typed combinators
+
+	Substitution match(Matcher matcher);
+
+	boolean matches(Matcher matcher);
+
+	<U extends Tree> Iterable<U> findAll(TypeSafeMatcher<U> matcher);
 }

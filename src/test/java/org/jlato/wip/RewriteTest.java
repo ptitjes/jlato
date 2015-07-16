@@ -60,12 +60,14 @@ public class RewriteTest {
 		final Pattern<FormalParameter> paramPattern = param("$t $n").or(param("$t... $n"));
 		final Pattern<Type> typePattern = type("$t");
 
-		forAll(cu, paramPattern, new MatchVisitor<FormalParameter>() {
+		cu.forAll(paramPattern, new MatchVisitor<FormalParameter>() {
 			@Override
-			public FormalParameter visit(FormalParameter formalParameter, Substitution s) {
-				debug("Formal parameter", formalParameter);
+			public FormalParameter visit(FormalParameter p, Substitution s) {
+				debug("Formal parameter", p);
 
-				forAll(formalParameter, typePattern, new MatchVisitor<Type>() {
+				System.out.println(p.matches(paramPattern));
+
+				forAll(p, typePattern, new MatchVisitor<Type>() {
 					@Override
 					public Type visit(Type type, Substitution s) {
 						debug("Type", type);
@@ -74,14 +76,14 @@ public class RewriteTest {
 				});
 
 				System.out.println();
-				return formalParameter;
+				return p;
 			}
 		});
 		System.out.println();
 		System.out.println();
 
 		final Pattern<Type> parameteredTypePattern = type("$t<$tps$>");
-		forAll(cu, parameteredTypePattern, new MatchVisitor<Type>() {
+		cu.forAll(parameteredTypePattern, new MatchVisitor<Type>() {
 			@Override
 			public Type visit(Type type, Substitution s) {
 				debug("Type", type);
