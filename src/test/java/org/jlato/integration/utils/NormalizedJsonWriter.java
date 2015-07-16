@@ -100,7 +100,8 @@ public class NormalizedJsonWriter {
 
 	private void collectPropertyMethods(Tree tree, Class<? extends Tree> treeClass, List<Method> methods) {
 		Class<?> superclass = treeClass.getSuperclass();
-		if (Tree.class.isAssignableFrom(superclass)) {
+		if (Tree.class.isAssignableFrom(superclass) &&
+				!TreeBase.class.equals(superclass)) {
 			collectPropertyMethods(tree, superclass.asSubclass(Tree.class), methods);
 		}
 
@@ -110,9 +111,7 @@ public class NormalizedJsonWriter {
 
 			String name = method.getName();
 
-			if (name.equals("parent") ||
-					name.equals("root") ||
-					name.equals("toString")) continue;
+			if (name.equals("toString")) continue;
 
 			methods.add(method);
 		}
