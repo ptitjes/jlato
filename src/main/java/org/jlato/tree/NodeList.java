@@ -34,7 +34,7 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public class NodeList<T extends Tree> extends TreeBase<SNodeListState> implements Tree, Iterable<T> {
+public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<T>, NodeList<T>> implements Tree, Iterable<T> {
 
 	public final static Kind<Tree> kind = new Kind<Tree>();
 

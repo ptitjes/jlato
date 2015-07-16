@@ -30,7 +30,7 @@ import org.jlato.tree.Tree;
 /**
  * @author Didier Villevalois
  */
-public abstract class TreeBase<S extends STreeState<S>> {
+public abstract class TreeBase<S extends STreeState<S>, ST extends Tree, T extends ST> {
 
 	protected final SLocation<S> location;
 
@@ -48,11 +48,11 @@ public abstract class TreeBase<S extends STreeState<S>> {
 	}
 
 	public static SLocation<? extends STreeState> locationOf(Tree facade) {
-		return facade == null ? null : ((TreeBase<?>) facade).location;
+		return facade == null ? null : ((TreeBase<?, ?, ?>) facade).location;
 	}
 
 	public static STree<? extends STreeState<?>> treeOf(Tree facade) {
-		return facade == null ? null : ((TreeBase<?>) facade).location.tree;
+		return facade == null ? null : ((TreeBase<?, ?, ?>) facade).location.tree;
 	}
 
 	public static ArrayList<STree<? extends STreeState<?>>> treesOf(Tree... facades) {

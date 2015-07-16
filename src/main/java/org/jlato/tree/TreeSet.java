@@ -38,7 +38,7 @@ import java.io.PrintWriter;
 /**
  * @author Didier Villevalois
  */
-public class TreeSet<T extends Tree> extends TreeBase<STreeSetState> implements Tree {
+public class TreeSet<T extends Tree> extends TreeBase<STreeSetState, TreeSet<T>, TreeSet<T>> implements Tree {
 
 	public final static Kind<Tree> kind = new Kind<Tree>();
 

@@ -31,7 +31,7 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public class NodeOption<T extends Tree> extends TreeBase<SNodeOptionState> implements Tree, Iterable<T> {
+public class NodeOption<T extends Tree> extends TreeBase<SNodeOptionState, NodeOption<T>, NodeOption<T>> implements Tree, Iterable<T> {
 
 	public final static Kind<Tree> kind = new Kind<Tree>();
 
