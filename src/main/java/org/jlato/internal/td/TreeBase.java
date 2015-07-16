@@ -55,7 +55,7 @@ public abstract class TreeBase<S extends STreeState<S>> {
 		return facade == null ? null : ((TreeBase<?>) facade).location.tree;
 	}
 
-	protected static ArrayList<STree<? extends STreeState<?>>> treesOf(Tree... facades) {
+	public static ArrayList<STree<? extends STreeState<?>>> treesOf(Tree... facades) {
 		final Builder<STree<?>, ArrayList<STree<?>>> builder = ArrayList.<STree<?>>factory().newBuilder();
 		for (Tree facade : facades) {
 			builder.add(treeOf(facade));
@@ -63,7 +63,7 @@ public abstract class TreeBase<S extends STreeState<S>> {
 		return builder.build();
 	}
 
-	protected static ArrayList<STree<? extends STreeState<?>>> arrayOf(STree<?>... trees) {
+	public static ArrayList<STree<? extends STreeState<?>>> arrayOf(STree<?>... trees) {
 		final Builder<STree<?>, ArrayList<STree<?>>> builder = ArrayList.<STree<?>>factory().newBuilder();
 		for (STree<?> tree : trees) {
 			builder.add(tree);
@@ -71,7 +71,7 @@ public abstract class TreeBase<S extends STreeState<S>> {
 		return builder.build();
 	}
 
-	protected static ArrayList<Object> dataOf(Object... attributes) {
+	public static ArrayList<Object> dataOf(Object... attributes) {
 		final Builder<Object, ArrayList<Object>> builder = ArrayList.factory().newBuilder();
 		for (Object attribute : attributes) {
 			builder.add(attribute);
@@ -79,7 +79,7 @@ public abstract class TreeBase<S extends STreeState<S>> {
 		return builder.build();
 	}
 
-	protected static Vector<STree<? extends STreeState<?>>> treeListOf(Tree... facades) {
+	public static Vector<STree<? extends STreeState<?>>> treeListOf(Tree... facades) {
 		final Builder<STree<?>, Vector<STree<?>>> builder = Vector.<STree<?>>factory().newBuilder();
 		for (Tree facade : facades) {
 			builder.add(treeOf(facade));

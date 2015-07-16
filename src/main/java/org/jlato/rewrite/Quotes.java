@@ -91,14 +91,24 @@ public abstract class Quotes {
 	private static STree<?> buildTreePattern(STree<?> tree) {
 		if (tree == null) {
 			return null;
-//			return new STree<SVarState>(null, new SVarState("___" + (lastAnnonVariable++)));
 		} else {
 			// Temporary code until dedicated parser is operational
 			STreeState state = tree.state;
 			if (tree.kind == Name.kind) {
 				String string = (String) state.data(0);
 				if (string.startsWith("$")) {
-					return new STree<SVarState>(null, new SVarState(string.substring(1)));
+					if (string.equals("$_")) {
+						// Anonymous vars have null name
+						return new STree<SVarState>(null, new SVarState(null));
+					} else if (string.startsWith("$$")) {
+						// Make a var that match the name string directly
+						return new STree<SLeafState>(Name.kind, new SLeafState(TreeBase.dataOf(
+								new STree<SVarState>(null, new SVarState(string.substring(2)))
+						)));
+					} else {
+						// Make a var that match something in place of the name
+						return new STree<SVarState>(null, new SVarState(string.substring(1)));
+					}
 				} else {
 					return tree;
 				}

@@ -60,11 +60,14 @@ class TreePattern<T extends Tree> extends Pattern<T> {
 
 		if (patternState instanceof SVarState) {
 			String name = ((SVarState) patternState).name;
-			if (substitution.binds(name)) {
-				STree<?> expected = substitution.get(name);
-				substitution = matchTree(expected, tree, substitution);
-			} else {
-				substitution = substitution.bind(name, tree);
+			// Not an anonymous var
+			if (name != null) {
+				if (substitution.binds(name)) {
+					STree<?> expected = substitution.get(name);
+					substitution = matchTree(expected, tree, substitution);
+				} else {
+					substitution = substitution.bind(name, tree);
+				}
 			}
 		} else if (patternState instanceof SLeafState) {
 			substitution = mathData(patternState, state, substitution);
@@ -86,7 +89,7 @@ class TreePattern<T extends Tree> extends Pattern<T> {
 
 	protected static Substitution mathData(STreeState<?> patternState, STreeState<?> state, Substitution substitution) {
 		for (int i = 0; i < patternState.data.size(); i++) {
-			substitution = matchConstant(patternState.data.get(i), state.data(i), substitution);
+			substitution = matchObject(patternState.data.get(i), state.data(i), substitution);
 			if (substitution == null) return null;
 		}
 		return substitution;
@@ -122,8 +125,26 @@ class TreePattern<T extends Tree> extends Pattern<T> {
 		return substitution;
 	}
 
-	protected static Substitution matchConstant(Object expected, Object object, Substitution substitution) {
-		return (expected == null && object == null) || (expected != null && expected.equals(object)) ? substitution : null;
+	protected static Substitution matchObject(Object pattern, Object object, Substitution substitution) {
+		if (pattern instanceof STree) {
+			STreeState<?> patternState = ((STree) pattern).state;
+
+			if (patternState instanceof SVarState) {
+				String name = ((SVarState) patternState).name;
+				// Not an anonymous var
+				if (name != null) {
+					if (substitution.binds(name)) {
+						Object expected = substitution.get(name);
+						substitution = matchObject(expected, object, substitution);
+					} else {
+						substitution = substitution.bind(name, object);
+					}
+				}
+			}
+			return substitution;
+		} else {
+			return (pattern == null && object == null) || (pattern != null && pattern.equals(object)) ? substitution : null;
+		}
 	}
 
 	@Override
@@ -141,7 +162,7 @@ class TreePattern<T extends Tree> extends Pattern<T> {
 
 		} else if (patternState instanceof SLeafState) {
 			return new STree<SLeafState>((SKind<SLeafState>) pattern.kind,
-					new SLeafState(pattern.state.data));
+					new SLeafState(buildData(pattern.state.data, substitution)));
 
 		} else if (patternState instanceof SNodeState) {
 			Builder<STree<?>, ArrayList<STree<?>>> childrenBuilder = ArrayList.<STree<?>>factory().newBuilder();
@@ -149,7 +170,7 @@ class TreePattern<T extends Tree> extends Pattern<T> {
 				childrenBuilder.add(buildTree(childPattern, substitution));
 			}
 			return new STree<SNodeState>((SKind<SNodeState>) pattern.kind,
-					new SNodeState(pattern.state.data, childrenBuilder.build()));
+					new SNodeState(buildData(pattern.state.data, substitution), childrenBuilder.build()));
 
 		} else if (patternState instanceof SNodeOptionState) {
 			STree<?> elementPattern = ((SNodeOptionState) patternState).element;
@@ -166,5 +187,24 @@ class TreePattern<T extends Tree> extends Pattern<T> {
 					new SNodeListState(elementsBuilder.build()));
 		}
 		return null;
+	}
+
+	private ArrayList<Object> buildData(ArrayList<Object> pattern, Substitution substitution) {
+		Builder<Object, ArrayList<Object>> childrenBuilder = ArrayList.<Object>factory().newBuilder();
+		for (Object childPattern : pattern) {
+			if (childPattern instanceof STree) {
+				STreeState<?> patternState = ((STree) childPattern).state;
+				if (patternState instanceof SVarState) {
+					String name = ((SVarState) patternState).name;
+
+					childrenBuilder.add(substitution.get(name));
+				} else {
+					childrenBuilder.add(childPattern);
+				}
+			} else {
+				childrenBuilder.add(childPattern);
+			}
+		}
+		return childrenBuilder.build();
 	}
 }
