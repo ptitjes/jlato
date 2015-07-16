@@ -26,9 +26,11 @@ import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.FormalParameter;
+import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -60,23 +62,41 @@ public class RewriteTest {
 		forAll(paramPattern, cu, new Traversal.Visitor<FormalParameter>() {
 			@Override
 			public FormalParameter visit(FormalParameter formalParameter) {
-				debug(formalParameter);
+				debug("Formal parameter", formalParameter);
 
 				forAll(typePattern, formalParameter, new Traversal.Visitor<Type>() {
 					@Override
 					public Type visit(Type type) {
-						debug(type);
+						debug("Type", type);
 						return type;
 					}
 				});
 
+				System.out.println();
 				return formalParameter;
+			}
+		});
+		System.out.println();
+		System.out.println();
+
+		final Pattern<Type> parameteredTypePattern = type("$t<$tps$>");
+		forAll(parameteredTypePattern, cu, new Traversal.Visitor<Type>() {
+			@Override
+			public Type visit(Type type) {
+				debug("Type", type);
+				NodeList<Type> tps = ((QualifiedType) type).typeArgs().get();
+				for (Type tp : tps) {
+					debug("With type parameter", tp);
+				}
+				System.out.println();
+				return type;
 			}
 		});
 	}
 
-	private static void debug(Tree tree) {
-		System.out.println(printToString(tree, false, FormattingSettings.Default));
+
+	private static void debug(String header, Tree tree) {
+		System.out.println(header + ": " +printToString(tree, false, FormattingSettings.Default));
 	}
 
 	@Ignore

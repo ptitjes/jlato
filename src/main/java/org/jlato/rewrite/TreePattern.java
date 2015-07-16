@@ -61,7 +61,7 @@ class TreePattern<T extends Tree> extends Pattern<T> {
 		if (patternState instanceof SVarState) {
 			String name = ((SVarState) patternState).name;
 			// Not an anonymous var
-			if (name != null) {
+			if (!name.equals("_")) {
 				if (substitution.binds(name)) {
 					STree<?> expected = substitution.get(name);
 					substitution = matchTree(expected, tree, substitution);
@@ -132,7 +132,7 @@ class TreePattern<T extends Tree> extends Pattern<T> {
 			if (patternState instanceof SVarState) {
 				String name = ((SVarState) patternState).name;
 				// Not an anonymous var
-				if (name != null) {
+				if (!name.equals("_")) {
 					if (substitution.binds(name)) {
 						Object expected = substitution.get(name);
 						substitution = matchObject(expected, object, substitution);

@@ -27,6 +27,8 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
+import org.jlato.printer.FormattingSettings;
+import org.jlato.printer.Printer;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.Expr;
@@ -97,10 +99,7 @@ public abstract class Quotes {
 			if (tree.kind == Name.kind) {
 				String string = (String) state.data(0);
 				if (string.startsWith("$")) {
-					if (string.equals("$_")) {
-						// Anonymous vars have null name
-						return new STree<SVarState>(null, new SVarState(null));
-					} else if (string.startsWith("$$")) {
+					if (string.startsWith("$$")) {
 						// Make a var that match the name string directly
 						return new STree<SLeafState>(Name.kind, new SLeafState(TreeBase.dataOf(
 								new STree<SVarState>(null, new SVarState(string.substring(2)))
@@ -119,18 +118,56 @@ public abstract class Quotes {
 
 			} else if (state instanceof SNodeState) {
 				STree<SNodeState> node = (STree<SNodeState>) tree;
-				return new STree<SNodeState>(node.kind, new SNodeState(buildDataPattern(state.data), buildTreePattern(((SNodeState) state).children)));
+				ArrayList<STree<?>> patterChildren = buildTreePattern(((SNodeState) state).children);
+				return new STree<SNodeState>(node.kind, new SNodeState(buildDataPattern(state.data), patterChildren));
 
 			} else if (state instanceof SNodeListState) {
 				STree<SNodeListState> nodeList = (STree<SNodeListState>) tree;
-				return new STree<SNodeListState>(nodeList.kind, new SNodeListState(buildTreePattern(((SNodeListState) state).children)));
+				Vector<STree<?>> elements = ((SNodeListState) state).children;
+
+				// Handle a unique variable ending with $ as a variable for the whole list
+				if (elements.size() == 1) {
+					STree<?> nodeListVar = varWithEndingDollar(elements.get(0));
+					if (nodeListVar != null) return nodeListVar;
+				}
+
+				Vector<STree<?>> patternElements = buildTreePattern(elements);
+				return new STree<SNodeListState>(nodeList.kind, new SNodeListState(patternElements));
 
 			} else if (state instanceof SNodeOptionState) {
 				STree<SNodeOptionState> nodeOption = (STree<SNodeOptionState>) tree;
-				return new STree<SNodeOptionState>(nodeOption.kind, new SNodeOptionState(buildTreePattern(((SNodeOptionState) state).element)));
+				STree<?> element = ((SNodeOptionState) state).element;
+
+				if (element != null && !(element.state instanceof SNodeListState)) {
+					// Handle a variable ending with $ as a variable for the whole option
+					STree<?> optionVar = varWithEndingDollar(element);
+					if (optionVar != null) return optionVar;
+				}
+
+				STree<?> patternElement = buildTreePattern(element);
+				return new STree<SNodeOptionState>(nodeOption.kind, new SNodeOptionState(patternElement));
 			}
 		}
 		return null;
+	}
+
+	private static STree<?> varWithEndingDollar(STree<?> element) {
+		if (element != null) {
+			// This is a big hack in waiting for a dedicated quote parser
+			String name = Printer.printToString(element.asTree(), false, FormattingSettings.Default);
+			if (isAlpha(name) && name.startsWith("$") && name.endsWith("$")) {
+				String varName = name.substring(1, name.length() - 1);
+				return new STree<SVarState>(null, new SVarState(varName));
+			}
+		}
+		return null;
+	}
+
+	private static boolean isAlpha(String name) {
+		for (char c : name.toCharArray()) {
+			if (!Character.isJavaIdentifierPart(c)) return false;
+		}
+		return true;
 	}
 
 	private static ArrayList<STree<?>> buildTreePattern(Iterable<STree<?>> children) {
