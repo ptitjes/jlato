@@ -23,4 +23,7 @@ package org.jlato.tree;
  * @author Didier Villevalois
  */
 public interface Tree {
+	Tree parent();
+
+	Tree root();
 }
