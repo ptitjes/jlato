@@ -32,19 +32,9 @@ import org.jlato.tree.Tree;
  */
 public abstract class Pattern<T> implements TypeSafeMatcher<T> {
 
-	public Set<String> variables() {
-		HashSet<String> variables = HashSet.empty();
-		variables = collectVariables(variables);
-		return variables;
-	}
-
-	protected abstract HashSet<String> collectVariables(HashSet<String> variables);
-
 	public Substitution match(Object object) {
 		return match(object, Substitution.empty());
 	}
-
-	protected abstract Substitution match(Object object, Substitution substitution);
 
 	public abstract T build(Substitution substitution);
 

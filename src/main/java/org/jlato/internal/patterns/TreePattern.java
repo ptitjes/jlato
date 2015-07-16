@@ -43,13 +43,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	}
 
 	@Override
-	protected HashSet<String> collectVariables(HashSet<String> variables) {
-		// TODO
-		return variables;
-	}
-
-	@Override
-	protected Substitution match(Object object, Substitution substitution) {
+	public Substitution match(Object object, Substitution substitution) {
 		if (!(object instanceof Tree)) return null;
 		return matchTree(pattern, TreeBase.treeOf((Tree) object), substitution);
 	}

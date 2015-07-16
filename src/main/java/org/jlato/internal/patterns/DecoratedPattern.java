@@ -19,7 +19,6 @@
 
 package org.jlato.internal.patterns;
 
-import com.github.andrewoma.dexx.collection.HashSet;
 import org.jlato.rewrite.Pattern;
 import org.jlato.rewrite.Substitution;
 
@@ -35,12 +34,7 @@ public class DecoratedPattern<T> extends Pattern<T> {
 	}
 
 	@Override
-	protected HashSet<String> collectVariables(HashSet<String> variables) {
-		return pattern.collectVariables(variables);
-	}
-
-	@Override
-	protected Substitution match(Object object, Substitution substitution) {
+	public Substitution match(Object object, Substitution substitution) {
 		return pattern.match(object, substitution);
 	}
 
