@@ -23,6 +23,7 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.patterns.TreePattern;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;

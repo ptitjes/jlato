@@ -17,10 +17,9 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.rewrite;
+package org.jlato.internal.td;
 
-import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.rewrite.RewriteRules;
 import org.jlato.tree.Tree;
 
 /**
@@ -29,18 +28,18 @@ import org.jlato.tree.Tree;
 public abstract class RewriteStrategy {
 
 	@SuppressWarnings("unchecked")
-	public <R extends Tree> R rewrite(R tree, Rewriter rewriter) {
+	public <R extends Tree> R rewrite(R tree, RewriteRules rewriter) {
 		SLocation location = TreeBase.locationOf(tree);
 		return (R) doRewrite(location, rewriter).facade;
 	}
 
 	// TODO Trampoline recursion
 
-	protected abstract SLocation doRewrite(SLocation location, Rewriter rewriter);
+	protected abstract SLocation doRewrite(SLocation location, RewriteRules rewriter);
 
 	public static final RewriteStrategy OutermostNeeded = new RewriteStrategy() {
 
-		protected SLocation doRewrite(SLocation location, Rewriter rewriter) {
+		protected SLocation doRewrite(SLocation location, RewriteRules rewriter) {
 			SLocation maybeRewrote = doApplyRewrite(location, rewriter);
 
 			// If rewrote, then try to rewrite again
@@ -55,12 +54,12 @@ public abstract class RewriteStrategy {
 			return location;
 		}
 
-		private SLocation doApplyRewrite(SLocation location, Rewriter rewriter) {
+		private SLocation doApplyRewrite(SLocation location, RewriteRules rewriter) {
 			SLocation rewrote = TreeBase.locationOf(rewriter.rewrite(location.facade));
 			return location.withTree(rewrote.tree);
 		}
 
-		private SLocation doRewriteChildren(SLocation location, Rewriter rewriter) {
+		private SLocation doRewriteChildren(SLocation location, RewriteRules rewriter) {
 			SLocation child = location.firstChild();
 			if (child == null) return location;
 

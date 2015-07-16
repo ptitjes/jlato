@@ -24,15 +24,15 @@ import org.jlato.tree.Tree;
 /**
  * @author Didier Villevalois
  */
-public abstract class Rewriter {
+public abstract class RewriteRules {
 
 	public abstract <T extends Tree> T rewrite(T t);
 
-	public Rewriter and(final Rewriter other) {
-		return new Rewriter() {
+	public RewriteRules and(final RewriteRules other) {
+		return new RewriteRules() {
 			@Override
 			public <T extends Tree> T rewrite(T t) {
-				T maybeRewrote = Rewriter.this.rewrite(t);
+				T maybeRewrote = RewriteRules.this.rewrite(t);
 				return maybeRewrote != t ? maybeRewrote : other.rewrite(t);
 			}
 		};

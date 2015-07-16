@@ -19,6 +19,7 @@
 
 package org.jlato.wip;
 
+import org.jlato.internal.td.RewriteStrategy;
 import org.jlato.rewrite.*;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
@@ -42,7 +43,7 @@ import java.io.*;
 import static org.jlato.rewrite.Quotes.expr;
 import static org.jlato.rewrite.Quotes.param;
 import static org.jlato.rewrite.Quotes.type;
-import static org.jlato.rewrite.Traversal.forAll;
+import static org.jlato.internal.td.Traversal.forAll;
 
 /**
  * @author Didier Villevalois
@@ -104,13 +105,13 @@ public class RewriteTest {
 	public void testClass() throws IOException, ParseException {
 		final String original = resourceAsString("org/jlato/samples/TestClass.java");
 
-		Rewriter rewriter = expr("$t.<$e>factory().newBuilder()").rewriteTo(expr("Builder.<$t<$e>>of()"));
+		RewriteRules rewriter = expr("$t.<$e>factory().newBuilder()").rewriteTo(expr("Builder.<$t<$e>>of()"));
 
 		String rewrote = parseRewriteAndPrint(original, true, rewriter, false, FormattingSettings.Default);
 		System.out.println(rewrote);
 	}
 
-	private String parseRewriteAndPrint(String original, boolean preserveWhitespaces, Rewriter rewriter, boolean format, FormattingSettings formattingSettings) throws ParseException {
+	private String parseRewriteAndPrint(String original, boolean preserveWhitespaces, RewriteRules rewriter, boolean format, FormattingSettings formattingSettings) throws ParseException {
 		final CompilationUnit cu = parse(original, preserveWhitespaces);
 		CompilationUnit rewrote = RewriteStrategy.OutermostNeeded.rewrite(cu, rewriter);
 		return printToString(rewrote, format, formattingSettings);

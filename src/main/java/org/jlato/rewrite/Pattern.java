@@ -23,6 +23,7 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.HashSet;
 import com.github.andrewoma.dexx.collection.Set;
+import org.jlato.internal.patterns.DecoratedPattern;
 import org.jlato.tree.Predicate;
 import org.jlato.tree.Tree;
 
@@ -87,8 +88,8 @@ public abstract class Pattern<T> implements TypeSafeMatcher<T> {
 		};
 	}
 
-	public Rewriter rewriteTo(final Pattern<T> rewrote) {
-		return new Rewriter() {
+	public RewriteRules rewriteTo(final Pattern<T> rewrote) {
+		return new RewriteRules() {
 			@Override
 			@SuppressWarnings("unchecked")
 			public <T extends Tree> T rewrite(T t) {

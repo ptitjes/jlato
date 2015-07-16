@@ -17,7 +17,7 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.rewrite;
+package org.jlato.internal.patterns;
 
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
@@ -27,12 +27,14 @@ import org.jlato.internal.bu.*;
 import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.rewrite.Pattern;
+import org.jlato.rewrite.Substitution;
 import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
  */
-class TreePattern<T extends Tree> extends Pattern<T> {
+public class TreePattern<T extends Tree> extends Pattern<T> {
 
 	private final STree<? extends STreeState<?>> pattern;
 

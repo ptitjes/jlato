@@ -17,10 +17,11 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.rewrite;
+package org.jlato.internal.td;
 
-import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.rewrite.MatchVisitor;
+import org.jlato.rewrite.Substitution;
+import org.jlato.rewrite.TypeSafeMatcher;
 import org.jlato.tree.Tree;
 
 /**

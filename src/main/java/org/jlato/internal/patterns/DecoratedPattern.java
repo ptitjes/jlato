@@ -17,14 +17,16 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.rewrite;
+package org.jlato.internal.patterns;
 
 import com.github.andrewoma.dexx.collection.HashSet;
+import org.jlato.rewrite.Pattern;
+import org.jlato.rewrite.Substitution;
 
 /**
  * @author Didier Villevalois
  */
-class DecoratedPattern<T> extends Pattern<T> {
+public class DecoratedPattern<T> extends Pattern<T> {
 
 	private final Pattern<T> pattern;
 
