@@ -93,50 +93,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>edu.iu.ul.maven.plugins</groupId>
-				<artifactId>fileweaver</artifactId>
-				<executions>
-					<execution>
-						<id>weave-grammars</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>weave</goal>
-						</goals>
-						<configuration>
-							<outputPath>target/generated-grammars</outputPath>
-							<outputs>
-								<output>
-									<name>sources.jj</name>
-									<parts>
-										<part><path>src/main/javacc/java_header.jj.part</path></part>
-										<part><path>src/main/javacc/java_standard_identifier_tokens.jj.part</path></part>
-										<part><path>src/main/javacc/java_quotes_additional_tokens.jj.part</path></part>
-										<part><path>src/main/javacc/java_main.jj.part</path></part>
-									</parts>
-									<properties>
-										<parser.name>Parser</parser.name>
-										<quotes>false</quotes>
-									</properties>
-								</output>
-								<output>
-									<name>quotes.jj</name>
-									<parts>
-										<part><path>src/main/javacc/java_header.jj.part</path></part>
-										<part><path>src/main/javacc/java_quotes_identifier_tokens.jj.part</path></part>
-										<part><path>src/main/javacc/java_quotes_additional_tokens.jj.part</path></part>
-										<part><path>src/main/javacc/java_main.jj.part</path></part>
-									</parts>
-									<properties>
-										<parser.name>QuotesParser</parser.name>
-										<quotes>true</quotes>
-									</properties>
-								</output>
-							</outputs>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>javacc-maven-plugin</artifactId>
 				<executions>
@@ -148,7 +104,6 @@
 						<configuration>
 							<grammarEncoding>${project.build.sourceEncoding}</grammarEncoding>
 							<jdkVersion>${java.version}</jdkVersion>
-							<sourceDirectory>target/generated-grammars</sourceDirectory>
 						</configuration>
 					</execution>
 				</executions>
@@ -173,7 +128,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>${maven-failsafe-plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -193,7 +147,6 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>prepare-agent</id>
@@ -206,16 +159,10 @@
 			<plugin>
 				<groupId>org.eluder.coveralls</groupId>
 				<artifactId>coveralls-maven-plugin</artifactId>
-				<version>${coveralls-maven-plugin.version}</version>
 			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>edu.iu.ul.maven.plugins</groupId>
-					<artifactId>fileweaver</artifactId>
-					<version>${fileweaver.version}</version>
-				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>javacc-maven-plugin</artifactId>
@@ -238,6 +185,11 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>${maven-failsafe-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-install-plugin</artifactId>
 					<version>${maven-install-plugin.version}</version>
 				</plugin>
@@ -245,6 +197,16 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>${maven-release-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco-maven-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eluder.coveralls</groupId>
+					<artifactId>coveralls-maven-plugin</artifactId>
+					<version>${coveralls-maven-plugin.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

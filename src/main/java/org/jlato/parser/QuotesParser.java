@@ -42,7 +42,7 @@ import java.util.List;
 public class QuotesParser {
 
 	private final ParserConfiguration configuration;
-	private QuotesParserImpl parserInstance = null;
+	private ParserImpl parserInstance = null;
 
 	public QuotesParser() {
 		this(ParserConfiguration.Default);
@@ -54,8 +54,8 @@ public class QuotesParser {
 
 	private  <T extends Tree> STree<?> parse(ParseContext<T> context, Reader reader) throws ParseException {
 		if (parserInstance == null) {
-			parserInstance = new QuotesParserImpl(reader);
-			parserInstance.configure(configuration);
+			parserInstance = ParserBase.newInstance(reader, configuration);
+			parserInstance.quotesMode = true;
 		}
 		else parserInstance.reset(reader);
 		return TreeBase.treeOf(context.callProduction(parserInstance));

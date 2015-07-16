@@ -61,12 +61,13 @@ abstract class ParserBase {
 		return parser;
 	}
 
-	public void configure(ParserConfiguration configuration) {
+	protected void configure(ParserConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
 	protected ParserConfiguration configuration;
 
+	protected boolean quotesMode = false;
 	protected IndexedList<WTokenRun> preamble;
 	private Stack<IndexedList<WTokenRun>> runStack = new Stack<IndexedList<WTokenRun>>();
 	private Token lastProcessedToken;

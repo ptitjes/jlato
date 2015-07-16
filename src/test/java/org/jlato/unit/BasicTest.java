@@ -29,6 +29,7 @@ import org.jlato.printer.Printer;
 import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.ImportDecl;
+import org.jlato.tree.expr.Expr;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -95,6 +96,13 @@ public class BasicTest {
 		Assert.assertEquals(original, parseAndPrint(original, false, false, FormattingSettings.JavaParser));
 		Assert.assertEquals(original, parseAndPrint(original, true, false, FormattingSettings.JavaParser));
 		Assert.assertEquals(original, parseAndPrint(original, true, true, FormattingSettings.JavaParser));
+	}
+
+	@Test
+	public void nameTest() throws IOException, ParseException {
+		final String original = "$name";
+		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
+		final Expr e = parser.parse(ParseContext.Expression, original);
 	}
 
 	private String parseAndPrint(String original, boolean preserveWhitespaces, boolean format, FormattingSettings formattingSettings) throws ParseException {
