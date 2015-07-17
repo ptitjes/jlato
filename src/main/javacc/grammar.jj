@@ -2861,7 +2861,7 @@ Expr CastExpression():
     LOOKAHEAD( LambdaParameters() "->" )
     ret = LambdaExpression()
   |
-    LOOKAHEAD( "(" PrimitiveCastType() )
+    LOOKAHEAD( "(" PrimitiveCastType() ")" )
     { run(); }
     "(" type = PrimitiveCastType() ")" ret = UnaryExpression()
     { ret = enRun(new CastExpr(type, ret)); }

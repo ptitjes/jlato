@@ -1,0 +1,23 @@
+{
+  class: org.jlato.tree.expr.CastExpr,
+  expr: {
+    class: org.jlato.tree.name.Name,
+    name: var,
+  },
+  type: {
+    class: org.jlato.tree.type.ArrayType,
+    componentType: {
+      class: org.jlato.tree.type.PrimitiveType,
+      annotations: [
+      ],
+      type: int,
+    },
+    dims: [
+      {
+        class: org.jlato.tree.decl.ArrayDim,
+        annotations: [
+        ],
+      },
+    ],
+  },
+}
