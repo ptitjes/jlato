@@ -25,7 +25,9 @@ import org.jlato.integration.utils.BulkTestRunner;
 import org.jlato.integration.utils.NormalizedJsonWriter;
 import org.jlato.integration.utils.TestResources;
 import org.jlato.printer.Printer;
-import org.jlato.tree.Tree; import org.jlato.internal.td.TreeBase; import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.Tree;
+import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.bu.SNodeState;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -36,9 +38,6 @@ import org.junit.runner.RunWith;
  */
 @RunWith(BulkTestRunner.class)
 public abstract class ChunkIntegrationTest<T extends Tree> implements BulkTestClass {
-
-	@Rule
-	public ExpectedException exception = ExpectedException.none();
 
 	protected abstract T parse(String content) throws ParseException;
 
@@ -71,9 +70,11 @@ public abstract class ChunkIntegrationTest<T extends Tree> implements BulkTestCl
 				Assert.assertEquals(normalized, actualNormalized);
 				Assert.assertEquals(formatted, actualFormatted);
 			} else if (failure != null) {
-				exception.expect(ParseException.class);
-				exception.expectMessage(failure);
-				parse(source);
+				try {
+					parse(source);
+				} catch (ParseException e) {
+					Assert.assertEquals(failure, e.getMessage());
+				}
 			} else {
 				throw new IllegalStateException("There should be either a normalized.txt or a failure.txt file");
 			}
