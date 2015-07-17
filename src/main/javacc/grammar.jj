@@ -2482,9 +2482,13 @@ Expr CastLambdaExpression():
 	NodeList<AnnotationExpr> annotations = null;
 }
 {
-  { run(); }
-  "("
-  { run(); } annotations = Annotations()
+  (
+    LOOKAHEAD( LambdaParameters() "->" )
+    ret = LambdaExpression()
+  |
+    { run(); }
+    "("
+    { run(); } annotations = Annotations()
 
     type = ReferenceType(annotations)
     { types = types.append(type); }
@@ -2493,21 +2497,17 @@ Expr CastLambdaExpression():
       (
         { lateRun(); } "&"
         { run(); } annotations = Annotations() type = ReferenceType(annotations)
-        { types = types.append(type); } )+
+        { types = types.append(type); }
+      )+
       {
         types = enRun(types, Type.intersectionShape);
         type = new IntersectionType(types);
       }
     ]
     ")"
-    (
-      LOOKAHEAD( LambdaParameters() "->" )
-      ret = LambdaExpression()
-    |
-      ret = CastLambdaExpression()
-    )
+    ret = CastLambdaExpression()
     { ret = enRun(new CastExpr(type, ret)); }
-
+  )
   { return ret; }
 }
 
