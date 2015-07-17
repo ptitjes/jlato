@@ -3259,7 +3259,7 @@ SynchronizedStmt SynchronizedStatement():
 TryStmt TryStatement():
 // TODO Make catchClauses/finallyClause counts less fatal
 {
-	NodeList resources = new NodeList();
+	NodeList resources = null;
 	BlockStmt tryBlock;
 	BlockStmt finallyBlock = null;
 	NodeList catchClauses = null;
@@ -3267,15 +3267,21 @@ TryStmt TryStatement():
 {
   { run(); }
   "try"
-  ( resources = ResourceSpecification() )?
-  tryBlock = Block()
   (
-    catchClauses = CatchClauses()
+    resources = ResourceSpecification()
+    tryBlock = Block()
+    [ catchClauses = CatchClauses() ]
     [ "finally" finallyBlock = Block() ]
   |
-    "finally" finallyBlock = Block()
+    tryBlock = Block()
+    (
+      catchClauses = CatchClauses()
+      [ "finally" finallyBlock = Block() ]
+    |
+      "finally" finallyBlock = Block()
+    )
   )
-  { return enRun(new TryStmt(resources, tryBlock, ensureNotNull(catchClauses), NodeOption.of(finallyBlock))); }
+  { return enRun(new TryStmt(ensureNotNull(resources), tryBlock, ensureNotNull(catchClauses), NodeOption.of(finallyBlock))); }
 }
 
 NodeList CatchClauses():

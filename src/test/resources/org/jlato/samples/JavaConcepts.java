@@ -345,6 +345,9 @@ public class JavaConcepts<T extends List<int[]>, X> extends Base implements Seri
         } catch (IOException e) {
             System.out.println("catch");
         }
+        try (InputStream in = createInputStream()) {
+            System.out.println(in);
+        }
         try {
             System.out.println("whatever");
         } catch (RuntimeException e) {
