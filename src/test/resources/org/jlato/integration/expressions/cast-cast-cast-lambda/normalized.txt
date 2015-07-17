@@ -1,0 +1,177 @@
+{
+  class: org.jlato.tree.expr.MethodInvocationExpr,
+  args: [
+    {
+      class: org.jlato.tree.expr.CastExpr,
+      expr: {
+        class: org.jlato.tree.expr.CastExpr,
+        expr: {
+          class: org.jlato.tree.expr.CastExpr,
+          expr: {
+            class: org.jlato.tree.expr.LambdaExpr,
+            body: {
+              class: org.jlato.tree.expr.MethodInvocationExpr,
+              args: [
+                x,
+              ],
+              name: prepend,
+              scope: l,
+              typeArgs: [
+              ],
+            },
+            params: [
+              {
+                class: org.jlato.tree.decl.FormalParameter,
+                id: {
+                  class: org.jlato.tree.decl.VariableDeclaratorId,
+                  dims: [
+                  ],
+                  name: l,
+                },
+                isVarArgs: false,
+                modifiers: [
+                ],
+                type: {
+                  class: org.jlato.tree.type.UnknownType,
+                },
+              },
+            ],
+          },
+          type: {
+            class: org.jlato.tree.type.QualifiedType,
+            annotations: [
+            ],
+            name: Function,
+            scope: null,
+            typeArgs: [
+              {
+                class: org.jlato.tree.type.QualifiedType,
+                annotations: [
+                ],
+                name: List,
+                scope: null,
+                typeArgs: [
+                  {
+                    class: org.jlato.tree.type.QualifiedType,
+                    annotations: [
+                    ],
+                    name: T,
+                    scope: null,
+                    typeArgs: null,
+                  },
+                ],
+              },
+              {
+                class: org.jlato.tree.type.QualifiedType,
+                annotations: [
+                ],
+                name: List,
+                scope: null,
+                typeArgs: [
+                  {
+                    class: org.jlato.tree.type.QualifiedType,
+                    annotations: [
+                    ],
+                    name: T,
+                    scope: null,
+                    typeArgs: null,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        type: {
+          class: org.jlato.tree.type.QualifiedType,
+          annotations: [
+          ],
+          name: Function,
+          scope: null,
+          typeArgs: [
+            {
+              class: org.jlato.tree.type.QualifiedType,
+              annotations: [
+              ],
+              name: List,
+              scope: null,
+              typeArgs: [
+                {
+                  class: org.jlato.tree.type.QualifiedType,
+                  annotations: [
+                  ],
+                  name: T,
+                  scope: null,
+                  typeArgs: null,
+                },
+              ],
+            },
+            {
+              class: org.jlato.tree.type.QualifiedType,
+              annotations: [
+              ],
+              name: List,
+              scope: null,
+              typeArgs: [
+                {
+                  class: org.jlato.tree.type.QualifiedType,
+                  annotations: [
+                  ],
+                  name: T,
+                  scope: null,
+                  typeArgs: null,
+                },
+              ],
+            },
+          ],
+        },
+      },
+      type: {
+        class: org.jlato.tree.type.QualifiedType,
+        annotations: [
+        ],
+        name: Function,
+        scope: null,
+        typeArgs: [
+          {
+            class: org.jlato.tree.type.QualifiedType,
+            annotations: [
+            ],
+            name: List,
+            scope: null,
+            typeArgs: [
+              {
+                class: org.jlato.tree.type.QualifiedType,
+                annotations: [
+                ],
+                name: T,
+                scope: null,
+                typeArgs: null,
+              },
+            ],
+          },
+          {
+            class: org.jlato.tree.type.QualifiedType,
+            annotations: [
+            ],
+            name: List,
+            scope: null,
+            typeArgs: [
+              {
+                class: org.jlato.tree.type.QualifiedType,
+                annotations: [
+                ],
+                name: T,
+                scope: null,
+                typeArgs: null,
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+  name: map,
+  scope: null,
+  typeArgs: [
+  ],
+}

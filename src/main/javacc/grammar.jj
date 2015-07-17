@@ -2443,7 +2443,7 @@ Expr Expression():
 }
 {
   (
-    LOOKAHEAD( LambdaParameters() "->" ) ret = LambdaExpression()
+    LOOKAHEAD( CastLambdaExpression() ) ret = CastLambdaExpression()
   |
     ret = AssignmentExpression()
   )
@@ -2471,6 +2471,43 @@ Expr AssignmentExpression():
     { lateRun(); } op = AssignmentOperator() value = Expression()
     { ret = enRun(new AssignExpr(ret, op, value)); }
   ]
+  { return ret; }
+}
+
+Expr CastLambdaExpression():
+{
+	Expr ret;
+	Type type;
+	NodeList types = new NodeList();
+	NodeList<AnnotationExpr> annotations = null;
+}
+{
+  { run(); }
+  "("
+  { run(); } annotations = Annotations()
+
+    type = ReferenceType(annotations)
+    { types = types.append(type); }
+    [
+      LOOKAHEAD("&")
+      (
+        { lateRun(); } "&"
+        { run(); } annotations = Annotations() type = ReferenceType(annotations)
+        { types = types.append(type); } )+
+      {
+        types = enRun(types, Type.intersectionShape);
+        type = new IntersectionType(types);
+      }
+    ]
+    ")"
+    (
+      LOOKAHEAD( LambdaParameters() "->" )
+      ret = LambdaExpression()
+    |
+      ret = CastLambdaExpression()
+    )
+    { ret = enRun(new CastExpr(type, ret)); }
+
   { return ret; }
 }
 
@@ -2534,7 +2571,13 @@ FormalParameter InferredFormalParameter():
 {
   { run(); }
   name = Name()
-  { return enRun(new FormalParameter(null, new UnknownType(), false, new VariableDeclaratorId(name, null))); }
+  {
+    return enRun(
+      new FormalParameter(NodeList.<ExtendedModifier>empty(), new UnknownType(), false,
+        new VariableDeclaratorId(name, NodeList.<ArrayDim>empty())
+      )
+    );
+  }
 }
 
 AssignExpr.AssignOp AssignmentOperator():
