@@ -2438,20 +2438,6 @@ NodeList ArrayDimsMandatory():
 }
 
 Expr Expression():
-{
-	Expr ret;
-}
-{
-  (
-    LOOKAHEAD( (Name() "->" | LambdaParameters() "->" | (LambdaCastType())* (LambdaParameters())? "->") )
-    ret = CastLambdaExpression()
-  |
-    ret = AssignmentExpression()
-  )
-  { return ret; }
-}
-
-Expr AssignmentExpression():
 // FIXME
 // This expansion has been written this way instead of :
 //   Assignment() | ConditionalExpression()
@@ -2475,50 +2461,24 @@ Expr AssignmentExpression():
   { return ret; }
 }
 
-Expr CastLambdaExpression():
+AssignExpr.AssignOp AssignmentOperator():
 {
-	Expr ret;
-	Type type;
-	NodeList types = new NodeList();
-	NodeList<AnnotationExpr> annotations = null;
+	AssignExpr.AssignOp ret;
 }
 {
-  (
-    LOOKAHEAD( (Name() "->" | LambdaParameters() "->") )
-    ret = LambdaExpression()
-  |
-    { run(); }
-    type = LambdaCastType()
-    ret = CastLambdaExpression()
-    { ret = enRun(new CastExpr(type, ret)); }
-  )
+  ( "="    { ret = AssignExpr.AssignOp.Normal; }
+  | "*="   { ret = AssignExpr.AssignOp.Times; }
+  | "/="   { ret = AssignExpr.AssignOp.Divide; }
+  | "%="   { ret = AssignExpr.AssignOp.Remainder; }
+  | "+="   { ret = AssignExpr.AssignOp.Plus; }
+  | "-="   { ret = AssignExpr.AssignOp.Minus; }
+  | "<<="  { ret = AssignExpr.AssignOp.LeftShift; }
+  | ">>="  { ret = AssignExpr.AssignOp.RightSignedShift; }
+  | ">>>=" { ret = AssignExpr.AssignOp.RightUnsignedShift; }
+  | "&="   { ret = AssignExpr.AssignOp.And; }
+  | "^="   { ret = AssignExpr.AssignOp.XOr; }
+  | "|="   { ret = AssignExpr.AssignOp.Or; } )
   { return ret; }
-}
-
-Type LambdaCastType():
-{
-	Type type;
-	NodeList types = new NodeList();
-	NodeList<AnnotationExpr> annotations = null;
-}
-{
-  "("
-  { run(); } annotations = Annotations() type = ReferenceType(annotations)
-  { types = types.append(type); }
-  [
-    LOOKAHEAD("&")
-    (
-      { lateRun(); } "&"
-      { run(); } annotations = Annotations() type = ReferenceType(annotations)
-      { types = types.append(type); }
-    )+
-    {
-      types = enRun(types, Type.intersectionShape);
-      type = new IntersectionType(types);
-    }
-  ]
-  ")"
-  { return type; }
 }
 
 LambdaExpr LambdaExpression():
@@ -2595,26 +2555,6 @@ FormalParameter InferredFormalParameter():
   }
 }
 
-AssignExpr.AssignOp AssignmentOperator():
-{
-	AssignExpr.AssignOp ret;
-}
-{
-  ( "="    { ret = AssignExpr.AssignOp.Normal; }
-  | "*="   { ret = AssignExpr.AssignOp.Times; }
-  | "/="   { ret = AssignExpr.AssignOp.Divide; }
-  | "%="   { ret = AssignExpr.AssignOp.Remainder; }
-  | "+="   { ret = AssignExpr.AssignOp.Plus; }
-  | "-="   { ret = AssignExpr.AssignOp.Minus; }
-  | "<<="  { ret = AssignExpr.AssignOp.LeftShift; }
-  | ">>="  { ret = AssignExpr.AssignOp.RightSignedShift; }
-  | ">>>=" { ret = AssignExpr.AssignOp.RightUnsignedShift; }
-  | "&="   { ret = AssignExpr.AssignOp.And; }
-  | "^="   { ret = AssignExpr.AssignOp.XOr; }
-  | "|="   { ret = AssignExpr.AssignOp.Or; } )
-  { return ret; }
-}
-
 Expr ConditionalExpression():
 {
 	Expr ret;
@@ -2624,6 +2564,7 @@ Expr ConditionalExpression():
 {
   ret = ConditionalOrExpression()
   [
+    LOOKAHEAD(2)
     { lateRun(); } "?" left = Expression() ":" right = ConditionalExpression()
     { ret = enRun(new ConditionalExpr(ret, left, right)); }
   ]
@@ -2638,6 +2579,7 @@ Expr ConditionalOrExpression():
 {
   ret = ConditionalAndExpression()
   (
+    LOOKAHEAD(2)
     { lateRun(); } "||" right = ConditionalAndExpression()
     { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.Or, right)); }
   )*
@@ -2652,6 +2594,7 @@ Expr ConditionalAndExpression():
 {
   ret = InclusiveOrExpression()
   (
+    LOOKAHEAD(2)
     { lateRun(); } "&&" right = InclusiveOrExpression()
     { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.And, right)); }
   )*
@@ -2666,6 +2609,7 @@ Expr InclusiveOrExpression():
 {
   ret = ExclusiveOrExpression()
   (
+    LOOKAHEAD(2)
     { lateRun(); } "|" right = ExclusiveOrExpression()
     { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.BinOr, right)); }
   )*
@@ -2680,6 +2624,7 @@ Expr ExclusiveOrExpression():
 {
   ret = AndExpression()
   (
+    LOOKAHEAD(2)
     { lateRun(); } "^" right = AndExpression()
     { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.XOr, right)); }
   )*
@@ -2694,6 +2639,7 @@ Expr AndExpression():
 {
   ret = EqualityExpression()
   (
+    LOOKAHEAD(2)
     { lateRun(); } "&" right = EqualityExpression()
     { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.BinAnd, right)); }
   )*
@@ -2709,6 +2655,7 @@ Expr EqualityExpression():
 {
   ret = InstanceOfExpression()
   (
+    LOOKAHEAD(2)
     { lateRun(); }
     ( "==" { op = BinaryExpr.BinaryOp.Equal; } |
       "!=" { op = BinaryExpr.BinaryOp.NotEqual; } )
@@ -2727,6 +2674,7 @@ Expr InstanceOfExpression():
 {
   ret = RelationalExpression()
   [
+    LOOKAHEAD(2)
     { lateRun(); } "instanceof"
     { run(); } annotations = Annotations() type = Type(annotations)
     { ret = enRun(new InstanceOfExpr(ret, type)); }
@@ -2743,6 +2691,7 @@ Expr RelationalExpression():
 {
   ret = ShiftExpression()
   (
+    LOOKAHEAD(2)
     { lateRun(); }
   	( "<"  { op = BinaryExpr.BinaryOp.Less; } |
   	  ">"  { op = BinaryExpr.BinaryOp.Greater; } |
@@ -2763,6 +2712,7 @@ Expr ShiftExpression():
 {
   ret = AdditiveExpression()
   (
+    LOOKAHEAD(2)
     { lateRun(); }
   	( "<<"             { op = BinaryExpr.BinaryOp.LeftShift; } |
   	  RSIGNEDSHIFT()   { op = BinaryExpr.BinaryOp.RightSignedShift; } |
@@ -2782,6 +2732,7 @@ Expr AdditiveExpression():
 {
   ret = MultiplicativeExpression()
   (
+    LOOKAHEAD(2)
     { lateRun(); }
   	( "+" { op = BinaryExpr.BinaryOp.Plus; } |
   	  "-" { op = BinaryExpr.BinaryOp.Minus; } )
@@ -2800,6 +2751,7 @@ Expr MultiplicativeExpression():
 {
   ret = UnaryExpression()
   (
+    LOOKAHEAD(2)
     { lateRun(); }
   	( "*" { op = BinaryExpr.BinaryOp.Times; } |
   	  "/" { op = BinaryExpr.BinaryOp.Divide; } |
@@ -2898,32 +2850,56 @@ Expr CastExpression():
 	NodeList<AnnotationExpr> annotations = null;
 }
 {
-  { run(); }
-  "("
-  { run(); } annotations = Annotations()
   (
-    LOOKAHEAD(2)
-    type = PrimitiveType(annotations)
-    ")" ret = UnaryExpression()
+    LOOKAHEAD( LambdaParameters() "->" )
+    ret = LambdaExpression()
+  |
+    LOOKAHEAD( "(" PrimitiveCastType() )
+    { run(); }
+    "(" type = PrimitiveCastType() ")" ret = UnaryExpression()
     { ret = enRun(new CastExpr(type, ret)); }
   |
-    type = ReferenceType(annotations)
-    { types = types.append(type); }
-    [
-      LOOKAHEAD("&")
-      (
-        { lateRun(); } "&"
-        { run(); } annotations = Annotations() type = ReferenceType(annotations)
-        { types = types.append(type); } )+
-      {
-        types = enRun(types, Type.intersectionShape);
-        type = new IntersectionType(types);
-      }
-    ]
-    ")" ret = UnaryExpressionNotPlusMinus()
+    { run(); }
+    "(" type = ReferenceCastType() ")"
+    ret = UnaryExpressionNotPlusMinus()
     { ret = enRun(new CastExpr(type, ret)); }
   )
   { return ret; }
+}
+
+Type PrimitiveCastType():
+{
+	Type type;
+	NodeList types = new NodeList();
+	NodeList<AnnotationExpr> annotations = null;
+}
+{
+  { run(); } annotations = Annotations() type = PrimitiveType(annotations)
+  { return type; }
+}
+
+Type ReferenceCastType():
+{
+	Type type;
+	NodeList types = new NodeList();
+	NodeList<AnnotationExpr> annotations = null;
+}
+{
+  { run(); } annotations = Annotations() type = ReferenceType(annotations)
+  { types = types.append(type); }
+  [
+    LOOKAHEAD("&")
+    (
+      { lateRun(); } "&"
+      { run(); } annotations = Annotations() type = ReferenceType(annotations)
+      { types = types.append(type); }
+    )+
+    {
+      types = enRun(types, Type.intersectionShape);
+      type = new IntersectionType(types);
+    }
+  ]
+  { return type; }
 }
 
 /**********************************************************************************************************************
@@ -3071,12 +3047,11 @@ ExpressionStmt StatementExpression():
 	Expr value;
 }
 {
-  // TODO Add Assignment, MethodInvocation and ClassInstanceCreationExpression
   { run(); }
   (
     LOOKAHEAD(2) expr = PreIncrementDecrementExpression()
   |
-    expr = AssignmentExpression()
+    expr = Expression()
   )
   ";"
   { return enRun(new ExpressionStmt(expr)); }
