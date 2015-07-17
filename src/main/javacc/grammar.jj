@@ -2484,7 +2484,7 @@ Expr UnaryExpressionNotPlusMinus():
   { return ret; }
 }
 
-Expr PostfixExpression():
+Expr PostIncrementDecrementExpression():
 {
 	Expr ret;
 	UnaryExpr.UnaryOp op;
@@ -2498,6 +2498,15 @@ Expr PostfixExpression():
       "--" { op = UnaryExpr.UnaryOp.PostDecrement; } )
     { ret = enRun(new UnaryExpr(op, ret)); }
   ]
+  { return ret; }
+}
+
+Expr PostfixExpression():
+{
+	Expr ret;
+}
+{
+  ret = PostIncrementDecrementExpression()
   { return ret; }
 }
 
@@ -2960,28 +2969,18 @@ Stmt LambdaBody():
 }
 
 ExpressionStmt StatementExpression():
-// FIXME
-// The last expansion of this production accepts more than the legal
-// Java expansions for StatementExpression.  This expansion does not
-// use PostfixExpression for performance reasons.
 {
 	Expr expr;
 	AssignExpr.AssignOp op;
 	Expr value;
 }
 {
+  // TODO Add Assignment, MethodInvocation and ClassInstanceCreationExpression
   { run(); }
   (
     LOOKAHEAD(2) expr = PreIncrementDecrementExpression()
   |
-    expr = PrimaryExpression()
-    [
-      { lateRun(); } "++" { expr = enRun(new UnaryExpr(UnaryExpr.UnaryOp.PostIncrement, expr));  }
-    |
-      { lateRun(); } "--" { expr = enRun(new UnaryExpr(UnaryExpr.UnaryOp.PostDecrement, expr));  }
-    |
-      { lateRun(); } op = AssignmentOperator() value = Expression() { expr = enRun(new AssignExpr(expr, op, value)); }
-	]
+    expr = PostIncrementDecrementExpression()
   )
   ";"
   { return enRun(new ExpressionStmt(expr)); }
