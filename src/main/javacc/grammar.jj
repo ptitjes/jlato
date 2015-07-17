@@ -1838,9 +1838,9 @@ ExplicitConstructorInvocationStmt ExplicitConstructorInvocation():
   { run(); }
 
   (
-    LOOKAHEAD([ TypeArguments() ] <THIS> "(")
+    LOOKAHEAD([ TypeArguments() ] "this" "(")
     [ typeArgs = TypeArguments() ]
-    <THIS> { isThis = true; }
+    "this" { isThis = true; }
     args = Arguments() ";"
   |
     [
@@ -1848,7 +1848,7 @@ ExplicitConstructorInvocationStmt ExplicitConstructorInvocation():
       expr = PrimaryExpressionWithoutSuperSuffix() "."
     ]
     [ typeArgs = TypeArguments() ]
-    <SUPER>
+    "super"
     args = Arguments() ";"
   )
 
