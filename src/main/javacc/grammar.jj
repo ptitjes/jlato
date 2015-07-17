@@ -2213,21 +2213,10 @@ Expr PrimaryPrefix():
 	(
 	  { lateRun(); }
 	  "."
-	  [ typeArgs = TypeArguments() ] // TODO Should not read type arguments for field access
-	  name = Name()
-	  [ args = Arguments() { hasArgs = true; } ]
-	  {
-	    if (hasArgs) {
-	  	  ret = enRun(new MethodInvocationExpr(NodeOption.of(ret), ensureNotNull(typeArgs), name, args));
-		} else {
-	  	  ret = enRun(new FieldAccessExpr(NodeOption.of(ret), name));
-		}
-      }
+	  ret = FieldAccessOrMethodInvocation(null)
 	|
 	  { lateRun(); }
-	  "::" [typeArgs = TypeArguments() ]
-      ( name = Name() | "new" { name = new Name("new"); } )
-	  { ret = enRun(new MethodReferenceExpr(ret, ensureNotNull(typeArgs), name)); }
+	  ret = MethodReferenceSuffix(ret)
 	)
   |
     { run(); } "(" ret = Expression() ")" { ret = enRun(new ParenthesizedExpr(ret)); }
@@ -2235,23 +2224,15 @@ Expr PrimaryPrefix():
     ret = AllocationExpression(null)
   |
     LOOKAHEAD( ResultType() "." "class" )
-    { run(); } type = ResultType()  "." "class" { ret = enRun(new ClassExpr(type)); }
+    { run(); } type = ResultType() "." "class" { ret = enRun(new ClassExpr(type)); }
   |
     LOOKAHEAD (ResultType() "::" )
     { run(); }
-    type = ResultType() "::" [typeArgs = TypeArguments() ]
-    ( name = Name() | "new" { name = new Name("new"); } )
-    { ret = enRun(new MethodReferenceExpr(new TypeExpr(type), ensureNotNull(typeArgs), name)); }
+    type = ResultType() { ret = new TypeExpr(type); }
+    ret = MethodReferenceSuffix(ret)
   |
     { run(); }
-    name = Name() [ args = Arguments() { hasArgs = true; } ]
-    {
-      if (hasArgs) {
-        ret = enRun(new MethodInvocationExpr(NodeOption.<Expr>none(), NodeList.<Type>empty(), name, args));
-      } else {
-        ret = enRun(name);
-      }
-    }
+    ret = FieldAccessOrMethodInvocation(null)
   )
   { return ret; }
 }
@@ -2274,26 +2255,9 @@ Expr PrimarySuffix(Expr scope):
   { return ret; }
 }
 
-Expr MethodReferenceSuffix(Expr scope):
-{
-    NodeList typeArgs = null;
-    Name name;
-	Expr ret;
-}
-{
-  // Run is started before scope
-
-  "::" [typeArgs = TypeArguments() ] name = Name()
-  { ret = enRun(new MethodReferenceExpr(scope, ensureNotNull(typeArgs), name)); }
-  { return ret; }
-}
-
 Expr PrimarySuffixWithoutSuper(Expr scope):
 {
 	Expr ret;
-	NodeList typeArgs = null;
-	NodeList args = null;
-	boolean hasArgs = false;
 	Name name;
 }
 {
@@ -2306,22 +2270,34 @@ Expr PrimarySuffixWithoutSuper(Expr scope):
     |
       ret = AllocationExpression(scope)
     |
-      LOOKAHEAD( [ TypeArguments() ] Name() )
-      [ typeArgs = TypeArguments() ] // TODO Should not read type arguments for field access
-      name = Name()
-      [ args = Arguments() { hasArgs=true; } ]
-      {
-        if (hasArgs) {
-          ret = enRun(new MethodInvocationExpr(NodeOption.of(scope), ensureNotNull(typeArgs), name, args));
-        } else {
-          ret = enRun(new FieldAccessExpr(NodeOption.of(scope), name));
-        }
-      }
+      ret = FieldAccessOrMethodInvocation(scope)
     )
   |
     "[" ret = Expression() "]" { ret = enRun(new ArrayAccessExpr(scope, ret)); }
   )
 
+  { return ret; }
+}
+
+Expr FieldAccessOrMethodInvocation(Expr scope):
+{
+    NodeList typeArgs = null;
+    Name name;
+    NodeList args = null;
+	Expr ret;
+}
+{
+  // Run is started before scope
+
+  (
+    LOOKAHEAD( [ TypeArguments() ] Name() "(" )
+    [ typeArgs = TypeArguments() ] name = Name()
+    args = Arguments()
+    { ret = enRun(new MethodInvocationExpr(NodeOption.of(scope), ensureNotNull(typeArgs), name, args)); }
+  |
+    name = Name()
+    { ret = enRun(new FieldAccessExpr(NodeOption.of(scope), name)); }
+  )
   { return ret; }
 }
 
@@ -2342,6 +2318,21 @@ NodeList Arguments():
   ]
   ")"
   { return enRun(ret, Expr.argumentsShape); }
+}
+
+Expr MethodReferenceSuffix(Expr scope):
+{
+    NodeList typeArgs = null;
+    Name name;
+	Expr ret;
+}
+{
+  // Run is started before scope
+
+  "::" [typeArgs = TypeArguments() ]
+  ( name = Name() | "new" { name = new Name("new"); } )
+  { ret = enRun(new MethodReferenceExpr(scope, ensureNotNull(typeArgs), name)); }
+  { return ret; }
 }
 
 Expr AllocationExpression(Expr scope):
