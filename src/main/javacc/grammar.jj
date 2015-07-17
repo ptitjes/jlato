@@ -2213,7 +2213,12 @@ Expr PrimaryPrefix():
 	(
 	  { lateRun(); }
 	  "."
-	  ret = FieldAccessOrMethodInvocation(null)
+	  (
+        LOOKAHEAD( [ TypeArguments() ] Name() "(" )
+        ret = MethodInvocation(ret)
+	  |
+	    ret = FieldAccess(ret)
+	  )
 	|
 	  { lateRun(); }
 	  ret = MethodReferenceSuffix(ret)
@@ -2231,8 +2236,11 @@ Expr PrimaryPrefix():
     type = ResultType() { ret = new TypeExpr(type); }
     ret = MethodReferenceSuffix(ret)
   |
+    LOOKAHEAD( [ TypeArguments() ] Name() "(" )
     { run(); }
-    ret = FieldAccessOrMethodInvocation(null)
+    ret = MethodInvocation(null)
+  |
+    ret = Name()
   )
   { return ret; }
 }
@@ -2270,7 +2278,10 @@ Expr PrimarySuffixWithoutSuper(Expr scope):
     |
       ret = AllocationExpression(scope)
     |
-      ret = FieldAccessOrMethodInvocation(scope)
+      LOOKAHEAD( [ TypeArguments() ] Name() "(" )
+      ret = MethodInvocation(scope)
+    |
+      ret = FieldAccess(scope)
     )
   |
     "[" ret = Expression() "]" { ret = enRun(new ArrayAccessExpr(scope, ret)); }
@@ -2279,7 +2290,18 @@ Expr PrimarySuffixWithoutSuper(Expr scope):
   { return ret; }
 }
 
-Expr FieldAccessOrMethodInvocation(Expr scope):
+Expr FieldAccess(Expr scope):
+{
+    Name name;
+}
+{
+  // Run is started before scope
+
+  name = Name()
+  { return enRun(new FieldAccessExpr(NodeOption.of(scope), name)); }
+}
+
+Expr MethodInvocation(Expr scope):
 {
     NodeList typeArgs = null;
     Name name;
@@ -2289,16 +2311,9 @@ Expr FieldAccessOrMethodInvocation(Expr scope):
 {
   // Run is started before scope
 
-  (
-    LOOKAHEAD( [ TypeArguments() ] Name() "(" )
-    [ typeArgs = TypeArguments() ] name = Name()
-    args = Arguments()
-    { ret = enRun(new MethodInvocationExpr(NodeOption.of(scope), ensureNotNull(typeArgs), name, args)); }
-  |
-    name = Name()
-    { ret = enRun(new FieldAccessExpr(NodeOption.of(scope), name)); }
-  )
-  { return ret; }
+  [ typeArgs = TypeArguments() ] name = Name()
+  args = Arguments()
+  { return enRun(new MethodInvocationExpr(NodeOption.of(scope), ensureNotNull(typeArgs), name, args)); }
 }
 
 NodeList Arguments():
@@ -2423,6 +2438,19 @@ NodeList ArrayDimsMandatory():
 }
 
 Expr Expression():
+{
+	Expr ret;
+}
+{
+  (
+    LOOKAHEAD( LambdaParameters() "->" ) ret = LambdaExpression()
+  |
+    ret = AssignmentExpression()
+  )
+  { return ret; }
+}
+
+Expr AssignmentExpression():
 // FIXME
 // This expansion has been written this way instead of :
 //   Assignment() | ConditionalExpression()
@@ -2437,15 +2465,12 @@ Expr Expression():
 	Expr value;
 }
 {
-  (
-    LOOKAHEAD( LambdaParameters() "->" ) ret = LambdaExpression()
-  |
-    ret = ConditionalExpression()
-    [
-      LOOKAHEAD(2) { lateRun(); } op = AssignmentOperator() value = Expression()
-      { ret = enRun(new AssignExpr(ret, op, value)); }
-    ]
-  )
+  ret = ConditionalExpression()
+  [
+    LOOKAHEAD(2)
+    { lateRun(); } op = AssignmentOperator() value = Expression()
+    { ret = enRun(new AssignExpr(ret, op, value)); }
+  ]
   { return ret; }
 }
 
@@ -2824,10 +2849,14 @@ Expr CastExpression():
     ")" ret = UnaryExpression()
     { ret = enRun(new CastExpr(type, ret)); }
   |
-    type = ReferenceType(annotations) { types = types.append(type); }
+    type = ReferenceType(annotations)
+    { types = types.append(type); }
     [
       LOOKAHEAD("&")
-      ( { lateRun(); } "&" annotations = Annotations() type = ReferenceType(annotations) { types = types.append(type); } )+
+      (
+        { lateRun(); } "&"
+        { run(); } annotations = Annotations() type = ReferenceType(annotations)
+        { types = types.append(type); } )+
       {
         types = enRun(types, Type.intersectionShape);
         type = new IntersectionType(types);
@@ -2989,7 +3018,7 @@ ExpressionStmt StatementExpression():
   (
     LOOKAHEAD(2) expr = PreIncrementDecrementExpression()
   |
-    expr = PostIncrementDecrementExpression()
+    expr = AssignmentExpression()
   )
   ";"
   { return enRun(new ExpressionStmt(expr)); }
