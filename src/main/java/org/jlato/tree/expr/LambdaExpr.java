@@ -28,6 +28,7 @@ import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
+import org.jlato.tree.NodeEither;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.stmt.BlockStmt;
@@ -51,16 +52,16 @@ public class LambdaExpr extends TreeBase<SNodeState, Expr, LambdaExpr> implement
 		super(location);
 	}
 
-	public LambdaExpr(NodeList<FormalParameter> params, Expr expr, BlockStmt body) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(params, expr, body)))));
+	public LambdaExpr(NodeList<FormalParameter> params, NodeEither<Expr, BlockStmt> body) {
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(params, body)))));
 	}
 
 	public LambdaExpr(NodeList<FormalParameter> params, Expr expr) {
-		this(params, expr, null);
+		this(params, NodeEither.<Expr, BlockStmt>left(expr));
 	}
 
-	public LambdaExpr(NodeList<FormalParameter> params, BlockStmt body) {
-		this(params, null, body);
+	public LambdaExpr(NodeList<FormalParameter> params, BlockStmt block) {
+		this(params, NodeEither.<Expr, BlockStmt>right(block));
 	}
 
 	public NodeList<FormalParameter> params() {
@@ -75,39 +76,26 @@ public class LambdaExpr extends TreeBase<SNodeState, Expr, LambdaExpr> implement
 		return location.safeTraversalMutate(PARAMETERS, mutation);
 	}
 
-	public Expr expr() {
-		return location.safeTraversal(EXPR);
+	public NodeEither<Expr, BlockStmt> body() {
+		return location.safeTraversal(BODY);
 	}
 
-	public LambdaExpr withExpr(Expr expr) {
-		return location.safeTraversalReplace(EXPR, expr);
+	public LambdaExpr withBody(NodeEither<Expr, BlockStmt> body) {
+		return location.safeTraversalReplace(BODY, body);
 	}
 
-	public LambdaExpr withExpr(Mutation<Expr> mutation) {
-		return location.safeTraversalMutate(EXPR, mutation);
-	}
-
-	public BlockStmt block() {
-		return location.safeTraversal(BLOCK);
-	}
-
-	public LambdaExpr withBlock(BlockStmt block) {
-		return location.safeTraversalReplace(BLOCK, block);
-	}
-
-	public LambdaExpr withBlock(Mutation<BlockStmt> mutation) {
-		return location.safeTraversalMutate(BLOCK, mutation);
+	public LambdaExpr withBody(Mutation<NodeEither<Expr, BlockStmt>> mutation) {
+		return location.safeTraversalMutate(BODY, mutation);
 	}
 
 	private static final STraversal<SNodeState> PARAMETERS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> BLOCK = SNodeState.childTraversal(2);
+	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft),
-			child(PARAMETERS, list(token(LToken.Comma).withSpacingAfter(space()))),
+			child(PARAMETERS, Expr.listShape),
 			token(LToken.ParenthesisRight),
 			token(LToken.Arrow).withSpacing(space(), space()),
-			nonNullChild(EXPR, child(EXPR), child(BLOCK))
+			child(BODY, leftOrRight())
 	);
 }
