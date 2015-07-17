@@ -19,6 +19,7 @@
 
 package org.jlato.integration.utils;
 
+import org.jlato.tree.NodeEither;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
@@ -147,6 +148,10 @@ public class NormalizedJsonWriter {
 					Tree tree = option.get();
 					writeValue(tree.getClass(), tree, indent);
 				}
+			} else if (NodeEither.class.isAssignableFrom(valueClass)) {
+				NodeEither<?, ?> option = (NodeEither<?, ?>) value;
+				Tree tree = option.isLeft() ? option.left() : option.right();
+				writeValue(tree.getClass(), tree, indent);
 			} else if (Tree.class.isAssignableFrom(valueClass)) {
 				writeTree((Tree) value, indent);
 			}

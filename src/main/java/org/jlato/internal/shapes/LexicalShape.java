@@ -118,6 +118,14 @@ public abstract class LexicalShape {
 		return new LSNodeOptionElement(shape);
 	}
 
+	public static LexicalShape leftOrRight() {
+		return leftOrRight(defaultShape());
+	}
+
+	public static LexicalShape leftOrRight(LexicalShape shape) {
+		return new LSNodeEitherElement(shape);
+	}
+
 	public static LexicalShape child(STraversal<SNodeState> traversal) {
 		return child(traversal, defaultShape());
 	}
