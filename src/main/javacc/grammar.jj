@@ -2513,6 +2513,7 @@ Expr CastLambdaExpression():
 
 LambdaExpr LambdaExpression():
 {
+  ByRef<Boolean> parenthesis = new ByRef<Boolean>();
   NodeList parameters;
   BlockStmt block;
   Expr expr;
@@ -2520,17 +2521,17 @@ LambdaExpr LambdaExpression():
 }
 {
   { run(); }
-  parameters = LambdaParameters()
+  parameters = LambdaParameters(parenthesis)
   "->"
   (
-    expr = Expression() { ret = enRun(new LambdaExpr(parameters, expr)); }
+    expr = Expression() { ret = enRun(new LambdaExpr(parameters, parenthesis.value, expr)); }
   |
-    block = Block() { ret = enRun(new LambdaExpr(parameters, block)); }
+    block = Block() { ret = enRun(new LambdaExpr(parameters, parenthesis.value, block)); }
   )
   { return ret; }
 }
 
-NodeList LambdaParameters():
+NodeList LambdaParameters(ByRef<Boolean> parenthesis):
 {
   NodeList ret;
   FormalParameter param;
@@ -2539,13 +2540,17 @@ NodeList LambdaParameters():
   (
     { run(); }
     param = InferredFormalParameter()
-    { ret = enRun(new NodeList(param)); }
+    {
+      parenthesis.value = false;
+      ret = enRun(new NodeList(param));
+    }
   |
     (
       LOOKAHEAD(InferredFormalParameterList()) ret = InferredFormalParameterList()
     |
       ret = FormalParameterList()
     )
+    { parenthesis.value = true; }
   )
   { return ret; }
 }

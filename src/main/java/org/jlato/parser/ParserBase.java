@@ -272,6 +272,12 @@ abstract class ParserBase {
 		return list == null ? NodeList.<T>empty() : list;
 	}
 
+	// Convenience class to get more data from a called production
+
+	class ByRef<T> {
+		public T value;
+	}
+
 	// Debug methods
 
 	private void debugFailedPopTokens() {

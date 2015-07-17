@@ -1,1 +1,1 @@
-map((Function<List<T>, List<T>>) (l) -> l.prepend(x))
+map((Function<List<T>, List<T>>) l -> l.prepend(x))

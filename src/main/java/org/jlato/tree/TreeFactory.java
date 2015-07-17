@@ -138,7 +138,7 @@ public abstract class TreeFactory {
 	}
 
 	public static LambdaExpr lambdaExpr() {
-		return new LambdaExpr(NodeList.<FormalParameter>empty(), (Expr) null);
+		return new LambdaExpr(NodeList.<FormalParameter>empty(), true, (Expr) null);
 	}
 
 	public static MarkerAnnotationExpr markerAnnotationExpr() {

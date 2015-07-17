@@ -23,6 +23,7 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
@@ -33,6 +34,7 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.stmt.BlockStmt;
 
+import static org.jlato.internal.shapes.LSCondition.data;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
@@ -52,16 +54,16 @@ public class LambdaExpr extends TreeBase<SNodeState, Expr, LambdaExpr> implement
 		super(location);
 	}
 
-	public LambdaExpr(NodeList<FormalParameter> params, NodeEither<Expr, BlockStmt> body) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(params, body)))));
+	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParenthesis, NodeEither<Expr, BlockStmt> body) {
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(hasParenthesis), treesOf(params, body)))));
 	}
 
-	public LambdaExpr(NodeList<FormalParameter> params, Expr expr) {
-		this(params, NodeEither.<Expr, BlockStmt>left(expr));
+	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParenthesis, Expr expr) {
+		this(params, hasParenthesis, NodeEither.<Expr, BlockStmt>left(expr));
 	}
 
-	public LambdaExpr(NodeList<FormalParameter> params, BlockStmt block) {
-		this(params, NodeEither.<Expr, BlockStmt>right(block));
+	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParenthesis, BlockStmt block) {
+		this(params, hasParenthesis, NodeEither.<Expr, BlockStmt>right(block));
 	}
 
 	public NodeList<FormalParameter> params() {
@@ -74,6 +76,14 @@ public class LambdaExpr extends TreeBase<SNodeState, Expr, LambdaExpr> implement
 
 	public LambdaExpr withParams(Mutation<NodeList<FormalParameter>> mutation) {
 		return location.safeTraversalMutate(PARAMETERS, mutation);
+	}
+
+	public boolean hasParenthesis() {
+		return location.<Boolean>data(HAS_PARENTHESIS);
+	}
+
+	public FormalParameter setParenthesis(boolean hasParenthesis) {
+		return location.withData(HAS_PARENTHESIS, hasParenthesis);
 	}
 
 	public NodeEither<Expr, BlockStmt> body() {
@@ -91,10 +101,12 @@ public class LambdaExpr extends TreeBase<SNodeState, Expr, LambdaExpr> implement
 	private static final STraversal<SNodeState> PARAMETERS = SNodeState.childTraversal(0);
 	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(1);
 
+	private static final int HAS_PARENTHESIS = 0;
+
 	public final static LexicalShape shape = composite(
-			token(LToken.ParenthesisLeft),
+			when(data(HAS_PARENTHESIS), token(LToken.ParenthesisLeft)),
 			child(PARAMETERS, Expr.listShape),
-			token(LToken.ParenthesisRight),
+			when(data(HAS_PARENTHESIS), token(LToken.ParenthesisRight)),
 			token(LToken.Arrow).withSpacing(space(), space()),
 			child(BODY, leftOrRight())
 	);
