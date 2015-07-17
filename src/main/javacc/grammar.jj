@@ -2540,7 +2540,10 @@ Expr ConditionalExpression():
 }
 {
   ret = ConditionalOrExpression()
-  [ { lateRun(); } "?" left = Expression() ":" right = ConditionalExpression() { ret = enRun(new ConditionalExpr(ret, left, right)); } ]
+  [
+    { lateRun(); } "?" left = Expression() ":" right = ConditionalExpression()
+    { ret = enRun(new ConditionalExpr(ret, left, right)); }
+  ]
   { return ret; }
 }
 
@@ -2551,7 +2554,10 @@ Expr ConditionalOrExpression():
 }
 {
   ret = ConditionalAndExpression()
-  ( { lateRun(); } "||" right = ConditionalAndExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.Or, right)); } )*
+  (
+    { lateRun(); } "||" right = ConditionalAndExpression()
+    { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.Or, right)); }
+  )*
   { return ret; }
 }
 
@@ -2562,7 +2568,10 @@ Expr ConditionalAndExpression():
 }
 {
   ret = InclusiveOrExpression()
-  ( { lateRun(); } "&&" right = InclusiveOrExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.And, right)); } )*
+  (
+    { lateRun(); } "&&" right = InclusiveOrExpression()
+    { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.And, right)); }
+  )*
   { return ret; }
 }
 
@@ -2573,7 +2582,10 @@ Expr InclusiveOrExpression():
 }
 {
   ret = ExclusiveOrExpression()
-  ( { lateRun(); } "|" right = ExclusiveOrExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.BinOr, right)); } )*
+  (
+    { lateRun(); } "|" right = ExclusiveOrExpression()
+    { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.BinOr, right)); }
+  )*
   { return ret; }
 }
 
@@ -2584,7 +2596,10 @@ Expr ExclusiveOrExpression():
 }
 {
   ret = AndExpression()
-  ( { lateRun(); } "^" right = AndExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.XOr, right)); } )*
+  (
+    { lateRun(); } "^" right = AndExpression()
+    { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.XOr, right)); }
+  )*
   { return ret; }
 }
 
@@ -2595,7 +2610,10 @@ Expr AndExpression():
 }
 {
   ret = EqualityExpression()
-  ( { lateRun(); } "&" right = EqualityExpression() { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.BinAnd, right)); } )*
+  (
+    { lateRun(); } "&" right = EqualityExpression()
+    { ret = enRun(new BinaryExpr(ret, BinaryExpr.BinaryOp.BinAnd, right)); }
+  )*
   { return ret; }
 }
 
