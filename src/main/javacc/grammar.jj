@@ -2443,7 +2443,8 @@ Expr Expression():
 }
 {
   (
-    LOOKAHEAD( CastLambdaExpression() ) ret = CastLambdaExpression()
+    LOOKAHEAD( (Name() "->" | LambdaParameters() "->" | (LambdaCastType())* (LambdaParameters())? "->") )
+    ret = CastLambdaExpression()
   |
     ret = AssignmentExpression()
   )
@@ -2483,32 +2484,41 @@ Expr CastLambdaExpression():
 }
 {
   (
-    LOOKAHEAD( LambdaParameters() "->" )
+    LOOKAHEAD( (Name() "->" | LambdaParameters() "->") )
     ret = LambdaExpression()
   |
     { run(); }
-    "("
-    { run(); } annotations = Annotations()
-
-    type = ReferenceType(annotations)
-    { types = types.append(type); }
-    [
-      LOOKAHEAD("&")
-      (
-        { lateRun(); } "&"
-        { run(); } annotations = Annotations() type = ReferenceType(annotations)
-        { types = types.append(type); }
-      )+
-      {
-        types = enRun(types, Type.intersectionShape);
-        type = new IntersectionType(types);
-      }
-    ]
-    ")"
+    type = LambdaCastType()
     ret = CastLambdaExpression()
     { ret = enRun(new CastExpr(type, ret)); }
   )
   { return ret; }
+}
+
+Type LambdaCastType():
+{
+	Type type;
+	NodeList types = new NodeList();
+	NodeList<AnnotationExpr> annotations = null;
+}
+{
+  "("
+  { run(); } annotations = Annotations() type = ReferenceType(annotations)
+  { types = types.append(type); }
+  [
+    LOOKAHEAD("&")
+    (
+      { lateRun(); } "&"
+      { run(); } annotations = Annotations() type = ReferenceType(annotations)
+      { types = types.append(type); }
+    )+
+    {
+      types = enRun(types, Type.intersectionShape);
+      type = new IntersectionType(types);
+    }
+  ]
+  ")"
+  { return type; }
 }
 
 LambdaExpr LambdaExpression():
