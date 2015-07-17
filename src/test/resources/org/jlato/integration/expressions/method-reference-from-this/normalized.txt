@@ -1,0 +1,19 @@
+{
+  class: org.jlato.tree.expr.MethodInvocationExpr,
+  args: [
+    {
+      class: org.jlato.tree.expr.MethodReferenceExpr,
+      name: method,
+      scope: {
+        class: org.jlato.tree.expr.ThisExpr,
+        classExpr: null,
+      },
+      typeArgs: [
+      ],
+    },
+  ],
+  name: call,
+  scope: null,
+  typeArgs: [
+  ],
+}

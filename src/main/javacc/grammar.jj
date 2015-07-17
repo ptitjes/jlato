@@ -2639,7 +2639,23 @@ Expr PrimarySuffix(Expr scope):
     ret = PrimarySuffixWithoutSuper(scope)
   |
     "." "super" { ret = enRun(new SuperExpr(NodeOption.of(scope))); }
+  |
+    ret = MethodReferenceSuffix(scope)
   )
+  { return ret; }
+}
+
+Expr MethodReferenceSuffix(Expr scope):
+{
+    NodeList typeArgs = null;
+    Name name;
+	Expr ret;
+}
+{
+  // Run is started before scope
+
+  "::" [typeArgs = TypeArguments() ] name = Name()
+  { ret = enRun(new MethodReferenceExpr(scope, ensureNotNull(typeArgs), name)); }
   { return ret; }
 }
 
