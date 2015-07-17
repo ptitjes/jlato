@@ -2115,10 +2115,9 @@ QualifiedName QualifiedName():
 {
   { run(); } name = Name() { ret = enRun(new QualifiedName(qualifier, name)); }
   (
-    LOOKAHEAD("." Name())
+    LOOKAHEAD(2)
     { lateRun(); } "." { qualifier = enRun(qualifier.set(ret), QualifiedName.qualifierShape); }
-    { lateRun(); }
-    name = Name() { ret = enRun(new QualifiedName(qualifier, name)); }
+    { lateRun(); } name = Name() { ret = enRun(new QualifiedName(qualifier, name)); }
   )*
   { return ret; }
 }
@@ -2177,7 +2176,11 @@ Expr PrimaryExpression():
 	Expr inner;
 }
 {
-  ret = PrimaryPrefix() ( LOOKAHEAD(2) { lateRun(); } ret = PrimarySuffix(ret) )*
+  ret = PrimaryPrefix()
+  (
+    LOOKAHEAD(2)
+    { lateRun(); } ret = PrimarySuffix(ret)
+  )*
   { return ret; }
 }
 
@@ -2187,7 +2190,11 @@ Expr PrimaryExpressionWithoutSuperSuffix():
 	Expr inner;
 }
 {
-  ret = PrimaryPrefix() ( LOOKAHEAD( PrimarySuffixWithoutSuper() ) { lateRun(); } ret = PrimarySuffixWithoutSuper(ret) )*
+  ret = PrimaryPrefix()
+  (
+    LOOKAHEAD( PrimarySuffixWithoutSuper() )
+    { lateRun(); } ret = PrimarySuffixWithoutSuper(ret)
+  )*
   { return ret; }
 }
 
@@ -3026,20 +3033,6 @@ EmptyStmt EmptyStatement():
   { return enRun(new EmptyStmt()); }
 }
 
-Stmt LambdaBody():
-{
-  Expr expr;
-  Stmt n = null;
-}
-{
-  (
-    { run(); } expr = Expression() { n = enRun(new ExpressionStmt(expr)); }
-  |
-    n = Block()
-  )
-  { return n; }
-}
-
 ExpressionStmt StatementExpression():
 {
 	Expr expr;
@@ -3049,9 +3042,19 @@ ExpressionStmt StatementExpression():
 {
   { run(); }
   (
-    LOOKAHEAD(2) expr = PreIncrementDecrementExpression()
+    expr = PreIncrementDecrementExpression()
   |
-    expr = Expression()
+    expr = PrimaryExpression()
+    [
+      { lateRun(); } "++"
+      { expr = enRun(new UnaryExpr(UnaryExpr.UnaryOp.PostIncrement, expr));  }
+    |
+      { lateRun(); } "--"
+      { expr = enRun(new UnaryExpr(UnaryExpr.UnaryOp.PostDecrement, expr));  }
+    |
+      { lateRun(); } op = AssignmentOperator() value = Expression()
+      { expr = enRun(new AssignExpr(expr, op, value)); }
+    ]
   )
   ";"
   { return enRun(new ExpressionStmt(expr)); }
