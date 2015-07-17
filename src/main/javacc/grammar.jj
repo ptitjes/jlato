@@ -2437,9 +2437,7 @@ Expr UnaryExpression():
 }
 {
   (
-    ret = PreIncrementExpression()
-  |
-    ret = PreDecrementExpression()
+    ret = PreIncrementDecrementExpression()
   |
     { run(); }
     ( "+" { op = UnaryExpr.UnaryOp.Positive; } |
@@ -2452,24 +2450,17 @@ Expr UnaryExpression():
   { return ret; }
 }
 
-Expr PreIncrementExpression():
+Expr PreIncrementDecrementExpression():
 {
+	UnaryExpr.UnaryOp op;
 	Expr ret;
 }
 {
   { run(); }
-  "++" ret = UnaryExpression()
-  { return enRun(new UnaryExpr(UnaryExpr.UnaryOp.PreIncrement, ret)); }
-}
-
-Expr PreDecrementExpression():
-{
-	Expr ret;
-}
-{
-  { run(); }
-  "--" ret = UnaryExpression()
-  { return enRun(new UnaryExpr(UnaryExpr.UnaryOp.PreDecrement, ret)); }
+  ( "++" { op = UnaryExpr.UnaryOp.PreIncrement; } |
+    "--" { op = UnaryExpr.UnaryOp.PreDecrement; } )
+  ret = UnaryExpression()
+  { return enRun(new UnaryExpr(op, ret)); }
 }
 
 Expr UnaryExpressionNotPlusMinus():
@@ -2981,9 +2972,7 @@ ExpressionStmt StatementExpression():
 {
   { run(); }
   (
-    LOOKAHEAD(2) expr = PreIncrementExpression()
-  |
-    expr = PreDecrementExpression()
+    LOOKAHEAD(2) expr = PreIncrementDecrementExpression()
   |
     expr = PrimaryExpression()
     [
