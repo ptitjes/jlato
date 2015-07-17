@@ -49,7 +49,7 @@ public abstract class ChunkIntegrationTest<T extends Tree> implements BulkTestCl
 				T tree = parse(source);
 
 				String normalized = NormalizedJsonWriter.write(tree);
-				String formatted = Printer.printToString(tree, true);
+				String formatted = Printer.printToString(tree, true) + "\n";
 
 				resources.updateResource("normalized.txt", normalized);
 				resources.updateResource("formatted.txt", formatted);
@@ -65,7 +65,7 @@ public abstract class ChunkIntegrationTest<T extends Tree> implements BulkTestCl
 				T tree = parse(source);
 
 				String actualNormalized = NormalizedJsonWriter.write(tree);
-				String actualFormatted = Printer.printToString(tree, true);
+				String actualFormatted = Printer.printToString(tree, true) + "\n";
 
 				Assert.assertEquals(normalized, actualNormalized);
 				Assert.assertEquals(formatted, actualFormatted);
