@@ -23,10 +23,9 @@ import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SKind;
+import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.printer.Printer;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.*;
@@ -207,7 +206,7 @@ abstract class ParserBase {
 		String image = token.image;
 		boolean nodeListVar = image.startsWith("..$");
 		String name = nodeListVar ? image.substring(3) : image.substring(1);
-		SKind<?> kind = nodeListVar ? NodeList.kind : Name.kind;
+		Kind kind = nodeListVar ? NodeList.kind : Name.kind;
 		return new STree(kind, new SVarState(name));
 	}
 

@@ -23,7 +23,7 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SKind;
+import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 
@@ -33,7 +33,7 @@ import org.jlato.tree.Tree;
 
 public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implements Type {
 
-	public final static SKind<VoidType.State> kind = new SKind<VoidType.State>() {
+	public final static Kind kind = new Kind() {
 
 	};
 

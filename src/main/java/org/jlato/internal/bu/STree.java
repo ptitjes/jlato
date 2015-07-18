@@ -19,7 +19,7 @@
 
 package org.jlato.internal.bu;
 
-import org.jlato.internal.td.SKind;
+import org.jlato.tree.Kind;
 import org.jlato.internal.td.SContext;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
@@ -29,15 +29,15 @@ import org.jlato.tree.Tree;
  */
 public class STree<S extends STreeState<S>> {
 
-	public final SKind<S> kind;
+	public final Kind kind;
 	public final S state;
 	public final WRunRun run;
 
-	public STree(SKind<S> kind, S state) {
+	public STree(Kind kind, S state) {
 		this(kind, state, null);
 	}
 
-	public STree(SKind<S> kind, S state, WRunRun run) {
+	public STree(Kind kind, S state, WRunRun run) {
 		this.kind = kind;
 		this.state = state;
 		this.run = run;

@@ -23,7 +23,7 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SKind;
+import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 
@@ -33,7 +33,7 @@ import org.jlato.tree.Tree;
 
 public class EmptyTypeDecl extends TreeBase<EmptyTypeDecl.State, TypeDecl, EmptyTypeDecl> implements TypeDecl {
 
-	public final static SKind<EmptyTypeDecl.State> kind = new SKind<EmptyTypeDecl.State>() {
+	public final static Kind kind = new Kind() {
 
 	};
 

@@ -21,7 +21,7 @@ package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.SKind;
+import org.jlato.tree.Kind;
 
 /**
  * @author Didier Villevalois
@@ -55,7 +55,7 @@ public abstract class LSCondition {
 		};
 	}
 
-	public static LSCondition kind(final SKind<?> kind) {
+	public static LSCondition kind(final Kind kind) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
 				return tree.kind == kind;
@@ -75,12 +75,12 @@ public abstract class LSCondition {
 		return childIs(traversal, condition);
 	}
 
-	public static LSCondition lastChildKind(final SKind<?> kind) {
+	public static LSCondition lastChildKind(final Kind kind) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
 				final SNodeListState state = (SNodeListState) tree.state;
 				final Vector<STree<?>> children = state.children;
-				final SKind<?> childKind = children.last().kind;
+				final Kind childKind = children.last().kind;
 				return childKind == kind;
 			}
 		};

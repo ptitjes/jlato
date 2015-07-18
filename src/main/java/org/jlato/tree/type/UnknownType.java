@@ -22,7 +22,7 @@ package org.jlato.tree.type;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SKind;
+import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 
@@ -32,7 +32,7 @@ import org.jlato.tree.Tree;
 
 public class UnknownType extends TreeBase<UnknownType.State, Type, UnknownType> implements Type {
 
-	public final static SKind<UnknownType.State> kind = new SKind<UnknownType.State>() {
+	public final static Kind kind = new Kind() {
 
 	};
 

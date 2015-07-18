@@ -24,7 +24,6 @@ import com.github.andrewoma.dexx.collection.Pair;
 import com.github.andrewoma.dexx.collection.TreeMap;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeSetState;
-import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.printer.FormattingSettings;
@@ -39,14 +38,14 @@ import java.io.PrintWriter;
  */
 public class TreeSet<T extends Tree> extends TreeBase<STreeSetState, TreeSet<T>, TreeSet<T>> implements Tree {
 
-	public final static Kind<Tree> kind = new Kind<Tree>();
+	public final static Kind kind = new Kind();
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Tree> Kind<T> kind() {
-		return (Kind<T>) kind;
+	public static <T extends Tree> Kind kind() {
+		return (Kind) kind;
 	}
 
-	public static class Kind<T extends Tree> implements SKind<STreeSetState> {
+	public static class Kind<T extends Tree> implements org.jlato.tree.Kind {
 
 	}
 

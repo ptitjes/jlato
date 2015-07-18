@@ -21,7 +21,6 @@ package org.jlato.tree;
 
 import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 
@@ -32,14 +31,14 @@ import java.util.Iterator;
  */
 public class NodeOption<T extends Tree> extends TreeBase<SNodeOptionState, NodeOption<T>, NodeOption<T>> implements Tree, Iterable<T> {
 
-	public final static Kind<Tree> kind = new Kind<Tree>();
+	public final static Kind kind = new Kind();
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Tree> Kind<T> kind() {
-		return (Kind<T>) kind;
+	public static <T extends Tree> Kind kind() {
+		return (Kind) kind;
 	}
 
-	public static class Kind<T extends Tree> implements SKind<SNodeOptionState> {
+	public static class Kind<T extends Tree> implements org.jlato.tree.Kind {
 
 	}
 

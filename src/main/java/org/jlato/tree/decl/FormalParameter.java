@@ -21,7 +21,7 @@ package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SKind;
+import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
@@ -38,7 +38,7 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class FormalParameter extends TreeBase<FormalParameter.State, Tree, FormalParameter> implements Tree {
 
-	public final static SKind<FormalParameter.State> kind = new SKind<FormalParameter.State>() {
+	public final static Kind kind = new Kind() {
 
 	};
 

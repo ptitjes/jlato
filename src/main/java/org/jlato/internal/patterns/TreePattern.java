@@ -23,7 +23,7 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.SKind;
+import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.rewrite.Pattern;
@@ -146,7 +146,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	}
 
 	private STree<?> buildTree(STree<?> pattern, Substitution substitution) {
-		SKind<? extends STreeState<?>> kind = pattern.kind;
+		Kind kind = pattern.kind;
 		STreeState<?> patternState = pattern.state;
 
 		if (patternState instanceof SVarState) {
@@ -154,12 +154,12 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 			return substitution.get(name);
 
 		} else if (patternState instanceof SNodeState) {
-			return buildNodeTree((SKind) kind, (SNodeState) patternState, substitution);
+			return buildNodeTree((Kind) kind, (SNodeState) patternState, substitution);
 
 		} else if (patternState instanceof SNodeOptionState) {
 			STree<?> elementPattern = ((SNodeOptionState) patternState).element;
 			STree<?> element = buildTree(elementPattern, substitution);
-			return new STree<SNodeOptionState>((SKind<SNodeOptionState>) pattern.kind,
+			return new STree<SNodeOptionState>((Kind) pattern.kind,
 					new SNodeOptionState(element));
 
 		} else if (patternState instanceof SNodeListState) {
@@ -167,13 +167,13 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 			for (STree<?> elementPattern : ((SNodeListState) patternState).children) {
 				elementsBuilder.add(buildTree(elementPattern, substitution));
 			}
-			return new STree<SNodeListState>((SKind<SNodeListState>) pattern.kind,
+			return new STree<SNodeListState>((Kind) pattern.kind,
 					new SNodeListState(elementsBuilder.build()));
 		}
 		return null;
 	}
 
-	private <S extends SNodeState<S>> STree<?> buildNodeTree(SKind<S> kind, S patternState, Substitution substitution) {
+	private <S extends SNodeState<S>> STree<?> buildNodeTree(Kind kind, S patternState, Substitution substitution) {
 //		Builder<STree<?>, ArrayList<STree<?>>> childrenBuilder = ArrayList.<STree<?>>factory().newBuilder();
 //		for (STree<?> childPattern : ((SNodeState<?>) patternState).children) {
 //			childrenBuilder.add(buildTree(childPattern, substitution));

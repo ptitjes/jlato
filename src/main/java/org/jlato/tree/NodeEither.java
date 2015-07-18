@@ -22,7 +22,6 @@ package org.jlato.tree;
 import org.jlato.internal.bu.SNodeEitherState;
 import org.jlato.internal.bu.SNodeEitherState.EitherSide;
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 
@@ -31,14 +30,14 @@ import org.jlato.internal.td.TreeBase;
  */
 public class NodeEither<TL extends Tree, TR extends Tree> extends TreeBase<SNodeEitherState, NodeEither<TL, TR>, NodeEither<TL, TR>> implements Tree {
 
-	public final static Kind<Tree, Tree> kind = new Kind<Tree, Tree>();
+	public final static Kind kind = new Kind();
 
 	@SuppressWarnings("unchecked")
-	public static <TL extends Tree, TR extends Tree> Kind<TL, TR> kind() {
-		return (Kind<TL, TR>) kind;
+	public static <TL extends Tree, TR extends Tree> Kind kind() {
+		return (Kind) kind;
 	}
 
-	public static class Kind<TL extends Tree, TR extends Tree> implements SKind<SNodeEitherState> {
+	public static class Kind<TL extends Tree, TR extends Tree> implements org.jlato.tree.Kind {
 
 	}
 
