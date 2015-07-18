@@ -119,8 +119,8 @@ public class FormalParameter extends TreeBase<SNodeState, Tree, FormalParameter>
 	);
 
 	public static final LexicalShape listShape = list(true,
-			token(LToken.ParenthesisLeft),
+			none(),
 			token(LToken.Comma).withSpacingAfter(space()),
-			token(LToken.ParenthesisRight)
+			none()
 	);
 }

@@ -19,6 +19,7 @@
 
 package org.jlato.tree.decl;
 
+import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
@@ -143,7 +144,9 @@ public class ConstructorDecl extends TreeBase<SNodeState, MemberDecl, Constructo
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(TYPE_PARAMETERS, TypeParameter.listShape),
 			child(NAME),
+			token(LToken.ParenthesisLeft),
 			child(PARAMETERS, FormalParameter.listShape),
+			token(LToken.ParenthesisRight),
 			child(THROWS_CLAUSE, QualifiedType.throwsClauseShape),
 			none().withSpacingAfter(space()), child(BODY)
 	);

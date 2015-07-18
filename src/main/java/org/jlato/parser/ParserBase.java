@@ -44,6 +44,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Stack;
 
+import static org.jlato.parser.ParserImplConstants.*;
+
 /**
  * @author Didier Villevalois
  */
@@ -274,8 +276,35 @@ abstract class ParserBase {
 
 	// Convenience class to get more data from a called production
 
-	class ByRef<T> {
+	static class ByRef<T> {
 		public T value;
+	}
+
+	boolean isLambda() {
+		for (int lookahead = 1; ; lookahead++) {
+			int kind = getToken(lookahead).kind;
+			switch (kind) {
+				case LPAREN:
+					// ( after ( => Expr
+					return false;
+				case RPAREN:
+					if (lookahead == 1) return true;
+					else return getToken(lookahead + 1).kind == ARROW;
+			}
+		}
+	}
+
+	boolean isLambdaOrExpr(int lookaheadStart) {
+		for (int lookahead = lookaheadStart; ; lookahead++) {
+			int kind = getToken(lookahead).kind;
+			switch (kind) {
+				case LPAREN:
+					// ( => Expr
+					return true;
+				case RPAREN:
+					return getToken(lookahead + 1).kind == ARROW;
+			}
+		}
 	}
 
 	// Debug methods

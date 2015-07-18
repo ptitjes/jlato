@@ -1733,7 +1733,7 @@ MethodDecl MethodDecl(NodeList modifiers):
 
   [ typeParameters = TypeParameters() ]
   type = ResultType()
-  name = Name() parameters = FormalParameterList() arrayDims = ArrayDims()
+  name = Name() parameters = FormalParameters() arrayDims = ArrayDims()
   [ throwsClause = ThrowsClause() ]
   (
     block = Block()
@@ -1748,22 +1748,34 @@ MethodDecl MethodDecl(NodeList modifiers):
   { return enRun(new MethodDecl(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), NodeOption.of(block))); }
 }
 
+NodeList FormalParameters():
+{
+	NodeList ret = null;
+	FormalParameter par;
+}
+{
+  "("
+  [
+    ret = FormalParameterList()
+  ]
+  ")"
+  { return ensureNotNull(ret); }
+}
+
 NodeList FormalParameterList():
 {
-	NodeList ret = new NodeList();
+	NodeList ret = null;
 	FormalParameter par;
 }
 {
   { run(); }
-  "("
-  [
-    par = FormalParameter() { ret = ret.append(par); }
-    ( "," par = FormalParameter() { ret = ret.append(par); } )*
+  (
+    par = FormalParameter() { ret = append(ret, par); }
+    ( "," par = FormalParameter() { ret = append(ret, par); } )*
   |
     LOOKAHEAD({quotesMode})
     <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
-  ]
-  ")"
+  )
   { return enRun(ret, FormalParameter.listShape); }
 }
 
@@ -1812,7 +1824,7 @@ ConstructorDecl ConstructorDecl(NodeList modifiers):
   // Run is started before modifiers
 
   [ typeParameters = TypeParameters() ]
-  name = Name() parameters = FormalParameterList()
+  name = Name() parameters = FormalParameters()
   [ throwsClause = ThrowsClause() ]
 
   { run(); }
@@ -2142,308 +2154,6 @@ Name Name():
  * Expressions
  **********************************************************************************************************************/
 
-Expr Literal():
-{
-	Expr ret;
-}
-{
-  { run(); }
-  (
-    <INTEGER_LITERAL>   { ret = new LiteralExpr<Integer>(Integer.class, token.image); }
-  |
-    <LONG_LITERAL>      { ret = new LiteralExpr<Long>(Long.class, token.image); }
-  |
-    <FLOAT_LITERAL>     { ret = new LiteralExpr<Float>(Float.class, token.image); }
-  |
-    <DOUBLE_LITERAL>    { ret = new LiteralExpr<Double>(Double.class, token.image); }
-  |
-    <CHARACTER_LITERAL> { ret = new LiteralExpr<Character>(Character.class, token.image); }
-  |
-    <STRING_LITERAL>    { ret = new LiteralExpr<String>(String.class, token.image); }
-  |
-    "true"  { ret = new LiteralExpr<Boolean>(Boolean.class, token.image); }
-  |
-    "false" { ret = new LiteralExpr<Boolean>(Boolean.class, token.image); }
-  |
-    "null"  { ret = new LiteralExpr<Void>(Void.class, token.image); }
-  )
-  { return enRun(ret); }
-}
-
-Expr PrimaryExpression():
-{
-	Expr ret;
-	Expr inner;
-}
-{
-  ret = PrimaryPrefix()
-  (
-    LOOKAHEAD(2)
-    { lateRun(); } ret = PrimarySuffix(ret)
-  )*
-  { return ret; }
-}
-
-Expr PrimaryExpressionWithoutSuperSuffix():
-{
-	Expr ret;
-	Expr inner;
-}
-{
-  ret = PrimaryPrefix()
-  (
-    LOOKAHEAD( PrimarySuffixWithoutSuper() )
-    { lateRun(); } ret = PrimarySuffixWithoutSuper(ret)
-  )*
-  { return ret; }
-}
-
-Expr PrimaryPrefix():
-{
-	Expr ret = null;
-	Name name;
-	NodeList typeArgs = null;
-	NodeList args = null;
-	boolean hasArgs = false;
-	boolean isLambda = false;
-	Type type;
-	FormalParameter p = null;
-	VariableDeclaratorId id = null;
-}
-{
-  (
-    ret = Literal()
-  |
-    { run(); } "this" { ret = enRun(new ThisExpr(NodeOption.<Expr>none())); }
-  |
-    { run(); } "super" { ret = enRun(new SuperExpr(NodeOption.<Expr>none())); }
-	(
-	  { lateRun(); }
-	  "."
-	  (
-        LOOKAHEAD( [ TypeArguments() ] Name() "(" )
-        ret = MethodInvocation(ret)
-	  |
-	    ret = FieldAccess(ret)
-	  )
-	|
-	  { lateRun(); }
-	  ret = MethodReferenceSuffix(ret)
-	)
-  |
-    { run(); } "(" ret = Expression() ")" { ret = enRun(new ParenthesizedExpr(ret)); }
-  |
-    ret = AllocationExpression(null)
-  |
-    LOOKAHEAD( ResultType() "." "class" )
-    { run(); } type = ResultType() "." "class" { ret = enRun(new ClassExpr(type)); }
-  |
-    LOOKAHEAD (ResultType() "::" )
-    { run(); }
-    type = ResultType() { ret = new TypeExpr(type); }
-    ret = MethodReferenceSuffix(ret)
-  |
-    LOOKAHEAD( [ TypeArguments() ] Name() "(" )
-    { run(); }
-    ret = MethodInvocation(null)
-  |
-    ret = Name()
-  )
-  { return ret; }
-}
-
-Expr PrimarySuffix(Expr scope):
-{
-	Expr ret;
-}
-{
-  // Run is started before scope
-
-  (
-    LOOKAHEAD(2)
-    ret = PrimarySuffixWithoutSuper(scope)
-  |
-    "." "super" { ret = enRun(new SuperExpr(NodeOption.of(scope))); }
-  |
-    ret = MethodReferenceSuffix(scope)
-  )
-  { return ret; }
-}
-
-Expr PrimarySuffixWithoutSuper(Expr scope):
-{
-	Expr ret;
-	Name name;
-}
-{
-  // Run is started before scope
-
-  (
-    "."
-    (
-      "this" { ret = enRun(new ThisExpr(NodeOption.of(scope))); }
-    |
-      ret = AllocationExpression(scope)
-    |
-      LOOKAHEAD( [ TypeArguments() ] Name() "(" )
-      ret = MethodInvocation(scope)
-    |
-      ret = FieldAccess(scope)
-    )
-  |
-    "[" ret = Expression() "]" { ret = enRun(new ArrayAccessExpr(scope, ret)); }
-  )
-
-  { return ret; }
-}
-
-Expr FieldAccess(Expr scope):
-{
-    Name name;
-}
-{
-  // Run is started before scope
-
-  name = Name()
-  { return enRun(new FieldAccessExpr(NodeOption.of(scope), name)); }
-}
-
-Expr MethodInvocation(Expr scope):
-{
-    NodeList typeArgs = null;
-    Name name;
-    NodeList args = null;
-	Expr ret;
-}
-{
-  // Run is started before scope
-
-  [ typeArgs = TypeArguments() ] name = Name()
-  args = Arguments()
-  { return enRun(new MethodInvocationExpr(NodeOption.of(scope), ensureNotNull(typeArgs), name, args)); }
-}
-
-NodeList Arguments():
-{
-	NodeList ret = new NodeList();
-	Expr expr;
-}
-{
-  { run(); }
-  "("
-  [
-    LOOKAHEAD({quotesMode})
-    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
-  |
-    expr = Expression() { ret = ret.append(expr); }
-    ( "," expr = Expression() { ret = ret.append(expr); } )*
-  ]
-  ")"
-  { return enRun(ret, Expr.argumentsShape); }
-}
-
-Expr MethodReferenceSuffix(Expr scope):
-{
-    NodeList typeArgs = null;
-    Name name;
-	Expr ret;
-}
-{
-  // Run is started before scope
-
-  "::" [typeArgs = TypeArguments() ]
-  ( name = Name() | "new" { name = new Name("new"); } )
-  { ret = enRun(new MethodReferenceExpr(scope, ensureNotNull(typeArgs), name)); }
-  { return ret; }
-}
-
-Expr AllocationExpression(Expr scope):
-{
-	Expr ret;
-	Type type;
-	NodeList typeArgs = null;
-	NodeList<MemberDecl> anonymousBody = null;
-	NodeList args;
-	NodeList<AnnotationExpr> annotations = null;
-}
-{
-  // Run may be started before scope
-  { if (scope == null) run(); }
-
-  "new"
-  [ typeArgs = TypeArguments() ]
-
-  { run(); }
-  annotations = Annotations()
-  (
-    type = PrimitiveType(annotations)
-    ret = ArrayCreationExpr(type)
-  |
-	type = QualifiedType(annotations)
-    (
-	  ret = ArrayCreationExpr(type)
-	|
-	  args = Arguments() [ LOOKAHEAD( "{" ) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
-      { ret = enRun(new ObjectCreationExpr(NodeOption.of(scope), ensureNotNull(typeArgs), (QualifiedType) type, args, NodeOption.of(anonymousBody))); }
-    )
-  )
-  { return ret; }
-}
-
-Expr ArrayCreationExpr(Type componentType):
-{
-	Expr expr;
-	NodeList arrayDimExprs = new NodeList();
-	NodeList arrayDims = new NodeList();
-	NodeList<AnnotationExpr> annotations = null;
-	ArrayInitializerExpr initializer;
-}
-{
-  (
-    LOOKAHEAD( Annotations() "[" Expression() "]" )
-    arrayDimExprs = ArrayDimExprsMandatory()
-    arrayDims = ArrayDims()
-    { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, NodeOption.<ArrayInitializerExpr>none())); }
-  |
-    arrayDims = ArrayDimsMandatory()
-    initializer = ArrayInitializer()
-    { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, NodeOption.of(initializer))); }
-  )
-}
-
-NodeList ArrayDimExprsMandatory():
-{
-	NodeList arrayDimExprs = new NodeList();
-	NodeList<AnnotationExpr> annotations;
-	Expr expr;
-}
-{
-  { run(); }
-  (
-    LOOKAHEAD( Annotations() "[" Expression() "]" )
-    { run(); }
-    annotations = Annotations() "[" expr = Expression() "]"
-    { arrayDimExprs = arrayDimExprs.append(enRun(new ArrayDimExpr(annotations, expr))); }
-  )+
-  { return enRun(arrayDimExprs, ArrayDimExpr.listShape); }
-}
-
-NodeList ArrayDimsMandatory():
-{
-	NodeList arrayDims = new NodeList();
-	NodeList<AnnotationExpr> annotations;
-}
-{
-  { run(); }
-  (
-    LOOKAHEAD( Annotations() "[" "]" )
-    { run(); }
-    annotations = Annotations() "[" "]"
-    { arrayDims = arrayDims.append(enRun(new ArrayDim(annotations))); }
-  )+
-  { return enRun(arrayDims, ArrayDim.listShape); }
-}
-
 Expr Expression():
 // FIXME
 // This expansion has been written this way instead of :
@@ -2457,15 +2167,100 @@ Expr Expression():
 	Expr ret;
 	AssignExpr.AssignOp op;
 	Expr value;
+	NodeList params;
 }
 {
-  ret = ConditionalExpression()
-  [
-    LOOKAHEAD(2)
-    { lateRun(); } op = AssignmentOperator() value = Expression()
-    { ret = enRun(new AssignExpr(ret, op, value)); }
-  ]
+  (
+    LOOKAHEAD( Name() "->" )
+    { run(); } ret = Name() "->" ret = LambdaBody(NodeList.of(makeFormalParameter((Name) ret)), false)
+  |
+    LOOKAHEAD( "(" ")" "->" )
+    { run(); } "(" ")" "->" ret = LambdaBody(NodeList.empty(), true)
+  |
+    LOOKAHEAD( "(" Name() ")" "->" )
+    { run(); } "(" ret = Name() ")" "->" ret = LambdaBody(NodeList.of(makeFormalParameter((Name) ret)), true)
+  |
+    LOOKAHEAD( "(" Name() "," )
+    "(" params = InferredFormalParameterList() ")" "->" ret = LambdaBody(params, true)
+  |
+    ret = ConditionalExpression()
+    [
+      LOOKAHEAD(2)
+      { lateRun(); } op = AssignmentOperator() value = Expression()
+      { ret = enRun(new AssignExpr(ret, op, value)); }
+    ]
+  )
   { return ret; }
+}
+
+LambdaExpr LambdaBody(NodeList parameters, boolean parenthesis):
+{
+  BlockStmt block;
+  Expr expr;
+  LambdaExpr ret;
+}
+{
+  // Run was started before parameters
+  (
+    expr = Expression() { ret = enRun(new LambdaExpr(parameters, parenthesis, expr)); }
+  |
+    block = Block() { ret = enRun(new LambdaExpr(parameters, parenthesis, block)); }
+  )
+  { return ret; }
+}
+
+NodeList LambdaParameters(ByRef<Boolean> parenthesis):
+{
+  NodeList ret;
+  FormalParameter param;
+}
+{
+  (
+    { run(); }
+    param = InferredFormalParameter()
+    {
+      parenthesis.value = false;
+      ret = enRun(new NodeList(param));
+    }
+  |
+    "("
+    (
+      LOOKAHEAD(InferredFormalParameterList()) ret = InferredFormalParameterList()
+    |
+      ret = FormalParameterList()
+    )
+    ")"
+    { parenthesis.value = true; }
+  )
+  { return ret; }
+}
+
+NodeList InferredFormalParameterList():
+{
+  NodeList ret = new NodeList();
+  FormalParameter param;
+}
+{
+  { run(); }
+  param = InferredFormalParameter() { ret = ret.append(param); }
+  ( "," param = InferredFormalParameter() { ret = ret.append(param); } )*
+  { return enRun(ret); }
+}
+
+FormalParameter InferredFormalParameter():
+{
+  Name name;
+}
+{
+  name = Name()
+  { return makeFormalParameter(name); }
+}
+
+JAVACODE
+FormalParameter makeFormalParameter(Name name) {
+  return new FormalParameter(NodeList.<ExtendedModifier>empty(), new UnknownType(), false,
+    new VariableDeclaratorId(name, NodeList.<ArrayDim>empty())
+  );
 }
 
 AssignExpr.AssignOp AssignmentOperator():
@@ -2486,80 +2281,6 @@ AssignExpr.AssignOp AssignmentOperator():
   | "^="   { ret = AssignExpr.AssignOp.XOr; }
   | "|="   { ret = AssignExpr.AssignOp.Or; } )
   { return ret; }
-}
-
-LambdaExpr LambdaExpression():
-{
-  ByRef<Boolean> parenthesis = new ByRef<Boolean>();
-  NodeList parameters;
-  BlockStmt block;
-  Expr expr;
-  LambdaExpr ret;
-}
-{
-  { run(); }
-  parameters = LambdaParameters(parenthesis)
-  "->"
-  (
-    expr = Expression() { ret = enRun(new LambdaExpr(parameters, parenthesis.value, expr)); }
-  |
-    block = Block() { ret = enRun(new LambdaExpr(parameters, parenthesis.value, block)); }
-  )
-  { return ret; }
-}
-
-NodeList LambdaParameters(ByRef<Boolean> parenthesis):
-{
-  NodeList ret;
-  FormalParameter param;
-}
-{
-  (
-    { run(); }
-    param = InferredFormalParameter()
-    {
-      parenthesis.value = false;
-      ret = enRun(new NodeList(param));
-    }
-  |
-    (
-      LOOKAHEAD(InferredFormalParameterList()) ret = InferredFormalParameterList()
-    |
-      ret = FormalParameterList()
-    )
-    { parenthesis.value = true; }
-  )
-  { return ret; }
-}
-
-NodeList InferredFormalParameterList():
-{
-  NodeList ret = new NodeList();
-  FormalParameter param;
-}
-{
-  { run(); }
-  "("
-  param = InferredFormalParameter() { ret = ret.append(param); }
-  ( "," param = InferredFormalParameter() { ret = ret.append(param); } )*
-  ")"
-  { return enRun(ret); }
-}
-
-FormalParameter InferredFormalParameter():
-{
-  Name name;
-}
-{
-  { run(); }
-  name = Name()
-  {
-    return enRun(
-      new FormalParameter(NodeList.<ExtendedModifier>empty(), new UnknownType(), false,
-        new VariableDeclaratorId(name, NodeList.<ArrayDim>empty())
-      )
-    );
-  }
 }
 
 Expr ConditionalExpression():
@@ -2776,7 +2497,7 @@ Expr UnaryExpression():
 }
 {
   (
-    ret = PreIncrementDecrementExpression()
+    ret = PrefixExpression()
   |
     { run(); }
     ( "+" { op = UnaryExpr.UnaryOp.Positive; } |
@@ -2789,7 +2510,7 @@ Expr UnaryExpression():
   { return ret; }
 }
 
-Expr PreIncrementDecrementExpression():
+Expr PrefixExpression():
 {
 	UnaryExpr.UnaryOp op;
 	Expr ret;
@@ -2815,7 +2536,7 @@ Expr UnaryExpressionNotPlusMinus():
 	ret = UnaryExpression()
 	{ ret = enRun(new UnaryExpr(op, ret)); }
   |
-    LOOKAHEAD( CastExpression() )
+    LOOKAHEAD(CastExpression())
     ret = CastExpression()
   |
     ret = PostfixExpression()
@@ -2823,7 +2544,7 @@ Expr UnaryExpressionNotPlusMinus():
   { return ret; }
 }
 
-Expr PostIncrementDecrementExpression():
+Expr PostfixExpression():
 {
 	Expr ret;
 	UnaryExpr.UnaryOp op;
@@ -2840,15 +2561,6 @@ Expr PostIncrementDecrementExpression():
   { return ret; }
 }
 
-Expr PostfixExpression():
-{
-	Expr ret;
-}
-{
-  ret = PostIncrementDecrementExpression()
-  { return ret; }
-}
-
 Expr CastExpression():
 {
 	Expr ret;
@@ -2858,9 +2570,6 @@ Expr CastExpression():
 }
 {
   (
-    LOOKAHEAD( LambdaParameters() "->" )
-    ret = LambdaExpression()
-  |
     LOOKAHEAD( "(" PrimitiveCastType() ")" )
     { run(); }
     "(" type = PrimitiveCastType() ")" ret = UnaryExpression()
@@ -2907,6 +2616,322 @@ Type ReferenceCastType():
     }
   ]
   { return type; }
+}
+
+Expr Literal():
+{
+	Expr ret;
+}
+{
+  { run(); }
+  (
+    <INTEGER_LITERAL>   { ret = new LiteralExpr<Integer>(Integer.class, token.image); }
+  |
+    <LONG_LITERAL>      { ret = new LiteralExpr<Long>(Long.class, token.image); }
+  |
+    <FLOAT_LITERAL>     { ret = new LiteralExpr<Float>(Float.class, token.image); }
+  |
+    <DOUBLE_LITERAL>    { ret = new LiteralExpr<Double>(Double.class, token.image); }
+  |
+    <CHARACTER_LITERAL> { ret = new LiteralExpr<Character>(Character.class, token.image); }
+  |
+    <STRING_LITERAL>    { ret = new LiteralExpr<String>(String.class, token.image); }
+  |
+    "true"  { ret = new LiteralExpr<Boolean>(Boolean.class, token.image); }
+  |
+    "false" { ret = new LiteralExpr<Boolean>(Boolean.class, token.image); }
+  |
+    "null"  { ret = new LiteralExpr<Void>(Void.class, token.image); }
+  )
+  { return enRun(ret); }
+}
+
+Expr PrimaryExpression():
+{
+	Expr ret;
+}
+{
+  ret = PrimaryPrefix()
+  (
+    LOOKAHEAD(2)
+    { lateRun(); } ret = PrimarySuffix(ret)
+  )*
+  { return ret; }
+}
+
+Expr PrimaryExpressionWithoutSuperSuffix():
+{
+	Expr ret;
+}
+{
+  ret = PrimaryPrefix()
+  (
+    LOOKAHEAD( PrimarySuffixWithoutSuper() )
+    { lateRun(); } ret = PrimarySuffixWithoutSuper(ret)
+  )*
+  { return ret; }
+}
+
+Expr PrimaryPrefix():
+{
+	Expr ret = null;
+	NodeList typeArgs = null;
+	NodeList params;
+	Type type;
+}
+{
+  (
+    ret = Literal()
+  |
+    { run(); } "this" { ret = enRun(new ThisExpr(NodeOption.<Expr>none())); }
+  |
+    { run(); } "super" { ret = enRun(new SuperExpr(NodeOption.<Expr>none())); }
+	(
+	  { lateRun(); }
+	  "."
+	  (
+        LOOKAHEAD( [ TypeArguments() ] Name() "(" )
+        ret = MethodInvocation(ret)
+	  |
+	    ret = FieldAccess(ret)
+	  )
+	|
+	  { lateRun(); }
+	  ret = MethodReferenceSuffix(ret)
+	)
+  |
+    ret = AllocationExpression(null)
+  |
+    LOOKAHEAD( ResultType() "." "class" )
+    { run(); } type = ResultType() "." "class" { ret = enRun(new ClassExpr(type)); }
+  |
+    LOOKAHEAD (ResultType() "::" )
+    { run(); }
+    type = ResultType() { ret = new TypeExpr(type); }
+    ret = MethodReferenceSuffix(ret)
+  |
+    LOOKAHEAD( [ TypeArguments() ] Name() "(" )
+    { run(); }
+    ret = MethodInvocation(null)
+  |
+    ret = Name()
+    [
+      { lateRun(); }
+      "->" ret = LambdaBody(NodeList.of(makeFormalParameter((Name) ret)), false)
+    ]
+  |
+    { run(); }
+    "("
+    (
+      ")" "->" ret = LambdaBody(NodeList.empty(), true)
+    |
+      LOOKAHEAD( Name() ")" "->" )
+      ret = Name() ")" "->" ret = LambdaBody(NodeList.of(makeFormalParameter((Name) ret)), true)
+    |
+      LOOKAHEAD( Name() "," )
+      params = InferredFormalParameterList() ")" "->" ret = LambdaBody(params, true)
+    |
+      LOOKAHEAD({ isLambda() })
+      params = FormalParameterList() ")" "->" ret = LambdaBody(params, true)
+    |
+      ret = Expression() ")"
+      { ret = enRun(new ParenthesizedExpr(ret)); }
+    )
+  )
+  { return ret; }
+}
+
+Expr PrimarySuffix(Expr scope):
+{
+	Expr ret;
+}
+{
+  // Run is started before scope
+
+  (
+    LOOKAHEAD(2)
+    ret = PrimarySuffixWithoutSuper(scope)
+  |
+    "." "super" { ret = enRun(new SuperExpr(NodeOption.of(scope))); }
+  |
+    ret = MethodReferenceSuffix(scope)
+  )
+  { return ret; }
+}
+
+Expr PrimarySuffixWithoutSuper(Expr scope):
+{
+	Expr ret;
+	Name name;
+}
+{
+  // Run is started before scope
+
+  (
+    "."
+    (
+      "this" { ret = enRun(new ThisExpr(NodeOption.of(scope))); }
+    |
+      ret = AllocationExpression(scope)
+    |
+      LOOKAHEAD( [ TypeArguments() ] Name() "(" )
+      ret = MethodInvocation(scope)
+    |
+      ret = FieldAccess(scope)
+    )
+  |
+    "[" ret = Expression() "]" { ret = enRun(new ArrayAccessExpr(scope, ret)); }
+  )
+
+  { return ret; }
+}
+
+Expr FieldAccess(Expr scope):
+{
+    Name name;
+}
+{
+  // Run is started before scope
+
+  name = Name()
+  { return enRun(new FieldAccessExpr(NodeOption.of(scope), name)); }
+}
+
+Expr MethodInvocation(Expr scope):
+{
+    NodeList typeArgs = null;
+    Name name;
+    NodeList args = null;
+	Expr ret;
+}
+{
+  // Run is started before scope
+
+  [ typeArgs = TypeArguments() ] name = Name()
+  args = Arguments()
+  { return enRun(new MethodInvocationExpr(NodeOption.of(scope), ensureNotNull(typeArgs), name, args)); }
+}
+
+NodeList Arguments():
+{
+	NodeList ret = new NodeList();
+	Expr expr;
+}
+{
+  { run(); }
+  "("
+  [
+//    LOOKAHEAD({quotesMode})
+//    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+//  |
+//    LOOKAHEAD(1)
+    expr = Expression() { ret = ret.append(expr); }
+    ( "," expr = Expression() { ret = ret.append(expr); } )*
+  ]
+  ")"
+  { return enRun(ret, Expr.argumentsShape); }
+}
+
+Expr MethodReferenceSuffix(Expr scope):
+{
+    NodeList typeArgs = null;
+    Name name;
+	Expr ret;
+}
+{
+  // Run is started before scope
+
+  "::" [typeArgs = TypeArguments() ]
+  ( name = Name() | "new" { name = new Name("new"); } )
+  { ret = enRun(new MethodReferenceExpr(scope, ensureNotNull(typeArgs), name)); }
+  { return ret; }
+}
+
+Expr AllocationExpression(Expr scope):
+{
+	Expr ret;
+	Type type;
+	NodeList typeArgs = null;
+	NodeList<MemberDecl> anonymousBody = null;
+	NodeList args;
+	NodeList<AnnotationExpr> annotations = null;
+}
+{
+  // Run may be started before scope
+  { if (scope == null) run(); }
+
+  "new"
+  [ typeArgs = TypeArguments() ]
+
+  { run(); }
+  annotations = Annotations()
+  (
+    type = PrimitiveType(annotations)
+    ret = ArrayCreationExpr(type)
+  |
+	type = QualifiedType(annotations)
+    (
+	  ret = ArrayCreationExpr(type)
+	|
+	  args = Arguments() [ LOOKAHEAD( "{" ) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
+      { ret = enRun(new ObjectCreationExpr(NodeOption.of(scope), ensureNotNull(typeArgs), (QualifiedType) type, args, NodeOption.of(anonymousBody))); }
+    )
+  )
+  { return ret; }
+}
+
+Expr ArrayCreationExpr(Type componentType):
+{
+	Expr expr;
+	NodeList arrayDimExprs = new NodeList();
+	NodeList arrayDims = new NodeList();
+	NodeList<AnnotationExpr> annotations = null;
+	ArrayInitializerExpr initializer;
+}
+{
+  (
+    LOOKAHEAD( Annotations() "[" Expression() "]" )
+    arrayDimExprs = ArrayDimExprsMandatory()
+    arrayDims = ArrayDims()
+    { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, NodeOption.<ArrayInitializerExpr>none())); }
+  |
+    arrayDims = ArrayDimsMandatory()
+    initializer = ArrayInitializer()
+    { return enRun(new ArrayCreationExpr(componentType, arrayDimExprs, arrayDims, NodeOption.of(initializer))); }
+  )
+}
+
+NodeList ArrayDimExprsMandatory():
+{
+	NodeList arrayDimExprs = new NodeList();
+	NodeList<AnnotationExpr> annotations;
+	Expr expr;
+}
+{
+  { run(); }
+  (
+    LOOKAHEAD( Annotations() "[" Expression() "]" )
+    { run(); }
+    annotations = Annotations() "[" expr = Expression() "]"
+    { arrayDimExprs = arrayDimExprs.append(enRun(new ArrayDimExpr(annotations, expr))); }
+  )+
+  { return enRun(arrayDimExprs, ArrayDimExpr.listShape); }
+}
+
+NodeList ArrayDimsMandatory():
+{
+	NodeList arrayDims = new NodeList();
+	NodeList<AnnotationExpr> annotations;
+}
+{
+  { run(); }
+  (
+    LOOKAHEAD( Annotations() "[" "]" )
+    { run(); }
+    annotations = Annotations() "[" "]"
+    { arrayDims = arrayDims.append(enRun(new ArrayDim(annotations))); }
+  )+
+  { return enRun(arrayDims, ArrayDim.listShape); }
 }
 
 /**********************************************************************************************************************
@@ -3042,7 +3067,7 @@ ExpressionStmt StatementExpression():
 {
   { run(); }
   (
-    expr = PreIncrementDecrementExpression()
+    expr = PrefixExpression()
   |
     expr = PrimaryExpression()
     [
