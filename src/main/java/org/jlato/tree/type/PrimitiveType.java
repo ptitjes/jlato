@@ -103,13 +103,22 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		}
 	};
 
-	private static final int PRIMITIVE = 0;
+	private static final SProperty<PrimitiveType.State> PRIMITIVE = new SProperty<PrimitiveType.State>() {
+
+		public Object retrieve(PrimitiveType.State state) {
+			return state.type;
+		}
+
+		public PrimitiveType.State rebuildParentState(PrimitiveType.State state, Object value) {
+			return state.withType((Primitive) value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
-					return ((Primitive) tree.state.data(PRIMITIVE)).token;
+					return ((State) tree.state).type.token;
 				}
 			})
 	);

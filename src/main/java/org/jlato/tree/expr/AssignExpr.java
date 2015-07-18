@@ -132,13 +132,22 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		}
 	};
 
-	private static final int OPERATOR = 0;
+	private static final SProperty<AssignExpr.State> OPERATOR = new SProperty<AssignExpr.State>() {
+
+		public Object retrieve(AssignExpr.State state) {
+			return state.operator;
+		}
+
+		public AssignExpr.State rebuildParentState(AssignExpr.State state, Object value) {
+			return state.withOperator((AssignOp) value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(TARGET),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
-					return ((AssignOp) tree.state.data(OPERATOR)).token;
+					return ((State) tree.state).operator.token;
 				}
 			}).withSpacing(space(), space()),
 			child(VALUE)

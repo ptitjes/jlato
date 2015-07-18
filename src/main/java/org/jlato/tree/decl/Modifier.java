@@ -74,11 +74,21 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 		return location.data(KEYWORD).toString();
 	}
 
-	public static final int KEYWORD = 0;
+	public static final SProperty<Modifier.State> KEYWORD = new SProperty<State>() {
+		@Override
+		public Object retrieve(State state) {
+			return state.keyword;
+		}
+
+		@Override
+		public State rebuildParentState(State state, Object value) {
+			return state.withKeyword((LToken) value);
+		}
+	};
 
 	public final static LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
-			return (LToken) tree.state.data(KEYWORD);
+			return ((State) tree.state).keyword;
 		}
 	});
 

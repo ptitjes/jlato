@@ -324,6 +324,7 @@ abstract class ParserBase {
 
 		final STreeState state = tree.state;
 
+/*
 		Iterable<? extends STree> children =
 				state instanceof SNodeListState ? ((SNodeListState) state).children :
 						state instanceof SNodeState ? ((SNodeState) state).children :
@@ -340,6 +341,7 @@ abstract class ParserBase {
 			}
 			index++;
 		}
+*/
 
 		System.out.println("For shape: " + shape);
 		dumpRunStack();

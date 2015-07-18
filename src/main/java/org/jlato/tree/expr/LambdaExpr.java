@@ -139,7 +139,16 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		}
 	};
 
-	private static final int PARENS = 0;
+	private static final SProperty<LambdaExpr.State> PARENS = new SProperty<LambdaExpr.State>() {
+
+		public Object retrieve(LambdaExpr.State state) {
+			return state.hasParens;
+		}
+
+		public LambdaExpr.State rebuildParentState(LambdaExpr.State state, Object value) {
+			return state.withParens((Boolean) value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			when(data(PARENS), token(LToken.ParenthesisLeft)),
@@ -167,7 +176,7 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 			return new LambdaExpr.State(params, hasParens, body);
 		}
 
-		public LambdaExpr.State withHasParens(boolean hasParens) {
+		public LambdaExpr.State withParens(boolean hasParens) {
 			return new LambdaExpr.State(params, hasParens, body);
 		}
 

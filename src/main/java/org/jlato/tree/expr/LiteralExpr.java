@@ -33,29 +33,21 @@ import org.jlato.tree.Tree;
 import static org.jlato.internal.shapes.LexicalShape.token;
 
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
-public class LiteralExpr<T> extends TreeBase<LiteralExpr.State<T>, Expr, LiteralExpr> implements Expr {
+public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExpr> implements Expr {
 
-	public final static Kind<Tree> kind = new Kind<Tree>();
-
-	@SuppressWarnings("unchecked")
-	public static <T> Kind<T> kind() {
-		return (Kind<T>) kind;
-	}
-
-	public static <T> STree<LiteralExpr.State<T>> make(Class<T> literalClass, String literalString) {
-		return new STree<LiteralExpr.State<T>>(LiteralExpr.<T>kind(), new LiteralExpr.State<T>(literalClass, literalString));
-	}
-
-	public static class Kind<T> implements SKind<LiteralExpr.State<T>> {
-		public Tree instantiate(SLocation<LiteralExpr.State<T>> location) {
-			return new LiteralExpr<T>(location);
+	public final static SKind<State> kind = new SKind<State>() {
+		public Tree instantiate(SLocation<State> location) {
+			return new LiteralExpr<Object>(location);
 		}
 
 		public LexicalShape shape() {
 			return shape;
 		}
+	};
+
+	public static <T> STree<LiteralExpr.State> make(Class<T> literalClass, String literalString) {
+		return new STree<LiteralExpr.State>(kind, new LiteralExpr.State(literalClass, literalString));
 	}
 
 	public static LiteralExpr<Void> nullLiteral() {
@@ -94,58 +86,82 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State<T>, Expr, Literal
 		return new LiteralExpr<T>(literalClass, Literals.from(literalClass, literalValue));
 	}
 
-	protected LiteralExpr(SLocation<LiteralExpr.State<T>> location) {
+	protected LiteralExpr(SLocation<LiteralExpr.State> location) {
 		super(location);
 	}
 
 	public LiteralExpr(Class<T> literalClass, String literalString) {
-		super(new SLocation<LiteralExpr.State<T>>(make(literalClass, literalString)));
+		super(new SLocation<LiteralExpr.State>(make(literalClass, literalString)));
 	}
 
 	@SuppressWarnings("unchecked")
 	public T value() {
-		final Class<T> literalClass = location.data(CLASS);
-		final String literalString = location.data(STRING);
-		return Literals.valueFor(literalClass, literalString);
+		final Class<?> literalClass = location.tree.state.literalClass;
+		final String literalString = location.tree.state.literalString;
+		return (T) Literals.valueFor(literalClass, literalString);
 	}
 
 	@SuppressWarnings("unchecked")
 	public LiteralExpr<T> withValue(T value) {
-		final Class<T> literalClass = location.data(CLASS);
-		return location.withData(STRING, Literals.from(literalClass, value));
+		final Class<?> literalClass = location.tree.state.literalClass;
+		return (LiteralExpr<T>) location.withData((SProperty) STRING, Literals.<T>from((Class<T>) literalClass, value));
 	}
 
-	private static final int CLASS = 0;
-	private static final int STRING = 1;
+	private static final SProperty<LiteralExpr.State> CLASS = new SProperty<State>() {
+		@Override
+		public Object retrieve(State state) {
+			return state.literalClass;
+		}
+
+		@Override
+		public State rebuildParentState(State state, Object value) {
+			return state.withLiteralClass((Class<?>) value);
+		}
+	};
+	private static final SProperty<LiteralExpr.State> STRING = new SProperty<State>() {
+		@Override
+		public Object retrieve(State state) {
+			return state.literalString;
+		}
+
+		@Override
+		public State rebuildParentState(State state, Object value) {
+			return state.withLiteralString((String) value);
+		}
+	};
 
 	public final static LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
-			final Class<?> literalClass = (Class<?>) tree.state.data(CLASS);
-			final String literalString = (String) tree.state.data(STRING);
+			final Class<?> literalClass = ((State) tree.state).literalClass;
+			final String literalString = ((State) tree.state).literalString;
 			return new LToken(0, literalString); // TODO Fix
 		}
 	});
 
-	public static class State<T> extends SNodeState<State<T>> {
+	public static class State extends SNodeState<State> {
 
-		public final Class<T> literalClass;
+		public final Class<?> literalClass;
 
 		public final String literalString;
 
-		State(Class<T> literalClass, String literalString) {
+		State(Class<?> literalClass, String literalString) {
 			this.literalClass = literalClass;
 			this.literalString = literalString;
 		}
 
-		public LiteralExpr.State<T> withLiteralString(String literalString) {
-			return new LiteralExpr.State<T>(literalClass, literalString);
+		public LiteralExpr.State withLiteralClass(Class<?> literalClass) {
+			return new LiteralExpr.State(literalClass, literalString);
 		}
 
-		public STraversal<LiteralExpr.State<T>> firstChild() {
+		public LiteralExpr.State withLiteralString(String literalString) {
+			return new LiteralExpr.State(literalClass, literalString);
+		}
+
+		public STraversal<LiteralExpr.State> firstChild() {
 			return null;
 		}
 
-		public STraversal<LiteralExpr.State<T>> lastChild() {
+		public STraversal<LiteralExpr.State> lastChild() {
 			return null;
 		}
 	}

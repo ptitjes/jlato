@@ -76,11 +76,21 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 		return name();
 	}
 
-	public static final int IDENTIFIER = 0;
+	public static final SProperty<Name.State> IDENTIFIER = new SProperty<State>() {
+		@Override
+		public Object retrieve(State state) {
+			return state.identifier;
+		}
+
+		@Override
+		public State rebuildParentState(State state, Object value) {
+			return state.withIdentifier((String) value);
+		}
+	};
 
 	public final static LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
-			return new LToken(ParserImplConstants.IDENTIFIER, (String) tree.state.data(IDENTIFIER));
+			return new LToken(ParserImplConstants.IDENTIFIER, ((State) tree.state).identifier);
 		}
 	});
 

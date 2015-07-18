@@ -154,7 +154,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 			return substitution.get(name);
 
 		} else if (patternState instanceof SNodeState) {
-			return buildNodeTree((SKind<SNodeState>) kind, (SNodeState) patternState, substitution);
+			return buildNodeTree((SKind) kind, (SNodeState) patternState, substitution);
 
 		} else if (patternState instanceof SNodeOptionState) {
 			STree<?> elementPattern = ((SNodeOptionState) patternState).element;

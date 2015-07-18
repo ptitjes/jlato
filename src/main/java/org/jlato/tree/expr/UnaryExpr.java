@@ -110,17 +110,26 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		}
 	};
 
-	private static final int OPERATOR = 0;
+	private static final SProperty<UnaryExpr.State> OPERATOR = new SProperty<UnaryExpr.State>() {
+
+		public Object retrieve(UnaryExpr.State state) {
+			return state.operator;
+		}
+
+		public UnaryExpr.State rebuildParentState(UnaryExpr.State state, Object value) {
+			return state.withOperator((UnaryOp) value);
+		}
+	};
 
 	private final static LexicalShape opShape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
-			return ((UnaryOp) tree.state.data(OPERATOR)).token;
+			return ((State) tree.state).operator.token;
 		}
 	});
 
 	public final static LexicalShape shape = alternative(new LSCondition() {
 		public boolean test(STree tree) {
-			final UnaryOp op = (UnaryOp) tree.state.data(OPERATOR);
+			final UnaryOp op = ((State) tree.state).operator;
 			return isPrefix(op);
 		}
 	}, composite(opShape, child(EXPR)), composite(child(EXPR), opShape));

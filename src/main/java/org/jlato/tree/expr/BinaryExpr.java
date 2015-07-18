@@ -132,13 +132,22 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		}
 	};
 
-	private static final int OPERATOR = 0;
+	private static final SProperty<BinaryExpr.State> OPERATOR = new SProperty<BinaryExpr.State>() {
+
+		public Object retrieve(BinaryExpr.State state) {
+			return state.operator;
+		}
+
+		public BinaryExpr.State rebuildParentState(BinaryExpr.State state, Object value) {
+			return state.withOperator((BinaryOp) value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(LEFT),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
-					return ((BinaryOp) tree.state.data(OPERATOR)).token;
+					return ((State)tree.state).operator.token;
 				}
 			}).withSpacing(space(), space()),
 			child(RIGHT)

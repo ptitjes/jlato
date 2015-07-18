@@ -26,5 +26,5 @@ public abstract class SProperty<P extends STreeState<P>> {
 
 	public abstract Object retrieve(P state);
 
-	public abstract P rebuildParentState(P state, Object data);
+	public abstract P rebuildParentState(P state, Object value);
 }

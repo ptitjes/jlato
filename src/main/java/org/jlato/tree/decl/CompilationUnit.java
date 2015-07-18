@@ -152,10 +152,19 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 		}
 	};
 
-	private static final int PREAMBLE = 0;
+	private static final SProperty<CompilationUnit.State> PREAMBLE = new SProperty<CompilationUnit.State>() {
+
+		public Object retrieve(CompilationUnit.State state) {
+			return state.preamble;
+		}
+
+		public CompilationUnit.State rebuildParentState(CompilationUnit.State state, Object value) {
+			return state.withPreamble((IndexedList<WTokenRun>) value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
-			new LSDump(PREAMBLE),
+			new LSDump<CompilationUnit.State>(PREAMBLE),
 			child(PACKAGE_DECL),
 			none().withSpacingAfter(spacing(CompilationUnit_AfterPackageDecl)),
 			child(IMPORTS, ImportDecl.listShape),

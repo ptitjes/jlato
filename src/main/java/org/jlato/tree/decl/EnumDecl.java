@@ -226,7 +226,16 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 		}
 	};
 
-	private static final int TRAILING_COMMA = 0;
+	private static final SProperty<EnumDecl.State> TRAILING_COMMA = new SProperty<EnumDecl.State>() {
+
+		public Object retrieve(EnumDecl.State state) {
+			return state.trailingComma;
+		}
+
+		public EnumDecl.State rebuildParentState(EnumDecl.State state, Object value) {
+			return state.withTrailingComma((Boolean) value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

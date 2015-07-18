@@ -33,15 +33,6 @@ public class SVarState implements STreeState<SVarState> {
 	}
 
 	@Override
-	public Object data(int index) {
-		return null;
-	}
-
-	public SVarState withData(int index, Object value) {
-		return this;
-	}
-
-	@Override
 	public Iterable<SProperty<SVarState>> allProperties() {
 		return Collections.emptyList();
 	}

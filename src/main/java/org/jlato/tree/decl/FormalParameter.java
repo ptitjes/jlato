@@ -35,8 +35,6 @@ import static org.jlato.internal.shapes.LSCondition.kind;
 import static org.jlato.internal.shapes.LSCondition.not;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class FormalParameter extends TreeBase<FormalParameter.State, Tree, FormalParameter> implements Tree {
 
@@ -87,11 +85,11 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 	}
 
 	public boolean isVarArgs() {
-		return location.<Boolean>data(VAR_ARG);
+		return location.<Boolean>data(VAR_ARGS);
 	}
 
 	public FormalParameter setVarArgs(boolean isVarArgs) {
-		return location.withData(VAR_ARG, isVarArgs);
+		return location.withData(VAR_ARGS, isVarArgs);
 	}
 
 	public VariableDeclaratorId id() {
@@ -161,12 +159,21 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 		}
 	};
 
-	private static final int VAR_ARG = 0;
+	private static final SProperty<FormalParameter.State> VAR_ARGS = new SProperty<FormalParameter.State>() {
+
+		public Object retrieve(FormalParameter.State state) {
+			return state.isVarArgs;
+		}
+
+		public FormalParameter.State rebuildParentState(FormalParameter.State state, Object value) {
+			return state.withVarArgs((Boolean) value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.singleLineShape),
 			child(TYPE),
-			dataOption(VAR_ARG, token(LToken.Ellipsis)),
+			dataOption(VAR_ARGS, token(LToken.Ellipsis)),
 			when(not(childIs(TYPE, kind(UnknownType.kind))), none().withSpacingAfter(space())),
 			child(ID)
 	);
@@ -202,7 +209,7 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 			return new FormalParameter.State(modifiers, type, isVarArgs, id);
 		}
 
-		public FormalParameter.State withIsVarArgs(boolean isVarArgs) {
+		public FormalParameter.State withVarArgs(boolean isVarArgs) {
 			return new FormalParameter.State(modifiers, type, isVarArgs, id);
 		}
 

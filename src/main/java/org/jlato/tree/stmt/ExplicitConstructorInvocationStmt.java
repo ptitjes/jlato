@@ -37,6 +37,7 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+
 import org.jlato.internal.bu.*;
 
 public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstructorInvocationStmt.State, Stmt, ExplicitConstructorInvocationStmt> implements Stmt {
@@ -76,11 +77,11 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	}
 
 	public boolean isThis() {
-		return location.data(CONSTRUCTOR_KIND) == ConstructorKind.This;
+		return location.data(IS_THIS);
 	}
 
 	public ExplicitConstructorInvocationStmt setThis(boolean isThis) {
-		return location.withData(CONSTRUCTOR_KIND, constructorKind(isThis));
+		return location.withData(IS_THIS, isThis);
 	}
 
 	public NodeOption<Expr> expr() {
@@ -162,40 +163,28 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 		}
 	};
 
-	private static final int CONSTRUCTOR_KIND = 0;
+	private static final SProperty<ExplicitConstructorInvocationStmt.State> IS_THIS = new SProperty<ExplicitConstructorInvocationStmt.State>() {
+
+		public Object retrieve(ExplicitConstructorInvocationStmt.State state) {
+			return state.isThis;
+		}
+
+		public ExplicitConstructorInvocationStmt.State rebuildParentState(ExplicitConstructorInvocationStmt.State state, Object value) {
+			return state.withThis((Boolean) value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			when(childIs(EXPR, some()), composite(child(EXPR, element()), token(LToken.Dot))),
 			child(TYPE_ARGS, Type.typeArgumentsShape),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
-					return ((ConstructorKind) tree.state.data(CONSTRUCTOR_KIND)).token;
+					return ((State) tree.state).isThis ? LToken.This : LToken.Super;
 				}
 			}),
 			child(ARGS, Expr.argumentsShape),
 			token(LToken.SemiColon)
 	);
-
-	private static ConstructorKind constructorKind(boolean isThis) {
-		return isThis ? ConstructorKind.This : ConstructorKind.Super;
-	}
-
-	public enum ConstructorKind {
-		This(LToken.This),
-		Super(LToken.Super),
-		// Keep last comma
-		;
-
-		protected final LToken token;
-
-		ConstructorKind(LToken token) {
-			this.token = token;
-		}
-
-		public String toString() {
-			return token.toString();
-		}
-	}
 
 	public static class State extends SNodeState<State> {
 
@@ -218,7 +207,7 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
 		}
 
-		public ExplicitConstructorInvocationStmt.State withIsThis(boolean isThis) {
+		public ExplicitConstructorInvocationStmt.State withThis(boolean isThis) {
 			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
 		}
 

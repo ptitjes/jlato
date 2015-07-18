@@ -109,8 +109,26 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 		}
 	};
 
-	private static final int STATIC = 0;
-	private static final int ON_DEMAND = 1;
+	private static final SProperty<ImportDecl.State> STATIC = new SProperty<ImportDecl.State>() {
+
+		public Object retrieve(ImportDecl.State state) {
+			return state.isStatic;
+		}
+
+		public ImportDecl.State rebuildParentState(ImportDecl.State state, Object value) {
+			return state.withStatic((Boolean) value);
+		}
+	};
+	private static final SProperty<ImportDecl.State> ON_DEMAND = new SProperty<ImportDecl.State>() {
+
+		public Object retrieve(ImportDecl.State state) {
+			return state.isOnDemand;
+		}
+
+		public ImportDecl.State rebuildParentState(ImportDecl.State state, Object value) {
+			return state.withOnDemand((Boolean) value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Import),
@@ -144,11 +162,11 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 			return new ImportDecl.State(name, isStatic, isOnDemand);
 		}
 
-		public ImportDecl.State withIsStatic(boolean isStatic) {
+		public ImportDecl.State withStatic(boolean isStatic) {
 			return new ImportDecl.State(name, isStatic, isOnDemand);
 		}
 
-		public ImportDecl.State withIsOnDemand(boolean isOnDemand) {
+		public ImportDecl.State withOnDemand(boolean isOnDemand) {
 			return new ImportDecl.State(name, isStatic, isOnDemand);
 		}
 
