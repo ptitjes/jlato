@@ -31,10 +31,11 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
+
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
 
-public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExpr> implements Expr {
+public class LiteralExpr<T> extends TreeBase<LiteralExpr.State<T>, Expr, LiteralExpr> implements Expr {
 
 	public final static Kind<Tree> kind = new Kind<Tree>();
 
@@ -43,12 +44,12 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 		return (Kind<T>) kind;
 	}
 
-	public static STree<LiteralExpr.State> make(Class<T> literalClass, String literalString) {
-		return new STree<LiteralExpr.State>(kind, new LiteralExpr.State(literalClass, literalString));
+	public static <T> STree<LiteralExpr.State<T>> make(Class<T> literalClass, String literalString) {
+		return new STree<LiteralExpr.State<T>>(LiteralExpr.<T>kind(), new LiteralExpr.State<T>(literalClass, literalString));
 	}
 
-	public static class Kind<T> implements SKind<LiteralExpr.State> {
-		public Tree instantiate(SLocation<LiteralExpr.State> location) {
+	public static class Kind<T> implements SKind<LiteralExpr.State<T>> {
+		public Tree instantiate(SLocation<LiteralExpr.State<T>> location) {
 			return new LiteralExpr<T>(location);
 		}
 
@@ -93,12 +94,12 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 		return new LiteralExpr<T>(literalClass, Literals.from(literalClass, literalValue));
 	}
 
-	protected LiteralExpr(SLocation<LiteralExpr.State> location) {
+	protected LiteralExpr(SLocation<LiteralExpr.State<T>> location) {
 		super(location);
 	}
 
 	public LiteralExpr(Class<T> literalClass, String literalString) {
-		super(new SLocation<LiteralExpr.State>(make(literalClass, literalString)));
+		super(new SLocation<LiteralExpr.State<T>>(make(literalClass, literalString)));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -125,7 +126,7 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 		}
 	});
 
-	public static class State extends SNodeState<State> {
+	public static class State<T> extends SNodeState<State<T>> {
 
 		public final Class<T> literalClass;
 
@@ -136,19 +137,15 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 			this.literalString = literalString;
 		}
 
-		public LiteralExpr.State withLiteralClass(Class<T> literalClass) {
-			return new LiteralExpr.State(literalClass, literalString);
+		public LiteralExpr.State<T> withLiteralString(String literalString) {
+			return new LiteralExpr.State<T>(literalClass, literalString);
 		}
 
-		public LiteralExpr.State withLiteralString(String literalString) {
-			return new LiteralExpr.State(literalClass, literalString);
-		}
-
-		public STraversal<LiteralExpr.State> firstChild() {
+		public STraversal<LiteralExpr.State<T>> firstChild() {
 			return null;
 		}
 
-		public STraversal<LiteralExpr.State> lastChild() {
+		public STraversal<LiteralExpr.State<T>> lastChild() {
 			return null;
 		}
 	}
