@@ -2821,10 +2821,10 @@ NodeList Arguments():
   { run(); }
   "("
   [
-//    LOOKAHEAD({quotesMode})
-//    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
-//  |
-//    LOOKAHEAD(1)
+    LOOKAHEAD({quotesMode})
+    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+  |
+    LOOKAHEAD(1)
     expr = Expression() { ret = ret.append(expr); }
     ( "," expr = Expression() { ret = ret.append(expr); } )*
   ]
