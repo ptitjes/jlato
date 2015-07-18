@@ -19,10 +19,7 @@
 
 package org.jlato.tree.decl;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
@@ -56,16 +53,12 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 		super(location);
 	}
 
-	public static STree<MethodDecl.State> make() {
-		return new STree<MethodDecl.State>(kind, new MethodDecl.State());
-	}
-
-	public MethodDecl() {
-		super(new SLocation<MethodDecl.State>(make()));
+	public static STree<MethodDecl.State> make(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, NodeOption<BlockStmt> body) {
+		return new STree<MethodDecl.State>(kind, new MethodDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<SNodeListState>nodeOf(typeParams), TreeBase.<Type.State>nodeOf(type), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(params), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeListState>nodeOf(throwsClause), TreeBase.<SNodeOptionState>nodeOf(body)));
 	}
 
 	public MethodDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, NodeOption<BlockStmt> body) {
-		super(new SLocation<MethodDecl.State>(make()));
+		super(new SLocation<MethodDecl.State>(make(modifiers, typeParams, type, name, params, dims, throwsClause, body)));
 	}
 
 	@Override
@@ -197,7 +190,63 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 
 	public static class State extends SNodeState<State> {
 
-		State() {
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<SNodeListState> typeParams;
+
+		public final STree<Type.State> type;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeListState> params;
+
+		public final STree<SNodeListState> dims;
+
+		public final STree<SNodeListState> throwsClause;
+
+		public final STree<SNodeOptionState> body;
+
+		State(STree<SNodeListState> modifiers, STree<SNodeListState> typeParams, STree<Type.State> type, STree<Name.State> name, STree<SNodeListState> params, STree<SNodeListState> dims, STree<SNodeListState> throwsClause, STree<SNodeOptionState> body) {
+			this.modifiers = modifiers;
+			this.typeParams = typeParams;
+			this.type = type;
+			this.name = name;
+			this.params = params;
+			this.dims = dims;
+			this.throwsClause = throwsClause;
+			this.body = body;
+		}
+
+		public MethodDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new MethodDecl.State(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		}
+
+		public MethodDecl.State withTypeParams(STree<SNodeListState> typeParams) {
+			return new MethodDecl.State(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		}
+
+		public MethodDecl.State withType(STree<Type.State> type) {
+			return new MethodDecl.State(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		}
+
+		public MethodDecl.State withName(STree<Name.State> name) {
+			return new MethodDecl.State(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		}
+
+		public MethodDecl.State withParams(STree<SNodeListState> params) {
+			return new MethodDecl.State(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		}
+
+		public MethodDecl.State withDims(STree<SNodeListState> dims) {
+			return new MethodDecl.State(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		}
+
+		public MethodDecl.State withThrowsClause(STree<SNodeListState> throwsClause) {
+			return new MethodDecl.State(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		}
+
+		public MethodDecl.State withBody(STree<SNodeOptionState> body) {
+			return new MethodDecl.State(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 		}
 
 		public STraversal<MethodDecl.State> firstChild() {
