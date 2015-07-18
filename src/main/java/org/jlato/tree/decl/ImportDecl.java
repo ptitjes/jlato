@@ -35,11 +35,13 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterImports;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ImportDecl extends TreeBase<SNodeState, Tree, ImportDecl> implements Tree {
+public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> implements Tree {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ImportDecl instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ImportDecl.State> kind = new SKind<ImportDecl.State>() {
+		public ImportDecl instantiate(SLocation<ImportDecl.State> location) {
 			return new ImportDecl(location);
 		}
 
@@ -48,12 +50,16 @@ public class ImportDecl extends TreeBase<SNodeState, Tree, ImportDecl> implement
 		}
 	};
 
-	private ImportDecl(SLocation<SNodeState> location) {
+	private ImportDecl(SLocation<ImportDecl.State> location) {
 		super(location);
 	}
 
+	public static STree<ImportDecl.State> make(QualifiedName name, boolean isStatic, boolean isOnDemand) {
+		return new STree<ImportDecl.State>(kind, new ImportDecl.State(TreeBase.<QualifiedName.State>nodeOf(name), isStatic, isOnDemand));
+	}
+
 	public ImportDecl(QualifiedName name, boolean isStatic, boolean isOnDemand) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(isStatic, isOnDemand), treesOf(name)))));
+		super(new SLocation<ImportDecl.State>(make(name, isStatic, isOnDemand)));
 	}
 
 	public QualifiedName name() {
@@ -84,7 +90,7 @@ public class ImportDecl extends TreeBase<SNodeState, Tree, ImportDecl> implement
 		return location.withData(ON_DEMAND, isOnDemand);
 	}
 
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<ImportDecl.State> NAME = SNodeState.childTraversal(0);
 
 	private static final int STATIC = 0;
 	private static final int ON_DEMAND = 1;
@@ -102,4 +108,39 @@ public class ImportDecl extends TreeBase<SNodeState, Tree, ImportDecl> implement
 			none().withSpacingAfter(newLine()),
 			none().withSpacingAfter(spacing(CompilationUnit_AfterImports))
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<QualifiedName.State> name;
+
+		public final boolean isStatic;
+
+		public final boolean isOnDemand;
+
+		State(STree<QualifiedName.State> name, boolean isStatic, boolean isOnDemand) {
+			this.name = name;
+			this.isStatic = isStatic;
+			this.isOnDemand = isOnDemand;
+		}
+
+		public ImportDecl.State withName(STree<QualifiedName.State> name) {
+			return new ImportDecl.State(name, isStatic, isOnDemand);
+		}
+
+		public ImportDecl.State withIsStatic(boolean isStatic) {
+			return new ImportDecl.State(name, isStatic, isOnDemand);
+		}
+
+		public ImportDecl.State withIsOnDemand(boolean isOnDemand) {
+			return new ImportDecl.State(name, isStatic, isOnDemand);
+		}
+
+		public STraversal<ImportDecl.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ImportDecl.State> lastChild() {
+			return null;
+		}
+	}
 }

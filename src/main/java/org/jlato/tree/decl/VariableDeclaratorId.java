@@ -32,11 +32,13 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class VariableDeclaratorId extends TreeBase<SNodeState, Tree, VariableDeclaratorId> implements Tree {
+public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, Tree, VariableDeclaratorId> implements Tree {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public VariableDeclaratorId instantiate(SLocation<SNodeState> location) {
+	public final static SKind<VariableDeclaratorId.State> kind = new SKind<VariableDeclaratorId.State>() {
+		public VariableDeclaratorId instantiate(SLocation<VariableDeclaratorId.State> location) {
 			return new VariableDeclaratorId(location);
 		}
 
@@ -45,12 +47,16 @@ public class VariableDeclaratorId extends TreeBase<SNodeState, Tree, VariableDec
 		}
 	};
 
-	private VariableDeclaratorId(SLocation<SNodeState> location) {
+	private VariableDeclaratorId(SLocation<VariableDeclaratorId.State> location) {
 		super(location);
 	}
 
+	public static STree<VariableDeclaratorId.State> make(Name name, NodeList<ArrayDim> dims) {
+		return new STree<VariableDeclaratorId.State>(kind, new VariableDeclaratorId.State(TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(dims)));
+	}
+
 	public VariableDeclaratorId(Name name, NodeList<ArrayDim> dims) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name, dims)))));
+		super(new SLocation<VariableDeclaratorId.State>(make(name, dims)));
 	}
 
 	public Name name() {
@@ -77,11 +83,39 @@ public class VariableDeclaratorId extends TreeBase<SNodeState, Tree, VariableDec
 		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> DIMS = SNodeState.childTraversal(1);
+	private static final STraversal<VariableDeclaratorId.State> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<VariableDeclaratorId.State> DIMS = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(NAME),
 			child(DIMS, list())
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeListState> dims;
+
+		State(STree<Name.State> name, STree<SNodeListState> dims) {
+			this.name = name;
+			this.dims = dims;
+		}
+
+		public VariableDeclaratorId.State withName(STree<Name.State> name) {
+			return new VariableDeclaratorId.State(name, dims);
+		}
+
+		public VariableDeclaratorId.State withDims(STree<SNodeListState> dims) {
+			return new VariableDeclaratorId.State(name, dims);
+		}
+
+		public STraversal<VariableDeclaratorId.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<VariableDeclaratorId.State> lastChild() {
+			return null;
+		}
+	}
 }

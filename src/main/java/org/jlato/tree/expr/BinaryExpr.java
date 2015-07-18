@@ -32,11 +32,13 @@ import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class BinaryExpr extends TreeBase<SNodeState, Expr, BinaryExpr> implements Expr {
+public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public BinaryExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<BinaryExpr.State> kind = new SKind<BinaryExpr.State>() {
+		public BinaryExpr instantiate(SLocation<BinaryExpr.State> location) {
 			return new BinaryExpr(location);
 		}
 
@@ -45,12 +47,16 @@ public class BinaryExpr extends TreeBase<SNodeState, Expr, BinaryExpr> implement
 		}
 	};
 
-	private BinaryExpr(SLocation<SNodeState> location) {
+	private BinaryExpr(SLocation<BinaryExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<BinaryExpr.State> make(Expr left, BinaryOp operator, Expr right) {
+		return new STree<BinaryExpr.State>(kind, new BinaryExpr.State(TreeBase.<Expr.State>nodeOf(left), operator, TreeBase.<Expr.State>nodeOf(right)));
+	}
+
 	public BinaryExpr(Expr left, BinaryOp operator, Expr right) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(operator), treesOf(left, right)))));
+		super(new SLocation<BinaryExpr.State>(make(left, operator, right)));
 	}
 
 	public Expr left() {
@@ -89,8 +95,8 @@ public class BinaryExpr extends TreeBase<SNodeState, Expr, BinaryExpr> implement
 		return location.safeTraversalMutate(RIGHT, mutation);
 	}
 
-	private static final STraversal<SNodeState> LEFT = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> RIGHT = SNodeState.childTraversal(1);
+	private static final STraversal<BinaryExpr.State> LEFT = SNodeState.childTraversal(0);
+	private static final STraversal<BinaryExpr.State> RIGHT = SNodeState.childTraversal(1);
 
 	private static final int OPERATOR = 0;
 
@@ -135,6 +141,41 @@ public class BinaryExpr extends TreeBase<SNodeState, Expr, BinaryExpr> implement
 
 		public String toString() {
 			return token.toString();
+		}
+	}
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Expr.State> left;
+
+		public final BinaryOp operator;
+
+		public final STree<Expr.State> right;
+
+		State(STree<Expr.State> left, BinaryOp operator, STree<Expr.State> right) {
+			this.left = left;
+			this.operator = operator;
+			this.right = right;
+		}
+
+		public BinaryExpr.State withLeft(STree<Expr.State> left) {
+			return new BinaryExpr.State(left, operator, right);
+		}
+
+		public BinaryExpr.State withOperator(BinaryOp operator) {
+			return new BinaryExpr.State(left, operator, right);
+		}
+
+		public BinaryExpr.State withRight(STree<Expr.State> right) {
+			return new BinaryExpr.State(left, operator, right);
+		}
+
+		public STraversal<BinaryExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<BinaryExpr.State> lastChild() {
+			return null;
 		}
 	}
 }

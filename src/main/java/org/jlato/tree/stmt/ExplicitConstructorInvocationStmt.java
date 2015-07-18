@@ -37,11 +37,13 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ExplicitConstructorInvocationStmt extends TreeBase<SNodeState, Stmt, ExplicitConstructorInvocationStmt> implements Stmt {
+public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstructorInvocationStmt.State, Stmt, ExplicitConstructorInvocationStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ExplicitConstructorInvocationStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ExplicitConstructorInvocationStmt.State> kind = new SKind<ExplicitConstructorInvocationStmt.State>() {
+		public ExplicitConstructorInvocationStmt instantiate(SLocation<ExplicitConstructorInvocationStmt.State> location) {
 			return new ExplicitConstructorInvocationStmt(location);
 		}
 
@@ -50,12 +52,16 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<SNodeState, Stmt
 		}
 	};
 
-	private ExplicitConstructorInvocationStmt(SLocation<SNodeState> location) {
+	private ExplicitConstructorInvocationStmt(SLocation<ExplicitConstructorInvocationStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<ExplicitConstructorInvocationStmt.State> make(NodeList<Type> typeArgs, boolean isThis, NodeOption<Expr> expr, NodeList<Expr> args) {
+		return new STree<ExplicitConstructorInvocationStmt.State>(kind, new ExplicitConstructorInvocationStmt.State(TreeBase.<SNodeListState>nodeOf(typeArgs), isThis, TreeBase.<SNodeOptionState>nodeOf(expr), TreeBase.<SNodeListState>nodeOf(args)));
+	}
+
 	public ExplicitConstructorInvocationStmt(NodeList<Type> typeArgs, boolean isThis, NodeOption<Expr> expr, NodeList<Expr> args) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(constructorKind(isThis)), treesOf(typeArgs, expr, args)))));
+		super(new SLocation<ExplicitConstructorInvocationStmt.State>(make(typeArgs, isThis, expr, args)));
 	}
 
 	public NodeList<Type> typeArgs() {
@@ -102,9 +108,9 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<SNodeState, Stmt
 		return location.safeTraversalMutate(ARGUMENTS, mutation);
 	}
 
-	private static final STraversal<SNodeState> TYPE_ARGUMENTS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> ARGUMENTS = SNodeState.childTraversal(2);
+	private static final STraversal<ExplicitConstructorInvocationStmt.State> TYPE_ARGUMENTS = SNodeState.childTraversal(0);
+	private static final STraversal<ExplicitConstructorInvocationStmt.State> EXPR = SNodeState.childTraversal(1);
+	private static final STraversal<ExplicitConstructorInvocationStmt.State> ARGUMENTS = SNodeState.childTraversal(2);
 
 	private static final int CONSTRUCTOR_KIND = 0;
 
@@ -138,6 +144,48 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<SNodeState, Stmt
 
 		public String toString() {
 			return token.toString();
+		}
+	}
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> typeArgs;
+
+		public final boolean isThis;
+
+		public final STree<SNodeOptionState> expr;
+
+		public final STree<SNodeListState> args;
+
+		State(STree<SNodeListState> typeArgs, boolean isThis, STree<SNodeOptionState> expr, STree<SNodeListState> args) {
+			this.typeArgs = typeArgs;
+			this.isThis = isThis;
+			this.expr = expr;
+			this.args = args;
+		}
+
+		public ExplicitConstructorInvocationStmt.State withTypeArgs(STree<SNodeListState> typeArgs) {
+			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
+		}
+
+		public ExplicitConstructorInvocationStmt.State withIsThis(boolean isThis) {
+			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
+		}
+
+		public ExplicitConstructorInvocationStmt.State withExpr(STree<SNodeOptionState> expr) {
+			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
+		}
+
+		public ExplicitConstructorInvocationStmt.State withArgs(STree<SNodeListState> args) {
+			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
+		}
+
+		public STraversal<ExplicitConstructorInvocationStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ExplicitConstructorInvocationStmt.State> lastChild() {
+			return null;
 		}
 	}
 }

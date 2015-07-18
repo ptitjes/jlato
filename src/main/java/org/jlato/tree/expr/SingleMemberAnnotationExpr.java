@@ -31,11 +31,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class SingleMemberAnnotationExpr extends TreeBase<SNodeState, AnnotationExpr, SingleMemberAnnotationExpr> implements AnnotationExpr {
+public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationExpr.State, AnnotationExpr, SingleMemberAnnotationExpr> implements AnnotationExpr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public SingleMemberAnnotationExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<SingleMemberAnnotationExpr.State> kind = new SKind<SingleMemberAnnotationExpr.State>() {
+		public SingleMemberAnnotationExpr instantiate(SLocation<SingleMemberAnnotationExpr.State> location) {
 			return new SingleMemberAnnotationExpr(location);
 		}
 
@@ -44,12 +46,16 @@ public class SingleMemberAnnotationExpr extends TreeBase<SNodeState, AnnotationE
 		}
 	};
 
-	private SingleMemberAnnotationExpr(SLocation<SNodeState> location) {
+	private SingleMemberAnnotationExpr(SLocation<SingleMemberAnnotationExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<SingleMemberAnnotationExpr.State> make(QualifiedName name, Expr memberValue) {
+		return new STree<SingleMemberAnnotationExpr.State>(kind, new SingleMemberAnnotationExpr.State(TreeBase.<QualifiedName.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(memberValue)));
+	}
+
 	public SingleMemberAnnotationExpr(QualifiedName name, Expr memberValue) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name, memberValue)))));
+		super(new SLocation<SingleMemberAnnotationExpr.State>(make(name, memberValue)));
 	}
 
 	public QualifiedName name() {
@@ -76,8 +82,8 @@ public class SingleMemberAnnotationExpr extends TreeBase<SNodeState, AnnotationE
 		return location.safeTraversalMutate(MEMBER_VALUE, mutation);
 	}
 
-	protected static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> MEMBER_VALUE = SNodeState.childTraversal(1);
+	protected static final STraversal<SingleMemberAnnotationExpr.State> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<SingleMemberAnnotationExpr.State> MEMBER_VALUE = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME),
@@ -85,4 +91,32 @@ public class SingleMemberAnnotationExpr extends TreeBase<SNodeState, AnnotationE
 			child(MEMBER_VALUE),
 			token(LToken.ParenthesisRight)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<QualifiedName.State> name;
+
+		public final STree<Expr.State> memberValue;
+
+		State(STree<QualifiedName.State> name, STree<Expr.State> memberValue) {
+			this.name = name;
+			this.memberValue = memberValue;
+		}
+
+		public SingleMemberAnnotationExpr.State withName(STree<QualifiedName.State> name) {
+			return new SingleMemberAnnotationExpr.State(name, memberValue);
+		}
+
+		public SingleMemberAnnotationExpr.State withMemberValue(STree<Expr.State> memberValue) {
+			return new SingleMemberAnnotationExpr.State(name, memberValue);
+		}
+
+		public STraversal<SingleMemberAnnotationExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<SingleMemberAnnotationExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

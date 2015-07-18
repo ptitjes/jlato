@@ -31,11 +31,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ClassExpr extends TreeBase<SNodeState, Expr, ClassExpr> implements Expr {
+public class ClassExpr extends TreeBase<ClassExpr.State, Expr, ClassExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ClassExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ClassExpr.State> kind = new SKind<ClassExpr.State>() {
+		public ClassExpr instantiate(SLocation<ClassExpr.State> location) {
 			return new ClassExpr(location);
 		}
 
@@ -44,12 +46,16 @@ public class ClassExpr extends TreeBase<SNodeState, Expr, ClassExpr> implements 
 		}
 	};
 
-	private ClassExpr(SLocation<SNodeState> location) {
+	private ClassExpr(SLocation<ClassExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<ClassExpr.State> make(Type type) {
+		return new STree<ClassExpr.State>(kind, new ClassExpr.State(TreeBase.<Type.State>nodeOf(type)));
+	}
+
 	public ClassExpr(Type type) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(type)))));
+		super(new SLocation<ClassExpr.State>(make(type)));
 	}
 
 	public Type type() {
@@ -64,10 +70,31 @@ public class ClassExpr extends TreeBase<SNodeState, Expr, ClassExpr> implements 
 		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
-	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(0);
+	private static final STraversal<ClassExpr.State> TYPE = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			child(TYPE),
 			token(LToken.Dot), token(LToken.Class)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Type.State> type;
+
+		State(STree<Type.State> type) {
+			this.type = type;
+		}
+
+		public ClassExpr.State withType(STree<Type.State> type) {
+			return new ClassExpr.State(type);
+		}
+
+		public STraversal<ClassExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ClassExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

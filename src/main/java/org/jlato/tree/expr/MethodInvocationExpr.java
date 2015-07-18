@@ -36,11 +36,13 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class MethodInvocationExpr extends TreeBase<SNodeState, Expr, MethodInvocationExpr> implements Expr {
+public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, Expr, MethodInvocationExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public MethodInvocationExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<MethodInvocationExpr.State> kind = new SKind<MethodInvocationExpr.State>() {
+		public MethodInvocationExpr instantiate(SLocation<MethodInvocationExpr.State> location) {
 			return new MethodInvocationExpr(location);
 		}
 
@@ -49,12 +51,16 @@ public class MethodInvocationExpr extends TreeBase<SNodeState, Expr, MethodInvoc
 		}
 	};
 
-	private MethodInvocationExpr(SLocation<SNodeState> location) {
+	private MethodInvocationExpr(SLocation<MethodInvocationExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<MethodInvocationExpr.State> make(NodeOption<Expr> scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
+		return new STree<MethodInvocationExpr.State>(kind, new MethodInvocationExpr.State(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(args)));
+	}
+
 	public MethodInvocationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(scope, typeArgs, name, args)))));
+		super(new SLocation<MethodInvocationExpr.State>(make(scope, typeArgs, name, args)));
 	}
 
 	public NodeOption<Expr> scope() {
@@ -105,10 +111,10 @@ public class MethodInvocationExpr extends TreeBase<SNodeState, Expr, MethodInvoc
 		return location.safeTraversalMutate(ARGUMENTS, mutation);
 	}
 
-	private static final STraversal<SNodeState> SCOPE = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> TYPE_ARGUMENTS = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(2);
-	private static final STraversal<SNodeState> ARGUMENTS = SNodeState.childTraversal(3);
+	private static final STraversal<MethodInvocationExpr.State> SCOPE = SNodeState.childTraversal(0);
+	private static final STraversal<MethodInvocationExpr.State> TYPE_ARGUMENTS = SNodeState.childTraversal(1);
+	private static final STraversal<MethodInvocationExpr.State> NAME = SNodeState.childTraversal(2);
+	private static final STraversal<MethodInvocationExpr.State> ARGUMENTS = SNodeState.childTraversal(3);
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
@@ -116,4 +122,46 @@ public class MethodInvocationExpr extends TreeBase<SNodeState, Expr, MethodInvoc
 			child(NAME),
 			child(ARGUMENTS, Expr.argumentsShape)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeOptionState> scope;
+
+		public final STree<SNodeListState> typeArgs;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeListState> args;
+
+		State(STree<SNodeOptionState> scope, STree<SNodeListState> typeArgs, STree<Name.State> name, STree<SNodeListState> args) {
+			this.scope = scope;
+			this.typeArgs = typeArgs;
+			this.name = name;
+			this.args = args;
+		}
+
+		public MethodInvocationExpr.State withScope(STree<SNodeOptionState> scope) {
+			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
+		}
+
+		public MethodInvocationExpr.State withTypeArgs(STree<SNodeListState> typeArgs) {
+			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
+		}
+
+		public MethodInvocationExpr.State withName(STree<Name.State> name) {
+			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
+		}
+
+		public MethodInvocationExpr.State withArgs(STree<SNodeListState> args) {
+			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
+		}
+
+		public STraversal<MethodInvocationExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<MethodInvocationExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

@@ -38,11 +38,13 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class IfStmt extends TreeBase<SNodeState, Stmt, IfStmt> implements Stmt {
+public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public IfStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<IfStmt.State> kind = new SKind<IfStmt.State>() {
+		public IfStmt instantiate(SLocation<IfStmt.State> location) {
 			return new IfStmt(location);
 		}
 
@@ -51,12 +53,16 @@ public class IfStmt extends TreeBase<SNodeState, Stmt, IfStmt> implements Stmt {
 		}
 	};
 
-	private IfStmt(SLocation<SNodeState> location) {
+	private IfStmt(SLocation<IfStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<IfStmt.State> make(Expr condition, Stmt thenStmt, NodeOption<Stmt> elseStmt) {
+		return new STree<IfStmt.State>(kind, new IfStmt.State(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Stmt.State>nodeOf(thenStmt), TreeBase.<SNodeOptionState>nodeOf(elseStmt)));
+	}
+
 	public IfStmt(Expr condition, Stmt thenStmt, NodeOption<Stmt> elseStmt) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(condition, thenStmt, elseStmt)))));
+		super(new SLocation<IfStmt.State>(make(condition, thenStmt, elseStmt)));
 	}
 
 	public Expr condition() {
@@ -95,9 +101,9 @@ public class IfStmt extends TreeBase<SNodeState, Stmt, IfStmt> implements Stmt {
 		return location.safeTraversalMutate(ELSE_STMT, mutation);
 	}
 
-	private static final STraversal<SNodeState> CONDITION = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> THEN_STMT = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> ELSE_STMT = SNodeState.childTraversal(2);
+	private static final STraversal<IfStmt.State> CONDITION = SNodeState.childTraversal(0);
+	private static final STraversal<IfStmt.State> THEN_STMT = SNodeState.childTraversal(1);
+	private static final STraversal<IfStmt.State> ELSE_STMT = SNodeState.childTraversal(2);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.If), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
@@ -143,4 +149,39 @@ public class IfStmt extends TreeBase<SNodeState, Stmt, IfStmt> implements Stmt {
 					)
 			))
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Expr.State> condition;
+
+		public final STree<Stmt.State> thenStmt;
+
+		public final STree<SNodeOptionState> elseStmt;
+
+		State(STree<Expr.State> condition, STree<Stmt.State> thenStmt, STree<SNodeOptionState> elseStmt) {
+			this.condition = condition;
+			this.thenStmt = thenStmt;
+			this.elseStmt = elseStmt;
+		}
+
+		public IfStmt.State withCondition(STree<Expr.State> condition) {
+			return new IfStmt.State(condition, thenStmt, elseStmt);
+		}
+
+		public IfStmt.State withThenStmt(STree<Stmt.State> thenStmt) {
+			return new IfStmt.State(condition, thenStmt, elseStmt);
+		}
+
+		public IfStmt.State withElseStmt(STree<SNodeOptionState> elseStmt) {
+			return new IfStmt.State(condition, thenStmt, elseStmt);
+		}
+
+		public STraversal<IfStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<IfStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

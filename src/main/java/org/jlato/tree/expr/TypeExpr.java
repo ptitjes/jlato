@@ -30,11 +30,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class TypeExpr extends TreeBase<SNodeState, Expr, TypeExpr> implements Expr {
+public class TypeExpr extends TreeBase<TypeExpr.State, Expr, TypeExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public TypeExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<TypeExpr.State> kind = new SKind<TypeExpr.State>() {
+		public TypeExpr instantiate(SLocation<TypeExpr.State> location) {
 			return new TypeExpr(location);
 		}
 
@@ -43,12 +45,16 @@ public class TypeExpr extends TreeBase<SNodeState, Expr, TypeExpr> implements Ex
 		}
 	};
 
-	private TypeExpr(SLocation<SNodeState> location) {
+	private TypeExpr(SLocation<TypeExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<TypeExpr.State> make(Type type) {
+		return new STree<TypeExpr.State>(kind, new TypeExpr.State(TreeBase.<Type.State>nodeOf(type)));
+	}
+
 	public TypeExpr(Type type) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(type)))));
+		super(new SLocation<TypeExpr.State>(make(type)));
 	}
 
 	public Type type() {
@@ -63,7 +69,28 @@ public class TypeExpr extends TreeBase<SNodeState, Expr, TypeExpr> implements Ex
 		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
-	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(0);
+	private static final STraversal<TypeExpr.State> TYPE = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = child(TYPE);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Type.State> type;
+
+		State(STree<Type.State> type) {
+			this.type = type;
+		}
+
+		public TypeExpr.State withType(STree<Type.State> type) {
+			return new TypeExpr.State(type);
+		}
+
+		public STraversal<TypeExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<TypeExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

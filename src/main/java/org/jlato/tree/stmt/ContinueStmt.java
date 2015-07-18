@@ -34,11 +34,13 @@ import org.jlato.tree.name.Name;
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ContinueStmt extends TreeBase<SNodeState, Stmt, ContinueStmt> implements Stmt {
+public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ContinueStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ContinueStmt.State> kind = new SKind<ContinueStmt.State>() {
+		public ContinueStmt instantiate(SLocation<ContinueStmt.State> location) {
 			return new ContinueStmt(location);
 		}
 
@@ -47,12 +49,16 @@ public class ContinueStmt extends TreeBase<SNodeState, Stmt, ContinueStmt> imple
 		}
 	};
 
-	private ContinueStmt(SLocation<SNodeState> location) {
+	private ContinueStmt(SLocation<ContinueStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<ContinueStmt.State> make(NodeOption<Name> id) {
+		return new STree<ContinueStmt.State>(kind, new ContinueStmt.State(TreeBase.<SNodeOptionState>nodeOf(id)));
+	}
+
 	public ContinueStmt(NodeOption<Name> id) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(id)))));
+		super(new SLocation<ContinueStmt.State>(make(id)));
 	}
 
 	public NodeOption<Name> id() {
@@ -67,11 +73,32 @@ public class ContinueStmt extends TreeBase<SNodeState, Stmt, ContinueStmt> imple
 		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final STraversal<SNodeState> ID = SNodeState.childTraversal(0);
+	private static final STraversal<ContinueStmt.State> ID = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Continue),
 			when(childIs(ID, some()), child(ID, element())),
 			token(LToken.SemiColon)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeOptionState> id;
+
+		State(STree<SNodeOptionState> id) {
+			this.id = id;
+		}
+
+		public ContinueStmt.State withId(STree<SNodeOptionState> id) {
+			return new ContinueStmt.State(id);
+		}
+
+		public STraversal<ContinueStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ContinueStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

@@ -34,11 +34,13 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterPackageDecl;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class CompilationUnit extends TreeBase<SNodeState, Tree, CompilationUnit> implements Tree {
+public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, CompilationUnit> implements Tree {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public CompilationUnit instantiate(SLocation<SNodeState> location) {
+	public final static SKind<CompilationUnit.State> kind = new SKind<CompilationUnit.State>() {
+		public CompilationUnit instantiate(SLocation<CompilationUnit.State> location) {
 			return new CompilationUnit(location);
 		}
 
@@ -47,12 +49,16 @@ public class CompilationUnit extends TreeBase<SNodeState, Tree, CompilationUnit>
 		}
 	};
 
-	private CompilationUnit(SLocation<SNodeState> location) {
+	private CompilationUnit(SLocation<CompilationUnit.State> location) {
 		super(location);
 	}
 
+	public static STree<CompilationUnit.State> make(IndexedList<WTokenRun> preamble, PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
+		return new STree<CompilationUnit.State>(kind, new CompilationUnit.State(preamble, TreeBase.<PackageDecl.State>nodeOf(packageDecl), TreeBase.<SNodeListState>nodeOf(imports), TreeBase.<SNodeListState>nodeOf(types)));
+	}
+
 	public CompilationUnit(IndexedList<WTokenRun> preamble, PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(preamble), treesOf(packageDecl, imports, types)))));
+		super(new SLocation<CompilationUnit.State>(make(preamble, packageDecl, imports, types)));
 	}
 
 	public PackageDecl packageDecl() {
@@ -91,9 +97,9 @@ public class CompilationUnit extends TreeBase<SNodeState, Tree, CompilationUnit>
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final STraversal<SNodeState> PACKAGE_DECL = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> IMPORTS = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> TYPES = SNodeState.childTraversal(2);
+	private static final STraversal<CompilationUnit.State> PACKAGE_DECL = SNodeState.childTraversal(0);
+	private static final STraversal<CompilationUnit.State> IMPORTS = SNodeState.childTraversal(1);
+	private static final STraversal<CompilationUnit.State> TYPES = SNodeState.childTraversal(2);
 
 	private static final int PREAMBLE = 0;
 
@@ -105,4 +111,46 @@ public class CompilationUnit extends TreeBase<SNodeState, Tree, CompilationUnit>
 			child(TYPES, TypeDecl.listShape),
 			token(LToken.EOF).withSpacingBefore(newLine())
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final IndexedList<WTokenRun> preamble;
+
+		public final STree<PackageDecl.State> packageDecl;
+
+		public final STree<SNodeListState> imports;
+
+		public final STree<SNodeListState> types;
+
+		State(IndexedList<WTokenRun> preamble, STree<PackageDecl.State> packageDecl, STree<SNodeListState> imports, STree<SNodeListState> types) {
+			this.preamble = preamble;
+			this.packageDecl = packageDecl;
+			this.imports = imports;
+			this.types = types;
+		}
+
+		public CompilationUnit.State withPreamble(IndexedList<WTokenRun> preamble) {
+			return new CompilationUnit.State(preamble, packageDecl, imports, types);
+		}
+
+		public CompilationUnit.State withPackageDecl(STree<PackageDecl.State> packageDecl) {
+			return new CompilationUnit.State(preamble, packageDecl, imports, types);
+		}
+
+		public CompilationUnit.State withImports(STree<SNodeListState> imports) {
+			return new CompilationUnit.State(preamble, packageDecl, imports, types);
+		}
+
+		public CompilationUnit.State withTypes(STree<SNodeListState> types) {
+			return new CompilationUnit.State(preamble, packageDecl, imports, types);
+		}
+
+		public STraversal<CompilationUnit.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<CompilationUnit.State> lastChild() {
+			return null;
+		}
+	}
 }

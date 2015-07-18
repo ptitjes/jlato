@@ -37,11 +37,13 @@ import org.jlato.tree.stmt.BlockStmt;
 import static org.jlato.internal.shapes.LSCondition.data;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class LambdaExpr extends TreeBase<SNodeState, Expr, LambdaExpr> implements Expr {
+public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public LambdaExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<LambdaExpr.State> kind = new SKind<LambdaExpr.State>() {
+		public LambdaExpr instantiate(SLocation<LambdaExpr.State> location) {
 			return new LambdaExpr(location);
 		}
 
@@ -50,12 +52,16 @@ public class LambdaExpr extends TreeBase<SNodeState, Expr, LambdaExpr> implement
 		}
 	};
 
-	private LambdaExpr(SLocation<SNodeState> location) {
+	private LambdaExpr(SLocation<LambdaExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<LambdaExpr.State> make(NodeList<FormalParameter> params, boolean hasParenthesis, NodeEither<Expr, BlockStmt> body) {
+		return new STree<LambdaExpr.State>(kind, new LambdaExpr.State(TreeBase.<SNodeListState>nodeOf(params), hasParenthesis, TreeBase.<SNodeEitherState>nodeOf(body)));
+	}
+
 	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParenthesis, NodeEither<Expr, BlockStmt> body) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(hasParenthesis), treesOf(params, body)))));
+		super(new SLocation<LambdaExpr.State>(make(params, hasParenthesis, body)));
 	}
 
 	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParenthesis, Expr expr) {
@@ -98,8 +104,8 @@ public class LambdaExpr extends TreeBase<SNodeState, Expr, LambdaExpr> implement
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<SNodeState> PARAMETERS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(1);
+	private static final STraversal<LambdaExpr.State> PARAMETERS = SNodeState.childTraversal(0);
+	private static final STraversal<LambdaExpr.State> BODY = SNodeState.childTraversal(1);
 
 	private static final int HAS_PARENTHESIS = 0;
 
@@ -110,4 +116,39 @@ public class LambdaExpr extends TreeBase<SNodeState, Expr, LambdaExpr> implement
 			token(LToken.Arrow).withSpacing(space(), space()),
 			child(BODY, leftOrRight())
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> params;
+
+		public final boolean hasParenthesis;
+
+		public final STree<SNodeEitherState> body;
+
+		State(STree<SNodeListState> params, boolean hasParenthesis, STree<SNodeEitherState> body) {
+			this.params = params;
+			this.hasParenthesis = hasParenthesis;
+			this.body = body;
+		}
+
+		public LambdaExpr.State withParams(STree<SNodeListState> params) {
+			return new LambdaExpr.State(params, hasParenthesis, body);
+		}
+
+		public LambdaExpr.State withHasParenthesis(boolean hasParenthesis) {
+			return new LambdaExpr.State(params, hasParenthesis, body);
+		}
+
+		public LambdaExpr.State withBody(STree<SNodeEitherState> body) {
+			return new LambdaExpr.State(params, hasParenthesis, body);
+		}
+
+		public STraversal<LambdaExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<LambdaExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

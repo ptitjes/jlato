@@ -27,11 +27,13 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 
 import static org.jlato.internal.shapes.LexicalShape.none;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class UnknownType extends TreeBase<SNodeState, Type, UnknownType> implements Type {
+public class UnknownType extends TreeBase<UnknownType.State, Type, UnknownType> implements Type {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public UnknownType instantiate(SLocation<SNodeState> location) {
+	public final static SKind<UnknownType.State> kind = new SKind<UnknownType.State>() {
+		public UnknownType instantiate(SLocation<UnknownType.State> location) {
 			return new UnknownType(location);
 		}
 
@@ -40,13 +42,31 @@ public class UnknownType extends TreeBase<SNodeState, Type, UnknownType> impleme
 		}
 	};
 
-	private UnknownType(SLocation<SNodeState> location) {
+	private UnknownType(SLocation<UnknownType.State> location) {
 		super(location);
 	}
 
+	public static STree<UnknownType.State> make() {
+		return new STree<UnknownType.State>(kind, new UnknownType.State());
+	}
+
 	public UnknownType() {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf()))));
+		super(new SLocation<UnknownType.State>(make()));
 	}
 
 	public final static LexicalShape shape = none();
+
+	public static class State extends SNodeState<State> {
+
+		State() {
+		}
+
+		public STraversal<UnknownType.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<UnknownType.State> lastChild() {
+			return null;
+		}
+	}
 }

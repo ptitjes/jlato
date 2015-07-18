@@ -31,8 +31,10 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class LiteralExpr<T> extends TreeBase<SNodeState, Expr, LiteralExpr> implements Expr {
+public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExpr> implements Expr {
 
 	public final static Kind<Tree> kind = new Kind<Tree>();
 
@@ -41,8 +43,12 @@ public class LiteralExpr<T> extends TreeBase<SNodeState, Expr, LiteralExpr> impl
 		return (Kind<T>) kind;
 	}
 
-	public static class Kind<T> implements SKind<SNodeState> {
-		public Tree instantiate(SLocation<SNodeState> location) {
+	public static STree<LiteralExpr.State> make(Class<T> literalClass, String literalString) {
+		return new STree<LiteralExpr.State>(kind, new LiteralExpr.State(literalClass, literalString));
+	}
+
+	public static class Kind<T> implements SKind<LiteralExpr.State> {
+		public Tree instantiate(SLocation<LiteralExpr.State> location) {
 			return new LiteralExpr<T>(location);
 		}
 
@@ -87,12 +93,12 @@ public class LiteralExpr<T> extends TreeBase<SNodeState, Expr, LiteralExpr> impl
 		return new LiteralExpr<T>(literalClass, Literals.from(literalClass, literalValue));
 	}
 
-	protected LiteralExpr(SLocation<SNodeState> location) {
+	protected LiteralExpr(SLocation<LiteralExpr.State> location) {
 		super(location);
 	}
 
 	public LiteralExpr(Class<T> literalClass, String literalString) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(literalClass, literalString), treesOf()))));
+		super(new SLocation<LiteralExpr.State>(make(literalClass, literalString)));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -118,4 +124,32 @@ public class LiteralExpr<T> extends TreeBase<SNodeState, Expr, LiteralExpr> impl
 			return new LToken(0, literalString); // TODO Fix
 		}
 	});
+
+	public static class State extends SNodeState<State> {
+
+		public final Class<T> literalClass;
+
+		public final String literalString;
+
+		State(Class<T> literalClass, String literalString) {
+			this.literalClass = literalClass;
+			this.literalString = literalString;
+		}
+
+		public LiteralExpr.State withLiteralClass(Class<T> literalClass) {
+			return new LiteralExpr.State(literalClass, literalString);
+		}
+
+		public LiteralExpr.State withLiteralString(String literalString) {
+			return new LiteralExpr.State(literalClass, literalString);
+		}
+
+		public STraversal<LiteralExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<LiteralExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

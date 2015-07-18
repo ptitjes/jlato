@@ -28,11 +28,13 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class EmptyMemberDecl extends TreeBase<SNodeState, MemberDecl, EmptyMemberDecl> implements MemberDecl {
+public class EmptyMemberDecl extends TreeBase<EmptyMemberDecl.State, MemberDecl, EmptyMemberDecl> implements MemberDecl {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public EmptyMemberDecl instantiate(SLocation<SNodeState> location) {
+	public final static SKind<EmptyMemberDecl.State> kind = new SKind<EmptyMemberDecl.State>() {
+		public EmptyMemberDecl instantiate(SLocation<EmptyMemberDecl.State> location) {
 			return new EmptyMemberDecl(location);
 		}
 
@@ -41,12 +43,16 @@ public class EmptyMemberDecl extends TreeBase<SNodeState, MemberDecl, EmptyMembe
 		}
 	};
 
-	private EmptyMemberDecl(SLocation<SNodeState> location) {
+	private EmptyMemberDecl(SLocation<EmptyMemberDecl.State> location) {
 		super(location);
 	}
 
+	public static STree<EmptyMemberDecl.State> make() {
+		return new STree<EmptyMemberDecl.State>(kind, new EmptyMemberDecl.State());
+	}
+
 	public EmptyMemberDecl() {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(), treesOf()))));
+		super(new SLocation<EmptyMemberDecl.State>(make()));
 	}
 
 	@Override
@@ -55,4 +61,18 @@ public class EmptyMemberDecl extends TreeBase<SNodeState, MemberDecl, EmptyMembe
 	}
 
 	public final static LexicalShape shape = token(LToken.SemiColon);
+
+	public static class State extends SNodeState<State> {
+
+		State() {
+		}
+
+		public STraversal<EmptyMemberDecl.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<EmptyMemberDecl.State> lastChild() {
+			return null;
+		}
+	}
 }

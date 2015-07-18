@@ -32,11 +32,13 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class MemberValuePair extends TreeBase<SNodeState, Tree, MemberValuePair> implements Tree {
+public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, MemberValuePair> implements Tree {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public MemberValuePair instantiate(SLocation<SNodeState> location) {
+	public final static SKind<MemberValuePair.State> kind = new SKind<MemberValuePair.State>() {
+		public MemberValuePair instantiate(SLocation<MemberValuePair.State> location) {
 			return new MemberValuePair(location);
 		}
 
@@ -45,12 +47,16 @@ public class MemberValuePair extends TreeBase<SNodeState, Tree, MemberValuePair>
 		}
 	};
 
-	private MemberValuePair(SLocation<SNodeState> location) {
+	private MemberValuePair(SLocation<MemberValuePair.State> location) {
 		super(location);
 	}
 
+	public static STree<MemberValuePair.State> make(Name name, Expr value) {
+		return new STree<MemberValuePair.State>(kind, new MemberValuePair.State(TreeBase.<Name.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(value)));
+	}
+
 	public MemberValuePair(Name name, Expr value) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name, value)))));
+		super(new SLocation<MemberValuePair.State>(make(name, value)));
 	}
 
 	public Name name() {
@@ -77,10 +83,38 @@ public class MemberValuePair extends TreeBase<SNodeState, Tree, MemberValuePair>
 		return location.safeTraversalMutate(VALUE, mutation);
 	}
 
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> VALUE = SNodeState.childTraversal(1);
+	private static final STraversal<MemberValuePair.State> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<MemberValuePair.State> VALUE = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(NAME), token(LToken.Assign), child(VALUE)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Name.State> name;
+
+		public final STree<Expr.State> value;
+
+		State(STree<Name.State> name, STree<Expr.State> value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public MemberValuePair.State withName(STree<Name.State> name) {
+			return new MemberValuePair.State(name, value);
+		}
+
+		public MemberValuePair.State withValue(STree<Expr.State> value) {
+			return new MemberValuePair.State(name, value);
+		}
+
+		public STraversal<MemberValuePair.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<MemberValuePair.State> lastChild() {
+			return null;
+		}
+	}
 }

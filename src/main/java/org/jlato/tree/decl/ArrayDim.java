@@ -34,11 +34,13 @@ import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ArrayDim extends TreeBase<SNodeState, Tree, ArrayDim> implements Tree {
+public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implements Tree {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ArrayDim instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ArrayDim.State> kind = new SKind<ArrayDim.State>() {
+		public ArrayDim instantiate(SLocation<ArrayDim.State> location) {
 			return new ArrayDim(location);
 		}
 
@@ -47,12 +49,16 @@ public class ArrayDim extends TreeBase<SNodeState, Tree, ArrayDim> implements Tr
 		}
 	};
 
-	private ArrayDim(SLocation<SNodeState> location) {
+	private ArrayDim(SLocation<ArrayDim.State> location) {
 		super(location);
 	}
 
+	public static STree<ArrayDim.State> make(NodeList<AnnotationExpr> annotations) {
+		return new STree<ArrayDim.State>(kind, new ArrayDim.State(TreeBase.<SNodeListState>nodeOf(annotations)));
+	}
+
 	public ArrayDim(NodeList<AnnotationExpr> annotations) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(annotations)))));
+		super(new SLocation<ArrayDim.State>(make(annotations)));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
@@ -67,7 +73,7 @@ public class ArrayDim extends TreeBase<SNodeState, Tree, ArrayDim> implements Tr
 		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 
-	private static final STraversal<SNodeState> ANNOTATIONS = SNodeState.childTraversal(0);
+	private static final STraversal<ArrayDim.State> ANNOTATIONS = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list(
@@ -79,4 +85,25 @@ public class ArrayDim extends TreeBase<SNodeState, Tree, ArrayDim> implements Tr
 	);
 
 	public static final LexicalShape listShape = list();
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> annotations;
+
+		State(STree<SNodeListState> annotations) {
+			this.annotations = annotations;
+		}
+
+		public ArrayDim.State withAnnotations(STree<SNodeListState> annotations) {
+			return new ArrayDim.State(annotations);
+		}
+
+		public STraversal<ArrayDim.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ArrayDim.State> lastChild() {
+			return null;
+		}
+	}
 }

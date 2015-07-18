@@ -32,11 +32,13 @@ import org.jlato.tree.NodeList;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ArrayInitializerExpr extends TreeBase<SNodeState, Expr, ArrayInitializerExpr> implements Expr {
+public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, Expr, ArrayInitializerExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ArrayInitializerExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ArrayInitializerExpr.State> kind = new SKind<ArrayInitializerExpr.State>() {
+		public ArrayInitializerExpr instantiate(SLocation<ArrayInitializerExpr.State> location) {
 			return new ArrayInitializerExpr(location);
 		}
 
@@ -45,12 +47,16 @@ public class ArrayInitializerExpr extends TreeBase<SNodeState, Expr, ArrayInitia
 		}
 	};
 
-	private ArrayInitializerExpr(SLocation<SNodeState> location) {
+	private ArrayInitializerExpr(SLocation<ArrayInitializerExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<ArrayInitializerExpr.State> make(NodeList<Expr> values) {
+		return new STree<ArrayInitializerExpr.State>(kind, new ArrayInitializerExpr.State(TreeBase.<SNodeListState>nodeOf(values)));
+	}
+
 	public ArrayInitializerExpr(NodeList<Expr> values) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(values)))));
+		super(new SLocation<ArrayInitializerExpr.State>(make(values)));
 	}
 
 	public NodeList<Expr> values() {
@@ -65,7 +71,7 @@ public class ArrayInitializerExpr extends TreeBase<SNodeState, Expr, ArrayInitia
 		return location.safeTraversalMutate(VALUES, mutation);
 	}
 
-	private static final STraversal<SNodeState> VALUES = SNodeState.childTraversal(0);
+	private static final STraversal<ArrayInitializerExpr.State> VALUES = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			nonEmptyChildren(VALUES,
@@ -77,4 +83,25 @@ public class ArrayInitializerExpr extends TreeBase<SNodeState, Expr, ArrayInitia
 					composite(token(LToken.BraceLeft), token(LToken.BraceRight))
 			)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> values;
+
+		State(STree<SNodeListState> values) {
+			this.values = values;
+		}
+
+		public ArrayInitializerExpr.State withValues(STree<SNodeListState> values) {
+			return new ArrayInitializerExpr.State(values);
+		}
+
+		public STraversal<ArrayInitializerExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ArrayInitializerExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

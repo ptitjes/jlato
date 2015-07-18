@@ -31,11 +31,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class InstanceOfExpr extends TreeBase<SNodeState, Expr, InstanceOfExpr> implements Expr {
+public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, InstanceOfExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public InstanceOfExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<InstanceOfExpr.State> kind = new SKind<InstanceOfExpr.State>() {
+		public InstanceOfExpr instantiate(SLocation<InstanceOfExpr.State> location) {
 			return new InstanceOfExpr(location);
 		}
 
@@ -44,12 +46,16 @@ public class InstanceOfExpr extends TreeBase<SNodeState, Expr, InstanceOfExpr> i
 		}
 	};
 
-	private InstanceOfExpr(SLocation<SNodeState> location) {
+	private InstanceOfExpr(SLocation<InstanceOfExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<InstanceOfExpr.State> make(Expr expr, Type type) {
+		return new STree<InstanceOfExpr.State>(kind, new InstanceOfExpr.State(TreeBase.<Expr.State>nodeOf(expr), TreeBase.<Type.State>nodeOf(type)));
+	}
+
 	public InstanceOfExpr(Expr expr, Type type) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(expr, type)))));
+		super(new SLocation<InstanceOfExpr.State>(make(expr, type)));
 	}
 
 	public Expr expr() {
@@ -76,12 +82,40 @@ public class InstanceOfExpr extends TreeBase<SNodeState, Expr, InstanceOfExpr> i
 		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
-	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(1);
+	private static final STraversal<InstanceOfExpr.State> EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<InstanceOfExpr.State> TYPE = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(EXPR),
 			token(LToken.InstanceOf),
 			child(TYPE)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Expr.State> expr;
+
+		public final STree<Type.State> type;
+
+		State(STree<Expr.State> expr, STree<Type.State> type) {
+			this.expr = expr;
+			this.type = type;
+		}
+
+		public InstanceOfExpr.State withExpr(STree<Expr.State> expr) {
+			return new InstanceOfExpr.State(expr, type);
+		}
+
+		public InstanceOfExpr.State withType(STree<Type.State> type) {
+			return new InstanceOfExpr.State(expr, type);
+		}
+
+		public STraversal<InstanceOfExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<InstanceOfExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

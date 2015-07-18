@@ -33,11 +33,13 @@ import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class FieldDecl extends TreeBase<SNodeState, MemberDecl, FieldDecl> implements MemberDecl {
+public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> implements MemberDecl {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public FieldDecl instantiate(SLocation<SNodeState> location) {
+	public final static SKind<FieldDecl.State> kind = new SKind<FieldDecl.State>() {
+		public FieldDecl instantiate(SLocation<FieldDecl.State> location) {
 			return new FieldDecl(location);
 		}
 
@@ -46,12 +48,16 @@ public class FieldDecl extends TreeBase<SNodeState, MemberDecl, FieldDecl> imple
 		}
 	};
 
-	private FieldDecl(SLocation<SNodeState> location) {
+	private FieldDecl(SLocation<FieldDecl.State> location) {
 		super(location);
 	}
 
+	public static STree<FieldDecl.State> make(NodeList<ExtendedModifier> modifiers, Type type, NodeList<VariableDeclarator> variables) {
+		return new STree<FieldDecl.State>(kind, new FieldDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(variables)));
+	}
+
 	public FieldDecl(NodeList<ExtendedModifier> modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, type, variables/*, javadocComment*/)))));
+		super(new SLocation<FieldDecl.State>(make(modifiers, type, variables)));
 	}
 
 	@Override
@@ -105,9 +111,9 @@ public class FieldDecl extends TreeBase<SNodeState, MemberDecl, FieldDecl> imple
 	}
 */
 
-	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> VARIABLES = SNodeState.childTraversal(2);
+	private static final STraversal<FieldDecl.State> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<FieldDecl.State> TYPE = SNodeState.childTraversal(1);
+	private static final STraversal<FieldDecl.State> VARIABLES = SNodeState.childTraversal(2);
 //	private static final int JAVADOC_COMMENT = 4;
 
 	public final static LexicalShape shape = composite(
@@ -116,4 +122,39 @@ public class FieldDecl extends TreeBase<SNodeState, MemberDecl, FieldDecl> imple
 			child(VARIABLES, VariableDeclarator.listShape).withSpacingBefore(space()),
 			token(LToken.SemiColon)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<Type.State> type;
+
+		public final STree<SNodeListState> variables;
+
+		State(STree<SNodeListState> modifiers, STree<Type.State> type, STree<SNodeListState> variables) {
+			this.modifiers = modifiers;
+			this.type = type;
+			this.variables = variables;
+		}
+
+		public FieldDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new FieldDecl.State(modifiers, type, variables);
+		}
+
+		public FieldDecl.State withType(STree<Type.State> type) {
+			return new FieldDecl.State(modifiers, type, variables);
+		}
+
+		public FieldDecl.State withVariables(STree<SNodeListState> variables) {
+			return new FieldDecl.State(modifiers, type, variables);
+		}
+
+		public STraversal<FieldDecl.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<FieldDecl.State> lastChild() {
+			return null;
+		}
+	}
 }

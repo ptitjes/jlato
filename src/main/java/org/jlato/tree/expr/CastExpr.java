@@ -32,11 +32,13 @@ import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class CastExpr extends TreeBase<SNodeState, Expr, CastExpr> implements Expr {
+public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public CastExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<CastExpr.State> kind = new SKind<CastExpr.State>() {
+		public CastExpr instantiate(SLocation<CastExpr.State> location) {
 			return new CastExpr(location);
 		}
 
@@ -45,12 +47,16 @@ public class CastExpr extends TreeBase<SNodeState, Expr, CastExpr> implements Ex
 		}
 	};
 
-	private CastExpr(SLocation<SNodeState> location) {
+	private CastExpr(SLocation<CastExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<CastExpr.State> make(Type type, Expr expr) {
+		return new STree<CastExpr.State>(kind, new CastExpr.State(TreeBase.<Type.State>nodeOf(type), TreeBase.<Expr.State>nodeOf(expr)));
+	}
+
 	public CastExpr(Type type, Expr expr) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(type, expr)))));
+		super(new SLocation<CastExpr.State>(make(type, expr)));
 	}
 
 	public Type type() {
@@ -77,10 +83,38 @@ public class CastExpr extends TreeBase<SNodeState, Expr, CastExpr> implements Ex
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(1);
+	private static final STraversal<CastExpr.State> TYPE = SNodeState.childTraversal(0);
+	private static final STraversal<CastExpr.State> EXPR = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft), child(TYPE), token(LToken.ParenthesisRight).withSpacingAfter(space()), child(EXPR)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Type.State> type;
+
+		public final STree<Expr.State> expr;
+
+		State(STree<Type.State> type, STree<Expr.State> expr) {
+			this.type = type;
+			this.expr = expr;
+		}
+
+		public CastExpr.State withType(STree<Type.State> type) {
+			return new CastExpr.State(type, expr);
+		}
+
+		public CastExpr.State withExpr(STree<Expr.State> expr) {
+			return new CastExpr.State(type, expr);
+		}
+
+		public STraversal<CastExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<CastExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

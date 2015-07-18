@@ -37,11 +37,13 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.SwitchStmt_Af
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class SwitchStmt extends TreeBase<SNodeState, Stmt, SwitchStmt> implements Stmt {
+public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public SwitchStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<SwitchStmt.State> kind = new SKind<SwitchStmt.State>() {
+		public SwitchStmt instantiate(SLocation<SwitchStmt.State> location) {
 			return new SwitchStmt(location);
 		}
 
@@ -50,12 +52,16 @@ public class SwitchStmt extends TreeBase<SNodeState, Stmt, SwitchStmt> implement
 		}
 	};
 
-	private SwitchStmt(SLocation<SNodeState> location) {
+	private SwitchStmt(SLocation<SwitchStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<SwitchStmt.State> make(Expr selector, NodeList<SwitchCase> cases) {
+		return new STree<SwitchStmt.State>(kind, new SwitchStmt.State(TreeBase.<Expr.State>nodeOf(selector), TreeBase.<SNodeListState>nodeOf(cases)));
+	}
+
 	public SwitchStmt(Expr selector, NodeList<SwitchCase> cases) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(selector, cases)))));
+		super(new SLocation<SwitchStmt.State>(make(selector, cases)));
 	}
 
 	public Expr selector() {
@@ -82,8 +88,8 @@ public class SwitchStmt extends TreeBase<SNodeState, Stmt, SwitchStmt> implement
 		return location.safeTraversalMutate(CASES, mutation);
 	}
 
-	private static final STraversal<SNodeState> SELECTOR = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> CASES = SNodeState.childTraversal(1);
+	private static final STraversal<SwitchStmt.State> SELECTOR = SNodeState.childTraversal(0);
+	private static final STraversal<SwitchStmt.State> CASES = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Switch),
@@ -109,4 +115,32 @@ public class SwitchStmt extends TreeBase<SNodeState, Stmt, SwitchStmt> implement
 					)
 			)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Expr.State> selector;
+
+		public final STree<SNodeListState> cases;
+
+		State(STree<Expr.State> selector, STree<SNodeListState> cases) {
+			this.selector = selector;
+			this.cases = cases;
+		}
+
+		public SwitchStmt.State withSelector(STree<Expr.State> selector) {
+			return new SwitchStmt.State(selector, cases);
+		}
+
+		public SwitchStmt.State withCases(STree<SNodeListState> cases) {
+			return new SwitchStmt.State(selector, cases);
+		}
+
+		public STraversal<SwitchStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<SwitchStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

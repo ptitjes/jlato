@@ -32,11 +32,13 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class SynchronizedStmt extends TreeBase<SNodeState, Stmt, SynchronizedStmt> implements Stmt {
+public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, SynchronizedStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public SynchronizedStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<SynchronizedStmt.State> kind = new SKind<SynchronizedStmt.State>() {
+		public SynchronizedStmt instantiate(SLocation<SynchronizedStmt.State> location) {
 			return new SynchronizedStmt(location);
 		}
 
@@ -45,12 +47,16 @@ public class SynchronizedStmt extends TreeBase<SNodeState, Stmt, SynchronizedStm
 		}
 	};
 
-	private SynchronizedStmt(SLocation<SNodeState> location) {
+	private SynchronizedStmt(SLocation<SynchronizedStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<SynchronizedStmt.State> make(Expr expr, BlockStmt block) {
+		return new STree<SynchronizedStmt.State>(kind, new SynchronizedStmt.State(TreeBase.<Expr.State>nodeOf(expr), TreeBase.<BlockStmt.State>nodeOf(block)));
+	}
+
 	public SynchronizedStmt(Expr expr, BlockStmt block) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(expr, block)))));
+		super(new SLocation<SynchronizedStmt.State>(make(expr, block)));
 	}
 
 	public Expr expr() {
@@ -77,8 +83,8 @@ public class SynchronizedStmt extends TreeBase<SNodeState, Stmt, SynchronizedStm
 		return location.safeTraversalMutate(BLOCK, mutation);
 	}
 
-	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> BLOCK = SNodeState.childTraversal(1);
+	private static final STraversal<SynchronizedStmt.State> EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<SynchronizedStmt.State> BLOCK = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Synchronized),
@@ -87,4 +93,32 @@ public class SynchronizedStmt extends TreeBase<SNodeState, Stmt, SynchronizedStm
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			child(BLOCK)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Expr.State> expr;
+
+		public final STree<BlockStmt.State> block;
+
+		State(STree<Expr.State> expr, STree<BlockStmt.State> block) {
+			this.expr = expr;
+			this.block = block;
+		}
+
+		public SynchronizedStmt.State withExpr(STree<Expr.State> expr) {
+			return new SynchronizedStmt.State(expr, block);
+		}
+
+		public SynchronizedStmt.State withBlock(STree<BlockStmt.State> block) {
+			return new SynchronizedStmt.State(expr, block);
+		}
+
+		public STraversal<SynchronizedStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<SynchronizedStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

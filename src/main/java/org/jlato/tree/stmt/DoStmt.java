@@ -32,11 +32,13 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class DoStmt extends TreeBase<SNodeState, Stmt, DoStmt> implements Stmt {
+public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public DoStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<DoStmt.State> kind = new SKind<DoStmt.State>() {
+		public DoStmt instantiate(SLocation<DoStmt.State> location) {
 			return new DoStmt(location);
 		}
 
@@ -45,12 +47,16 @@ public class DoStmt extends TreeBase<SNodeState, Stmt, DoStmt> implements Stmt {
 		}
 	};
 
-	private DoStmt(SLocation<SNodeState> location) {
+	private DoStmt(SLocation<DoStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<DoStmt.State> make(Stmt body, Expr condition) {
+		return new STree<DoStmt.State>(kind, new DoStmt.State(TreeBase.<Stmt.State>nodeOf(body), TreeBase.<Expr.State>nodeOf(condition)));
+	}
+
 	public DoStmt(Stmt body, Expr condition) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(body, condition)))));
+		super(new SLocation<DoStmt.State>(make(body, condition)));
 	}
 
 	public Stmt body() {
@@ -77,8 +83,8 @@ public class DoStmt extends TreeBase<SNodeState, Stmt, DoStmt> implements Stmt {
 		return location.safeTraversalMutate(CONDITION, mutation);
 	}
 
-	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> CONDITION = SNodeState.childTraversal(1);
+	private static final STraversal<DoStmt.State> BODY = SNodeState.childTraversal(0);
+	private static final STraversal<DoStmt.State> CONDITION = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Do).withSpacingAfter(space()),
@@ -89,4 +95,32 @@ public class DoStmt extends TreeBase<SNodeState, Stmt, DoStmt> implements Stmt {
 			token(LToken.ParenthesisRight),
 			token(LToken.SemiColon)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Stmt.State> body;
+
+		public final STree<Expr.State> condition;
+
+		State(STree<Stmt.State> body, STree<Expr.State> condition) {
+			this.body = body;
+			this.condition = condition;
+		}
+
+		public DoStmt.State withBody(STree<Stmt.State> body) {
+			return new DoStmt.State(body, condition);
+		}
+
+		public DoStmt.State withCondition(STree<Expr.State> condition) {
+			return new DoStmt.State(body, condition);
+		}
+
+		public STraversal<DoStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<DoStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

@@ -38,11 +38,13 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.SpacingConstraint.spacing;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class EnumConstantDecl extends TreeBase<SNodeState, MemberDecl, EnumConstantDecl> implements MemberDecl {
+public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDecl, EnumConstantDecl> implements MemberDecl {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public EnumConstantDecl instantiate(SLocation<SNodeState> location) {
+	public final static SKind<EnumConstantDecl.State> kind = new SKind<EnumConstantDecl.State>() {
+		public EnumConstantDecl instantiate(SLocation<EnumConstantDecl.State> location) {
 			return new EnumConstantDecl(location);
 		}
 
@@ -51,12 +53,16 @@ public class EnumConstantDecl extends TreeBase<SNodeState, MemberDecl, EnumConst
 		}
 	};
 
-	private EnumConstantDecl(SLocation<SNodeState> location) {
+	private EnumConstantDecl(SLocation<EnumConstantDecl.State> location) {
 		super(location);
 	}
 
+	public static STree<EnumConstantDecl.State> make(NodeList<ExtendedModifier> modifiers, Name name, NodeOption<NodeList<Expr>> args, NodeOption<NodeList<MemberDecl>> classBody) {
+		return new STree<EnumConstantDecl.State>(kind, new EnumConstantDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeOptionState>nodeOf(args), TreeBase.<SNodeOptionState>nodeOf(classBody)));
+	}
+
 	public EnumConstantDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeOption<NodeList<Expr>> args, NodeOption<NodeList<MemberDecl>> classBody) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, name, args, classBody)))));
+		super(new SLocation<EnumConstantDecl.State>(make(modifiers, name, args, classBody)));
 	}
 
 	@Override
@@ -112,10 +118,10 @@ public class EnumConstantDecl extends TreeBase<SNodeState, MemberDecl, EnumConst
 		return location.safeTraversalMutate(CLASS_BODY, mutation);
 	}
 
-	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> ARGS = SNodeState.childTraversal(2);
-	private static final STraversal<SNodeState> CLASS_BODY = SNodeState.childTraversal(3);
+	private static final STraversal<EnumConstantDecl.State> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<EnumConstantDecl.State> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<EnumConstantDecl.State> ARGS = SNodeState.childTraversal(2);
+	private static final STraversal<EnumConstantDecl.State> CLASS_BODY = SNodeState.childTraversal(3);
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
@@ -130,4 +136,46 @@ public class EnumConstantDecl extends TreeBase<SNodeState, MemberDecl, EnumConst
 			token(LToken.Comma).withSpacingAfter(spacing(EnumBody_BetweenConstants)),
 			null
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeOptionState> args;
+
+		public final STree<SNodeOptionState> classBody;
+
+		State(STree<SNodeListState> modifiers, STree<Name.State> name, STree<SNodeOptionState> args, STree<SNodeOptionState> classBody) {
+			this.modifiers = modifiers;
+			this.name = name;
+			this.args = args;
+			this.classBody = classBody;
+		}
+
+		public EnumConstantDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new EnumConstantDecl.State(modifiers, name, args, classBody);
+		}
+
+		public EnumConstantDecl.State withName(STree<Name.State> name) {
+			return new EnumConstantDecl.State(modifiers, name, args, classBody);
+		}
+
+		public EnumConstantDecl.State withArgs(STree<SNodeOptionState> args) {
+			return new EnumConstantDecl.State(modifiers, name, args, classBody);
+		}
+
+		public EnumConstantDecl.State withClassBody(STree<SNodeOptionState> classBody) {
+			return new EnumConstantDecl.State(modifiers, name, args, classBody);
+		}
+
+		public STraversal<EnumConstantDecl.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<EnumConstantDecl.State> lastChild() {
+			return null;
+		}
+	}
 }

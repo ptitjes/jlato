@@ -36,11 +36,13 @@ import org.jlato.tree.name.Name;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class QualifiedType extends TreeBase<SNodeState, ReferenceType, QualifiedType> implements ReferenceType {
+public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, QualifiedType> implements ReferenceType {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public QualifiedType instantiate(SLocation<SNodeState> location) {
+	public final static SKind<QualifiedType.State> kind = new SKind<QualifiedType.State>() {
+		public QualifiedType instantiate(SLocation<QualifiedType.State> location) {
 			return new QualifiedType(location);
 		}
 
@@ -49,12 +51,16 @@ public class QualifiedType extends TreeBase<SNodeState, ReferenceType, Qualified
 		}
 	};
 
-	private QualifiedType(SLocation<SNodeState> location) {
+	private QualifiedType(SLocation<QualifiedType.State> location) {
 		super(location);
 	}
 
+	public static STree<QualifiedType.State> make(NodeList<AnnotationExpr> annotations, NodeOption<QualifiedType> scope, Name name, NodeOption<NodeList<Type>> typeArgs) {
+		return new STree<QualifiedType.State>(kind, new QualifiedType.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeOptionState>nodeOf(typeArgs)));
+	}
+
 	public QualifiedType(NodeList<AnnotationExpr> annotations, NodeOption<QualifiedType> scope, Name name, NodeOption<NodeList<Type>> typeArgs) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(annotations, scope, name, typeArgs)))));
+		super(new SLocation<QualifiedType.State>(make(annotations, scope, name, typeArgs)));
 	}
 
 	public NodeOption<QualifiedType> scope() {
@@ -105,10 +111,10 @@ public class QualifiedType extends TreeBase<SNodeState, ReferenceType, Qualified
 		return location.safeTraversalMutate(TYPE_ARGUMENTS, mutation);
 	}
 
-	private static final STraversal<SNodeState> ANNOTATIONS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> SCOPE = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(2);
-	private static final STraversal<SNodeState> TYPE_ARGUMENTS = SNodeState.childTraversal(3);
+	private static final STraversal<QualifiedType.State> ANNOTATIONS = SNodeState.childTraversal(0);
+	private static final STraversal<QualifiedType.State> SCOPE = SNodeState.childTraversal(1);
+	private static final STraversal<QualifiedType.State> NAME = SNodeState.childTraversal(2);
+	private static final STraversal<QualifiedType.State> TYPE_ARGUMENTS = SNodeState.childTraversal(3);
 
 	public static final LexicalShape scopeShape = composite(element(), token(LToken.Dot));
 
@@ -136,4 +142,46 @@ public class QualifiedType extends TreeBase<SNodeState, ReferenceType, Qualified
 			token(LToken.Comma).withSpacingAfter(space()),
 			null
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> annotations;
+
+		public final STree<SNodeOptionState> scope;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeOptionState> typeArgs;
+
+		State(STree<SNodeListState> annotations, STree<SNodeOptionState> scope, STree<Name.State> name, STree<SNodeOptionState> typeArgs) {
+			this.annotations = annotations;
+			this.scope = scope;
+			this.name = name;
+			this.typeArgs = typeArgs;
+		}
+
+		public QualifiedType.State withAnnotations(STree<SNodeListState> annotations) {
+			return new QualifiedType.State(annotations, scope, name, typeArgs);
+		}
+
+		public QualifiedType.State withScope(STree<SNodeOptionState> scope) {
+			return new QualifiedType.State(annotations, scope, name, typeArgs);
+		}
+
+		public QualifiedType.State withName(STree<Name.State> name) {
+			return new QualifiedType.State(annotations, scope, name, typeArgs);
+		}
+
+		public QualifiedType.State withTypeArgs(STree<SNodeOptionState> typeArgs) {
+			return new QualifiedType.State(annotations, scope, name, typeArgs);
+		}
+
+		public STraversal<QualifiedType.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<QualifiedType.State> lastChild() {
+			return null;
+		}
+	}
 }

@@ -38,11 +38,13 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ObjectCreationExpr extends TreeBase<SNodeState, Expr, ObjectCreationExpr> implements Expr {
+public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr, ObjectCreationExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ObjectCreationExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ObjectCreationExpr.State> kind = new SKind<ObjectCreationExpr.State>() {
+		public ObjectCreationExpr instantiate(SLocation<ObjectCreationExpr.State> location) {
 			return new ObjectCreationExpr(location);
 		}
 
@@ -51,12 +53,16 @@ public class ObjectCreationExpr extends TreeBase<SNodeState, Expr, ObjectCreatio
 		}
 	};
 
-	private ObjectCreationExpr(SLocation<SNodeState> location) {
+	private ObjectCreationExpr(SLocation<ObjectCreationExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<ObjectCreationExpr.State> make(NodeOption<Expr> scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeOption<NodeList<MemberDecl>> body) {
+		return new STree<ObjectCreationExpr.State>(kind, new ObjectCreationExpr.State(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<QualifiedType.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(args), TreeBase.<SNodeOptionState>nodeOf(body)));
+	}
+
 	public ObjectCreationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeOption<NodeList<MemberDecl>> body) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(scope, typeArgs, type, args, body)))));
+		super(new SLocation<ObjectCreationExpr.State>(make(scope, typeArgs, type, args, body)));
 	}
 
 	public NodeOption<Expr> scope() {
@@ -119,11 +125,11 @@ public class ObjectCreationExpr extends TreeBase<SNodeState, Expr, ObjectCreatio
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<SNodeState> SCOPE = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> TYPE_ARGUMENTS = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(2);
-	private static final STraversal<SNodeState> ARGUMENTS = SNodeState.childTraversal(3);
-	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(4);
+	private static final STraversal<ObjectCreationExpr.State> SCOPE = SNodeState.childTraversal(0);
+	private static final STraversal<ObjectCreationExpr.State> TYPE_ARGUMENTS = SNodeState.childTraversal(1);
+	private static final STraversal<ObjectCreationExpr.State> TYPE = SNodeState.childTraversal(2);
+	private static final STraversal<ObjectCreationExpr.State> ARGUMENTS = SNodeState.childTraversal(3);
+	private static final STraversal<ObjectCreationExpr.State> BODY = SNodeState.childTraversal(4);
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
@@ -133,4 +139,53 @@ public class ObjectCreationExpr extends TreeBase<SNodeState, Expr, ObjectCreatio
 			child(ARGUMENTS, Expr.argumentsShape),
 			child(BODY, when(some(), element(MemberDecl.bodyShape)))
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeOptionState> scope;
+
+		public final STree<SNodeListState> typeArgs;
+
+		public final STree<QualifiedType.State> type;
+
+		public final STree<SNodeListState> args;
+
+		public final STree<SNodeOptionState> body;
+
+		State(STree<SNodeOptionState> scope, STree<SNodeListState> typeArgs, STree<QualifiedType.State> type, STree<SNodeListState> args, STree<SNodeOptionState> body) {
+			this.scope = scope;
+			this.typeArgs = typeArgs;
+			this.type = type;
+			this.args = args;
+			this.body = body;
+		}
+
+		public ObjectCreationExpr.State withScope(STree<SNodeOptionState> scope) {
+			return new ObjectCreationExpr.State(scope, typeArgs, type, args, body);
+		}
+
+		public ObjectCreationExpr.State withTypeArgs(STree<SNodeListState> typeArgs) {
+			return new ObjectCreationExpr.State(scope, typeArgs, type, args, body);
+		}
+
+		public ObjectCreationExpr.State withType(STree<QualifiedType.State> type) {
+			return new ObjectCreationExpr.State(scope, typeArgs, type, args, body);
+		}
+
+		public ObjectCreationExpr.State withArgs(STree<SNodeListState> args) {
+			return new ObjectCreationExpr.State(scope, typeArgs, type, args, body);
+		}
+
+		public ObjectCreationExpr.State withBody(STree<SNodeOptionState> body) {
+			return new ObjectCreationExpr.State(scope, typeArgs, type, args, body);
+		}
+
+		public STraversal<ObjectCreationExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ObjectCreationExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

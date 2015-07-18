@@ -35,11 +35,13 @@ import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ConstructorDecl extends TreeBase<SNodeState, MemberDecl, ConstructorDecl> implements MemberDecl {
+public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl, ConstructorDecl> implements MemberDecl {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ConstructorDecl instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ConstructorDecl.State> kind = new SKind<ConstructorDecl.State>() {
+		public ConstructorDecl instantiate(SLocation<ConstructorDecl.State> location) {
 			return new ConstructorDecl(location);
 		}
 
@@ -48,12 +50,16 @@ public class ConstructorDecl extends TreeBase<SNodeState, MemberDecl, Constructo
 		}
 	};
 
-	private ConstructorDecl(SLocation<SNodeState> location) {
+	private ConstructorDecl(SLocation<ConstructorDecl.State> location) {
 		super(location);
 	}
 
+	public static STree<ConstructorDecl.State> make(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<FormalParameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
+		return new STree<ConstructorDecl.State>(kind, new ConstructorDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<SNodeListState>nodeOf(typeParams), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(params), TreeBase.<SNodeListState>nodeOf(throwsClause), TreeBase.<BlockStmt.State>nodeOf(body)));
+	}
+
 	public ConstructorDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<FormalParameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, typeParams, name, params, throwsClause, body)))));
+		super(new SLocation<ConstructorDecl.State>(make(modifiers, typeParams, name, params, throwsClause, body)));
 	}
 
 	@Override
@@ -133,12 +139,12 @@ public class ConstructorDecl extends TreeBase<SNodeState, MemberDecl, Constructo
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> TYPE_PARAMETERS = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(2);
-	private static final STraversal<SNodeState> PARAMETERS = SNodeState.childTraversal(3);
-	private static final STraversal<SNodeState> THROWS_CLAUSE = SNodeState.childTraversal(4);
-	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(5);
+	private static final STraversal<ConstructorDecl.State> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<ConstructorDecl.State> TYPE_PARAMETERS = SNodeState.childTraversal(1);
+	private static final STraversal<ConstructorDecl.State> NAME = SNodeState.childTraversal(2);
+	private static final STraversal<ConstructorDecl.State> PARAMETERS = SNodeState.childTraversal(3);
+	private static final STraversal<ConstructorDecl.State> THROWS_CLAUSE = SNodeState.childTraversal(4);
+	private static final STraversal<ConstructorDecl.State> BODY = SNodeState.childTraversal(5);
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
@@ -150,4 +156,60 @@ public class ConstructorDecl extends TreeBase<SNodeState, MemberDecl, Constructo
 			child(THROWS_CLAUSE, QualifiedType.throwsClauseShape),
 			none().withSpacingAfter(space()), child(BODY)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<SNodeListState> typeParams;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeListState> params;
+
+		public final STree<SNodeListState> throwsClause;
+
+		public final STree<BlockStmt.State> body;
+
+		State(STree<SNodeListState> modifiers, STree<SNodeListState> typeParams, STree<Name.State> name, STree<SNodeListState> params, STree<SNodeListState> throwsClause, STree<BlockStmt.State> body) {
+			this.modifiers = modifiers;
+			this.typeParams = typeParams;
+			this.name = name;
+			this.params = params;
+			this.throwsClause = throwsClause;
+			this.body = body;
+		}
+
+		public ConstructorDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body);
+		}
+
+		public ConstructorDecl.State withTypeParams(STree<SNodeListState> typeParams) {
+			return new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body);
+		}
+
+		public ConstructorDecl.State withName(STree<Name.State> name) {
+			return new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body);
+		}
+
+		public ConstructorDecl.State withParams(STree<SNodeListState> params) {
+			return new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body);
+		}
+
+		public ConstructorDecl.State withThrowsClause(STree<SNodeListState> throwsClause) {
+			return new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body);
+		}
+
+		public ConstructorDecl.State withBody(STree<BlockStmt.State> body) {
+			return new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body);
+		}
+
+		public STraversal<ConstructorDecl.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ConstructorDecl.State> lastChild() {
+			return null;
+		}
+	}
 }

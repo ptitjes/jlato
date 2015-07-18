@@ -33,11 +33,13 @@ import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class NormalAnnotationExpr extends TreeBase<SNodeState, AnnotationExpr, NormalAnnotationExpr> implements AnnotationExpr {
+public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, AnnotationExpr, NormalAnnotationExpr> implements AnnotationExpr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public NormalAnnotationExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<NormalAnnotationExpr.State> kind = new SKind<NormalAnnotationExpr.State>() {
+		public NormalAnnotationExpr instantiate(SLocation<NormalAnnotationExpr.State> location) {
 			return new NormalAnnotationExpr(location);
 		}
 
@@ -46,12 +48,16 @@ public class NormalAnnotationExpr extends TreeBase<SNodeState, AnnotationExpr, N
 		}
 	};
 
-	private NormalAnnotationExpr(SLocation<SNodeState> location) {
+	private NormalAnnotationExpr(SLocation<NormalAnnotationExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<NormalAnnotationExpr.State> make(QualifiedName name, NodeList<MemberValuePair> pairs) {
+		return new STree<NormalAnnotationExpr.State>(kind, new NormalAnnotationExpr.State(TreeBase.<QualifiedName.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(pairs)));
+	}
+
 	public NormalAnnotationExpr(QualifiedName name, NodeList<MemberValuePair> pairs) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name, pairs)))));
+		super(new SLocation<NormalAnnotationExpr.State>(make(name, pairs)));
 	}
 
 	public QualifiedName name() {
@@ -78,8 +84,8 @@ public class NormalAnnotationExpr extends TreeBase<SNodeState, AnnotationExpr, N
 		return location.safeTraversalMutate(PAIRS, mutation);
 	}
 
-	protected static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> PAIRS = SNodeState.childTraversal(1);
+	protected static final STraversal<NormalAnnotationExpr.State> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<NormalAnnotationExpr.State> PAIRS = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME),
@@ -87,4 +93,32 @@ public class NormalAnnotationExpr extends TreeBase<SNodeState, AnnotationExpr, N
 			child(PAIRS, list(token(LToken.Comma).withSpacingAfter(space()))),
 			token(LToken.ParenthesisRight)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<QualifiedName.State> name;
+
+		public final STree<SNodeListState> pairs;
+
+		State(STree<QualifiedName.State> name, STree<SNodeListState> pairs) {
+			this.name = name;
+			this.pairs = pairs;
+		}
+
+		public NormalAnnotationExpr.State withName(STree<QualifiedName.State> name) {
+			return new NormalAnnotationExpr.State(name, pairs);
+		}
+
+		public NormalAnnotationExpr.State withPairs(STree<SNodeListState> pairs) {
+			return new NormalAnnotationExpr.State(name, pairs);
+		}
+
+		public STraversal<NormalAnnotationExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<NormalAnnotationExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

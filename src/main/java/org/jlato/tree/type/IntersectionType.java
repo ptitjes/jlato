@@ -31,11 +31,13 @@ import org.jlato.tree.NodeList;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class IntersectionType extends TreeBase<SNodeState, Type, IntersectionType> implements Type {
+public class IntersectionType extends TreeBase<IntersectionType.State, Type, IntersectionType> implements Type {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public IntersectionType instantiate(SLocation<SNodeState> location) {
+	public final static SKind<IntersectionType.State> kind = new SKind<IntersectionType.State>() {
+		public IntersectionType instantiate(SLocation<IntersectionType.State> location) {
 			return new IntersectionType(location);
 		}
 
@@ -44,12 +46,16 @@ public class IntersectionType extends TreeBase<SNodeState, Type, IntersectionTyp
 		}
 	};
 
-	private IntersectionType(SLocation<SNodeState> location) {
+	private IntersectionType(SLocation<IntersectionType.State> location) {
 		super(location);
 	}
 
+	public static STree<IntersectionType.State> make(NodeList<Type> types) {
+		return new STree<IntersectionType.State>(kind, new IntersectionType.State(TreeBase.<SNodeListState>nodeOf(types)));
+	}
+
 	public IntersectionType(NodeList<Type> types) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(types)))));
+		super(new SLocation<IntersectionType.State>(make(types)));
 	}
 
 	public NodeList<Type> types() {
@@ -64,9 +70,30 @@ public class IntersectionType extends TreeBase<SNodeState, Type, IntersectionTyp
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final STraversal<SNodeState> TYPES = SNodeState.childTraversal(0);
+	private static final STraversal<IntersectionType.State> TYPES = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			child(TYPES, Type.intersectionShape)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> types;
+
+		State(STree<SNodeListState> types) {
+			this.types = types;
+		}
+
+		public IntersectionType.State withTypes(STree<SNodeListState> types) {
+			return new IntersectionType.State(types);
+		}
+
+		public STraversal<IntersectionType.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<IntersectionType.State> lastChild() {
+			return null;
+		}
+	}
 }

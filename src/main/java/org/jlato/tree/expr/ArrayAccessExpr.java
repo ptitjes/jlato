@@ -30,11 +30,13 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ArrayAccessExpr extends TreeBase<SNodeState, Expr, ArrayAccessExpr> implements Expr {
+public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, ArrayAccessExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ArrayAccessExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ArrayAccessExpr.State> kind = new SKind<ArrayAccessExpr.State>() {
+		public ArrayAccessExpr instantiate(SLocation<ArrayAccessExpr.State> location) {
 			return new ArrayAccessExpr(location);
 		}
 
@@ -43,12 +45,16 @@ public class ArrayAccessExpr extends TreeBase<SNodeState, Expr, ArrayAccessExpr>
 		}
 	};
 
-	private ArrayAccessExpr(SLocation<SNodeState> location) {
+	private ArrayAccessExpr(SLocation<ArrayAccessExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<ArrayAccessExpr.State> make(Expr name, Expr index) {
+		return new STree<ArrayAccessExpr.State>(kind, new ArrayAccessExpr.State(TreeBase.<Expr.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(index)));
+	}
+
 	public ArrayAccessExpr(Expr name, Expr index) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name, index)))));
+		super(new SLocation<ArrayAccessExpr.State>(make(name, index)));
 	}
 
 	public Expr name() {
@@ -75,11 +81,39 @@ public class ArrayAccessExpr extends TreeBase<SNodeState, Expr, ArrayAccessExpr>
 		return location.safeTraversalMutate(INDEX, mutation);
 	}
 
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> INDEX = SNodeState.childTraversal(1);
+	private static final STraversal<ArrayAccessExpr.State> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<ArrayAccessExpr.State> INDEX = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(NAME),
 			token(LToken.BracketLeft), child(INDEX), token(LToken.BracketRight)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Expr.State> name;
+
+		public final STree<Expr.State> index;
+
+		State(STree<Expr.State> name, STree<Expr.State> index) {
+			this.name = name;
+			this.index = index;
+		}
+
+		public ArrayAccessExpr.State withName(STree<Expr.State> name) {
+			return new ArrayAccessExpr.State(name, index);
+		}
+
+		public ArrayAccessExpr.State withIndex(STree<Expr.State> index) {
+			return new ArrayAccessExpr.State(name, index);
+		}
+
+		public STraversal<ArrayAccessExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ArrayAccessExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

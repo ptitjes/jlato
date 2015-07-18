@@ -36,11 +36,13 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class VariableDeclarationExpr extends TreeBase<SNodeState, Expr, VariableDeclarationExpr> implements Expr {
+public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.State, Expr, VariableDeclarationExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public VariableDeclarationExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<VariableDeclarationExpr.State> kind = new SKind<VariableDeclarationExpr.State>() {
+		public VariableDeclarationExpr instantiate(SLocation<VariableDeclarationExpr.State> location) {
 			return new VariableDeclarationExpr(location);
 		}
 
@@ -49,12 +51,16 @@ public class VariableDeclarationExpr extends TreeBase<SNodeState, Expr, Variable
 		}
 	};
 
-	private VariableDeclarationExpr(SLocation<SNodeState> location) {
+	private VariableDeclarationExpr(SLocation<VariableDeclarationExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<VariableDeclarationExpr.State> make(LocalVariableDecl declaration) {
+		return new STree<VariableDeclarationExpr.State>(kind, new VariableDeclarationExpr.State(TreeBase.<LocalVariableDecl.State>nodeOf(declaration)));
+	}
+
 	public VariableDeclarationExpr(LocalVariableDecl declaration) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(declaration)))));
+		super(new SLocation<VariableDeclarationExpr.State>(make(declaration)));
 	}
 
 	public LocalVariableDecl declaration() {
@@ -69,7 +75,7 @@ public class VariableDeclarationExpr extends TreeBase<SNodeState, Expr, Variable
 		return location.safeTraversalMutate(DECLARATION, mutation);
 	}
 
-	private static final STraversal<SNodeState> DECLARATION = SNodeState.childTraversal(0);
+	private static final STraversal<VariableDeclarationExpr.State> DECLARATION = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = child(DECLARATION);
 
@@ -82,4 +88,25 @@ public class VariableDeclarationExpr extends TreeBase<SNodeState, Expr, Variable
 					.withIndentationBefore(unIndent(TRY_RESOURCES))
 					.withSpacingAfter(space())
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<LocalVariableDecl.State> declaration;
+
+		State(STree<LocalVariableDecl.State> declaration) {
+			this.declaration = declaration;
+		}
+
+		public VariableDeclarationExpr.State withDeclaration(STree<LocalVariableDecl.State> declaration) {
+			return new VariableDeclarationExpr.State(declaration);
+		}
+
+		public STraversal<VariableDeclarationExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<VariableDeclarationExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

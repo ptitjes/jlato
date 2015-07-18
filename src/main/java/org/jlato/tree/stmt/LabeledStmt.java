@@ -36,11 +36,13 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.LabeledStmt_A
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.spacing;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class LabeledStmt extends TreeBase<SNodeState, Stmt, LabeledStmt> implements Stmt {
+public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public LabeledStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<LabeledStmt.State> kind = new SKind<LabeledStmt.State>() {
+		public LabeledStmt instantiate(SLocation<LabeledStmt.State> location) {
 			return new LabeledStmt(location);
 		}
 
@@ -49,12 +51,16 @@ public class LabeledStmt extends TreeBase<SNodeState, Stmt, LabeledStmt> impleme
 		}
 	};
 
-	private LabeledStmt(SLocation<SNodeState> location) {
+	private LabeledStmt(SLocation<LabeledStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<LabeledStmt.State> make(Name label, Stmt stmt) {
+		return new STree<LabeledStmt.State>(kind, new LabeledStmt.State(TreeBase.<Name.State>nodeOf(label), TreeBase.<Stmt.State>nodeOf(stmt)));
+	}
+
 	public LabeledStmt(Name label, Stmt stmt) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(label, stmt)))));
+		super(new SLocation<LabeledStmt.State>(make(label, stmt)));
 	}
 
 	public Name label() {
@@ -81,8 +87,8 @@ public class LabeledStmt extends TreeBase<SNodeState, Stmt, LabeledStmt> impleme
 		return location.safeTraversalMutate(STMT, mutation);
 	}
 
-	private static final STraversal<SNodeState> LABEL = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> STMT = SNodeState.childTraversal(1);
+	private static final STraversal<LabeledStmt.State> LABEL = SNodeState.childTraversal(0);
+	private static final STraversal<LabeledStmt.State> STMT = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			none().withIndentationAfter(indent(IndentationContext.LABEL)),
@@ -91,4 +97,32 @@ public class LabeledStmt extends TreeBase<SNodeState, Stmt, LabeledStmt> impleme
 			none().withIndentationBefore(unIndent(IndentationContext.LABEL)),
 			child(STMT)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Name.State> label;
+
+		public final STree<Stmt.State> stmt;
+
+		State(STree<Name.State> label, STree<Stmt.State> stmt) {
+			this.label = label;
+			this.stmt = stmt;
+		}
+
+		public LabeledStmt.State withLabel(STree<Name.State> label) {
+			return new LabeledStmt.State(label, stmt);
+		}
+
+		public LabeledStmt.State withStmt(STree<Stmt.State> stmt) {
+			return new LabeledStmt.State(label, stmt);
+		}
+
+		public STraversal<LabeledStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<LabeledStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

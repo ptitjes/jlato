@@ -31,11 +31,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class MarkerAnnotationExpr extends TreeBase<SNodeState, AnnotationExpr, MarkerAnnotationExpr> implements AnnotationExpr {
+public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, AnnotationExpr, MarkerAnnotationExpr> implements AnnotationExpr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public MarkerAnnotationExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<MarkerAnnotationExpr.State> kind = new SKind<MarkerAnnotationExpr.State>() {
+		public MarkerAnnotationExpr instantiate(SLocation<MarkerAnnotationExpr.State> location) {
 			return new MarkerAnnotationExpr(location);
 		}
 
@@ -44,12 +46,16 @@ public class MarkerAnnotationExpr extends TreeBase<SNodeState, AnnotationExpr, M
 		}
 	};
 
-	private MarkerAnnotationExpr(SLocation<SNodeState> location) {
+	private MarkerAnnotationExpr(SLocation<MarkerAnnotationExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<MarkerAnnotationExpr.State> make(QualifiedName name) {
+		return new STree<MarkerAnnotationExpr.State>(kind, new MarkerAnnotationExpr.State(TreeBase.<QualifiedName.State>nodeOf(name)));
+	}
+
 	public MarkerAnnotationExpr(QualifiedName name) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name)))));
+		super(new SLocation<MarkerAnnotationExpr.State>(make(name)));
 	}
 
 	public QualifiedName name() {
@@ -64,9 +70,30 @@ public class MarkerAnnotationExpr extends TreeBase<SNodeState, AnnotationExpr, M
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	protected static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
+	protected static final STraversal<MarkerAnnotationExpr.State> NAME = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<QualifiedName.State> name;
+
+		State(STree<QualifiedName.State> name) {
+			this.name = name;
+		}
+
+		public MarkerAnnotationExpr.State withName(STree<QualifiedName.State> name) {
+			return new MarkerAnnotationExpr.State(name);
+		}
+
+		public STraversal<MarkerAnnotationExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<MarkerAnnotationExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

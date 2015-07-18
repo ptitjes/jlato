@@ -33,11 +33,13 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ArrayDimExpr extends TreeBase<SNodeState, Tree, ArrayDimExpr> implements Tree {
+public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExpr> implements Tree {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ArrayDimExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ArrayDimExpr.State> kind = new SKind<ArrayDimExpr.State>() {
+		public ArrayDimExpr instantiate(SLocation<ArrayDimExpr.State> location) {
 			return new ArrayDimExpr(location);
 		}
 
@@ -46,12 +48,16 @@ public class ArrayDimExpr extends TreeBase<SNodeState, Tree, ArrayDimExpr> imple
 		}
 	};
 
-	private ArrayDimExpr(SLocation<SNodeState> location) {
+	private ArrayDimExpr(SLocation<ArrayDimExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<ArrayDimExpr.State> make(NodeList<AnnotationExpr> annotations, Expr expr) {
+		return new STree<ArrayDimExpr.State>(kind, new ArrayDimExpr.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<Expr.State>nodeOf(expr)));
+	}
+
 	public ArrayDimExpr(NodeList<AnnotationExpr> annotations, Expr expr) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(annotations, expr)))));
+		super(new SLocation<ArrayDimExpr.State>(make(annotations, expr)));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
@@ -78,8 +84,8 @@ public class ArrayDimExpr extends TreeBase<SNodeState, Tree, ArrayDimExpr> imple
 		return location.safeTraversalMutate(EXPRESSION, mutation);
 	}
 
-	private static final STraversal<SNodeState> ANNOTATIONS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> EXPRESSION = SNodeState.childTraversal(1);
+	private static final STraversal<ArrayDimExpr.State> ANNOTATIONS = SNodeState.childTraversal(0);
+	private static final STraversal<ArrayDimExpr.State> EXPRESSION = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list(
@@ -91,4 +97,32 @@ public class ArrayDimExpr extends TreeBase<SNodeState, Tree, ArrayDimExpr> imple
 	);
 
 	public static final LexicalShape listShape = list();
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> annotations;
+
+		public final STree<Expr.State> expr;
+
+		State(STree<SNodeListState> annotations, STree<Expr.State> expr) {
+			this.annotations = annotations;
+			this.expr = expr;
+		}
+
+		public ArrayDimExpr.State withAnnotations(STree<SNodeListState> annotations) {
+			return new ArrayDimExpr.State(annotations, expr);
+		}
+
+		public ArrayDimExpr.State withExpr(STree<Expr.State> expr) {
+			return new ArrayDimExpr.State(annotations, expr);
+		}
+
+		public STraversal<ArrayDimExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ArrayDimExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

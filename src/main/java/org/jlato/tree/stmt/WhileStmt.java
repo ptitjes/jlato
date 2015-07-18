@@ -32,11 +32,13 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class WhileStmt extends TreeBase<SNodeState, Stmt, WhileStmt> implements Stmt {
+public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public WhileStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<WhileStmt.State> kind = new SKind<WhileStmt.State>() {
+		public WhileStmt instantiate(SLocation<WhileStmt.State> location) {
 			return new WhileStmt(location);
 		}
 
@@ -45,12 +47,16 @@ public class WhileStmt extends TreeBase<SNodeState, Stmt, WhileStmt> implements 
 		}
 	};
 
-	private WhileStmt(SLocation<SNodeState> location) {
+	private WhileStmt(SLocation<WhileStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<WhileStmt.State> make(Expr condition, Stmt body) {
+		return new STree<WhileStmt.State>(kind, new WhileStmt.State(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Stmt.State>nodeOf(body)));
+	}
+
 	public WhileStmt(Expr condition, Stmt body) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(condition, body)))));
+		super(new SLocation<WhileStmt.State>(make(condition, body)));
 	}
 
 	public Expr condition() {
@@ -77,8 +83,8 @@ public class WhileStmt extends TreeBase<SNodeState, Stmt, WhileStmt> implements 
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<SNodeState> CONDITION = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(1);
+	private static final STraversal<WhileStmt.State> CONDITION = SNodeState.childTraversal(0);
+	private static final STraversal<WhileStmt.State> BODY = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.While), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
@@ -86,4 +92,32 @@ public class WhileStmt extends TreeBase<SNodeState, Stmt, WhileStmt> implements 
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			child(BODY)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Expr.State> condition;
+
+		public final STree<Stmt.State> body;
+
+		State(STree<Expr.State> condition, STree<Stmt.State> body) {
+			this.condition = condition;
+			this.body = body;
+		}
+
+		public WhileStmt.State withCondition(STree<Expr.State> condition) {
+			return new WhileStmt.State(condition, body);
+		}
+
+		public WhileStmt.State withBody(STree<Stmt.State> body) {
+			return new WhileStmt.State(condition, body);
+		}
+
+		public STraversal<WhileStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<WhileStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

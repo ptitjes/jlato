@@ -34,11 +34,13 @@ import org.jlato.tree.name.Name;
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class FieldAccessExpr extends TreeBase<SNodeState, Expr, FieldAccessExpr> implements Expr {
+public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, FieldAccessExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public FieldAccessExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<FieldAccessExpr.State> kind = new SKind<FieldAccessExpr.State>() {
+		public FieldAccessExpr instantiate(SLocation<FieldAccessExpr.State> location) {
 			return new FieldAccessExpr(location);
 		}
 
@@ -47,12 +49,16 @@ public class FieldAccessExpr extends TreeBase<SNodeState, Expr, FieldAccessExpr>
 		}
 	};
 
-	private FieldAccessExpr(SLocation<SNodeState> location) {
+	private FieldAccessExpr(SLocation<FieldAccessExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<FieldAccessExpr.State> make(NodeOption<Expr> scope, Name name) {
+		return new STree<FieldAccessExpr.State>(kind, new FieldAccessExpr.State(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<Name.State>nodeOf(name)));
+	}
+
 	public FieldAccessExpr(NodeOption<Expr> scope, Name name) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(scope, name)))));
+		super(new SLocation<FieldAccessExpr.State>(make(scope, name)));
 	}
 
 	public NodeOption<Expr> scope() {
@@ -79,11 +85,39 @@ public class FieldAccessExpr extends TreeBase<SNodeState, Expr, FieldAccessExpr>
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal<SNodeState> SCOPE = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<FieldAccessExpr.State> SCOPE = SNodeState.childTraversal(0);
+	private static final STraversal<FieldAccessExpr.State> NAME = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
 			child(NAME)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeOptionState> scope;
+
+		public final STree<Name.State> name;
+
+		State(STree<SNodeOptionState> scope, STree<Name.State> name) {
+			this.scope = scope;
+			this.name = name;
+		}
+
+		public FieldAccessExpr.State withScope(STree<SNodeOptionState> scope) {
+			return new FieldAccessExpr.State(scope, name);
+		}
+
+		public FieldAccessExpr.State withName(STree<Name.State> name) {
+			return new FieldAccessExpr.State(scope, name);
+		}
+
+		public STraversal<FieldAccessExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<FieldAccessExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

@@ -35,11 +35,13 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class AssertStmt extends TreeBase<SNodeState, Stmt, AssertStmt> implements Stmt {
+public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public AssertStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<AssertStmt.State> kind = new SKind<AssertStmt.State>() {
+		public AssertStmt instantiate(SLocation<AssertStmt.State> location) {
 			return new AssertStmt(location);
 		}
 
@@ -48,12 +50,16 @@ public class AssertStmt extends TreeBase<SNodeState, Stmt, AssertStmt> implement
 		}
 	};
 
-	private AssertStmt(SLocation<SNodeState> location) {
+	private AssertStmt(SLocation<AssertStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<AssertStmt.State> make(Expr check, NodeOption<Expr> msg) {
+		return new STree<AssertStmt.State>(kind, new AssertStmt.State(TreeBase.<Expr.State>nodeOf(check), TreeBase.<SNodeOptionState>nodeOf(msg)));
+	}
+
 	public AssertStmt(Expr check, NodeOption<Expr> msg) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(check, msg)))));
+		super(new SLocation<AssertStmt.State>(make(check, msg)));
 	}
 
 	public Expr check() {
@@ -80,8 +86,8 @@ public class AssertStmt extends TreeBase<SNodeState, Stmt, AssertStmt> implement
 		return location.safeTraversalMutate(MSG, mutation);
 	}
 
-	private static final STraversal<SNodeState> CHECK = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> MSG = SNodeState.childTraversal(1);
+	private static final STraversal<AssertStmt.State> CHECK = SNodeState.childTraversal(0);
+	private static final STraversal<AssertStmt.State> MSG = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Assert),
@@ -92,4 +98,32 @@ public class AssertStmt extends TreeBase<SNodeState, Stmt, AssertStmt> implement
 			)),
 			token(LToken.SemiColon)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Expr.State> check;
+
+		public final STree<SNodeOptionState> msg;
+
+		State(STree<Expr.State> check, STree<SNodeOptionState> msg) {
+			this.check = check;
+			this.msg = msg;
+		}
+
+		public AssertStmt.State withCheck(STree<Expr.State> check) {
+			return new AssertStmt.State(check, msg);
+		}
+
+		public AssertStmt.State withMsg(STree<SNodeOptionState> msg) {
+			return new AssertStmt.State(check, msg);
+		}
+
+		public STraversal<AssertStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<AssertStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

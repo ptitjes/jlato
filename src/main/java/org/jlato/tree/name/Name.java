@@ -32,11 +32,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class Name extends TreeBase<SNodeState, Expr, Name> implements Expr {
+public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public Name instantiate(SLocation<SNodeState> location) {
+	public final static SKind<Name.State> kind = new SKind<Name.State>() {
+		public Name instantiate(SLocation<Name.State> location) {
 			return new Name(location);
 		}
 
@@ -45,12 +47,16 @@ public class Name extends TreeBase<SNodeState, Expr, Name> implements Expr {
 		}
 	};
 
-	private Name(SLocation<SNodeState> location) {
+	private Name(SLocation<Name.State> location) {
 		super(location);
 	}
 
+	public static STree<Name.State> make(String identifier) {
+		return new STree<Name.State>(kind, new Name.State(identifier));
+	}
+
 	public Name(String identifier) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(identifier), treesOf()))));
+		super(new SLocation<Name.State>(make(identifier)));
 	}
 
 	public String name() {
@@ -77,4 +83,25 @@ public class Name extends TreeBase<SNodeState, Expr, Name> implements Expr {
 			return new LToken(ParserImplConstants.IDENTIFIER, (String) tree.state.data(IDENTIFIER));
 		}
 	});
+
+	public static class State extends SNodeState<State> {
+
+		public final String identifier;
+
+		State(String identifier) {
+			this.identifier = identifier;
+		}
+
+		public Name.State withIdentifier(String identifier) {
+			return new Name.State(identifier);
+		}
+
+		public STraversal<Name.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<Name.State> lastChild() {
+			return null;
+		}
+	}
 }

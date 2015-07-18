@@ -33,11 +33,13 @@ import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class InterfaceDecl extends TreeBase<SNodeState, TypeDecl, InterfaceDecl> implements TypeDecl {
+public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, InterfaceDecl> implements TypeDecl {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public InterfaceDecl instantiate(SLocation<SNodeState> location) {
+	public final static SKind<InterfaceDecl.State> kind = new SKind<InterfaceDecl.State>() {
+		public InterfaceDecl instantiate(SLocation<InterfaceDecl.State> location) {
 			return new InterfaceDecl(location);
 		}
 
@@ -46,12 +48,16 @@ public class InterfaceDecl extends TreeBase<SNodeState, TypeDecl, InterfaceDecl>
 		}
 	};
 
-	protected InterfaceDecl(SLocation<SNodeState> location) {
+	protected InterfaceDecl(SLocation<InterfaceDecl.State> location) {
 		super(location);
 	}
 
+	public static STree<InterfaceDecl.State> make(NodeList<ExtendedModifier> modifiers, Name name, NodeList<TypeParameter> typeParams, NodeList<QualifiedType> extendsClause, NodeList<MemberDecl> members) {
+		return new STree<InterfaceDecl.State>(kind, new InterfaceDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(typeParams), TreeBase.<SNodeListState>nodeOf(extendsClause), TreeBase.<SNodeListState>nodeOf(members)));
+	}
+
 	public InterfaceDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<TypeParameter> typeParams, NodeList<QualifiedType> extendsClause, NodeList<MemberDecl> members) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, name, typeParams, extendsClause, members)))));
+		super(new SLocation<InterfaceDecl.State>(make(modifiers, name, typeParams, extendsClause, members)));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {
@@ -123,11 +129,11 @@ public class InterfaceDecl extends TreeBase<SNodeState, TypeDecl, InterfaceDecl>
 		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
 
-	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> TYPE_PARAMETERS = SNodeState.childTraversal(2);
-	private static final STraversal<SNodeState> EXTENDS_CLAUSE = SNodeState.childTraversal(3);
-	private static final STraversal<SNodeState> MEMBERS = SNodeState.childTraversal(4);
+	private static final STraversal<InterfaceDecl.State> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<InterfaceDecl.State> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<InterfaceDecl.State> TYPE_PARAMETERS = SNodeState.childTraversal(2);
+	private static final STraversal<InterfaceDecl.State> EXTENDS_CLAUSE = SNodeState.childTraversal(3);
+	private static final STraversal<InterfaceDecl.State> MEMBERS = SNodeState.childTraversal(4);
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
@@ -137,4 +143,53 @@ public class InterfaceDecl extends TreeBase<SNodeState, TypeDecl, InterfaceDecl>
 			child(EXTENDS_CLAUSE, QualifiedType.extendsClauseShape),
 			child(MEMBERS, MemberDecl.bodyShape)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeListState> typeParams;
+
+		public final STree<SNodeListState> extendsClause;
+
+		public final STree<SNodeListState> members;
+
+		State(STree<SNodeListState> modifiers, STree<Name.State> name, STree<SNodeListState> typeParams, STree<SNodeListState> extendsClause, STree<SNodeListState> members) {
+			this.modifiers = modifiers;
+			this.name = name;
+			this.typeParams = typeParams;
+			this.extendsClause = extendsClause;
+			this.members = members;
+		}
+
+		public InterfaceDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new InterfaceDecl.State(modifiers, name, typeParams, extendsClause, members);
+		}
+
+		public InterfaceDecl.State withName(STree<Name.State> name) {
+			return new InterfaceDecl.State(modifiers, name, typeParams, extendsClause, members);
+		}
+
+		public InterfaceDecl.State withTypeParams(STree<SNodeListState> typeParams) {
+			return new InterfaceDecl.State(modifiers, name, typeParams, extendsClause, members);
+		}
+
+		public InterfaceDecl.State withExtendsClause(STree<SNodeListState> extendsClause) {
+			return new InterfaceDecl.State(modifiers, name, typeParams, extendsClause, members);
+		}
+
+		public InterfaceDecl.State withMembers(STree<SNodeListState> members) {
+			return new InterfaceDecl.State(modifiers, name, typeParams, extendsClause, members);
+		}
+
+		public STraversal<InterfaceDecl.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<InterfaceDecl.State> lastChild() {
+			return null;
+		}
+	}
 }

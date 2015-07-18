@@ -31,11 +31,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ExpressionStmt extends TreeBase<SNodeState, Stmt, ExpressionStmt> implements Stmt {
+public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, ExpressionStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ExpressionStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ExpressionStmt.State> kind = new SKind<ExpressionStmt.State>() {
+		public ExpressionStmt instantiate(SLocation<ExpressionStmt.State> location) {
 			return new ExpressionStmt(location);
 		}
 
@@ -44,12 +46,16 @@ public class ExpressionStmt extends TreeBase<SNodeState, Stmt, ExpressionStmt> i
 		}
 	};
 
-	private ExpressionStmt(SLocation<SNodeState> location) {
+	private ExpressionStmt(SLocation<ExpressionStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<ExpressionStmt.State> make(Expr expr) {
+		return new STree<ExpressionStmt.State>(kind, new ExpressionStmt.State(TreeBase.<Expr.State>nodeOf(expr)));
+	}
+
 	public ExpressionStmt(Expr expr) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(expr)))));
+		super(new SLocation<ExpressionStmt.State>(make(expr)));
 	}
 
 	public Expr expr() {
@@ -64,9 +70,30 @@ public class ExpressionStmt extends TreeBase<SNodeState, Stmt, ExpressionStmt> i
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<ExpressionStmt.State> EXPR = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			child(EXPR), token(LToken.SemiColon)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Expr.State> expr;
+
+		State(STree<Expr.State> expr) {
+			this.expr = expr;
+		}
+
+		public ExpressionStmt.State withExpr(STree<Expr.State> expr) {
+			return new ExpressionStmt.State(expr);
+		}
+
+		public STraversal<ExpressionStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ExpressionStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

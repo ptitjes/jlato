@@ -34,11 +34,13 @@ import org.jlato.tree.name.Name;
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class BreakStmt extends TreeBase<SNodeState, Stmt, BreakStmt> implements Stmt {
+public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public BreakStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<BreakStmt.State> kind = new SKind<BreakStmt.State>() {
+		public BreakStmt instantiate(SLocation<BreakStmt.State> location) {
 			return new BreakStmt(location);
 		}
 
@@ -47,12 +49,16 @@ public class BreakStmt extends TreeBase<SNodeState, Stmt, BreakStmt> implements 
 		}
 	};
 
-	private BreakStmt(SLocation<SNodeState> location) {
+	private BreakStmt(SLocation<BreakStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<BreakStmt.State> make(NodeOption<Name> id) {
+		return new STree<BreakStmt.State>(kind, new BreakStmt.State(TreeBase.<SNodeOptionState>nodeOf(id)));
+	}
+
 	public BreakStmt(NodeOption<Name> id) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(id)))));
+		super(new SLocation<BreakStmt.State>(make(id)));
 	}
 
 	public NodeOption<Name> id() {
@@ -67,11 +73,32 @@ public class BreakStmt extends TreeBase<SNodeState, Stmt, BreakStmt> implements 
 		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final STraversal<SNodeState> ID = SNodeState.childTraversal(0);
+	private static final STraversal<BreakStmt.State> ID = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Break),
 			when(childIs(ID, some()), child(ID, element())),
 			token(LToken.SemiColon)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeOptionState> id;
+
+		State(STree<SNodeOptionState> id) {
+			this.id = id;
+		}
+
+		public BreakStmt.State withId(STree<SNodeOptionState> id) {
+			return new BreakStmt.State(id);
+		}
+
+		public STraversal<BreakStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<BreakStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

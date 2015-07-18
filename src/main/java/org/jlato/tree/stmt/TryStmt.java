@@ -36,11 +36,13 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class TryStmt extends TreeBase<SNodeState, Stmt, TryStmt> implements Stmt {
+public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public TryStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<TryStmt.State> kind = new SKind<TryStmt.State>() {
+		public TryStmt instantiate(SLocation<TryStmt.State> location) {
 			return new TryStmt(location);
 		}
 
@@ -49,12 +51,16 @@ public class TryStmt extends TreeBase<SNodeState, Stmt, TryStmt> implements Stmt
 		}
 	};
 
-	private TryStmt(SLocation<SNodeState> location) {
+	private TryStmt(SLocation<TryStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<TryStmt.State> make(NodeList<VariableDeclarationExpr> resources, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
+		return new STree<TryStmt.State>(kind, new TryStmt.State(TreeBase.<SNodeListState>nodeOf(resources), TreeBase.<BlockStmt.State>nodeOf(tryBlock), TreeBase.<SNodeListState>nodeOf(catchs), TreeBase.<SNodeOptionState>nodeOf(finallyBlock)));
+	}
+
 	public TryStmt(NodeList<VariableDeclarationExpr> resources, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(resources, tryBlock, catchs, finallyBlock)))));
+		super(new SLocation<TryStmt.State>(make(resources, tryBlock, catchs, finallyBlock)));
 	}
 
 	public NodeList<VariableDeclarationExpr> resources() {
@@ -105,10 +111,10 @@ public class TryStmt extends TreeBase<SNodeState, Stmt, TryStmt> implements Stmt
 		return location.safeTraversalMutate(FINALLY_BLOCK, mutation);
 	}
 
-	private static final STraversal<SNodeState> RESOURCES = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> TRY_BLOCK = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> CATCHS = SNodeState.childTraversal(2);
-	private static final STraversal<SNodeState> FINALLY_BLOCK = SNodeState.childTraversal(3);
+	private static final STraversal<TryStmt.State> RESOURCES = SNodeState.childTraversal(0);
+	private static final STraversal<TryStmt.State> TRY_BLOCK = SNodeState.childTraversal(1);
+	private static final STraversal<TryStmt.State> CATCHS = SNodeState.childTraversal(2);
+	private static final STraversal<TryStmt.State> FINALLY_BLOCK = SNodeState.childTraversal(3);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Try).withSpacingAfter(space()),
@@ -120,4 +126,46 @@ public class TryStmt extends TreeBase<SNodeState, Stmt, TryStmt> implements Stmt
 					child(FINALLY_BLOCK, element())
 			))
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> resources;
+
+		public final STree<BlockStmt.State> tryBlock;
+
+		public final STree<SNodeListState> catchs;
+
+		public final STree<SNodeOptionState> finallyBlock;
+
+		State(STree<SNodeListState> resources, STree<BlockStmt.State> tryBlock, STree<SNodeListState> catchs, STree<SNodeOptionState> finallyBlock) {
+			this.resources = resources;
+			this.tryBlock = tryBlock;
+			this.catchs = catchs;
+			this.finallyBlock = finallyBlock;
+		}
+
+		public TryStmt.State withResources(STree<SNodeListState> resources) {
+			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
+		}
+
+		public TryStmt.State withTryBlock(STree<BlockStmt.State> tryBlock) {
+			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
+		}
+
+		public TryStmt.State withCatchs(STree<SNodeListState> catchs) {
+			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
+		}
+
+		public TryStmt.State withFinallyBlock(STree<SNodeOptionState> finallyBlock) {
+			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
+		}
+
+		public STraversal<TryStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<TryStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

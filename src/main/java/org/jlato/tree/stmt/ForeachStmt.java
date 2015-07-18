@@ -33,11 +33,13 @@ import org.jlato.tree.expr.VariableDeclarationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ForeachStmt extends TreeBase<SNodeState, Stmt, ForeachStmt> implements Stmt {
+public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ForeachStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ForeachStmt.State> kind = new SKind<ForeachStmt.State>() {
+		public ForeachStmt instantiate(SLocation<ForeachStmt.State> location) {
 			return new ForeachStmt(location);
 		}
 
@@ -46,12 +48,16 @@ public class ForeachStmt extends TreeBase<SNodeState, Stmt, ForeachStmt> impleme
 		}
 	};
 
-	private ForeachStmt(SLocation<SNodeState> location) {
+	private ForeachStmt(SLocation<ForeachStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<ForeachStmt.State> make(VariableDeclarationExpr var, Expr iterable, Stmt body) {
+		return new STree<ForeachStmt.State>(kind, new ForeachStmt.State(TreeBase.<VariableDeclarationExpr.State>nodeOf(var), TreeBase.<Expr.State>nodeOf(iterable), TreeBase.<Stmt.State>nodeOf(body)));
+	}
+
 	public ForeachStmt(VariableDeclarationExpr var, Expr iterable, Stmt body) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(var, iterable, body)))));
+		super(new SLocation<ForeachStmt.State>(make(var, iterable, body)));
 	}
 
 	public VariableDeclarationExpr var() {
@@ -90,9 +96,9 @@ public class ForeachStmt extends TreeBase<SNodeState, Stmt, ForeachStmt> impleme
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<SNodeState> VAR = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> ITERABLE = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(2);
+	private static final STraversal<ForeachStmt.State> VAR = SNodeState.childTraversal(0);
+	private static final STraversal<ForeachStmt.State> ITERABLE = SNodeState.childTraversal(1);
+	private static final STraversal<ForeachStmt.State> BODY = SNodeState.childTraversal(2);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
@@ -102,4 +108,39 @@ public class ForeachStmt extends TreeBase<SNodeState, Stmt, ForeachStmt> impleme
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			child(BODY)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<VariableDeclarationExpr.State> var;
+
+		public final STree<Expr.State> iterable;
+
+		public final STree<Stmt.State> body;
+
+		State(STree<VariableDeclarationExpr.State> var, STree<Expr.State> iterable, STree<Stmt.State> body) {
+			this.var = var;
+			this.iterable = iterable;
+			this.body = body;
+		}
+
+		public ForeachStmt.State withVar(STree<VariableDeclarationExpr.State> var) {
+			return new ForeachStmt.State(var, iterable, body);
+		}
+
+		public ForeachStmt.State withIterable(STree<Expr.State> iterable) {
+			return new ForeachStmt.State(var, iterable, body);
+		}
+
+		public ForeachStmt.State withBody(STree<Stmt.State> body) {
+			return new ForeachStmt.State(var, iterable, body);
+		}
+
+		public STraversal<ForeachStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ForeachStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

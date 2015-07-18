@@ -31,11 +31,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ThrowStmt extends TreeBase<SNodeState, Stmt, ThrowStmt> implements Stmt {
+public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ThrowStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ThrowStmt.State> kind = new SKind<ThrowStmt.State>() {
+		public ThrowStmt instantiate(SLocation<ThrowStmt.State> location) {
 			return new ThrowStmt(location);
 		}
 
@@ -44,12 +46,16 @@ public class ThrowStmt extends TreeBase<SNodeState, Stmt, ThrowStmt> implements 
 		}
 	};
 
-	private ThrowStmt(SLocation<SNodeState> location) {
+	private ThrowStmt(SLocation<ThrowStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<ThrowStmt.State> make(Expr expr) {
+		return new STree<ThrowStmt.State>(kind, new ThrowStmt.State(TreeBase.<Expr.State>nodeOf(expr)));
+	}
+
 	public ThrowStmt(Expr expr) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(expr)))));
+		super(new SLocation<ThrowStmt.State>(make(expr)));
 	}
 
 	public Expr expr() {
@@ -64,9 +70,30 @@ public class ThrowStmt extends TreeBase<SNodeState, Stmt, ThrowStmt> implements 
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<ThrowStmt.State> EXPR = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Throw), child(EXPR), token(LToken.SemiColon)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Expr.State> expr;
+
+		State(STree<Expr.State> expr) {
+			this.expr = expr;
+		}
+
+		public ThrowStmt.State withExpr(STree<Expr.State> expr) {
+			return new ThrowStmt.State(expr);
+		}
+
+		public STraversal<ThrowStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ThrowStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

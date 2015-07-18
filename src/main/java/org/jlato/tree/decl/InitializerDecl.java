@@ -32,11 +32,13 @@ import org.jlato.tree.stmt.BlockStmt;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class InitializerDecl extends TreeBase<SNodeState, MemberDecl, InitializerDecl> implements MemberDecl {
+public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl, InitializerDecl> implements MemberDecl {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public InitializerDecl instantiate(SLocation<SNodeState> location) {
+	public final static SKind<InitializerDecl.State> kind = new SKind<InitializerDecl.State>() {
+		public InitializerDecl instantiate(SLocation<InitializerDecl.State> location) {
 			return new InitializerDecl(location);
 		}
 
@@ -45,12 +47,16 @@ public class InitializerDecl extends TreeBase<SNodeState, MemberDecl, Initialize
 		}
 	};
 
-	private InitializerDecl(SLocation<SNodeState> location) {
+	private InitializerDecl(SLocation<InitializerDecl.State> location) {
 		super(location);
 	}
 
+	public static STree<InitializerDecl.State> make(NodeList<ExtendedModifier> modifiers, BlockStmt body) {
+		return new STree<InitializerDecl.State>(kind, new InitializerDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<BlockStmt.State>nodeOf(body)));
+	}
+
 	public InitializerDecl(NodeList<ExtendedModifier> modifiers, BlockStmt body/*, JavadocComment javadocComment*/) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, body/*, javadocComment*/)))));
+		super(new SLocation<InitializerDecl.State>(make(modifiers, body)));
 	}
 
 	@Override
@@ -91,12 +97,40 @@ public class InitializerDecl extends TreeBase<SNodeState, MemberDecl, Initialize
 			return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
 		}
 	*/
-	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(1);
+	private static final STraversal<InitializerDecl.State> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<InitializerDecl.State> BODY = SNodeState.childTraversal(1);
 //	private static final int JAVADOC_COMMENT = 3;
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(BODY)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<BlockStmt.State> body;
+
+		State(STree<SNodeListState> modifiers, STree<BlockStmt.State> body) {
+			this.modifiers = modifiers;
+			this.body = body;
+		}
+
+		public InitializerDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new InitializerDecl.State(modifiers, body);
+		}
+
+		public InitializerDecl.State withBody(STree<BlockStmt.State> body) {
+			return new InitializerDecl.State(modifiers, body);
+		}
+
+		public STraversal<InitializerDecl.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<InitializerDecl.State> lastChild() {
+			return null;
+		}
+	}
 }

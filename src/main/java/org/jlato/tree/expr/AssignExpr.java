@@ -32,11 +32,13 @@ import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class AssignExpr extends TreeBase<SNodeState, Expr, AssignExpr> implements Expr {
+public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public AssignExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<AssignExpr.State> kind = new SKind<AssignExpr.State>() {
+		public AssignExpr instantiate(SLocation<AssignExpr.State> location) {
 			return new AssignExpr(location);
 		}
 
@@ -45,12 +47,16 @@ public class AssignExpr extends TreeBase<SNodeState, Expr, AssignExpr> implement
 		}
 	};
 
-	private AssignExpr(SLocation<SNodeState> location) {
+	private AssignExpr(SLocation<AssignExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<AssignExpr.State> make(Expr target, AssignOp operator, Expr value) {
+		return new STree<AssignExpr.State>(kind, new AssignExpr.State(TreeBase.<Expr.State>nodeOf(target), operator, TreeBase.<Expr.State>nodeOf(value)));
+	}
+
 	public AssignExpr(Expr target, AssignOp operator, Expr value) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(operator), treesOf(target, value)))));
+		super(new SLocation<AssignExpr.State>(make(target, operator, value)));
 	}
 
 	public Expr target() {
@@ -89,8 +95,8 @@ public class AssignExpr extends TreeBase<SNodeState, Expr, AssignExpr> implement
 		return location.safeTraversalMutate(VALUE, mutation);
 	}
 
-	private static final STraversal<SNodeState> TARGET = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> VALUE = SNodeState.childTraversal(1);
+	private static final STraversal<AssignExpr.State> TARGET = SNodeState.childTraversal(0);
+	private static final STraversal<AssignExpr.State> VALUE = SNodeState.childTraversal(1);
 
 	private static final int OPERATOR = 0;
 
@@ -124,6 +130,41 @@ public class AssignExpr extends TreeBase<SNodeState, Expr, AssignExpr> implement
 
 		AssignOp(LToken token) {
 			this.token = token;
+		}
+	}
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Expr.State> target;
+
+		public final AssignOp operator;
+
+		public final STree<Expr.State> value;
+
+		State(STree<Expr.State> target, AssignOp operator, STree<Expr.State> value) {
+			this.target = target;
+			this.operator = operator;
+			this.value = value;
+		}
+
+		public AssignExpr.State withTarget(STree<Expr.State> target) {
+			return new AssignExpr.State(target, operator, value);
+		}
+
+		public AssignExpr.State withOperator(AssignOp operator) {
+			return new AssignExpr.State(target, operator, value);
+		}
+
+		public AssignExpr.State withValue(STree<Expr.State> value) {
+			return new AssignExpr.State(target, operator, value);
+		}
+
+		public STraversal<AssignExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<AssignExpr.State> lastChild() {
+			return null;
 		}
 	}
 }

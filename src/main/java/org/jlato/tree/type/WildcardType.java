@@ -36,11 +36,13 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class WildcardType extends TreeBase<SNodeState, Type, WildcardType> implements Type {
+public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardType> implements Type {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public WildcardType instantiate(SLocation<SNodeState> location) {
+	public final static SKind<WildcardType.State> kind = new SKind<WildcardType.State>() {
+		public WildcardType instantiate(SLocation<WildcardType.State> location) {
 			return new WildcardType(location);
 		}
 
@@ -49,12 +51,16 @@ public class WildcardType extends TreeBase<SNodeState, Type, WildcardType> imple
 		}
 	};
 
-	private WildcardType(SLocation<SNodeState> location) {
+	private WildcardType(SLocation<WildcardType.State> location) {
 		super(location);
 	}
 
+	public static STree<WildcardType.State> make(NodeList<AnnotationExpr> annotations, NodeOption<ReferenceType> ext, NodeOption<ReferenceType> sup) {
+		return new STree<WildcardType.State>(kind, new WildcardType.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<SNodeOptionState>nodeOf(ext), TreeBase.<SNodeOptionState>nodeOf(sup)));
+	}
+
 	public WildcardType(NodeList<AnnotationExpr> annotations, NodeOption<ReferenceType> ext, NodeOption<ReferenceType> sup) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(annotations, ext, sup)))));
+		super(new SLocation<WildcardType.State>(make(annotations, ext, sup)));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
@@ -93,9 +99,9 @@ public class WildcardType extends TreeBase<SNodeState, Type, WildcardType> imple
 		return location.safeTraversalMutate(SUP, mutation);
 	}
 
-	private static final STraversal<SNodeState> ANNOTATIONS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> EXT = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> SUP = SNodeState.childTraversal(2);
+	private static final STraversal<WildcardType.State> ANNOTATIONS = SNodeState.childTraversal(0);
+	private static final STraversal<WildcardType.State> EXT = SNodeState.childTraversal(1);
+	private static final STraversal<WildcardType.State> SUP = SNodeState.childTraversal(2);
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
@@ -103,4 +109,39 @@ public class WildcardType extends TreeBase<SNodeState, Type, WildcardType> imple
 			when(childIs(EXT, some()), composite(token(LToken.Extends).withSpacingBefore(space()), child(EXT, element()))),
 			when(childIs(SUP, some()), composite(token(LToken.Super).withSpacingBefore(space()), child(SUP, element())))
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> annotations;
+
+		public final STree<SNodeOptionState> ext;
+
+		public final STree<SNodeOptionState> sup;
+
+		State(STree<SNodeListState> annotations, STree<SNodeOptionState> ext, STree<SNodeOptionState> sup) {
+			this.annotations = annotations;
+			this.ext = ext;
+			this.sup = sup;
+		}
+
+		public WildcardType.State withAnnotations(STree<SNodeListState> annotations) {
+			return new WildcardType.State(annotations, ext, sup);
+		}
+
+		public WildcardType.State withExt(STree<SNodeOptionState> ext) {
+			return new WildcardType.State(annotations, ext, sup);
+		}
+
+		public WildcardType.State withSup(STree<SNodeOptionState> sup) {
+			return new WildcardType.State(annotations, ext, sup);
+		}
+
+		public STraversal<WildcardType.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<WildcardType.State> lastChild() {
+			return null;
+		}
+	}
 }

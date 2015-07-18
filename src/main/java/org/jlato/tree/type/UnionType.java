@@ -31,11 +31,13 @@ import org.jlato.tree.NodeList;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class UnionType extends TreeBase<SNodeState, Type, UnionType> implements Type {
+public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implements Type {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public UnionType instantiate(SLocation<SNodeState> location) {
+	public final static SKind<UnionType.State> kind = new SKind<UnionType.State>() {
+		public UnionType instantiate(SLocation<UnionType.State> location) {
 			return new UnionType(location);
 		}
 
@@ -44,12 +46,16 @@ public class UnionType extends TreeBase<SNodeState, Type, UnionType> implements 
 		}
 	};
 
-	private UnionType(SLocation<SNodeState> location) {
+	private UnionType(SLocation<UnionType.State> location) {
 		super(location);
 	}
 
+	public static STree<UnionType.State> make(NodeList<Type> types) {
+		return new STree<UnionType.State>(kind, new UnionType.State(TreeBase.<SNodeListState>nodeOf(types)));
+	}
+
 	public UnionType(NodeList<Type> types) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(types)))));
+		super(new SLocation<UnionType.State>(make(types)));
 	}
 
 	public NodeList<Type> types() {
@@ -64,9 +70,30 @@ public class UnionType extends TreeBase<SNodeState, Type, UnionType> implements 
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final STraversal<SNodeState> TYPES = SNodeState.childTraversal(0);
+	private static final STraversal<UnionType.State> TYPES = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			child(TYPES, Type.unionShape)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> types;
+
+		State(STree<SNodeListState> types) {
+			this.types = types;
+		}
+
+		public UnionType.State withTypes(STree<SNodeListState> types) {
+			return new UnionType.State(types);
+		}
+
+		public STraversal<UnionType.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<UnionType.State> lastChild() {
+			return null;
+		}
+	}
 }

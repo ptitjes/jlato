@@ -33,11 +33,13 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ForStmt extends TreeBase<SNodeState, Stmt, ForStmt> implements Stmt {
+public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ForStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ForStmt.State> kind = new SKind<ForStmt.State>() {
+		public ForStmt instantiate(SLocation<ForStmt.State> location) {
 			return new ForStmt(location);
 		}
 
@@ -46,12 +48,16 @@ public class ForStmt extends TreeBase<SNodeState, Stmt, ForStmt> implements Stmt
 		}
 	};
 
-	private ForStmt(SLocation<SNodeState> location) {
+	private ForStmt(SLocation<ForStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<ForStmt.State> make(NodeList<Expr> init, Expr compare, NodeList<Expr> update, Stmt body) {
+		return new STree<ForStmt.State>(kind, new ForStmt.State(TreeBase.<SNodeListState>nodeOf(init), TreeBase.<Expr.State>nodeOf(compare), TreeBase.<SNodeListState>nodeOf(update), TreeBase.<Stmt.State>nodeOf(body)));
+	}
+
 	public ForStmt(NodeList<Expr> init, Expr compare, NodeList<Expr> update, Stmt body) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(init, compare, update, body)))));
+		super(new SLocation<ForStmt.State>(make(init, compare, update, body)));
 	}
 
 	public NodeList<Expr> init() {
@@ -102,10 +108,10 @@ public class ForStmt extends TreeBase<SNodeState, Stmt, ForStmt> implements Stmt
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<SNodeState> INIT = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> COMPARE = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> UPDATE = SNodeState.childTraversal(2);
-	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(3);
+	private static final STraversal<ForStmt.State> INIT = SNodeState.childTraversal(0);
+	private static final STraversal<ForStmt.State> COMPARE = SNodeState.childTraversal(1);
+	private static final STraversal<ForStmt.State> UPDATE = SNodeState.childTraversal(2);
+	private static final STraversal<ForStmt.State> BODY = SNodeState.childTraversal(3);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
@@ -117,4 +123,46 @@ public class ForStmt extends TreeBase<SNodeState, Stmt, ForStmt> implements Stmt
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			child(BODY)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> init;
+
+		public final STree<Expr.State> compare;
+
+		public final STree<SNodeListState> update;
+
+		public final STree<Stmt.State> body;
+
+		State(STree<SNodeListState> init, STree<Expr.State> compare, STree<SNodeListState> update, STree<Stmt.State> body) {
+			this.init = init;
+			this.compare = compare;
+			this.update = update;
+			this.body = body;
+		}
+
+		public ForStmt.State withInit(STree<SNodeListState> init) {
+			return new ForStmt.State(init, compare, update, body);
+		}
+
+		public ForStmt.State withCompare(STree<Expr.State> compare) {
+			return new ForStmt.State(init, compare, update, body);
+		}
+
+		public ForStmt.State withUpdate(STree<SNodeListState> update) {
+			return new ForStmt.State(init, compare, update, body);
+		}
+
+		public ForStmt.State withBody(STree<Stmt.State> body) {
+			return new ForStmt.State(init, compare, update, body);
+		}
+
+		public STraversal<ForStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ForStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

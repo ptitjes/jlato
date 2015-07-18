@@ -32,11 +32,13 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class AnnotationDecl extends TreeBase<SNodeState, TypeDecl, AnnotationDecl> implements TypeDecl {
+public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, AnnotationDecl> implements TypeDecl {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public AnnotationDecl instantiate(SLocation<SNodeState> location) {
+	public final static SKind<AnnotationDecl.State> kind = new SKind<AnnotationDecl.State>() {
+		public AnnotationDecl instantiate(SLocation<AnnotationDecl.State> location) {
 			return new AnnotationDecl(location);
 		}
 
@@ -45,12 +47,16 @@ public class AnnotationDecl extends TreeBase<SNodeState, TypeDecl, AnnotationDec
 		}
 	};
 
-	protected AnnotationDecl(SLocation<SNodeState> location) {
+	protected AnnotationDecl(SLocation<AnnotationDecl.State> location) {
 		super(location);
 	}
 
+	public static STree<AnnotationDecl.State> make(NodeList<ExtendedModifier> modifiers, Name name, NodeList<MemberDecl> members) {
+		return new STree<AnnotationDecl.State>(kind, new AnnotationDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(members)));
+	}
+
 	public AnnotationDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<MemberDecl> members) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, name, members)))));
+		super(new SLocation<AnnotationDecl.State>(make(modifiers, name, members)));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {
@@ -98,9 +104,9 @@ public class AnnotationDecl extends TreeBase<SNodeState, TypeDecl, AnnotationDec
 		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
 
-	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> MEMBERS = SNodeState.childTraversal(6);
+	private static final STraversal<AnnotationDecl.State> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<AnnotationDecl.State> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<AnnotationDecl.State> MEMBERS = SNodeState.childTraversal(6);
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS),
@@ -108,4 +114,39 @@ public class AnnotationDecl extends TreeBase<SNodeState, TypeDecl, AnnotationDec
 			child(NAME),
 			child(MEMBERS, MemberDecl.bodyShape)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeListState> members;
+
+		State(STree<SNodeListState> modifiers, STree<Name.State> name, STree<SNodeListState> members) {
+			this.modifiers = modifiers;
+			this.name = name;
+			this.members = members;
+		}
+
+		public AnnotationDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new AnnotationDecl.State(modifiers, name, members);
+		}
+
+		public AnnotationDecl.State withName(STree<Name.State> name) {
+			return new AnnotationDecl.State(modifiers, name, members);
+		}
+
+		public AnnotationDecl.State withMembers(STree<SNodeListState> members) {
+			return new AnnotationDecl.State(modifiers, name, members);
+		}
+
+		public STraversal<AnnotationDecl.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<AnnotationDecl.State> lastChild() {
+			return null;
+		}
+	}
 }

@@ -30,11 +30,13 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ParenthesizedExpr extends TreeBase<SNodeState, Expr, ParenthesizedExpr> implements Expr {
+public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, ParenthesizedExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ParenthesizedExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ParenthesizedExpr.State> kind = new SKind<ParenthesizedExpr.State>() {
+		public ParenthesizedExpr instantiate(SLocation<ParenthesizedExpr.State> location) {
 			return new ParenthesizedExpr(location);
 		}
 
@@ -43,12 +45,16 @@ public class ParenthesizedExpr extends TreeBase<SNodeState, Expr, ParenthesizedE
 		}
 	};
 
-	private ParenthesizedExpr(SLocation<SNodeState> location) {
+	private ParenthesizedExpr(SLocation<ParenthesizedExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<ParenthesizedExpr.State> make(Expr inner) {
+		return new STree<ParenthesizedExpr.State>(kind, new ParenthesizedExpr.State(TreeBase.<Expr.State>nodeOf(inner)));
+	}
+
 	public ParenthesizedExpr(Expr inner) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(inner)))));
+		super(new SLocation<ParenthesizedExpr.State>(make(inner)));
 	}
 
 	public Expr inner() {
@@ -63,9 +69,30 @@ public class ParenthesizedExpr extends TreeBase<SNodeState, Expr, ParenthesizedE
 		return location.safeTraversalMutate(INNER, mutation);
 	}
 
-	private static final STraversal<SNodeState> INNER = SNodeState.childTraversal(0);
+	private static final STraversal<ParenthesizedExpr.State> INNER = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft), child(INNER), token(LToken.ParenthesisRight)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Expr.State> inner;
+
+		State(STree<Expr.State> inner) {
+			this.inner = inner;
+		}
+
+		public ParenthesizedExpr.State withInner(STree<Expr.State> inner) {
+			return new ParenthesizedExpr.State(inner);
+		}
+
+		public STraversal<ParenthesizedExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ParenthesizedExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

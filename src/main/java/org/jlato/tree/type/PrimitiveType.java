@@ -33,11 +33,13 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class PrimitiveType extends TreeBase<SNodeState, Type, PrimitiveType> implements Type {
+public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, PrimitiveType> implements Type {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public PrimitiveType instantiate(SLocation<SNodeState> location) {
+	public final static SKind<PrimitiveType.State> kind = new SKind<PrimitiveType.State>() {
+		public PrimitiveType instantiate(SLocation<PrimitiveType.State> location) {
 			return new PrimitiveType(location);
 		}
 
@@ -46,12 +48,16 @@ public class PrimitiveType extends TreeBase<SNodeState, Type, PrimitiveType> imp
 		}
 	};
 
-	private PrimitiveType(SLocation<SNodeState> location) {
+	private PrimitiveType(SLocation<PrimitiveType.State> location) {
 		super(location);
 	}
 
+	public static STree<PrimitiveType.State> make(NodeList<AnnotationExpr> annotations, Primitive type) {
+		return new STree<PrimitiveType.State>(kind, new PrimitiveType.State(TreeBase.<SNodeListState>nodeOf(annotations), type));
+	}
+
 	public PrimitiveType(NodeList<AnnotationExpr> annotations, Primitive type) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(type), treesOf(annotations)))));
+		super(new SLocation<PrimitiveType.State>(make(annotations, type)));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
@@ -78,7 +84,7 @@ public class PrimitiveType extends TreeBase<SNodeState, Type, PrimitiveType> imp
 		return location.mutateData(PRIMITIVE, mutation);
 	}
 
-	private static final STraversal<SNodeState> ANNOTATIONS = SNodeState.childTraversal(0);
+	private static final STraversal<PrimitiveType.State> ANNOTATIONS = SNodeState.childTraversal(0);
 
 	private static final int PRIMITIVE = 0;
 
@@ -111,6 +117,34 @@ public class PrimitiveType extends TreeBase<SNodeState, Type, PrimitiveType> imp
 
 		public String toString() {
 			return token.toString();
+		}
+	}
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> annotations;
+
+		public final Primitive type;
+
+		State(STree<SNodeListState> annotations, Primitive type) {
+			this.annotations = annotations;
+			this.type = type;
+		}
+
+		public PrimitiveType.State withAnnotations(STree<SNodeListState> annotations) {
+			return new PrimitiveType.State(annotations, type);
+		}
+
+		public PrimitiveType.State withType(Primitive type) {
+			return new PrimitiveType.State(annotations, type);
+		}
+
+		public STraversal<PrimitiveType.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<PrimitiveType.State> lastChild() {
+			return null;
 		}
 	}
 }

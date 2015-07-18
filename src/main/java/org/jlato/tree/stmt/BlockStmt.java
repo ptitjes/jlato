@@ -35,11 +35,13 @@ import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class BlockStmt extends TreeBase<SNodeState, Stmt, BlockStmt> implements Stmt {
+public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public BlockStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<BlockStmt.State> kind = new SKind<BlockStmt.State>() {
+		public BlockStmt instantiate(SLocation<BlockStmt.State> location) {
 			return new BlockStmt(location);
 		}
 
@@ -48,12 +50,16 @@ public class BlockStmt extends TreeBase<SNodeState, Stmt, BlockStmt> implements 
 		}
 	};
 
-	private BlockStmt(SLocation<SNodeState> location) {
+	private BlockStmt(SLocation<BlockStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<BlockStmt.State> make(NodeList<Stmt> stmts) {
+		return new STree<BlockStmt.State>(kind, new BlockStmt.State(TreeBase.<SNodeListState>nodeOf(stmts)));
+	}
+
 	public BlockStmt(NodeList<Stmt> stmts) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(stmts)))));
+		super(new SLocation<BlockStmt.State>(make(stmts)));
 	}
 
 	public NodeList<Stmt> stmts() {
@@ -68,7 +74,7 @@ public class BlockStmt extends TreeBase<SNodeState, Stmt, BlockStmt> implements 
 		return location.safeTraversalMutate(STMTS, mutation);
 	}
 
-	private static final STraversal<SNodeState> STMTS = SNodeState.childTraversal(0);
+	private static final STraversal<BlockStmt.State> STMTS = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			nonEmptyChildren(STMTS,
@@ -90,4 +96,25 @@ public class BlockStmt extends TreeBase<SNodeState, Stmt, BlockStmt> implements 
 					)
 			)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> stmts;
+
+		State(STree<SNodeListState> stmts) {
+			this.stmts = stmts;
+		}
+
+		public BlockStmt.State withStmts(STree<SNodeListState> stmts) {
+			return new BlockStmt.State(stmts);
+		}
+
+		public STraversal<BlockStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<BlockStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

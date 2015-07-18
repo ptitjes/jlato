@@ -33,11 +33,13 @@ import org.jlato.tree.decl.FormalParameter;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class CatchClause extends TreeBase<SNodeState, Tree, CatchClause> implements Tree {
+public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> implements Tree {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public CatchClause instantiate(SLocation<SNodeState> location) {
+	public final static SKind<CatchClause.State> kind = new SKind<CatchClause.State>() {
+		public CatchClause instantiate(SLocation<CatchClause.State> location) {
 			return new CatchClause(location);
 		}
 
@@ -46,12 +48,16 @@ public class CatchClause extends TreeBase<SNodeState, Tree, CatchClause> impleme
 		}
 	};
 
-	private CatchClause(SLocation<SNodeState> location) {
+	private CatchClause(SLocation<CatchClause.State> location) {
 		super(location);
 	}
 
+	public static STree<CatchClause.State> make(FormalParameter except, BlockStmt catchBlock) {
+		return new STree<CatchClause.State>(kind, new CatchClause.State(TreeBase.<FormalParameter.State>nodeOf(except), TreeBase.<BlockStmt.State>nodeOf(catchBlock)));
+	}
+
 	public CatchClause(FormalParameter except, BlockStmt catchBlock) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(except, catchBlock)))));
+		super(new SLocation<CatchClause.State>(make(except, catchBlock)));
 	}
 
 	public FormalParameter except() {
@@ -78,8 +84,8 @@ public class CatchClause extends TreeBase<SNodeState, Tree, CatchClause> impleme
 		return location.safeTraversalMutate(CATCH_BLOCK, mutation);
 	}
 
-	private static final STraversal<SNodeState> EXCEPT = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> CATCH_BLOCK = SNodeState.childTraversal(1);
+	private static final STraversal<CatchClause.State> EXCEPT = SNodeState.childTraversal(0);
+	private static final STraversal<CatchClause.State> CATCH_BLOCK = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Catch).withSpacingBefore(space()),
@@ -90,4 +96,32 @@ public class CatchClause extends TreeBase<SNodeState, Tree, CatchClause> impleme
 	);
 
 	public static final LexicalShape listShape = list();
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<FormalParameter.State> except;
+
+		public final STree<BlockStmt.State> catchBlock;
+
+		State(STree<FormalParameter.State> except, STree<BlockStmt.State> catchBlock) {
+			this.except = except;
+			this.catchBlock = catchBlock;
+		}
+
+		public CatchClause.State withExcept(STree<FormalParameter.State> except) {
+			return new CatchClause.State(except, catchBlock);
+		}
+
+		public CatchClause.State withCatchBlock(STree<BlockStmt.State> catchBlock) {
+			return new CatchClause.State(except, catchBlock);
+		}
+
+		public STraversal<CatchClause.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<CatchClause.State> lastChild() {
+			return null;
+		}
+	}
 }

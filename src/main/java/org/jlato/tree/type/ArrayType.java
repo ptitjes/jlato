@@ -32,11 +32,13 @@ import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.decl.VariableDeclaratorId;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ArrayType extends TreeBase<SNodeState, ReferenceType, ArrayType> implements ReferenceType {
+public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayType> implements ReferenceType {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ArrayType instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ArrayType.State> kind = new SKind<ArrayType.State>() {
+		public ArrayType instantiate(SLocation<ArrayType.State> location) {
 			return new ArrayType(location);
 		}
 
@@ -45,12 +47,16 @@ public class ArrayType extends TreeBase<SNodeState, ReferenceType, ArrayType> im
 		}
 	};
 
-	private ArrayType(SLocation<SNodeState> location) {
+	private ArrayType(SLocation<ArrayType.State> location) {
 		super(location);
 	}
 
+	public static STree<ArrayType.State> make(Type componentType, NodeList<ArrayDim> dims) {
+		return new STree<ArrayType.State>(kind, new ArrayType.State(TreeBase.<Type.State>nodeOf(componentType), TreeBase.<SNodeListState>nodeOf(dims)));
+	}
+
 	public ArrayType(Type componentType, NodeList<ArrayDim> dims) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(componentType, dims)))));
+		super(new SLocation<ArrayType.State>(make(componentType, dims)));
 	}
 
 	public Type componentType() {
@@ -77,11 +83,39 @@ public class ArrayType extends TreeBase<SNodeState, ReferenceType, ArrayType> im
 		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
-	private static final STraversal<SNodeState> COMPONENT_TYPE = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> DIMS = SNodeState.childTraversal(1);
+	private static final STraversal<ArrayType.State> COMPONENT_TYPE = SNodeState.childTraversal(0);
+	private static final STraversal<ArrayType.State> DIMS = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(COMPONENT_TYPE),
 			child(DIMS, list())
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<Type.State> componentType;
+
+		public final STree<SNodeListState> dims;
+
+		State(STree<Type.State> componentType, STree<SNodeListState> dims) {
+			this.componentType = componentType;
+			this.dims = dims;
+		}
+
+		public ArrayType.State withComponentType(STree<Type.State> componentType) {
+			return new ArrayType.State(componentType, dims);
+		}
+
+		public ArrayType.State withDims(STree<SNodeListState> dims) {
+			return new ArrayType.State(componentType, dims);
+		}
+
+		public STraversal<ArrayType.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ArrayType.State> lastChild() {
+			return null;
+		}
+	}
 }

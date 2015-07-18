@@ -34,11 +34,13 @@ import org.jlato.tree.expr.Expr;
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class ReturnStmt extends TreeBase<SNodeState, Stmt, ReturnStmt> implements Stmt {
+public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public ReturnStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<ReturnStmt.State> kind = new SKind<ReturnStmt.State>() {
+		public ReturnStmt instantiate(SLocation<ReturnStmt.State> location) {
 			return new ReturnStmt(location);
 		}
 
@@ -47,12 +49,16 @@ public class ReturnStmt extends TreeBase<SNodeState, Stmt, ReturnStmt> implement
 		}
 	};
 
-	private ReturnStmt(SLocation<SNodeState> location) {
+	private ReturnStmt(SLocation<ReturnStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<ReturnStmt.State> make(NodeOption<Expr> expr) {
+		return new STree<ReturnStmt.State>(kind, new ReturnStmt.State(TreeBase.<SNodeOptionState>nodeOf(expr)));
+	}
+
 	public ReturnStmt(NodeOption<Expr> expr) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(expr)))));
+		super(new SLocation<ReturnStmt.State>(make(expr)));
 	}
 
 	public NodeOption<Expr> expr() {
@@ -67,11 +73,32 @@ public class ReturnStmt extends TreeBase<SNodeState, Stmt, ReturnStmt> implement
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<ReturnStmt.State> EXPR = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Return),
 			when(childIs(EXPR, some()), child(EXPR, element())),
 			token(LToken.SemiColon)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeOptionState> expr;
+
+		State(STree<SNodeOptionState> expr) {
+			this.expr = expr;
+		}
+
+		public ReturnStmt.State withExpr(STree<SNodeOptionState> expr) {
+			return new ReturnStmt.State(expr);
+		}
+
+		public STraversal<ReturnStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<ReturnStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

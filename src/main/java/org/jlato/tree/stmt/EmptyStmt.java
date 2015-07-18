@@ -28,11 +28,13 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class EmptyStmt extends TreeBase<SNodeState, Stmt, EmptyStmt> implements Stmt {
+public class EmptyStmt extends TreeBase<EmptyStmt.State, Stmt, EmptyStmt> implements Stmt {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public EmptyStmt instantiate(SLocation<SNodeState> location) {
+	public final static SKind<EmptyStmt.State> kind = new SKind<EmptyStmt.State>() {
+		public EmptyStmt instantiate(SLocation<EmptyStmt.State> location) {
 			return new EmptyStmt(location);
 		}
 
@@ -41,13 +43,31 @@ public class EmptyStmt extends TreeBase<SNodeState, Stmt, EmptyStmt> implements 
 		}
 	};
 
-	private EmptyStmt(SLocation<SNodeState> location) {
+	private EmptyStmt(SLocation<EmptyStmt.State> location) {
 		super(location);
 	}
 
+	public static STree<EmptyStmt.State> make() {
+		return new STree<EmptyStmt.State>(kind, new EmptyStmt.State());
+	}
+
 	public EmptyStmt() {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(), treesOf()))));
+		super(new SLocation<EmptyStmt.State>(make()));
 	}
 
 	public final static LexicalShape shape = token(LToken.SemiColon);
+
+	public static class State extends SNodeState<State> {
+
+		State() {
+		}
+
+		public STraversal<EmptyStmt.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<EmptyStmt.State> lastChild() {
+			return null;
+		}
+	}
 }

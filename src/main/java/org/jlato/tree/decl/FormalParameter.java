@@ -35,11 +35,13 @@ import static org.jlato.internal.shapes.LSCondition.kind;
 import static org.jlato.internal.shapes.LSCondition.not;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class FormalParameter extends TreeBase<SNodeState, Tree, FormalParameter> implements Tree {
+public class FormalParameter extends TreeBase<FormalParameter.State, Tree, FormalParameter> implements Tree {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public FormalParameter instantiate(SLocation<SNodeState> location) {
+	public final static SKind<FormalParameter.State> kind = new SKind<FormalParameter.State>() {
+		public FormalParameter instantiate(SLocation<FormalParameter.State> location) {
 			return new FormalParameter(location);
 		}
 
@@ -48,12 +50,16 @@ public class FormalParameter extends TreeBase<SNodeState, Tree, FormalParameter>
 		}
 	};
 
-	private FormalParameter(SLocation<SNodeState> location) {
+	private FormalParameter(SLocation<FormalParameter.State> location) {
 		super(location);
 	}
 
+	public static STree<FormalParameter.State> make(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
+		return new STree<FormalParameter.State>(kind, new FormalParameter.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), isVarArgs, TreeBase.<VariableDeclaratorId.State>nodeOf(id)));
+	}
+
 	public FormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(isVarArgs), treesOf(modifiers, type, id)))));
+		super(new SLocation<FormalParameter.State>(make(modifiers, type, isVarArgs, id)));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {
@@ -100,9 +106,9 @@ public class FormalParameter extends TreeBase<SNodeState, Tree, FormalParameter>
 		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> ID = SNodeState.childTraversal(2);
+	private static final STraversal<FormalParameter.State> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<FormalParameter.State> TYPE = SNodeState.childTraversal(1);
+	private static final STraversal<FormalParameter.State> ID = SNodeState.childTraversal(2);
 
 	private static final int VAR_ARG = 0;
 
@@ -119,4 +125,46 @@ public class FormalParameter extends TreeBase<SNodeState, Tree, FormalParameter>
 			token(LToken.Comma).withSpacingAfter(space()),
 			none()
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<Type.State> type;
+
+		public final boolean isVarArgs;
+
+		public final STree<VariableDeclaratorId.State> id;
+
+		State(STree<SNodeListState> modifiers, STree<Type.State> type, boolean isVarArgs, STree<VariableDeclaratorId.State> id) {
+			this.modifiers = modifiers;
+			this.type = type;
+			this.isVarArgs = isVarArgs;
+			this.id = id;
+		}
+
+		public FormalParameter.State withModifiers(STree<SNodeListState> modifiers) {
+			return new FormalParameter.State(modifiers, type, isVarArgs, id);
+		}
+
+		public FormalParameter.State withType(STree<Type.State> type) {
+			return new FormalParameter.State(modifiers, type, isVarArgs, id);
+		}
+
+		public FormalParameter.State withIsVarArgs(boolean isVarArgs) {
+			return new FormalParameter.State(modifiers, type, isVarArgs, id);
+		}
+
+		public FormalParameter.State withId(STree<VariableDeclaratorId.State> id) {
+			return new FormalParameter.State(modifiers, type, isVarArgs, id);
+		}
+
+		public STraversal<FormalParameter.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<FormalParameter.State> lastChild() {
+			return null;
+		}
+	}
 }

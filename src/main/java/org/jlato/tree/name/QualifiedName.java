@@ -33,11 +33,13 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class QualifiedName extends TreeBase<SNodeState, Tree, QualifiedName> implements Tree {
+public class QualifiedName extends TreeBase<QualifiedName.State, Tree, QualifiedName> implements Tree {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public QualifiedName instantiate(SLocation<SNodeState> location) {
+	public final static SKind<QualifiedName.State> kind = new SKind<QualifiedName.State>() {
+		public QualifiedName instantiate(SLocation<QualifiedName.State> location) {
 			return new QualifiedName(location);
 		}
 
@@ -55,12 +57,16 @@ public class QualifiedName extends TreeBase<SNodeState, Tree, QualifiedName> imp
 		return name;
 	}
 
-	private QualifiedName(SLocation<SNodeState> location) {
+	public static STree<QualifiedName.State> make(NodeOption<QualifiedName> qualifier, Name name) {
+		return new STree<QualifiedName.State>(kind, new QualifiedName.State(TreeBase.<SNodeOptionState>nodeOf(qualifier), TreeBase.<Name.State>nodeOf(name)));
+	}
+
+	private QualifiedName(SLocation<QualifiedName.State> location) {
 		super(location);
 	}
 
 	public QualifiedName(NodeOption<QualifiedName> qualifier, Name name) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(qualifier, name)))));
+		super(new SLocation<QualifiedName.State>(make(qualifier, name)));
 	}
 
 	public NodeOption<QualifiedName> qualifier() {
@@ -98,8 +104,8 @@ public class QualifiedName extends TreeBase<SNodeState, Tree, QualifiedName> imp
 		return qualifier.isDefined() ? qualifier.get().toString() + "." + name.toString() : name.toString();
 	}
 
-	private static final STraversal<SNodeState> QUALIFIER = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<QualifiedName.State> QUALIFIER = SNodeState.childTraversal(0);
+	private static final STraversal<QualifiedName.State> NAME = SNodeState.childTraversal(1);
 
 	public final static LexicalShape qualifierShape = composite(element(), token(LToken.Dot));
 
@@ -107,4 +113,32 @@ public class QualifiedName extends TreeBase<SNodeState, Tree, QualifiedName> imp
 			child(QUALIFIER, when(some(), qualifierShape)),
 			child(NAME)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeOptionState> qualifier;
+
+		public final STree<Name.State> name;
+
+		State(STree<SNodeOptionState> qualifier, STree<Name.State> name) {
+			this.qualifier = qualifier;
+			this.name = name;
+		}
+
+		public QualifiedName.State withQualifier(STree<SNodeOptionState> qualifier) {
+			return new QualifiedName.State(qualifier, name);
+		}
+
+		public QualifiedName.State withName(STree<Name.State> name) {
+			return new QualifiedName.State(qualifier, name);
+		}
+
+		public STraversal<QualifiedName.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<QualifiedName.State> lastChild() {
+			return null;
+		}
+	}
 }

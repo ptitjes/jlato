@@ -39,11 +39,13 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class MethodDecl extends TreeBase<SNodeState, MemberDecl, MethodDecl> implements MemberDecl {
+public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDecl> implements MemberDecl {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public MethodDecl instantiate(SLocation<SNodeState> location) {
+	public final static SKind<MethodDecl.State> kind = new SKind<MethodDecl.State>() {
+		public MethodDecl instantiate(SLocation<MethodDecl.State> location) {
 			return new MethodDecl(location);
 		}
 
@@ -52,16 +54,20 @@ public class MethodDecl extends TreeBase<SNodeState, MemberDecl, MethodDecl> imp
 		}
 	};
 
-	private MethodDecl(SLocation<SNodeState> location) {
+	private MethodDecl(SLocation<MethodDecl.State> location) {
 		super(location);
 	}
 
+	public static STree<MethodDecl.State> make() {
+		return new STree<MethodDecl.State>(kind, new MethodDecl.State());
+	}
+
 	public MethodDecl() {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(NodeList.empty(), NodeList.empty(), null, null, NodeList.empty(), NodeList.empty(), NodeList.empty(), null)))));
+		super(new SLocation<MethodDecl.State>(make()));
 	}
 
 	public MethodDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, NodeOption<BlockStmt> body) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(modifiers, typeParams, type, name, params, dims, throwsClause, body)))));
+		super(new SLocation<MethodDecl.State>(make()));
 	}
 
 	@Override
@@ -165,14 +171,14 @@ public class MethodDecl extends TreeBase<SNodeState, MemberDecl, MethodDecl> imp
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<SNodeState> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> TYPE_PARAMETERS = SNodeState.childTraversal(1);
-	private static final STraversal<SNodeState> TYPE = SNodeState.childTraversal(2);
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(3);
-	private static final STraversal<SNodeState> PARAMETERS = SNodeState.childTraversal(4);
-	private static final STraversal<SNodeState> DIMS = SNodeState.childTraversal(5);
-	private static final STraversal<SNodeState> THROWS_CLAUSE = SNodeState.childTraversal(6);
-	private static final STraversal<SNodeState> BODY = SNodeState.childTraversal(7);
+	private static final STraversal<MethodDecl.State> MODIFIERS = SNodeState.childTraversal(0);
+	private static final STraversal<MethodDecl.State> TYPE_PARAMETERS = SNodeState.childTraversal(1);
+	private static final STraversal<MethodDecl.State> TYPE = SNodeState.childTraversal(2);
+	private static final STraversal<MethodDecl.State> NAME = SNodeState.childTraversal(3);
+	private static final STraversal<MethodDecl.State> PARAMETERS = SNodeState.childTraversal(4);
+	private static final STraversal<MethodDecl.State> DIMS = SNodeState.childTraversal(5);
+	private static final STraversal<MethodDecl.State> THROWS_CLAUSE = SNodeState.childTraversal(6);
+	private static final STraversal<MethodDecl.State> BODY = SNodeState.childTraversal(7);
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
@@ -190,4 +196,18 @@ public class MethodDecl extends TreeBase<SNodeState, MemberDecl, MethodDecl> imp
 					token(LToken.SemiColon)
 			)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		State() {
+		}
+
+		public STraversal<MethodDecl.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<MethodDecl.State> lastChild() {
+			return null;
+		}
+	}
 }

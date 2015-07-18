@@ -33,11 +33,13 @@ import org.jlato.tree.NodeOption;
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class SuperExpr extends TreeBase<SNodeState, Expr, SuperExpr> implements Expr {
+public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public SuperExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<SuperExpr.State> kind = new SKind<SuperExpr.State>() {
+		public SuperExpr instantiate(SLocation<SuperExpr.State> location) {
 			return new SuperExpr(location);
 		}
 
@@ -46,12 +48,16 @@ public class SuperExpr extends TreeBase<SNodeState, Expr, SuperExpr> implements 
 		}
 	};
 
-	private SuperExpr(SLocation<SNodeState> location) {
+	private SuperExpr(SLocation<SuperExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<SuperExpr.State> make(NodeOption<Expr> classExpr) {
+		return new STree<SuperExpr.State>(kind, new SuperExpr.State(TreeBase.<SNodeOptionState>nodeOf(classExpr)));
+	}
+
 	public SuperExpr(NodeOption<Expr> classExpr) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(classExpr)))));
+		super(new SLocation<SuperExpr.State>(make(classExpr)));
 	}
 
 	public NodeOption<Expr> classExpr() {
@@ -66,10 +72,31 @@ public class SuperExpr extends TreeBase<SNodeState, Expr, SuperExpr> implements 
 		return location.safeTraversalMutate(CLASS_EXPR, mutation);
 	}
 
-	private static final STraversal<SNodeState> CLASS_EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<SuperExpr.State> CLASS_EXPR = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			when(childIs(CLASS_EXPR, some()), composite(child(CLASS_EXPR, element()), token(LToken.Dot))),
 			token(LToken.Super)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeOptionState> classExpr;
+
+		State(STree<SNodeOptionState> classExpr) {
+			this.classExpr = classExpr;
+		}
+
+		public SuperExpr.State withClassExpr(STree<SNodeOptionState> classExpr) {
+			return new SuperExpr.State(classExpr);
+		}
+
+		public STraversal<SuperExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<SuperExpr.State> lastChild() {
+			return null;
+		}
+	}
 }

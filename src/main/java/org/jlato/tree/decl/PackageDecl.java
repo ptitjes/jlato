@@ -34,11 +34,13 @@ import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class PackageDecl extends TreeBase<SNodeState, Tree, PackageDecl> implements Tree {
+public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> implements Tree {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public PackageDecl instantiate(SLocation<SNodeState> location) {
+	public final static SKind<PackageDecl.State> kind = new SKind<PackageDecl.State>() {
+		public PackageDecl instantiate(SLocation<PackageDecl.State> location) {
 			return new PackageDecl(location);
 		}
 
@@ -47,12 +49,16 @@ public class PackageDecl extends TreeBase<SNodeState, Tree, PackageDecl> impleme
 		}
 	};
 
-	private PackageDecl(SLocation<SNodeState> location) {
+	private PackageDecl(SLocation<PackageDecl.State> location) {
 		super(location);
 	}
 
+	public static STree<PackageDecl.State> make(NodeList<AnnotationExpr> annotations, QualifiedName name) {
+		return new STree<PackageDecl.State>(kind, new PackageDecl.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<QualifiedName.State>nodeOf(name)));
+	}
+
 	public PackageDecl(NodeList<AnnotationExpr> annotations, QualifiedName name) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(annotations, name)))));
+		super(new SLocation<PackageDecl.State>(make(annotations, name)));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
@@ -79,8 +85,8 @@ public class PackageDecl extends TreeBase<SNodeState, Tree, PackageDecl> impleme
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal<SNodeState> ANNOTATIONS = SNodeState.childTraversal(0);
-	private static final STraversal<SNodeState> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<PackageDecl.State> ANNOTATIONS = SNodeState.childTraversal(0);
+	private static final STraversal<PackageDecl.State> NAME = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
@@ -88,4 +94,32 @@ public class PackageDecl extends TreeBase<SNodeState, Tree, PackageDecl> impleme
 			child(NAME),
 			token(LToken.SemiColon)
 	);
+
+	public static class State extends SNodeState<State> {
+
+		public final STree<SNodeListState> annotations;
+
+		public final STree<QualifiedName.State> name;
+
+		State(STree<SNodeListState> annotations, STree<QualifiedName.State> name) {
+			this.annotations = annotations;
+			this.name = name;
+		}
+
+		public PackageDecl.State withAnnotations(STree<SNodeListState> annotations) {
+			return new PackageDecl.State(annotations, name);
+		}
+
+		public PackageDecl.State withName(STree<QualifiedName.State> name) {
+			return new PackageDecl.State(annotations, name);
+		}
+
+		public STraversal<PackageDecl.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<PackageDecl.State> lastChild() {
+			return null;
+		}
+	}
 }

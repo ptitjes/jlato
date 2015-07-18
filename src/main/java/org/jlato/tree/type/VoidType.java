@@ -28,11 +28,13 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class VoidType extends TreeBase<SNodeState, Type, VoidType> implements Type {
+public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implements Type {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public VoidType instantiate(SLocation<SNodeState> location) {
+	public final static SKind<VoidType.State> kind = new SKind<VoidType.State>() {
+		public VoidType instantiate(SLocation<VoidType.State> location) {
 			return new VoidType(location);
 		}
 
@@ -41,13 +43,31 @@ public class VoidType extends TreeBase<SNodeState, Type, VoidType> implements Ty
 		}
 	};
 
-	private VoidType(SLocation<SNodeState> location) {
+	private VoidType(SLocation<VoidType.State> location) {
 		super(location);
 	}
 
+	public static STree<VoidType.State> make() {
+		return new STree<VoidType.State>(kind, new VoidType.State());
+	}
+
 	public VoidType() {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf()))));
+		super(new SLocation<VoidType.State>(make()));
 	}
 
 	public final static LexicalShape shape = token(LToken.Void);
+
+	public static class State extends SNodeState<State> {
+
+		State() {
+		}
+
+		public STraversal<VoidType.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<VoidType.State> lastChild() {
+			return null;
+		}
+	}
 }

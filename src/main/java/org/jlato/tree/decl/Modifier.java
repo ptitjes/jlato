@@ -30,11 +30,13 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class Modifier extends TreeBase<SNodeState, ExtendedModifier, Modifier> implements ExtendedModifier {
+public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifier> implements ExtendedModifier {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public Tree instantiate(SLocation<SNodeState> location) {
+	public final static SKind<Modifier.State> kind = new SKind<Modifier.State>() {
+		public Tree instantiate(SLocation<Modifier.State> location) {
 			return new Modifier(location);
 		}
 
@@ -44,6 +46,10 @@ public class Modifier extends TreeBase<SNodeState, ExtendedModifier, Modifier> i
 	};
 
 	public static final Modifier Public = new Modifier(LToken.Public);
+
+	public static STree<Modifier.State> make(LToken keyword) {
+		return new STree<Modifier.State>(kind, new Modifier.State(keyword));
+	}
 	public static final Modifier Protected = new Modifier(LToken.Protected);
 	public static final Modifier Private = new Modifier(LToken.Private);
 	public static final Modifier Abstract = new Modifier(LToken.Abstract);
@@ -56,12 +62,12 @@ public class Modifier extends TreeBase<SNodeState, ExtendedModifier, Modifier> i
 	public static final Modifier Native = new Modifier(LToken.Native);
 	public static final Modifier StrictFP = new Modifier(LToken.StrictFP);
 
-	protected Modifier(SLocation<SNodeState> location) {
+	protected Modifier(SLocation<Modifier.State> location) {
 		super(location);
 	}
 
 	public Modifier(LToken keyword) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(keyword), treesOf()))));
+		super(new SLocation<Modifier.State>(make(keyword)));
 	}
 
 	public String toString() {
@@ -75,4 +81,25 @@ public class Modifier extends TreeBase<SNodeState, ExtendedModifier, Modifier> i
 			return (LToken) tree.state.data(KEYWORD);
 		}
 	});
+
+	public static class State extends SNodeState<State> {
+
+		public final LToken keyword;
+
+		State(LToken keyword) {
+			this.keyword = keyword;
+		}
+
+		public Modifier.State withKeyword(LToken keyword) {
+			return new Modifier.State(keyword);
+		}
+
+		public STraversal<Modifier.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<Modifier.State> lastChild() {
+			return null;
+		}
+	}
 }

@@ -32,11 +32,13 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
-public class UnaryExpr extends TreeBase<SNodeState, Expr, UnaryExpr> implements Expr {
+public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implements Expr {
 
-	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
-		public UnaryExpr instantiate(SLocation<SNodeState> location) {
+	public final static SKind<UnaryExpr.State> kind = new SKind<UnaryExpr.State>() {
+		public UnaryExpr instantiate(SLocation<UnaryExpr.State> location) {
 			return new UnaryExpr(location);
 		}
 
@@ -45,12 +47,16 @@ public class UnaryExpr extends TreeBase<SNodeState, Expr, UnaryExpr> implements 
 		}
 	};
 
-	private UnaryExpr(SLocation<SNodeState> location) {
+	private UnaryExpr(SLocation<UnaryExpr.State> location) {
 		super(location);
 	}
 
+	public static STree<UnaryExpr.State> make(UnaryOp operator, Expr expr) {
+		return new STree<UnaryExpr.State>(kind, new UnaryExpr.State(operator, TreeBase.<Expr.State>nodeOf(expr)));
+	}
+
 	public UnaryExpr(UnaryOp operator, Expr expr) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(operator), treesOf(expr)))));
+		super(new SLocation<UnaryExpr.State>(make(operator, expr)));
 	}
 
 	public UnaryOp op() {
@@ -85,7 +91,7 @@ public class UnaryExpr extends TreeBase<SNodeState, Expr, UnaryExpr> implements 
 		return op == UnaryOp.PostIncrement || op == UnaryOp.PostDecrement;
 	}
 
-	private static final STraversal<SNodeState> EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<UnaryExpr.State> EXPR = SNodeState.childTraversal(0);
 
 	private static final int OPERATOR = 0;
 
@@ -123,6 +129,34 @@ public class UnaryExpr extends TreeBase<SNodeState, Expr, UnaryExpr> implements 
 
 		public String toString() {
 			return token.toString();
+		}
+	}
+
+	public static class State extends SNodeState<State> {
+
+		public final UnaryOp operator;
+
+		public final STree<Expr.State> expr;
+
+		State(UnaryOp operator, STree<Expr.State> expr) {
+			this.operator = operator;
+			this.expr = expr;
+		}
+
+		public UnaryExpr.State withOperator(UnaryOp operator) {
+			return new UnaryExpr.State(operator, expr);
+		}
+
+		public UnaryExpr.State withExpr(STree<Expr.State> expr) {
+			return new UnaryExpr.State(operator, expr);
+		}
+
+		public STraversal<UnaryExpr.State> firstChild() {
+			return null;
+		}
+
+		public STraversal<UnaryExpr.State> lastChild() {
+			return null;
 		}
 	}
 }
