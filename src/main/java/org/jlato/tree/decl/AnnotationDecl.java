@@ -187,11 +187,11 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 		}
 
 		public STraversal<AnnotationDecl.State> firstChild() {
-			return null;
+			return MODIFIERS;
 		}
 
 		public STraversal<AnnotationDecl.State> lastChild() {
-			return null;
+			return MEMBERS;
 		}
 
 		public Tree instantiate(SLocation<AnnotationDecl.State> location) {

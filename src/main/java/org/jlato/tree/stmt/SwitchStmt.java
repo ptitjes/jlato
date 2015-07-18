@@ -164,11 +164,11 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 		}
 
 		public STraversal<SwitchStmt.State> firstChild() {
-			return null;
+			return SELECTOR;
 		}
 
 		public STraversal<SwitchStmt.State> lastChild() {
-			return null;
+			return CASES;
 		}
 
 		public Tree instantiate(SLocation<SwitchStmt.State> location) {

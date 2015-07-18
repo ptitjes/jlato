@@ -109,11 +109,11 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 		}
 
 		public STraversal<ArrayDim.State> firstChild() {
-			return null;
+			return ANNOTATIONS;
 		}
 
 		public STraversal<ArrayDim.State> lastChild() {
-			return null;
+			return ANNOTATIONS;
 		}
 
 		public Tree instantiate(SLocation<ArrayDim.State> location) {

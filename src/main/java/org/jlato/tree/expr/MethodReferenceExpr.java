@@ -179,11 +179,11 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 		}
 
 		public STraversal<MethodReferenceExpr.State> firstChild() {
-			return null;
+			return SCOPE;
 		}
 
 		public STraversal<MethodReferenceExpr.State> lastChild() {
-			return null;
+			return NAME;
 		}
 
 		public Tree instantiate(SLocation<MethodReferenceExpr.State> location) {

@@ -144,11 +144,11 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 		}
 
 		public STraversal<DoStmt.State> firstChild() {
-			return null;
+			return BODY;
 		}
 
 		public STraversal<DoStmt.State> lastChild() {
-			return null;
+			return CONDITION;
 		}
 
 		public Tree instantiate(SLocation<DoStmt.State> location) {

@@ -100,11 +100,11 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 		}
 
 		public STraversal<UnionType.State> firstChild() {
-			return null;
+			return TYPES;
 		}
 
 		public STraversal<UnionType.State> lastChild() {
-			return null;
+			return TYPES;
 		}
 
 		public Tree instantiate(SLocation<UnionType.State> location) {

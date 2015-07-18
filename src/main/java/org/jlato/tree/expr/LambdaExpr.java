@@ -180,11 +180,11 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		}
 
 		public STraversal<LambdaExpr.State> firstChild() {
-			return null;
+			return PARAMS;
 		}
 
 		public STraversal<LambdaExpr.State> lastChild() {
-			return null;
+			return BODY;
 		}
 
 		public Tree instantiate(SLocation<LambdaExpr.State> location) {

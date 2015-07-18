@@ -219,11 +219,11 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 		}
 
 		public STraversal<MethodInvocationExpr.State> firstChild() {
-			return null;
+			return SCOPE;
 		}
 
 		public STraversal<MethodInvocationExpr.State> lastChild() {
-			return null;
+			return ARGS;
 		}
 
 		public Tree instantiate(SLocation<MethodInvocationExpr.State> location) {

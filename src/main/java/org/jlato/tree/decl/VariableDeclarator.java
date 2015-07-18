@@ -148,11 +148,11 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 		}
 
 		public STraversal<VariableDeclarator.State> firstChild() {
-			return null;
+			return ID;
 		}
 
 		public STraversal<VariableDeclarator.State> lastChild() {
-			return null;
+			return INIT;
 		}
 
 		public Tree instantiate(SLocation<VariableDeclarator.State> location) {

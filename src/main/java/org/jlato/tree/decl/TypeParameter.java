@@ -192,11 +192,11 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 		}
 
 		public STraversal<TypeParameter.State> firstChild() {
-			return null;
+			return ANNOTATIONS;
 		}
 
 		public STraversal<TypeParameter.State> lastChild() {
-			return null;
+			return BOUNDS;
 		}
 
 		public Tree instantiate(SLocation<TypeParameter.State> location) {

@@ -226,11 +226,11 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 		}
 
 		public STraversal<ArrayCreationExpr.State> firstChild() {
-			return null;
+			return TYPE;
 		}
 
 		public STraversal<ArrayCreationExpr.State> lastChild() {
-			return null;
+			return INIT;
 		}
 
 		public Tree instantiate(SLocation<ArrayCreationExpr.State> location) {

@@ -164,11 +164,11 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 		}
 
 		public STraversal<ImportDecl.State> firstChild() {
-			return null;
+			return NAME;
 		}
 
 		public STraversal<ImportDecl.State> lastChild() {
-			return null;
+			return NAME;
 		}
 
 		public Tree instantiate(SLocation<ImportDecl.State> location) {

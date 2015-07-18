@@ -198,11 +198,11 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 		}
 
 		public STraversal<CompilationUnit.State> firstChild() {
-			return null;
+			return PACKAGE_DECL;
 		}
 
 		public STraversal<CompilationUnit.State> lastChild() {
-			return null;
+			return TYPES;
 		}
 
 		public Tree instantiate(SLocation<CompilationUnit.State> location) {

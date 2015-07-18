@@ -264,11 +264,11 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 		}
 
 		public STraversal<AnnotationMemberDecl.State> firstChild() {
-			return null;
+			return MODIFIERS;
 		}
 
 		public STraversal<AnnotationMemberDecl.State> lastChild() {
-			return null;
+			return DEFAULT_VALUE;
 		}
 
 		public Tree instantiate(SLocation<AnnotationMemberDecl.State> location) {

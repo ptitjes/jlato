@@ -138,11 +138,11 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 		}
 
 		public STraversal<CastExpr.State> firstChild() {
-			return null;
+			return TYPE;
 		}
 
 		public STraversal<CastExpr.State> lastChild() {
-			return null;
+			return EXPR;
 		}
 
 		public Tree instantiate(SLocation<CastExpr.State> location) {

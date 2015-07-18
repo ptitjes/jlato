@@ -143,11 +143,11 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 		}
 
 		public STraversal<CatchClause.State> firstChild() {
-			return null;
+			return EXCEPT;
 		}
 
 		public STraversal<CatchClause.State> lastChild() {
-			return null;
+			return CATCH_BLOCK;
 		}
 
 		public Tree instantiate(SLocation<CatchClause.State> location) {

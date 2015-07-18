@@ -178,11 +178,11 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 		}
 
 		public STraversal<LocalVariableDecl.State> firstChild() {
-			return null;
+			return MODIFIERS;
 		}
 
 		public STraversal<LocalVariableDecl.State> lastChild() {
-			return null;
+			return VARIABLES;
 		}
 
 		public Tree instantiate(SLocation<LocalVariableDecl.State> location) {

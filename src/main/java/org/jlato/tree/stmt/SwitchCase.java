@@ -154,11 +154,11 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 		}
 
 		public STraversal<SwitchCase.State> firstChild() {
-			return null;
+			return LABEL;
 		}
 
 		public STraversal<SwitchCase.State> lastChild() {
-			return null;
+			return STMTS;
 		}
 
 		public Tree instantiate(SLocation<SwitchCase.State> location) {

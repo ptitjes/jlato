@@ -142,11 +142,11 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 		}
 
 		public STraversal<PackageDecl.State> firstChild() {
-			return null;
+			return ANNOTATIONS;
 		}
 
 		public STraversal<PackageDecl.State> lastChild() {
-			return null;
+			return NAME;
 		}
 
 		public Tree instantiate(SLocation<PackageDecl.State> location) {

@@ -147,11 +147,11 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 		}
 
 		public STraversal<AssertStmt.State> firstChild() {
-			return null;
+			return CHECK;
 		}
 
 		public STraversal<AssertStmt.State> lastChild() {
-			return null;
+			return MSG;
 		}
 
 		public Tree instantiate(SLocation<AssertStmt.State> location) {

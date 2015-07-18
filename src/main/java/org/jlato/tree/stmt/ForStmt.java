@@ -220,11 +220,11 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 		}
 
 		public STraversal<ForStmt.State> firstChild() {
-			return null;
+			return INIT;
 		}
 
 		public STraversal<ForStmt.State> lastChild() {
-			return null;
+			return BODY;
 		}
 
 		public Tree instantiate(SLocation<ForStmt.State> location) {

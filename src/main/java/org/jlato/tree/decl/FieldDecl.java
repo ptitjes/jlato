@@ -195,11 +195,11 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 		}
 
 		public STraversal<FieldDecl.State> firstChild() {
-			return null;
+			return MODIFIERS;
 		}
 
 		public STraversal<FieldDecl.State> lastChild() {
-			return null;
+			return VARIABLES;
 		}
 
 		public Tree instantiate(SLocation<FieldDecl.State> location) {

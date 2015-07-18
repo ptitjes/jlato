@@ -108,11 +108,11 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 		}
 
 		public STraversal<ArrayInitializerExpr.State> firstChild() {
-			return null;
+			return VALUES;
 		}
 
 		public STraversal<ArrayInitializerExpr.State> lastChild() {
-			return null;
+			return VALUES;
 		}
 
 		public Tree instantiate(SLocation<ArrayInitializerExpr.State> location) {

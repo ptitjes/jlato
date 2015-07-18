@@ -215,11 +215,11 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 		}
 
 		public STraversal<ExplicitConstructorInvocationStmt.State> firstChild() {
-			return null;
+			return TYPE_ARGS;
 		}
 
 		public STraversal<ExplicitConstructorInvocationStmt.State> lastChild() {
-			return null;
+			return ARGS;
 		}
 
 		public Tree instantiate(SLocation<ExplicitConstructorInvocationStmt.State> location) {

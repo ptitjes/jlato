@@ -103,11 +103,11 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 		}
 
 		public STraversal<ThisExpr.State> firstChild() {
-			return null;
+			return CLASS_EXPR;
 		}
 
 		public STraversal<ThisExpr.State> lastChild() {
-			return null;
+			return CLASS_EXPR;
 		}
 
 		public Tree instantiate(SLocation<ThisExpr.State> location) {

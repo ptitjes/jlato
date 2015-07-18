@@ -139,11 +139,11 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 		}
 
 		public STraversal<ArrayType.State> firstChild() {
-			return null;
+			return COMPONENT_TYPE;
 		}
 
 		public STraversal<ArrayType.State> lastChild() {
-			return null;
+			return DIMS;
 		}
 
 		public Tree instantiate(SLocation<ArrayType.State> location) {

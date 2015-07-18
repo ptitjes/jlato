@@ -137,11 +137,11 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 		}
 
 		public STraversal<ArrayAccessExpr.State> firstChild() {
-			return null;
+			return NAME;
 		}
 
 		public STraversal<ArrayAccessExpr.State> lastChild() {
-			return null;
+			return INDEX;
 		}
 
 		public Tree instantiate(SLocation<ArrayAccessExpr.State> location) {

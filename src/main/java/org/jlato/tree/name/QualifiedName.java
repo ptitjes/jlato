@@ -161,11 +161,11 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 		}
 
 		public STraversal<QualifiedName.State> firstChild() {
-			return null;
+			return QUALIFIER;
 		}
 
 		public STraversal<QualifiedName.State> lastChild() {
-			return null;
+			return NAME;
 		}
 
 		public Tree instantiate(SLocation<QualifiedName.State> location) {

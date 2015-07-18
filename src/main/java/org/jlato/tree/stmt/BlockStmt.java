@@ -121,11 +121,11 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 		}
 
 		public STraversal<BlockStmt.State> firstChild() {
-			return null;
+			return STMTS;
 		}
 
 		public STraversal<BlockStmt.State> lastChild() {
-			return null;
+			return STMTS;
 		}
 
 		public Tree instantiate(SLocation<BlockStmt.State> location) {

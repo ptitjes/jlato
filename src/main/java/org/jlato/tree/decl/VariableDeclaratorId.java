@@ -138,11 +138,11 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 		}
 
 		public STraversal<VariableDeclaratorId.State> firstChild() {
-			return null;
+			return NAME;
 		}
 
 		public STraversal<VariableDeclaratorId.State> lastChild() {
-			return null;
+			return DIMS;
 		}
 
 		public Tree instantiate(SLocation<VariableDeclaratorId.State> location) {

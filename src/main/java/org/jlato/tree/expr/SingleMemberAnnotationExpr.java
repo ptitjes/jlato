@@ -140,11 +140,11 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 		}
 
 		public STraversal<SingleMemberAnnotationExpr.State> firstChild() {
-			return null;
+			return NAME;
 		}
 
 		public STraversal<SingleMemberAnnotationExpr.State> lastChild() {
-			return null;
+			return MEMBER_VALUE;
 		}
 
 		public Tree instantiate(SLocation<SingleMemberAnnotationExpr.State> location) {

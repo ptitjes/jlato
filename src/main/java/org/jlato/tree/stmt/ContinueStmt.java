@@ -105,11 +105,11 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 		}
 
 		public STraversal<ContinueStmt.State> firstChild() {
-			return null;
+			return ID;
 		}
 
 		public STraversal<ContinueStmt.State> lastChild() {
-			return null;
+			return ID;
 		}
 
 		public Tree instantiate(SLocation<ContinueStmt.State> location) {

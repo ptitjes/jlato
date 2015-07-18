@@ -223,11 +223,11 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 		}
 
 		public STraversal<IfStmt.State> firstChild() {
-			return null;
+			return CONDITION;
 		}
 
 		public STraversal<IfStmt.State> lastChild() {
-			return null;
+			return ELSE_STMT;
 		}
 
 		public Tree instantiate(SLocation<IfStmt.State> location) {

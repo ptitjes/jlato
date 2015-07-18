@@ -223,11 +223,11 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 		}
 
 		public STraversal<TryStmt.State> firstChild() {
-			return null;
+			return RESOURCES;
 		}
 
 		public STraversal<TryStmt.State> lastChild() {
-			return null;
+			return FINALLY_BLOCK;
 		}
 
 		public Tree instantiate(SLocation<TryStmt.State> location) {

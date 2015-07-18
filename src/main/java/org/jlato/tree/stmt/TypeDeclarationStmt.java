@@ -100,11 +100,11 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 		}
 
 		public STraversal<TypeDeclarationStmt.State> firstChild() {
-			return null;
+			return TYPE_DECL;
 		}
 
 		public STraversal<TypeDeclarationStmt.State> lastChild() {
-			return null;
+			return TYPE_DECL;
 		}
 
 		public Tree instantiate(SLocation<TypeDeclarationStmt.State> location) {

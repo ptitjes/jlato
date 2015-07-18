@@ -99,11 +99,11 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 		}
 
 		public STraversal<ParenthesizedExpr.State> firstChild() {
-			return null;
+			return INNER;
 		}
 
 		public STraversal<ParenthesizedExpr.State> lastChild() {
-			return null;
+			return INNER;
 		}
 
 		public Tree instantiate(SLocation<ParenthesizedExpr.State> location) {

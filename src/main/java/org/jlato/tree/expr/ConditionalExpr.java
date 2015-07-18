@@ -178,11 +178,11 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 		}
 
 		public STraversal<ConditionalExpr.State> firstChild() {
-			return null;
+			return CONDITION;
 		}
 
 		public STraversal<ConditionalExpr.State> lastChild() {
-			return null;
+			return ELSE_EXPR;
 		}
 
 		public Tree instantiate(SLocation<ConditionalExpr.State> location) {

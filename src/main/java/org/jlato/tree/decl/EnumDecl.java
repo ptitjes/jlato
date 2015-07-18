@@ -307,11 +307,11 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 		}
 
 		public STraversal<EnumDecl.State> firstChild() {
-			return null;
+			return MODIFIERS;
 		}
 
 		public STraversal<EnumDecl.State> lastChild() {
-			return null;
+			return MEMBERS;
 		}
 
 		public Tree instantiate(SLocation<EnumDecl.State> location) {

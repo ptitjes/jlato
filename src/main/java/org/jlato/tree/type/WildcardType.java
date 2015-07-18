@@ -182,11 +182,11 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 		}
 
 		public STraversal<WildcardType.State> firstChild() {
-			return null;
+			return ANNOTATIONS;
 		}
 
 		public STraversal<WildcardType.State> lastChild() {
-			return null;
+			return SUP;
 		}
 
 		public Tree instantiate(SLocation<WildcardType.State> location) {

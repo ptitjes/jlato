@@ -100,11 +100,11 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 		}
 
 		public STraversal<MarkerAnnotationExpr.State> firstChild() {
-			return null;
+			return NAME;
 		}
 
 		public STraversal<MarkerAnnotationExpr.State> lastChild() {
-			return null;
+			return NAME;
 		}
 
 		public Tree instantiate(SLocation<MarkerAnnotationExpr.State> location) {

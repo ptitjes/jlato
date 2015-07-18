@@ -103,11 +103,11 @@ public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implem
 		}
 
 		public STraversal<SuperExpr.State> firstChild() {
-			return null;
+			return CLASS_EXPR;
 		}
 
 		public STraversal<SuperExpr.State> lastChild() {
-			return null;
+			return CLASS_EXPR;
 		}
 
 		public Tree instantiate(SLocation<SuperExpr.State> location) {

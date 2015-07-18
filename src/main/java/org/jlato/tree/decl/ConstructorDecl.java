@@ -301,11 +301,11 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 		}
 
 		public STraversal<ConstructorDecl.State> firstChild() {
-			return null;
+			return MODIFIERS;
 		}
 
 		public STraversal<ConstructorDecl.State> lastChild() {
-			return null;
+			return BODY;
 		}
 
 		public Tree instantiate(SLocation<ConstructorDecl.State> location) {

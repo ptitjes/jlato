@@ -142,11 +142,11 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 		}
 
 		public STraversal<SynchronizedStmt.State> firstChild() {
-			return null;
+			return EXPR;
 		}
 
 		public STraversal<SynchronizedStmt.State> lastChild() {
-			return null;
+			return BLOCK;
 		}
 
 		public Tree instantiate(SLocation<SynchronizedStmt.State> location) {

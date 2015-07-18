@@ -100,11 +100,11 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 		}
 
 		public STraversal<ExpressionStmt.State> firstChild() {
-			return null;
+			return EXPR;
 		}
 
 		public STraversal<ExpressionStmt.State> lastChild() {
-			return null;
+			return EXPR;
 		}
 
 		public Tree instantiate(SLocation<ExpressionStmt.State> location) {

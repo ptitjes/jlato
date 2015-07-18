@@ -141,11 +141,11 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 		}
 
 		public STraversal<FieldAccessExpr.State> firstChild() {
-			return null;
+			return SCOPE;
 		}
 
 		public STraversal<FieldAccessExpr.State> lastChild() {
-			return null;
+			return NAME;
 		}
 
 		public Tree instantiate(SLocation<FieldAccessExpr.State> location) {

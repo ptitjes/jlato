@@ -181,11 +181,11 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 		}
 
 		public STraversal<ForeachStmt.State> firstChild() {
-			return null;
+			return VAR;
 		}
 
 		public STraversal<ForeachStmt.State> lastChild() {
-			return null;
+			return BODY;
 		}
 
 		public Tree instantiate(SLocation<ForeachStmt.State> location) {

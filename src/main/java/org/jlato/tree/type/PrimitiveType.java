@@ -160,11 +160,11 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		}
 
 		public STraversal<PrimitiveType.State> firstChild() {
-			return null;
+			return ANNOTATIONS;
 		}
 
 		public STraversal<PrimitiveType.State> lastChild() {
-			return null;
+			return ANNOTATIONS;
 		}
 
 		public Tree instantiate(SLocation<PrimitiveType.State> location) {

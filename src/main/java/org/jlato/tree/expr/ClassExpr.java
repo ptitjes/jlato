@@ -101,11 +101,11 @@ public class ClassExpr extends TreeBase<ClassExpr.State, Expr, ClassExpr> implem
 		}
 
 		public STraversal<ClassExpr.State> firstChild() {
-			return null;
+			return TYPE;
 		}
 
 		public STraversal<ClassExpr.State> lastChild() {
-			return null;
+			return TYPE;
 		}
 
 		public Tree instantiate(SLocation<ClassExpr.State> location) {

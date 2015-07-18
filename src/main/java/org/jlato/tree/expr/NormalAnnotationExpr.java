@@ -142,11 +142,11 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 		}
 
 		public STraversal<NormalAnnotationExpr.State> firstChild() {
-			return null;
+			return NAME;
 		}
 
 		public STraversal<NormalAnnotationExpr.State> lastChild() {
-			return null;
+			return PAIRS;
 		}
 
 		public Tree instantiate(SLocation<NormalAnnotationExpr.State> location) {

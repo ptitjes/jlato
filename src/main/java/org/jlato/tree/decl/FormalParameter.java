@@ -212,11 +212,11 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 		}
 
 		public STraversal<FormalParameter.State> firstChild() {
-			return null;
+			return MODIFIERS;
 		}
 
 		public STraversal<FormalParameter.State> lastChild() {
-			return null;
+			return ID;
 		}
 
 		public Tree instantiate(SLocation<FormalParameter.State> location) {

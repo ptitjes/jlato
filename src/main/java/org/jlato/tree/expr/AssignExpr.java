@@ -197,11 +197,11 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		}
 
 		public STraversal<AssignExpr.State> firstChild() {
-			return null;
+			return TARGET;
 		}
 
 		public STraversal<AssignExpr.State> lastChild() {
-			return null;
+			return VALUE;
 		}
 
 		public Tree instantiate(SLocation<AssignExpr.State> location) {

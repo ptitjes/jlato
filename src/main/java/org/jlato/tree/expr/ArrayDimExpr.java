@@ -145,11 +145,11 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 		}
 
 		public STraversal<ArrayDimExpr.State> firstChild() {
-			return null;
+			return ANNOTATIONS;
 		}
 
 		public STraversal<ArrayDimExpr.State> lastChild() {
-			return null;
+			return EXPR;
 		}
 
 		public Tree instantiate(SLocation<ArrayDimExpr.State> location) {

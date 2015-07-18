@@ -233,11 +233,11 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 		}
 
 		public STraversal<EnumConstantDecl.State> firstChild() {
-			return null;
+			return MODIFIERS;
 		}
 
 		public STraversal<EnumConstantDecl.State> lastChild() {
-			return null;
+			return CLASS_BODY;
 		}
 
 		public Tree instantiate(SLocation<EnumConstantDecl.State> location) {

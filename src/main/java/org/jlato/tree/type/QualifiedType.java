@@ -239,11 +239,11 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 		}
 
 		public STraversal<QualifiedType.State> firstChild() {
-			return null;
+			return ANNOTATIONS;
 		}
 
 		public STraversal<QualifiedType.State> lastChild() {
-			return null;
+			return TYPE_ARGS;
 		}
 
 		public Tree instantiate(SLocation<QualifiedType.State> location) {

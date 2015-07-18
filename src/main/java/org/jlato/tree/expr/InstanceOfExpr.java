@@ -139,11 +139,11 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 		}
 
 		public STraversal<InstanceOfExpr.State> firstChild() {
-			return null;
+			return EXPR;
 		}
 
 		public STraversal<InstanceOfExpr.State> lastChild() {
-			return null;
+			return TYPE;
 		}
 
 		public Tree instantiate(SLocation<InstanceOfExpr.State> location) {

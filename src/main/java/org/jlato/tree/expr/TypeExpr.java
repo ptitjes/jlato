@@ -97,11 +97,11 @@ public class TypeExpr extends TreeBase<TypeExpr.State, Expr, TypeExpr> implement
 		}
 
 		public STraversal<TypeExpr.State> firstChild() {
-			return null;
+			return TYPE;
 		}
 
 		public STraversal<TypeExpr.State> lastChild() {
-			return null;
+			return TYPE;
 		}
 
 		public Tree instantiate(SLocation<TypeExpr.State> location) {

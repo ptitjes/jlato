@@ -105,11 +105,11 @@ public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> imp
 		}
 
 		public STraversal<ReturnStmt.State> firstChild() {
-			return null;
+			return EXPR;
 		}
 
 		public STraversal<ReturnStmt.State> lastChild() {
-			return null;
+			return EXPR;
 		}
 
 		public Tree instantiate(SLocation<ReturnStmt.State> location) {

@@ -154,11 +154,11 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 		}
 
 		public STraversal<InitializerDecl.State> firstChild() {
-			return null;
+			return MODIFIERS;
 		}
 
 		public STraversal<InitializerDecl.State> lastChild() {
-			return null;
+			return BODY;
 		}
 
 		public Tree instantiate(SLocation<InitializerDecl.State> location) {

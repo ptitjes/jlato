@@ -172,11 +172,11 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		}
 
 		public STraversal<UnaryExpr.State> firstChild() {
-			return null;
+			return EXPR;
 		}
 
 		public STraversal<UnaryExpr.State> lastChild() {
-			return null;
+			return EXPR;
 		}
 
 		public Tree instantiate(SLocation<UnaryExpr.State> location) {

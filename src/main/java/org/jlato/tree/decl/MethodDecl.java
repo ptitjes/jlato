@@ -381,11 +381,11 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 		}
 
 		public STraversal<MethodDecl.State> firstChild() {
-			return null;
+			return MODIFIERS;
 		}
 
 		public STraversal<MethodDecl.State> lastChild() {
-			return null;
+			return BODY;
 		}
 
 		public Tree instantiate(SLocation<MethodDecl.State> location) {

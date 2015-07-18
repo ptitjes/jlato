@@ -100,11 +100,11 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 		}
 
 		public STraversal<IntersectionType.State> firstChild() {
-			return null;
+			return TYPES;
 		}
 
 		public STraversal<IntersectionType.State> lastChild() {
-			return null;
+			return TYPES;
 		}
 
 		public Tree instantiate(SLocation<IntersectionType.State> location) {

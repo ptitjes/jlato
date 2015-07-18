@@ -100,11 +100,11 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 		}
 
 		public STraversal<ThrowStmt.State> firstChild() {
-			return null;
+			return EXPR;
 		}
 
 		public STraversal<ThrowStmt.State> lastChild() {
-			return null;
+			return EXPR;
 		}
 
 		public Tree instantiate(SLocation<ThrowStmt.State> location) {

@@ -105,11 +105,11 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 		}
 
 		public STraversal<BreakStmt.State> firstChild() {
-			return null;
+			return ID;
 		}
 
 		public STraversal<BreakStmt.State> lastChild() {
-			return null;
+			return ID;
 		}
 
 		public Tree instantiate(SLocation<BreakStmt.State> location) {

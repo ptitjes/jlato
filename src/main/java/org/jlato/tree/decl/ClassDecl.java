@@ -311,11 +311,11 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 		}
 
 		public STraversal<ClassDecl.State> firstChild() {
-			return null;
+			return MODIFIERS;
 		}
 
 		public STraversal<ClassDecl.State> lastChild() {
-			return null;
+			return MEMBERS;
 		}
 
 		public Tree instantiate(SLocation<ClassDecl.State> location) {

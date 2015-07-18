@@ -113,11 +113,11 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 		}
 
 		public STraversal<VariableDeclarationExpr.State> firstChild() {
-			return null;
+			return DECLARATION;
 		}
 
 		public STraversal<VariableDeclarationExpr.State> lastChild() {
-			return null;
+			return DECLARATION;
 		}
 
 		public Tree instantiate(SLocation<VariableDeclarationExpr.State> location) {

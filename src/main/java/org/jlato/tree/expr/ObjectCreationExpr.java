@@ -260,11 +260,11 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 		}
 
 		public STraversal<ObjectCreationExpr.State> firstChild() {
-			return null;
+			return SCOPE;
 		}
 
 		public STraversal<ObjectCreationExpr.State> lastChild() {
-			return null;
+			return BODY;
 		}
 
 		public Tree instantiate(SLocation<ObjectCreationExpr.State> location) {

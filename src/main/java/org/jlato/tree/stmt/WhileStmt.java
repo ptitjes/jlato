@@ -141,11 +141,11 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 		}
 
 		public STraversal<WhileStmt.State> firstChild() {
-			return null;
+			return CONDITION;
 		}
 
 		public STraversal<WhileStmt.State> lastChild() {
-			return null;
+			return BODY;
 		}
 
 		public Tree instantiate(SLocation<WhileStmt.State> location) {

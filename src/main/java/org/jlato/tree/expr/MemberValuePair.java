@@ -136,11 +136,11 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 		}
 
 		public STraversal<MemberValuePair.State> firstChild() {
-			return null;
+			return NAME;
 		}
 
 		public STraversal<MemberValuePair.State> lastChild() {
-			return null;
+			return VALUE;
 		}
 
 		public Tree instantiate(SLocation<MemberValuePair.State> location) {

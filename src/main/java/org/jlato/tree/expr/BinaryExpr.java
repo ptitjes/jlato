@@ -208,11 +208,11 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		}
 
 		public STraversal<BinaryExpr.State> firstChild() {
-			return null;
+			return LEFT;
 		}
 
 		public STraversal<BinaryExpr.State> lastChild() {
-			return null;
+			return RIGHT;
 		}
 
 		public Tree instantiate(SLocation<BinaryExpr.State> location) {

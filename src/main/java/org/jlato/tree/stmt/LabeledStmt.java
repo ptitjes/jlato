@@ -146,11 +146,11 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 		}
 
 		public STraversal<LabeledStmt.State> firstChild() {
-			return null;
+			return LABEL;
 		}
 
 		public STraversal<LabeledStmt.State> lastChild() {
-			return null;
+			return STMT;
 		}
 
 		public Tree instantiate(SLocation<LabeledStmt.State> location) {

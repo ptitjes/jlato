@@ -264,11 +264,11 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 		}
 
 		public STraversal<InterfaceDecl.State> firstChild() {
-			return null;
+			return MODIFIERS;
 		}
 
 		public STraversal<InterfaceDecl.State> lastChild() {
-			return null;
+			return MEMBERS;
 		}
 
 		public Tree instantiate(SLocation<InterfaceDecl.State> location) {
