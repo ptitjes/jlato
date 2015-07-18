@@ -33,19 +33,11 @@ import org.jlato.tree.decl.FormalParameter;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> implements Tree {
 
 	public final static SKind<CatchClause.State> kind = new SKind<CatchClause.State>() {
-		public CatchClause instantiate(SLocation<CatchClause.State> location) {
-			return new CatchClause(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private CatchClause(SLocation<CatchClause.State> location) {
@@ -156,6 +148,14 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 
 		public STraversal<CatchClause.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<CatchClause.State> location) {
+			return new CatchClause(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

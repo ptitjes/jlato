@@ -38,17 +38,12 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, ArrayCreationExpr> implements Expr {
 
 	public final static SKind<ArrayCreationExpr.State> kind = new SKind<ArrayCreationExpr.State>() {
-		public ArrayCreationExpr instantiate(SLocation<ArrayCreationExpr.State> location) {
-			return new ArrayCreationExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ArrayCreationExpr(SLocation<ArrayCreationExpr.State> location) {
@@ -236,6 +231,14 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 
 		public STraversal<ArrayCreationExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ArrayCreationExpr.State> location) {
+			return new ArrayCreationExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

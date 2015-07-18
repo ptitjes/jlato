@@ -39,18 +39,12 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.SpacingConstraint.spacing;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDecl, EnumConstantDecl> implements MemberDecl {
 
 	public final static SKind<EnumConstantDecl.State> kind = new SKind<EnumConstantDecl.State>() {
-		public EnumConstantDecl instantiate(SLocation<EnumConstantDecl.State> location) {
-			return new EnumConstantDecl(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private EnumConstantDecl(SLocation<EnumConstantDecl.State> location) {
@@ -244,6 +238,14 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 
 		public STraversal<EnumConstantDecl.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<EnumConstantDecl.State> location) {
+			return new EnumConstantDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

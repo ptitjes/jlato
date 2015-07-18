@@ -29,18 +29,12 @@ import org.jlato.internal.td.TreeBase;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class EmptyTypeDecl extends TreeBase<EmptyTypeDecl.State, TypeDecl, EmptyTypeDecl> implements TypeDecl {
 
 	public final static SKind<EmptyTypeDecl.State> kind = new SKind<EmptyTypeDecl.State>() {
-		public EmptyTypeDecl instantiate(SLocation<EmptyTypeDecl.State> location) {
-			return new EmptyTypeDecl(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private EmptyTypeDecl(SLocation<EmptyTypeDecl.State> location) {
@@ -78,6 +72,14 @@ public class EmptyTypeDecl extends TreeBase<EmptyTypeDecl.State, TypeDecl, Empty
 
 		public STraversal<EmptyTypeDecl.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<EmptyTypeDecl.State> location) {
+			return new EmptyTypeDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

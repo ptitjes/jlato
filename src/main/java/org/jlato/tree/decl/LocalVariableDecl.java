@@ -34,18 +34,12 @@ import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, LocalVariableDecl> implements Decl {
 
 	public final static SKind<LocalVariableDecl.State> kind = new SKind<LocalVariableDecl.State>() {
-		public LocalVariableDecl instantiate(SLocation<LocalVariableDecl.State> location) {
-			return new LocalVariableDecl(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	protected LocalVariableDecl(SLocation<LocalVariableDecl.State> location) {
@@ -189,6 +183,14 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 
 		public STraversal<LocalVariableDecl.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<LocalVariableDecl.State> location) {
+			return new LocalVariableDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

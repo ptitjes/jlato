@@ -40,13 +40,7 @@ import org.jlato.internal.bu.*;
 public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> implements Tree {
 
 	public final static SKind<ImportDecl.State> kind = new SKind<ImportDecl.State>() {
-		public ImportDecl instantiate(SLocation<ImportDecl.State> location) {
-			return new ImportDecl(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ImportDecl(SLocation<ImportDecl.State> location) {
@@ -175,6 +169,14 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 
 		public STraversal<ImportDecl.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ImportDecl.State> location) {
+			return new ImportDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

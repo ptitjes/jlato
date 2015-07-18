@@ -35,18 +35,12 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStmt> implements Stmt {
 
 	public final static SKind<ContinueStmt.State> kind = new SKind<ContinueStmt.State>() {
-		public ContinueStmt instantiate(SLocation<ContinueStmt.State> location) {
-			return new ContinueStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ContinueStmt(SLocation<ContinueStmt.State> location) {
@@ -116,6 +110,14 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 
 		public STraversal<ContinueStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ContinueStmt.State> location) {
+			return new ContinueStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

@@ -35,18 +35,12 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implements Stmt {
 
 	public final static SKind<BreakStmt.State> kind = new SKind<BreakStmt.State>() {
-		public BreakStmt instantiate(SLocation<BreakStmt.State> location) {
-			return new BreakStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private BreakStmt(SLocation<BreakStmt.State> location) {
@@ -116,6 +110,14 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 
 		public STraversal<BreakStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<BreakStmt.State> location) {
+			return new BreakStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

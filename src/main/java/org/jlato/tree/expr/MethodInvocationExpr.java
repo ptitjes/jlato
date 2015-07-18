@@ -37,17 +37,12 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, Expr, MethodInvocationExpr> implements Expr {
 
 	public final static SKind<MethodInvocationExpr.State> kind = new SKind<MethodInvocationExpr.State>() {
-		public MethodInvocationExpr instantiate(SLocation<MethodInvocationExpr.State> location) {
-			return new MethodInvocationExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private MethodInvocationExpr(SLocation<MethodInvocationExpr.State> location) {
@@ -229,6 +224,14 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 
 		public STraversal<MethodInvocationExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<MethodInvocationExpr.State> location) {
+			return new MethodInvocationExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

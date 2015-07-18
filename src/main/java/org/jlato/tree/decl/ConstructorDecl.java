@@ -36,17 +36,12 @@ import org.jlato.tree.type.QualifiedType;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl, ConstructorDecl> implements MemberDecl {
 
 	public final static SKind<ConstructorDecl.State> kind = new SKind<ConstructorDecl.State>() {
-		public ConstructorDecl instantiate(SLocation<ConstructorDecl.State> location) {
-			return new ConstructorDecl(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ConstructorDecl(SLocation<ConstructorDecl.State> location) {
@@ -311,6 +306,14 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 
 		public STraversal<ConstructorDecl.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ConstructorDecl.State> location) {
+			return new ConstructorDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

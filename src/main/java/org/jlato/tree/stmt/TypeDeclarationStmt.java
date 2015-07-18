@@ -31,19 +31,13 @@ import org.jlato.tree.decl.TypeDecl;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stmt, TypeDeclarationStmt> implements Stmt {
 
 	public final static SKind<TypeDeclarationStmt.State> kind = new SKind<TypeDeclarationStmt.State>() {
-		public TypeDeclarationStmt instantiate(SLocation<TypeDeclarationStmt.State> location) {
-			return new TypeDeclarationStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private TypeDeclarationStmt(SLocation<TypeDeclarationStmt.State> location) {
@@ -111,6 +105,14 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 
 		public STraversal<TypeDeclarationStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<TypeDeclarationStmt.State> location) {
+			return new TypeDeclarationStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

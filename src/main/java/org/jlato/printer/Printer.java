@@ -191,7 +191,7 @@ public class Printer {
 	public void print(Tree tree) {
 		reset();
 		final STree sTree = TreeBase.treeOf(tree);
-		final LexicalShape shape = sTree.kind.shape();
+		final LexicalShape shape = sTree.state.shape();
 		shape.render(sTree, sTree.run, this);
 	}
 

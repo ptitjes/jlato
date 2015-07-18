@@ -32,19 +32,13 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt {
 
 	public final static SKind<DoStmt.State> kind = new SKind<DoStmt.State>() {
-		public DoStmt instantiate(SLocation<DoStmt.State> location) {
-			return new DoStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private DoStmt(SLocation<DoStmt.State> location) {
@@ -155,6 +149,14 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 
 		public STraversal<DoStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<DoStmt.State> location) {
+			return new DoStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

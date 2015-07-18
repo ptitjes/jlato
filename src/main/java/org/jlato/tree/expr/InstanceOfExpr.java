@@ -31,19 +31,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, InstanceOfExpr> implements Expr {
 
 	public final static SKind<InstanceOfExpr.State> kind = new SKind<InstanceOfExpr.State>() {
-		public InstanceOfExpr instantiate(SLocation<InstanceOfExpr.State> location) {
-			return new InstanceOfExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private InstanceOfExpr(SLocation<InstanceOfExpr.State> location) {
@@ -150,6 +144,14 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 
 		public STraversal<InstanceOfExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<InstanceOfExpr.State> location) {
+			return new InstanceOfExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

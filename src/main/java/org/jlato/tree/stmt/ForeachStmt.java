@@ -33,19 +33,13 @@ import org.jlato.tree.expr.VariableDeclarationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> implements Stmt {
 
 	public final static SKind<ForeachStmt.State> kind = new SKind<ForeachStmt.State>() {
-		public ForeachStmt instantiate(SLocation<ForeachStmt.State> location) {
-			return new ForeachStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ForeachStmt(SLocation<ForeachStmt.State> location) {
@@ -192,6 +186,14 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 
 		public STraversal<ForeachStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ForeachStmt.State> location) {
+			return new ForeachStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

@@ -33,18 +33,12 @@ import org.jlato.tree.stmt.BlockStmt;
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl, InitializerDecl> implements MemberDecl {
 
 	public final static SKind<InitializerDecl.State> kind = new SKind<InitializerDecl.State>() {
-		public InitializerDecl instantiate(SLocation<InitializerDecl.State> location) {
-			return new InitializerDecl(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private InitializerDecl(SLocation<InitializerDecl.State> location) {
@@ -165,6 +159,14 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 
 		public STraversal<InitializerDecl.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<InitializerDecl.State> location) {
+			return new InitializerDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

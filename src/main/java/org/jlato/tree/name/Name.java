@@ -33,17 +33,12 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 
 	public final static SKind<Name.State> kind = new SKind<Name.State>() {
-		public Name instantiate(SLocation<Name.State> location) {
-			return new Name(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private Name(SLocation<Name.State> location) {
@@ -111,6 +106,14 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 
 		public STraversal<Name.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<Name.State> location) {
+			return new Name(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

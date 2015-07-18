@@ -37,18 +37,12 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements Stmt {
 
 	public final static SKind<TryStmt.State> kind = new SKind<TryStmt.State>() {
-		public TryStmt instantiate(SLocation<TryStmt.State> location) {
-			return new TryStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private TryStmt(SLocation<TryStmt.State> location) {
@@ -234,6 +228,14 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 
 		public STraversal<TryStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<TryStmt.State> location) {
+			return new TryStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

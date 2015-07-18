@@ -41,18 +41,11 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> implements Tree {
 
 	public final static SKind<SwitchCase.State> kind = new SKind<SwitchCase.State>() {
-		public SwitchCase instantiate(SLocation<SwitchCase.State> location) {
-			return new SwitchCase(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private SwitchCase(SLocation<SwitchCase.State> location) {
@@ -166,6 +159,14 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 
 		public STraversal<SwitchCase.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<SwitchCase.State> location) {
+			return new SwitchCase(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

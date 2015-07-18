@@ -34,18 +34,12 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implements Expr {
 
 	public final static SKind<ThisExpr.State> kind = new SKind<ThisExpr.State>() {
-		public ThisExpr instantiate(SLocation<ThisExpr.State> location) {
-			return new ThisExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ThisExpr(SLocation<ThisExpr.State> location) {
@@ -114,6 +108,14 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 
 		public STraversal<ThisExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ThisExpr.State> location) {
+			return new ThisExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

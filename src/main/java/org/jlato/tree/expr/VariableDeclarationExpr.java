@@ -36,19 +36,13 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.State, Expr, VariableDeclarationExpr> implements Expr {
 
 	public final static SKind<VariableDeclarationExpr.State> kind = new SKind<VariableDeclarationExpr.State>() {
-		public VariableDeclarationExpr instantiate(SLocation<VariableDeclarationExpr.State> location) {
-			return new VariableDeclarationExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private VariableDeclarationExpr(SLocation<VariableDeclarationExpr.State> location) {
@@ -124,6 +118,14 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 
 		public STraversal<VariableDeclarationExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<VariableDeclarationExpr.State> location) {
+			return new VariableDeclarationExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

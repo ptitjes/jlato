@@ -33,18 +33,12 @@ import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, AnnotationDecl> implements TypeDecl {
 
 	public final static SKind<AnnotationDecl.State> kind = new SKind<AnnotationDecl.State>() {
-		public AnnotationDecl instantiate(SLocation<AnnotationDecl.State> location) {
-			return new AnnotationDecl(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	protected AnnotationDecl(SLocation<AnnotationDecl.State> location) {
@@ -198,6 +192,14 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 
 		public STraversal<AnnotationDecl.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<AnnotationDecl.State> location) {
+			return new AnnotationDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

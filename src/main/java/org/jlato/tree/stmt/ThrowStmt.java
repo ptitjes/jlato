@@ -31,19 +31,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implements Stmt {
 
 	public final static SKind<ThrowStmt.State> kind = new SKind<ThrowStmt.State>() {
-		public ThrowStmt instantiate(SLocation<ThrowStmt.State> location) {
-			return new ThrowStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ThrowStmt(SLocation<ThrowStmt.State> location) {
@@ -111,6 +105,14 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 
 		public STraversal<ThrowStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ThrowStmt.State> location) {
+			return new ThrowStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

@@ -35,18 +35,11 @@ import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> implements Tree {
 
 	public final static SKind<PackageDecl.State> kind = new SKind<PackageDecl.State>() {
-		public PackageDecl instantiate(SLocation<PackageDecl.State> location) {
-			return new PackageDecl(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private PackageDecl(SLocation<PackageDecl.State> location) {
@@ -154,6 +147,14 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 
 		public STraversal<PackageDecl.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<PackageDecl.State> location) {
+			return new PackageDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

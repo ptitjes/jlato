@@ -31,19 +31,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, ExpressionStmt> implements Stmt {
 
 	public final static SKind<ExpressionStmt.State> kind = new SKind<ExpressionStmt.State>() {
-		public ExpressionStmt instantiate(SLocation<ExpressionStmt.State> location) {
-			return new ExpressionStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ExpressionStmt(SLocation<ExpressionStmt.State> location) {
@@ -111,6 +105,14 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 
 		public STraversal<ExpressionStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ExpressionStmt.State> location) {
+			return new ExpressionStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

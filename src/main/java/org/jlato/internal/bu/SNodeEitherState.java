@@ -19,6 +19,11 @@
 
 package org.jlato.internal.bu;
 
+import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeEither;
+import org.jlato.tree.Tree;
+
 import java.util.Collections;
 
 /**
@@ -32,6 +37,16 @@ public class SNodeEitherState implements STreeState<SNodeEitherState> {
 	public SNodeEitherState(STree<?> element, EitherSide side) {
 		this.element = element;
 		this.side = side;
+	}
+
+	@Override
+	public Tree instantiate(SLocation<SNodeEitherState> location) {
+		return new NodeEither<Tree, Tree>(location);
+	}
+
+	@Override
+	public LexicalShape shape() {
+		throw new UnsupportedOperationException();
 	}
 
 	public static STraversal<SNodeEitherState> elementTraversal() {

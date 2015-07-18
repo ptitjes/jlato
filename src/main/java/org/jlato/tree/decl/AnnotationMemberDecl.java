@@ -37,18 +37,12 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, MemberDecl, AnnotationMemberDecl> implements MemberDecl {
 
 	public final static SKind<AnnotationMemberDecl.State> kind = new SKind<AnnotationMemberDecl.State>() {
-		public AnnotationMemberDecl instantiate(SLocation<AnnotationMemberDecl.State> location) {
-			return new AnnotationMemberDecl(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private AnnotationMemberDecl(SLocation<AnnotationMemberDecl.State> location) {
@@ -275,6 +269,14 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 
 		public STraversal<AnnotationMemberDecl.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<AnnotationMemberDecl.State> location) {
+			return new AnnotationMemberDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

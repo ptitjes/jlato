@@ -27,8 +27,4 @@ import org.jlato.tree.Tree;
  * @author Didier Villevalois
  */
 public interface SKind<S extends STreeState<S>> {
-
-	Tree instantiate(SLocation<S> location);
-
-	LexicalShape shape();
 }

@@ -28,18 +28,12 @@ import org.jlato.internal.td.TreeBase;
 
 import static org.jlato.internal.shapes.LexicalShape.none;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class UnknownType extends TreeBase<UnknownType.State, Type, UnknownType> implements Type {
 
 	public final static SKind<UnknownType.State> kind = new SKind<UnknownType.State>() {
-		public UnknownType instantiate(SLocation<UnknownType.State> location) {
-			return new UnknownType(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private UnknownType(SLocation<UnknownType.State> location) {
@@ -67,6 +61,14 @@ public class UnknownType extends TreeBase<UnknownType.State, Type, UnknownType> 
 
 		public STraversal<UnknownType.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<UnknownType.State> location) {
+			return new UnknownType(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

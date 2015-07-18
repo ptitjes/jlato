@@ -34,18 +34,12 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> implements MemberDecl {
 
 	public final static SKind<FieldDecl.State> kind = new SKind<FieldDecl.State>() {
-		public FieldDecl instantiate(SLocation<FieldDecl.State> location) {
-			return new FieldDecl(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private FieldDecl(SLocation<FieldDecl.State> location) {
@@ -206,6 +200,14 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 
 		public STraversal<FieldDecl.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<FieldDecl.State> location) {
+			return new FieldDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

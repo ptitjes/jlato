@@ -35,18 +35,11 @@ import org.jlato.tree.expr.AnnotationExpr;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implements Tree {
 
 	public final static SKind<ArrayDim.State> kind = new SKind<ArrayDim.State>() {
-		public ArrayDim instantiate(SLocation<ArrayDim.State> location) {
-			return new ArrayDim(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ArrayDim(SLocation<ArrayDim.State> location) {
@@ -121,6 +114,14 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 
 		public STraversal<ArrayDim.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ArrayDim.State> location) {
+			return new ArrayDim(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

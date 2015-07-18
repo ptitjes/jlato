@@ -33,17 +33,12 @@ import org.jlato.tree.Mutation;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> implements Expr {
 
 	public final static SKind<BinaryExpr.State> kind = new SKind<BinaryExpr.State>() {
-		public BinaryExpr instantiate(SLocation<BinaryExpr.State> location) {
-			return new BinaryExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private BinaryExpr(SLocation<BinaryExpr.State> location) {
@@ -218,6 +213,14 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 
 		public STraversal<BinaryExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<BinaryExpr.State> location) {
+			return new BinaryExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

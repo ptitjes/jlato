@@ -34,19 +34,11 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterPackageDecl;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, CompilationUnit> implements Tree {
 
 	public final static SKind<CompilationUnit.State> kind = new SKind<CompilationUnit.State>() {
-		public CompilationUnit instantiate(SLocation<CompilationUnit.State> location) {
-			return new CompilationUnit(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private CompilationUnit(SLocation<CompilationUnit.State> location) {
@@ -211,6 +203,14 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 
 		public STraversal<CompilationUnit.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<CompilationUnit.State> location) {
+			return new CompilationUnit(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

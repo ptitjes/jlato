@@ -34,17 +34,12 @@ import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Expr, MethodReferenceExpr> implements Expr {
 
 	public final static SKind<MethodReferenceExpr.State> kind = new SKind<MethodReferenceExpr.State>() {
-		public MethodReferenceExpr instantiate(SLocation<MethodReferenceExpr.State> location) {
-			return new MethodReferenceExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private MethodReferenceExpr(SLocation<MethodReferenceExpr.State> location) {
@@ -189,6 +184,14 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 
 		public STraversal<MethodReferenceExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<MethodReferenceExpr.State> location) {
+			return new MethodReferenceExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

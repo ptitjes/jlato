@@ -35,7 +35,7 @@ public final class LSDefault extends LexicalShape {
 	}
 
 	private LexicalShape shapeFor(STree tree) {
-		return tree.kind.shape();
+		return tree.state.shape();
 	}
 
 	@Override

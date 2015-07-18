@@ -32,18 +32,12 @@ import org.jlato.tree.NodeList;
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class IntersectionType extends TreeBase<IntersectionType.State, Type, IntersectionType> implements Type {
 
 	public final static SKind<IntersectionType.State> kind = new SKind<IntersectionType.State>() {
-		public IntersectionType instantiate(SLocation<IntersectionType.State> location) {
-			return new IntersectionType(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private IntersectionType(SLocation<IntersectionType.State> location) {
@@ -111,6 +105,14 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 
 		public STraversal<IntersectionType.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<IntersectionType.State> location) {
+			return new IntersectionType(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

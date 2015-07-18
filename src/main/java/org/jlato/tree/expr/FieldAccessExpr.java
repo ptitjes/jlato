@@ -35,18 +35,12 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, FieldAccessExpr> implements Expr {
 
 	public final static SKind<FieldAccessExpr.State> kind = new SKind<FieldAccessExpr.State>() {
-		public FieldAccessExpr instantiate(SLocation<FieldAccessExpr.State> location) {
-			return new FieldAccessExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private FieldAccessExpr(SLocation<FieldAccessExpr.State> location) {
@@ -152,6 +146,14 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 
 		public STraversal<FieldAccessExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<FieldAccessExpr.State> location) {
+			return new FieldAccessExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

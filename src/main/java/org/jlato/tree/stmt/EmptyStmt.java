@@ -29,18 +29,12 @@ import org.jlato.internal.td.TreeBase;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class EmptyStmt extends TreeBase<EmptyStmt.State, Stmt, EmptyStmt> implements Stmt {
 
 	public final static SKind<EmptyStmt.State> kind = new SKind<EmptyStmt.State>() {
-		public EmptyStmt instantiate(SLocation<EmptyStmt.State> location) {
-			return new EmptyStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private EmptyStmt(SLocation<EmptyStmt.State> location) {
@@ -68,6 +62,14 @@ public class EmptyStmt extends TreeBase<EmptyStmt.State, Stmt, EmptyStmt> implem
 
 		public STraversal<EmptyStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<EmptyStmt.State> location) {
+			return new EmptyStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

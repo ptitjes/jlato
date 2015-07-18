@@ -33,18 +33,12 @@ import org.jlato.tree.decl.VariableDeclaratorId;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayType> implements ReferenceType {
 
 	public final static SKind<ArrayType.State> kind = new SKind<ArrayType.State>() {
-		public ArrayType instantiate(SLocation<ArrayType.State> location) {
-			return new ArrayType(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ArrayType(SLocation<ArrayType.State> location) {
@@ -150,6 +144,14 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 
 		public STraversal<ArrayType.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ArrayType.State> location) {
+			return new ArrayType(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

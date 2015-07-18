@@ -40,18 +40,12 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> implements TypeDecl {
 
 	public final static SKind<EnumDecl.State> kind = new SKind<EnumDecl.State>() {
-		public EnumDecl instantiate(SLocation<EnumDecl.State> location) {
-			return new EnumDecl(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	protected EnumDecl(SLocation<EnumDecl.State> location) {
@@ -318,6 +312,14 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 
 		public STraversal<EnumDecl.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<EnumDecl.State> location) {
+			return new EnumDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

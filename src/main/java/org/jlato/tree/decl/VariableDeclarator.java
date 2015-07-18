@@ -36,18 +36,11 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree, VariableDeclarator> implements Tree {
 
 	public final static SKind<VariableDeclarator.State> kind = new SKind<VariableDeclarator.State>() {
-		public VariableDeclarator instantiate(SLocation<VariableDeclarator.State> location) {
-			return new VariableDeclarator(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private VariableDeclarator(SLocation<VariableDeclarator.State> location) {
@@ -160,6 +153,14 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 
 		public STraversal<VariableDeclarator.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<VariableDeclarator.State> location) {
+			return new VariableDeclarator(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

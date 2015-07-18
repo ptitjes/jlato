@@ -33,18 +33,12 @@ import org.jlato.tree.NodeList;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, Expr, ArrayInitializerExpr> implements Expr {
 
 	public final static SKind<ArrayInitializerExpr.State> kind = new SKind<ArrayInitializerExpr.State>() {
-		public ArrayInitializerExpr instantiate(SLocation<ArrayInitializerExpr.State> location) {
-			return new ArrayInitializerExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ArrayInitializerExpr(SLocation<ArrayInitializerExpr.State> location) {
@@ -119,6 +113,14 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 
 		public STraversal<ArrayInitializerExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ArrayInitializerExpr.State> location) {
+			return new ArrayInitializerExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

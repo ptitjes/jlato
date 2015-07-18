@@ -33,18 +33,11 @@ import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, Tree, VariableDeclaratorId> implements Tree {
 
 	public final static SKind<VariableDeclaratorId.State> kind = new SKind<VariableDeclaratorId.State>() {
-		public VariableDeclaratorId instantiate(SLocation<VariableDeclaratorId.State> location) {
-			return new VariableDeclaratorId(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private VariableDeclaratorId(SLocation<VariableDeclaratorId.State> location) {
@@ -150,6 +143,14 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 
 		public STraversal<VariableDeclaratorId.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<VariableDeclaratorId.State> location) {
+			return new VariableDeclaratorId(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

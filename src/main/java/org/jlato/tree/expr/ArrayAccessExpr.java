@@ -30,19 +30,13 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, ArrayAccessExpr> implements Expr {
 
 	public final static SKind<ArrayAccessExpr.State> kind = new SKind<ArrayAccessExpr.State>() {
-		public ArrayAccessExpr instantiate(SLocation<ArrayAccessExpr.State> location) {
-			return new ArrayAccessExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ArrayAccessExpr(SLocation<ArrayAccessExpr.State> location) {
@@ -148,6 +142,14 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 
 		public STraversal<ArrayAccessExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ArrayAccessExpr.State> location) {
+			return new ArrayAccessExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

@@ -39,18 +39,12 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt {
 
 	public final static SKind<IfStmt.State> kind = new SKind<IfStmt.State>() {
-		public IfStmt instantiate(SLocation<IfStmt.State> location) {
-			return new IfStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private IfStmt(SLocation<IfStmt.State> location) {
@@ -233,6 +227,14 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 
 		public STraversal<IfStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<IfStmt.State> location) {
+			return new IfStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

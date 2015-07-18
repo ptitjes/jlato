@@ -21,14 +21,10 @@ package org.jlato.tree;
 
 import org.jlato.internal.bu.SNodeEitherState;
 import org.jlato.internal.bu.SNodeEitherState.EitherSide;
-import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
-
-import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
@@ -43,13 +39,7 @@ public class NodeEither<TL extends Tree, TR extends Tree> extends TreeBase<SNode
 	}
 
 	public static class Kind<TL extends Tree, TR extends Tree> implements SKind<SNodeEitherState> {
-		public Tree instantiate(SLocation<SNodeEitherState> location) {
-			return new NodeEither<TL, TR>(location);
-		}
 
-		public LexicalShape shape() {
-			throw new UnsupportedOperationException();
-		}
 	}
 
 	public static <TL extends Tree, TR extends Tree> NodeEither<TL, TR> left(TL tree) {
@@ -62,7 +52,7 @@ public class NodeEither<TL extends Tree, TR extends Tree> extends TreeBase<SNode
 		return new NodeEither<TL, TR>(tree, EitherSide.Right);
 	}
 
-	private NodeEither(SLocation<SNodeEitherState> location) {
+	public NodeEither(SLocation<SNodeEitherState> location) {
 		super(location);
 	}
 

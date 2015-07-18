@@ -34,18 +34,11 @@ import org.jlato.tree.Tree;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class QualifiedName extends TreeBase<QualifiedName.State, Tree, QualifiedName> implements Tree {
 
 	public final static SKind<QualifiedName.State> kind = new SKind<QualifiedName.State>() {
-		public QualifiedName instantiate(SLocation<QualifiedName.State> location) {
-			return new QualifiedName(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	public static QualifiedName of(String nameString) {
@@ -173,6 +166,14 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 
 		public STraversal<QualifiedName.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<QualifiedName.State> location) {
+			return new QualifiedName(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

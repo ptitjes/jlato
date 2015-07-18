@@ -32,19 +32,13 @@ import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implements Expr {
 
 	public final static SKind<CastExpr.State> kind = new SKind<CastExpr.State>() {
-		public CastExpr instantiate(SLocation<CastExpr.State> location) {
-			return new CastExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private CastExpr(SLocation<CastExpr.State> location) {
@@ -149,6 +143,14 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 
 		public STraversal<CastExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<CastExpr.State> location) {
+			return new CastExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

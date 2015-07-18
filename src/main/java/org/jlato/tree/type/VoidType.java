@@ -29,18 +29,12 @@ import org.jlato.internal.td.TreeBase;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implements Type {
 
 	public final static SKind<VoidType.State> kind = new SKind<VoidType.State>() {
-		public VoidType instantiate(SLocation<VoidType.State> location) {
-			return new VoidType(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private VoidType(SLocation<VoidType.State> location) {
@@ -68,6 +62,14 @@ public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implement
 
 		public STraversal<VoidType.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<VoidType.State> location) {
+			return new VoidType(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

@@ -33,17 +33,12 @@ import org.jlato.tree.Mutation;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> implements Expr {
 
 	public final static SKind<AssignExpr.State> kind = new SKind<AssignExpr.State>() {
-		public AssignExpr instantiate(SLocation<AssignExpr.State> location) {
-			return new AssignExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private AssignExpr(SLocation<AssignExpr.State> location) {
@@ -207,6 +202,14 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 
 		public STraversal<AssignExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<AssignExpr.State> location) {
+			return new AssignExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

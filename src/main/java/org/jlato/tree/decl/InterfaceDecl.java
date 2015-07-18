@@ -34,17 +34,12 @@ import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, InterfaceDecl> implements TypeDecl {
 
 	public final static SKind<InterfaceDecl.State> kind = new SKind<InterfaceDecl.State>() {
-		public InterfaceDecl instantiate(SLocation<InterfaceDecl.State> location) {
-			return new InterfaceDecl(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	protected InterfaceDecl(SLocation<InterfaceDecl.State> location) {
@@ -274,6 +269,14 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 
 		public STraversal<InterfaceDecl.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<InterfaceDecl.State> location) {
+			return new InterfaceDecl(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

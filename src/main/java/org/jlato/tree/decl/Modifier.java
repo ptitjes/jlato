@@ -35,13 +35,7 @@ import org.jlato.internal.bu.*;
 public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifier> implements ExtendedModifier {
 
 	public final static SKind<Modifier.State> kind = new SKind<Modifier.State>() {
-		public Tree instantiate(SLocation<Modifier.State> location) {
-			return new Modifier(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	public static final Modifier Public = new Modifier(LToken.Public);
@@ -109,6 +103,14 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 
 		public STraversal<Modifier.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<Modifier.State> location) {
+			return new Modifier(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

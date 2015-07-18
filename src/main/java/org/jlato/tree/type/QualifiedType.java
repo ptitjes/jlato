@@ -37,17 +37,12 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, QualifiedType> implements ReferenceType {
 
 	public final static SKind<QualifiedType.State> kind = new SKind<QualifiedType.State>() {
-		public QualifiedType instantiate(SLocation<QualifiedType.State> location) {
-			return new QualifiedType(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private QualifiedType(SLocation<QualifiedType.State> location) {
@@ -249,6 +244,14 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 
 		public STraversal<QualifiedType.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<QualifiedType.State> location) {
+			return new QualifiedType(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

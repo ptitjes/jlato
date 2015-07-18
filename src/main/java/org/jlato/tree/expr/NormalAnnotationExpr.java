@@ -34,18 +34,12 @@ import org.jlato.tree.name.QualifiedName;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, AnnotationExpr, NormalAnnotationExpr> implements AnnotationExpr {
 
 	public final static SKind<NormalAnnotationExpr.State> kind = new SKind<NormalAnnotationExpr.State>() {
-		public NormalAnnotationExpr instantiate(SLocation<NormalAnnotationExpr.State> location) {
-			return new NormalAnnotationExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private NormalAnnotationExpr(SLocation<NormalAnnotationExpr.State> location) {
@@ -153,6 +147,14 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 
 		public STraversal<NormalAnnotationExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<NormalAnnotationExpr.State> location) {
+			return new NormalAnnotationExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

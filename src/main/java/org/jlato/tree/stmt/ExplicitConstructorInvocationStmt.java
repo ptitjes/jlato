@@ -39,17 +39,12 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstructorInvocationStmt.State, Stmt, ExplicitConstructorInvocationStmt> implements Stmt {
 
 	public final static SKind<ExplicitConstructorInvocationStmt.State> kind = new SKind<ExplicitConstructorInvocationStmt.State>() {
-		public ExplicitConstructorInvocationStmt instantiate(SLocation<ExplicitConstructorInvocationStmt.State> location) {
-			return new ExplicitConstructorInvocationStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ExplicitConstructorInvocationStmt(SLocation<ExplicitConstructorInvocationStmt.State> location) {
@@ -225,6 +220,14 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 
 		public STraversal<ExplicitConstructorInvocationStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ExplicitConstructorInvocationStmt.State> location) {
+			return new ExplicitConstructorInvocationStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

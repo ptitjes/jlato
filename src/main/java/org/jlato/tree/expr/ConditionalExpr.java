@@ -31,19 +31,13 @@ import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, ConditionalExpr> implements Expr {
 
 	public final static SKind<ConditionalExpr.State> kind = new SKind<ConditionalExpr.State>() {
-		public ConditionalExpr instantiate(SLocation<ConditionalExpr.State> location) {
-			return new ConditionalExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ConditionalExpr(SLocation<ConditionalExpr.State> location) {
@@ -189,6 +183,14 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 
 		public STraversal<ConditionalExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ConditionalExpr.State> location) {
+			return new ConditionalExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

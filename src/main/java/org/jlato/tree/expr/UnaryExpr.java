@@ -33,17 +33,12 @@ import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implements Expr {
 
 	public final static SKind<UnaryExpr.State> kind = new SKind<UnaryExpr.State>() {
-		public UnaryExpr instantiate(SLocation<UnaryExpr.State> location) {
-			return new UnaryExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private UnaryExpr(SLocation<UnaryExpr.State> location) {
@@ -182,6 +177,14 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 
 		public STraversal<UnaryExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<UnaryExpr.State> location) {
+			return new UnaryExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

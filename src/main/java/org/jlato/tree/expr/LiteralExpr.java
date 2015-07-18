@@ -37,13 +37,7 @@ import org.jlato.internal.bu.*;
 public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExpr> implements Expr {
 
 	public final static SKind<State> kind = new SKind<State>() {
-		public Tree instantiate(SLocation<State> location) {
-			return new LiteralExpr<Object>(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	public static <T> STree<LiteralExpr.State> make(Class<T> literalClass, String literalString) {
@@ -163,6 +157,14 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 
 		public STraversal<LiteralExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<LiteralExpr.State> location) {
+			return new LiteralExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

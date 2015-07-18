@@ -34,18 +34,12 @@ import org.jlato.tree.expr.Expr;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements Stmt {
 
 	public final static SKind<ForStmt.State> kind = new SKind<ForStmt.State>() {
-		public ForStmt instantiate(SLocation<ForStmt.State> location) {
-			return new ForStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ForStmt(SLocation<ForStmt.State> location) {
@@ -231,6 +225,14 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 
 		public STraversal<ForStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ForStmt.State> location) {
+			return new ForStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

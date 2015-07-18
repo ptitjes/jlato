@@ -37,17 +37,12 @@ import static org.jlato.internal.shapes.LSCondition.data;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> implements Expr {
 
 	public final static SKind<LambdaExpr.State> kind = new SKind<LambdaExpr.State>() {
-		public LambdaExpr instantiate(SLocation<LambdaExpr.State> location) {
-			return new LambdaExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private LambdaExpr(SLocation<LambdaExpr.State> location) {
@@ -190,6 +185,14 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 
 		public STraversal<LambdaExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<LambdaExpr.State> location) {
+			return new LambdaExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

@@ -39,13 +39,7 @@ import static org.jlato.printer.SpacingConstraint.space;
 public class FormalParameter extends TreeBase<FormalParameter.State, Tree, FormalParameter> implements Tree {
 
 	public final static SKind<FormalParameter.State> kind = new SKind<FormalParameter.State>() {
-		public FormalParameter instantiate(SLocation<FormalParameter.State> location) {
-			return new FormalParameter(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private FormalParameter(SLocation<FormalParameter.State> location) {
@@ -223,6 +217,14 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 
 		public STraversal<FormalParameter.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<FormalParameter.State> location) {
+			return new FormalParameter(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

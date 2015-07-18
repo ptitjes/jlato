@@ -19,8 +19,11 @@
 
 package org.jlato.internal.bu;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Vector;
+import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
 
 import java.util.Collections;
 
@@ -33,6 +36,16 @@ public class SNodeListState implements STreeState<SNodeListState> {
 
 	public SNodeListState(Vector<STree<? extends STreeState<?>>> children) {
 		this.children = children;
+	}
+
+	@Override
+	public Tree instantiate(SLocation<SNodeListState> location) {
+		return new NodeList<Tree>(location);
+	}
+
+	@Override
+	public LexicalShape shape() {
+		throw new UnsupportedOperationException();
 	}
 
 	public static STraversal<SNodeListState> elementTraversal(int index) {

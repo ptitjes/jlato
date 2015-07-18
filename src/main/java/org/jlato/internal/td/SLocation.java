@@ -48,7 +48,7 @@ public class SLocation<S extends STreeState<S>> {
 		this.context = context;
 		this.tree = tree;
 		this.changed = changed;
-		this.facade = tree.kind.instantiate(this);
+		this.facade = tree.state.instantiate(this);
 	}
 
 	public SLocation<S> withTree(STree<S> newTree) {

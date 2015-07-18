@@ -36,19 +36,13 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.LabeledStmt_A
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.spacing;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> implements Stmt {
 
 	public final static SKind<LabeledStmt.State> kind = new SKind<LabeledStmt.State>() {
-		public LabeledStmt instantiate(SLocation<LabeledStmt.State> location) {
-			return new LabeledStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private LabeledStmt(SLocation<LabeledStmt.State> location) {
@@ -157,6 +151,14 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 
 		public STraversal<LabeledStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<LabeledStmt.State> location) {
+			return new LabeledStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

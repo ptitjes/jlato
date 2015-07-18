@@ -32,18 +32,12 @@ import org.jlato.tree.NodeList;
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implements Type {
 
 	public final static SKind<UnionType.State> kind = new SKind<UnionType.State>() {
-		public UnionType instantiate(SLocation<UnionType.State> location) {
-			return new UnionType(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private UnionType(SLocation<UnionType.State> location) {
@@ -111,6 +105,14 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 
 		public STraversal<UnionType.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<UnionType.State> location) {
+			return new UnionType(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

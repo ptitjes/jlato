@@ -32,19 +32,13 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, SynchronizedStmt> implements Stmt {
 
 	public final static SKind<SynchronizedStmt.State> kind = new SKind<SynchronizedStmt.State>() {
-		public SynchronizedStmt instantiate(SLocation<SynchronizedStmt.State> location) {
-			return new SynchronizedStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private SynchronizedStmt(SLocation<SynchronizedStmt.State> location) {
@@ -153,6 +147,14 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 
 		public STraversal<SynchronizedStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<SynchronizedStmt.State> location) {
+			return new SynchronizedStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

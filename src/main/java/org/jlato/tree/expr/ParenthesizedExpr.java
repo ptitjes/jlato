@@ -30,19 +30,13 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, ParenthesizedExpr> implements Expr {
 
 	public final static SKind<ParenthesizedExpr.State> kind = new SKind<ParenthesizedExpr.State>() {
-		public ParenthesizedExpr instantiate(SLocation<ParenthesizedExpr.State> location) {
-			return new ParenthesizedExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ParenthesizedExpr(SLocation<ParenthesizedExpr.State> location) {
@@ -110,6 +104,14 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 
 		public STraversal<ParenthesizedExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ParenthesizedExpr.State> location) {
+			return new ParenthesizedExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

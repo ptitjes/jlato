@@ -24,7 +24,6 @@ import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WRunRun;
-import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
@@ -44,13 +43,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 	}
 
 	public static class Kind<T extends Tree> implements SKind<SNodeListState> {
-		public Tree instantiate(SLocation<SNodeListState> location) {
-			return new NodeList<T>(location);
-		}
 
-		public LexicalShape shape() {
-			throw new UnsupportedOperationException();
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -96,7 +89,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		return list;
 	}
 
-	private NodeList(SLocation<SNodeListState> location) {
+	public NodeList(SLocation<SNodeListState> location) {
 		super(location);
 	}
 

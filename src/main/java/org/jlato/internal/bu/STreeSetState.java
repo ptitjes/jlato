@@ -20,6 +20,10 @@
 package org.jlato.internal.bu;
 
 import com.github.andrewoma.dexx.collection.TreeMap;
+import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Tree;
+import org.jlato.tree.TreeSet;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,6 +43,16 @@ public class STreeSetState implements STreeState<STreeSetState> {
 	public STreeSetState(String rootPath, TreeMap<String, STree<?>> trees) {
 		this.rootPath = rootPath;
 		this.trees = trees;
+	}
+
+	@Override
+	public Tree instantiate(SLocation<STreeSetState> location) {
+		return new TreeSet<Tree>(location);
+	}
+
+	@Override
+	public LexicalShape shape() {
+		throw new UnsupportedOperationException();
 	}
 
 	public static STraversal<STreeSetState> treeTraversal(String path) {

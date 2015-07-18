@@ -36,18 +36,12 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implements Stmt {
 
 	public final static SKind<BlockStmt.State> kind = new SKind<BlockStmt.State>() {
-		public BlockStmt instantiate(SLocation<BlockStmt.State> location) {
-			return new BlockStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private BlockStmt(SLocation<BlockStmt.State> location) {
@@ -132,6 +126,14 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 
 		public STraversal<BlockStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<BlockStmt.State> location) {
+			return new BlockStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

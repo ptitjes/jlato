@@ -38,13 +38,7 @@ import org.jlato.internal.bu.*;
 public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExpr> implements Tree {
 
 	public final static SKind<ArrayDimExpr.State> kind = new SKind<ArrayDimExpr.State>() {
-		public ArrayDimExpr instantiate(SLocation<ArrayDimExpr.State> location) {
-			return new ArrayDimExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ArrayDimExpr(SLocation<ArrayDimExpr.State> location) {
@@ -156,6 +150,14 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 
 		public STraversal<ArrayDimExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ArrayDimExpr.State> location) {
+			return new ArrayDimExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

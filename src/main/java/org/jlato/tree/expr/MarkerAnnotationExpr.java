@@ -31,19 +31,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, AnnotationExpr, MarkerAnnotationExpr> implements AnnotationExpr {
 
 	public final static SKind<MarkerAnnotationExpr.State> kind = new SKind<MarkerAnnotationExpr.State>() {
-		public MarkerAnnotationExpr instantiate(SLocation<MarkerAnnotationExpr.State> location) {
-			return new MarkerAnnotationExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private MarkerAnnotationExpr(SLocation<MarkerAnnotationExpr.State> location) {
@@ -111,6 +105,14 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 
 		public STraversal<MarkerAnnotationExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<MarkerAnnotationExpr.State> location) {
+			return new MarkerAnnotationExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

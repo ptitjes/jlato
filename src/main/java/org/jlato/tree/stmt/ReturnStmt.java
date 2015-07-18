@@ -35,18 +35,12 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> implements Stmt {
 
 	public final static SKind<ReturnStmt.State> kind = new SKind<ReturnStmt.State>() {
-		public ReturnStmt instantiate(SLocation<ReturnStmt.State> location) {
-			return new ReturnStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private ReturnStmt(SLocation<ReturnStmt.State> location) {
@@ -116,6 +110,14 @@ public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> imp
 
 		public STraversal<ReturnStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<ReturnStmt.State> location) {
+			return new ReturnStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

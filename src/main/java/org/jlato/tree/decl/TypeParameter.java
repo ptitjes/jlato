@@ -37,18 +37,11 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParameter> implements Tree {
 
 	public final static SKind<TypeParameter.State> kind = new SKind<TypeParameter.State>() {
-		public TypeParameter instantiate(SLocation<TypeParameter.State> location) {
-			return new TypeParameter(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private TypeParameter(SLocation<TypeParameter.State> location) {
@@ -204,6 +197,14 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 
 		public STraversal<TypeParameter.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<TypeParameter.State> location) {
+			return new TypeParameter(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

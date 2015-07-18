@@ -19,6 +19,10 @@
 
 package org.jlato.internal.bu;
 
+import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SLocation;
+import org.jlato.tree.Tree;
+
 /**
  * @author Didier Villevalois
  */
@@ -31,4 +35,8 @@ public interface STreeState<S extends STreeState<S>> {
 	STraversal<S> lastChild();
 
 	void validate(STree<S> tree);
+
+	Tree instantiate(SLocation<S> location);
+
+	LexicalShape shape();
 }

@@ -31,19 +31,13 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+
+import org.jlato.tree.Tree;
 
 public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationExpr.State, AnnotationExpr, SingleMemberAnnotationExpr> implements AnnotationExpr {
 
 	public final static SKind<SingleMemberAnnotationExpr.State> kind = new SKind<SingleMemberAnnotationExpr.State>() {
-		public SingleMemberAnnotationExpr instantiate(SLocation<SingleMemberAnnotationExpr.State> location) {
-			return new SingleMemberAnnotationExpr(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private SingleMemberAnnotationExpr(SLocation<SingleMemberAnnotationExpr.State> location) {
@@ -151,6 +145,14 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 
 		public STraversal<SingleMemberAnnotationExpr.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<SingleMemberAnnotationExpr.State> location) {
+			return new SingleMemberAnnotationExpr(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

@@ -32,19 +32,11 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, MemberValuePair> implements Tree {
 
 	public final static SKind<MemberValuePair.State> kind = new SKind<MemberValuePair.State>() {
-		public MemberValuePair instantiate(SLocation<MemberValuePair.State> location) {
-			return new MemberValuePair(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private MemberValuePair(SLocation<MemberValuePair.State> location) {
@@ -149,6 +141,14 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 
 		public STraversal<MemberValuePair.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<MemberValuePair.State> location) {
+			return new MemberValuePair(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

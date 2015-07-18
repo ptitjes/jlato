@@ -21,7 +21,6 @@ package org.jlato.tree;
 
 import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
@@ -41,13 +40,7 @@ public class NodeOption<T extends Tree> extends TreeBase<SNodeOptionState, NodeO
 	}
 
 	public static class Kind<T extends Tree> implements SKind<SNodeOptionState> {
-		public Tree instantiate(SLocation<SNodeOptionState> location) {
-			return new NodeOption<T>(location);
-		}
 
-		public LexicalShape shape() {
-			throw new UnsupportedOperationException();
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -65,7 +58,7 @@ public class NodeOption<T extends Tree> extends TreeBase<SNodeOptionState, NodeO
 		return new NodeOption<T>(tree);
 	}
 
-	private NodeOption(SLocation<SNodeOptionState> location) {
+	public NodeOption(SLocation<SNodeOptionState> location) {
 		super(location);
 	}
 

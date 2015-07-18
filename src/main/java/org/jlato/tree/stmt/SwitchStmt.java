@@ -38,18 +38,12 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
+import org.jlato.tree.Tree;
 
 public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> implements Stmt {
 
 	public final static SKind<SwitchStmt.State> kind = new SKind<SwitchStmt.State>() {
-		public SwitchStmt instantiate(SLocation<SwitchStmt.State> location) {
-			return new SwitchStmt(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private SwitchStmt(SLocation<SwitchStmt.State> location) {
@@ -175,6 +169,14 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 
 		public STraversal<SwitchStmt.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<SwitchStmt.State> location) {
+			return new SwitchStmt(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }

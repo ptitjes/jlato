@@ -145,7 +145,7 @@ abstract class ParserBase {
 			if (facade == null) return null;
 
 			final STree tree = TreeBase.treeOf(facade);
-			final LexicalShape shape = tree.kind.shape();
+			final LexicalShape shape = tree.state.shape();
 			return doEnRun(tree, shape, tokens);
 
 		} catch (EmptyStackException e) {

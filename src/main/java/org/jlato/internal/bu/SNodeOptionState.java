@@ -19,6 +19,11 @@
 
 package org.jlato.internal.bu;
 
+import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SLocation;
+import org.jlato.tree.NodeOption;
+import org.jlato.tree.Tree;
+
 import java.util.Collections;
 
 /**
@@ -30,6 +35,16 @@ public class SNodeOptionState implements STreeState<SNodeOptionState> {
 
 	public SNodeOptionState(STree<?> element) {
 		this.element = element;
+	}
+
+	@Override
+	public Tree instantiate(SLocation<SNodeOptionState> location) {
+		return new NodeOption<Tree>(location);
+	}
+
+	@Override
+	public LexicalShape shape() {
+		throw new UnsupportedOperationException();
 	}
 
 	public static STraversal<SNodeOptionState> elementTraversal() {

@@ -34,17 +34,12 @@ import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
+import org.jlato.tree.Tree;
 
 public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, PrimitiveType> implements Type {
 
 	public final static SKind<PrimitiveType.State> kind = new SKind<PrimitiveType.State>() {
-		public PrimitiveType instantiate(SLocation<PrimitiveType.State> location) {
-			return new PrimitiveType(location);
-		}
 
-		public LexicalShape shape() {
-			return shape;
-		}
 	};
 
 	private PrimitiveType(SLocation<PrimitiveType.State> location) {
@@ -170,6 +165,14 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 
 		public STraversal<PrimitiveType.State> lastChild() {
 			return null;
+		}
+
+		public Tree instantiate(SLocation<PrimitiveType.State> location) {
+			return new PrimitiveType(location);
+		}
+
+		public LexicalShape shape() {
+			return shape;
 		}
 	}
 }
