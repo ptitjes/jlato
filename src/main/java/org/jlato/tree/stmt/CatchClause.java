@@ -84,8 +84,42 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 		return location.safeTraversalMutate(CATCH_BLOCK, mutation);
 	}
 
-	private static final STraversal<CatchClause.State> EXCEPT = SNodeState.childTraversal(0);
-	private static final STraversal<CatchClause.State> CATCH_BLOCK = SNodeState.childTraversal(1);
+	private static final STraversal<CatchClause.State> EXCEPT = new STraversal<CatchClause.State>() {
+
+		public STree<?> traverse(CatchClause.State state) {
+			return state.except;
+		}
+
+		public CatchClause.State rebuildParentState(CatchClause.State state, STree<?> child) {
+			return state.withExcept((STree) child);
+		}
+
+		public STraversal<CatchClause.State> leftSibling(CatchClause.State state) {
+			return null;
+		}
+
+		public STraversal<CatchClause.State> rightSibling(CatchClause.State state) {
+			return CATCH_BLOCK;
+		}
+	};
+	private static final STraversal<CatchClause.State> CATCH_BLOCK = new STraversal<CatchClause.State>() {
+
+		public STree<?> traverse(CatchClause.State state) {
+			return state.catchBlock;
+		}
+
+		public CatchClause.State rebuildParentState(CatchClause.State state, STree<?> child) {
+			return state.withCatchBlock((STree) child);
+		}
+
+		public STraversal<CatchClause.State> leftSibling(CatchClause.State state) {
+			return EXCEPT;
+		}
+
+		public STraversal<CatchClause.State> rightSibling(CatchClause.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Catch).withSpacingBefore(space()),

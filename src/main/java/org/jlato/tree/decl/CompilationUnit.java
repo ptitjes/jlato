@@ -97,9 +97,60 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final STraversal<CompilationUnit.State> PACKAGE_DECL = SNodeState.childTraversal(0);
-	private static final STraversal<CompilationUnit.State> IMPORTS = SNodeState.childTraversal(1);
-	private static final STraversal<CompilationUnit.State> TYPES = SNodeState.childTraversal(2);
+	private static final STraversal<CompilationUnit.State> PACKAGE_DECL = new STraversal<CompilationUnit.State>() {
+
+		public STree<?> traverse(CompilationUnit.State state) {
+			return state.packageDecl;
+		}
+
+		public CompilationUnit.State rebuildParentState(CompilationUnit.State state, STree<?> child) {
+			return state.withPackageDecl((STree) child);
+		}
+
+		public STraversal<CompilationUnit.State> leftSibling(CompilationUnit.State state) {
+			return null;
+		}
+
+		public STraversal<CompilationUnit.State> rightSibling(CompilationUnit.State state) {
+			return IMPORTS;
+		}
+	};
+	private static final STraversal<CompilationUnit.State> IMPORTS = new STraversal<CompilationUnit.State>() {
+
+		public STree<?> traverse(CompilationUnit.State state) {
+			return state.imports;
+		}
+
+		public CompilationUnit.State rebuildParentState(CompilationUnit.State state, STree<?> child) {
+			return state.withImports((STree) child);
+		}
+
+		public STraversal<CompilationUnit.State> leftSibling(CompilationUnit.State state) {
+			return PACKAGE_DECL;
+		}
+
+		public STraversal<CompilationUnit.State> rightSibling(CompilationUnit.State state) {
+			return TYPES;
+		}
+	};
+	private static final STraversal<CompilationUnit.State> TYPES = new STraversal<CompilationUnit.State>() {
+
+		public STree<?> traverse(CompilationUnit.State state) {
+			return state.types;
+		}
+
+		public CompilationUnit.State rebuildParentState(CompilationUnit.State state, STree<?> child) {
+			return state.withTypes((STree) child);
+		}
+
+		public STraversal<CompilationUnit.State> leftSibling(CompilationUnit.State state) {
+			return IMPORTS;
+		}
+
+		public STraversal<CompilationUnit.State> rightSibling(CompilationUnit.State state) {
+			return null;
+		}
+	};
 
 	private static final int PREAMBLE = 0;
 

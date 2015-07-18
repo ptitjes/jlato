@@ -138,12 +138,114 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<ConstructorDecl.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<ConstructorDecl.State> TYPE_PARAMS = SNodeState.childTraversal(1);
-	private static final STraversal<ConstructorDecl.State> NAME = SNodeState.childTraversal(2);
-	private static final STraversal<ConstructorDecl.State> PARAMS = SNodeState.childTraversal(3);
-	private static final STraversal<ConstructorDecl.State> THROWS_CLAUSE = SNodeState.childTraversal(4);
-	private static final STraversal<ConstructorDecl.State> BODY = SNodeState.childTraversal(5);
+	private static final STraversal<ConstructorDecl.State> MODIFIERS = new STraversal<ConstructorDecl.State>() {
+
+		public STree<?> traverse(ConstructorDecl.State state) {
+			return state.modifiers;
+		}
+
+		public ConstructorDecl.State rebuildParentState(ConstructorDecl.State state, STree<?> child) {
+			return state.withModifiers((STree) child);
+		}
+
+		public STraversal<ConstructorDecl.State> leftSibling(ConstructorDecl.State state) {
+			return null;
+		}
+
+		public STraversal<ConstructorDecl.State> rightSibling(ConstructorDecl.State state) {
+			return TYPE_PARAMS;
+		}
+	};
+	private static final STraversal<ConstructorDecl.State> TYPE_PARAMS = new STraversal<ConstructorDecl.State>() {
+
+		public STree<?> traverse(ConstructorDecl.State state) {
+			return state.typeParams;
+		}
+
+		public ConstructorDecl.State rebuildParentState(ConstructorDecl.State state, STree<?> child) {
+			return state.withTypeParams((STree) child);
+		}
+
+		public STraversal<ConstructorDecl.State> leftSibling(ConstructorDecl.State state) {
+			return MODIFIERS;
+		}
+
+		public STraversal<ConstructorDecl.State> rightSibling(ConstructorDecl.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<ConstructorDecl.State> NAME = new STraversal<ConstructorDecl.State>() {
+
+		public STree<?> traverse(ConstructorDecl.State state) {
+			return state.name;
+		}
+
+		public ConstructorDecl.State rebuildParentState(ConstructorDecl.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<ConstructorDecl.State> leftSibling(ConstructorDecl.State state) {
+			return TYPE_PARAMS;
+		}
+
+		public STraversal<ConstructorDecl.State> rightSibling(ConstructorDecl.State state) {
+			return PARAMS;
+		}
+	};
+	private static final STraversal<ConstructorDecl.State> PARAMS = new STraversal<ConstructorDecl.State>() {
+
+		public STree<?> traverse(ConstructorDecl.State state) {
+			return state.params;
+		}
+
+		public ConstructorDecl.State rebuildParentState(ConstructorDecl.State state, STree<?> child) {
+			return state.withParams((STree) child);
+		}
+
+		public STraversal<ConstructorDecl.State> leftSibling(ConstructorDecl.State state) {
+			return NAME;
+		}
+
+		public STraversal<ConstructorDecl.State> rightSibling(ConstructorDecl.State state) {
+			return THROWS_CLAUSE;
+		}
+	};
+	private static final STraversal<ConstructorDecl.State> THROWS_CLAUSE = new STraversal<ConstructorDecl.State>() {
+
+		public STree<?> traverse(ConstructorDecl.State state) {
+			return state.throwsClause;
+		}
+
+		public ConstructorDecl.State rebuildParentState(ConstructorDecl.State state, STree<?> child) {
+			return state.withThrowsClause((STree) child);
+		}
+
+		public STraversal<ConstructorDecl.State> leftSibling(ConstructorDecl.State state) {
+			return PARAMS;
+		}
+
+		public STraversal<ConstructorDecl.State> rightSibling(ConstructorDecl.State state) {
+			return BODY;
+		}
+	};
+	private static final STraversal<ConstructorDecl.State> BODY = new STraversal<ConstructorDecl.State>() {
+
+		public STree<?> traverse(ConstructorDecl.State state) {
+			return state.body;
+		}
+
+		public ConstructorDecl.State rebuildParentState(ConstructorDecl.State state, STree<?> child) {
+			return state.withBody((STree) child);
+		}
+
+		public STraversal<ConstructorDecl.State> leftSibling(ConstructorDecl.State state) {
+			return THROWS_CLAUSE;
+		}
+
+		public STraversal<ConstructorDecl.State> rightSibling(ConstructorDecl.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

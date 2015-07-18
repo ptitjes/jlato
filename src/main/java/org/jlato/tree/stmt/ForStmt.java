@@ -108,10 +108,78 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<ForStmt.State> INIT = SNodeState.childTraversal(0);
-	private static final STraversal<ForStmt.State> COMPARE = SNodeState.childTraversal(1);
-	private static final STraversal<ForStmt.State> UPDATE = SNodeState.childTraversal(2);
-	private static final STraversal<ForStmt.State> BODY = SNodeState.childTraversal(3);
+	private static final STraversal<ForStmt.State> INIT = new STraversal<ForStmt.State>() {
+
+		public STree<?> traverse(ForStmt.State state) {
+			return state.init;
+		}
+
+		public ForStmt.State rebuildParentState(ForStmt.State state, STree<?> child) {
+			return state.withInit((STree) child);
+		}
+
+		public STraversal<ForStmt.State> leftSibling(ForStmt.State state) {
+			return null;
+		}
+
+		public STraversal<ForStmt.State> rightSibling(ForStmt.State state) {
+			return COMPARE;
+		}
+	};
+	private static final STraversal<ForStmt.State> COMPARE = new STraversal<ForStmt.State>() {
+
+		public STree<?> traverse(ForStmt.State state) {
+			return state.compare;
+		}
+
+		public ForStmt.State rebuildParentState(ForStmt.State state, STree<?> child) {
+			return state.withCompare((STree) child);
+		}
+
+		public STraversal<ForStmt.State> leftSibling(ForStmt.State state) {
+			return INIT;
+		}
+
+		public STraversal<ForStmt.State> rightSibling(ForStmt.State state) {
+			return UPDATE;
+		}
+	};
+	private static final STraversal<ForStmt.State> UPDATE = new STraversal<ForStmt.State>() {
+
+		public STree<?> traverse(ForStmt.State state) {
+			return state.update;
+		}
+
+		public ForStmt.State rebuildParentState(ForStmt.State state, STree<?> child) {
+			return state.withUpdate((STree) child);
+		}
+
+		public STraversal<ForStmt.State> leftSibling(ForStmt.State state) {
+			return COMPARE;
+		}
+
+		public STraversal<ForStmt.State> rightSibling(ForStmt.State state) {
+			return BODY;
+		}
+	};
+	private static final STraversal<ForStmt.State> BODY = new STraversal<ForStmt.State>() {
+
+		public STree<?> traverse(ForStmt.State state) {
+			return state.body;
+		}
+
+		public ForStmt.State rebuildParentState(ForStmt.State state, STree<?> child) {
+			return state.withBody((STree) child);
+		}
+
+		public STraversal<ForStmt.State> leftSibling(ForStmt.State state) {
+			return UPDATE;
+		}
+
+		public STraversal<ForStmt.State> rightSibling(ForStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),

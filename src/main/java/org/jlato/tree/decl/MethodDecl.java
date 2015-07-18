@@ -162,14 +162,150 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<MethodDecl.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<MethodDecl.State> TYPE_PARAMS = SNodeState.childTraversal(1);
-	private static final STraversal<MethodDecl.State> TYPE = SNodeState.childTraversal(2);
-	private static final STraversal<MethodDecl.State> NAME = SNodeState.childTraversal(3);
-	private static final STraversal<MethodDecl.State> PARAMS = SNodeState.childTraversal(4);
-	private static final STraversal<MethodDecl.State> DIMS = SNodeState.childTraversal(5);
-	private static final STraversal<MethodDecl.State> THROWS_CLAUSE = SNodeState.childTraversal(6);
-	private static final STraversal<MethodDecl.State> BODY = SNodeState.childTraversal(7);
+	private static final STraversal<MethodDecl.State> MODIFIERS = new STraversal<MethodDecl.State>() {
+
+		public STree<?> traverse(MethodDecl.State state) {
+			return state.modifiers;
+		}
+
+		public MethodDecl.State rebuildParentState(MethodDecl.State state, STree<?> child) {
+			return state.withModifiers((STree) child);
+		}
+
+		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+			return null;
+		}
+
+		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+			return TYPE_PARAMS;
+		}
+	};
+	private static final STraversal<MethodDecl.State> TYPE_PARAMS = new STraversal<MethodDecl.State>() {
+
+		public STree<?> traverse(MethodDecl.State state) {
+			return state.typeParams;
+		}
+
+		public MethodDecl.State rebuildParentState(MethodDecl.State state, STree<?> child) {
+			return state.withTypeParams((STree) child);
+		}
+
+		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+			return MODIFIERS;
+		}
+
+		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+			return TYPE;
+		}
+	};
+	private static final STraversal<MethodDecl.State> TYPE = new STraversal<MethodDecl.State>() {
+
+		public STree<?> traverse(MethodDecl.State state) {
+			return state.type;
+		}
+
+		public MethodDecl.State rebuildParentState(MethodDecl.State state, STree<?> child) {
+			return state.withType((STree) child);
+		}
+
+		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+			return TYPE_PARAMS;
+		}
+
+		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<MethodDecl.State> NAME = new STraversal<MethodDecl.State>() {
+
+		public STree<?> traverse(MethodDecl.State state) {
+			return state.name;
+		}
+
+		public MethodDecl.State rebuildParentState(MethodDecl.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+			return TYPE;
+		}
+
+		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+			return PARAMS;
+		}
+	};
+	private static final STraversal<MethodDecl.State> PARAMS = new STraversal<MethodDecl.State>() {
+
+		public STree<?> traverse(MethodDecl.State state) {
+			return state.params;
+		}
+
+		public MethodDecl.State rebuildParentState(MethodDecl.State state, STree<?> child) {
+			return state.withParams((STree) child);
+		}
+
+		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+			return NAME;
+		}
+
+		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+			return DIMS;
+		}
+	};
+	private static final STraversal<MethodDecl.State> DIMS = new STraversal<MethodDecl.State>() {
+
+		public STree<?> traverse(MethodDecl.State state) {
+			return state.dims;
+		}
+
+		public MethodDecl.State rebuildParentState(MethodDecl.State state, STree<?> child) {
+			return state.withDims((STree) child);
+		}
+
+		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+			return PARAMS;
+		}
+
+		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+			return THROWS_CLAUSE;
+		}
+	};
+	private static final STraversal<MethodDecl.State> THROWS_CLAUSE = new STraversal<MethodDecl.State>() {
+
+		public STree<?> traverse(MethodDecl.State state) {
+			return state.throwsClause;
+		}
+
+		public MethodDecl.State rebuildParentState(MethodDecl.State state, STree<?> child) {
+			return state.withThrowsClause((STree) child);
+		}
+
+		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+			return DIMS;
+		}
+
+		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+			return BODY;
+		}
+	};
+	private static final STraversal<MethodDecl.State> BODY = new STraversal<MethodDecl.State>() {
+
+		public STree<?> traverse(MethodDecl.State state) {
+			return state.body;
+		}
+
+		public MethodDecl.State rebuildParentState(MethodDecl.State state, STree<?> child) {
+			return state.withBody((STree) child);
+		}
+
+		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+			return THROWS_CLAUSE;
+		}
+
+		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

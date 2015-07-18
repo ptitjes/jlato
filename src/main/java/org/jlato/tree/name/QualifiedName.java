@@ -104,8 +104,42 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 		return qualifier.isDefined() ? qualifier.get().toString() + "." + name.toString() : name.toString();
 	}
 
-	private static final STraversal<QualifiedName.State> QUALIFIER = SNodeState.childTraversal(0);
-	private static final STraversal<QualifiedName.State> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<QualifiedName.State> QUALIFIER = new STraversal<QualifiedName.State>() {
+
+		public STree<?> traverse(QualifiedName.State state) {
+			return state.qualifier;
+		}
+
+		public QualifiedName.State rebuildParentState(QualifiedName.State state, STree<?> child) {
+			return state.withQualifier((STree) child);
+		}
+
+		public STraversal<QualifiedName.State> leftSibling(QualifiedName.State state) {
+			return null;
+		}
+
+		public STraversal<QualifiedName.State> rightSibling(QualifiedName.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<QualifiedName.State> NAME = new STraversal<QualifiedName.State>() {
+
+		public STree<?> traverse(QualifiedName.State state) {
+			return state.name;
+		}
+
+		public QualifiedName.State rebuildParentState(QualifiedName.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<QualifiedName.State> leftSibling(QualifiedName.State state) {
+			return QUALIFIER;
+		}
+
+		public STraversal<QualifiedName.State> rightSibling(QualifiedName.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape qualifierShape = composite(element(), token(LToken.Dot));
 

@@ -111,9 +111,60 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 	}
 */
 
-	private static final STraversal<FieldDecl.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<FieldDecl.State> TYPE = SNodeState.childTraversal(1);
-	private static final STraversal<FieldDecl.State> VARIABLES = SNodeState.childTraversal(2);
+	private static final STraversal<FieldDecl.State> MODIFIERS = new STraversal<FieldDecl.State>() {
+
+		public STree<?> traverse(FieldDecl.State state) {
+			return state.modifiers;
+		}
+
+		public FieldDecl.State rebuildParentState(FieldDecl.State state, STree<?> child) {
+			return state.withModifiers((STree) child);
+		}
+
+		public STraversal<FieldDecl.State> leftSibling(FieldDecl.State state) {
+			return null;
+		}
+
+		public STraversal<FieldDecl.State> rightSibling(FieldDecl.State state) {
+			return TYPE;
+		}
+	};
+	private static final STraversal<FieldDecl.State> TYPE = new STraversal<FieldDecl.State>() {
+
+		public STree<?> traverse(FieldDecl.State state) {
+			return state.type;
+		}
+
+		public FieldDecl.State rebuildParentState(FieldDecl.State state, STree<?> child) {
+			return state.withType((STree) child);
+		}
+
+		public STraversal<FieldDecl.State> leftSibling(FieldDecl.State state) {
+			return MODIFIERS;
+		}
+
+		public STraversal<FieldDecl.State> rightSibling(FieldDecl.State state) {
+			return VARIABLES;
+		}
+	};
+	private static final STraversal<FieldDecl.State> VARIABLES = new STraversal<FieldDecl.State>() {
+
+		public STree<?> traverse(FieldDecl.State state) {
+			return state.variables;
+		}
+
+		public FieldDecl.State rebuildParentState(FieldDecl.State state, STree<?> child) {
+			return state.withVariables((STree) child);
+		}
+
+		public STraversal<FieldDecl.State> leftSibling(FieldDecl.State state) {
+			return TYPE;
+		}
+
+		public STraversal<FieldDecl.State> rightSibling(FieldDecl.State state) {
+			return null;
+		}
+	};
 //	private static final int JAVADOC_COMMENT = 4;
 
 	public final static LexicalShape shape = composite(

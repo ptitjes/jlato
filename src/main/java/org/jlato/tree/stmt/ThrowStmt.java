@@ -70,7 +70,24 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal<ThrowStmt.State> EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<ThrowStmt.State> EXPR = new STraversal<ThrowStmt.State>() {
+
+		public STree<?> traverse(ThrowStmt.State state) {
+			return state.expr;
+		}
+
+		public ThrowStmt.State rebuildParentState(ThrowStmt.State state, STree<?> child) {
+			return state.withExpr((STree) child);
+		}
+
+		public STraversal<ThrowStmt.State> leftSibling(ThrowStmt.State state) {
+			return null;
+		}
+
+		public STraversal<ThrowStmt.State> rightSibling(ThrowStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Throw), child(EXPR), token(LToken.SemiColon)

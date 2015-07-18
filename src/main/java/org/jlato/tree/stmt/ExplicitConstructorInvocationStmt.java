@@ -38,7 +38,6 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstructorInvocationStmt.State, Stmt, ExplicitConstructorInvocationStmt> implements Stmt {
 
@@ -65,15 +64,15 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	}
 
 	public NodeList<Type> typeArgs() {
-		return location.safeTraversal(TYPE_ARGUMENTS);
+		return location.safeTraversal(TYPE_ARGS);
 	}
 
 	public ExplicitConstructorInvocationStmt withTypeArgs(NodeList<Type> typeArgs) {
-		return location.safeTraversalReplace(TYPE_ARGUMENTS, typeArgs);
+		return location.safeTraversalReplace(TYPE_ARGS, typeArgs);
 	}
 
 	public ExplicitConstructorInvocationStmt withTypeArgs(Mutation<NodeList<Type>> mutation) {
-		return location.safeTraversalMutate(TYPE_ARGUMENTS, mutation);
+		return location.safeTraversalMutate(TYPE_ARGS, mutation);
 	}
 
 	public boolean isThis() {
@@ -97,32 +96,83 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	}
 
 	public NodeList<Expr> args() {
-		return location.safeTraversal(ARGUMENTS);
+		return location.safeTraversal(ARGS);
 	}
 
 	public ExplicitConstructorInvocationStmt withArgs(NodeList<Expr> args) {
-		return location.safeTraversalReplace(ARGUMENTS, args);
+		return location.safeTraversalReplace(ARGS, args);
 	}
 
 	public ExplicitConstructorInvocationStmt withArgs(Mutation<NodeList<Expr>> mutation) {
-		return location.safeTraversalMutate(ARGUMENTS, mutation);
+		return location.safeTraversalMutate(ARGS, mutation);
 	}
 
-	private static final STraversal<ExplicitConstructorInvocationStmt.State> TYPE_ARGUMENTS = SNodeState.childTraversal(0);
-	private static final STraversal<ExplicitConstructorInvocationStmt.State> EXPR = SNodeState.childTraversal(1);
-	private static final STraversal<ExplicitConstructorInvocationStmt.State> ARGUMENTS = SNodeState.childTraversal(2);
+	private static final STraversal<ExplicitConstructorInvocationStmt.State> TYPE_ARGS = new STraversal<ExplicitConstructorInvocationStmt.State>() {
+
+		public STree<?> traverse(ExplicitConstructorInvocationStmt.State state) {
+			return state.typeArgs;
+		}
+
+		public ExplicitConstructorInvocationStmt.State rebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<?> child) {
+			return state.withTypeArgs((STree) child);
+		}
+
+		public STraversal<ExplicitConstructorInvocationStmt.State> leftSibling(ExplicitConstructorInvocationStmt.State state) {
+			return null;
+		}
+
+		public STraversal<ExplicitConstructorInvocationStmt.State> rightSibling(ExplicitConstructorInvocationStmt.State state) {
+			return EXPR;
+		}
+	};
+	private static final STraversal<ExplicitConstructorInvocationStmt.State> EXPR = new STraversal<ExplicitConstructorInvocationStmt.State>() {
+
+		public STree<?> traverse(ExplicitConstructorInvocationStmt.State state) {
+			return state.expr;
+		}
+
+		public ExplicitConstructorInvocationStmt.State rebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<?> child) {
+			return state.withExpr((STree) child);
+		}
+
+		public STraversal<ExplicitConstructorInvocationStmt.State> leftSibling(ExplicitConstructorInvocationStmt.State state) {
+			return TYPE_ARGS;
+		}
+
+		public STraversal<ExplicitConstructorInvocationStmt.State> rightSibling(ExplicitConstructorInvocationStmt.State state) {
+			return ARGS;
+		}
+	};
+	private static final STraversal<ExplicitConstructorInvocationStmt.State> ARGS = new STraversal<ExplicitConstructorInvocationStmt.State>() {
+
+		public STree<?> traverse(ExplicitConstructorInvocationStmt.State state) {
+			return state.args;
+		}
+
+		public ExplicitConstructorInvocationStmt.State rebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<?> child) {
+			return state.withArgs((STree) child);
+		}
+
+		public STraversal<ExplicitConstructorInvocationStmt.State> leftSibling(ExplicitConstructorInvocationStmt.State state) {
+			return EXPR;
+		}
+
+		public STraversal<ExplicitConstructorInvocationStmt.State> rightSibling(ExplicitConstructorInvocationStmt.State state) {
+			return null;
+		}
+	};
 
 	private static final int CONSTRUCTOR_KIND = 0;
 
 	public final static LexicalShape shape = composite(
 			when(childIs(EXPR, some()), composite(child(EXPR, element()), token(LToken.Dot))),
-			child(TYPE_ARGUMENTS, Type.typeArgumentsShape),
+			child(TYPE_ARGS, Type.typeArgumentsShape),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
 					return ((ConstructorKind) tree.state.data(CONSTRUCTOR_KIND)).token;
 				}
 			}),
-			child(ARGUMENTS, Expr.argumentsShape),
+			child(ARGS, Expr.argumentsShape),
 			token(LToken.SemiColon)
 	);
 

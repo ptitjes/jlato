@@ -91,8 +91,42 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 		return location.safeTraversalMutate(STMTS, mutation);
 	}
 
-	private static final STraversal<SwitchCase.State> LABEL = SNodeState.childTraversal(0);
-	private static final STraversal<SwitchCase.State> STMTS = SNodeState.childTraversal(1);
+	private static final STraversal<SwitchCase.State> LABEL = new STraversal<SwitchCase.State>() {
+
+		public STree<?> traverse(SwitchCase.State state) {
+			return state.label;
+		}
+
+		public SwitchCase.State rebuildParentState(SwitchCase.State state, STree<?> child) {
+			return state.withLabel((STree) child);
+		}
+
+		public STraversal<SwitchCase.State> leftSibling(SwitchCase.State state) {
+			return null;
+		}
+
+		public STraversal<SwitchCase.State> rightSibling(SwitchCase.State state) {
+			return STMTS;
+		}
+	};
+	private static final STraversal<SwitchCase.State> STMTS = new STraversal<SwitchCase.State>() {
+
+		public STree<?> traverse(SwitchCase.State state) {
+			return state.stmts;
+		}
+
+		public SwitchCase.State rebuildParentState(SwitchCase.State state, STree<?> child) {
+			return state.withStmts((STree) child);
+		}
+
+		public STraversal<SwitchCase.State> leftSibling(SwitchCase.State state) {
+			return LABEL;
+		}
+
+		public STraversal<SwitchCase.State> rightSibling(SwitchCase.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			alternative(childIs(LABEL, some()),

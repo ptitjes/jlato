@@ -128,11 +128,96 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
 
-	private static final STraversal<InterfaceDecl.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<InterfaceDecl.State> NAME = SNodeState.childTraversal(1);
-	private static final STraversal<InterfaceDecl.State> TYPE_PARAMS = SNodeState.childTraversal(2);
-	private static final STraversal<InterfaceDecl.State> EXTENDS_CLAUSE = SNodeState.childTraversal(3);
-	private static final STraversal<InterfaceDecl.State> MEMBERS = SNodeState.childTraversal(4);
+	private static final STraversal<InterfaceDecl.State> MODIFIERS = new STraversal<InterfaceDecl.State>() {
+
+		public STree<?> traverse(InterfaceDecl.State state) {
+			return state.modifiers;
+		}
+
+		public InterfaceDecl.State rebuildParentState(InterfaceDecl.State state, STree<?> child) {
+			return state.withModifiers((STree) child);
+		}
+
+		public STraversal<InterfaceDecl.State> leftSibling(InterfaceDecl.State state) {
+			return null;
+		}
+
+		public STraversal<InterfaceDecl.State> rightSibling(InterfaceDecl.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<InterfaceDecl.State> NAME = new STraversal<InterfaceDecl.State>() {
+
+		public STree<?> traverse(InterfaceDecl.State state) {
+			return state.name;
+		}
+
+		public InterfaceDecl.State rebuildParentState(InterfaceDecl.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<InterfaceDecl.State> leftSibling(InterfaceDecl.State state) {
+			return MODIFIERS;
+		}
+
+		public STraversal<InterfaceDecl.State> rightSibling(InterfaceDecl.State state) {
+			return TYPE_PARAMS;
+		}
+	};
+	private static final STraversal<InterfaceDecl.State> TYPE_PARAMS = new STraversal<InterfaceDecl.State>() {
+
+		public STree<?> traverse(InterfaceDecl.State state) {
+			return state.typeParams;
+		}
+
+		public InterfaceDecl.State rebuildParentState(InterfaceDecl.State state, STree<?> child) {
+			return state.withTypeParams((STree) child);
+		}
+
+		public STraversal<InterfaceDecl.State> leftSibling(InterfaceDecl.State state) {
+			return NAME;
+		}
+
+		public STraversal<InterfaceDecl.State> rightSibling(InterfaceDecl.State state) {
+			return EXTENDS_CLAUSE;
+		}
+	};
+	private static final STraversal<InterfaceDecl.State> EXTENDS_CLAUSE = new STraversal<InterfaceDecl.State>() {
+
+		public STree<?> traverse(InterfaceDecl.State state) {
+			return state.extendsClause;
+		}
+
+		public InterfaceDecl.State rebuildParentState(InterfaceDecl.State state, STree<?> child) {
+			return state.withExtendsClause((STree) child);
+		}
+
+		public STraversal<InterfaceDecl.State> leftSibling(InterfaceDecl.State state) {
+			return TYPE_PARAMS;
+		}
+
+		public STraversal<InterfaceDecl.State> rightSibling(InterfaceDecl.State state) {
+			return MEMBERS;
+		}
+	};
+	private static final STraversal<InterfaceDecl.State> MEMBERS = new STraversal<InterfaceDecl.State>() {
+
+		public STree<?> traverse(InterfaceDecl.State state) {
+			return state.members;
+		}
+
+		public InterfaceDecl.State rebuildParentState(InterfaceDecl.State state, STree<?> child) {
+			return state.withMembers((STree) child);
+		}
+
+		public STraversal<InterfaceDecl.State> leftSibling(InterfaceDecl.State state) {
+			return EXTENDS_CLAUSE;
+		}
+
+		public STraversal<InterfaceDecl.State> rightSibling(InterfaceDecl.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

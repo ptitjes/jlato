@@ -106,9 +106,60 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final STraversal<FormalParameter.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<FormalParameter.State> TYPE = SNodeState.childTraversal(1);
-	private static final STraversal<FormalParameter.State> ID = SNodeState.childTraversal(2);
+	private static final STraversal<FormalParameter.State> MODIFIERS = new STraversal<FormalParameter.State>() {
+
+		public STree<?> traverse(FormalParameter.State state) {
+			return state.modifiers;
+		}
+
+		public FormalParameter.State rebuildParentState(FormalParameter.State state, STree<?> child) {
+			return state.withModifiers((STree) child);
+		}
+
+		public STraversal<FormalParameter.State> leftSibling(FormalParameter.State state) {
+			return null;
+		}
+
+		public STraversal<FormalParameter.State> rightSibling(FormalParameter.State state) {
+			return TYPE;
+		}
+	};
+	private static final STraversal<FormalParameter.State> TYPE = new STraversal<FormalParameter.State>() {
+
+		public STree<?> traverse(FormalParameter.State state) {
+			return state.type;
+		}
+
+		public FormalParameter.State rebuildParentState(FormalParameter.State state, STree<?> child) {
+			return state.withType((STree) child);
+		}
+
+		public STraversal<FormalParameter.State> leftSibling(FormalParameter.State state) {
+			return MODIFIERS;
+		}
+
+		public STraversal<FormalParameter.State> rightSibling(FormalParameter.State state) {
+			return ID;
+		}
+	};
+	private static final STraversal<FormalParameter.State> ID = new STraversal<FormalParameter.State>() {
+
+		public STree<?> traverse(FormalParameter.State state) {
+			return state.id;
+		}
+
+		public FormalParameter.State rebuildParentState(FormalParameter.State state, STree<?> child) {
+			return state.withId((STree) child);
+		}
+
+		public STraversal<FormalParameter.State> leftSibling(FormalParameter.State state) {
+			return TYPE;
+		}
+
+		public STraversal<FormalParameter.State> rightSibling(FormalParameter.State state) {
+			return null;
+		}
+	};
 
 	private static final int VAR_ARG = 0;
 

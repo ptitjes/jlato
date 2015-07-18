@@ -104,9 +104,60 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
 
-	private static final STraversal<AnnotationDecl.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<AnnotationDecl.State> NAME = SNodeState.childTraversal(1);
-	private static final STraversal<AnnotationDecl.State> MEMBERS = SNodeState.childTraversal(6);
+	private static final STraversal<AnnotationDecl.State> MODIFIERS = new STraversal<AnnotationDecl.State>() {
+
+		public STree<?> traverse(AnnotationDecl.State state) {
+			return state.modifiers;
+		}
+
+		public AnnotationDecl.State rebuildParentState(AnnotationDecl.State state, STree<?> child) {
+			return state.withModifiers((STree) child);
+		}
+
+		public STraversal<AnnotationDecl.State> leftSibling(AnnotationDecl.State state) {
+			return null;
+		}
+
+		public STraversal<AnnotationDecl.State> rightSibling(AnnotationDecl.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<AnnotationDecl.State> NAME = new STraversal<AnnotationDecl.State>() {
+
+		public STree<?> traverse(AnnotationDecl.State state) {
+			return state.name;
+		}
+
+		public AnnotationDecl.State rebuildParentState(AnnotationDecl.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<AnnotationDecl.State> leftSibling(AnnotationDecl.State state) {
+			return MODIFIERS;
+		}
+
+		public STraversal<AnnotationDecl.State> rightSibling(AnnotationDecl.State state) {
+			return MEMBERS;
+		}
+	};
+	private static final STraversal<AnnotationDecl.State> MEMBERS = new STraversal<AnnotationDecl.State>() {
+
+		public STree<?> traverse(AnnotationDecl.State state) {
+			return state.members;
+		}
+
+		public AnnotationDecl.State rebuildParentState(AnnotationDecl.State state, STree<?> child) {
+			return state.withMembers((STree) child);
+		}
+
+		public STraversal<AnnotationDecl.State> leftSibling(AnnotationDecl.State state) {
+			return NAME;
+		}
+
+		public STraversal<AnnotationDecl.State> rightSibling(AnnotationDecl.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS),

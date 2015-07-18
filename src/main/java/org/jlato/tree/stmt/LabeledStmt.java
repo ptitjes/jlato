@@ -87,8 +87,42 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 		return location.safeTraversalMutate(STMT, mutation);
 	}
 
-	private static final STraversal<LabeledStmt.State> LABEL = SNodeState.childTraversal(0);
-	private static final STraversal<LabeledStmt.State> STMT = SNodeState.childTraversal(1);
+	private static final STraversal<LabeledStmt.State> LABEL = new STraversal<LabeledStmt.State>() {
+
+		public STree<?> traverse(LabeledStmt.State state) {
+			return state.label;
+		}
+
+		public LabeledStmt.State rebuildParentState(LabeledStmt.State state, STree<?> child) {
+			return state.withLabel((STree) child);
+		}
+
+		public STraversal<LabeledStmt.State> leftSibling(LabeledStmt.State state) {
+			return null;
+		}
+
+		public STraversal<LabeledStmt.State> rightSibling(LabeledStmt.State state) {
+			return STMT;
+		}
+	};
+	private static final STraversal<LabeledStmt.State> STMT = new STraversal<LabeledStmt.State>() {
+
+		public STree<?> traverse(LabeledStmt.State state) {
+			return state.stmt;
+		}
+
+		public LabeledStmt.State rebuildParentState(LabeledStmt.State state, STree<?> child) {
+			return state.withStmt((STree) child);
+		}
+
+		public STraversal<LabeledStmt.State> leftSibling(LabeledStmt.State state) {
+			return LABEL;
+		}
+
+		public STraversal<LabeledStmt.State> rightSibling(LabeledStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			none().withIndentationAfter(indent(IndentationContext.LABEL)),

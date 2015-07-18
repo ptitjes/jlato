@@ -83,8 +83,42 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<WhileStmt.State> CONDITION = SNodeState.childTraversal(0);
-	private static final STraversal<WhileStmt.State> BODY = SNodeState.childTraversal(1);
+	private static final STraversal<WhileStmt.State> CONDITION = new STraversal<WhileStmt.State>() {
+
+		public STree<?> traverse(WhileStmt.State state) {
+			return state.condition;
+		}
+
+		public WhileStmt.State rebuildParentState(WhileStmt.State state, STree<?> child) {
+			return state.withCondition((STree) child);
+		}
+
+		public STraversal<WhileStmt.State> leftSibling(WhileStmt.State state) {
+			return null;
+		}
+
+		public STraversal<WhileStmt.State> rightSibling(WhileStmt.State state) {
+			return BODY;
+		}
+	};
+	private static final STraversal<WhileStmt.State> BODY = new STraversal<WhileStmt.State>() {
+
+		public STree<?> traverse(WhileStmt.State state) {
+			return state.body;
+		}
+
+		public WhileStmt.State rebuildParentState(WhileStmt.State state, STree<?> child) {
+			return state.withBody((STree) child);
+		}
+
+		public STraversal<WhileStmt.State> leftSibling(WhileStmt.State state) {
+			return CONDITION;
+		}
+
+		public STraversal<WhileStmt.State> rightSibling(WhileStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.While), token(LToken.ParenthesisLeft).withSpacingBefore(space()),

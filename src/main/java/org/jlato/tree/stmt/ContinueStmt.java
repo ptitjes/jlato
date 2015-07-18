@@ -73,7 +73,24 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final STraversal<ContinueStmt.State> ID = SNodeState.childTraversal(0);
+	private static final STraversal<ContinueStmt.State> ID = new STraversal<ContinueStmt.State>() {
+
+		public STree<?> traverse(ContinueStmt.State state) {
+			return state.id;
+		}
+
+		public ContinueStmt.State rebuildParentState(ContinueStmt.State state, STree<?> child) {
+			return state.withId((STree) child);
+		}
+
+		public STraversal<ContinueStmt.State> leftSibling(ContinueStmt.State state) {
+			return null;
+		}
+
+		public STraversal<ContinueStmt.State> rightSibling(ContinueStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Continue),

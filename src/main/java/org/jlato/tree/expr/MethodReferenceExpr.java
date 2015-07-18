@@ -95,9 +95,60 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal<MethodReferenceExpr.State> SCOPE = SNodeState.childTraversal(0);
-	private static final STraversal<MethodReferenceExpr.State> TYPE_ARGS = SNodeState.childTraversal(1);
-	private static final STraversal<MethodReferenceExpr.State> NAME = SNodeState.childTraversal(2);
+	private static final STraversal<MethodReferenceExpr.State> SCOPE = new STraversal<MethodReferenceExpr.State>() {
+
+		public STree<?> traverse(MethodReferenceExpr.State state) {
+			return state.scope;
+		}
+
+		public MethodReferenceExpr.State rebuildParentState(MethodReferenceExpr.State state, STree<?> child) {
+			return state.withScope((STree) child);
+		}
+
+		public STraversal<MethodReferenceExpr.State> leftSibling(MethodReferenceExpr.State state) {
+			return null;
+		}
+
+		public STraversal<MethodReferenceExpr.State> rightSibling(MethodReferenceExpr.State state) {
+			return TYPE_ARGS;
+		}
+	};
+	private static final STraversal<MethodReferenceExpr.State> TYPE_ARGS = new STraversal<MethodReferenceExpr.State>() {
+
+		public STree<?> traverse(MethodReferenceExpr.State state) {
+			return state.typeArgs;
+		}
+
+		public MethodReferenceExpr.State rebuildParentState(MethodReferenceExpr.State state, STree<?> child) {
+			return state.withTypeArgs((STree) child);
+		}
+
+		public STraversal<MethodReferenceExpr.State> leftSibling(MethodReferenceExpr.State state) {
+			return SCOPE;
+		}
+
+		public STraversal<MethodReferenceExpr.State> rightSibling(MethodReferenceExpr.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<MethodReferenceExpr.State> NAME = new STraversal<MethodReferenceExpr.State>() {
+
+		public STree<?> traverse(MethodReferenceExpr.State state) {
+			return state.name;
+		}
+
+		public MethodReferenceExpr.State rebuildParentState(MethodReferenceExpr.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<MethodReferenceExpr.State> leftSibling(MethodReferenceExpr.State state) {
+			return TYPE_ARGS;
+		}
+
+		public STraversal<MethodReferenceExpr.State> rightSibling(MethodReferenceExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(SCOPE),

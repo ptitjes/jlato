@@ -82,8 +82,42 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 		return location.safeTraversalMutate(MEMBER_VALUE, mutation);
 	}
 
-	private static final STraversal<SingleMemberAnnotationExpr.State> NAME = SNodeState.childTraversal(0);
-	private static final STraversal<SingleMemberAnnotationExpr.State> MEMBER_VALUE = SNodeState.childTraversal(1);
+	private static final STraversal<SingleMemberAnnotationExpr.State> NAME = new STraversal<SingleMemberAnnotationExpr.State>() {
+
+		public STree<?> traverse(SingleMemberAnnotationExpr.State state) {
+			return state.name;
+		}
+
+		public SingleMemberAnnotationExpr.State rebuildParentState(SingleMemberAnnotationExpr.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<SingleMemberAnnotationExpr.State> leftSibling(SingleMemberAnnotationExpr.State state) {
+			return null;
+		}
+
+		public STraversal<SingleMemberAnnotationExpr.State> rightSibling(SingleMemberAnnotationExpr.State state) {
+			return MEMBER_VALUE;
+		}
+	};
+	private static final STraversal<SingleMemberAnnotationExpr.State> MEMBER_VALUE = new STraversal<SingleMemberAnnotationExpr.State>() {
+
+		public STree<?> traverse(SingleMemberAnnotationExpr.State state) {
+			return state.memberValue;
+		}
+
+		public SingleMemberAnnotationExpr.State rebuildParentState(SingleMemberAnnotationExpr.State state, STree<?> child) {
+			return state.withMemberValue((STree) child);
+		}
+
+		public STraversal<SingleMemberAnnotationExpr.State> leftSibling(SingleMemberAnnotationExpr.State state) {
+			return NAME;
+		}
+
+		public STraversal<SingleMemberAnnotationExpr.State> rightSibling(SingleMemberAnnotationExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME),

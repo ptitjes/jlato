@@ -111,10 +111,78 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 		return location.safeTraversalMutate(FINALLY_BLOCK, mutation);
 	}
 
-	private static final STraversal<TryStmt.State> RESOURCES = SNodeState.childTraversal(0);
-	private static final STraversal<TryStmt.State> TRY_BLOCK = SNodeState.childTraversal(1);
-	private static final STraversal<TryStmt.State> CATCHS = SNodeState.childTraversal(2);
-	private static final STraversal<TryStmt.State> FINALLY_BLOCK = SNodeState.childTraversal(3);
+	private static final STraversal<TryStmt.State> RESOURCES = new STraversal<TryStmt.State>() {
+
+		public STree<?> traverse(TryStmt.State state) {
+			return state.resources;
+		}
+
+		public TryStmt.State rebuildParentState(TryStmt.State state, STree<?> child) {
+			return state.withResources((STree) child);
+		}
+
+		public STraversal<TryStmt.State> leftSibling(TryStmt.State state) {
+			return null;
+		}
+
+		public STraversal<TryStmt.State> rightSibling(TryStmt.State state) {
+			return TRY_BLOCK;
+		}
+	};
+	private static final STraversal<TryStmt.State> TRY_BLOCK = new STraversal<TryStmt.State>() {
+
+		public STree<?> traverse(TryStmt.State state) {
+			return state.tryBlock;
+		}
+
+		public TryStmt.State rebuildParentState(TryStmt.State state, STree<?> child) {
+			return state.withTryBlock((STree) child);
+		}
+
+		public STraversal<TryStmt.State> leftSibling(TryStmt.State state) {
+			return RESOURCES;
+		}
+
+		public STraversal<TryStmt.State> rightSibling(TryStmt.State state) {
+			return CATCHS;
+		}
+	};
+	private static final STraversal<TryStmt.State> CATCHS = new STraversal<TryStmt.State>() {
+
+		public STree<?> traverse(TryStmt.State state) {
+			return state.catchs;
+		}
+
+		public TryStmt.State rebuildParentState(TryStmt.State state, STree<?> child) {
+			return state.withCatchs((STree) child);
+		}
+
+		public STraversal<TryStmt.State> leftSibling(TryStmt.State state) {
+			return TRY_BLOCK;
+		}
+
+		public STraversal<TryStmt.State> rightSibling(TryStmt.State state) {
+			return FINALLY_BLOCK;
+		}
+	};
+	private static final STraversal<TryStmt.State> FINALLY_BLOCK = new STraversal<TryStmt.State>() {
+
+		public STree<?> traverse(TryStmt.State state) {
+			return state.finallyBlock;
+		}
+
+		public TryStmt.State rebuildParentState(TryStmt.State state, STree<?> child) {
+			return state.withFinallyBlock((STree) child);
+		}
+
+		public STraversal<TryStmt.State> leftSibling(TryStmt.State state) {
+			return CATCHS;
+		}
+
+		public STraversal<TryStmt.State> rightSibling(TryStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Try).withSpacingAfter(space()),

@@ -85,8 +85,42 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal<PackageDecl.State> ANNOTATIONS = SNodeState.childTraversal(0);
-	private static final STraversal<PackageDecl.State> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<PackageDecl.State> ANNOTATIONS = new STraversal<PackageDecl.State>() {
+
+		public STree<?> traverse(PackageDecl.State state) {
+			return state.annotations;
+		}
+
+		public PackageDecl.State rebuildParentState(PackageDecl.State state, STree<?> child) {
+			return state.withAnnotations((STree) child);
+		}
+
+		public STraversal<PackageDecl.State> leftSibling(PackageDecl.State state) {
+			return null;
+		}
+
+		public STraversal<PackageDecl.State> rightSibling(PackageDecl.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<PackageDecl.State> NAME = new STraversal<PackageDecl.State>() {
+
+		public STree<?> traverse(PackageDecl.State state) {
+			return state.name;
+		}
+
+		public PackageDecl.State rebuildParentState(PackageDecl.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<PackageDecl.State> leftSibling(PackageDecl.State state) {
+			return ANNOTATIONS;
+		}
+
+		public STraversal<PackageDecl.State> rightSibling(PackageDecl.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),

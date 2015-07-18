@@ -86,8 +86,42 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 		return location.safeTraversalMutate(INIT, mutation);
 	}
 
-	private static final STraversal<VariableDeclarator.State> ID = SNodeState.childTraversal(0);
-	private static final STraversal<VariableDeclarator.State> INIT = SNodeState.childTraversal(1);
+	private static final STraversal<VariableDeclarator.State> ID = new STraversal<VariableDeclarator.State>() {
+
+		public STree<?> traverse(VariableDeclarator.State state) {
+			return state.id;
+		}
+
+		public VariableDeclarator.State rebuildParentState(VariableDeclarator.State state, STree<?> child) {
+			return state.withId((STree) child);
+		}
+
+		public STraversal<VariableDeclarator.State> leftSibling(VariableDeclarator.State state) {
+			return null;
+		}
+
+		public STraversal<VariableDeclarator.State> rightSibling(VariableDeclarator.State state) {
+			return INIT;
+		}
+	};
+	private static final STraversal<VariableDeclarator.State> INIT = new STraversal<VariableDeclarator.State>() {
+
+		public STree<?> traverse(VariableDeclarator.State state) {
+			return state.init;
+		}
+
+		public VariableDeclarator.State rebuildParentState(VariableDeclarator.State state, STree<?> child) {
+			return state.withInit((STree) child);
+		}
+
+		public STraversal<VariableDeclarator.State> leftSibling(VariableDeclarator.State state) {
+			return ID;
+		}
+
+		public STraversal<VariableDeclarator.State> rightSibling(VariableDeclarator.State state) {
+			return null;
+		}
+	};
 
 	public static final LexicalShape initializerShape = composite(
 			token(LToken.Assign).withSpacing(space(), space()),

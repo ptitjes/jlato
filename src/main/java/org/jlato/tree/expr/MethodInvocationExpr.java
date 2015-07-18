@@ -110,10 +110,78 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 		return location.safeTraversalMutate(ARGS, mutation);
 	}
 
-	private static final STraversal<MethodInvocationExpr.State> SCOPE = SNodeState.childTraversal(0);
-	private static final STraversal<MethodInvocationExpr.State> TYPE_ARGS = SNodeState.childTraversal(1);
-	private static final STraversal<MethodInvocationExpr.State> NAME = SNodeState.childTraversal(2);
-	private static final STraversal<MethodInvocationExpr.State> ARGS = SNodeState.childTraversal(3);
+	private static final STraversal<MethodInvocationExpr.State> SCOPE = new STraversal<MethodInvocationExpr.State>() {
+
+		public STree<?> traverse(MethodInvocationExpr.State state) {
+			return state.scope;
+		}
+
+		public MethodInvocationExpr.State rebuildParentState(MethodInvocationExpr.State state, STree<?> child) {
+			return state.withScope((STree) child);
+		}
+
+		public STraversal<MethodInvocationExpr.State> leftSibling(MethodInvocationExpr.State state) {
+			return null;
+		}
+
+		public STraversal<MethodInvocationExpr.State> rightSibling(MethodInvocationExpr.State state) {
+			return TYPE_ARGS;
+		}
+	};
+	private static final STraversal<MethodInvocationExpr.State> TYPE_ARGS = new STraversal<MethodInvocationExpr.State>() {
+
+		public STree<?> traverse(MethodInvocationExpr.State state) {
+			return state.typeArgs;
+		}
+
+		public MethodInvocationExpr.State rebuildParentState(MethodInvocationExpr.State state, STree<?> child) {
+			return state.withTypeArgs((STree) child);
+		}
+
+		public STraversal<MethodInvocationExpr.State> leftSibling(MethodInvocationExpr.State state) {
+			return SCOPE;
+		}
+
+		public STraversal<MethodInvocationExpr.State> rightSibling(MethodInvocationExpr.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<MethodInvocationExpr.State> NAME = new STraversal<MethodInvocationExpr.State>() {
+
+		public STree<?> traverse(MethodInvocationExpr.State state) {
+			return state.name;
+		}
+
+		public MethodInvocationExpr.State rebuildParentState(MethodInvocationExpr.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<MethodInvocationExpr.State> leftSibling(MethodInvocationExpr.State state) {
+			return TYPE_ARGS;
+		}
+
+		public STraversal<MethodInvocationExpr.State> rightSibling(MethodInvocationExpr.State state) {
+			return ARGS;
+		}
+	};
+	private static final STraversal<MethodInvocationExpr.State> ARGS = new STraversal<MethodInvocationExpr.State>() {
+
+		public STree<?> traverse(MethodInvocationExpr.State state) {
+			return state.args;
+		}
+
+		public MethodInvocationExpr.State rebuildParentState(MethodInvocationExpr.State state, STree<?> child) {
+			return state.withArgs((STree) child);
+		}
+
+		public STraversal<MethodInvocationExpr.State> leftSibling(MethodInvocationExpr.State state) {
+			return NAME;
+		}
+
+		public STraversal<MethodInvocationExpr.State> rightSibling(MethodInvocationExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),

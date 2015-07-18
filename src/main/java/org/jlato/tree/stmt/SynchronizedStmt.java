@@ -83,8 +83,42 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 		return location.safeTraversalMutate(BLOCK, mutation);
 	}
 
-	private static final STraversal<SynchronizedStmt.State> EXPR = SNodeState.childTraversal(0);
-	private static final STraversal<SynchronizedStmt.State> BLOCK = SNodeState.childTraversal(1);
+	private static final STraversal<SynchronizedStmt.State> EXPR = new STraversal<SynchronizedStmt.State>() {
+
+		public STree<?> traverse(SynchronizedStmt.State state) {
+			return state.expr;
+		}
+
+		public SynchronizedStmt.State rebuildParentState(SynchronizedStmt.State state, STree<?> child) {
+			return state.withExpr((STree) child);
+		}
+
+		public STraversal<SynchronizedStmt.State> leftSibling(SynchronizedStmt.State state) {
+			return null;
+		}
+
+		public STraversal<SynchronizedStmt.State> rightSibling(SynchronizedStmt.State state) {
+			return BLOCK;
+		}
+	};
+	private static final STraversal<SynchronizedStmt.State> BLOCK = new STraversal<SynchronizedStmt.State>() {
+
+		public STree<?> traverse(SynchronizedStmt.State state) {
+			return state.block;
+		}
+
+		public SynchronizedStmt.State rebuildParentState(SynchronizedStmt.State state, STree<?> child) {
+			return state.withBlock((STree) child);
+		}
+
+		public STraversal<SynchronizedStmt.State> leftSibling(SynchronizedStmt.State state) {
+			return EXPR;
+		}
+
+		public STraversal<SynchronizedStmt.State> rightSibling(SynchronizedStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Synchronized),

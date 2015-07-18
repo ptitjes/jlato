@@ -83,8 +83,42 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal<ArrayDimExpr.State> ANNOTATIONS = SNodeState.childTraversal(0);
-	private static final STraversal<ArrayDimExpr.State> EXPR = SNodeState.childTraversal(1);
+	private static final STraversal<ArrayDimExpr.State> ANNOTATIONS = new STraversal<ArrayDimExpr.State>() {
+
+		public STree<?> traverse(ArrayDimExpr.State state) {
+			return state.annotations;
+		}
+
+		public ArrayDimExpr.State rebuildParentState(ArrayDimExpr.State state, STree<?> child) {
+			return state.withAnnotations((STree) child);
+		}
+
+		public STraversal<ArrayDimExpr.State> leftSibling(ArrayDimExpr.State state) {
+			return null;
+		}
+
+		public STraversal<ArrayDimExpr.State> rightSibling(ArrayDimExpr.State state) {
+			return EXPR;
+		}
+	};
+	private static final STraversal<ArrayDimExpr.State> EXPR = new STraversal<ArrayDimExpr.State>() {
+
+		public STree<?> traverse(ArrayDimExpr.State state) {
+			return state.expr;
+		}
+
+		public ArrayDimExpr.State rebuildParentState(ArrayDimExpr.State state, STree<?> child) {
+			return state.withExpr((STree) child);
+		}
+
+		public STraversal<ArrayDimExpr.State> leftSibling(ArrayDimExpr.State state) {
+			return ANNOTATIONS;
+		}
+
+		public STraversal<ArrayDimExpr.State> rightSibling(ArrayDimExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list(

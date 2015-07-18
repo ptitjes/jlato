@@ -97,8 +97,42 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 			return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
 		}
 	*/
-	private static final STraversal<InitializerDecl.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<InitializerDecl.State> BODY = SNodeState.childTraversal(1);
+	private static final STraversal<InitializerDecl.State> MODIFIERS = new STraversal<InitializerDecl.State>() {
+
+		public STree<?> traverse(InitializerDecl.State state) {
+			return state.modifiers;
+		}
+
+		public InitializerDecl.State rebuildParentState(InitializerDecl.State state, STree<?> child) {
+			return state.withModifiers((STree) child);
+		}
+
+		public STraversal<InitializerDecl.State> leftSibling(InitializerDecl.State state) {
+			return null;
+		}
+
+		public STraversal<InitializerDecl.State> rightSibling(InitializerDecl.State state) {
+			return BODY;
+		}
+	};
+	private static final STraversal<InitializerDecl.State> BODY = new STraversal<InitializerDecl.State>() {
+
+		public STree<?> traverse(InitializerDecl.State state) {
+			return state.body;
+		}
+
+		public InitializerDecl.State rebuildParentState(InitializerDecl.State state, STree<?> child) {
+			return state.withBody((STree) child);
+		}
+
+		public STraversal<InitializerDecl.State> leftSibling(InitializerDecl.State state) {
+			return MODIFIERS;
+		}
+
+		public STraversal<InitializerDecl.State> rightSibling(InitializerDecl.State state) {
+			return null;
+		}
+	};
 //	private static final int JAVADOC_COMMENT = 3;
 
 	public final static LexicalShape shape = composite(

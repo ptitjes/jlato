@@ -124,11 +124,96 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<ObjectCreationExpr.State> SCOPE = SNodeState.childTraversal(0);
-	private static final STraversal<ObjectCreationExpr.State> TYPE_ARGS = SNodeState.childTraversal(1);
-	private static final STraversal<ObjectCreationExpr.State> TYPE = SNodeState.childTraversal(2);
-	private static final STraversal<ObjectCreationExpr.State> ARGS = SNodeState.childTraversal(3);
-	private static final STraversal<ObjectCreationExpr.State> BODY = SNodeState.childTraversal(4);
+	private static final STraversal<ObjectCreationExpr.State> SCOPE = new STraversal<ObjectCreationExpr.State>() {
+
+		public STree<?> traverse(ObjectCreationExpr.State state) {
+			return state.scope;
+		}
+
+		public ObjectCreationExpr.State rebuildParentState(ObjectCreationExpr.State state, STree<?> child) {
+			return state.withScope((STree) child);
+		}
+
+		public STraversal<ObjectCreationExpr.State> leftSibling(ObjectCreationExpr.State state) {
+			return null;
+		}
+
+		public STraversal<ObjectCreationExpr.State> rightSibling(ObjectCreationExpr.State state) {
+			return TYPE_ARGS;
+		}
+	};
+	private static final STraversal<ObjectCreationExpr.State> TYPE_ARGS = new STraversal<ObjectCreationExpr.State>() {
+
+		public STree<?> traverse(ObjectCreationExpr.State state) {
+			return state.typeArgs;
+		}
+
+		public ObjectCreationExpr.State rebuildParentState(ObjectCreationExpr.State state, STree<?> child) {
+			return state.withTypeArgs((STree) child);
+		}
+
+		public STraversal<ObjectCreationExpr.State> leftSibling(ObjectCreationExpr.State state) {
+			return SCOPE;
+		}
+
+		public STraversal<ObjectCreationExpr.State> rightSibling(ObjectCreationExpr.State state) {
+			return TYPE;
+		}
+	};
+	private static final STraversal<ObjectCreationExpr.State> TYPE = new STraversal<ObjectCreationExpr.State>() {
+
+		public STree<?> traverse(ObjectCreationExpr.State state) {
+			return state.type;
+		}
+
+		public ObjectCreationExpr.State rebuildParentState(ObjectCreationExpr.State state, STree<?> child) {
+			return state.withType((STree) child);
+		}
+
+		public STraversal<ObjectCreationExpr.State> leftSibling(ObjectCreationExpr.State state) {
+			return TYPE_ARGS;
+		}
+
+		public STraversal<ObjectCreationExpr.State> rightSibling(ObjectCreationExpr.State state) {
+			return ARGS;
+		}
+	};
+	private static final STraversal<ObjectCreationExpr.State> ARGS = new STraversal<ObjectCreationExpr.State>() {
+
+		public STree<?> traverse(ObjectCreationExpr.State state) {
+			return state.args;
+		}
+
+		public ObjectCreationExpr.State rebuildParentState(ObjectCreationExpr.State state, STree<?> child) {
+			return state.withArgs((STree) child);
+		}
+
+		public STraversal<ObjectCreationExpr.State> leftSibling(ObjectCreationExpr.State state) {
+			return TYPE;
+		}
+
+		public STraversal<ObjectCreationExpr.State> rightSibling(ObjectCreationExpr.State state) {
+			return BODY;
+		}
+	};
+	private static final STraversal<ObjectCreationExpr.State> BODY = new STraversal<ObjectCreationExpr.State>() {
+
+		public STree<?> traverse(ObjectCreationExpr.State state) {
+			return state.body;
+		}
+
+		public ObjectCreationExpr.State rebuildParentState(ObjectCreationExpr.State state, STree<?> child) {
+			return state.withBody((STree) child);
+		}
+
+		public STraversal<ObjectCreationExpr.State> leftSibling(ObjectCreationExpr.State state) {
+			return ARGS;
+		}
+
+		public STraversal<ObjectCreationExpr.State> rightSibling(ObjectCreationExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),

@@ -102,8 +102,42 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<LambdaExpr.State> PARAMS = SNodeState.childTraversal(0);
-	private static final STraversal<LambdaExpr.State> BODY = SNodeState.childTraversal(1);
+	private static final STraversal<LambdaExpr.State> PARAMS = new STraversal<LambdaExpr.State>() {
+
+		public STree<?> traverse(LambdaExpr.State state) {
+			return state.params;
+		}
+
+		public LambdaExpr.State rebuildParentState(LambdaExpr.State state, STree<?> child) {
+			return state.withParams((STree) child);
+		}
+
+		public STraversal<LambdaExpr.State> leftSibling(LambdaExpr.State state) {
+			return null;
+		}
+
+		public STraversal<LambdaExpr.State> rightSibling(LambdaExpr.State state) {
+			return BODY;
+		}
+	};
+	private static final STraversal<LambdaExpr.State> BODY = new STraversal<LambdaExpr.State>() {
+
+		public STree<?> traverse(LambdaExpr.State state) {
+			return state.body;
+		}
+
+		public LambdaExpr.State rebuildParentState(LambdaExpr.State state, STree<?> child) {
+			return state.withBody((STree) child);
+		}
+
+		public STraversal<LambdaExpr.State> leftSibling(LambdaExpr.State state) {
+			return PARAMS;
+		}
+
+		public STraversal<LambdaExpr.State> rightSibling(LambdaExpr.State state) {
+			return null;
+		}
+	};
 
 	private static final int PARENS = 0;
 

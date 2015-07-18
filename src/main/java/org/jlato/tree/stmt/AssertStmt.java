@@ -86,8 +86,42 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 		return location.safeTraversalMutate(MSG, mutation);
 	}
 
-	private static final STraversal<AssertStmt.State> CHECK = SNodeState.childTraversal(0);
-	private static final STraversal<AssertStmt.State> MSG = SNodeState.childTraversal(1);
+	private static final STraversal<AssertStmt.State> CHECK = new STraversal<AssertStmt.State>() {
+
+		public STree<?> traverse(AssertStmt.State state) {
+			return state.check;
+		}
+
+		public AssertStmt.State rebuildParentState(AssertStmt.State state, STree<?> child) {
+			return state.withCheck((STree) child);
+		}
+
+		public STraversal<AssertStmt.State> leftSibling(AssertStmt.State state) {
+			return null;
+		}
+
+		public STraversal<AssertStmt.State> rightSibling(AssertStmt.State state) {
+			return MSG;
+		}
+	};
+	private static final STraversal<AssertStmt.State> MSG = new STraversal<AssertStmt.State>() {
+
+		public STree<?> traverse(AssertStmt.State state) {
+			return state.msg;
+		}
+
+		public AssertStmt.State rebuildParentState(AssertStmt.State state, STree<?> child) {
+			return state.withMsg((STree) child);
+		}
+
+		public STraversal<AssertStmt.State> leftSibling(AssertStmt.State state) {
+			return CHECK;
+		}
+
+		public STraversal<AssertStmt.State> rightSibling(AssertStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Assert),

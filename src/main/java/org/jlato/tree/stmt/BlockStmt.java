@@ -74,7 +74,24 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 		return location.safeTraversalMutate(STMTS, mutation);
 	}
 
-	private static final STraversal<BlockStmt.State> STMTS = SNodeState.childTraversal(0);
+	private static final STraversal<BlockStmt.State> STMTS = new STraversal<BlockStmt.State>() {
+
+		public STree<?> traverse(BlockStmt.State state) {
+			return state.stmts;
+		}
+
+		public BlockStmt.State rebuildParentState(BlockStmt.State state, STree<?> child) {
+			return state.withStmts((STree) child);
+		}
+
+		public STraversal<BlockStmt.State> leftSibling(BlockStmt.State state) {
+			return null;
+		}
+
+		public STraversal<BlockStmt.State> rightSibling(BlockStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			nonEmptyChildren(STMTS,

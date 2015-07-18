@@ -88,8 +88,42 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 		return location.safeTraversalMutate(CASES, mutation);
 	}
 
-	private static final STraversal<SwitchStmt.State> SELECTOR = SNodeState.childTraversal(0);
-	private static final STraversal<SwitchStmt.State> CASES = SNodeState.childTraversal(1);
+	private static final STraversal<SwitchStmt.State> SELECTOR = new STraversal<SwitchStmt.State>() {
+
+		public STree<?> traverse(SwitchStmt.State state) {
+			return state.selector;
+		}
+
+		public SwitchStmt.State rebuildParentState(SwitchStmt.State state, STree<?> child) {
+			return state.withSelector((STree) child);
+		}
+
+		public STraversal<SwitchStmt.State> leftSibling(SwitchStmt.State state) {
+			return null;
+		}
+
+		public STraversal<SwitchStmt.State> rightSibling(SwitchStmt.State state) {
+			return CASES;
+		}
+	};
+	private static final STraversal<SwitchStmt.State> CASES = new STraversal<SwitchStmt.State>() {
+
+		public STree<?> traverse(SwitchStmt.State state) {
+			return state.cases;
+		}
+
+		public SwitchStmt.State rebuildParentState(SwitchStmt.State state, STree<?> child) {
+			return state.withCases((STree) child);
+		}
+
+		public STraversal<SwitchStmt.State> leftSibling(SwitchStmt.State state) {
+			return SELECTOR;
+		}
+
+		public STraversal<SwitchStmt.State> rightSibling(SwitchStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Switch),

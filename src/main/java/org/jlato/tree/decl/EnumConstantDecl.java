@@ -118,10 +118,78 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 		return location.safeTraversalMutate(CLASS_BODY, mutation);
 	}
 
-	private static final STraversal<EnumConstantDecl.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<EnumConstantDecl.State> NAME = SNodeState.childTraversal(1);
-	private static final STraversal<EnumConstantDecl.State> ARGS = SNodeState.childTraversal(2);
-	private static final STraversal<EnumConstantDecl.State> CLASS_BODY = SNodeState.childTraversal(3);
+	private static final STraversal<EnumConstantDecl.State> MODIFIERS = new STraversal<EnumConstantDecl.State>() {
+
+		public STree<?> traverse(EnumConstantDecl.State state) {
+			return state.modifiers;
+		}
+
+		public EnumConstantDecl.State rebuildParentState(EnumConstantDecl.State state, STree<?> child) {
+			return state.withModifiers((STree) child);
+		}
+
+		public STraversal<EnumConstantDecl.State> leftSibling(EnumConstantDecl.State state) {
+			return null;
+		}
+
+		public STraversal<EnumConstantDecl.State> rightSibling(EnumConstantDecl.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<EnumConstantDecl.State> NAME = new STraversal<EnumConstantDecl.State>() {
+
+		public STree<?> traverse(EnumConstantDecl.State state) {
+			return state.name;
+		}
+
+		public EnumConstantDecl.State rebuildParentState(EnumConstantDecl.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<EnumConstantDecl.State> leftSibling(EnumConstantDecl.State state) {
+			return MODIFIERS;
+		}
+
+		public STraversal<EnumConstantDecl.State> rightSibling(EnumConstantDecl.State state) {
+			return ARGS;
+		}
+	};
+	private static final STraversal<EnumConstantDecl.State> ARGS = new STraversal<EnumConstantDecl.State>() {
+
+		public STree<?> traverse(EnumConstantDecl.State state) {
+			return state.args;
+		}
+
+		public EnumConstantDecl.State rebuildParentState(EnumConstantDecl.State state, STree<?> child) {
+			return state.withArgs((STree) child);
+		}
+
+		public STraversal<EnumConstantDecl.State> leftSibling(EnumConstantDecl.State state) {
+			return NAME;
+		}
+
+		public STraversal<EnumConstantDecl.State> rightSibling(EnumConstantDecl.State state) {
+			return CLASS_BODY;
+		}
+	};
+	private static final STraversal<EnumConstantDecl.State> CLASS_BODY = new STraversal<EnumConstantDecl.State>() {
+
+		public STree<?> traverse(EnumConstantDecl.State state) {
+			return state.classBody;
+		}
+
+		public EnumConstantDecl.State rebuildParentState(EnumConstantDecl.State state, STree<?> child) {
+			return state.withClassBody((STree) child);
+		}
+
+		public STraversal<EnumConstantDecl.State> leftSibling(EnumConstantDecl.State state) {
+			return ARGS;
+		}
+
+		public STraversal<EnumConstantDecl.State> rightSibling(EnumConstantDecl.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

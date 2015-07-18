@@ -70,7 +70,24 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal<ExpressionStmt.State> EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<ExpressionStmt.State> EXPR = new STraversal<ExpressionStmt.State>() {
+
+		public STree<?> traverse(ExpressionStmt.State state) {
+			return state.expr;
+		}
+
+		public ExpressionStmt.State rebuildParentState(ExpressionStmt.State state, STree<?> child) {
+			return state.withExpr((STree) child);
+		}
+
+		public STraversal<ExpressionStmt.State> leftSibling(ExpressionStmt.State state) {
+			return null;
+		}
+
+		public STraversal<ExpressionStmt.State> rightSibling(ExpressionStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(EXPR), token(LToken.SemiColon)

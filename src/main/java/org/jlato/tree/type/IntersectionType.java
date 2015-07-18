@@ -70,7 +70,24 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final STraversal<IntersectionType.State> TYPES = SNodeState.childTraversal(0);
+	private static final STraversal<IntersectionType.State> TYPES = new STraversal<IntersectionType.State>() {
+
+		public STree<?> traverse(IntersectionType.State state) {
+			return state.types;
+		}
+
+		public IntersectionType.State rebuildParentState(IntersectionType.State state, STree<?> child) {
+			return state.withTypes((STree) child);
+		}
+
+		public STraversal<IntersectionType.State> leftSibling(IntersectionType.State state) {
+			return null;
+		}
+
+		public STraversal<IntersectionType.State> rightSibling(IntersectionType.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(TYPES, Type.intersectionShape)

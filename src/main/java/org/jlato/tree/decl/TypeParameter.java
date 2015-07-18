@@ -99,9 +99,60 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 		return location.safeTraversalMutate(BOUNDS, mutation);
 	}
 
-	private static final STraversal<TypeParameter.State> ANNOTATIONS = SNodeState.childTraversal(0);
-	private static final STraversal<TypeParameter.State> NAME = SNodeState.childTraversal(1);
-	private static final STraversal<TypeParameter.State> BOUNDS = SNodeState.childTraversal(2);
+	private static final STraversal<TypeParameter.State> ANNOTATIONS = new STraversal<TypeParameter.State>() {
+
+		public STree<?> traverse(TypeParameter.State state) {
+			return state.annotations;
+		}
+
+		public TypeParameter.State rebuildParentState(TypeParameter.State state, STree<?> child) {
+			return state.withAnnotations((STree) child);
+		}
+
+		public STraversal<TypeParameter.State> leftSibling(TypeParameter.State state) {
+			return null;
+		}
+
+		public STraversal<TypeParameter.State> rightSibling(TypeParameter.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<TypeParameter.State> NAME = new STraversal<TypeParameter.State>() {
+
+		public STree<?> traverse(TypeParameter.State state) {
+			return state.name;
+		}
+
+		public TypeParameter.State rebuildParentState(TypeParameter.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<TypeParameter.State> leftSibling(TypeParameter.State state) {
+			return ANNOTATIONS;
+		}
+
+		public STraversal<TypeParameter.State> rightSibling(TypeParameter.State state) {
+			return BOUNDS;
+		}
+	};
+	private static final STraversal<TypeParameter.State> BOUNDS = new STraversal<TypeParameter.State>() {
+
+		public STree<?> traverse(TypeParameter.State state) {
+			return state.bounds;
+		}
+
+		public TypeParameter.State rebuildParentState(TypeParameter.State state, STree<?> child) {
+			return state.withBounds((STree) child);
+		}
+
+		public STraversal<TypeParameter.State> leftSibling(TypeParameter.State state) {
+			return NAME;
+		}
+
+		public STraversal<TypeParameter.State> rightSibling(TypeParameter.State state) {
+			return null;
+		}
+	};
 
 	public static final LexicalShape boundsShape = list(
 			token(LToken.Extends).withSpacingBefore(space()),

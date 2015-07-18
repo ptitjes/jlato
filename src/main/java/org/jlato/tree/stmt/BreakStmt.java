@@ -73,7 +73,24 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final STraversal<BreakStmt.State> ID = SNodeState.childTraversal(0);
+	private static final STraversal<BreakStmt.State> ID = new STraversal<BreakStmt.State>() {
+
+		public STree<?> traverse(BreakStmt.State state) {
+			return state.id;
+		}
+
+		public BreakStmt.State rebuildParentState(BreakStmt.State state, STree<?> child) {
+			return state.withId((STree) child);
+		}
+
+		public STraversal<BreakStmt.State> leftSibling(BreakStmt.State state) {
+			return null;
+		}
+
+		public STraversal<BreakStmt.State> rightSibling(BreakStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Break),

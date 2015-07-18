@@ -128,11 +128,96 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 		return location.safeTraversalMutate(DEFAULT_VALUE, mutation);
 	}
 
-	private static final STraversal<AnnotationMemberDecl.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<AnnotationMemberDecl.State> TYPE = SNodeState.childTraversal(1);
-	private static final STraversal<AnnotationMemberDecl.State> NAME = SNodeState.childTraversal(2);
-	private static final STraversal<AnnotationMemberDecl.State> DIMS = SNodeState.childTraversal(3);
-	private static final STraversal<AnnotationMemberDecl.State> DEFAULT_VALUE = SNodeState.childTraversal(4);
+	private static final STraversal<AnnotationMemberDecl.State> MODIFIERS = new STraversal<AnnotationMemberDecl.State>() {
+
+		public STree<?> traverse(AnnotationMemberDecl.State state) {
+			return state.modifiers;
+		}
+
+		public AnnotationMemberDecl.State rebuildParentState(AnnotationMemberDecl.State state, STree<?> child) {
+			return state.withModifiers((STree) child);
+		}
+
+		public STraversal<AnnotationMemberDecl.State> leftSibling(AnnotationMemberDecl.State state) {
+			return null;
+		}
+
+		public STraversal<AnnotationMemberDecl.State> rightSibling(AnnotationMemberDecl.State state) {
+			return TYPE;
+		}
+	};
+	private static final STraversal<AnnotationMemberDecl.State> TYPE = new STraversal<AnnotationMemberDecl.State>() {
+
+		public STree<?> traverse(AnnotationMemberDecl.State state) {
+			return state.type;
+		}
+
+		public AnnotationMemberDecl.State rebuildParentState(AnnotationMemberDecl.State state, STree<?> child) {
+			return state.withType((STree) child);
+		}
+
+		public STraversal<AnnotationMemberDecl.State> leftSibling(AnnotationMemberDecl.State state) {
+			return MODIFIERS;
+		}
+
+		public STraversal<AnnotationMemberDecl.State> rightSibling(AnnotationMemberDecl.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<AnnotationMemberDecl.State> NAME = new STraversal<AnnotationMemberDecl.State>() {
+
+		public STree<?> traverse(AnnotationMemberDecl.State state) {
+			return state.name;
+		}
+
+		public AnnotationMemberDecl.State rebuildParentState(AnnotationMemberDecl.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<AnnotationMemberDecl.State> leftSibling(AnnotationMemberDecl.State state) {
+			return TYPE;
+		}
+
+		public STraversal<AnnotationMemberDecl.State> rightSibling(AnnotationMemberDecl.State state) {
+			return DIMS;
+		}
+	};
+	private static final STraversal<AnnotationMemberDecl.State> DIMS = new STraversal<AnnotationMemberDecl.State>() {
+
+		public STree<?> traverse(AnnotationMemberDecl.State state) {
+			return state.dims;
+		}
+
+		public AnnotationMemberDecl.State rebuildParentState(AnnotationMemberDecl.State state, STree<?> child) {
+			return state.withDims((STree) child);
+		}
+
+		public STraversal<AnnotationMemberDecl.State> leftSibling(AnnotationMemberDecl.State state) {
+			return NAME;
+		}
+
+		public STraversal<AnnotationMemberDecl.State> rightSibling(AnnotationMemberDecl.State state) {
+			return DEFAULT_VALUE;
+		}
+	};
+	private static final STraversal<AnnotationMemberDecl.State> DEFAULT_VALUE = new STraversal<AnnotationMemberDecl.State>() {
+
+		public STree<?> traverse(AnnotationMemberDecl.State state) {
+			return state.defaultValue;
+		}
+
+		public AnnotationMemberDecl.State rebuildParentState(AnnotationMemberDecl.State state, STree<?> child) {
+			return state.withDefaultValue((STree) child);
+		}
+
+		public STraversal<AnnotationMemberDecl.State> leftSibling(AnnotationMemberDecl.State state) {
+			return DIMS;
+		}
+
+		public STraversal<AnnotationMemberDecl.State> rightSibling(AnnotationMemberDecl.State state) {
+			return null;
+		}
+	};
 
 	public static final LexicalShape defaultValShape = composite(token(LToken.Default), element());
 

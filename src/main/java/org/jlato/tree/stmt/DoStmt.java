@@ -83,8 +83,42 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 		return location.safeTraversalMutate(CONDITION, mutation);
 	}
 
-	private static final STraversal<DoStmt.State> BODY = SNodeState.childTraversal(0);
-	private static final STraversal<DoStmt.State> CONDITION = SNodeState.childTraversal(1);
+	private static final STraversal<DoStmt.State> BODY = new STraversal<DoStmt.State>() {
+
+		public STree<?> traverse(DoStmt.State state) {
+			return state.body;
+		}
+
+		public DoStmt.State rebuildParentState(DoStmt.State state, STree<?> child) {
+			return state.withBody((STree) child);
+		}
+
+		public STraversal<DoStmt.State> leftSibling(DoStmt.State state) {
+			return null;
+		}
+
+		public STraversal<DoStmt.State> rightSibling(DoStmt.State state) {
+			return CONDITION;
+		}
+	};
+	private static final STraversal<DoStmt.State> CONDITION = new STraversal<DoStmt.State>() {
+
+		public STree<?> traverse(DoStmt.State state) {
+			return state.condition;
+		}
+
+		public DoStmt.State rebuildParentState(DoStmt.State state, STree<?> child) {
+			return state.withCondition((STree) child);
+		}
+
+		public STraversal<DoStmt.State> leftSibling(DoStmt.State state) {
+			return BODY;
+		}
+
+		public STraversal<DoStmt.State> rightSibling(DoStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Do).withSpacingAfter(space()),

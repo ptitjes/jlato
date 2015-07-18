@@ -84,8 +84,42 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 		return location.safeTraversalMutate(PAIRS, mutation);
 	}
 
-	private static final STraversal<NormalAnnotationExpr.State> NAME = SNodeState.childTraversal(0);
-	private static final STraversal<NormalAnnotationExpr.State> PAIRS = SNodeState.childTraversal(1);
+	private static final STraversal<NormalAnnotationExpr.State> NAME = new STraversal<NormalAnnotationExpr.State>() {
+
+		public STree<?> traverse(NormalAnnotationExpr.State state) {
+			return state.name;
+		}
+
+		public NormalAnnotationExpr.State rebuildParentState(NormalAnnotationExpr.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<NormalAnnotationExpr.State> leftSibling(NormalAnnotationExpr.State state) {
+			return null;
+		}
+
+		public STraversal<NormalAnnotationExpr.State> rightSibling(NormalAnnotationExpr.State state) {
+			return PAIRS;
+		}
+	};
+	private static final STraversal<NormalAnnotationExpr.State> PAIRS = new STraversal<NormalAnnotationExpr.State>() {
+
+		public STree<?> traverse(NormalAnnotationExpr.State state) {
+			return state.pairs;
+		}
+
+		public NormalAnnotationExpr.State rebuildParentState(NormalAnnotationExpr.State state, STree<?> child) {
+			return state.withPairs((STree) child);
+		}
+
+		public STraversal<NormalAnnotationExpr.State> leftSibling(NormalAnnotationExpr.State state) {
+			return NAME;
+		}
+
+		public STraversal<NormalAnnotationExpr.State> rightSibling(NormalAnnotationExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME),

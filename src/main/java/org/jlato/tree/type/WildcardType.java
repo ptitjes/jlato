@@ -99,9 +99,60 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 		return location.safeTraversalMutate(SUP, mutation);
 	}
 
-	private static final STraversal<WildcardType.State> ANNOTATIONS = SNodeState.childTraversal(0);
-	private static final STraversal<WildcardType.State> EXT = SNodeState.childTraversal(1);
-	private static final STraversal<WildcardType.State> SUP = SNodeState.childTraversal(2);
+	private static final STraversal<WildcardType.State> ANNOTATIONS = new STraversal<WildcardType.State>() {
+
+		public STree<?> traverse(WildcardType.State state) {
+			return state.annotations;
+		}
+
+		public WildcardType.State rebuildParentState(WildcardType.State state, STree<?> child) {
+			return state.withAnnotations((STree) child);
+		}
+
+		public STraversal<WildcardType.State> leftSibling(WildcardType.State state) {
+			return null;
+		}
+
+		public STraversal<WildcardType.State> rightSibling(WildcardType.State state) {
+			return EXT;
+		}
+	};
+	private static final STraversal<WildcardType.State> EXT = new STraversal<WildcardType.State>() {
+
+		public STree<?> traverse(WildcardType.State state) {
+			return state.ext;
+		}
+
+		public WildcardType.State rebuildParentState(WildcardType.State state, STree<?> child) {
+			return state.withExt((STree) child);
+		}
+
+		public STraversal<WildcardType.State> leftSibling(WildcardType.State state) {
+			return ANNOTATIONS;
+		}
+
+		public STraversal<WildcardType.State> rightSibling(WildcardType.State state) {
+			return SUP;
+		}
+	};
+	private static final STraversal<WildcardType.State> SUP = new STraversal<WildcardType.State>() {
+
+		public STree<?> traverse(WildcardType.State state) {
+			return state.sup;
+		}
+
+		public WildcardType.State rebuildParentState(WildcardType.State state, STree<?> child) {
+			return state.withSup((STree) child);
+		}
+
+		public STraversal<WildcardType.State> leftSibling(WildcardType.State state) {
+			return EXT;
+		}
+
+		public STraversal<WildcardType.State> rightSibling(WildcardType.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),

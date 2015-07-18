@@ -70,7 +70,24 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 		return location.safeTraversalMutate(TYPE_DECL, mutation);
 	}
 
-	private static final STraversal<TypeDeclarationStmt.State> TYPE_DECL = SNodeState.childTraversal(0);
+	private static final STraversal<TypeDeclarationStmt.State> TYPE_DECL = new STraversal<TypeDeclarationStmt.State>() {
+
+		public STree<?> traverse(TypeDeclarationStmt.State state) {
+			return state.typeDecl;
+		}
+
+		public TypeDeclarationStmt.State rebuildParentState(TypeDeclarationStmt.State state, STree<?> child) {
+			return state.withTypeDecl((STree) child);
+		}
+
+		public STraversal<TypeDeclarationStmt.State> leftSibling(TypeDeclarationStmt.State state) {
+			return null;
+		}
+
+		public STraversal<TypeDeclarationStmt.State> rightSibling(TypeDeclarationStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(TYPE_DECL)

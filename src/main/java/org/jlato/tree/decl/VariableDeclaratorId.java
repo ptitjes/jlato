@@ -83,8 +83,42 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
-	private static final STraversal<VariableDeclaratorId.State> NAME = SNodeState.childTraversal(0);
-	private static final STraversal<VariableDeclaratorId.State> DIMS = SNodeState.childTraversal(1);
+	private static final STraversal<VariableDeclaratorId.State> NAME = new STraversal<VariableDeclaratorId.State>() {
+
+		public STree<?> traverse(VariableDeclaratorId.State state) {
+			return state.name;
+		}
+
+		public VariableDeclaratorId.State rebuildParentState(VariableDeclaratorId.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<VariableDeclaratorId.State> leftSibling(VariableDeclaratorId.State state) {
+			return null;
+		}
+
+		public STraversal<VariableDeclaratorId.State> rightSibling(VariableDeclaratorId.State state) {
+			return DIMS;
+		}
+	};
+	private static final STraversal<VariableDeclaratorId.State> DIMS = new STraversal<VariableDeclaratorId.State>() {
+
+		public STree<?> traverse(VariableDeclaratorId.State state) {
+			return state.dims;
+		}
+
+		public VariableDeclaratorId.State rebuildParentState(VariableDeclaratorId.State state, STree<?> child) {
+			return state.withDims((STree) child);
+		}
+
+		public STraversal<VariableDeclaratorId.State> leftSibling(VariableDeclaratorId.State state) {
+			return NAME;
+		}
+
+		public STraversal<VariableDeclaratorId.State> rightSibling(VariableDeclaratorId.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(NAME),

@@ -135,11 +135,96 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
 
-	private static final STraversal<EnumDecl.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<EnumDecl.State> NAME = SNodeState.childTraversal(1);
-	private static final STraversal<EnumDecl.State> IMPLEMENTS_CLAUSE = SNodeState.childTraversal(2);
-	private static final STraversal<EnumDecl.State> ENUM_CONSTANTS = SNodeState.childTraversal(3);
-	private static final STraversal<EnumDecl.State> MEMBERS = SNodeState.childTraversal(4);
+	private static final STraversal<EnumDecl.State> MODIFIERS = new STraversal<EnumDecl.State>() {
+
+		public STree<?> traverse(EnumDecl.State state) {
+			return state.modifiers;
+		}
+
+		public EnumDecl.State rebuildParentState(EnumDecl.State state, STree<?> child) {
+			return state.withModifiers((STree) child);
+		}
+
+		public STraversal<EnumDecl.State> leftSibling(EnumDecl.State state) {
+			return null;
+		}
+
+		public STraversal<EnumDecl.State> rightSibling(EnumDecl.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<EnumDecl.State> NAME = new STraversal<EnumDecl.State>() {
+
+		public STree<?> traverse(EnumDecl.State state) {
+			return state.name;
+		}
+
+		public EnumDecl.State rebuildParentState(EnumDecl.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<EnumDecl.State> leftSibling(EnumDecl.State state) {
+			return MODIFIERS;
+		}
+
+		public STraversal<EnumDecl.State> rightSibling(EnumDecl.State state) {
+			return IMPLEMENTS_CLAUSE;
+		}
+	};
+	private static final STraversal<EnumDecl.State> IMPLEMENTS_CLAUSE = new STraversal<EnumDecl.State>() {
+
+		public STree<?> traverse(EnumDecl.State state) {
+			return state.implementsClause;
+		}
+
+		public EnumDecl.State rebuildParentState(EnumDecl.State state, STree<?> child) {
+			return state.withImplementsClause((STree) child);
+		}
+
+		public STraversal<EnumDecl.State> leftSibling(EnumDecl.State state) {
+			return NAME;
+		}
+
+		public STraversal<EnumDecl.State> rightSibling(EnumDecl.State state) {
+			return ENUM_CONSTANTS;
+		}
+	};
+	private static final STraversal<EnumDecl.State> ENUM_CONSTANTS = new STraversal<EnumDecl.State>() {
+
+		public STree<?> traverse(EnumDecl.State state) {
+			return state.enumConstants;
+		}
+
+		public EnumDecl.State rebuildParentState(EnumDecl.State state, STree<?> child) {
+			return state.withEnumConstants((STree) child);
+		}
+
+		public STraversal<EnumDecl.State> leftSibling(EnumDecl.State state) {
+			return IMPLEMENTS_CLAUSE;
+		}
+
+		public STraversal<EnumDecl.State> rightSibling(EnumDecl.State state) {
+			return MEMBERS;
+		}
+	};
+	private static final STraversal<EnumDecl.State> MEMBERS = new STraversal<EnumDecl.State>() {
+
+		public STree<?> traverse(EnumDecl.State state) {
+			return state.members;
+		}
+
+		public EnumDecl.State rebuildParentState(EnumDecl.State state, STree<?> child) {
+			return state.withMembers((STree) child);
+		}
+
+		public STraversal<EnumDecl.State> leftSibling(EnumDecl.State state) {
+			return ENUM_CONSTANTS;
+		}
+
+		public STraversal<EnumDecl.State> rightSibling(EnumDecl.State state) {
+			return null;
+		}
+	};
 
 	private static final int TRAILING_COMMA = 0;
 

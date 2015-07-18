@@ -110,10 +110,78 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 		return location.safeTraversalMutate(TYPE_ARGS, mutation);
 	}
 
-	private static final STraversal<QualifiedType.State> ANNOTATIONS = SNodeState.childTraversal(0);
-	private static final STraversal<QualifiedType.State> SCOPE = SNodeState.childTraversal(1);
-	private static final STraversal<QualifiedType.State> NAME = SNodeState.childTraversal(2);
-	private static final STraversal<QualifiedType.State> TYPE_ARGS = SNodeState.childTraversal(3);
+	private static final STraversal<QualifiedType.State> ANNOTATIONS = new STraversal<QualifiedType.State>() {
+
+		public STree<?> traverse(QualifiedType.State state) {
+			return state.annotations;
+		}
+
+		public QualifiedType.State rebuildParentState(QualifiedType.State state, STree<?> child) {
+			return state.withAnnotations((STree) child);
+		}
+
+		public STraversal<QualifiedType.State> leftSibling(QualifiedType.State state) {
+			return null;
+		}
+
+		public STraversal<QualifiedType.State> rightSibling(QualifiedType.State state) {
+			return SCOPE;
+		}
+	};
+	private static final STraversal<QualifiedType.State> SCOPE = new STraversal<QualifiedType.State>() {
+
+		public STree<?> traverse(QualifiedType.State state) {
+			return state.scope;
+		}
+
+		public QualifiedType.State rebuildParentState(QualifiedType.State state, STree<?> child) {
+			return state.withScope((STree) child);
+		}
+
+		public STraversal<QualifiedType.State> leftSibling(QualifiedType.State state) {
+			return ANNOTATIONS;
+		}
+
+		public STraversal<QualifiedType.State> rightSibling(QualifiedType.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<QualifiedType.State> NAME = new STraversal<QualifiedType.State>() {
+
+		public STree<?> traverse(QualifiedType.State state) {
+			return state.name;
+		}
+
+		public QualifiedType.State rebuildParentState(QualifiedType.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<QualifiedType.State> leftSibling(QualifiedType.State state) {
+			return SCOPE;
+		}
+
+		public STraversal<QualifiedType.State> rightSibling(QualifiedType.State state) {
+			return TYPE_ARGS;
+		}
+	};
+	private static final STraversal<QualifiedType.State> TYPE_ARGS = new STraversal<QualifiedType.State>() {
+
+		public STree<?> traverse(QualifiedType.State state) {
+			return state.typeArgs;
+		}
+
+		public QualifiedType.State rebuildParentState(QualifiedType.State state, STree<?> child) {
+			return state.withTypeArgs((STree) child);
+		}
+
+		public STraversal<QualifiedType.State> leftSibling(QualifiedType.State state) {
+			return NAME;
+		}
+
+		public STraversal<QualifiedType.State> rightSibling(QualifiedType.State state) {
+			return null;
+		}
+	};
 
 	public static final LexicalShape scopeShape = composite(element(), token(LToken.Dot));
 

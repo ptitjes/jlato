@@ -73,7 +73,24 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 
-	private static final STraversal<ArrayDim.State> ANNOTATIONS = SNodeState.childTraversal(0);
+	private static final STraversal<ArrayDim.State> ANNOTATIONS = new STraversal<ArrayDim.State>() {
+
+		public STree<?> traverse(ArrayDim.State state) {
+			return state.annotations;
+		}
+
+		public ArrayDim.State rebuildParentState(ArrayDim.State state, STree<?> child) {
+			return state.withAnnotations((STree) child);
+		}
+
+		public STraversal<ArrayDim.State> leftSibling(ArrayDim.State state) {
+			return null;
+		}
+
+		public STraversal<ArrayDim.State> rightSibling(ArrayDim.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list(

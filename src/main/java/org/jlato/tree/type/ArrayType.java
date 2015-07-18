@@ -83,8 +83,42 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
-	private static final STraversal<ArrayType.State> COMPONENT_TYPE = SNodeState.childTraversal(0);
-	private static final STraversal<ArrayType.State> DIMS = SNodeState.childTraversal(1);
+	private static final STraversal<ArrayType.State> COMPONENT_TYPE = new STraversal<ArrayType.State>() {
+
+		public STree<?> traverse(ArrayType.State state) {
+			return state.componentType;
+		}
+
+		public ArrayType.State rebuildParentState(ArrayType.State state, STree<?> child) {
+			return state.withComponentType((STree) child);
+		}
+
+		public STraversal<ArrayType.State> leftSibling(ArrayType.State state) {
+			return null;
+		}
+
+		public STraversal<ArrayType.State> rightSibling(ArrayType.State state) {
+			return DIMS;
+		}
+	};
+	private static final STraversal<ArrayType.State> DIMS = new STraversal<ArrayType.State>() {
+
+		public STree<?> traverse(ArrayType.State state) {
+			return state.dims;
+		}
+
+		public ArrayType.State rebuildParentState(ArrayType.State state, STree<?> child) {
+			return state.withDims((STree) child);
+		}
+
+		public STraversal<ArrayType.State> leftSibling(ArrayType.State state) {
+			return COMPONENT_TYPE;
+		}
+
+		public STraversal<ArrayType.State> rightSibling(ArrayType.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(COMPONENT_TYPE),

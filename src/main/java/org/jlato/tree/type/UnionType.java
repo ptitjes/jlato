@@ -70,7 +70,24 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final STraversal<UnionType.State> TYPES = SNodeState.childTraversal(0);
+	private static final STraversal<UnionType.State> TYPES = new STraversal<UnionType.State>() {
+
+		public STree<?> traverse(UnionType.State state) {
+			return state.types;
+		}
+
+		public UnionType.State rebuildParentState(UnionType.State state, STree<?> child) {
+			return state.withTypes((STree) child);
+		}
+
+		public STraversal<UnionType.State> leftSibling(UnionType.State state) {
+			return null;
+		}
+
+		public STraversal<UnionType.State> rightSibling(UnionType.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(TYPES, Type.unionShape)

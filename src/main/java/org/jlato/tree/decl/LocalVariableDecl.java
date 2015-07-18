@@ -96,9 +96,60 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 		return location.safeTraversalMutate(VARIABLES, mutation);
 	}
 
-	private static final STraversal<LocalVariableDecl.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<LocalVariableDecl.State> TYPE = SNodeState.childTraversal(1);
-	private static final STraversal<LocalVariableDecl.State> VARIABLES = SNodeState.childTraversal(2);
+	private static final STraversal<LocalVariableDecl.State> MODIFIERS = new STraversal<LocalVariableDecl.State>() {
+
+		public STree<?> traverse(LocalVariableDecl.State state) {
+			return state.modifiers;
+		}
+
+		public LocalVariableDecl.State rebuildParentState(LocalVariableDecl.State state, STree<?> child) {
+			return state.withModifiers((STree) child);
+		}
+
+		public STraversal<LocalVariableDecl.State> leftSibling(LocalVariableDecl.State state) {
+			return null;
+		}
+
+		public STraversal<LocalVariableDecl.State> rightSibling(LocalVariableDecl.State state) {
+			return TYPE;
+		}
+	};
+	private static final STraversal<LocalVariableDecl.State> TYPE = new STraversal<LocalVariableDecl.State>() {
+
+		public STree<?> traverse(LocalVariableDecl.State state) {
+			return state.type;
+		}
+
+		public LocalVariableDecl.State rebuildParentState(LocalVariableDecl.State state, STree<?> child) {
+			return state.withType((STree) child);
+		}
+
+		public STraversal<LocalVariableDecl.State> leftSibling(LocalVariableDecl.State state) {
+			return MODIFIERS;
+		}
+
+		public STraversal<LocalVariableDecl.State> rightSibling(LocalVariableDecl.State state) {
+			return VARIABLES;
+		}
+	};
+	private static final STraversal<LocalVariableDecl.State> VARIABLES = new STraversal<LocalVariableDecl.State>() {
+
+		public STree<?> traverse(LocalVariableDecl.State state) {
+			return state.variables;
+		}
+
+		public LocalVariableDecl.State rebuildParentState(LocalVariableDecl.State state, STree<?> child) {
+			return state.withVariables((STree) child);
+		}
+
+		public STraversal<LocalVariableDecl.State> leftSibling(LocalVariableDecl.State state) {
+			return TYPE;
+		}
+
+		public STraversal<LocalVariableDecl.State> rightSibling(LocalVariableDecl.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.singleLineShape),

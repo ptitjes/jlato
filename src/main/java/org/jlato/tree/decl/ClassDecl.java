@@ -144,12 +144,114 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
 
-	private static final STraversal<ClassDecl.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<ClassDecl.State> NAME = SNodeState.childTraversal(1);
-	private static final STraversal<ClassDecl.State> TYPE_PARAMS = SNodeState.childTraversal(2);
-	private static final STraversal<ClassDecl.State> EXTENDS_CLAUSE = SNodeState.childTraversal(3);
-	private static final STraversal<ClassDecl.State> IMPLEMENTS_CLAUSE = SNodeState.childTraversal(4);
-	private static final STraversal<ClassDecl.State> MEMBERS = SNodeState.childTraversal(5);
+	private static final STraversal<ClassDecl.State> MODIFIERS = new STraversal<ClassDecl.State>() {
+
+		public STree<?> traverse(ClassDecl.State state) {
+			return state.modifiers;
+		}
+
+		public ClassDecl.State rebuildParentState(ClassDecl.State state, STree<?> child) {
+			return state.withModifiers((STree) child);
+		}
+
+		public STraversal<ClassDecl.State> leftSibling(ClassDecl.State state) {
+			return null;
+		}
+
+		public STraversal<ClassDecl.State> rightSibling(ClassDecl.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<ClassDecl.State> NAME = new STraversal<ClassDecl.State>() {
+
+		public STree<?> traverse(ClassDecl.State state) {
+			return state.name;
+		}
+
+		public ClassDecl.State rebuildParentState(ClassDecl.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<ClassDecl.State> leftSibling(ClassDecl.State state) {
+			return MODIFIERS;
+		}
+
+		public STraversal<ClassDecl.State> rightSibling(ClassDecl.State state) {
+			return TYPE_PARAMS;
+		}
+	};
+	private static final STraversal<ClassDecl.State> TYPE_PARAMS = new STraversal<ClassDecl.State>() {
+
+		public STree<?> traverse(ClassDecl.State state) {
+			return state.typeParams;
+		}
+
+		public ClassDecl.State rebuildParentState(ClassDecl.State state, STree<?> child) {
+			return state.withTypeParams((STree) child);
+		}
+
+		public STraversal<ClassDecl.State> leftSibling(ClassDecl.State state) {
+			return NAME;
+		}
+
+		public STraversal<ClassDecl.State> rightSibling(ClassDecl.State state) {
+			return EXTENDS_CLAUSE;
+		}
+	};
+	private static final STraversal<ClassDecl.State> EXTENDS_CLAUSE = new STraversal<ClassDecl.State>() {
+
+		public STree<?> traverse(ClassDecl.State state) {
+			return state.extendsClause;
+		}
+
+		public ClassDecl.State rebuildParentState(ClassDecl.State state, STree<?> child) {
+			return state.withExtendsClause((STree) child);
+		}
+
+		public STraversal<ClassDecl.State> leftSibling(ClassDecl.State state) {
+			return TYPE_PARAMS;
+		}
+
+		public STraversal<ClassDecl.State> rightSibling(ClassDecl.State state) {
+			return IMPLEMENTS_CLAUSE;
+		}
+	};
+	private static final STraversal<ClassDecl.State> IMPLEMENTS_CLAUSE = new STraversal<ClassDecl.State>() {
+
+		public STree<?> traverse(ClassDecl.State state) {
+			return state.implementsClause;
+		}
+
+		public ClassDecl.State rebuildParentState(ClassDecl.State state, STree<?> child) {
+			return state.withImplementsClause((STree) child);
+		}
+
+		public STraversal<ClassDecl.State> leftSibling(ClassDecl.State state) {
+			return EXTENDS_CLAUSE;
+		}
+
+		public STraversal<ClassDecl.State> rightSibling(ClassDecl.State state) {
+			return MEMBERS;
+		}
+	};
+	private static final STraversal<ClassDecl.State> MEMBERS = new STraversal<ClassDecl.State>() {
+
+		public STree<?> traverse(ClassDecl.State state) {
+			return state.members;
+		}
+
+		public ClassDecl.State rebuildParentState(ClassDecl.State state, STree<?> child) {
+			return state.withMembers((STree) child);
+		}
+
+		public STraversal<ClassDecl.State> leftSibling(ClassDecl.State state) {
+			return IMPLEMENTS_CLAUSE;
+		}
+
+		public STraversal<ClassDecl.State> rightSibling(ClassDecl.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

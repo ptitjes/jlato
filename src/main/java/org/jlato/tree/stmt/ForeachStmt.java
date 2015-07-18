@@ -96,9 +96,60 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<ForeachStmt.State> VAR = SNodeState.childTraversal(0);
-	private static final STraversal<ForeachStmt.State> ITERABLE = SNodeState.childTraversal(1);
-	private static final STraversal<ForeachStmt.State> BODY = SNodeState.childTraversal(2);
+	private static final STraversal<ForeachStmt.State> VAR = new STraversal<ForeachStmt.State>() {
+
+		public STree<?> traverse(ForeachStmt.State state) {
+			return state.var;
+		}
+
+		public ForeachStmt.State rebuildParentState(ForeachStmt.State state, STree<?> child) {
+			return state.withVar((STree) child);
+		}
+
+		public STraversal<ForeachStmt.State> leftSibling(ForeachStmt.State state) {
+			return null;
+		}
+
+		public STraversal<ForeachStmt.State> rightSibling(ForeachStmt.State state) {
+			return ITERABLE;
+		}
+	};
+	private static final STraversal<ForeachStmt.State> ITERABLE = new STraversal<ForeachStmt.State>() {
+
+		public STree<?> traverse(ForeachStmt.State state) {
+			return state.iterable;
+		}
+
+		public ForeachStmt.State rebuildParentState(ForeachStmt.State state, STree<?> child) {
+			return state.withIterable((STree) child);
+		}
+
+		public STraversal<ForeachStmt.State> leftSibling(ForeachStmt.State state) {
+			return VAR;
+		}
+
+		public STraversal<ForeachStmt.State> rightSibling(ForeachStmt.State state) {
+			return BODY;
+		}
+	};
+	private static final STraversal<ForeachStmt.State> BODY = new STraversal<ForeachStmt.State>() {
+
+		public STree<?> traverse(ForeachStmt.State state) {
+			return state.body;
+		}
+
+		public ForeachStmt.State rebuildParentState(ForeachStmt.State state, STree<?> child) {
+			return state.withBody((STree) child);
+		}
+
+		public STraversal<ForeachStmt.State> leftSibling(ForeachStmt.State state) {
+			return ITERABLE;
+		}
+
+		public STraversal<ForeachStmt.State> rightSibling(ForeachStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),

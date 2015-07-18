@@ -101,9 +101,60 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 		return location.safeTraversalMutate(ELSE_STMT, mutation);
 	}
 
-	private static final STraversal<IfStmt.State> CONDITION = SNodeState.childTraversal(0);
-	private static final STraversal<IfStmt.State> THEN_STMT = SNodeState.childTraversal(1);
-	private static final STraversal<IfStmt.State> ELSE_STMT = SNodeState.childTraversal(2);
+	private static final STraversal<IfStmt.State> CONDITION = new STraversal<IfStmt.State>() {
+
+		public STree<?> traverse(IfStmt.State state) {
+			return state.condition;
+		}
+
+		public IfStmt.State rebuildParentState(IfStmt.State state, STree<?> child) {
+			return state.withCondition((STree) child);
+		}
+
+		public STraversal<IfStmt.State> leftSibling(IfStmt.State state) {
+			return null;
+		}
+
+		public STraversal<IfStmt.State> rightSibling(IfStmt.State state) {
+			return THEN_STMT;
+		}
+	};
+	private static final STraversal<IfStmt.State> THEN_STMT = new STraversal<IfStmt.State>() {
+
+		public STree<?> traverse(IfStmt.State state) {
+			return state.thenStmt;
+		}
+
+		public IfStmt.State rebuildParentState(IfStmt.State state, STree<?> child) {
+			return state.withThenStmt((STree) child);
+		}
+
+		public STraversal<IfStmt.State> leftSibling(IfStmt.State state) {
+			return CONDITION;
+		}
+
+		public STraversal<IfStmt.State> rightSibling(IfStmt.State state) {
+			return ELSE_STMT;
+		}
+	};
+	private static final STraversal<IfStmt.State> ELSE_STMT = new STraversal<IfStmt.State>() {
+
+		public STree<?> traverse(IfStmt.State state) {
+			return state.elseStmt;
+		}
+
+		public IfStmt.State rebuildParentState(IfStmt.State state, STree<?> child) {
+			return state.withElseStmt((STree) child);
+		}
+
+		public STraversal<IfStmt.State> leftSibling(IfStmt.State state) {
+			return THEN_STMT;
+		}
+
+		public STraversal<IfStmt.State> rightSibling(IfStmt.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.If), token(LToken.ParenthesisLeft).withSpacingBefore(space()),

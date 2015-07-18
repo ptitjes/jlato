@@ -70,7 +70,24 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal<MarkerAnnotationExpr.State> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<MarkerAnnotationExpr.State> NAME = new STraversal<MarkerAnnotationExpr.State>() {
+
+		public STree<?> traverse(MarkerAnnotationExpr.State state) {
+			return state.name;
+		}
+
+		public MarkerAnnotationExpr.State rebuildParentState(MarkerAnnotationExpr.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<MarkerAnnotationExpr.State> leftSibling(MarkerAnnotationExpr.State state) {
+			return null;
+		}
+
+		public STraversal<MarkerAnnotationExpr.State> rightSibling(MarkerAnnotationExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME)

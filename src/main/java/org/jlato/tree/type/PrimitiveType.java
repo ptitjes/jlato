@@ -84,7 +84,24 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		return location.mutateData(PRIMITIVE, mutation);
 	}
 
-	private static final STraversal<PrimitiveType.State> ANNOTATIONS = SNodeState.childTraversal(0);
+	private static final STraversal<PrimitiveType.State> ANNOTATIONS = new STraversal<PrimitiveType.State>() {
+
+		public STree<?> traverse(PrimitiveType.State state) {
+			return state.annotations;
+		}
+
+		public PrimitiveType.State rebuildParentState(PrimitiveType.State state, STree<?> child) {
+			return state.withAnnotations((STree) child);
+		}
+
+		public STraversal<PrimitiveType.State> leftSibling(PrimitiveType.State state) {
+			return null;
+		}
+
+		public STraversal<PrimitiveType.State> rightSibling(PrimitiveType.State state) {
+			return null;
+		}
+	};
 
 	private static final int PRIMITIVE = 0;
 

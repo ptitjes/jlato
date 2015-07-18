@@ -90,7 +90,24 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 		return location.withData(ON_DEMAND, isOnDemand);
 	}
 
-	private static final STraversal<ImportDecl.State> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<ImportDecl.State> NAME = new STraversal<ImportDecl.State>() {
+
+		public STree<?> traverse(ImportDecl.State state) {
+			return state.name;
+		}
+
+		public ImportDecl.State rebuildParentState(ImportDecl.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<ImportDecl.State> leftSibling(ImportDecl.State state) {
+			return null;
+		}
+
+		public STraversal<ImportDecl.State> rightSibling(ImportDecl.State state) {
+			return null;
+		}
+	};
 
 	private static final int STATIC = 0;
 	private static final int ON_DEMAND = 1;
