@@ -72,7 +72,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 	public static <T extends Tree> NodeList<T> of(Iterable<T> ts) {
 		NodeList<T> list = empty();
 		for (T t : ts) {
-			list.append(t);
+			list = list.append(t);
 		}
 		return list;
 	}
