@@ -20,7 +20,7 @@
 package org.jlato.tree.name;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SLeafState;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
@@ -33,10 +33,10 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class Name extends TreeBase<SLeafState, Expr, Name> implements Expr {
+public class Name extends TreeBase<SNodeState, Expr, Name> implements Expr {
 
-	public final static SKind<SLeafState> kind = new SKind<SLeafState>() {
-		public Name instantiate(SLocation<SLeafState> location) {
+	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
+		public Name instantiate(SLocation<SNodeState> location) {
 			return new Name(location);
 		}
 
@@ -45,12 +45,12 @@ public class Name extends TreeBase<SLeafState, Expr, Name> implements Expr {
 		}
 	};
 
-	private Name(SLocation<SLeafState> location) {
+	private Name(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public Name(String identifier) {
-		super(new SLocation<SLeafState>(new STree<SLeafState>(kind, new SLeafState(dataOf(identifier)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(identifier), treesOf()))));
 	}
 
 	public String name() {

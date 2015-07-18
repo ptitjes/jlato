@@ -20,7 +20,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SLeafState;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SKind;
@@ -29,10 +29,10 @@ import org.jlato.internal.td.TreeBase;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class EmptyMemberDecl extends TreeBase<SLeafState, MemberDecl, EmptyMemberDecl> implements MemberDecl {
+public class EmptyMemberDecl extends TreeBase<SNodeState, MemberDecl, EmptyMemberDecl> implements MemberDecl {
 
-	public final static SKind<SLeafState> kind = new SKind<SLeafState>() {
-		public EmptyMemberDecl instantiate(SLocation<SLeafState> location) {
+	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
+		public EmptyMemberDecl instantiate(SLocation<SNodeState> location) {
 			return new EmptyMemberDecl(location);
 		}
 
@@ -41,12 +41,12 @@ public class EmptyMemberDecl extends TreeBase<SLeafState, MemberDecl, EmptyMembe
 		}
 	};
 
-	private EmptyMemberDecl(SLocation<SLeafState> location) {
+	private EmptyMemberDecl(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	public EmptyMemberDecl() {
-		super(new SLocation<SLeafState>(new STree<SLeafState>(kind, new SLeafState(dataOf()))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(), treesOf()))));
 	}
 
 	@Override

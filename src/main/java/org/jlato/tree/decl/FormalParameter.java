@@ -19,10 +19,7 @@
 
 package org.jlato.tree.decl;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SKind;
@@ -57,7 +54,11 @@ public class FormalParameter extends TreeBase<SNodeState, Tree, FormalParameter>
 	}
 
 	public FormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(isVarArgs), treesOf(modifiers, type, id)))));
+		super(new SLocation<SNodeState>(make(modifiers, type, isVarArgs, id)));
+	}
+
+	public static STree<SNodeState> make(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
+		return new STree<SNodeState>(kind, new SNodeState(dataOf(isVarArgs), treesOf(modifiers, type, id)));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

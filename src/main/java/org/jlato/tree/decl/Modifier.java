@@ -20,7 +20,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SLeafState;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
@@ -31,10 +31,10 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class Modifier extends TreeBase<SLeafState, Tree, Modifier> implements Tree, ExtendedModifier {
+public class Modifier extends TreeBase<SNodeState, Tree, Modifier> implements Tree, ExtendedModifier {
 
-	public final static SKind<SLeafState> kind = new SKind<SLeafState>() {
-		public Tree instantiate(SLocation<SLeafState> location) {
+	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
+		public Tree instantiate(SLocation<SNodeState> location) {
 			return new Modifier(location);
 		}
 
@@ -56,12 +56,12 @@ public class Modifier extends TreeBase<SLeafState, Tree, Modifier> implements Tr
 	public static final Modifier Native = new Modifier(LToken.Native);
 	public static final Modifier StrictFP = new Modifier(LToken.StrictFP);
 
-	protected Modifier(SLocation<SLeafState> location) {
+	protected Modifier(SLocation<SNodeState> location) {
 		super(location);
 	}
 
 	private Modifier(LToken keyword) {
-		super(new SLocation<SLeafState>(new STree<SLeafState>(kind, new SLeafState(dataOf(keyword)))));
+		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(dataOf(keyword), treesOf()))));
 	}
 
 	public String toString() {

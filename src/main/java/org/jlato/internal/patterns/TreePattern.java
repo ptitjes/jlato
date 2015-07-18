@@ -21,7 +21,6 @@ package org.jlato.internal.patterns;
 
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
-import com.github.andrewoma.dexx.collection.HashSet;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.SKind;
@@ -66,8 +65,6 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 					substitution = substitution.bind(name, tree.asTree());
 				}
 			}
-		} else if (patternState instanceof SLeafState) {
-			substitution = mathData(patternState, state, substitution);
 		} else if (patternState instanceof SNodeState) {
 			substitution = mathData(patternState, state, substitution);
 			if (substitution == null) return null;
@@ -156,10 +153,6 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		if (patternState instanceof SVarState) {
 			String name = ((SVarState) patternState).name;
 			return substitution.get(name);
-
-		} else if (patternState instanceof SLeafState) {
-			return new STree<SLeafState>((SKind<SLeafState>) pattern.kind,
-					new SLeafState(buildData(pattern.state.data, substitution)));
 
 		} else if (patternState instanceof SNodeState) {
 			Builder<STree<?>, ArrayList<STree<?>>> childrenBuilder = ArrayList.<STree<?>>factory().newBuilder();
