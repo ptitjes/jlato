@@ -33,7 +33,6 @@ import org.jlato.tree.Mutation;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> implements Expr {
 
@@ -72,15 +71,15 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 	}
 
 	public AssignOp op() {
-		return location.data(OPERATOR);
+		return location.safeProperty(OPERATOR);
 	}
 
 	public AssignExpr withOp(AssignOp operator) {
-		return location.withData(OPERATOR, operator);
+		return location.safePropertyReplace(OPERATOR, operator);
 	}
 
 	public AssignExpr withOp(Mutation<AssignOp> mutation) {
-		return location.mutateData(OPERATOR, mutation);
+		return location.safePropertyMutate(OPERATOR, mutation);
 	}
 
 	public Expr value() {

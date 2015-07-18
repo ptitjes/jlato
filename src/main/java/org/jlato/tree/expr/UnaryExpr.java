@@ -33,7 +33,6 @@ import org.jlato.tree.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implements Expr {
 
@@ -60,15 +59,15 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 	}
 
 	public UnaryOp op() {
-		return location.data(OPERATOR);
+		return location.safeProperty(OPERATOR);
 	}
 
 	public UnaryExpr withOp(UnaryOp operator) {
-		return location.withData(OPERATOR, operator);
+		return location.safePropertyReplace(OPERATOR, operator);
 	}
 
 	public UnaryExpr withOp(Mutation<UnaryOp> mutation) {
-		return location.mutateData(OPERATOR, mutation);
+		return location.safePropertyMutate(OPERATOR, mutation);
 	}
 
 	public Expr expr() {

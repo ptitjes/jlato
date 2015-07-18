@@ -34,7 +34,6 @@ import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, PrimitiveType> implements Type {
 
@@ -73,15 +72,15 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 	}
 
 	public Primitive type() {
-		return location.data(PRIMITIVE);
+		return location.safeProperty(PRIMITIVE);
 	}
 
 	public PrimitiveType withType(Primitive type) {
-		return location.withData(PRIMITIVE, type);
+		return location.safePropertyReplace(PRIMITIVE, type);
 	}
 
 	public PrimitiveType withType(Mutation<Primitive> mutation) {
-		return location.mutateData(PRIMITIVE, mutation);
+		return location.safePropertyMutate(PRIMITIVE, mutation);
 	}
 
 	private static final STraversal<PrimitiveType.State> ANNOTATIONS = new STraversal<PrimitiveType.State>() {

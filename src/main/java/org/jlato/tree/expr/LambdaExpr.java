@@ -83,11 +83,11 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 	}
 
 	public boolean hasParens() {
-		return location.<Boolean>data(PARENS);
+		return location.safeProperty(PARENS);
 	}
 
 	public FormalParameter setParens(boolean hasParens) {
-		return location.withData(PARENS, hasParens);
+		return location.safePropertyReplace(PARENS, (Boolean) hasParens);
 	}
 
 	public NodeEither<Expr, BlockStmt> body() {

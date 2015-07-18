@@ -85,11 +85,11 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 	}
 
 	public boolean isVarArgs() {
-		return location.<Boolean>data(VAR_ARGS);
+		return location.safeProperty(VAR_ARGS);
 	}
 
 	public FormalParameter setVarArgs(boolean isVarArgs) {
-		return location.withData(VAR_ARGS, isVarArgs);
+		return location.safePropertyReplace(VAR_ARGS, (Boolean) isVarArgs);
 	}
 
 	public VariableDeclaratorId id() {

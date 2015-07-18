@@ -77,11 +77,11 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	}
 
 	public boolean isThis() {
-		return location.data(IS_THIS);
+		return location.safeProperty(IS_THIS);
 	}
 
 	public ExplicitConstructorInvocationStmt setThis(boolean isThis) {
-		return location.withData(IS_THIS, isThis);
+		return location.safePropertyReplace(IS_THIS, (Boolean) isThis);
 	}
 
 	public NodeOption<Expr> expr() {

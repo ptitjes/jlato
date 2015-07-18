@@ -33,7 +33,6 @@ import org.jlato.tree.Mutation;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> implements Expr {
 
@@ -72,15 +71,15 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 	}
 
 	public BinaryOp op() {
-		return location.data(OPERATOR);
+		return location.safeProperty(OPERATOR);
 	}
 
 	public BinaryExpr withOp(BinaryOp operator) {
-		return location.withData(OPERATOR, operator);
+		return location.safePropertyReplace(OPERATOR, operator);
 	}
 
 	public BinaryExpr withOp(Mutation<BinaryOp> mutation) {
-		return location.mutateData(OPERATOR, mutation);
+		return location.safePropertyMutate(OPERATOR, mutation);
 	}
 
 	public Expr right() {

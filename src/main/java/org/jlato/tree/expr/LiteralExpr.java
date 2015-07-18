@@ -104,7 +104,7 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 	@SuppressWarnings("unchecked")
 	public LiteralExpr<T> withValue(T value) {
 		final Class<?> literalClass = location.tree.state.literalClass;
-		return (LiteralExpr<T>) location.withData((SProperty) STRING, Literals.<T>from((Class<T>) literalClass, value));
+		return (LiteralExpr<T>) location.safePropertyReplace((SProperty) STRING, Literals.<T>from((Class<T>) literalClass, value));
 	}
 
 	private static final SProperty<LiteralExpr.State> CLASS = new SProperty<State>() {

@@ -33,7 +33,6 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 
@@ -60,15 +59,15 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 	}
 
 	public String name() {
-		return location.data(IDENTIFIER).toString();
+		return location.safeProperty(IDENTIFIER).toString();
 	}
 
 	public Name withName(String name) {
-		return location.withData(IDENTIFIER, name);
+		return location.safePropertyReplace(IDENTIFIER, name);
 	}
 
 	public Name withName(Mutation<String> mutation) {
-		return location.mutateData(IDENTIFIER, mutation);
+		return location.safePropertyMutate(IDENTIFIER, mutation);
 	}
 
 	@Override

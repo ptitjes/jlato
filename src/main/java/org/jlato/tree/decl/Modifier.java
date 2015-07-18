@@ -31,7 +31,6 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifier> implements ExtendedModifier {
 
@@ -71,7 +70,7 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 	}
 
 	public String toString() {
-		return location.data(KEYWORD).toString();
+		return location.safeProperty(KEYWORD).toString();
 	}
 
 	public static final SProperty<Modifier.State> KEYWORD = new SProperty<State>() {

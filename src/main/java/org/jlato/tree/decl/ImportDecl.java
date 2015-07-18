@@ -36,7 +36,6 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUn
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> implements Tree {
 
@@ -75,19 +74,19 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 	}
 
 	public boolean isStatic() {
-		return location.<Boolean>data(STATIC);
+		return location.safeProperty(STATIC);
 	}
 
 	public ImportDecl setStatic(boolean isStatic) {
-		return location.withData(STATIC, isStatic);
+		return location.safePropertyReplace(STATIC, (Boolean) isStatic);
 	}
 
 	public boolean isOnDemand() {
-		return location.<Boolean>data(ON_DEMAND);
+		return location.safeProperty(ON_DEMAND);
 	}
 
 	public ImportDecl setOnDemand(boolean isOnDemand) {
-		return location.withData(ON_DEMAND, isOnDemand);
+		return location.safePropertyReplace(ON_DEMAND, (Boolean) isOnDemand);
 	}
 
 	private static final STraversal<ImportDecl.State> NAME = new STraversal<ImportDecl.State>() {

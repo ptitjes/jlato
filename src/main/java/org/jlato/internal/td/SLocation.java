@@ -103,20 +103,6 @@ public class SLocation<S extends STreeState<S>> {
 	/* Node methods */
 
 	@SuppressWarnings("unchecked")
-	public <A> A data(SProperty<S> property) {
-		return this.safeProperty(property);
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends Tree, A> T withData(SProperty<S> property, A attribute) {
-		return safePropertyReplace(property, attribute);
-	}
-
-	public <T extends Tree, A> T mutateData(SProperty<S> property, Mutation<A> mutation) {
-		return safePropertyMutate(property, mutation);
-	}
-
-	@SuppressWarnings("unchecked")
 	public <A> A safeProperty(SProperty<S> property) {
 		final S state = tree.state;
 		return (A) property.retrieve(state);
