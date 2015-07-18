@@ -15,7 +15,7 @@
           typeArgs: [
           ],
         },
-        hasParenthesis: false,
+        hasParens: false,
         params: [
           {
             class: org.jlato.tree.decl.FormalParameter,

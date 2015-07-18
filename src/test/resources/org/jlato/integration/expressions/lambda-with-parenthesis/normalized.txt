@@ -13,7 +13,7 @@
         typeArgs: [
         ],
       },
-      hasParenthesis: true,
+      hasParens: true,
       params: [
         {
           class: org.jlato.tree.decl.FormalParameter,
