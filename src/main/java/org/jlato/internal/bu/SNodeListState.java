@@ -34,6 +34,14 @@ public class SNodeListState implements STreeState<SNodeListState> {
 
 	public final Vector<STree<?>> children;
 
+	public SNodeListState() {
+		this(Vector.<STree<? extends STreeState<?>>>empty());
+	}
+
+	public SNodeListState(STree<?> element) {
+		this(Vector.<STree<? extends STreeState<?>>>empty().append(element));
+	}
+
 	public SNodeListState(Vector<STree<? extends STreeState<?>>> children) {
 		this.children = children;
 	}

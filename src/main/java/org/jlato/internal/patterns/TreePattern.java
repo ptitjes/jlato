@@ -64,15 +64,18 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 				}
 			}
 		} else if (patternState instanceof SNodeState) {
+			if (!(state instanceof SNodeState)) return null;
 			if (((SNodeState) patternState).kind() != ((SNodeState) state).kind()) return null;
 
 			substitution = mathData((SNodeState) patternState, (SNodeState) state, substitution);
 			if (substitution == null) return null;
 			substitution = mathChildren((SNodeState) patternState, (SNodeState) state, substitution);
 		} else if (patternState instanceof SNodeOptionState) {
+			if (!(state instanceof SNodeOptionState)) return null;
 			if (substitution == null) return null;
 			substitution = mathChildren((SNodeOptionState) patternState, (SNodeOptionState) state, substitution);
 		} else if (patternState instanceof SNodeListState) {
+			if (!(state instanceof SNodeListState)) return null;
 			if (substitution == null) return null;
 			substitution = mathChildren((SNodeListState) patternState, (SNodeListState) state, substitution);
 		}

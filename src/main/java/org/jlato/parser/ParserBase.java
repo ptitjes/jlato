@@ -135,15 +135,14 @@ abstract class ParserBase {
 		return runStack.pop();
 	}
 
-	protected <T extends Tree> T enRun(T facade) {
-		if (!configuration.preserveWhitespaces) return facade;
+	protected <S extends STreeState<S>> STree<S> enRun(STree<S> tree) {
+		if (!configuration.preserveWhitespaces) return tree;
 
 		try {
 			final IndexedList<WTokenRun> tokens = popTokens();
 
-			if (facade == null) return null;
+			if (tree == null) return null;
 
-			final STree tree = TreeBase.treeOf(facade);
 			final LexicalShape shape = tree.state.shape();
 			return doEnRun(tree, shape, tokens);
 
@@ -153,15 +152,14 @@ abstract class ParserBase {
 		}
 	}
 
-	protected <T extends Tree> T enRun(T facade, LexicalShape shape) {
-		if (!configuration.preserveWhitespaces) return facade;
+	protected <S extends STreeState<S>> STree<S> enRun(STree<S> tree, LexicalShape shape) {
+		if (!configuration.preserveWhitespaces) return tree;
 
 		try {
 			final IndexedList<WTokenRun> tokens = popTokens();
 
-			if (facade == null) return null;
+			if (tree == null) return null;
 
-			final STree tree = TreeBase.treeOf(facade);
 			return doEnRun(tree, shape, tokens);
 
 		} catch (EmptyStackException e) {
@@ -170,8 +168,7 @@ abstract class ParserBase {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private <T extends Tree> T doEnRun(STree tree, LexicalShape shape,
+	private <S extends STreeState<S>> STree<S> doEnRun(STree<S> tree, LexicalShape shape,
 	                                   IndexedList<WTokenRun> tokens) {
 		try {
 			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
@@ -188,8 +185,8 @@ abstract class ParserBase {
 				}
 			}
 
-			final STree newTree = tree.withRun(run);
-			return (T) newTree.asTree();
+			final STree<S> newTree = tree.withRun(run);
+			return newTree;
 
 		} catch (NoSuchElementException e) {
 			debugFailedEnRun(tree, shape, tokens);
@@ -198,15 +195,11 @@ abstract class ParserBase {
 	}
 
 	// TODO This is really dirty and temporary until the parser parses STrees directly
-	protected <T extends Tree> T makeVar(Token token) {
-		return (T) new SLocation(doMakeVar(token)).facade;
-	}
-
-	protected STree<?> doMakeVar(Token token) {
+	protected STree<?> makeVar(Token token) {
 		String image = token.image;
 		boolean nodeListVar = image.startsWith("..$");
 		String name = nodeListVar ? image.substring(3) : image.substring(1);
-		return new STree(new SVarState(name));
+		return new STree<SVarState>(new SVarState(name));
 	}
 
 	// Interface with ParserImpl
@@ -222,39 +215,39 @@ abstract class ParserBase {
 		else return new WTokenRun(Vector.<WToken>empty());
 	}
 
-	public abstract CompilationUnit CompilationUnit() throws ParseException;
+	public abstract STree<CompilationUnit.State> CompilationUnit() throws ParseException;
 
-	public abstract PackageDecl PackageDecl() throws ParseException;
+	public abstract STree<PackageDecl.State> PackageDecl() throws ParseException;
 
-	public abstract ImportDecl ImportDecl() throws ParseException;
+	public abstract STree<ImportDecl.State> ImportDecl() throws ParseException;
 
-	public abstract TypeDecl TypeDecl() throws ParseException;
+	public abstract STree<TypeDecl.State> TypeDecl() throws ParseException;
 
-	public abstract MemberDecl ClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
+	public abstract STree<MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
 
-	public abstract MemberDecl AnnotationTypeBodyDecl() throws ParseException;
+	public abstract STree<MemberDecl.State> AnnotationTypeBodyDecl() throws ParseException;
 
-	public abstract NodeList Modifiers() throws ParseException;
+	public abstract STree<SNodeListState> Modifiers() throws ParseException;
 
-	public abstract MethodDecl MethodDecl(NodeList modifiers) throws ParseException;
+	public abstract STree<MethodDecl.State> MethodDecl(STree<SNodeListState> modifiers) throws ParseException;
 
-	public abstract FieldDecl FieldDecl(NodeList modifiers) throws ParseException;
+	public abstract STree<FieldDecl.State> FieldDecl(STree<SNodeListState> modifiers) throws ParseException;
 
-	public abstract AnnotationMemberDecl AnnotationTypeMemberDecl(NodeList modifiers) throws ParseException;
+	public abstract STree<AnnotationMemberDecl.State> AnnotationTypeMemberDecl(STree<SNodeListState> modifiers) throws ParseException;
 
-	public abstract EnumConstantDecl EnumConstantDecl() throws ParseException;
+	public abstract STree<EnumConstantDecl.State> EnumConstantDecl() throws ParseException;
 
-	public abstract FormalParameter FormalParameter() throws ParseException;
+	public abstract STree<FormalParameter.State> FormalParameter() throws ParseException;
 
-	public abstract TypeParameter TypeParameter() throws ParseException;
+	public abstract STree<TypeParameter.State> TypeParameter() throws ParseException;
 
-	public abstract Stmt Statement() throws ParseException;
+	public abstract STree<Stmt.State> Statement() throws ParseException;
 
-	public abstract Expr Expression() throws ParseException;
+	public abstract STree<Expr.State> Expression() throws ParseException;
 
-	public abstract NodeList<AnnotationExpr> Annotations() throws ParseException;
+	public abstract STree<SNodeListState> Annotations() throws ParseException;
 
-	public abstract Type Type(NodeList<AnnotationExpr> annotations) throws ParseException;
+	public abstract STree<Type.State> Type(STree<SNodeListState> annotations) throws ParseException;
 
 	static class TokenBase {
 
@@ -264,12 +257,33 @@ abstract class ParserBase {
 
 	// Convenience methods for lists
 
-	protected <T extends Tree> NodeList<T> append(NodeList<T> list, T element) {
-		return list == null ? NodeList.of(element) : list.append(element);
+	protected STree<SNodeListState> emptyList() {
+		return new STree<SNodeListState>(new SNodeListState());
 	}
 
-	protected <T extends Tree> NodeList<T> ensureNotNull(NodeList<T> list) {
-		return list == null ? NodeList.<T>empty() : list;
+	protected STree<SNodeListState> singletonList(STree<?> element) {
+		return new STree<SNodeListState>(new SNodeListState(element));
+	}
+
+	protected STree<SNodeListState> append(STree<SNodeListState> list, STree<?> element) {
+		return list == null ? singletonList(element) :
+				list.withState(list.state.withChildren(list.state.children.append(element)));
+	}
+
+	protected boolean contains(STree<SNodeListState> list, STree<?> element) {
+		return list.state.children.indexOf(element) != -1;
+	}
+
+	protected STree<SNodeListState> ensureNotNull(STree<SNodeListState> list) {
+		return list == null ? emptyList() : list;
+	}
+
+	protected STree<SNodeOptionState> optionOf(STree<?> element) {
+		return new STree<SNodeOptionState>(new SNodeOptionState(element));
+	}
+
+	protected STree<SNodeOptionState> none() {
+		return new STree<SNodeOptionState>(new SNodeOptionState(null));
 	}
 
 	// Convenience class to get more data from a called production

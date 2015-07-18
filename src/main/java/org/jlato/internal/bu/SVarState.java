@@ -21,6 +21,7 @@ package org.jlato.internal.bu;
 
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Tree;
 
 import java.util.Collections;
@@ -38,7 +39,7 @@ public class SVarState implements STreeState<SVarState> {
 
 	@Override
 	public Tree instantiate(SLocation<SVarState> location) {
-		return null;
+		return new FakeTree(location);
 	}
 
 	@Override
@@ -63,5 +64,11 @@ public class SVarState implements STreeState<SVarState> {
 
 	@Override
 	public void validate(STree<SVarState> tree) {
+	}
+
+	class FakeTree extends TreeBase<SVarState, Tree, Tree> {
+		protected FakeTree(SLocation<SVarState> location) {
+			super(location);
+		}
 	}
 }

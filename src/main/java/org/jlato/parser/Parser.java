@@ -19,6 +19,7 @@
 
 package org.jlato.parser;
 
+import org.jlato.internal.bu.STree;
 import org.jlato.tree.Tree;
 import org.jlato.tree.TreeSet;
 import org.jlato.tree.decl.CompilationUnit;
@@ -47,13 +48,15 @@ public class Parser {
 	public <T extends Tree> T parse(ParseContext<T> context, InputStream inputStream, String encoding) throws ParseException {
 		if (parserInstance == null) parserInstance = ParserImpl.newInstance(inputStream, encoding, configuration);
 		else parserInstance.reset(inputStream, encoding);
-		return context.callProduction(parserInstance);
+		STree<?> tree = context.callProduction(parserInstance);
+		return (T) tree.asTree();
 	}
 
 	public <T extends Tree> T parse(ParseContext<T> context, Reader reader) throws ParseException {
 		if (parserInstance == null) parserInstance = ParserImpl.newInstance(reader, configuration);
 		else parserInstance.reset(reader);
-		return context.callProduction(parserInstance);
+		STree<?> tree = context.callProduction(parserInstance);
+		return (T) tree.asTree();
 	}
 
 	public <T extends Tree> T parse(ParseContext<T> context, String content) throws ParseException {
