@@ -82,10 +82,10 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	}
 
 	protected static Substitution mathData(STreeState<?> patternState, STreeState<?> state, Substitution substitution) {
-		for (int i = 0; i < patternState.data.size(); i++) {
-			substitution = matchObject(patternState.data.get(i), state.data(i), substitution);
-			if (substitution == null) return null;
-		}
+//		for (int i = 0; i < patternState.data.size(); i++) {
+//			substitution = matchObject(patternState.data.get(i), state.data(i), substitution);
+//			if (substitution == null) return null;
+//		}
 		return substitution;
 	}
 
@@ -160,7 +160,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 				childrenBuilder.add(buildTree(childPattern, substitution));
 			}
 			return new STree<SNodeState>((SKind<SNodeState>) pattern.kind,
-					new SNodeState(buildData(pattern.state.data, substitution), childrenBuilder.build()));
+					new SNodeState(ArrayList.empty()/*buildData(pattern.state.data, substitution)*/, childrenBuilder.build()));
 
 		} else if (patternState instanceof SNodeOptionState) {
 			STree<?> elementPattern = ((SNodeOptionState) patternState).element;

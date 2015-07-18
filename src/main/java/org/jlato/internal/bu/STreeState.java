@@ -19,22 +19,12 @@
 
 package org.jlato.internal.bu;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
-
 /**
  * @author Didier Villevalois
  */
 public abstract class STreeState<S extends STreeState<S>> {
 
-	public final ArrayList<Object> data;
-
-	public STreeState(ArrayList<Object> data) {
-		this.data = data;
-	}
-
-	public Object data(int index) {
-		return data.get(index);
-	}
+	public abstract Object data(int index);
 
 	public abstract S withData(int index, Object value);
 

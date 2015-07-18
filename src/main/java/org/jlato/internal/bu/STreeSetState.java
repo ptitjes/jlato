@@ -19,7 +19,6 @@
 
 package org.jlato.internal.bu;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.TreeMap;
 
 import java.util.Comparator;
@@ -29,18 +28,15 @@ import java.util.Comparator;
  */
 public class STreeSetState extends STreeState<STreeSetState> {
 
+	public final String rootPath;
 	public final TreeMap<String, STree<?>> trees;
 
-	public STreeSetState(ArrayList<Object> data) {
-		this(new TreeMap<String, STree<?>>(STRING_COMPARATOR, null), data);
+	public STreeSetState(String rootPath) {
+		this(rootPath, new TreeMap<String, STree<?>>(STRING_COMPARATOR, null));
 	}
 
-	public STreeSetState(TreeMap<String, STree<?>> trees) {
-		this(trees, ArrayList.empty());
-	}
-
-	public STreeSetState(TreeMap<String, STree<?>> trees, ArrayList<Object> data) {
-		super(data);
+	public STreeSetState(String rootPath, TreeMap<String, STree<?>> trees) {
+		this.rootPath = rootPath;
 		this.trees = trees;
 	}
 
@@ -65,15 +61,20 @@ public class STreeSetState extends STreeState<STreeSetState> {
 	}
 
 	public STreeSetState withTree(String path, STree<?> value) {
-		return new STreeSetState(trees.put(path, value), data);
+		return new STreeSetState(rootPath, trees.put(path, value));
+	}
+
+	@Override
+	public Object data(int index) {
+		return null;
 	}
 
 	public STreeSetState withData(int index, Object value) {
-		return new STreeSetState(trees, data.set(index, value));
+		return this;
 	}
 
 	public STreeState withTrees(TreeMap<String, STree<?>> trees) {
-		return new STreeSetState(trees, data);
+		return new STreeSetState(rootPath, trees);
 	}
 
 	private static final Comparator<String> STRING_COMPARATOR = new Comparator<String>() {

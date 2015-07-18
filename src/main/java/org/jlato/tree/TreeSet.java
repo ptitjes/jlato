@@ -62,11 +62,11 @@ public class TreeSet<T extends Tree> extends TreeBase<STreeSetState, TreeSet<T>,
 	}
 
 	public TreeSet(String rootPath) {
-		this(new SLocation<STreeSetState>(new STree<STreeSetState>(kind, new STreeSetState(dataOf(rootPath)))));
+		this(new SLocation<STreeSetState>(new STree<STreeSetState>(kind, new STreeSetState(rootPath))));
 	}
 
 	public TreeSet(String rootPath, TreeMap<String, STree<?>> trees) {
-		this(new SLocation<STreeSetState>(new STree<STreeSetState>(kind, new STreeSetState(trees, dataOf(rootPath)))));
+		this(new SLocation<STreeSetState>(new STree<STreeSetState>(kind, new STreeSetState(rootPath, trees))));
 	}
 
 	public T get(String path) {
@@ -86,7 +86,7 @@ public class TreeSet<T extends Tree> extends TreeBase<STreeSetState, TreeSet<T>,
 	}
 
 	public void updateOnDisk(boolean format, FormattingSettings formattingSettings) throws IOException {
-		final String rootPath = location.data(ROOT_PATH);
+		final String rootPath = location.tree.state.rootPath;
 		for (Pair<String, STree<?>> pair : location.tree.state.trees) {
 			final String path = pair.component1();
 			final STree tree = pair.component2();
@@ -97,6 +97,4 @@ public class TreeSet<T extends Tree> extends TreeBase<STreeSetState, TreeSet<T>,
 			writer.close();
 		}
 	}
-
-	private static final int ROOT_PATH = 0;
 }

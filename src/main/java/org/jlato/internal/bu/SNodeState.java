@@ -26,6 +26,7 @@ import com.github.andrewoma.dexx.collection.ArrayList;
  */
 public class SNodeState extends STreeState<SNodeState> {
 
+	public final ArrayList<Object> data;
 	public final ArrayList<STree<?>> children;
 
 	public SNodeState(ArrayList<STree<? extends STreeState<?>>> children) {
@@ -33,7 +34,7 @@ public class SNodeState extends STreeState<SNodeState> {
 	}
 
 	public SNodeState(ArrayList<Object> data, ArrayList<STree<? extends STreeState<?>>> children) {
-		super(data);
+		this.data = data;
 		this.children = children;
 	}
 
@@ -59,6 +60,10 @@ public class SNodeState extends STreeState<SNodeState> {
 
 	public SNodeState withChild(int index, STree<?> value) {
 		return new SNodeState(data, children.set(index, value));
+	}
+
+	public Object data(int index) {
+		return data.get(index);
 	}
 
 	public SNodeState withData(int index, Object value) {

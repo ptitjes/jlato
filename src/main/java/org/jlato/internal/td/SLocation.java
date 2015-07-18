@@ -99,7 +99,7 @@ public class SLocation<S extends STreeState<S>> {
 		return (T) withTree(newTree).facade;
 	}
 
-	/* Tree methods */
+	/* Node methods */
 
 	@SuppressWarnings("unchecked")
 	public <A> A data(final int index) {
@@ -117,8 +117,6 @@ public class SLocation<S extends STreeState<S>> {
 	public <T extends Tree, A> T mutateData(int index, Mutation<A> mutation) {
 		return withData(index, mutation.mutate(this.<A>data(index)));
 	}
-
-	/* Node methods */
 
 	@SuppressWarnings("unchecked")
 	public <C extends Tree> C safeTraversal(STraversal<S> traversal) {

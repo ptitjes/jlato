@@ -30,11 +30,6 @@ public class SNodeEitherState extends STreeState<SNodeEitherState> {
 	public final EitherSide side;
 
 	public SNodeEitherState(STree<?> element, EitherSide side) {
-		this(element, side, ArrayList.empty());
-	}
-
-	public SNodeEitherState(STree<?> element, EitherSide side, ArrayList<Object> data) {
-		super(data);
 		this.element = element;
 		this.side = side;
 	}
@@ -66,23 +61,28 @@ public class SNodeEitherState extends STreeState<SNodeEitherState> {
 	}
 
 	public SNodeEitherState withSide(EitherSide side) {
-		return new SNodeEitherState(element, side, data);
+		return new SNodeEitherState(element, side);
 	}
 
 	public SNodeEitherState withElement(STree<?> element) {
-		return new SNodeEitherState(element, side, data);
+		return new SNodeEitherState(element, side);
 	}
 
 	public SNodeEitherState withLeft(STree<?> element) {
-		return new SNodeEitherState(element, EitherSide.Left, data);
+		return new SNodeEitherState(element, EitherSide.Left);
 	}
 
 	public SNodeEitherState withRight(STree<?> element) {
-		return new SNodeEitherState(element, EitherSide.Right, data);
+		return new SNodeEitherState(element, EitherSide.Right);
+	}
+
+	@Override
+	public Object data(int index) {
+		return null;
 	}
 
 	public SNodeEitherState withData(int index, Object value) {
-		return new SNodeEitherState(element, side, data.set(index, value));
+		return this;
 	}
 
 	public void validate(STree tree) {

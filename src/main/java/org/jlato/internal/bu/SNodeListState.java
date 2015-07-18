@@ -30,11 +30,6 @@ public class SNodeListState extends STreeState<SNodeListState> {
 	public final Vector<STree<?>> children;
 
 	public SNodeListState(Vector<STree<? extends STreeState<?>>> children) {
-		this(children, ArrayList.empty());
-	}
-
-	public SNodeListState(Vector<STree<? extends STreeState<?>>> children, ArrayList<Object> data) {
-		super(data);
 		this.children = children;
 	}
 
@@ -59,15 +54,20 @@ public class SNodeListState extends STreeState<SNodeListState> {
 	}
 
 	public SNodeListState withChild(int index, STree<?> value) {
-		return new SNodeListState(children.set(index, value), data);
+		return new SNodeListState(children.set(index, value));
 	}
 
 	public SNodeListState withChildren(Vector<STree<?>> children) {
-		return new SNodeListState(children, data);
+		return new SNodeListState(children);
+	}
+
+	@Override
+	public Object data(int index) {
+		return null;
 	}
 
 	public SNodeListState withData(int index, Object value) {
-		return new SNodeListState(children, data.set(index, value));
+		return this;
 	}
 
 	public void validate(STree tree) {

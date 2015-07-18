@@ -19,8 +19,6 @@
 
 package org.jlato.internal.bu;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
-
 /**
  * @author Didier Villevalois
  */
@@ -29,11 +27,6 @@ public class SNodeOptionState extends STreeState<SNodeOptionState> {
 	public final STree<?> element;
 
 	public SNodeOptionState(STree<?> element) {
-		this(element, ArrayList.empty());
-	}
-
-	public SNodeOptionState(STree<?> element, ArrayList<Object> data) {
-		super(data);
 		this.element = element;
 	}
 
@@ -56,11 +49,16 @@ public class SNodeOptionState extends STreeState<SNodeOptionState> {
 	}
 
 	public SNodeOptionState withElement(STree<?> element) {
-		return new SNodeOptionState(element, data);
+		return new SNodeOptionState(element);
+	}
+
+	@Override
+	public Object data(int index) {
+		return null;
 	}
 
 	public SNodeOptionState withData(int index, Object value) {
-		return new SNodeOptionState(element, data.set(index, value));
+		return this;
 	}
 
 	public void validate(STree tree) {

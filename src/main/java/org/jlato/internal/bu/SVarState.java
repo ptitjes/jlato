@@ -19,8 +19,6 @@
 
 package org.jlato.internal.bu;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
-
 /**
  * @author Didier Villevalois
  */
@@ -29,16 +27,16 @@ public class SVarState extends STreeState<SVarState> {
 	public final String name;
 
 	public SVarState(String name) {
-		this(ArrayList.empty(), name);
-	}
-
-	public SVarState(ArrayList<Object> data, String name) {
-		super(data);
 		this.name = name;
 	}
 
+	@Override
+	public Object data(int index) {
+		return null;
+	}
+
 	public SVarState withData(int index, Object value) {
-		return new SVarState(data.set(index, value), name);
+		return this;
 	}
 
 	@Override
