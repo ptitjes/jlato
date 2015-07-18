@@ -41,16 +41,16 @@ import org.jlato.tree.Tree;
 
 public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, Expr, MethodInvocationExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.MethodInvocationExpr;
+	}
 
 	private MethodInvocationExpr(SLocation<MethodInvocationExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<MethodInvocationExpr.State> make(NodeOption<Expr> scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
-		return new STree<MethodInvocationExpr.State>(kind, new MethodInvocationExpr.State(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(args)));
+		return new STree<MethodInvocationExpr.State>(new MethodInvocationExpr.State(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(args)));
 	}
 
 	public MethodInvocationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
@@ -232,6 +232,10 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.MethodInvocationExpr;
 		}
 	}
 }

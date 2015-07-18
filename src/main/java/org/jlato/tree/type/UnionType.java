@@ -36,16 +36,16 @@ import org.jlato.tree.Tree;
 
 public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implements Type {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.UnionType;
+	}
 
 	private UnionType(SLocation<UnionType.State> location) {
 		super(location);
 	}
 
 	public static STree<UnionType.State> make(NodeList<Type> types) {
-		return new STree<UnionType.State>(kind, new UnionType.State(TreeBase.<SNodeListState>nodeOf(types)));
+		return new STree<UnionType.State>(new UnionType.State(TreeBase.<SNodeListState>nodeOf(types)));
 	}
 
 	public UnionType(NodeList<Type> types) {
@@ -113,6 +113,10 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.UnionType;
 		}
 	}
 }

@@ -35,16 +35,16 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, MemberValuePair> implements Tree {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.MemberValuePair;
+	}
 
 	private MemberValuePair(SLocation<MemberValuePair.State> location) {
 		super(location);
 	}
 
 	public static STree<MemberValuePair.State> make(Name name, Expr value) {
-		return new STree<MemberValuePair.State>(kind, new MemberValuePair.State(TreeBase.<Name.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(value)));
+		return new STree<MemberValuePair.State>(new MemberValuePair.State(TreeBase.<Name.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(value)));
 	}
 
 	public MemberValuePair(Name name, Expr value) {
@@ -149,6 +149,10 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.MemberValuePair;
 		}
 	}
 }

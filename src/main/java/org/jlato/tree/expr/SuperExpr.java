@@ -38,16 +38,16 @@ import org.jlato.tree.Tree;
 
 public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.SuperExpr;
+	}
 
 	private SuperExpr(SLocation<SuperExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<SuperExpr.State> make(NodeOption<Expr> classExpr) {
-		return new STree<SuperExpr.State>(kind, new SuperExpr.State(TreeBase.<SNodeOptionState>nodeOf(classExpr)));
+		return new STree<SuperExpr.State>(new SuperExpr.State(TreeBase.<SNodeOptionState>nodeOf(classExpr)));
 	}
 
 	public SuperExpr(NodeOption<Expr> classExpr) {
@@ -116,6 +116,10 @@ public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implem
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.SuperExpr;
 		}
 	}
 }

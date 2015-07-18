@@ -37,9 +37,9 @@ import org.jlato.internal.bu.*;
 
 public class QualifiedName extends TreeBase<QualifiedName.State, Tree, QualifiedName> implements Tree {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.QualifiedName;
+	}
 
 	public static QualifiedName of(String nameString) {
 		final String[] split = nameString.split("\\.");
@@ -51,7 +51,7 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 	}
 
 	public static STree<QualifiedName.State> make(NodeOption<QualifiedName> qualifier, Name name) {
-		return new STree<QualifiedName.State>(kind, new QualifiedName.State(TreeBase.<SNodeOptionState>nodeOf(qualifier), TreeBase.<Name.State>nodeOf(name)));
+		return new STree<QualifiedName.State>(new QualifiedName.State(TreeBase.<SNodeOptionState>nodeOf(qualifier), TreeBase.<Name.State>nodeOf(name)));
 	}
 
 	private QualifiedName(SLocation<QualifiedName.State> location) {
@@ -174,6 +174,10 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.QualifiedName;
 		}
 	}
 }

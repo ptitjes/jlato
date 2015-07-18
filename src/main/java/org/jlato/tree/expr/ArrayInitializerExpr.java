@@ -37,16 +37,16 @@ import org.jlato.tree.Tree;
 
 public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, Expr, ArrayInitializerExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ArrayInitializerExpr;
+	}
 
 	private ArrayInitializerExpr(SLocation<ArrayInitializerExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<ArrayInitializerExpr.State> make(NodeList<Expr> values) {
-		return new STree<ArrayInitializerExpr.State>(kind, new ArrayInitializerExpr.State(TreeBase.<SNodeListState>nodeOf(values)));
+		return new STree<ArrayInitializerExpr.State>(new ArrayInitializerExpr.State(TreeBase.<SNodeListState>nodeOf(values)));
 	}
 
 	public ArrayInitializerExpr(NodeList<Expr> values) {
@@ -121,6 +121,10 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ArrayInitializerExpr;
 		}
 	}
 }

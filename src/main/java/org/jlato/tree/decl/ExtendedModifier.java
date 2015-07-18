@@ -22,8 +22,11 @@ package org.jlato.tree.decl;
 import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 
+import static org.jlato.internal.shapes.LSCondition.kind;
+import static org.jlato.internal.shapes.LSCondition.lastChildKind;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
@@ -40,12 +43,12 @@ public interface ExtendedModifier extends Tree {
 	public static final LexicalShape multiLineShape = list(
 			none(),
 			alternative(
-					LSCondition.kind(Modifier.kind),
+					kind(Kind.Modifier),
 					none().withSpacingAfter(space()),
 					none().withSpacingAfter(newLine())
 			),
 			alternative(
-					LSCondition.lastChildKind(Modifier.kind),
+					lastChildKind(Kind.Modifier),
 					none().withSpacingAfter(space()),
 					none().withSpacingAfter(newLine())
 			)

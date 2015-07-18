@@ -41,16 +41,16 @@ import org.jlato.tree.Tree;
 
 public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, MemberDecl, AnnotationMemberDecl> implements MemberDecl {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.AnnotationMemberDecl;
+	}
 
 	private AnnotationMemberDecl(SLocation<AnnotationMemberDecl.State> location) {
 		super(location);
 	}
 
 	public static STree<AnnotationMemberDecl.State> make(NodeList<ExtendedModifier> modifiers, Type type, Name name, NodeList<ArrayDim> dims, NodeOption<Expr> defaultValue) {
-		return new STree<AnnotationMemberDecl.State>(kind, new AnnotationMemberDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeOptionState>nodeOf(defaultValue)));
+		return new STree<AnnotationMemberDecl.State>(new AnnotationMemberDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeOptionState>nodeOf(defaultValue)));
 	}
 
 	public AnnotationMemberDecl(NodeList<ExtendedModifier> modifiers, Type type, Name name, NodeList<ArrayDim> dims, NodeOption<Expr> defaultValue) {
@@ -277,6 +277,10 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.AnnotationMemberDecl;
 		}
 	}
 }

@@ -36,12 +36,12 @@ import org.jlato.internal.bu.*;
 
 public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.LiteralExpr;
+	}
 
 	public static <T> STree<LiteralExpr.State> make(Class<T> literalClass, String literalString) {
-		return new STree<LiteralExpr.State>(kind, new LiteralExpr.State(literalClass, literalString));
+		return new STree<LiteralExpr.State>(new LiteralExpr.State(literalClass, literalString));
 	}
 
 	public static LiteralExpr<Void> nullLiteral() {
@@ -165,6 +165,10 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.LiteralExpr;
 		}
 	}
 }

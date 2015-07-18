@@ -1,26 +1,83 @@
-/*
- * Copyright (C) 2015 Didier Villevalois.
- *
- * This file is part of JLaTo.
- *
- * JLaTo is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * JLaTo is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.jlato.tree;
 
-/**
- * @author Didier Villevalois
- */
-public interface Kind {
+public enum Kind {
+	AnnotationDecl,
+	AnnotationMemberDecl,
+	ArrayDim,
+	ClassDecl,
+	CompilationUnit,
+	ConstructorDecl,
+	EmptyMemberDecl,
+	EmptyTypeDecl,
+	EnumConstantDecl,
+	EnumDecl,
+	FieldDecl,
+	FormalParameter,
+	ImportDecl,
+	InitializerDecl,
+	InterfaceDecl,
+	LocalVariableDecl,
+	MethodDecl,
+	Modifier,
+	PackageDecl,
+	TypeParameter,
+	VariableDeclarator,
+	VariableDeclaratorId,
+	ArrayAccessExpr,
+	ArrayCreationExpr,
+	ArrayDimExpr,
+	ArrayInitializerExpr,
+	AssignExpr,
+	BinaryExpr,
+	CastExpr,
+	ClassExpr,
+	ConditionalExpr,
+	FieldAccessExpr,
+	InstanceOfExpr,
+	LambdaExpr,
+	LiteralExpr,
+	MarkerAnnotationExpr,
+	MemberValuePair,
+	MethodInvocationExpr,
+	MethodReferenceExpr,
+	NormalAnnotationExpr,
+	ObjectCreationExpr,
+	ParenthesizedExpr,
+	SingleMemberAnnotationExpr,
+	SuperExpr,
+	ThisExpr,
+	TypeExpr,
+	UnaryExpr,
+	VariableDeclarationExpr,
+	Name,
+	QualifiedName,
+	AssertStmt,
+	BlockStmt,
+	BreakStmt,
+	CatchClause,
+	ContinueStmt,
+	DoStmt,
+	EmptyStmt,
+	ExplicitConstructorInvocationStmt,
+	ExpressionStmt,
+	ForStmt,
+	ForeachStmt,
+	IfStmt,
+	LabeledStmt,
+	ReturnStmt,
+	SwitchCase,
+	SwitchStmt,
+	SynchronizedStmt,
+	ThrowStmt,
+	TryStmt,
+	TypeDeclarationStmt,
+	WhileStmt,
+	ArrayType,
+	IntersectionType,
+	PrimitiveType,
+	QualifiedType,
+	UnionType,
+	UnknownType,
+	VoidType,
+	WildcardType
 }

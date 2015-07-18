@@ -29,16 +29,14 @@ import org.jlato.tree.Tree;
  */
 public class STree<S extends STreeState<S>> {
 
-	public final Kind kind;
 	public final S state;
 	public final WRunRun run;
 
-	public STree(Kind kind, S state) {
-		this(kind, state, null);
+	public STree(S state) {
+		this(state, null);
 	}
 
-	public STree(Kind kind, S state, WRunRun run) {
-		this.kind = kind;
+	public STree(S state, WRunRun run) {
 		this.state = state;
 		this.run = run;
 	}
@@ -48,11 +46,11 @@ public class STree<S extends STreeState<S>> {
 	}
 
 	public STree<S> withState(S state) {
-		return new STree<S>(kind, state, run);
+		return new STree<S>(state, run);
 	}
 
 	public STree<S> withRun(WRunRun run) {
-		return new STree<S>(kind, state, run);
+		return new STree<S>(state, run);
 	}
 
 	public STree<?> traverse(STraversal<S> traversal) {

@@ -41,16 +41,16 @@ import org.jlato.tree.Tree;
 
 public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardType> implements Type {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.WildcardType;
+	}
 
 	private WildcardType(SLocation<WildcardType.State> location) {
 		super(location);
 	}
 
 	public static STree<WildcardType.State> make(NodeList<AnnotationExpr> annotations, NodeOption<ReferenceType> ext, NodeOption<ReferenceType> sup) {
-		return new STree<WildcardType.State>(kind, new WildcardType.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<SNodeOptionState>nodeOf(ext), TreeBase.<SNodeOptionState>nodeOf(sup)));
+		return new STree<WildcardType.State>(new WildcardType.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<SNodeOptionState>nodeOf(ext), TreeBase.<SNodeOptionState>nodeOf(sup)));
 	}
 
 	public WildcardType(NodeList<AnnotationExpr> annotations, NodeOption<ReferenceType> ext, NodeOption<ReferenceType> sup) {
@@ -195,6 +195,10 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.WildcardType;
 		}
 	}
 }

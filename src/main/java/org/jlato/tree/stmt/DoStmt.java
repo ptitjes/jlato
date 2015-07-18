@@ -37,16 +37,16 @@ import org.jlato.tree.Tree;
 
 public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.DoStmt;
+	}
 
 	private DoStmt(SLocation<DoStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<DoStmt.State> make(Stmt body, Expr condition) {
-		return new STree<DoStmt.State>(kind, new DoStmt.State(TreeBase.<Stmt.State>nodeOf(body), TreeBase.<Expr.State>nodeOf(condition)));
+		return new STree<DoStmt.State>(new DoStmt.State(TreeBase.<Stmt.State>nodeOf(body), TreeBase.<Expr.State>nodeOf(condition)));
 	}
 
 	public DoStmt(Stmt body, Expr condition) {
@@ -157,6 +157,10 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.DoStmt;
 		}
 	}
 }

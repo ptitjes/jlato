@@ -40,16 +40,16 @@ import org.jlato.tree.Tree;
 
 public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl, ConstructorDecl> implements MemberDecl {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ConstructorDecl;
+	}
 
 	private ConstructorDecl(SLocation<ConstructorDecl.State> location) {
 		super(location);
 	}
 
 	public static STree<ConstructorDecl.State> make(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<FormalParameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
-		return new STree<ConstructorDecl.State>(kind, new ConstructorDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<SNodeListState>nodeOf(typeParams), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(params), TreeBase.<SNodeListState>nodeOf(throwsClause), TreeBase.<BlockStmt.State>nodeOf(body)));
+		return new STree<ConstructorDecl.State>(new ConstructorDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<SNodeListState>nodeOf(typeParams), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(params), TreeBase.<SNodeListState>nodeOf(throwsClause), TreeBase.<BlockStmt.State>nodeOf(body)));
 	}
 
 	public ConstructorDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<FormalParameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
@@ -314,6 +314,10 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ConstructorDecl;
 		}
 	}
 }

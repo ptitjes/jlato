@@ -38,16 +38,16 @@ import org.jlato.tree.Tree;
 
 public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, LocalVariableDecl> implements Decl {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.LocalVariableDecl;
+	}
 
 	protected LocalVariableDecl(SLocation<LocalVariableDecl.State> location) {
 		super(location);
 	}
 
 	public static STree<LocalVariableDecl.State> make(NodeList<ExtendedModifier> modifiers, Type type, NodeList<VariableDeclarator> variables) {
-		return new STree<LocalVariableDecl.State>(kind, new LocalVariableDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(variables)));
+		return new STree<LocalVariableDecl.State>(new LocalVariableDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(variables)));
 	}
 
 	public LocalVariableDecl(NodeList<ExtendedModifier> modifiers, Type type, NodeList<VariableDeclarator> variables) {
@@ -191,6 +191,10 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.LocalVariableDecl;
 		}
 	}
 }

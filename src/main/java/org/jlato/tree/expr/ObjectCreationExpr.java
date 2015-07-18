@@ -43,16 +43,16 @@ import org.jlato.tree.Tree;
 
 public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr, ObjectCreationExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ObjectCreationExpr;
+	}
 
 	private ObjectCreationExpr(SLocation<ObjectCreationExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<ObjectCreationExpr.State> make(NodeOption<Expr> scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeOption<NodeList<MemberDecl>> body) {
-		return new STree<ObjectCreationExpr.State>(kind, new ObjectCreationExpr.State(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<QualifiedType.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(args), TreeBase.<SNodeOptionState>nodeOf(body)));
+		return new STree<ObjectCreationExpr.State>(new ObjectCreationExpr.State(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<QualifiedType.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(args), TreeBase.<SNodeOptionState>nodeOf(body)));
 	}
 
 	public ObjectCreationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeOption<NodeList<MemberDecl>> body) {
@@ -273,6 +273,10 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ObjectCreationExpr;
 		}
 	}
 }

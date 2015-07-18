@@ -40,16 +40,16 @@ import org.jlato.internal.bu.*;
 
 public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParameter> implements Tree {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.TypeParameter;
+	}
 
 	private TypeParameter(SLocation<TypeParameter.State> location) {
 		super(location);
 	}
 
 	public static STree<TypeParameter.State> make(NodeList<AnnotationExpr> annotations, Name name, NodeList<Type> bounds) {
-		return new STree<TypeParameter.State>(kind, new TypeParameter.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(bounds)));
+		return new STree<TypeParameter.State>(new TypeParameter.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(bounds)));
 	}
 
 	public TypeParameter(NodeList<AnnotationExpr> annotations, Name name, NodeList<Type> bounds) {
@@ -205,6 +205,10 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.TypeParameter;
 		}
 	}
 }

@@ -38,16 +38,16 @@ import org.jlato.tree.Tree;
 
 public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ForStmt;
+	}
 
 	private ForStmt(SLocation<ForStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<ForStmt.State> make(NodeList<Expr> init, Expr compare, NodeList<Expr> update, Stmt body) {
-		return new STree<ForStmt.State>(kind, new ForStmt.State(TreeBase.<SNodeListState>nodeOf(init), TreeBase.<Expr.State>nodeOf(compare), TreeBase.<SNodeListState>nodeOf(update), TreeBase.<Stmt.State>nodeOf(body)));
+		return new STree<ForStmt.State>(new ForStmt.State(TreeBase.<SNodeListState>nodeOf(init), TreeBase.<Expr.State>nodeOf(compare), TreeBase.<SNodeListState>nodeOf(update), TreeBase.<Stmt.State>nodeOf(body)));
 	}
 
 	public ForStmt(NodeList<Expr> init, Expr compare, NodeList<Expr> update, Stmt body) {
@@ -233,6 +233,10 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ForStmt;
 		}
 	}
 }

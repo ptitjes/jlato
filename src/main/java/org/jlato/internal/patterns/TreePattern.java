@@ -52,8 +52,6 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		STreeState<?> state = tree.state;
 		boolean isVariable = patternState instanceof SVarState;
 
-		if (!isVariable && pattern.kind != tree.kind) return null;
-
 		if (isVariable) {
 			String name = ((SVarState) patternState).name;
 			// Not an anonymous var
@@ -66,6 +64,8 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 				}
 			}
 		} else if (patternState instanceof SNodeState) {
+			if (((SNodeState) patternState).kind() != ((SNodeState) state).kind()) return null;
+
 			substitution = mathData((SNodeState) patternState, (SNodeState) state, substitution);
 			if (substitution == null) return null;
 			substitution = mathChildren((SNodeState) patternState, (SNodeState) state, substitution);
@@ -146,20 +146,19 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	}
 
 	private STree<?> buildTree(STree<?> pattern, Substitution substitution) {
-		Kind kind = pattern.kind;
 		STreeState<?> patternState = pattern.state;
-
 		if (patternState instanceof SVarState) {
 			String name = ((SVarState) patternState).name;
 			return substitution.get(name);
 
 		} else if (patternState instanceof SNodeState) {
+			Kind kind = ((SNodeState) patternState).kind();
 			return buildNodeTree((Kind) kind, (SNodeState) patternState, substitution);
 
 		} else if (patternState instanceof SNodeOptionState) {
 			STree<?> elementPattern = ((SNodeOptionState) patternState).element;
 			STree<?> element = buildTree(elementPattern, substitution);
-			return new STree<SNodeOptionState>((Kind) pattern.kind,
+			return new STree<SNodeOptionState>(
 					new SNodeOptionState(element));
 
 		} else if (patternState instanceof SNodeListState) {
@@ -167,7 +166,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 			for (STree<?> elementPattern : ((SNodeListState) patternState).children) {
 				elementsBuilder.add(buildTree(elementPattern, substitution));
 			}
-			return new STree<SNodeListState>((Kind) pattern.kind,
+			return new STree<SNodeListState>(
 					new SNodeListState(elementsBuilder.build()));
 		}
 		return null;

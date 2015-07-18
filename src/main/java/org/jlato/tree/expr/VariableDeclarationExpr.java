@@ -41,16 +41,16 @@ import org.jlato.tree.Tree;
 
 public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.State, Expr, VariableDeclarationExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.VariableDeclarationExpr;
+	}
 
 	private VariableDeclarationExpr(SLocation<VariableDeclarationExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<VariableDeclarationExpr.State> make(LocalVariableDecl declaration) {
-		return new STree<VariableDeclarationExpr.State>(kind, new VariableDeclarationExpr.State(TreeBase.<LocalVariableDecl.State>nodeOf(declaration)));
+		return new STree<VariableDeclarationExpr.State>(new VariableDeclarationExpr.State(TreeBase.<LocalVariableDecl.State>nodeOf(declaration)));
 	}
 
 	public VariableDeclarationExpr(LocalVariableDecl declaration) {
@@ -126,6 +126,10 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.VariableDeclarationExpr;
 		}
 	}
 }

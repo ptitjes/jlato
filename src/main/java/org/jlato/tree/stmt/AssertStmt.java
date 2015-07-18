@@ -40,16 +40,16 @@ import org.jlato.tree.Tree;
 
 public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.AssertStmt;
+	}
 
 	private AssertStmt(SLocation<AssertStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<AssertStmt.State> make(Expr check, NodeOption<Expr> msg) {
-		return new STree<AssertStmt.State>(kind, new AssertStmt.State(TreeBase.<Expr.State>nodeOf(check), TreeBase.<SNodeOptionState>nodeOf(msg)));
+		return new STree<AssertStmt.State>(new AssertStmt.State(TreeBase.<Expr.State>nodeOf(check), TreeBase.<SNodeOptionState>nodeOf(msg)));
 	}
 
 	public AssertStmt(Expr check, NodeOption<Expr> msg) {
@@ -160,6 +160,10 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.AssertStmt;
 		}
 	}
 }

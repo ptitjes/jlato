@@ -39,16 +39,16 @@ import org.jlato.internal.bu.*;
 
 public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> implements Tree {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ImportDecl;
+	}
 
 	private ImportDecl(SLocation<ImportDecl.State> location) {
 		super(location);
 	}
 
 	public static STree<ImportDecl.State> make(QualifiedName name, boolean isStatic, boolean isOnDemand) {
-		return new STree<ImportDecl.State>(kind, new ImportDecl.State(TreeBase.<QualifiedName.State>nodeOf(name), isStatic, isOnDemand));
+		return new STree<ImportDecl.State>(new ImportDecl.State(TreeBase.<QualifiedName.State>nodeOf(name), isStatic, isOnDemand));
 	}
 
 	public ImportDecl(QualifiedName name, boolean isStatic, boolean isOnDemand) {
@@ -177,6 +177,10 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ImportDecl;
 		}
 	}
 }

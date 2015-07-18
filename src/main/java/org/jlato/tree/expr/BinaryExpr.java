@@ -37,16 +37,16 @@ import org.jlato.tree.Tree;
 
 public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.BinaryExpr;
+	}
 
 	private BinaryExpr(SLocation<BinaryExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<BinaryExpr.State> make(Expr left, BinaryOp operator, Expr right) {
-		return new STree<BinaryExpr.State>(kind, new BinaryExpr.State(TreeBase.<Expr.State>nodeOf(left), operator, TreeBase.<Expr.State>nodeOf(right)));
+		return new STree<BinaryExpr.State>(new BinaryExpr.State(TreeBase.<Expr.State>nodeOf(left), operator, TreeBase.<Expr.State>nodeOf(right)));
 	}
 
 	public BinaryExpr(Expr left, BinaryOp operator, Expr right) {
@@ -221,6 +221,10 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.BinaryExpr;
 		}
 	}
 }

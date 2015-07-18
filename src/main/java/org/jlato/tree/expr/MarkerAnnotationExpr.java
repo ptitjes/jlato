@@ -36,16 +36,16 @@ import org.jlato.tree.Tree;
 
 public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, AnnotationExpr, MarkerAnnotationExpr> implements AnnotationExpr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.MarkerAnnotationExpr;
+	}
 
 	private MarkerAnnotationExpr(SLocation<MarkerAnnotationExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<MarkerAnnotationExpr.State> make(QualifiedName name) {
-		return new STree<MarkerAnnotationExpr.State>(kind, new MarkerAnnotationExpr.State(TreeBase.<QualifiedName.State>nodeOf(name)));
+		return new STree<MarkerAnnotationExpr.State>(new MarkerAnnotationExpr.State(TreeBase.<QualifiedName.State>nodeOf(name)));
 	}
 
 	public MarkerAnnotationExpr(QualifiedName name) {
@@ -113,6 +113,10 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.MarkerAnnotationExpr;
 		}
 	}
 }

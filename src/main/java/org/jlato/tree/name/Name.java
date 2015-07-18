@@ -37,16 +37,16 @@ import org.jlato.tree.Tree;
 
 public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.Name;
+	}
 
 	private Name(SLocation<Name.State> location) {
 		super(location);
 	}
 
 	public static STree<Name.State> make(String identifier) {
-		return new STree<Name.State>(kind, new Name.State(identifier));
+		return new STree<Name.State>(new Name.State(identifier));
 	}
 
 	public Name(String identifier) {
@@ -114,6 +114,10 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.Name;
 		}
 	}
 }

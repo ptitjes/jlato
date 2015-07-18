@@ -36,16 +36,16 @@ import org.jlato.tree.Tree;
 
 public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, ConditionalExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ConditionalExpr;
+	}
 
 	private ConditionalExpr(SLocation<ConditionalExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<ConditionalExpr.State> make(Expr condition, Expr thenExpr, Expr elseExpr) {
-		return new STree<ConditionalExpr.State>(kind, new ConditionalExpr.State(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Expr.State>nodeOf(thenExpr), TreeBase.<Expr.State>nodeOf(elseExpr)));
+		return new STree<ConditionalExpr.State>(new ConditionalExpr.State(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Expr.State>nodeOf(thenExpr), TreeBase.<Expr.State>nodeOf(elseExpr)));
 	}
 
 	public ConditionalExpr(Expr condition, Expr thenExpr, Expr elseExpr) {
@@ -191,6 +191,10 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ConditionalExpr;
 		}
 	}
 }

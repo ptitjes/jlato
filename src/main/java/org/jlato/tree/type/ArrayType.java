@@ -37,16 +37,16 @@ import org.jlato.tree.Tree;
 
 public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayType> implements ReferenceType {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ArrayType;
+	}
 
 	private ArrayType(SLocation<ArrayType.State> location) {
 		super(location);
 	}
 
 	public static STree<ArrayType.State> make(Type componentType, NodeList<ArrayDim> dims) {
-		return new STree<ArrayType.State>(kind, new ArrayType.State(TreeBase.<Type.State>nodeOf(componentType), TreeBase.<SNodeListState>nodeOf(dims)));
+		return new STree<ArrayType.State>(new ArrayType.State(TreeBase.<Type.State>nodeOf(componentType), TreeBase.<SNodeListState>nodeOf(dims)));
 	}
 
 	public ArrayType(Type componentType, NodeList<ArrayDim> dims) {
@@ -152,6 +152,10 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ArrayType;
 		}
 	}
 }

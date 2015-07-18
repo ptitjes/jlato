@@ -33,16 +33,16 @@ import org.jlato.tree.Tree;
 
 public class EmptyTypeDecl extends TreeBase<EmptyTypeDecl.State, TypeDecl, EmptyTypeDecl> implements TypeDecl {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.EmptyTypeDecl;
+	}
 
 	private EmptyTypeDecl(SLocation<EmptyTypeDecl.State> location) {
 		super(location);
 	}
 
 	public static STree<EmptyTypeDecl.State> make() {
-		return new STree<EmptyTypeDecl.State>(kind, new EmptyTypeDecl.State());
+		return new STree<EmptyTypeDecl.State>(new EmptyTypeDecl.State());
 	}
 
 	public EmptyTypeDecl() {
@@ -80,6 +80,10 @@ public class EmptyTypeDecl extends TreeBase<EmptyTypeDecl.State, TypeDecl, Empty
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.EmptyTypeDecl;
 		}
 	}
 }

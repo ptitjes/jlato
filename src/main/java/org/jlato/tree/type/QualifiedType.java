@@ -41,16 +41,16 @@ import org.jlato.tree.Tree;
 
 public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, QualifiedType> implements ReferenceType {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.QualifiedType;
+	}
 
 	private QualifiedType(SLocation<QualifiedType.State> location) {
 		super(location);
 	}
 
 	public static STree<QualifiedType.State> make(NodeList<AnnotationExpr> annotations, NodeOption<QualifiedType> scope, Name name, NodeOption<NodeList<Type>> typeArgs) {
-		return new STree<QualifiedType.State>(kind, new QualifiedType.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeOptionState>nodeOf(typeArgs)));
+		return new STree<QualifiedType.State>(new QualifiedType.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeOptionState>nodeOf(typeArgs)));
 	}
 
 	public QualifiedType(NodeList<AnnotationExpr> annotations, NodeOption<QualifiedType> scope, Name name, NodeOption<NodeList<Type>> typeArgs) {
@@ -252,6 +252,10 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.QualifiedType;
 		}
 	}
 }

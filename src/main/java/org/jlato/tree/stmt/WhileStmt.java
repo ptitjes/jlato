@@ -37,16 +37,16 @@ import org.jlato.tree.Tree;
 
 public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.WhileStmt;
+	}
 
 	private WhileStmt(SLocation<WhileStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<WhileStmt.State> make(Expr condition, Stmt body) {
-		return new STree<WhileStmt.State>(kind, new WhileStmt.State(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Stmt.State>nodeOf(body)));
+		return new STree<WhileStmt.State>(new WhileStmt.State(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Stmt.State>nodeOf(body)));
 	}
 
 	public WhileStmt(Expr condition, Stmt body) {
@@ -154,6 +154,10 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.WhileStmt;
 		}
 	}
 }

@@ -36,16 +36,16 @@ import org.jlato.internal.bu.*;
 
 public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, Tree, VariableDeclaratorId> implements Tree {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.VariableDeclaratorId;
+	}
 
 	private VariableDeclaratorId(SLocation<VariableDeclaratorId.State> location) {
 		super(location);
 	}
 
 	public static STree<VariableDeclaratorId.State> make(Name name, NodeList<ArrayDim> dims) {
-		return new STree<VariableDeclaratorId.State>(kind, new VariableDeclaratorId.State(TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(dims)));
+		return new STree<VariableDeclaratorId.State>(new VariableDeclaratorId.State(TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(dims)));
 	}
 
 	public VariableDeclaratorId(Name name, NodeList<ArrayDim> dims) {
@@ -151,6 +151,10 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.VariableDeclaratorId;
 		}
 	}
 }

@@ -34,17 +34,6 @@ import java.util.Iterator;
  */
 public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<T>, NodeList<T>> implements Tree, Iterable<T> {
 
-	public final static Kind kind = new Kind();
-
-	@SuppressWarnings("unchecked")
-	public static <T extends Tree> Kind kind() {
-		return (Kind) kind;
-	}
-
-	public static class Kind<T extends Tree> implements org.jlato.tree.Kind {
-
-	}
-
 	@SuppressWarnings("unchecked")
 	public static <T extends Tree> NodeList<T> empty() {
 		return new NodeList<T>();
@@ -93,7 +82,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 	}
 
 	public NodeList(T... elements) {
-		super(new SLocation<SNodeListState>(new STree<SNodeListState>(kind, new SNodeListState(treeListOf(elements)))));
+		super(new SLocation<SNodeListState>(new STree<SNodeListState>(new SNodeListState(treeListOf(elements)))));
 	}
 
 	public boolean isEmpty() {

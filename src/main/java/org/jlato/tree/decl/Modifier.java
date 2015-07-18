@@ -34,14 +34,14 @@ import org.jlato.internal.bu.*;
 
 public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifier> implements ExtendedModifier {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.Modifier;
+	}
 
 	public static final Modifier Public = new Modifier(LToken.Public);
 
 	public static STree<Modifier.State> make(LToken keyword) {
-		return new STree<Modifier.State>(kind, new Modifier.State(keyword));
+		return new STree<Modifier.State>(new Modifier.State(keyword));
 	}
 	public static final Modifier Protected = new Modifier(LToken.Protected);
 	public static final Modifier Private = new Modifier(LToken.Private);
@@ -111,6 +111,10 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.Modifier;
 		}
 	}
 }

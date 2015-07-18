@@ -43,16 +43,16 @@ import org.jlato.tree.Tree;
 
 public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDecl, EnumConstantDecl> implements MemberDecl {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.EnumConstantDecl;
+	}
 
 	private EnumConstantDecl(SLocation<EnumConstantDecl.State> location) {
 		super(location);
 	}
 
 	public static STree<EnumConstantDecl.State> make(NodeList<ExtendedModifier> modifiers, Name name, NodeOption<NodeList<Expr>> args, NodeOption<NodeList<MemberDecl>> classBody) {
-		return new STree<EnumConstantDecl.State>(kind, new EnumConstantDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeOptionState>nodeOf(args), TreeBase.<SNodeOptionState>nodeOf(classBody)));
+		return new STree<EnumConstantDecl.State>(new EnumConstantDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeOptionState>nodeOf(args), TreeBase.<SNodeOptionState>nodeOf(classBody)));
 	}
 
 	public EnumConstantDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeOption<NodeList<Expr>> args, NodeOption<NodeList<MemberDecl>> classBody) {
@@ -246,6 +246,10 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.EnumConstantDecl;
 		}
 	}
 }

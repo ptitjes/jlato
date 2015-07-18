@@ -37,16 +37,16 @@ import org.jlato.tree.Tree;
 
 public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.UnaryExpr;
+	}
 
 	private UnaryExpr(SLocation<UnaryExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<UnaryExpr.State> make(UnaryOp operator, Expr expr) {
-		return new STree<UnaryExpr.State>(kind, new UnaryExpr.State(operator, TreeBase.<Expr.State>nodeOf(expr)));
+		return new STree<UnaryExpr.State>(new UnaryExpr.State(operator, TreeBase.<Expr.State>nodeOf(expr)));
 	}
 
 	public UnaryExpr(UnaryOp operator, Expr expr) {
@@ -185,6 +185,10 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.UnaryExpr;
 		}
 	}
 }

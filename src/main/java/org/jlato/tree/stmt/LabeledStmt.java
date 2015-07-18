@@ -41,16 +41,16 @@ import org.jlato.tree.Tree;
 
 public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.LabeledStmt;
+	}
 
 	private LabeledStmt(SLocation<LabeledStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<LabeledStmt.State> make(Name label, Stmt stmt) {
-		return new STree<LabeledStmt.State>(kind, new LabeledStmt.State(TreeBase.<Name.State>nodeOf(label), TreeBase.<Stmt.State>nodeOf(stmt)));
+		return new STree<LabeledStmt.State>(new LabeledStmt.State(TreeBase.<Name.State>nodeOf(label), TreeBase.<Stmt.State>nodeOf(stmt)));
 	}
 
 	public LabeledStmt(Name label, Stmt stmt) {
@@ -159,6 +159,10 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.LabeledStmt;
 		}
 	}
 }

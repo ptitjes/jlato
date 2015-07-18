@@ -36,16 +36,16 @@ import org.jlato.tree.Tree;
 
 public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationExpr.State, AnnotationExpr, SingleMemberAnnotationExpr> implements AnnotationExpr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.SingleMemberAnnotationExpr;
+	}
 
 	private SingleMemberAnnotationExpr(SLocation<SingleMemberAnnotationExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<SingleMemberAnnotationExpr.State> make(QualifiedName name, Expr memberValue) {
-		return new STree<SingleMemberAnnotationExpr.State>(kind, new SingleMemberAnnotationExpr.State(TreeBase.<QualifiedName.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(memberValue)));
+		return new STree<SingleMemberAnnotationExpr.State>(new SingleMemberAnnotationExpr.State(TreeBase.<QualifiedName.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(memberValue)));
 	}
 
 	public SingleMemberAnnotationExpr(QualifiedName name, Expr memberValue) {
@@ -153,6 +153,10 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.SingleMemberAnnotationExpr;
 		}
 	}
 }

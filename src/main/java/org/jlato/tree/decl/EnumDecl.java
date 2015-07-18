@@ -44,16 +44,16 @@ import org.jlato.tree.Tree;
 
 public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> implements TypeDecl {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.EnumDecl;
+	}
 
 	protected EnumDecl(SLocation<EnumDecl.State> location) {
 		super(location);
 	}
 
 	public static STree<EnumDecl.State> make(NodeList<ExtendedModifier> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, boolean trailingComma, NodeList<MemberDecl> members) {
-		return new STree<EnumDecl.State>(kind, new EnumDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(implementsClause), TreeBase.<SNodeListState>nodeOf(enumConstants), trailingComma, TreeBase.<SNodeListState>nodeOf(members)));
+		return new STree<EnumDecl.State>(new EnumDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(implementsClause), TreeBase.<SNodeListState>nodeOf(enumConstants), trailingComma, TreeBase.<SNodeListState>nodeOf(members)));
 	}
 
 	public EnumDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, boolean trailingComma, NodeList<MemberDecl> members) {
@@ -320,6 +320,10 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.EnumDecl;
 		}
 	}
 }

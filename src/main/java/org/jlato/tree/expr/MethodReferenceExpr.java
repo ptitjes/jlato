@@ -38,16 +38,16 @@ import org.jlato.tree.Tree;
 
 public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Expr, MethodReferenceExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.MethodReferenceExpr;
+	}
 
 	private MethodReferenceExpr(SLocation<MethodReferenceExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<MethodReferenceExpr.State> make(Expr scope, NodeList<Type> typeArgs, Name name) {
-		return new STree<MethodReferenceExpr.State>(kind, new MethodReferenceExpr.State(TreeBase.<Expr.State>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<Name.State>nodeOf(name)));
+		return new STree<MethodReferenceExpr.State>(new MethodReferenceExpr.State(TreeBase.<Expr.State>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<Name.State>nodeOf(name)));
 	}
 
 	public MethodReferenceExpr(Expr scope, NodeList<Type> typeArgs, Name name) {
@@ -192,6 +192,10 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.MethodReferenceExpr;
 		}
 	}
 }

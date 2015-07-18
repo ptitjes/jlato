@@ -38,27 +38,16 @@ import java.io.PrintWriter;
  */
 public class TreeSet<T extends Tree> extends TreeBase<STreeSetState, TreeSet<T>, TreeSet<T>> implements Tree {
 
-	public final static Kind kind = new Kind();
-
-	@SuppressWarnings("unchecked")
-	public static <T extends Tree> Kind kind() {
-		return (Kind) kind;
-	}
-
-	public static class Kind<T extends Tree> implements org.jlato.tree.Kind {
-
-	}
-
 	public TreeSet(SLocation<STreeSetState> location) {
 		super(location);
 	}
 
 	public TreeSet(String rootPath) {
-		this(new SLocation<STreeSetState>(new STree<STreeSetState>(kind, new STreeSetState(rootPath))));
+		this(new SLocation<STreeSetState>(new STree<STreeSetState>(new STreeSetState(rootPath))));
 	}
 
 	public TreeSet(String rootPath, TreeMap<String, STree<?>> trees) {
-		this(new SLocation<STreeSetState>(new STree<STreeSetState>(kind, new STreeSetState(rootPath, trees))));
+		this(new SLocation<STreeSetState>(new STree<STreeSetState>(new STreeSetState(rootPath, trees))));
 	}
 
 	public T get(String path) {

@@ -206,8 +206,7 @@ abstract class ParserBase {
 		String image = token.image;
 		boolean nodeListVar = image.startsWith("..$");
 		String name = nodeListVar ? image.substring(3) : image.substring(1);
-		Kind kind = nodeListVar ? NodeList.kind : Name.kind;
-		return new STree(kind, new SVarState(name));
+		return new STree(new SVarState(name));
 	}
 
 	// Interface with ParserImpl
@@ -319,7 +318,7 @@ abstract class ParserBase {
 		System.out.print("Failed to enRun tokens: ");
 		System.out.println(tokens);
 
-		System.out.println("For tree of kind: " + tree.kind);
+		System.out.println("For tree of kind: " + ((SNodeState) tree.state).kind());
 
 		final STreeState state = tree.state;
 

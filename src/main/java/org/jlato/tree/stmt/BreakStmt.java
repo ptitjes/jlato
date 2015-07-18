@@ -39,16 +39,16 @@ import org.jlato.tree.Tree;
 
 public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.BreakStmt;
+	}
 
 	private BreakStmt(SLocation<BreakStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<BreakStmt.State> make(NodeOption<Name> id) {
-		return new STree<BreakStmt.State>(kind, new BreakStmt.State(TreeBase.<SNodeOptionState>nodeOf(id)));
+		return new STree<BreakStmt.State>(new BreakStmt.State(TreeBase.<SNodeOptionState>nodeOf(id)));
 	}
 
 	public BreakStmt(NodeOption<Name> id) {
@@ -118,6 +118,10 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.BreakStmt;
 		}
 	}
 }

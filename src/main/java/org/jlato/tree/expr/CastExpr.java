@@ -37,16 +37,16 @@ import org.jlato.tree.Tree;
 
 public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.CastExpr;
+	}
 
 	private CastExpr(SLocation<CastExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<CastExpr.State> make(Type type, Expr expr) {
-		return new STree<CastExpr.State>(kind, new CastExpr.State(TreeBase.<Type.State>nodeOf(type), TreeBase.<Expr.State>nodeOf(expr)));
+		return new STree<CastExpr.State>(new CastExpr.State(TreeBase.<Type.State>nodeOf(type), TreeBase.<Expr.State>nodeOf(expr)));
 	}
 
 	public CastExpr(Type type, Expr expr) {
@@ -151,6 +151,10 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.CastExpr;
 		}
 	}
 }

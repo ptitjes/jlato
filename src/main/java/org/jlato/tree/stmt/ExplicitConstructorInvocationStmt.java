@@ -43,16 +43,16 @@ import org.jlato.tree.Tree;
 
 public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstructorInvocationStmt.State, Stmt, ExplicitConstructorInvocationStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ExplicitConstructorInvocationStmt;
+	}
 
 	private ExplicitConstructorInvocationStmt(SLocation<ExplicitConstructorInvocationStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<ExplicitConstructorInvocationStmt.State> make(NodeList<Type> typeArgs, boolean isThis, NodeOption<Expr> expr, NodeList<Expr> args) {
-		return new STree<ExplicitConstructorInvocationStmt.State>(kind, new ExplicitConstructorInvocationStmt.State(TreeBase.<SNodeListState>nodeOf(typeArgs), isThis, TreeBase.<SNodeOptionState>nodeOf(expr), TreeBase.<SNodeListState>nodeOf(args)));
+		return new STree<ExplicitConstructorInvocationStmt.State>(new ExplicitConstructorInvocationStmt.State(TreeBase.<SNodeListState>nodeOf(typeArgs), isThis, TreeBase.<SNodeOptionState>nodeOf(expr), TreeBase.<SNodeListState>nodeOf(args)));
 	}
 
 	public ExplicitConstructorInvocationStmt(NodeList<Type> typeArgs, boolean isThis, NodeOption<Expr> expr, NodeList<Expr> args) {
@@ -228,6 +228,10 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ExplicitConstructorInvocationStmt;
 		}
 	}
 }

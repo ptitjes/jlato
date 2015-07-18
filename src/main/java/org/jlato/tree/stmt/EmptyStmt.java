@@ -33,16 +33,16 @@ import org.jlato.tree.Tree;
 
 public class EmptyStmt extends TreeBase<EmptyStmt.State, Stmt, EmptyStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.EmptyStmt;
+	}
 
 	private EmptyStmt(SLocation<EmptyStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<EmptyStmt.State> make() {
-		return new STree<EmptyStmt.State>(kind, new EmptyStmt.State());
+		return new STree<EmptyStmt.State>(new EmptyStmt.State());
 	}
 
 	public EmptyStmt() {
@@ -70,6 +70,10 @@ public class EmptyStmt extends TreeBase<EmptyStmt.State, Stmt, EmptyStmt> implem
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.EmptyStmt;
 		}
 	}
 }

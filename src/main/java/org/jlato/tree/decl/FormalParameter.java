@@ -20,6 +20,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.*;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
@@ -31,23 +32,22 @@ import org.jlato.tree.type.Type;
 import org.jlato.tree.type.UnknownType;
 
 import static org.jlato.internal.shapes.LSCondition.childIs;
-import static org.jlato.internal.shapes.LSCondition.kind;
 import static org.jlato.internal.shapes.LSCondition.not;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
 public class FormalParameter extends TreeBase<FormalParameter.State, Tree, FormalParameter> implements Tree {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.FormalParameter;
+	}
 
 	private FormalParameter(SLocation<FormalParameter.State> location) {
 		super(location);
 	}
 
 	public static STree<FormalParameter.State> make(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		return new STree<FormalParameter.State>(kind, new FormalParameter.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), isVarArgs, TreeBase.<VariableDeclaratorId.State>nodeOf(id)));
+		return new STree<FormalParameter.State>(new FormalParameter.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), isVarArgs, TreeBase.<VariableDeclaratorId.State>nodeOf(id)));
 	}
 
 	public FormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
@@ -168,7 +168,7 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 			child(MODIFIERS, ExtendedModifier.singleLineShape),
 			child(TYPE),
 			dataOption(VAR_ARGS, token(LToken.Ellipsis)),
-			when(not(childIs(TYPE, kind(UnknownType.kind))), none().withSpacingAfter(space())),
+			when(not(childIs(TYPE, LSCondition.kind(Kind.UnknownType))), none().withSpacingAfter(space())),
 			child(ID)
 	);
 
@@ -225,6 +225,10 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.FormalParameter;
 		}
 	}
 }

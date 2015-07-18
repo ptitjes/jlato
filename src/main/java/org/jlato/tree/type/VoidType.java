@@ -33,16 +33,16 @@ import org.jlato.tree.Tree;
 
 public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implements Type {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.VoidType;
+	}
 
 	private VoidType(SLocation<VoidType.State> location) {
 		super(location);
 	}
 
 	public static STree<VoidType.State> make() {
-		return new STree<VoidType.State>(kind, new VoidType.State());
+		return new STree<VoidType.State>(new VoidType.State());
 	}
 
 	public VoidType() {
@@ -70,6 +70,10 @@ public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implement
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.VoidType;
 		}
 	}
 }

@@ -36,16 +36,16 @@ import org.jlato.tree.Tree;
 
 public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, InstanceOfExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.InstanceOfExpr;
+	}
 
 	private InstanceOfExpr(SLocation<InstanceOfExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<InstanceOfExpr.State> make(Expr expr, Type type) {
-		return new STree<InstanceOfExpr.State>(kind, new InstanceOfExpr.State(TreeBase.<Expr.State>nodeOf(expr), TreeBase.<Type.State>nodeOf(type)));
+		return new STree<InstanceOfExpr.State>(new InstanceOfExpr.State(TreeBase.<Expr.State>nodeOf(expr), TreeBase.<Type.State>nodeOf(type)));
 	}
 
 	public InstanceOfExpr(Expr expr, Type type) {
@@ -152,6 +152,10 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.InstanceOfExpr;
 		}
 	}
 }

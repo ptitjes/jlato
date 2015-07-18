@@ -36,16 +36,16 @@ import org.jlato.tree.Tree;
 
 public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ThrowStmt;
+	}
 
 	private ThrowStmt(SLocation<ThrowStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<ThrowStmt.State> make(Expr expr) {
-		return new STree<ThrowStmt.State>(kind, new ThrowStmt.State(TreeBase.<Expr.State>nodeOf(expr)));
+		return new STree<ThrowStmt.State>(new ThrowStmt.State(TreeBase.<Expr.State>nodeOf(expr)));
 	}
 
 	public ThrowStmt(Expr expr) {
@@ -113,6 +113,10 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ThrowStmt;
 		}
 	}
 }

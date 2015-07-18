@@ -58,7 +58,7 @@ public abstract class LSCondition {
 	public static LSCondition kind(final Kind kind) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
-				return tree.kind == kind;
+				return ((SNodeState) tree.state).kind() == kind;
 			}
 		};
 	}
@@ -80,7 +80,7 @@ public abstract class LSCondition {
 			public boolean test(STree tree) {
 				final SNodeListState state = (SNodeListState) tree.state;
 				final Vector<STree<?>> children = state.children;
-				final Kind childKind = children.last().kind;
+				final Kind childKind = ((SNodeState) children.last().state).kind();
 				return childKind == kind;
 			}
 		};

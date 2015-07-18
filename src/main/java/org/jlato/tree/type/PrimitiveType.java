@@ -38,16 +38,16 @@ import org.jlato.tree.Tree;
 
 public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, PrimitiveType> implements Type {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.PrimitiveType;
+	}
 
 	private PrimitiveType(SLocation<PrimitiveType.State> location) {
 		super(location);
 	}
 
 	public static STree<PrimitiveType.State> make(NodeList<AnnotationExpr> annotations, Primitive type) {
-		return new STree<PrimitiveType.State>(kind, new PrimitiveType.State(TreeBase.<SNodeListState>nodeOf(annotations), type));
+		return new STree<PrimitiveType.State>(new PrimitiveType.State(TreeBase.<SNodeListState>nodeOf(annotations), type));
 	}
 
 	public PrimitiveType(NodeList<AnnotationExpr> annotations, Primitive type) {
@@ -173,6 +173,10 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.PrimitiveType;
 		}
 	}
 }

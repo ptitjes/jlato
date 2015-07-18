@@ -42,16 +42,16 @@ import org.jlato.tree.Tree;
 
 public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.SwitchStmt;
+	}
 
 	private SwitchStmt(SLocation<SwitchStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<SwitchStmt.State> make(Expr selector, NodeList<SwitchCase> cases) {
-		return new STree<SwitchStmt.State>(kind, new SwitchStmt.State(TreeBase.<Expr.State>nodeOf(selector), TreeBase.<SNodeListState>nodeOf(cases)));
+		return new STree<SwitchStmt.State>(new SwitchStmt.State(TreeBase.<Expr.State>nodeOf(selector), TreeBase.<SNodeListState>nodeOf(cases)));
 	}
 
 	public SwitchStmt(Expr selector, NodeList<SwitchCase> cases) {
@@ -177,6 +177,10 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.SwitchStmt;
 		}
 	}
 }

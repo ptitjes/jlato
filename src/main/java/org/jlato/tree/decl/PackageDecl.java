@@ -38,16 +38,16 @@ import org.jlato.internal.bu.*;
 
 public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> implements Tree {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.PackageDecl;
+	}
 
 	private PackageDecl(SLocation<PackageDecl.State> location) {
 		super(location);
 	}
 
 	public static STree<PackageDecl.State> make(NodeList<AnnotationExpr> annotations, QualifiedName name) {
-		return new STree<PackageDecl.State>(kind, new PackageDecl.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<QualifiedName.State>nodeOf(name)));
+		return new STree<PackageDecl.State>(new PackageDecl.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<QualifiedName.State>nodeOf(name)));
 	}
 
 	public PackageDecl(NodeList<AnnotationExpr> annotations, QualifiedName name) {
@@ -155,6 +155,10 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.PackageDecl;
 		}
 	}
 }

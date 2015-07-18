@@ -37,16 +37,16 @@ import org.jlato.tree.Tree;
 
 public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, SynchronizedStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.SynchronizedStmt;
+	}
 
 	private SynchronizedStmt(SLocation<SynchronizedStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<SynchronizedStmt.State> make(Expr expr, BlockStmt block) {
-		return new STree<SynchronizedStmt.State>(kind, new SynchronizedStmt.State(TreeBase.<Expr.State>nodeOf(expr), TreeBase.<BlockStmt.State>nodeOf(block)));
+		return new STree<SynchronizedStmt.State>(new SynchronizedStmt.State(TreeBase.<Expr.State>nodeOf(expr), TreeBase.<BlockStmt.State>nodeOf(block)));
 	}
 
 	public SynchronizedStmt(Expr expr, BlockStmt block) {
@@ -155,6 +155,10 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.SynchronizedStmt;
 		}
 	}
 }

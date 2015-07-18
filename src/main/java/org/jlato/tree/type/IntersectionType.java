@@ -36,16 +36,16 @@ import org.jlato.tree.Tree;
 
 public class IntersectionType extends TreeBase<IntersectionType.State, Type, IntersectionType> implements Type {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.IntersectionType;
+	}
 
 	private IntersectionType(SLocation<IntersectionType.State> location) {
 		super(location);
 	}
 
 	public static STree<IntersectionType.State> make(NodeList<Type> types) {
-		return new STree<IntersectionType.State>(kind, new IntersectionType.State(TreeBase.<SNodeListState>nodeOf(types)));
+		return new STree<IntersectionType.State>(new IntersectionType.State(TreeBase.<SNodeListState>nodeOf(types)));
 	}
 
 	public IntersectionType(NodeList<Type> types) {
@@ -113,6 +113,10 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.IntersectionType;
 		}
 	}
 }

@@ -32,16 +32,16 @@ import org.jlato.tree.Tree;
 
 public class UnknownType extends TreeBase<UnknownType.State, Type, UnknownType> implements Type {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.UnknownType;
+	}
 
 	private UnknownType(SLocation<UnknownType.State> location) {
 		super(location);
 	}
 
 	public static STree<UnknownType.State> make() {
-		return new STree<UnknownType.State>(kind, new UnknownType.State());
+		return new STree<UnknownType.State>(new UnknownType.State());
 	}
 
 	public UnknownType() {
@@ -69,6 +69,10 @@ public class UnknownType extends TreeBase<UnknownType.State, Type, UnknownType> 
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.UnknownType;
 		}
 	}
 }

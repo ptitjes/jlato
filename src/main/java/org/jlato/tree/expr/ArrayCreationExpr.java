@@ -42,16 +42,16 @@ import org.jlato.tree.Tree;
 
 public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, ArrayCreationExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ArrayCreationExpr;
+	}
 
 	private ArrayCreationExpr(SLocation<ArrayCreationExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<ArrayCreationExpr.State> make(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> init) {
-		return new STree<ArrayCreationExpr.State>(kind, new ArrayCreationExpr.State(TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(dimExprs), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeOptionState>nodeOf(init)));
+		return new STree<ArrayCreationExpr.State>(new ArrayCreationExpr.State(TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(dimExprs), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeOptionState>nodeOf(init)));
 	}
 
 	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> init) {
@@ -239,6 +239,10 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ArrayCreationExpr;
 		}
 	}
 }

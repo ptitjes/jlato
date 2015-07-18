@@ -44,16 +44,16 @@ import org.jlato.internal.bu.*;
 
 public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> implements Tree {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.SwitchCase;
+	}
 
 	private SwitchCase(SLocation<SwitchCase.State> location) {
 		super(location);
 	}
 
 	public static STree<SwitchCase.State> make(NodeOption<Expr> label, NodeList<Stmt> stmts) {
-		return new STree<SwitchCase.State>(kind, new SwitchCase.State(TreeBase.<SNodeOptionState>nodeOf(label), TreeBase.<SNodeListState>nodeOf(stmts)));
+		return new STree<SwitchCase.State>(new SwitchCase.State(TreeBase.<SNodeOptionState>nodeOf(label), TreeBase.<SNodeListState>nodeOf(stmts)));
 	}
 
 	public SwitchCase(NodeOption<Expr> label, NodeList<Stmt> stmts) {
@@ -167,6 +167,10 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.SwitchCase;
 		}
 	}
 }

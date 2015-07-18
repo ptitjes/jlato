@@ -38,16 +38,16 @@ import org.jlato.internal.bu.*;
 
 public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implements Tree {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ArrayDim;
+	}
 
 	private ArrayDim(SLocation<ArrayDim.State> location) {
 		super(location);
 	}
 
 	public static STree<ArrayDim.State> make(NodeList<AnnotationExpr> annotations) {
-		return new STree<ArrayDim.State>(kind, new ArrayDim.State(TreeBase.<SNodeListState>nodeOf(annotations)));
+		return new STree<ArrayDim.State>(new ArrayDim.State(TreeBase.<SNodeListState>nodeOf(annotations)));
 	}
 
 	public ArrayDim(NodeList<AnnotationExpr> annotations) {
@@ -122,6 +122,10 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ArrayDim;
 		}
 	}
 }

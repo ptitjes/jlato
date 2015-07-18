@@ -38,16 +38,16 @@ import org.jlato.tree.Tree;
 
 public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ForeachStmt;
+	}
 
 	private ForeachStmt(SLocation<ForeachStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<ForeachStmt.State> make(VariableDeclarationExpr var, Expr iterable, Stmt body) {
-		return new STree<ForeachStmt.State>(kind, new ForeachStmt.State(TreeBase.<VariableDeclarationExpr.State>nodeOf(var), TreeBase.<Expr.State>nodeOf(iterable), TreeBase.<Stmt.State>nodeOf(body)));
+		return new STree<ForeachStmt.State>(new ForeachStmt.State(TreeBase.<VariableDeclarationExpr.State>nodeOf(var), TreeBase.<Expr.State>nodeOf(iterable), TreeBase.<Stmt.State>nodeOf(body)));
 	}
 
 	public ForeachStmt(VariableDeclarationExpr var, Expr iterable, Stmt body) {
@@ -194,6 +194,10 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ForeachStmt;
 		}
 	}
 }

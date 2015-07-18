@@ -112,7 +112,7 @@ public class NormalizedJsonWriter {
 
 			String name = method.getName();
 
-			if (name.equals("toString")) continue;
+			if (name.equals("toString") || name.equals("kind")) continue;
 
 			methods.add(method);
 		}

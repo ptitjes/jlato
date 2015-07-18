@@ -41,16 +41,16 @@ import org.jlato.tree.Tree;
 
 public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.TryStmt;
+	}
 
 	private TryStmt(SLocation<TryStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<TryStmt.State> make(NodeList<VariableDeclarationExpr> resources, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
-		return new STree<TryStmt.State>(kind, new TryStmt.State(TreeBase.<SNodeListState>nodeOf(resources), TreeBase.<BlockStmt.State>nodeOf(tryBlock), TreeBase.<SNodeListState>nodeOf(catchs), TreeBase.<SNodeOptionState>nodeOf(finallyBlock)));
+		return new STree<TryStmt.State>(new TryStmt.State(TreeBase.<SNodeListState>nodeOf(resources), TreeBase.<BlockStmt.State>nodeOf(tryBlock), TreeBase.<SNodeListState>nodeOf(catchs), TreeBase.<SNodeOptionState>nodeOf(finallyBlock)));
 	}
 
 	public TryStmt(NodeList<VariableDeclarationExpr> resources, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
@@ -236,6 +236,10 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.TryStmt;
 		}
 	}
 }

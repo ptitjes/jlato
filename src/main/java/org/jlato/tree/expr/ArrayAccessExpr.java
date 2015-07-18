@@ -35,16 +35,16 @@ import org.jlato.tree.Tree;
 
 public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, ArrayAccessExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ArrayAccessExpr;
+	}
 
 	private ArrayAccessExpr(SLocation<ArrayAccessExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<ArrayAccessExpr.State> make(Expr name, Expr index) {
-		return new STree<ArrayAccessExpr.State>(kind, new ArrayAccessExpr.State(TreeBase.<Expr.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(index)));
+		return new STree<ArrayAccessExpr.State>(new ArrayAccessExpr.State(TreeBase.<Expr.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(index)));
 	}
 
 	public ArrayAccessExpr(Expr name, Expr index) {
@@ -150,6 +150,10 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ArrayAccessExpr;
 		}
 	}
 }

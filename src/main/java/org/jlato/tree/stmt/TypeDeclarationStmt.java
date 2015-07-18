@@ -36,16 +36,16 @@ import org.jlato.tree.Tree;
 
 public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stmt, TypeDeclarationStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.TypeDeclarationStmt;
+	}
 
 	private TypeDeclarationStmt(SLocation<TypeDeclarationStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<TypeDeclarationStmt.State> make(TypeDecl typeDecl) {
-		return new STree<TypeDeclarationStmt.State>(kind, new TypeDeclarationStmt.State(TreeBase.<TypeDecl.State>nodeOf(typeDecl)));
+		return new STree<TypeDeclarationStmt.State>(new TypeDeclarationStmt.State(TreeBase.<TypeDecl.State>nodeOf(typeDecl)));
 	}
 
 	public TypeDeclarationStmt(TypeDecl typeDecl) {
@@ -113,6 +113,10 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.TypeDeclarationStmt;
 		}
 	}
 }

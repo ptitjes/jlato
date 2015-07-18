@@ -36,16 +36,16 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> implements Tree {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.CatchClause;
+	}
 
 	private CatchClause(SLocation<CatchClause.State> location) {
 		super(location);
 	}
 
 	public static STree<CatchClause.State> make(FormalParameter except, BlockStmt catchBlock) {
-		return new STree<CatchClause.State>(kind, new CatchClause.State(TreeBase.<FormalParameter.State>nodeOf(except), TreeBase.<BlockStmt.State>nodeOf(catchBlock)));
+		return new STree<CatchClause.State>(new CatchClause.State(TreeBase.<FormalParameter.State>nodeOf(except), TreeBase.<BlockStmt.State>nodeOf(catchBlock)));
 	}
 
 	public CatchClause(FormalParameter except, BlockStmt catchBlock) {
@@ -156,6 +156,10 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.CatchClause;
 		}
 	}
 }

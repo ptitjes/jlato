@@ -19,6 +19,8 @@
 
 package org.jlato.internal.bu;
 
+import org.jlato.tree.Kind;
+
 import java.util.Collections;
 
 /**
@@ -28,6 +30,8 @@ public abstract class SNodeState<S extends SNodeState<S>> implements STreeState<
 
 	public SNodeState() {
 	}
+
+	public abstract Kind kind();
 
 	@Override
 	public Iterable<SProperty<S>> allProperties() {

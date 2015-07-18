@@ -36,16 +36,16 @@ import org.jlato.tree.Tree;
 
 public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, ExpressionStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ExpressionStmt;
+	}
 
 	private ExpressionStmt(SLocation<ExpressionStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<ExpressionStmt.State> make(Expr expr) {
-		return new STree<ExpressionStmt.State>(kind, new ExpressionStmt.State(TreeBase.<Expr.State>nodeOf(expr)));
+		return new STree<ExpressionStmt.State>(new ExpressionStmt.State(TreeBase.<Expr.State>nodeOf(expr)));
 	}
 
 	public ExpressionStmt(Expr expr) {
@@ -113,6 +113,10 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ExpressionStmt;
 		}
 	}
 }

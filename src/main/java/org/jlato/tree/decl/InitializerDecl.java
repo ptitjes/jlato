@@ -37,16 +37,16 @@ import org.jlato.tree.Tree;
 
 public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl, InitializerDecl> implements MemberDecl {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.InitializerDecl;
+	}
 
 	private InitializerDecl(SLocation<InitializerDecl.State> location) {
 		super(location);
 	}
 
 	public static STree<InitializerDecl.State> make(NodeList<ExtendedModifier> modifiers, BlockStmt body) {
-		return new STree<InitializerDecl.State>(kind, new InitializerDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<BlockStmt.State>nodeOf(body)));
+		return new STree<InitializerDecl.State>(new InitializerDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<BlockStmt.State>nodeOf(body)));
 	}
 
 	public InitializerDecl(NodeList<ExtendedModifier> modifiers, BlockStmt body/*, JavadocComment javadocComment*/) {
@@ -167,6 +167,10 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.InitializerDecl;
 		}
 	}
 }

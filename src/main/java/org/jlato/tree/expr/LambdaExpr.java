@@ -41,16 +41,16 @@ import org.jlato.tree.Tree;
 
 public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.LambdaExpr;
+	}
 
 	private LambdaExpr(SLocation<LambdaExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<LambdaExpr.State> make(NodeList<FormalParameter> params, boolean hasParens, NodeEither<Expr, BlockStmt> body) {
-		return new STree<LambdaExpr.State>(kind, new LambdaExpr.State(TreeBase.<SNodeListState>nodeOf(params), hasParens, TreeBase.<SNodeEitherState>nodeOf(body)));
+		return new STree<LambdaExpr.State>(new LambdaExpr.State(TreeBase.<SNodeListState>nodeOf(params), hasParens, TreeBase.<SNodeEitherState>nodeOf(body)));
 	}
 
 	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParens, NodeEither<Expr, BlockStmt> body) {
@@ -193,6 +193,10 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.LambdaExpr;
 		}
 	}
 }

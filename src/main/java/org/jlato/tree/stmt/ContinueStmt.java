@@ -39,16 +39,16 @@ import org.jlato.tree.Tree;
 
 public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ContinueStmt;
+	}
 
 	private ContinueStmt(SLocation<ContinueStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<ContinueStmt.State> make(NodeOption<Name> id) {
-		return new STree<ContinueStmt.State>(kind, new ContinueStmt.State(TreeBase.<SNodeOptionState>nodeOf(id)));
+		return new STree<ContinueStmt.State>(new ContinueStmt.State(TreeBase.<SNodeOptionState>nodeOf(id)));
 	}
 
 	public ContinueStmt(NodeOption<Name> id) {
@@ -118,6 +118,10 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ContinueStmt;
 		}
 	}
 }

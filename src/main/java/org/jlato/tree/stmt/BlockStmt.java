@@ -40,16 +40,16 @@ import org.jlato.tree.Tree;
 
 public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.BlockStmt;
+	}
 
 	private BlockStmt(SLocation<BlockStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<BlockStmt.State> make(NodeList<Stmt> stmts) {
-		return new STree<BlockStmt.State>(kind, new BlockStmt.State(TreeBase.<SNodeListState>nodeOf(stmts)));
+		return new STree<BlockStmt.State>(new BlockStmt.State(TreeBase.<SNodeListState>nodeOf(stmts)));
 	}
 
 	public BlockStmt(NodeList<Stmt> stmts) {
@@ -134,6 +134,10 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.BlockStmt;
 		}
 	}
 }

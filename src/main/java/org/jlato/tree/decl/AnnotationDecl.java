@@ -37,16 +37,16 @@ import org.jlato.tree.Tree;
 
 public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, AnnotationDecl> implements TypeDecl {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.AnnotationDecl;
+	}
 
 	protected AnnotationDecl(SLocation<AnnotationDecl.State> location) {
 		super(location);
 	}
 
 	public static STree<AnnotationDecl.State> make(NodeList<ExtendedModifier> modifiers, Name name, NodeList<MemberDecl> members) {
-		return new STree<AnnotationDecl.State>(kind, new AnnotationDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(members)));
+		return new STree<AnnotationDecl.State>(new AnnotationDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(members)));
 	}
 
 	public AnnotationDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<MemberDecl> members) {
@@ -200,6 +200,10 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.AnnotationDecl;
 		}
 	}
 }

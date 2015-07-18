@@ -23,6 +23,7 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
@@ -43,16 +44,16 @@ import org.jlato.tree.Tree;
 
 public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.IfStmt;
+	}
 
 	private IfStmt(SLocation<IfStmt.State> location) {
 		super(location);
 	}
 
 	public static STree<IfStmt.State> make(Expr condition, Stmt thenStmt, NodeOption<Stmt> elseStmt) {
-		return new STree<IfStmt.State>(kind, new IfStmt.State(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Stmt.State>nodeOf(thenStmt), TreeBase.<SNodeOptionState>nodeOf(elseStmt)));
+		return new STree<IfStmt.State>(new IfStmt.State(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Stmt.State>nodeOf(thenStmt), TreeBase.<SNodeOptionState>nodeOf(elseStmt)));
 	}
 
 	public IfStmt(Expr condition, Stmt thenStmt, NodeOption<Stmt> elseStmt) {
@@ -154,9 +155,9 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 			token(LToken.If), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
 			child(CONDITION),
 			token(LToken.ParenthesisRight),
-			alternative(childHas(THEN_STMT, kind(BlockStmt.kind)),
+			alternative(childHas(THEN_STMT, LSCondition.kind(Kind.BlockStmt)),
 					composite(none().withSpacingAfter(space()), child(THEN_STMT)),
-					alternative(childHas(THEN_STMT, kind(ExpressionStmt.kind)),
+					alternative(childHas(THEN_STMT, LSCondition.kind(Kind.ExpressionStmt)),
 							composite(
 									none().withSpacingAfter(spacing(IfStmt_ThenExpressionStmt)).withIndentationAfter(indent(BLOCK)),
 									child(THEN_STMT),
@@ -171,14 +172,14 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 			),
 			when(childIs(ELSE_STMT, some()), composite(
 					token(LToken.Else).withSpacingBefore(space()),
-					alternative(childHas(ELSE_STMT, elementHas(kind(BlockStmt.kind))),
+					alternative(childHas(ELSE_STMT, elementHas(LSCondition.kind(Kind.BlockStmt))),
 							composite(none().withSpacingAfter(space()), child(ELSE_STMT, element())),
-							alternative(childHas(ELSE_STMT, elementHas(kind(IfStmt.kind))),
+							alternative(childHas(ELSE_STMT, elementHas(LSCondition.kind(Kind.IfStmt))),
 									composite(
 											none().withSpacingAfter(spacing(IfStmt_ElseIfStmt)),
 											child(ELSE_STMT, element())
 									),
-									alternative(childHas(ELSE_STMT, elementHas(kind(ExpressionStmt.kind))),
+									alternative(childHas(ELSE_STMT, elementHas(LSCondition.kind(Kind.ExpressionStmt))),
 											composite(
 													none().withSpacingAfter(spacing(IfStmt_ElseExpressionStmt)).withIndentationAfter(indent(BLOCK)),
 													child(ELSE_STMT, element()),
@@ -235,6 +236,10 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.IfStmt;
 		}
 	}
 }

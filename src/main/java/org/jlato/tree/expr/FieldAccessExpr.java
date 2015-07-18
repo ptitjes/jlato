@@ -39,16 +39,16 @@ import org.jlato.tree.Tree;
 
 public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, FieldAccessExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.FieldAccessExpr;
+	}
 
 	private FieldAccessExpr(SLocation<FieldAccessExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<FieldAccessExpr.State> make(NodeOption<Expr> scope, Name name) {
-		return new STree<FieldAccessExpr.State>(kind, new FieldAccessExpr.State(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<Name.State>nodeOf(name)));
+		return new STree<FieldAccessExpr.State>(new FieldAccessExpr.State(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<Name.State>nodeOf(name)));
 	}
 
 	public FieldAccessExpr(NodeOption<Expr> scope, Name name) {
@@ -154,6 +154,10 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.FieldAccessExpr;
 		}
 	}
 }

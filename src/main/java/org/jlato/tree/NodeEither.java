@@ -30,17 +30,6 @@ import org.jlato.internal.td.TreeBase;
  */
 public class NodeEither<TL extends Tree, TR extends Tree> extends TreeBase<SNodeEitherState, NodeEither<TL, TR>, NodeEither<TL, TR>> implements Tree {
 
-	public final static Kind kind = new Kind();
-
-	@SuppressWarnings("unchecked")
-	public static <TL extends Tree, TR extends Tree> Kind kind() {
-		return (Kind) kind;
-	}
-
-	public static class Kind<TL extends Tree, TR extends Tree> implements org.jlato.tree.Kind {
-
-	}
-
 	public static <TL extends Tree, TR extends Tree> NodeEither<TL, TR> left(TL tree) {
 		if (tree == null) throw new NullPointerException();
 		return new NodeEither<TL, TR>(tree, EitherSide.Left);
@@ -56,7 +45,7 @@ public class NodeEither<TL extends Tree, TR extends Tree> extends TreeBase<SNode
 	}
 
 	private NodeEither(Tree element, EitherSide side) {
-		super(new SLocation<SNodeEitherState>(new STree<SNodeEitherState>(kind, new SNodeEitherState(treeOf(element), side))));
+		super(new SLocation<SNodeEitherState>(new STree<SNodeEitherState>(new SNodeEitherState(treeOf(element), side))));
 	}
 
 	public boolean isLeft() {

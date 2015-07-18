@@ -31,17 +31,6 @@ import java.util.Iterator;
  */
 public class NodeOption<T extends Tree> extends TreeBase<SNodeOptionState, NodeOption<T>, NodeOption<T>> implements Tree, Iterable<T> {
 
-	public final static Kind kind = new Kind();
-
-	@SuppressWarnings("unchecked")
-	public static <T extends Tree> Kind kind() {
-		return (Kind) kind;
-	}
-
-	public static class Kind<T extends Tree> implements org.jlato.tree.Kind {
-
-	}
-
 	@SuppressWarnings("unchecked")
 	public static <T extends Tree> NodeOption<T> of(T tree) {
 		return tree == null ? NodeOption.<T>none() : some(tree);
@@ -62,11 +51,11 @@ public class NodeOption<T extends Tree> extends TreeBase<SNodeOptionState, NodeO
 	}
 
 	public NodeOption() {
-		super(new SLocation<SNodeOptionState>(new STree<SNodeOptionState>(kind, new SNodeOptionState(treeOf(null)))));
+		super(new SLocation<SNodeOptionState>(new STree<SNodeOptionState>(new SNodeOptionState(treeOf(null)))));
 	}
 
 	public NodeOption(T element) {
-		super(new SLocation<SNodeOptionState>(new STree<SNodeOptionState>(kind, new SNodeOptionState(treeOf(element)))));
+		super(new SLocation<SNodeOptionState>(new STree<SNodeOptionState>(new SNodeOptionState(treeOf(element)))));
 	}
 
 	public boolean isDefined() {

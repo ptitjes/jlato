@@ -35,16 +35,16 @@ import org.jlato.tree.Tree;
 
 public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, ParenthesizedExpr> implements Expr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.ParenthesizedExpr;
+	}
 
 	private ParenthesizedExpr(SLocation<ParenthesizedExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<ParenthesizedExpr.State> make(Expr inner) {
-		return new STree<ParenthesizedExpr.State>(kind, new ParenthesizedExpr.State(TreeBase.<Expr.State>nodeOf(inner)));
+		return new STree<ParenthesizedExpr.State>(new ParenthesizedExpr.State(TreeBase.<Expr.State>nodeOf(inner)));
 	}
 
 	public ParenthesizedExpr(Expr inner) {
@@ -112,6 +112,10 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.ParenthesizedExpr;
 		}
 	}
 }

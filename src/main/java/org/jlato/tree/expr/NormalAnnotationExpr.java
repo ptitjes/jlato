@@ -38,16 +38,16 @@ import org.jlato.tree.Tree;
 
 public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, AnnotationExpr, NormalAnnotationExpr> implements AnnotationExpr {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.NormalAnnotationExpr;
+	}
 
 	private NormalAnnotationExpr(SLocation<NormalAnnotationExpr.State> location) {
 		super(location);
 	}
 
 	public static STree<NormalAnnotationExpr.State> make(QualifiedName name, NodeList<MemberValuePair> pairs) {
-		return new STree<NormalAnnotationExpr.State>(kind, new NormalAnnotationExpr.State(TreeBase.<QualifiedName.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(pairs)));
+		return new STree<NormalAnnotationExpr.State>(new NormalAnnotationExpr.State(TreeBase.<QualifiedName.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(pairs)));
 	}
 
 	public NormalAnnotationExpr(QualifiedName name, NodeList<MemberValuePair> pairs) {
@@ -155,6 +155,10 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.NormalAnnotationExpr;
 		}
 	}
 }

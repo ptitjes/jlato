@@ -37,16 +37,16 @@ import static org.jlato.printer.SpacingConstraint.spacing;
 
 public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, CompilationUnit> implements Tree {
 
-	public final static Kind kind = new Kind() {
-
-	};
+	public Kind kind() {
+		return Kind.CompilationUnit;
+	}
 
 	private CompilationUnit(SLocation<CompilationUnit.State> location) {
 		super(location);
 	}
 
 	public static STree<CompilationUnit.State> make(IndexedList<WTokenRun> preamble, PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
-		return new STree<CompilationUnit.State>(kind, new CompilationUnit.State(preamble, TreeBase.<PackageDecl.State>nodeOf(packageDecl), TreeBase.<SNodeListState>nodeOf(imports), TreeBase.<SNodeListState>nodeOf(types)));
+		return new STree<CompilationUnit.State>(new CompilationUnit.State(preamble, TreeBase.<PackageDecl.State>nodeOf(packageDecl), TreeBase.<SNodeListState>nodeOf(imports), TreeBase.<SNodeListState>nodeOf(types)));
 	}
 
 	public CompilationUnit(IndexedList<WTokenRun> preamble, PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
@@ -211,6 +211,10 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		public Kind kind() {
+			return Kind.CompilationUnit;
 		}
 	}
 }
