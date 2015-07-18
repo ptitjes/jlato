@@ -84,7 +84,7 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 		return location.safeTraversalMutate(PAIRS, mutation);
 	}
 
-	protected static final STraversal<NormalAnnotationExpr.State> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<NormalAnnotationExpr.State> NAME = SNodeState.childTraversal(0);
 	private static final STraversal<NormalAnnotationExpr.State> PAIRS = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(

@@ -34,7 +34,6 @@ import org.jlato.tree.Tree;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExpr> implements Tree {
 
@@ -73,19 +72,19 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 	}
 
 	public Expr expr() {
-		return location.safeTraversal(EXPRESSION);
+		return location.safeTraversal(EXPR);
 	}
 
 	public ArrayDimExpr withExpr(Expr expr) {
-		return location.safeTraversalReplace(EXPRESSION, expr);
+		return location.safeTraversalReplace(EXPR, expr);
 	}
 
 	public ArrayDimExpr withExpr(Mutation<Expr> mutation) {
-		return location.safeTraversalMutate(EXPRESSION, mutation);
+		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
 	private static final STraversal<ArrayDimExpr.State> ANNOTATIONS = SNodeState.childTraversal(0);
-	private static final STraversal<ArrayDimExpr.State> EXPRESSION = SNodeState.childTraversal(1);
+	private static final STraversal<ArrayDimExpr.State> EXPR = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list(
@@ -93,7 +92,7 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 					none().withSpacingBefore(space()),
 					none().withSpacingBefore(space())
 			)),
-			token(LToken.BracketLeft), child(EXPRESSION), token(LToken.BracketRight)
+			token(LToken.BracketLeft), child(EXPR), token(LToken.BracketRight)
 	);
 
 	public static final LexicalShape listShape = list();

@@ -34,7 +34,6 @@ import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Expr, MethodReferenceExpr> implements Expr {
 
@@ -73,15 +72,15 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 	}
 
 	public NodeList<Type> typeArgs() {
-		return location.safeTraversal(TYPE_ARGUMENTS);
+		return location.safeTraversal(TYPE_ARGS);
 	}
 
 	public MethodReferenceExpr withTypeArgs(NodeList<Type> typeArgs) {
-		return location.safeTraversalReplace(TYPE_ARGUMENTS, typeArgs);
+		return location.safeTraversalReplace(TYPE_ARGS, typeArgs);
 	}
 
 	public MethodReferenceExpr withTypeArgs(Mutation<NodeList<Type>> mutation) {
-		return location.safeTraversalMutate(TYPE_ARGUMENTS, mutation);
+		return location.safeTraversalMutate(TYPE_ARGS, mutation);
 	}
 
 	public Name name() {
@@ -97,13 +96,13 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 	}
 
 	private static final STraversal<MethodReferenceExpr.State> SCOPE = SNodeState.childTraversal(0);
-	private static final STraversal<MethodReferenceExpr.State> TYPE_ARGUMENTS = SNodeState.childTraversal(1);
+	private static final STraversal<MethodReferenceExpr.State> TYPE_ARGS = SNodeState.childTraversal(1);
 	private static final STraversal<MethodReferenceExpr.State> NAME = SNodeState.childTraversal(2);
 
 	public final static LexicalShape shape = composite(
 			child(SCOPE),
 			token(LToken.DoubleColon),
-			child(TYPE_ARGUMENTS, Type.typeArgumentsShape),
+			child(TYPE_ARGS, Type.typeArgumentsShape),
 			child(NAME)
 	);
 

@@ -70,7 +70,7 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	protected static final STraversal<MarkerAnnotationExpr.State> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<MarkerAnnotationExpr.State> NAME = SNodeState.childTraversal(0);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME)

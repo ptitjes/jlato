@@ -23,7 +23,6 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
@@ -38,7 +37,6 @@ import static org.jlato.internal.shapes.LSCondition.data;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> implements Expr {
 
@@ -56,40 +54,40 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		super(location);
 	}
 
-	public static STree<LambdaExpr.State> make(NodeList<FormalParameter> params, boolean hasParenthesis, NodeEither<Expr, BlockStmt> body) {
-		return new STree<LambdaExpr.State>(kind, new LambdaExpr.State(TreeBase.<SNodeListState>nodeOf(params), hasParenthesis, TreeBase.<SNodeEitherState>nodeOf(body)));
+	public static STree<LambdaExpr.State> make(NodeList<FormalParameter> params, boolean hasParens, NodeEither<Expr, BlockStmt> body) {
+		return new STree<LambdaExpr.State>(kind, new LambdaExpr.State(TreeBase.<SNodeListState>nodeOf(params), hasParens, TreeBase.<SNodeEitherState>nodeOf(body)));
 	}
 
-	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParenthesis, NodeEither<Expr, BlockStmt> body) {
-		super(new SLocation<LambdaExpr.State>(make(params, hasParenthesis, body)));
+	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParens, NodeEither<Expr, BlockStmt> body) {
+		super(new SLocation<LambdaExpr.State>(make(params, hasParens, body)));
 	}
 
-	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParenthesis, Expr expr) {
-		this(params, hasParenthesis, NodeEither.<Expr, BlockStmt>left(expr));
+	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParens, Expr expr) {
+		this(params, hasParens, NodeEither.<Expr, BlockStmt>left(expr));
 	}
 
-	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParenthesis, BlockStmt block) {
-		this(params, hasParenthesis, NodeEither.<Expr, BlockStmt>right(block));
+	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParens, BlockStmt block) {
+		this(params, hasParens, NodeEither.<Expr, BlockStmt>right(block));
 	}
 
 	public NodeList<FormalParameter> params() {
-		return location.safeTraversal(PARAMETERS);
+		return location.safeTraversal(PARAMS);
 	}
 
 	public LambdaExpr withParams(NodeList<FormalParameter> params) {
-		return location.safeTraversalReplace(PARAMETERS, params);
+		return location.safeTraversalReplace(PARAMS, params);
 	}
 
 	public LambdaExpr withParams(Mutation<NodeList<FormalParameter>> mutation) {
-		return location.safeTraversalMutate(PARAMETERS, mutation);
+		return location.safeTraversalMutate(PARAMS, mutation);
 	}
 
-	public boolean hasParenthesis() {
-		return location.<Boolean>data(HAS_PARENTHESIS);
+	public boolean hasParens() {
+		return location.<Boolean>data(PARENS);
 	}
 
-	public FormalParameter setParenthesis(boolean hasParenthesis) {
-		return location.withData(HAS_PARENTHESIS, hasParenthesis);
+	public FormalParameter setParens(boolean hasParens) {
+		return location.withData(PARENS, hasParens);
 	}
 
 	public NodeEither<Expr, BlockStmt> body() {
@@ -104,15 +102,15 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<LambdaExpr.State> PARAMETERS = SNodeState.childTraversal(0);
+	private static final STraversal<LambdaExpr.State> PARAMS = SNodeState.childTraversal(0);
 	private static final STraversal<LambdaExpr.State> BODY = SNodeState.childTraversal(1);
 
-	private static final int HAS_PARENTHESIS = 0;
+	private static final int PARENS = 0;
 
 	public final static LexicalShape shape = composite(
-			when(data(HAS_PARENTHESIS), token(LToken.ParenthesisLeft)),
-			child(PARAMETERS, Expr.listShape),
-			when(data(HAS_PARENTHESIS), token(LToken.ParenthesisRight)),
+			when(data(PARENS), token(LToken.ParenthesisLeft)),
+			child(PARAMS, Expr.listShape),
+			when(data(PARENS), token(LToken.ParenthesisRight)),
 			token(LToken.Arrow).withSpacing(space(), space()),
 			child(BODY, leftOrRight())
 	);
@@ -121,26 +119,26 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 
 		public final STree<SNodeListState> params;
 
-		public final boolean hasParenthesis;
+		public final boolean hasParens;
 
 		public final STree<SNodeEitherState> body;
 
-		State(STree<SNodeListState> params, boolean hasParenthesis, STree<SNodeEitherState> body) {
+		State(STree<SNodeListState> params, boolean hasParens, STree<SNodeEitherState> body) {
 			this.params = params;
-			this.hasParenthesis = hasParenthesis;
+			this.hasParens = hasParens;
 			this.body = body;
 		}
 
 		public LambdaExpr.State withParams(STree<SNodeListState> params) {
-			return new LambdaExpr.State(params, hasParenthesis, body);
+			return new LambdaExpr.State(params, hasParens, body);
 		}
 
-		public LambdaExpr.State withHasParenthesis(boolean hasParenthesis) {
-			return new LambdaExpr.State(params, hasParenthesis, body);
+		public LambdaExpr.State withHasParens(boolean hasParens) {
+			return new LambdaExpr.State(params, hasParens, body);
 		}
 
 		public LambdaExpr.State withBody(STree<SNodeEitherState> body) {
-			return new LambdaExpr.State(params, hasParenthesis, body);
+			return new LambdaExpr.State(params, hasParens, body);
 		}
 
 		public STraversal<LambdaExpr.State> firstChild() {

@@ -38,7 +38,6 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, ArrayCreationExpr> implements Expr {
 
@@ -56,12 +55,12 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 		super(location);
 	}
 
-	public static STree<ArrayCreationExpr.State> make(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> initializer) {
-		return new STree<ArrayCreationExpr.State>(kind, new ArrayCreationExpr.State(TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(dimExprs), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeOptionState>nodeOf(initializer)));
+	public static STree<ArrayCreationExpr.State> make(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> init) {
+		return new STree<ArrayCreationExpr.State>(kind, new ArrayCreationExpr.State(TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(dimExprs), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeOptionState>nodeOf(init)));
 	}
 
-	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> initializer) {
-		super(new SLocation<ArrayCreationExpr.State>(make(type, dimExprs, dims, initializer)));
+	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> init) {
+		super(new SLocation<ArrayCreationExpr.State>(make(type, dimExprs, dims, init)));
 	}
 
 	public Type type() {
@@ -77,55 +76,55 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 	}
 
 	public NodeList<ArrayDimExpr> dimExprs() {
-		return location.safeTraversal(DIMENSION_EXPRESSIONS);
+		return location.safeTraversal(DIM_EXPRS);
 	}
 
 	public ArrayCreationExpr withDimExprs(NodeList<ArrayDimExpr> dimExprs) {
-		return location.safeTraversalReplace(DIMENSION_EXPRESSIONS, dimExprs);
+		return location.safeTraversalReplace(DIM_EXPRS, dimExprs);
 	}
 
 	public ArrayCreationExpr withDimExprs(Mutation<NodeList<ArrayDimExpr>> mutation) {
-		return location.safeTraversalMutate(DIMENSION_EXPRESSIONS, mutation);
+		return location.safeTraversalMutate(DIM_EXPRS, mutation);
 	}
 
 	public NodeList<ArrayDim> dims() {
-		return location.safeTraversal(DIMENSIONS);
+		return location.safeTraversal(DIMS);
 	}
 
 	public ArrayCreationExpr withDims(NodeList<ArrayDim> dims) {
-		return location.safeTraversalReplace(DIMENSIONS, dims);
+		return location.safeTraversalReplace(DIMS, dims);
 	}
 
 	public ArrayCreationExpr withDims(Mutation<NodeList<ArrayDim>> mutation) {
-		return location.safeTraversalMutate(DIMENSIONS, mutation);
+		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
 	public NodeOption<ArrayInitializerExpr> init() {
-		return location.safeTraversal(INITIALIZER);
+		return location.safeTraversal(INIT);
 	}
 
 	public ArrayCreationExpr withInit(NodeOption<ArrayInitializerExpr> initializer) {
-		return location.safeTraversalReplace(INITIALIZER, initializer);
+		return location.safeTraversalReplace(INIT, initializer);
 	}
 
 	public ArrayCreationExpr withInit(Mutation<NodeOption<ArrayInitializerExpr>> mutation) {
-		return location.safeTraversalMutate(INITIALIZER, mutation);
+		return location.safeTraversalMutate(INIT, mutation);
 	}
 
 	private static final STraversal<ArrayCreationExpr.State> TYPE = SNodeState.childTraversal(0);
-	private static final STraversal<ArrayCreationExpr.State> DIMENSION_EXPRESSIONS = SNodeState.childTraversal(1);
-	private static final STraversal<ArrayCreationExpr.State> DIMENSIONS = SNodeState.childTraversal(2);
-	private static final STraversal<ArrayCreationExpr.State> INITIALIZER = SNodeState.childTraversal(3);
+	private static final STraversal<ArrayCreationExpr.State> DIM_EXPRS = SNodeState.childTraversal(1);
+	private static final STraversal<ArrayCreationExpr.State> DIMS = SNodeState.childTraversal(2);
+	private static final STraversal<ArrayCreationExpr.State> INIT = SNodeState.childTraversal(3);
 
 	public final static LexicalShape shape = composite(
 			token(LToken.New),
 			child(TYPE),
-			child(DIMENSION_EXPRESSIONS, list()),
-			child(DIMENSIONS, list()),
-			when(childIs(INITIALIZER, some()),
+			child(DIM_EXPRS, list()),
+			child(DIMS, list()),
+			when(childIs(INIT, some()),
 					composite(
 							none().withSpacingAfter(space()),
-							child(INITIALIZER, element())
+							child(INIT, element())
 					)
 			)
 	);
@@ -138,29 +137,29 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 
 		public final STree<SNodeListState> dims;
 
-		public final STree<SNodeOptionState> initializer;
+		public final STree<SNodeOptionState> init;
 
-		State(STree<Type.State> type, STree<SNodeListState> dimExprs, STree<SNodeListState> dims, STree<SNodeOptionState> initializer) {
+		State(STree<Type.State> type, STree<SNodeListState> dimExprs, STree<SNodeListState> dims, STree<SNodeOptionState> init) {
 			this.type = type;
 			this.dimExprs = dimExprs;
 			this.dims = dims;
-			this.initializer = initializer;
+			this.init = init;
 		}
 
 		public ArrayCreationExpr.State withType(STree<Type.State> type) {
-			return new ArrayCreationExpr.State(type, dimExprs, dims, initializer);
+			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
 		}
 
 		public ArrayCreationExpr.State withDimExprs(STree<SNodeListState> dimExprs) {
-			return new ArrayCreationExpr.State(type, dimExprs, dims, initializer);
+			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
 		}
 
 		public ArrayCreationExpr.State withDims(STree<SNodeListState> dims) {
-			return new ArrayCreationExpr.State(type, dimExprs, dims, initializer);
+			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
 		}
 
-		public ArrayCreationExpr.State withInitializer(STree<SNodeOptionState> initializer) {
-			return new ArrayCreationExpr.State(type, dimExprs, dims, initializer);
+		public ArrayCreationExpr.State withInit(STree<SNodeOptionState> init) {
+			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
 		}
 
 		public STraversal<ArrayCreationExpr.State> firstChild() {

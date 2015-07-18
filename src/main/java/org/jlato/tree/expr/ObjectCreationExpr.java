@@ -39,7 +39,6 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr, ObjectCreationExpr> implements Expr {
 
@@ -78,15 +77,15 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 	}
 
 	public NodeList<Type> typeArgs() {
-		return location.safeTraversal(TYPE_ARGUMENTS);
+		return location.safeTraversal(TYPE_ARGS);
 	}
 
 	public ObjectCreationExpr withTypeArgs(NodeList<Type> typeArgs) {
-		return location.safeTraversalReplace(TYPE_ARGUMENTS, typeArgs);
+		return location.safeTraversalReplace(TYPE_ARGS, typeArgs);
 	}
 
 	public ObjectCreationExpr withTypeArgs(Mutation<NodeList<Type>> mutation) {
-		return location.safeTraversalMutate(TYPE_ARGUMENTS, mutation);
+		return location.safeTraversalMutate(TYPE_ARGS, mutation);
 	}
 
 	public QualifiedType type() {
@@ -102,15 +101,15 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 	}
 
 	public NodeList<Expr> args() {
-		return location.safeTraversal(ARGUMENTS);
+		return location.safeTraversal(ARGS);
 	}
 
 	public ObjectCreationExpr withArgs(NodeList<Expr> args) {
-		return location.safeTraversalReplace(ARGUMENTS, args);
+		return location.safeTraversalReplace(ARGS, args);
 	}
 
 	public ObjectCreationExpr withArgs(Mutation<NodeList<Expr>> mutation) {
-		return location.safeTraversalMutate(ARGUMENTS, mutation);
+		return location.safeTraversalMutate(ARGS, mutation);
 	}
 
 	public NodeOption<NodeList<MemberDecl>> body() {
@@ -126,17 +125,17 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 	}
 
 	private static final STraversal<ObjectCreationExpr.State> SCOPE = SNodeState.childTraversal(0);
-	private static final STraversal<ObjectCreationExpr.State> TYPE_ARGUMENTS = SNodeState.childTraversal(1);
+	private static final STraversal<ObjectCreationExpr.State> TYPE_ARGS = SNodeState.childTraversal(1);
 	private static final STraversal<ObjectCreationExpr.State> TYPE = SNodeState.childTraversal(2);
-	private static final STraversal<ObjectCreationExpr.State> ARGUMENTS = SNodeState.childTraversal(3);
+	private static final STraversal<ObjectCreationExpr.State> ARGS = SNodeState.childTraversal(3);
 	private static final STraversal<ObjectCreationExpr.State> BODY = SNodeState.childTraversal(4);
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
 			token(LToken.New).withSpacingAfter(space()),
-			child(TYPE_ARGUMENTS, Type.typeArgumentsShape),
+			child(TYPE_ARGS, Type.typeArgumentsShape),
 			child(TYPE),
-			child(ARGUMENTS, Expr.argumentsShape),
+			child(ARGS, Expr.argumentsShape),
 			child(BODY, when(some(), element(MemberDecl.bodyShape)))
 	);
 

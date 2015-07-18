@@ -37,7 +37,6 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, QualifiedType> implements ReferenceType {
 
@@ -100,21 +99,21 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 	}
 
 	public NodeOption<NodeList<Type>> typeArgs() {
-		return location.safeTraversal(TYPE_ARGUMENTS);
+		return location.safeTraversal(TYPE_ARGS);
 	}
 
 	public QualifiedType withTypeArgs(NodeOption<NodeList<Type>> typeArgs) {
-		return location.safeTraversalReplace(TYPE_ARGUMENTS, typeArgs);
+		return location.safeTraversalReplace(TYPE_ARGS, typeArgs);
 	}
 
 	public QualifiedType withTypeArgs(Mutation<NodeOption<NodeList<Type>>> mutation) {
-		return location.safeTraversalMutate(TYPE_ARGUMENTS, mutation);
+		return location.safeTraversalMutate(TYPE_ARGS, mutation);
 	}
 
 	private static final STraversal<QualifiedType.State> ANNOTATIONS = SNodeState.childTraversal(0);
 	private static final STraversal<QualifiedType.State> SCOPE = SNodeState.childTraversal(1);
 	private static final STraversal<QualifiedType.State> NAME = SNodeState.childTraversal(2);
-	private static final STraversal<QualifiedType.State> TYPE_ARGUMENTS = SNodeState.childTraversal(3);
+	private static final STraversal<QualifiedType.State> TYPE_ARGS = SNodeState.childTraversal(3);
 
 	public static final LexicalShape scopeShape = composite(element(), token(LToken.Dot));
 
@@ -122,7 +121,7 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 			child(SCOPE, when(some(), scopeShape)),
 			child(ANNOTATIONS, AnnotationExpr.singleLineAnnotationsShape),
 			child(NAME),
-			child(TYPE_ARGUMENTS, when(some(), element(Type.typeArgumentsOrDiamondShape)))
+			child(TYPE_ARGS, when(some(), element(Type.typeArgumentsOrDiamondShape)))
 	);
 
 	public static final LexicalShape extendsClauseShape = list(

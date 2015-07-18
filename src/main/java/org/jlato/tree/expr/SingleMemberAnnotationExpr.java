@@ -82,7 +82,7 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 		return location.safeTraversalMutate(MEMBER_VALUE, mutation);
 	}
 
-	protected static final STraversal<SingleMemberAnnotationExpr.State> NAME = SNodeState.childTraversal(0);
+	private static final STraversal<SingleMemberAnnotationExpr.State> NAME = SNodeState.childTraversal(0);
 	private static final STraversal<SingleMemberAnnotationExpr.State> MEMBER_VALUE = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(

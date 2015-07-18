@@ -37,7 +37,6 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, Expr, MethodInvocationExpr> implements Expr {
 
@@ -76,15 +75,15 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 	}
 
 	public NodeList<Type> typeArgs() {
-		return location.safeTraversal(TYPE_ARGUMENTS);
+		return location.safeTraversal(TYPE_ARGS);
 	}
 
 	public MethodInvocationExpr withTypeArgs(NodeList<Type> typeArgs) {
-		return location.safeTraversalReplace(TYPE_ARGUMENTS, typeArgs);
+		return location.safeTraversalReplace(TYPE_ARGS, typeArgs);
 	}
 
 	public MethodInvocationExpr withTypeArgs(Mutation<NodeList<Type>> mutation) {
-		return location.safeTraversalMutate(TYPE_ARGUMENTS, mutation);
+		return location.safeTraversalMutate(TYPE_ARGS, mutation);
 	}
 
 	public Name name() {
@@ -100,27 +99,27 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 	}
 
 	public NodeList<Expr> args() {
-		return location.safeTraversal(ARGUMENTS);
+		return location.safeTraversal(ARGS);
 	}
 
 	public MethodInvocationExpr withArgs(NodeList<Expr> args) {
-		return location.safeTraversalReplace(ARGUMENTS, args);
+		return location.safeTraversalReplace(ARGS, args);
 	}
 
 	public MethodInvocationExpr withArgs(Mutation<NodeList<Expr>> mutation) {
-		return location.safeTraversalMutate(ARGUMENTS, mutation);
+		return location.safeTraversalMutate(ARGS, mutation);
 	}
 
 	private static final STraversal<MethodInvocationExpr.State> SCOPE = SNodeState.childTraversal(0);
-	private static final STraversal<MethodInvocationExpr.State> TYPE_ARGUMENTS = SNodeState.childTraversal(1);
+	private static final STraversal<MethodInvocationExpr.State> TYPE_ARGS = SNodeState.childTraversal(1);
 	private static final STraversal<MethodInvocationExpr.State> NAME = SNodeState.childTraversal(2);
-	private static final STraversal<MethodInvocationExpr.State> ARGUMENTS = SNodeState.childTraversal(3);
+	private static final STraversal<MethodInvocationExpr.State> ARGS = SNodeState.childTraversal(3);
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
-			child(TYPE_ARGUMENTS, Type.typeArgumentsShape),
+			child(TYPE_ARGS, Type.typeArgumentsShape),
 			child(NAME),
-			child(ARGUMENTS, Expr.argumentsShape)
+			child(ARGS, Expr.argumentsShape)
 	);
 
 	public static class State extends SNodeState<State> {
