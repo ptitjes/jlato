@@ -39,8 +39,6 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDecl> implements MemberDecl {
 
@@ -88,15 +86,15 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 	}
 
 	public NodeList<TypeParameter> typeParams() {
-		return location.safeTraversal(TYPE_PARAMETERS);
+		return location.safeTraversal(TYPE_PARAMS);
 	}
 
 	public MethodDecl withTypeParams(NodeList<TypeParameter> typeParams) {
-		return location.safeTraversalReplace(TYPE_PARAMETERS, typeParams);
+		return location.safeTraversalReplace(TYPE_PARAMS, typeParams);
 	}
 
 	public MethodDecl withTypeParams(Mutation<NodeList<TypeParameter>> mutation) {
-		return location.safeTraversalMutate(TYPE_PARAMETERS, mutation);
+		return location.safeTraversalMutate(TYPE_PARAMS, mutation);
 	}
 
 	public Type type() {
@@ -124,15 +122,15 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 	}
 
 	public NodeList<FormalParameter> params() {
-		return location.safeTraversal(PARAMETERS);
+		return location.safeTraversal(PARAMS);
 	}
 
 	public MethodDecl withParams(NodeList<FormalParameter> params) {
-		return location.safeTraversalReplace(PARAMETERS, params);
+		return location.safeTraversalReplace(PARAMS, params);
 	}
 
 	public MethodDecl withParams(Mutation<NodeList<FormalParameter>> mutation) {
-		return location.safeTraversalMutate(PARAMETERS, mutation);
+		return location.safeTraversalMutate(PARAMS, mutation);
 	}
 
 	public NodeList<ArrayDim> dims() {
@@ -172,22 +170,22 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 	}
 
 	private static final STraversal<MethodDecl.State> MODIFIERS = SNodeState.childTraversal(0);
-	private static final STraversal<MethodDecl.State> TYPE_PARAMETERS = SNodeState.childTraversal(1);
+	private static final STraversal<MethodDecl.State> TYPE_PARAMS = SNodeState.childTraversal(1);
 	private static final STraversal<MethodDecl.State> TYPE = SNodeState.childTraversal(2);
 	private static final STraversal<MethodDecl.State> NAME = SNodeState.childTraversal(3);
-	private static final STraversal<MethodDecl.State> PARAMETERS = SNodeState.childTraversal(4);
+	private static final STraversal<MethodDecl.State> PARAMS = SNodeState.childTraversal(4);
 	private static final STraversal<MethodDecl.State> DIMS = SNodeState.childTraversal(5);
 	private static final STraversal<MethodDecl.State> THROWS_CLAUSE = SNodeState.childTraversal(6);
 	private static final STraversal<MethodDecl.State> BODY = SNodeState.childTraversal(7);
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
-			child(TYPE_PARAMETERS, TypeParameter.listShape),
+			child(TYPE_PARAMS, TypeParameter.listShape),
 			child(TYPE),
 			none().withSpacingAfter(space()),
 			child(NAME),
 			token(LToken.ParenthesisLeft),
-			child(PARAMETERS, FormalParameter.listShape),
+			child(PARAMS, FormalParameter.listShape),
 			token(LToken.ParenthesisRight),
 			child(DIMS, ArrayDim.listShape),
 			child(THROWS_CLAUSE, QualifiedType.throwsClauseShape),

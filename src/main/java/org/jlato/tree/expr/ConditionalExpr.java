@@ -94,9 +94,60 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 		return location.safeTraversalMutate(ELSE_EXPR, mutation);
 	}
 
-	private static final STraversal<ConditionalExpr.State> CONDITION = SNodeState.childTraversal(0);
-	private static final STraversal<ConditionalExpr.State> THEN_EXPR = SNodeState.childTraversal(1);
-	private static final STraversal<ConditionalExpr.State> ELSE_EXPR = SNodeState.childTraversal(2);
+	private static final STraversal<ConditionalExpr.State> CONDITION = new STraversal<ConditionalExpr.State>() {
+
+		public STree<?> traverse(ConditionalExpr.State state) {
+			return state.condition;
+		}
+
+		public ConditionalExpr.State rebuildParentState(ConditionalExpr.State state, STree<?> child) {
+			return state.withCondition((STree) child);
+		}
+
+		public STraversal<ConditionalExpr.State> leftSibling(ConditionalExpr.State state) {
+			return null;
+		}
+
+		public STraversal<ConditionalExpr.State> rightSibling(ConditionalExpr.State state) {
+			return THEN_EXPR;
+		}
+	};
+	private static final STraversal<ConditionalExpr.State> THEN_EXPR = new STraversal<ConditionalExpr.State>() {
+
+		public STree<?> traverse(ConditionalExpr.State state) {
+			return state.thenExpr;
+		}
+
+		public ConditionalExpr.State rebuildParentState(ConditionalExpr.State state, STree<?> child) {
+			return state.withThenExpr((STree) child);
+		}
+
+		public STraversal<ConditionalExpr.State> leftSibling(ConditionalExpr.State state) {
+			return CONDITION;
+		}
+
+		public STraversal<ConditionalExpr.State> rightSibling(ConditionalExpr.State state) {
+			return ELSE_EXPR;
+		}
+	};
+	private static final STraversal<ConditionalExpr.State> ELSE_EXPR = new STraversal<ConditionalExpr.State>() {
+
+		public STree<?> traverse(ConditionalExpr.State state) {
+			return state.elseExpr;
+		}
+
+		public ConditionalExpr.State rebuildParentState(ConditionalExpr.State state, STree<?> child) {
+			return state.withElseExpr((STree) child);
+		}
+
+		public STraversal<ConditionalExpr.State> leftSibling(ConditionalExpr.State state) {
+			return THEN_EXPR;
+		}
+
+		public STraversal<ConditionalExpr.State> rightSibling(ConditionalExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(CONDITION),

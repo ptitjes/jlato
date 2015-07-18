@@ -69,7 +69,24 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 		return location.safeTraversalMutate(INNER, mutation);
 	}
 
-	private static final STraversal<ParenthesizedExpr.State> INNER = SNodeState.childTraversal(0);
+	private static final STraversal<ParenthesizedExpr.State> INNER = new STraversal<ParenthesizedExpr.State>() {
+
+		public STree<?> traverse(ParenthesizedExpr.State state) {
+			return state.inner;
+		}
+
+		public ParenthesizedExpr.State rebuildParentState(ParenthesizedExpr.State state, STree<?> child) {
+			return state.withInner((STree) child);
+		}
+
+		public STraversal<ParenthesizedExpr.State> leftSibling(ParenthesizedExpr.State state) {
+			return null;
+		}
+
+		public STraversal<ParenthesizedExpr.State> rightSibling(ParenthesizedExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft), child(INNER), token(LToken.ParenthesisRight)

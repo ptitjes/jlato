@@ -95,8 +95,42 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		return location.safeTraversalMutate(RIGHT, mutation);
 	}
 
-	private static final STraversal<BinaryExpr.State> LEFT = SNodeState.childTraversal(0);
-	private static final STraversal<BinaryExpr.State> RIGHT = SNodeState.childTraversal(1);
+	private static final STraversal<BinaryExpr.State> LEFT = new STraversal<BinaryExpr.State>() {
+
+		public STree<?> traverse(BinaryExpr.State state) {
+			return state.left;
+		}
+
+		public BinaryExpr.State rebuildParentState(BinaryExpr.State state, STree<?> child) {
+			return state.withLeft((STree) child);
+		}
+
+		public STraversal<BinaryExpr.State> leftSibling(BinaryExpr.State state) {
+			return null;
+		}
+
+		public STraversal<BinaryExpr.State> rightSibling(BinaryExpr.State state) {
+			return RIGHT;
+		}
+	};
+	private static final STraversal<BinaryExpr.State> RIGHT = new STraversal<BinaryExpr.State>() {
+
+		public STree<?> traverse(BinaryExpr.State state) {
+			return state.right;
+		}
+
+		public BinaryExpr.State rebuildParentState(BinaryExpr.State state, STree<?> child) {
+			return state.withRight((STree) child);
+		}
+
+		public STraversal<BinaryExpr.State> leftSibling(BinaryExpr.State state) {
+			return LEFT;
+		}
+
+		public STraversal<BinaryExpr.State> rightSibling(BinaryExpr.State state) {
+			return null;
+		}
+	};
 
 	private static final int OPERATOR = 0;
 

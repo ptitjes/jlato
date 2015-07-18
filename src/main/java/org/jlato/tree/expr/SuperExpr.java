@@ -72,7 +72,24 @@ public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implem
 		return location.safeTraversalMutate(CLASS_EXPR, mutation);
 	}
 
-	private static final STraversal<SuperExpr.State> CLASS_EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<SuperExpr.State> CLASS_EXPR = new STraversal<SuperExpr.State>() {
+
+		public STree<?> traverse(SuperExpr.State state) {
+			return state.classExpr;
+		}
+
+		public SuperExpr.State rebuildParentState(SuperExpr.State state, STree<?> child) {
+			return state.withClassExpr((STree) child);
+		}
+
+		public STraversal<SuperExpr.State> leftSibling(SuperExpr.State state) {
+			return null;
+		}
+
+		public STraversal<SuperExpr.State> rightSibling(SuperExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			when(childIs(CLASS_EXPR, some()), composite(child(CLASS_EXPR, element()), token(LToken.Dot))),

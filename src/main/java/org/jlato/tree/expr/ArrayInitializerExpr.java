@@ -71,7 +71,24 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 		return location.safeTraversalMutate(VALUES, mutation);
 	}
 
-	private static final STraversal<ArrayInitializerExpr.State> VALUES = SNodeState.childTraversal(0);
+	private static final STraversal<ArrayInitializerExpr.State> VALUES = new STraversal<ArrayInitializerExpr.State>() {
+
+		public STree<?> traverse(ArrayInitializerExpr.State state) {
+			return state.values;
+		}
+
+		public ArrayInitializerExpr.State rebuildParentState(ArrayInitializerExpr.State state, STree<?> child) {
+			return state.withValues((STree) child);
+		}
+
+		public STraversal<ArrayInitializerExpr.State> leftSibling(ArrayInitializerExpr.State state) {
+			return null;
+		}
+
+		public STraversal<ArrayInitializerExpr.State> rightSibling(ArrayInitializerExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			nonEmptyChildren(VALUES,

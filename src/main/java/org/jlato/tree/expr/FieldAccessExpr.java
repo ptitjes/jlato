@@ -85,8 +85,42 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal<FieldAccessExpr.State> SCOPE = SNodeState.childTraversal(0);
-	private static final STraversal<FieldAccessExpr.State> NAME = SNodeState.childTraversal(1);
+	private static final STraversal<FieldAccessExpr.State> SCOPE = new STraversal<FieldAccessExpr.State>() {
+
+		public STree<?> traverse(FieldAccessExpr.State state) {
+			return state.scope;
+		}
+
+		public FieldAccessExpr.State rebuildParentState(FieldAccessExpr.State state, STree<?> child) {
+			return state.withScope((STree) child);
+		}
+
+		public STraversal<FieldAccessExpr.State> leftSibling(FieldAccessExpr.State state) {
+			return null;
+		}
+
+		public STraversal<FieldAccessExpr.State> rightSibling(FieldAccessExpr.State state) {
+			return NAME;
+		}
+	};
+	private static final STraversal<FieldAccessExpr.State> NAME = new STraversal<FieldAccessExpr.State>() {
+
+		public STree<?> traverse(FieldAccessExpr.State state) {
+			return state.name;
+		}
+
+		public FieldAccessExpr.State rebuildParentState(FieldAccessExpr.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<FieldAccessExpr.State> leftSibling(FieldAccessExpr.State state) {
+			return SCOPE;
+		}
+
+		public STraversal<FieldAccessExpr.State> rightSibling(FieldAccessExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),

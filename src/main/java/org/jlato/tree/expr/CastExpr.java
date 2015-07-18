@@ -83,8 +83,42 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal<CastExpr.State> TYPE = SNodeState.childTraversal(0);
-	private static final STraversal<CastExpr.State> EXPR = SNodeState.childTraversal(1);
+	private static final STraversal<CastExpr.State> TYPE = new STraversal<CastExpr.State>() {
+
+		public STree<?> traverse(CastExpr.State state) {
+			return state.type;
+		}
+
+		public CastExpr.State rebuildParentState(CastExpr.State state, STree<?> child) {
+			return state.withType((STree) child);
+		}
+
+		public STraversal<CastExpr.State> leftSibling(CastExpr.State state) {
+			return null;
+		}
+
+		public STraversal<CastExpr.State> rightSibling(CastExpr.State state) {
+			return EXPR;
+		}
+	};
+	private static final STraversal<CastExpr.State> EXPR = new STraversal<CastExpr.State>() {
+
+		public STree<?> traverse(CastExpr.State state) {
+			return state.expr;
+		}
+
+		public CastExpr.State rebuildParentState(CastExpr.State state, STree<?> child) {
+			return state.withExpr((STree) child);
+		}
+
+		public STraversal<CastExpr.State> leftSibling(CastExpr.State state) {
+			return TYPE;
+		}
+
+		public STraversal<CastExpr.State> rightSibling(CastExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft), child(TYPE), token(LToken.ParenthesisRight).withSpacingAfter(space()), child(EXPR)

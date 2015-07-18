@@ -72,7 +72,24 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 		return location.safeTraversalMutate(CLASS_EXPR, mutation);
 	}
 
-	private static final STraversal<ThisExpr.State> CLASS_EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<ThisExpr.State> CLASS_EXPR = new STraversal<ThisExpr.State>() {
+
+		public STree<?> traverse(ThisExpr.State state) {
+			return state.classExpr;
+		}
+
+		public ThisExpr.State rebuildParentState(ThisExpr.State state, STree<?> child) {
+			return state.withClassExpr((STree) child);
+		}
+
+		public STraversal<ThisExpr.State> leftSibling(ThisExpr.State state) {
+			return null;
+		}
+
+		public STraversal<ThisExpr.State> rightSibling(ThisExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			when(childIs(CLASS_EXPR, some()), composite(child(CLASS_EXPR, element()), token(LToken.Dot))),

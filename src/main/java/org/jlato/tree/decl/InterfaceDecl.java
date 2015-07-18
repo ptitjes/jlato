@@ -34,7 +34,6 @@ import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, InterfaceDecl> implements TypeDecl {
 
@@ -94,15 +93,15 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 	}
 
 	public NodeList<TypeParameter> typeParams() {
-		return location.safeTraversal(TYPE_PARAMETERS);
+		return location.safeTraversal(TYPE_PARAMS);
 	}
 
 	public InterfaceDecl withTypeParams(NodeList<TypeParameter> typeParams) {
-		return location.safeTraversalReplace(TYPE_PARAMETERS, typeParams);
+		return location.safeTraversalReplace(TYPE_PARAMS, typeParams);
 	}
 
 	public InterfaceDecl withTypeParams(Mutation<NodeList<TypeParameter>> mutation) {
-		return location.safeTraversalMutate(TYPE_PARAMETERS, mutation);
+		return location.safeTraversalMutate(TYPE_PARAMS, mutation);
 	}
 
 	public NodeList<QualifiedType> extendsClause() {
@@ -131,7 +130,7 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 
 	private static final STraversal<InterfaceDecl.State> MODIFIERS = SNodeState.childTraversal(0);
 	private static final STraversal<InterfaceDecl.State> NAME = SNodeState.childTraversal(1);
-	private static final STraversal<InterfaceDecl.State> TYPE_PARAMETERS = SNodeState.childTraversal(2);
+	private static final STraversal<InterfaceDecl.State> TYPE_PARAMS = SNodeState.childTraversal(2);
 	private static final STraversal<InterfaceDecl.State> EXTENDS_CLAUSE = SNodeState.childTraversal(3);
 	private static final STraversal<InterfaceDecl.State> MEMBERS = SNodeState.childTraversal(4);
 
@@ -139,7 +138,7 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			token(LToken.Interface),
 			child(NAME),
-			child(TYPE_PARAMETERS, TypeParameter.listShape),
+			child(TYPE_PARAMS, TypeParameter.listShape),
 			child(EXTENDS_CLAUSE, QualifiedType.extendsClauseShape),
 			child(MEMBERS, MemberDecl.bodyShape)
 	);

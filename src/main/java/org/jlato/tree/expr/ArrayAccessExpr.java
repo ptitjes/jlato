@@ -81,8 +81,42 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 		return location.safeTraversalMutate(INDEX, mutation);
 	}
 
-	private static final STraversal<ArrayAccessExpr.State> NAME = SNodeState.childTraversal(0);
-	private static final STraversal<ArrayAccessExpr.State> INDEX = SNodeState.childTraversal(1);
+	private static final STraversal<ArrayAccessExpr.State> NAME = new STraversal<ArrayAccessExpr.State>() {
+
+		public STree<?> traverse(ArrayAccessExpr.State state) {
+			return state.name;
+		}
+
+		public ArrayAccessExpr.State rebuildParentState(ArrayAccessExpr.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<ArrayAccessExpr.State> leftSibling(ArrayAccessExpr.State state) {
+			return null;
+		}
+
+		public STraversal<ArrayAccessExpr.State> rightSibling(ArrayAccessExpr.State state) {
+			return INDEX;
+		}
+	};
+	private static final STraversal<ArrayAccessExpr.State> INDEX = new STraversal<ArrayAccessExpr.State>() {
+
+		public STree<?> traverse(ArrayAccessExpr.State state) {
+			return state.index;
+		}
+
+		public ArrayAccessExpr.State rebuildParentState(ArrayAccessExpr.State state, STree<?> child) {
+			return state.withIndex((STree) child);
+		}
+
+		public STraversal<ArrayAccessExpr.State> leftSibling(ArrayAccessExpr.State state) {
+			return NAME;
+		}
+
+		public STraversal<ArrayAccessExpr.State> rightSibling(ArrayAccessExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(NAME),

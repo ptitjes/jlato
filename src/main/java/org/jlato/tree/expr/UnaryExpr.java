@@ -91,7 +91,24 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		return op == UnaryOp.PostIncrement || op == UnaryOp.PostDecrement;
 	}
 
-	private static final STraversal<UnaryExpr.State> EXPR = SNodeState.childTraversal(0);
+	private static final STraversal<UnaryExpr.State> EXPR = new STraversal<UnaryExpr.State>() {
+
+		public STree<?> traverse(UnaryExpr.State state) {
+			return state.expr;
+		}
+
+		public UnaryExpr.State rebuildParentState(UnaryExpr.State state, STree<?> child) {
+			return state.withExpr((STree) child);
+		}
+
+		public STraversal<UnaryExpr.State> leftSibling(UnaryExpr.State state) {
+			return null;
+		}
+
+		public STraversal<UnaryExpr.State> rightSibling(UnaryExpr.State state) {
+			return null;
+		}
+	};
 
 	private static final int OPERATOR = 0;
 

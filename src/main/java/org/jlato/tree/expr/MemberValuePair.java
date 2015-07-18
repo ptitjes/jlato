@@ -83,8 +83,42 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 		return location.safeTraversalMutate(VALUE, mutation);
 	}
 
-	private static final STraversal<MemberValuePair.State> NAME = SNodeState.childTraversal(0);
-	private static final STraversal<MemberValuePair.State> VALUE = SNodeState.childTraversal(1);
+	private static final STraversal<MemberValuePair.State> NAME = new STraversal<MemberValuePair.State>() {
+
+		public STree<?> traverse(MemberValuePair.State state) {
+			return state.name;
+		}
+
+		public MemberValuePair.State rebuildParentState(MemberValuePair.State state, STree<?> child) {
+			return state.withName((STree) child);
+		}
+
+		public STraversal<MemberValuePair.State> leftSibling(MemberValuePair.State state) {
+			return null;
+		}
+
+		public STraversal<MemberValuePair.State> rightSibling(MemberValuePair.State state) {
+			return VALUE;
+		}
+	};
+	private static final STraversal<MemberValuePair.State> VALUE = new STraversal<MemberValuePair.State>() {
+
+		public STree<?> traverse(MemberValuePair.State state) {
+			return state.value;
+		}
+
+		public MemberValuePair.State rebuildParentState(MemberValuePair.State state, STree<?> child) {
+			return state.withValue((STree) child);
+		}
+
+		public STraversal<MemberValuePair.State> leftSibling(MemberValuePair.State state) {
+			return NAME;
+		}
+
+		public STraversal<MemberValuePair.State> rightSibling(MemberValuePair.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(NAME), token(LToken.Assign), child(VALUE)

@@ -95,8 +95,42 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		return location.safeTraversalMutate(VALUE, mutation);
 	}
 
-	private static final STraversal<AssignExpr.State> TARGET = SNodeState.childTraversal(0);
-	private static final STraversal<AssignExpr.State> VALUE = SNodeState.childTraversal(1);
+	private static final STraversal<AssignExpr.State> TARGET = new STraversal<AssignExpr.State>() {
+
+		public STree<?> traverse(AssignExpr.State state) {
+			return state.target;
+		}
+
+		public AssignExpr.State rebuildParentState(AssignExpr.State state, STree<?> child) {
+			return state.withTarget((STree) child);
+		}
+
+		public STraversal<AssignExpr.State> leftSibling(AssignExpr.State state) {
+			return null;
+		}
+
+		public STraversal<AssignExpr.State> rightSibling(AssignExpr.State state) {
+			return VALUE;
+		}
+	};
+	private static final STraversal<AssignExpr.State> VALUE = new STraversal<AssignExpr.State>() {
+
+		public STree<?> traverse(AssignExpr.State state) {
+			return state.value;
+		}
+
+		public AssignExpr.State rebuildParentState(AssignExpr.State state, STree<?> child) {
+			return state.withValue((STree) child);
+		}
+
+		public STraversal<AssignExpr.State> leftSibling(AssignExpr.State state) {
+			return TARGET;
+		}
+
+		public STraversal<AssignExpr.State> rightSibling(AssignExpr.State state) {
+			return null;
+		}
+	};
 
 	private static final int OPERATOR = 0;
 

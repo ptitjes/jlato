@@ -75,7 +75,24 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 		return location.safeTraversalMutate(DECLARATION, mutation);
 	}
 
-	private static final STraversal<VariableDeclarationExpr.State> DECLARATION = SNodeState.childTraversal(0);
+	private static final STraversal<VariableDeclarationExpr.State> DECLARATION = new STraversal<VariableDeclarationExpr.State>() {
+
+		public STree<?> traverse(VariableDeclarationExpr.State state) {
+			return state.declaration;
+		}
+
+		public VariableDeclarationExpr.State rebuildParentState(VariableDeclarationExpr.State state, STree<?> child) {
+			return state.withDeclaration((STree) child);
+		}
+
+		public STraversal<VariableDeclarationExpr.State> leftSibling(VariableDeclarationExpr.State state) {
+			return null;
+		}
+
+		public STraversal<VariableDeclarationExpr.State> rightSibling(VariableDeclarationExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = child(DECLARATION);
 

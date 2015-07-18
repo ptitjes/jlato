@@ -82,8 +82,42 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
-	private static final STraversal<InstanceOfExpr.State> EXPR = SNodeState.childTraversal(0);
-	private static final STraversal<InstanceOfExpr.State> TYPE = SNodeState.childTraversal(1);
+	private static final STraversal<InstanceOfExpr.State> EXPR = new STraversal<InstanceOfExpr.State>() {
+
+		public STree<?> traverse(InstanceOfExpr.State state) {
+			return state.expr;
+		}
+
+		public InstanceOfExpr.State rebuildParentState(InstanceOfExpr.State state, STree<?> child) {
+			return state.withExpr((STree) child);
+		}
+
+		public STraversal<InstanceOfExpr.State> leftSibling(InstanceOfExpr.State state) {
+			return null;
+		}
+
+		public STraversal<InstanceOfExpr.State> rightSibling(InstanceOfExpr.State state) {
+			return TYPE;
+		}
+	};
+	private static final STraversal<InstanceOfExpr.State> TYPE = new STraversal<InstanceOfExpr.State>() {
+
+		public STree<?> traverse(InstanceOfExpr.State state) {
+			return state.type;
+		}
+
+		public InstanceOfExpr.State rebuildParentState(InstanceOfExpr.State state, STree<?> child) {
+			return state.withType((STree) child);
+		}
+
+		public STraversal<InstanceOfExpr.State> leftSibling(InstanceOfExpr.State state) {
+			return EXPR;
+		}
+
+		public STraversal<InstanceOfExpr.State> rightSibling(InstanceOfExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(EXPR),

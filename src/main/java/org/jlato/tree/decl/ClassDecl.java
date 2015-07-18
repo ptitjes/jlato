@@ -38,7 +38,6 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> implements TypeDecl {
 
@@ -98,15 +97,15 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	}
 
 	public NodeList<TypeParameter> typeParams() {
-		return location.safeTraversal(TYPE_PARAMETERS);
+		return location.safeTraversal(TYPE_PARAMS);
 	}
 
 	public ClassDecl withTypeParams(NodeList<TypeParameter> typeParams) {
-		return location.safeTraversalReplace(TYPE_PARAMETERS, typeParams);
+		return location.safeTraversalReplace(TYPE_PARAMS, typeParams);
 	}
 
 	public ClassDecl withTypeParams(Mutation<NodeList<TypeParameter>> mutation) {
-		return location.safeTraversalMutate(TYPE_PARAMETERS, mutation);
+		return location.safeTraversalMutate(TYPE_PARAMS, mutation);
 	}
 
 	public NodeOption<QualifiedType> extendsClause() {
@@ -147,7 +146,7 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 
 	private static final STraversal<ClassDecl.State> MODIFIERS = SNodeState.childTraversal(0);
 	private static final STraversal<ClassDecl.State> NAME = SNodeState.childTraversal(1);
-	private static final STraversal<ClassDecl.State> TYPE_PARAMETERS = SNodeState.childTraversal(2);
+	private static final STraversal<ClassDecl.State> TYPE_PARAMS = SNodeState.childTraversal(2);
 	private static final STraversal<ClassDecl.State> EXTENDS_CLAUSE = SNodeState.childTraversal(3);
 	private static final STraversal<ClassDecl.State> IMPLEMENTS_CLAUSE = SNodeState.childTraversal(4);
 	private static final STraversal<ClassDecl.State> MEMBERS = SNodeState.childTraversal(5);
@@ -156,7 +155,7 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			token(LToken.Class),
 			child(NAME),
-			child(TYPE_PARAMETERS, TypeParameter.listShape),
+			child(TYPE_PARAMS, TypeParameter.listShape),
 			when(childIs(EXTENDS_CLAUSE, some()),
 					child(EXTENDS_CLAUSE, composite(
 							token(LToken.Extends).withSpacing(space(), space()),

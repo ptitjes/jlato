@@ -70,7 +70,24 @@ public class ClassExpr extends TreeBase<ClassExpr.State, Expr, ClassExpr> implem
 		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
-	private static final STraversal<ClassExpr.State> TYPE = SNodeState.childTraversal(0);
+	private static final STraversal<ClassExpr.State> TYPE = new STraversal<ClassExpr.State>() {
+
+		public STree<?> traverse(ClassExpr.State state) {
+			return state.type;
+		}
+
+		public ClassExpr.State rebuildParentState(ClassExpr.State state, STree<?> child) {
+			return state.withType((STree) child);
+		}
+
+		public STraversal<ClassExpr.State> leftSibling(ClassExpr.State state) {
+			return null;
+		}
+
+		public STraversal<ClassExpr.State> rightSibling(ClassExpr.State state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(TYPE),
