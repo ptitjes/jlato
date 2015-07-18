@@ -66,26 +66,24 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 				}
 			}
 		} else if (patternState instanceof SNodeState) {
-			substitution = mathData(patternState, state, substitution);
+			substitution = mathData((SNodeState) patternState, (SNodeState) state, substitution);
 			if (substitution == null) return null;
 			substitution = mathChildren((SNodeState) patternState, (SNodeState) state, substitution);
 		} else if (patternState instanceof SNodeOptionState) {
-			substitution = mathData(patternState, state, substitution);
 			if (substitution == null) return null;
 			substitution = mathChildren((SNodeOptionState) patternState, (SNodeOptionState) state, substitution);
 		} else if (patternState instanceof SNodeListState) {
-			substitution = mathData(patternState, state, substitution);
 			if (substitution == null) return null;
 			substitution = mathChildren((SNodeListState) patternState, (SNodeListState) state, substitution);
 		}
 		return substitution;
 	}
 
-	protected static Substitution mathData(STreeState<?> patternState, STreeState<?> state, Substitution substitution) {
-//		for (int i = 0; i < patternState.data.size(); i++) {
-//			substitution = matchObject(patternState.data.get(i), state.data(i), substitution);
-//			if (substitution == null) return null;
-//		}
+	protected static Substitution mathData(SNodeState patternState, SNodeState state, Substitution substitution) {
+		for (int i = 0; i < patternState.data.size(); i++) {
+			substitution = matchObject(patternState.data.get(i), state.data(i), substitution);
+			if (substitution == null) return null;
+		}
 		return substitution;
 	}
 
@@ -160,7 +158,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 				childrenBuilder.add(buildTree(childPattern, substitution));
 			}
 			return new STree<SNodeState>((SKind<SNodeState>) pattern.kind,
-					new SNodeState(ArrayList.empty()/*buildData(pattern.state.data, substitution)*/, childrenBuilder.build()));
+					new SNodeState(buildData(((SNodeState) patternState).data, substitution), childrenBuilder.build()));
 
 		} else if (patternState instanceof SNodeOptionState) {
 			STree<?> elementPattern = ((SNodeOptionState) patternState).element;
