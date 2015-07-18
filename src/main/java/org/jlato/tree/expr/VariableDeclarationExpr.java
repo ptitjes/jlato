@@ -49,12 +49,12 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 		super(location);
 	}
 
-	public static STree<VariableDeclarationExpr.State> make(LocalVariableDecl declaration) {
-		return new STree<VariableDeclarationExpr.State>(new VariableDeclarationExpr.State(TreeBase.<LocalVariableDecl.State>nodeOf(declaration)));
+	public static STree<VariableDeclarationExpr.State> make(STree<LocalVariableDecl.State> declaration) {
+		return new STree<VariableDeclarationExpr.State>(new VariableDeclarationExpr.State(declaration));
 	}
 
 	public VariableDeclarationExpr(LocalVariableDecl declaration) {
-		super(new SLocation<VariableDeclarationExpr.State>(make(declaration)));
+		super(new SLocation<VariableDeclarationExpr.State>(make(TreeBase.<LocalVariableDecl.State>nodeOf(declaration))));
 	}
 
 	public LocalVariableDecl declaration() {

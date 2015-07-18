@@ -46,12 +46,12 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 		super(location);
 	}
 
-	public static STree<NormalAnnotationExpr.State> make(QualifiedName name, NodeList<MemberValuePair> pairs) {
-		return new STree<NormalAnnotationExpr.State>(new NormalAnnotationExpr.State(TreeBase.<QualifiedName.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(pairs)));
+	public static STree<NormalAnnotationExpr.State> make(STree<QualifiedName.State> name, STree<SNodeListState> pairs) {
+		return new STree<NormalAnnotationExpr.State>(new NormalAnnotationExpr.State(name, pairs));
 	}
 
 	public NormalAnnotationExpr(QualifiedName name, NodeList<MemberValuePair> pairs) {
-		super(new SLocation<NormalAnnotationExpr.State>(make(name, pairs)));
+		super(new SLocation<NormalAnnotationExpr.State>(make(TreeBase.<QualifiedName.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(pairs))));
 	}
 
 	public QualifiedName name() {

@@ -45,12 +45,12 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 		super(location);
 	}
 
-	public static STree<ArrayInitializerExpr.State> make(NodeList<Expr> values) {
-		return new STree<ArrayInitializerExpr.State>(new ArrayInitializerExpr.State(TreeBase.<SNodeListState>nodeOf(values)));
+	public static STree<ArrayInitializerExpr.State> make(STree<SNodeListState> values) {
+		return new STree<ArrayInitializerExpr.State>(new ArrayInitializerExpr.State(values));
 	}
 
 	public ArrayInitializerExpr(NodeList<Expr> values) {
-		super(new SLocation<ArrayInitializerExpr.State>(make(values)));
+		super(new SLocation<ArrayInitializerExpr.State>(make(TreeBase.<SNodeListState>nodeOf(values))));
 	}
 
 	public NodeList<Expr> values() {

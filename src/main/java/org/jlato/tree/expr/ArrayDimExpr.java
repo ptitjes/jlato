@@ -45,12 +45,12 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 		super(location);
 	}
 
-	public static STree<ArrayDimExpr.State> make(NodeList<AnnotationExpr> annotations, Expr expr) {
-		return new STree<ArrayDimExpr.State>(new ArrayDimExpr.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<Expr.State>nodeOf(expr)));
+	public static STree<ArrayDimExpr.State> make(STree<SNodeListState> annotations, STree<Expr.State> expr) {
+		return new STree<ArrayDimExpr.State>(new ArrayDimExpr.State(annotations, expr));
 	}
 
 	public ArrayDimExpr(NodeList<AnnotationExpr> annotations, Expr expr) {
-		super(new SLocation<ArrayDimExpr.State>(make(annotations, expr)));
+		super(new SLocation<ArrayDimExpr.State>(make(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<Expr.State>nodeOf(expr))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

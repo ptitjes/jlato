@@ -44,12 +44,12 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 		super(location);
 	}
 
-	public static STree<TypeDeclarationStmt.State> make(TypeDecl typeDecl) {
-		return new STree<TypeDeclarationStmt.State>(new TypeDeclarationStmt.State(TreeBase.<TypeDecl.State>nodeOf(typeDecl)));
+	public static STree<TypeDeclarationStmt.State> make(STree<TypeDecl.State> typeDecl) {
+		return new STree<TypeDeclarationStmt.State>(new TypeDeclarationStmt.State(typeDecl));
 	}
 
 	public TypeDeclarationStmt(TypeDecl typeDecl) {
-		super(new SLocation<TypeDeclarationStmt.State>(make(typeDecl)));
+		super(new SLocation<TypeDeclarationStmt.State>(make(TreeBase.<TypeDecl.State>nodeOf(typeDecl))));
 	}
 
 	public TypeDecl typeDecl() {

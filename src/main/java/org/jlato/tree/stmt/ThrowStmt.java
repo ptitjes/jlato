@@ -44,12 +44,12 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 		super(location);
 	}
 
-	public static STree<ThrowStmt.State> make(Expr expr) {
-		return new STree<ThrowStmt.State>(new ThrowStmt.State(TreeBase.<Expr.State>nodeOf(expr)));
+	public static STree<ThrowStmt.State> make(STree<Expr.State> expr) {
+		return new STree<ThrowStmt.State>(new ThrowStmt.State(expr));
 	}
 
 	public ThrowStmt(Expr expr) {
-		super(new SLocation<ThrowStmt.State>(make(expr)));
+		super(new SLocation<ThrowStmt.State>(make(TreeBase.<Expr.State>nodeOf(expr))));
 	}
 
 	public Expr expr() {

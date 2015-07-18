@@ -48,12 +48,12 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 		super(location);
 	}
 
-	public static STree<AssertStmt.State> make(Expr check, NodeOption<Expr> msg) {
-		return new STree<AssertStmt.State>(new AssertStmt.State(TreeBase.<Expr.State>nodeOf(check), TreeBase.<SNodeOptionState>nodeOf(msg)));
+	public static STree<AssertStmt.State> make(STree<Expr.State> check, STree<SNodeOptionState> msg) {
+		return new STree<AssertStmt.State>(new AssertStmt.State(check, msg));
 	}
 
 	public AssertStmt(Expr check, NodeOption<Expr> msg) {
-		super(new SLocation<AssertStmt.State>(make(check, msg)));
+		super(new SLocation<AssertStmt.State>(make(TreeBase.<Expr.State>nodeOf(check), TreeBase.<SNodeOptionState>nodeOf(msg))));
 	}
 
 	public Expr check() {

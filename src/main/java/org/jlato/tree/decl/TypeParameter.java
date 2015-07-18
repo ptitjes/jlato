@@ -48,12 +48,12 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 		super(location);
 	}
 
-	public static STree<TypeParameter.State> make(NodeList<AnnotationExpr> annotations, Name name, NodeList<Type> bounds) {
-		return new STree<TypeParameter.State>(new TypeParameter.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(bounds)));
+	public static STree<TypeParameter.State> make(STree<SNodeListState> annotations, STree<Name.State> name, STree<SNodeListState> bounds) {
+		return new STree<TypeParameter.State>(new TypeParameter.State(annotations, name, bounds));
 	}
 
 	public TypeParameter(NodeList<AnnotationExpr> annotations, Name name, NodeList<Type> bounds) {
-		super(new SLocation<TypeParameter.State>(make(annotations, name, bounds)));
+		super(new SLocation<TypeParameter.State>(make(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(bounds))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

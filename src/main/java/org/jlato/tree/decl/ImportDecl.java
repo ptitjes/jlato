@@ -47,12 +47,12 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 		super(location);
 	}
 
-	public static STree<ImportDecl.State> make(QualifiedName name, boolean isStatic, boolean isOnDemand) {
-		return new STree<ImportDecl.State>(new ImportDecl.State(TreeBase.<QualifiedName.State>nodeOf(name), isStatic, isOnDemand));
+	public static STree<ImportDecl.State> make(STree<QualifiedName.State> name, boolean isStatic, boolean isOnDemand) {
+		return new STree<ImportDecl.State>(new ImportDecl.State(name, isStatic, isOnDemand));
 	}
 
 	public ImportDecl(QualifiedName name, boolean isStatic, boolean isOnDemand) {
-		super(new SLocation<ImportDecl.State>(make(name, isStatic, isOnDemand)));
+		super(new SLocation<ImportDecl.State>(make(TreeBase.<QualifiedName.State>nodeOf(name), isStatic, isOnDemand)));
 	}
 
 	public QualifiedName name() {

@@ -47,12 +47,12 @@ public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> imp
 		super(location);
 	}
 
-	public static STree<ReturnStmt.State> make(NodeOption<Expr> expr) {
-		return new STree<ReturnStmt.State>(new ReturnStmt.State(TreeBase.<SNodeOptionState>nodeOf(expr)));
+	public static STree<ReturnStmt.State> make(STree<SNodeOptionState> expr) {
+		return new STree<ReturnStmt.State>(new ReturnStmt.State(expr));
 	}
 
 	public ReturnStmt(NodeOption<Expr> expr) {
-		super(new SLocation<ReturnStmt.State>(make(expr)));
+		super(new SLocation<ReturnStmt.State>(make(TreeBase.<SNodeOptionState>nodeOf(expr))));
 	}
 
 	public NodeOption<Expr> expr() {

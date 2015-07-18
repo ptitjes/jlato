@@ -44,12 +44,12 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 		super(location);
 	}
 
-	public static STree<SingleMemberAnnotationExpr.State> make(QualifiedName name, Expr memberValue) {
-		return new STree<SingleMemberAnnotationExpr.State>(new SingleMemberAnnotationExpr.State(TreeBase.<QualifiedName.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(memberValue)));
+	public static STree<SingleMemberAnnotationExpr.State> make(STree<QualifiedName.State> name, STree<Expr.State> memberValue) {
+		return new STree<SingleMemberAnnotationExpr.State>(new SingleMemberAnnotationExpr.State(name, memberValue));
 	}
 
 	public SingleMemberAnnotationExpr(QualifiedName name, Expr memberValue) {
-		super(new SLocation<SingleMemberAnnotationExpr.State>(make(name, memberValue)));
+		super(new SLocation<SingleMemberAnnotationExpr.State>(make(TreeBase.<QualifiedName.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(memberValue))));
 	}
 
 	public QualifiedName name() {

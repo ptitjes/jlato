@@ -49,12 +49,12 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 		super(location);
 	}
 
-	public static STree<MethodInvocationExpr.State> make(NodeOption<Expr> scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
-		return new STree<MethodInvocationExpr.State>(new MethodInvocationExpr.State(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(args)));
+	public static STree<MethodInvocationExpr.State> make(STree<SNodeOptionState> scope, STree<SNodeListState> typeArgs, STree<Name.State> name, STree<SNodeListState> args) {
+		return new STree<MethodInvocationExpr.State>(new MethodInvocationExpr.State(scope, typeArgs, name, args));
 	}
 
 	public MethodInvocationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
-		super(new SLocation<MethodInvocationExpr.State>(make(scope, typeArgs, name, args)));
+		super(new SLocation<MethodInvocationExpr.State>(make(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(args))));
 	}
 
 	public NodeOption<Expr> scope() {

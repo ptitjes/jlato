@@ -44,12 +44,12 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 		super(location);
 	}
 
-	public static STree<CatchClause.State> make(FormalParameter except, BlockStmt catchBlock) {
-		return new STree<CatchClause.State>(new CatchClause.State(TreeBase.<FormalParameter.State>nodeOf(except), TreeBase.<BlockStmt.State>nodeOf(catchBlock)));
+	public static STree<CatchClause.State> make(STree<FormalParameter.State> except, STree<BlockStmt.State> catchBlock) {
+		return new STree<CatchClause.State>(new CatchClause.State(except, catchBlock));
 	}
 
 	public CatchClause(FormalParameter except, BlockStmt catchBlock) {
-		super(new SLocation<CatchClause.State>(make(except, catchBlock)));
+		super(new SLocation<CatchClause.State>(make(TreeBase.<FormalParameter.State>nodeOf(except), TreeBase.<BlockStmt.State>nodeOf(catchBlock))));
 	}
 
 	public FormalParameter except() {

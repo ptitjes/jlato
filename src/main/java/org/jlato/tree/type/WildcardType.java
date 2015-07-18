@@ -49,12 +49,12 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 		super(location);
 	}
 
-	public static STree<WildcardType.State> make(NodeList<AnnotationExpr> annotations, NodeOption<ReferenceType> ext, NodeOption<ReferenceType> sup) {
-		return new STree<WildcardType.State>(new WildcardType.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<SNodeOptionState>nodeOf(ext), TreeBase.<SNodeOptionState>nodeOf(sup)));
+	public static STree<WildcardType.State> make(STree<SNodeListState> annotations, STree<SNodeOptionState> ext, STree<SNodeOptionState> sup) {
+		return new STree<WildcardType.State>(new WildcardType.State(annotations, ext, sup));
 	}
 
 	public WildcardType(NodeList<AnnotationExpr> annotations, NodeOption<ReferenceType> ext, NodeOption<ReferenceType> sup) {
-		super(new SLocation<WildcardType.State>(make(annotations, ext, sup)));
+		super(new SLocation<WildcardType.State>(make(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<SNodeOptionState>nodeOf(ext), TreeBase.<SNodeOptionState>nodeOf(sup))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

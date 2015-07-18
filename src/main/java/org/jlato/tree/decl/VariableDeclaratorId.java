@@ -44,12 +44,12 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 		super(location);
 	}
 
-	public static STree<VariableDeclaratorId.State> make(Name name, NodeList<ArrayDim> dims) {
-		return new STree<VariableDeclaratorId.State>(new VariableDeclaratorId.State(TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(dims)));
+	public static STree<VariableDeclaratorId.State> make(STree<Name.State> name, STree<SNodeListState> dims) {
+		return new STree<VariableDeclaratorId.State>(new VariableDeclaratorId.State(name, dims));
 	}
 
 	public VariableDeclaratorId(Name name, NodeList<ArrayDim> dims) {
-		super(new SLocation<VariableDeclaratorId.State>(make(name, dims)));
+		super(new SLocation<VariableDeclaratorId.State>(make(TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(dims))));
 	}
 
 	public Name name() {

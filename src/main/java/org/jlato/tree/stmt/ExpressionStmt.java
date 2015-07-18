@@ -44,12 +44,12 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 		super(location);
 	}
 
-	public static STree<ExpressionStmt.State> make(Expr expr) {
-		return new STree<ExpressionStmt.State>(new ExpressionStmt.State(TreeBase.<Expr.State>nodeOf(expr)));
+	public static STree<ExpressionStmt.State> make(STree<Expr.State> expr) {
+		return new STree<ExpressionStmt.State>(new ExpressionStmt.State(expr));
 	}
 
 	public ExpressionStmt(Expr expr) {
-		super(new SLocation<ExpressionStmt.State>(make(expr)));
+		super(new SLocation<ExpressionStmt.State>(make(TreeBase.<Expr.State>nodeOf(expr))));
 	}
 
 	public Expr expr() {

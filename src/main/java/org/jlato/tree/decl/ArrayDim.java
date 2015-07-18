@@ -46,12 +46,12 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 		super(location);
 	}
 
-	public static STree<ArrayDim.State> make(NodeList<AnnotationExpr> annotations) {
-		return new STree<ArrayDim.State>(new ArrayDim.State(TreeBase.<SNodeListState>nodeOf(annotations)));
+	public static STree<ArrayDim.State> make(STree<SNodeListState> annotations) {
+		return new STree<ArrayDim.State>(new ArrayDim.State(annotations));
 	}
 
 	public ArrayDim(NodeList<AnnotationExpr> annotations) {
-		super(new SLocation<ArrayDim.State>(make(annotations)));
+		super(new SLocation<ArrayDim.State>(make(TreeBase.<SNodeListState>nodeOf(annotations))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

@@ -50,12 +50,12 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 		super(location);
 	}
 
-	public static STree<SwitchStmt.State> make(Expr selector, NodeList<SwitchCase> cases) {
-		return new STree<SwitchStmt.State>(new SwitchStmt.State(TreeBase.<Expr.State>nodeOf(selector), TreeBase.<SNodeListState>nodeOf(cases)));
+	public static STree<SwitchStmt.State> make(STree<Expr.State> selector, STree<SNodeListState> cases) {
+		return new STree<SwitchStmt.State>(new SwitchStmt.State(selector, cases));
 	}
 
 	public SwitchStmt(Expr selector, NodeList<SwitchCase> cases) {
-		super(new SLocation<SwitchStmt.State>(make(selector, cases)));
+		super(new SLocation<SwitchStmt.State>(make(TreeBase.<Expr.State>nodeOf(selector), TreeBase.<SNodeListState>nodeOf(cases))));
 	}
 
 	public Expr selector() {

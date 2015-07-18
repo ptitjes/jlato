@@ -51,12 +51,12 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 		super(location);
 	}
 
-	public static STree<ExplicitConstructorInvocationStmt.State> make(NodeList<Type> typeArgs, boolean isThis, NodeOption<Expr> expr, NodeList<Expr> args) {
-		return new STree<ExplicitConstructorInvocationStmt.State>(new ExplicitConstructorInvocationStmt.State(TreeBase.<SNodeListState>nodeOf(typeArgs), isThis, TreeBase.<SNodeOptionState>nodeOf(expr), TreeBase.<SNodeListState>nodeOf(args)));
+	public static STree<ExplicitConstructorInvocationStmt.State> make(STree<SNodeListState> typeArgs, boolean isThis, STree<SNodeOptionState> expr, STree<SNodeListState> args) {
+		return new STree<ExplicitConstructorInvocationStmt.State>(new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args));
 	}
 
 	public ExplicitConstructorInvocationStmt(NodeList<Type> typeArgs, boolean isThis, NodeOption<Expr> expr, NodeList<Expr> args) {
-		super(new SLocation<ExplicitConstructorInvocationStmt.State>(make(typeArgs, isThis, expr, args)));
+		super(new SLocation<ExplicitConstructorInvocationStmt.State>(make(TreeBase.<SNodeListState>nodeOf(typeArgs), isThis, TreeBase.<SNodeOptionState>nodeOf(expr), TreeBase.<SNodeListState>nodeOf(args))));
 	}
 
 	public NodeList<Type> typeArgs() {

@@ -46,12 +46,12 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		super(location);
 	}
 
-	public static STree<PrimitiveType.State> make(NodeList<AnnotationExpr> annotations, Primitive type) {
-		return new STree<PrimitiveType.State>(new PrimitiveType.State(TreeBase.<SNodeListState>nodeOf(annotations), type));
+	public static STree<PrimitiveType.State> make(STree<SNodeListState> annotations, Primitive type) {
+		return new STree<PrimitiveType.State>(new PrimitiveType.State(annotations, type));
 	}
 
 	public PrimitiveType(NodeList<AnnotationExpr> annotations, Primitive type) {
-		super(new SLocation<PrimitiveType.State>(make(annotations, type)));
+		super(new SLocation<PrimitiveType.State>(make(TreeBase.<SNodeListState>nodeOf(annotations), type)));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

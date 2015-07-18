@@ -45,12 +45,12 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		super(location);
 	}
 
-	public static STree<UnaryExpr.State> make(UnaryOp operator, Expr expr) {
-		return new STree<UnaryExpr.State>(new UnaryExpr.State(operator, TreeBase.<Expr.State>nodeOf(expr)));
+	public static STree<UnaryExpr.State> make(UnaryOp operator, STree<Expr.State> expr) {
+		return new STree<UnaryExpr.State>(new UnaryExpr.State(operator, expr));
 	}
 
 	public UnaryExpr(UnaryOp operator, Expr expr) {
-		super(new SLocation<UnaryExpr.State>(make(operator, expr)));
+		super(new SLocation<UnaryExpr.State>(make(operator, TreeBase.<Expr.State>nodeOf(expr))));
 	}
 
 	public UnaryOp op() {

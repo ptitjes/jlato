@@ -45,12 +45,12 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		super(location);
 	}
 
-	public static STree<AssignExpr.State> make(Expr target, AssignOp operator, Expr value) {
-		return new STree<AssignExpr.State>(new AssignExpr.State(TreeBase.<Expr.State>nodeOf(target), operator, TreeBase.<Expr.State>nodeOf(value)));
+	public static STree<AssignExpr.State> make(STree<Expr.State> target, AssignOp operator, STree<Expr.State> value) {
+		return new STree<AssignExpr.State>(new AssignExpr.State(target, operator, value));
 	}
 
 	public AssignExpr(Expr target, AssignOp operator, Expr value) {
-		super(new SLocation<AssignExpr.State>(make(target, operator, value)));
+		super(new SLocation<AssignExpr.State>(make(TreeBase.<Expr.State>nodeOf(target), operator, TreeBase.<Expr.State>nodeOf(value))));
 	}
 
 	public Expr target() {

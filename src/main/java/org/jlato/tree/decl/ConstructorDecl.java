@@ -48,12 +48,12 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 		super(location);
 	}
 
-	public static STree<ConstructorDecl.State> make(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<FormalParameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
-		return new STree<ConstructorDecl.State>(new ConstructorDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<SNodeListState>nodeOf(typeParams), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(params), TreeBase.<SNodeListState>nodeOf(throwsClause), TreeBase.<BlockStmt.State>nodeOf(body)));
+	public static STree<ConstructorDecl.State> make(STree<SNodeListState> modifiers, STree<SNodeListState> typeParams, STree<Name.State> name, STree<SNodeListState> params, STree<SNodeListState> throwsClause, STree<BlockStmt.State> body) {
+		return new STree<ConstructorDecl.State>(new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body));
 	}
 
 	public ConstructorDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<FormalParameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
-		super(new SLocation<ConstructorDecl.State>(make(modifiers, typeParams, name, params, throwsClause, body)));
+		super(new SLocation<ConstructorDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<SNodeListState>nodeOf(typeParams), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(params), TreeBase.<SNodeListState>nodeOf(throwsClause), TreeBase.<BlockStmt.State>nodeOf(body))));
 	}
 
 	@Override

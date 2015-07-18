@@ -43,12 +43,12 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 		super(location);
 	}
 
-	public static STree<ArrayAccessExpr.State> make(Expr name, Expr index) {
-		return new STree<ArrayAccessExpr.State>(new ArrayAccessExpr.State(TreeBase.<Expr.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(index)));
+	public static STree<ArrayAccessExpr.State> make(STree<Expr.State> name, STree<Expr.State> index) {
+		return new STree<ArrayAccessExpr.State>(new ArrayAccessExpr.State(name, index));
 	}
 
 	public ArrayAccessExpr(Expr name, Expr index) {
-		super(new SLocation<ArrayAccessExpr.State>(make(name, index)));
+		super(new SLocation<ArrayAccessExpr.State>(make(TreeBase.<Expr.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(index))));
 	}
 
 	public Expr name() {

@@ -46,12 +46,12 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 		super(location);
 	}
 
-	public static STree<FormalParameter.State> make(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		return new STree<FormalParameter.State>(new FormalParameter.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), isVarArgs, TreeBase.<VariableDeclaratorId.State>nodeOf(id)));
+	public static STree<FormalParameter.State> make(STree<SNodeListState> modifiers, STree<Type.State> type, boolean isVarArgs, STree<VariableDeclaratorId.State> id) {
+		return new STree<FormalParameter.State>(new FormalParameter.State(modifiers, type, isVarArgs, id));
 	}
 
 	public FormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		super(new SLocation<FormalParameter.State>(make(modifiers, type, isVarArgs, id)));
+		super(new SLocation<FormalParameter.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), isVarArgs, TreeBase.<VariableDeclaratorId.State>nodeOf(id))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

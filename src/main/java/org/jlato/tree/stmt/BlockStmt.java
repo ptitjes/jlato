@@ -48,12 +48,12 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 		super(location);
 	}
 
-	public static STree<BlockStmt.State> make(NodeList<Stmt> stmts) {
-		return new STree<BlockStmt.State>(new BlockStmt.State(TreeBase.<SNodeListState>nodeOf(stmts)));
+	public static STree<BlockStmt.State> make(STree<SNodeListState> stmts) {
+		return new STree<BlockStmt.State>(new BlockStmt.State(stmts));
 	}
 
 	public BlockStmt(NodeList<Stmt> stmts) {
-		super(new SLocation<BlockStmt.State>(make(stmts)));
+		super(new SLocation<BlockStmt.State>(make(TreeBase.<SNodeListState>nodeOf(stmts))));
 	}
 
 	public NodeList<Stmt> stmts() {

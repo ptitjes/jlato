@@ -49,12 +49,12 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 		super(location);
 	}
 
-	public static STree<TryStmt.State> make(NodeList<VariableDeclarationExpr> resources, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
-		return new STree<TryStmt.State>(new TryStmt.State(TreeBase.<SNodeListState>nodeOf(resources), TreeBase.<BlockStmt.State>nodeOf(tryBlock), TreeBase.<SNodeListState>nodeOf(catchs), TreeBase.<SNodeOptionState>nodeOf(finallyBlock)));
+	public static STree<TryStmt.State> make(STree<SNodeListState> resources, STree<BlockStmt.State> tryBlock, STree<SNodeListState> catchs, STree<SNodeOptionState> finallyBlock) {
+		return new STree<TryStmt.State>(new TryStmt.State(resources, tryBlock, catchs, finallyBlock));
 	}
 
 	public TryStmt(NodeList<VariableDeclarationExpr> resources, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
-		super(new SLocation<TryStmt.State>(make(resources, tryBlock, catchs, finallyBlock)));
+		super(new SLocation<TryStmt.State>(make(TreeBase.<SNodeListState>nodeOf(resources), TreeBase.<BlockStmt.State>nodeOf(tryBlock), TreeBase.<SNodeListState>nodeOf(catchs), TreeBase.<SNodeOptionState>nodeOf(finallyBlock))));
 	}
 
 	public NodeList<VariableDeclarationExpr> resources() {

@@ -50,8 +50,8 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 		return name;
 	}
 
-	public static STree<QualifiedName.State> make(NodeOption<QualifiedName> qualifier, Name name) {
-		return new STree<QualifiedName.State>(new QualifiedName.State(TreeBase.<SNodeOptionState>nodeOf(qualifier), TreeBase.<Name.State>nodeOf(name)));
+	public static STree<QualifiedName.State> make(STree<SNodeOptionState> qualifier, STree<Name.State> name) {
+		return new STree<QualifiedName.State>(new QualifiedName.State(qualifier, name));
 	}
 
 	private QualifiedName(SLocation<QualifiedName.State> location) {
@@ -59,7 +59,7 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 	}
 
 	public QualifiedName(NodeOption<QualifiedName> qualifier, Name name) {
-		super(new SLocation<QualifiedName.State>(make(qualifier, name)));
+		super(new SLocation<QualifiedName.State>(make(TreeBase.<SNodeOptionState>nodeOf(qualifier), TreeBase.<Name.State>nodeOf(name))));
 	}
 
 	public NodeOption<QualifiedName> qualifier() {

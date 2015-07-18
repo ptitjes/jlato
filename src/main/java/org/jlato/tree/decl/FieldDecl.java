@@ -46,12 +46,12 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 		super(location);
 	}
 
-	public static STree<FieldDecl.State> make(NodeList<ExtendedModifier> modifiers, Type type, NodeList<VariableDeclarator> variables) {
-		return new STree<FieldDecl.State>(new FieldDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(variables)));
+	public static STree<FieldDecl.State> make(STree<SNodeListState> modifiers, STree<Type.State> type, STree<SNodeListState> variables) {
+		return new STree<FieldDecl.State>(new FieldDecl.State(modifiers, type, variables));
 	}
 
 	public FieldDecl(NodeList<ExtendedModifier> modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
-		super(new SLocation<FieldDecl.State>(make(modifiers, type, variables)));
+		super(new SLocation<FieldDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(variables))));
 	}
 
 	@Override

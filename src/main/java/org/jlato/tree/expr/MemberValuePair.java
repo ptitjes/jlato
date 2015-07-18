@@ -43,12 +43,12 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 		super(location);
 	}
 
-	public static STree<MemberValuePair.State> make(Name name, Expr value) {
-		return new STree<MemberValuePair.State>(new MemberValuePair.State(TreeBase.<Name.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(value)));
+	public static STree<MemberValuePair.State> make(STree<Name.State> name, STree<Expr.State> value) {
+		return new STree<MemberValuePair.State>(new MemberValuePair.State(name, value));
 	}
 
 	public MemberValuePair(Name name, Expr value) {
-		super(new SLocation<MemberValuePair.State>(make(name, value)));
+		super(new SLocation<MemberValuePair.State>(make(TreeBase.<Name.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(value))));
 	}
 
 	public Name name() {

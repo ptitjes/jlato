@@ -45,12 +45,12 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 		super(location);
 	}
 
-	public static STree<SynchronizedStmt.State> make(Expr expr, BlockStmt block) {
-		return new STree<SynchronizedStmt.State>(new SynchronizedStmt.State(TreeBase.<Expr.State>nodeOf(expr), TreeBase.<BlockStmt.State>nodeOf(block)));
+	public static STree<SynchronizedStmt.State> make(STree<Expr.State> expr, STree<BlockStmt.State> block) {
+		return new STree<SynchronizedStmt.State>(new SynchronizedStmt.State(expr, block));
 	}
 
 	public SynchronizedStmt(Expr expr, BlockStmt block) {
-		super(new SLocation<SynchronizedStmt.State>(make(expr, block)));
+		super(new SLocation<SynchronizedStmt.State>(make(TreeBase.<Expr.State>nodeOf(expr), TreeBase.<BlockStmt.State>nodeOf(block))));
 	}
 
 	public Expr expr() {

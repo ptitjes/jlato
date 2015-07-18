@@ -45,12 +45,12 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 		super(location);
 	}
 
-	public static STree<WhileStmt.State> make(Expr condition, Stmt body) {
-		return new STree<WhileStmt.State>(new WhileStmt.State(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Stmt.State>nodeOf(body)));
+	public static STree<WhileStmt.State> make(STree<Expr.State> condition, STree<Stmt.State> body) {
+		return new STree<WhileStmt.State>(new WhileStmt.State(condition, body));
 	}
 
 	public WhileStmt(Expr condition, Stmt body) {
-		super(new SLocation<WhileStmt.State>(make(condition, body)));
+		super(new SLocation<WhileStmt.State>(make(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Stmt.State>nodeOf(body))));
 	}
 
 	public Expr condition() {

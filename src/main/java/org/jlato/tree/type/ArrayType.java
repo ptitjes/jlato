@@ -45,12 +45,12 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 		super(location);
 	}
 
-	public static STree<ArrayType.State> make(Type componentType, NodeList<ArrayDim> dims) {
-		return new STree<ArrayType.State>(new ArrayType.State(TreeBase.<Type.State>nodeOf(componentType), TreeBase.<SNodeListState>nodeOf(dims)));
+	public static STree<ArrayType.State> make(STree<Type.State> componentType, STree<SNodeListState> dims) {
+		return new STree<ArrayType.State>(new ArrayType.State(componentType, dims));
 	}
 
 	public ArrayType(Type componentType, NodeList<ArrayDim> dims) {
-		super(new SLocation<ArrayType.State>(make(componentType, dims)));
+		super(new SLocation<ArrayType.State>(make(TreeBase.<Type.State>nodeOf(componentType), TreeBase.<SNodeListState>nodeOf(dims))));
 	}
 
 	public Type componentType() {

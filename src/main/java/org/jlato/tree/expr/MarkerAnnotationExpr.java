@@ -44,12 +44,12 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 		super(location);
 	}
 
-	public static STree<MarkerAnnotationExpr.State> make(QualifiedName name) {
-		return new STree<MarkerAnnotationExpr.State>(new MarkerAnnotationExpr.State(TreeBase.<QualifiedName.State>nodeOf(name)));
+	public static STree<MarkerAnnotationExpr.State> make(STree<QualifiedName.State> name) {
+		return new STree<MarkerAnnotationExpr.State>(new MarkerAnnotationExpr.State(name));
 	}
 
 	public MarkerAnnotationExpr(QualifiedName name) {
-		super(new SLocation<MarkerAnnotationExpr.State>(make(name)));
+		super(new SLocation<MarkerAnnotationExpr.State>(make(TreeBase.<QualifiedName.State>nodeOf(name))));
 	}
 
 	public QualifiedName name() {

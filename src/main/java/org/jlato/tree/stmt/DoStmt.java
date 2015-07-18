@@ -45,12 +45,12 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 		super(location);
 	}
 
-	public static STree<DoStmt.State> make(Stmt body, Expr condition) {
-		return new STree<DoStmt.State>(new DoStmt.State(TreeBase.<Stmt.State>nodeOf(body), TreeBase.<Expr.State>nodeOf(condition)));
+	public static STree<DoStmt.State> make(STree<Stmt.State> body, STree<Expr.State> condition) {
+		return new STree<DoStmt.State>(new DoStmt.State(body, condition));
 	}
 
 	public DoStmt(Stmt body, Expr condition) {
-		super(new SLocation<DoStmt.State>(make(body, condition)));
+		super(new SLocation<DoStmt.State>(make(TreeBase.<Stmt.State>nodeOf(body), TreeBase.<Expr.State>nodeOf(condition))));
 	}
 
 	public Stmt body() {

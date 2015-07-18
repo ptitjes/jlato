@@ -51,12 +51,12 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 		super(location);
 	}
 
-	public static STree<ObjectCreationExpr.State> make(NodeOption<Expr> scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeOption<NodeList<MemberDecl>> body) {
-		return new STree<ObjectCreationExpr.State>(new ObjectCreationExpr.State(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<QualifiedType.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(args), TreeBase.<SNodeOptionState>nodeOf(body)));
+	public static STree<ObjectCreationExpr.State> make(STree<SNodeOptionState> scope, STree<SNodeListState> typeArgs, STree<QualifiedType.State> type, STree<SNodeListState> args, STree<SNodeOptionState> body) {
+		return new STree<ObjectCreationExpr.State>(new ObjectCreationExpr.State(scope, typeArgs, type, args, body));
 	}
 
 	public ObjectCreationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeOption<NodeList<MemberDecl>> body) {
-		super(new SLocation<ObjectCreationExpr.State>(make(scope, typeArgs, type, args, body)));
+		super(new SLocation<ObjectCreationExpr.State>(make(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<QualifiedType.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(args), TreeBase.<SNodeOptionState>nodeOf(body))));
 	}
 
 	public NodeOption<Expr> scope() {

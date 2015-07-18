@@ -40,7 +40,7 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 		return Kind.LiteralExpr;
 	}
 
-	public static <T> STree<LiteralExpr.State> make(Class<T> literalClass, String literalString) {
+	public static <T> STree<LiteralExpr.State> make(Class<?> literalClass, String literalString) {
 		return new STree<LiteralExpr.State>(new LiteralExpr.State(literalClass, literalString));
 	}
 

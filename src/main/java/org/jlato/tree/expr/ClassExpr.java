@@ -44,12 +44,12 @@ public class ClassExpr extends TreeBase<ClassExpr.State, Expr, ClassExpr> implem
 		super(location);
 	}
 
-	public static STree<ClassExpr.State> make(Type type) {
-		return new STree<ClassExpr.State>(new ClassExpr.State(TreeBase.<Type.State>nodeOf(type)));
+	public static STree<ClassExpr.State> make(STree<Type.State> type) {
+		return new STree<ClassExpr.State>(new ClassExpr.State(type));
 	}
 
 	public ClassExpr(Type type) {
-		super(new SLocation<ClassExpr.State>(make(type)));
+		super(new SLocation<ClassExpr.State>(make(TreeBase.<Type.State>nodeOf(type))));
 	}
 
 	public Type type() {

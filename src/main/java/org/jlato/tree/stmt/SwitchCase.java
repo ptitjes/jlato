@@ -52,12 +52,12 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 		super(location);
 	}
 
-	public static STree<SwitchCase.State> make(NodeOption<Expr> label, NodeList<Stmt> stmts) {
-		return new STree<SwitchCase.State>(new SwitchCase.State(TreeBase.<SNodeOptionState>nodeOf(label), TreeBase.<SNodeListState>nodeOf(stmts)));
+	public static STree<SwitchCase.State> make(STree<SNodeOptionState> label, STree<SNodeListState> stmts) {
+		return new STree<SwitchCase.State>(new SwitchCase.State(label, stmts));
 	}
 
 	public SwitchCase(NodeOption<Expr> label, NodeList<Stmt> stmts) {
-		super(new SLocation<SwitchCase.State>(make(label, stmts)));
+		super(new SLocation<SwitchCase.State>(make(TreeBase.<SNodeOptionState>nodeOf(label), TreeBase.<SNodeListState>nodeOf(stmts))));
 	}
 
 	public NodeOption<Expr> label() {

@@ -52,12 +52,12 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 		super(location);
 	}
 
-	public static STree<IfStmt.State> make(Expr condition, Stmt thenStmt, NodeOption<Stmt> elseStmt) {
-		return new STree<IfStmt.State>(new IfStmt.State(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Stmt.State>nodeOf(thenStmt), TreeBase.<SNodeOptionState>nodeOf(elseStmt)));
+	public static STree<IfStmt.State> make(STree<Expr.State> condition, STree<Stmt.State> thenStmt, STree<SNodeOptionState> elseStmt) {
+		return new STree<IfStmt.State>(new IfStmt.State(condition, thenStmt, elseStmt));
 	}
 
 	public IfStmt(Expr condition, Stmt thenStmt, NodeOption<Stmt> elseStmt) {
-		super(new SLocation<IfStmt.State>(make(condition, thenStmt, elseStmt)));
+		super(new SLocation<IfStmt.State>(make(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Stmt.State>nodeOf(thenStmt), TreeBase.<SNodeOptionState>nodeOf(elseStmt))));
 	}
 
 	public Expr condition() {

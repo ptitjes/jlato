@@ -44,12 +44,12 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 		super(location);
 	}
 
-	public static STree<InstanceOfExpr.State> make(Expr expr, Type type) {
-		return new STree<InstanceOfExpr.State>(new InstanceOfExpr.State(TreeBase.<Expr.State>nodeOf(expr), TreeBase.<Type.State>nodeOf(type)));
+	public static STree<InstanceOfExpr.State> make(STree<Expr.State> expr, STree<Type.State> type) {
+		return new STree<InstanceOfExpr.State>(new InstanceOfExpr.State(expr, type));
 	}
 
 	public InstanceOfExpr(Expr expr, Type type) {
-		super(new SLocation<InstanceOfExpr.State>(make(expr, type)));
+		super(new SLocation<InstanceOfExpr.State>(make(TreeBase.<Expr.State>nodeOf(expr), TreeBase.<Type.State>nodeOf(type))));
 	}
 
 	public Expr expr() {

@@ -45,12 +45,12 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		super(location);
 	}
 
-	public static STree<BinaryExpr.State> make(Expr left, BinaryOp operator, Expr right) {
-		return new STree<BinaryExpr.State>(new BinaryExpr.State(TreeBase.<Expr.State>nodeOf(left), operator, TreeBase.<Expr.State>nodeOf(right)));
+	public static STree<BinaryExpr.State> make(STree<Expr.State> left, BinaryOp operator, STree<Expr.State> right) {
+		return new STree<BinaryExpr.State>(new BinaryExpr.State(left, operator, right));
 	}
 
 	public BinaryExpr(Expr left, BinaryOp operator, Expr right) {
-		super(new SLocation<BinaryExpr.State>(make(left, operator, right)));
+		super(new SLocation<BinaryExpr.State>(make(TreeBase.<Expr.State>nodeOf(left), operator, TreeBase.<Expr.State>nodeOf(right))));
 	}
 
 	public Expr left() {

@@ -47,12 +47,12 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 		super(location);
 	}
 
-	public static STree<BreakStmt.State> make(NodeOption<Name> id) {
-		return new STree<BreakStmt.State>(new BreakStmt.State(TreeBase.<SNodeOptionState>nodeOf(id)));
+	public static STree<BreakStmt.State> make(STree<SNodeOptionState> id) {
+		return new STree<BreakStmt.State>(new BreakStmt.State(id));
 	}
 
 	public BreakStmt(NodeOption<Name> id) {
-		super(new SLocation<BreakStmt.State>(make(id)));
+		super(new SLocation<BreakStmt.State>(make(TreeBase.<SNodeOptionState>nodeOf(id))));
 	}
 
 	public NodeOption<Name> id() {

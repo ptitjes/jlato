@@ -46,12 +46,12 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 		super(location);
 	}
 
-	public static STree<PackageDecl.State> make(NodeList<AnnotationExpr> annotations, QualifiedName name) {
-		return new STree<PackageDecl.State>(new PackageDecl.State(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<QualifiedName.State>nodeOf(name)));
+	public static STree<PackageDecl.State> make(STree<SNodeListState> annotations, STree<QualifiedName.State> name) {
+		return new STree<PackageDecl.State>(new PackageDecl.State(annotations, name));
 	}
 
 	public PackageDecl(NodeList<AnnotationExpr> annotations, QualifiedName name) {
-		super(new SLocation<PackageDecl.State>(make(annotations, name)));
+		super(new SLocation<PackageDecl.State>(make(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<QualifiedName.State>nodeOf(name))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

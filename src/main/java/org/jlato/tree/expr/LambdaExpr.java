@@ -49,20 +49,20 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		super(location);
 	}
 
-	public static STree<LambdaExpr.State> make(NodeList<FormalParameter> params, boolean hasParens, NodeEither<Expr, BlockStmt> body) {
-		return new STree<LambdaExpr.State>(new LambdaExpr.State(TreeBase.<SNodeListState>nodeOf(params), hasParens, TreeBase.<SNodeEitherState>nodeOf(body)));
+	public static STree<LambdaExpr.State> make(STree<SNodeListState> params, boolean hasParens, STree<SNodeEitherState> body) {
+		return new STree<LambdaExpr.State>(new LambdaExpr.State(params, hasParens, body));
 	}
 
 	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParens, NodeEither<Expr, BlockStmt> body) {
-		super(new SLocation<LambdaExpr.State>(make(params, hasParens, body)));
+		super(new SLocation<LambdaExpr.State>(make(TreeBase.<SNodeListState>nodeOf(params), hasParens, TreeBase.<SNodeEitherState>nodeOf(body))));
 	}
 
-	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParens, Expr expr) {
-		this(params, hasParens, NodeEither.<Expr, BlockStmt>left(expr));
+	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParens, Expr body) {
+		super(new SLocation<LambdaExpr.State>(make(TreeBase.<SNodeListState>nodeOf(params), hasParens, TreeBase.<SNodeEitherState>nodeOf(body))));
 	}
 
-	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParens, BlockStmt block) {
-		this(params, hasParens, NodeEither.<Expr, BlockStmt>right(block));
+	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParens, BlockStmt body) {
+		super(new SLocation<LambdaExpr.State>(make(TreeBase.<SNodeListState>nodeOf(params), hasParens, TreeBase.<SNodeEitherState>nodeOf(body))));
 	}
 
 	public NodeList<FormalParameter> params() {

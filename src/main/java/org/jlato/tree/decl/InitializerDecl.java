@@ -45,12 +45,12 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 		super(location);
 	}
 
-	public static STree<InitializerDecl.State> make(NodeList<ExtendedModifier> modifiers, BlockStmt body) {
-		return new STree<InitializerDecl.State>(new InitializerDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<BlockStmt.State>nodeOf(body)));
+	public static STree<InitializerDecl.State> make(STree<SNodeListState> modifiers, STree<BlockStmt.State> body) {
+		return new STree<InitializerDecl.State>(new InitializerDecl.State(modifiers, body));
 	}
 
 	public InitializerDecl(NodeList<ExtendedModifier> modifiers, BlockStmt body/*, JavadocComment javadocComment*/) {
-		super(new SLocation<InitializerDecl.State>(make(modifiers, body)));
+		super(new SLocation<InitializerDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<BlockStmt.State>nodeOf(body))));
 	}
 
 	@Override

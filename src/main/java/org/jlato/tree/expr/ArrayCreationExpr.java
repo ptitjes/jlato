@@ -50,12 +50,12 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 		super(location);
 	}
 
-	public static STree<ArrayCreationExpr.State> make(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> init) {
-		return new STree<ArrayCreationExpr.State>(new ArrayCreationExpr.State(TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(dimExprs), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeOptionState>nodeOf(init)));
+	public static STree<ArrayCreationExpr.State> make(STree<Type.State> type, STree<SNodeListState> dimExprs, STree<SNodeListState> dims, STree<SNodeOptionState> init) {
+		return new STree<ArrayCreationExpr.State>(new ArrayCreationExpr.State(type, dimExprs, dims, init));
 	}
 
 	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> init) {
-		super(new SLocation<ArrayCreationExpr.State>(make(type, dimExprs, dims, init)));
+		super(new SLocation<ArrayCreationExpr.State>(make(TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(dimExprs), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeOptionState>nodeOf(init))));
 	}
 
 	public Type type() {

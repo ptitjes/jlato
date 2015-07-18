@@ -49,12 +49,12 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 		super(location);
 	}
 
-	public static STree<LabeledStmt.State> make(Name label, Stmt stmt) {
-		return new STree<LabeledStmt.State>(new LabeledStmt.State(TreeBase.<Name.State>nodeOf(label), TreeBase.<Stmt.State>nodeOf(stmt)));
+	public static STree<LabeledStmt.State> make(STree<Name.State> label, STree<Stmt.State> stmt) {
+		return new STree<LabeledStmt.State>(new LabeledStmt.State(label, stmt));
 	}
 
 	public LabeledStmt(Name label, Stmt stmt) {
-		super(new SLocation<LabeledStmt.State>(make(label, stmt)));
+		super(new SLocation<LabeledStmt.State>(make(TreeBase.<Name.State>nodeOf(label), TreeBase.<Stmt.State>nodeOf(stmt))));
 	}
 
 	public Name label() {

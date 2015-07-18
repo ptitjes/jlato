@@ -45,12 +45,12 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 		super(location);
 	}
 
-	public static STree<AnnotationDecl.State> make(NodeList<ExtendedModifier> modifiers, Name name, NodeList<MemberDecl> members) {
-		return new STree<AnnotationDecl.State>(new AnnotationDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(members)));
+	public static STree<AnnotationDecl.State> make(STree<SNodeListState> modifiers, STree<Name.State> name, STree<SNodeListState> members) {
+		return new STree<AnnotationDecl.State>(new AnnotationDecl.State(modifiers, name, members));
 	}
 
 	public AnnotationDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<MemberDecl> members) {
-		super(new SLocation<AnnotationDecl.State>(make(modifiers, name, members)));
+		super(new SLocation<AnnotationDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(members))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

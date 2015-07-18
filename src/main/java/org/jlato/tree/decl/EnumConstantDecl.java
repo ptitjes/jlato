@@ -51,12 +51,12 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 		super(location);
 	}
 
-	public static STree<EnumConstantDecl.State> make(NodeList<ExtendedModifier> modifiers, Name name, NodeOption<NodeList<Expr>> args, NodeOption<NodeList<MemberDecl>> classBody) {
-		return new STree<EnumConstantDecl.State>(new EnumConstantDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeOptionState>nodeOf(args), TreeBase.<SNodeOptionState>nodeOf(classBody)));
+	public static STree<EnumConstantDecl.State> make(STree<SNodeListState> modifiers, STree<Name.State> name, STree<SNodeOptionState> args, STree<SNodeOptionState> classBody) {
+		return new STree<EnumConstantDecl.State>(new EnumConstantDecl.State(modifiers, name, args, classBody));
 	}
 
 	public EnumConstantDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeOption<NodeList<Expr>> args, NodeOption<NodeList<MemberDecl>> classBody) {
-		super(new SLocation<EnumConstantDecl.State>(make(modifiers, name, args, classBody)));
+		super(new SLocation<EnumConstantDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeOptionState>nodeOf(args), TreeBase.<SNodeOptionState>nodeOf(classBody))));
 	}
 
 	@Override

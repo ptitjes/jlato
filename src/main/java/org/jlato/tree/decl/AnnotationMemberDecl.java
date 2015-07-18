@@ -49,12 +49,12 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 		super(location);
 	}
 
-	public static STree<AnnotationMemberDecl.State> make(NodeList<ExtendedModifier> modifiers, Type type, Name name, NodeList<ArrayDim> dims, NodeOption<Expr> defaultValue) {
-		return new STree<AnnotationMemberDecl.State>(new AnnotationMemberDecl.State(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeOptionState>nodeOf(defaultValue)));
+	public static STree<AnnotationMemberDecl.State> make(STree<SNodeListState> modifiers, STree<Type.State> type, STree<Name.State> name, STree<SNodeListState> dims, STree<SNodeOptionState> defaultValue) {
+		return new STree<AnnotationMemberDecl.State>(new AnnotationMemberDecl.State(modifiers, type, name, dims, defaultValue));
 	}
 
 	public AnnotationMemberDecl(NodeList<ExtendedModifier> modifiers, Type type, Name name, NodeList<ArrayDim> dims, NodeOption<Expr> defaultValue) {
-		super(new SLocation<AnnotationMemberDecl.State>(make(modifiers, type, name, dims, defaultValue)));
+		super(new SLocation<AnnotationMemberDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeOptionState>nodeOf(defaultValue))));
 	}
 
 	@Override
