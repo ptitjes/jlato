@@ -19,12 +19,12 @@
 
 package org.jlato.internal.bu;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Didier Villevalois
  */
-public class SNodeEitherState extends STreeState<SNodeEitherState> {
+public class SNodeEitherState implements STreeState<SNodeEitherState> {
 
 	public final STree<?> element;
 	public final EitherSide side;
@@ -44,6 +44,11 @@ public class SNodeEitherState extends STreeState<SNodeEitherState> {
 
 	public static STraversal<SNodeEitherState> rightTraversal() {
 		return new ElementTraversal(EitherSide.Right);
+	}
+
+	@Override
+	public Iterable<SProperty<SNodeEitherState>> allProperties() {
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -76,19 +81,8 @@ public class SNodeEitherState extends STreeState<SNodeEitherState> {
 		return new SNodeEitherState(element, EitherSide.Right);
 	}
 
-	@Override
-	public Object data(int index) {
-		return null;
-	}
-
-	public SNodeEitherState withData(int index, Object value) {
-		return this;
-	}
-
 	public void validate(STree tree) {
-		super.validate(tree);
-
-		if (element != null) element.state.validate(element);
+		if (element != null) element.validate();
 	}
 
 	public static class ElementTraversal extends STraversal<SNodeEitherState> {

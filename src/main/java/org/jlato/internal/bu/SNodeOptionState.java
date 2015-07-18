@@ -19,10 +19,12 @@
 
 package org.jlato.internal.bu;
 
+import java.util.Collections;
+
 /**
  * @author Didier Villevalois
  */
-public class SNodeOptionState extends STreeState<SNodeOptionState> {
+public class SNodeOptionState implements STreeState<SNodeOptionState> {
 
 	public final STree<?> element;
 
@@ -32,6 +34,11 @@ public class SNodeOptionState extends STreeState<SNodeOptionState> {
 
 	public static STraversal<SNodeOptionState> elementTraversal() {
 		return new ElementTraversal();
+	}
+
+	@Override
+	public Iterable<SProperty<SNodeOptionState>> allProperties() {
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -52,19 +59,8 @@ public class SNodeOptionState extends STreeState<SNodeOptionState> {
 		return new SNodeOptionState(element);
 	}
 
-	@Override
-	public Object data(int index) {
-		return null;
-	}
-
-	public SNodeOptionState withData(int index, Object value) {
-		return this;
-	}
-
-	public void validate(STree tree) {
-		super.validate(tree);
-
-		if (element != null) element.state.validate(element);
+	public void validate(STree<SNodeOptionState> tree) {
+		if (element != null) element.validate();
 	}
 
 

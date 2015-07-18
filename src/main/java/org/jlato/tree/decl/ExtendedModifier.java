@@ -19,6 +19,7 @@
 
 package org.jlato.tree.decl;
 
+import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Tree;
@@ -49,4 +50,8 @@ public interface ExtendedModifier extends Tree {
 					none().withSpacingAfter(newLine())
 			)
 	);
+
+	interface State extends STreeState<State> {
+
+	}
 }

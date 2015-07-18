@@ -19,10 +19,12 @@
 
 package org.jlato.internal.bu;
 
+import java.util.Collections;
+
 /**
  * @author Didier Villevalois
  */
-public class SVarState extends STreeState<SVarState> {
+public class SVarState implements STreeState<SVarState> {
 
 	public final String name;
 
@@ -40,6 +42,11 @@ public class SVarState extends STreeState<SVarState> {
 	}
 
 	@Override
+	public Iterable<SProperty<SVarState>> allProperties() {
+		return Collections.emptyList();
+	}
+
+	@Override
 	public STraversal<SVarState> firstChild() {
 		return null;
 	}
@@ -47,5 +54,9 @@ public class SVarState extends STreeState<SVarState> {
 	@Override
 	public STraversal<SVarState> lastChild() {
 		return null;
+	}
+
+	@Override
+	public void validate(STree<SVarState> tree) {
 	}
 }

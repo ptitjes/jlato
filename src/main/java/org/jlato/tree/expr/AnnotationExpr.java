@@ -19,11 +19,8 @@
 
 package org.jlato.tree.expr;
 
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.name.QualifiedName;
@@ -33,35 +30,27 @@ import static org.jlato.internal.shapes.LexicalShape.none;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public abstract class AnnotationExpr extends TreeBase<SNodeState, Expr, AnnotationExpr> implements Expr, ExtendedModifier {
+public interface AnnotationExpr extends Expr, ExtendedModifier {
 
-	protected AnnotationExpr(SLocation<SNodeState> location) {
-		super(location);
-	}
+	QualifiedName name();
 
-	public QualifiedName name() {
-		return location.safeTraversal(NAME);
-	}
+	AnnotationExpr withName(QualifiedName name);
 
-	public AnnotationExpr withName(QualifiedName name) {
-		return location.safeTraversalReplace(NAME, name);
-	}
+	AnnotationExpr withName(Mutation<QualifiedName> mutation);
 
-	public AnnotationExpr withName(Mutation<QualifiedName> mutation) {
-		return location.safeTraversalMutate(NAME, mutation);
-	}
-
-	protected static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
-
-	public static final LexicalShape singleLineAnnotationsShape = list(
+	LexicalShape singleLineAnnotationsShape = list(
 			none(),
 			none().withSpacingAfter(space()),
 			none().withSpacingAfter(space())
 	);
 
-	public static final LexicalShape multiLineAnnotationsShape = list(
+	LexicalShape multiLineAnnotationsShape = list(
 			none(),
 			none().withSpacingAfter(newLine()),
 			none().withSpacingAfter(newLine())
 	);
+
+	interface State extends STreeState<State> {
+
+	}
 }

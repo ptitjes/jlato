@@ -28,9 +28,9 @@ import org.jlato.internal.bu.STree;
  */
 public final class LSNodeChild extends LSTraversal {
 
-	private final STraversal<SNodeState> traversal;
+	private final STraversal<? extends SNodeState> traversal;
 
-	public LSNodeChild(STraversal<SNodeState> traversal, LexicalShape shape) {
+	public LSNodeChild(STraversal<? extends SNodeState> traversal, LexicalShape shape) {
 		super(shape);
 		this.traversal = traversal;
 	}

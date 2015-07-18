@@ -79,20 +79,20 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		return substitution;
 	}
 
-	protected static Substitution mathData(SNodeState patternState, SNodeState state, Substitution substitution) {
-		for (int i = 0; i < patternState.data.size(); i++) {
-			substitution = matchObject(patternState.data.get(i), state.data(i), substitution);
+	protected static <S extends SNodeState<S>> Substitution mathData(S patternState, S state, Substitution substitution) {
+		for (SProperty<S> prop : patternState.allProperties()) {
+			substitution = matchObject(prop.retrieve(patternState), prop.retrieve(state), substitution);
 			if (substitution == null) return null;
 		}
 		return substitution;
 	}
 
-	protected static Substitution mathChildren(SNodeState patternState, SNodeState state, Substitution substitution) {
-		ArrayList<STree<?>> patternChildren = patternState.children;
-		ArrayList<STree<?>> children = state.children;
-		for (int i = 0; i < patternChildren.size(); i++) {
-			substitution = matchTree(patternChildren.get(i), children.get(i), substitution);
+	protected static <S extends SNodeState<S>> Substitution mathChildren(S patternState, S state, Substitution substitution) {
+		STraversal<S> traversal = patternState.firstChild();
+		while (traversal != null) {
+			substitution = matchTree(traversal.traverse(patternState), traversal.traverse(state), substitution);
 			if (substitution == null) return null;
+			traversal = traversal.rightSibling(patternState);
 		}
 		return substitution;
 	}
@@ -146,6 +146,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	}
 
 	private STree<?> buildTree(STree<?> pattern, Substitution substitution) {
+		SKind<? extends STreeState<?>> kind = pattern.kind;
 		STreeState<?> patternState = pattern.state;
 
 		if (patternState instanceof SVarState) {
@@ -153,12 +154,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 			return substitution.get(name);
 
 		} else if (patternState instanceof SNodeState) {
-			Builder<STree<?>, ArrayList<STree<?>>> childrenBuilder = ArrayList.<STree<?>>factory().newBuilder();
-			for (STree<?> childPattern : ((SNodeState) patternState).children) {
-				childrenBuilder.add(buildTree(childPattern, substitution));
-			}
-			return new STree<SNodeState>((SKind<SNodeState>) pattern.kind,
-					new SNodeState(buildData(((SNodeState) patternState).data, substitution), childrenBuilder.build()));
+			return buildNodeTree((SKind<SNodeState>) kind, (SNodeState) patternState, substitution);
 
 		} else if (patternState instanceof SNodeOptionState) {
 			STree<?> elementPattern = ((SNodeOptionState) patternState).element;
@@ -174,6 +170,16 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 			return new STree<SNodeListState>((SKind<SNodeListState>) pattern.kind,
 					new SNodeListState(elementsBuilder.build()));
 		}
+		return null;
+	}
+
+	private <S extends SNodeState<S>> STree<?> buildNodeTree(SKind<S> kind, S patternState, Substitution substitution) {
+//		Builder<STree<?>, ArrayList<STree<?>>> childrenBuilder = ArrayList.<STree<?>>factory().newBuilder();
+//		for (STree<?> childPattern : ((SNodeState<?>) patternState).children) {
+//			childrenBuilder.add(buildTree(childPattern, substitution));
+//		}
+//		return new STree<SNodeState>(kind,
+//				new SNodeState(buildData(patternState.data, substitution), childrenBuilder.build()));
 		return null;
 	}
 

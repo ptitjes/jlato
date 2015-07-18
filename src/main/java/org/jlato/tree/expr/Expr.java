@@ -20,6 +20,7 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Tree;
 
@@ -41,4 +42,8 @@ public interface Expr extends Tree {
 	LexicalShape listShape = list(
 			token(LToken.Comma).withSpacingAfter(space())
 	);
+
+	interface State extends STreeState<State> {
+
+	}
 }

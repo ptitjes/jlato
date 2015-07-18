@@ -19,6 +19,7 @@
 
 package org.jlato.tree.stmt;
 
+import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Tree;
 
@@ -32,4 +33,8 @@ import static org.jlato.printer.SpacingConstraint.newLine;
 public interface Stmt extends Tree {
 
 	LexicalShape listShape = list(none().withSpacingAfter(newLine()));
+
+	interface State extends STreeState<State> {
+
+	}
 }

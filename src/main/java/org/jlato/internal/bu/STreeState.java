@@ -19,25 +19,16 @@
 
 package org.jlato.internal.bu;
 
-import java.util.Collections;
-
 /**
  * @author Didier Villevalois
  */
-public abstract class STreeState<S extends STreeState<S>> {
+public interface STreeState<S extends STreeState<S>> {
 
-	public abstract Object data(int index);
+	Iterable<SProperty<S>> allProperties();
 
-	public abstract S withData(int index, Object value);
+	STraversal<S> firstChild();
 
-	public Iterable<SProperty<S>> allProperties() {
-		return Collections.emptyList();
-	}
+	STraversal<S> lastChild();
 
-	public abstract STraversal<S> firstChild();
-
-	public abstract STraversal<S> lastChild();
-
-	public void validate(STree tree) {
-	}
+	void validate(STree<S> tree);
 }

@@ -21,12 +21,13 @@ package org.jlato.internal.bu;
 
 import com.github.andrewoma.dexx.collection.TreeMap;
 
+import java.util.Collections;
 import java.util.Comparator;
 
 /**
  * @author Didier Villevalois
  */
-public class STreeSetState extends STreeState<STreeSetState> {
+public class STreeSetState implements STreeState<STreeSetState> {
 
 	public final String rootPath;
 	public final TreeMap<String, STree<?>> trees;
@@ -42,6 +43,11 @@ public class STreeSetState extends STreeState<STreeSetState> {
 
 	public static STraversal<STreeSetState> treeTraversal(String path) {
 		return new TreeTraversal(path);
+	}
+
+	@Override
+	public Iterable<SProperty<STreeSetState>> allProperties() {
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -64,17 +70,13 @@ public class STreeSetState extends STreeState<STreeSetState> {
 		return new STreeSetState(rootPath, trees.put(path, value));
 	}
 
-	@Override
-	public Object data(int index) {
-		return null;
-	}
-
-	public STreeSetState withData(int index, Object value) {
-		return this;
-	}
-
 	public STreeState withTrees(TreeMap<String, STree<?>> trees) {
 		return new STreeSetState(rootPath, trees);
+	}
+
+	@Override
+	public void validate(STree<STreeSetState> tree) {
+		// TODO
 	}
 
 	private static final Comparator<String> STRING_COMPARATOR = new Comparator<String>() {

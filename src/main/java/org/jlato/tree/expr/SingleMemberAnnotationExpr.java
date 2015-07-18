@@ -26,12 +26,13 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SingleMemberAnnotationExpr extends AnnotationExpr {
+public class SingleMemberAnnotationExpr extends TreeBase<SNodeState, AnnotationExpr, SingleMemberAnnotationExpr> implements AnnotationExpr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public SingleMemberAnnotationExpr instantiate(SLocation<SNodeState> location) {
@@ -51,6 +52,18 @@ public class SingleMemberAnnotationExpr extends AnnotationExpr {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name, memberValue)))));
 	}
 
+	public QualifiedName name() {
+		return location.safeTraversal(NAME);
+	}
+
+	public SingleMemberAnnotationExpr withName(QualifiedName name) {
+		return location.safeTraversalReplace(NAME, name);
+	}
+
+	public SingleMemberAnnotationExpr withName(Mutation<QualifiedName> mutation) {
+		return location.safeTraversalMutate(NAME, mutation);
+	}
+
 	public Expr memberValue() {
 		return location.safeTraversal(MEMBER_VALUE);
 	}
@@ -63,6 +76,7 @@ public class SingleMemberAnnotationExpr extends AnnotationExpr {
 		return location.safeTraversalMutate(MEMBER_VALUE, mutation);
 	}
 
+	protected static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
 	private static final STraversal<SNodeState> MEMBER_VALUE = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(

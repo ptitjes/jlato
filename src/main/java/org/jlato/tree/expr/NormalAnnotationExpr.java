@@ -26,6 +26,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SKind;
 import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.name.QualifiedName;
@@ -33,7 +34,7 @@ import org.jlato.tree.name.QualifiedName;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class NormalAnnotationExpr extends AnnotationExpr {
+public class NormalAnnotationExpr extends TreeBase<SNodeState, AnnotationExpr, NormalAnnotationExpr> implements AnnotationExpr {
 
 	public final static SKind<SNodeState> kind = new SKind<SNodeState>() {
 		public NormalAnnotationExpr instantiate(SLocation<SNodeState> location) {
@@ -53,6 +54,18 @@ public class NormalAnnotationExpr extends AnnotationExpr {
 		super(new SLocation<SNodeState>(new STree<SNodeState>(kind, new SNodeState(treesOf(name, pairs)))));
 	}
 
+	public QualifiedName name() {
+		return location.safeTraversal(NAME);
+	}
+
+	public NormalAnnotationExpr withName(QualifiedName name) {
+		return location.safeTraversalReplace(NAME, name);
+	}
+
+	public NormalAnnotationExpr withName(Mutation<QualifiedName> mutation) {
+		return location.safeTraversalMutate(NAME, mutation);
+	}
+
 	public NodeList<MemberValuePair> pairs() {
 		return location.safeTraversal(PAIRS);
 	}
@@ -65,6 +78,7 @@ public class NormalAnnotationExpr extends AnnotationExpr {
 		return location.safeTraversalMutate(PAIRS, mutation);
 	}
 
+	protected static final STraversal<SNodeState> NAME = SNodeState.childTraversal(0);
 	private static final STraversal<SNodeState> PAIRS = SNodeState.childTraversal(1);
 
 	public final static LexicalShape shape = composite(

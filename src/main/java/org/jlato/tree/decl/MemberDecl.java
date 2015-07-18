@@ -20,6 +20,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LexicalShape;
 
 import static org.jlato.internal.shapes.LSCondition.emptyList;
@@ -69,5 +70,9 @@ public interface MemberDecl extends Decl {
 		EnumConstant,
 		Type,
 		// Keep last comma
+	}
+
+	interface State extends STreeState<State> {
+
 	}
 }

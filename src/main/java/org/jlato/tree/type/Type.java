@@ -20,6 +20,7 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Tree;
 
@@ -44,4 +45,8 @@ public interface Type extends Tree {
 	LexicalShape intersectionShape = list(token(LToken.BinAnd).withSpacing(space(), space()));
 
 	LexicalShape unionShape = list(token(LToken.BinOr).withSpacing(space(), space()));
+
+	interface State extends STreeState<State> {
+
+	}
 }

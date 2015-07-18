@@ -22,10 +22,12 @@ package org.jlato.internal.bu;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Vector;
 
+import java.util.Collections;
+
 /**
  * @author Didier Villevalois
  */
-public class SNodeListState extends STreeState<SNodeListState> {
+public class SNodeListState implements STreeState<SNodeListState> {
 
 	public final Vector<STree<?>> children;
 
@@ -35,6 +37,11 @@ public class SNodeListState extends STreeState<SNodeListState> {
 
 	public static STraversal<SNodeListState> elementTraversal(int index) {
 		return new ElementTraversal(index);
+	}
+
+	@Override
+	public Iterable<SProperty<SNodeListState>> allProperties() {
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -61,22 +68,11 @@ public class SNodeListState extends STreeState<SNodeListState> {
 		return new SNodeListState(children);
 	}
 
-	@Override
-	public Object data(int index) {
-		return null;
-	}
-
-	public SNodeListState withData(int index, Object value) {
-		return this;
-	}
-
-	public void validate(STree tree) {
-		super.validate(tree);
-
+	public void validate(STree<SNodeListState> tree) {
 		for (STree child : children) {
 			if (child == null) // TODO Add better error message
 				throw new IllegalStateException();
-			child.state.validate(child);
+			child.validate();
 		}
 	}
 

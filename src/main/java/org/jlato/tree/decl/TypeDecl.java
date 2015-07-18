@@ -19,6 +19,7 @@
 
 package org.jlato.tree.decl;
 
+import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LexicalShape;
 
 import static org.jlato.internal.shapes.LexicalShape.list;
@@ -41,5 +42,9 @@ public interface TypeDecl extends MemberDecl {
 		Enum,
 		AnnotationType,
 		// Keep last comma
+	}
+
+	interface State extends STreeState<State> {
+
 	}
 }

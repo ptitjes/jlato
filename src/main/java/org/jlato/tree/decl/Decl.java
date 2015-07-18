@@ -19,7 +19,12 @@
 
 package org.jlato.tree.decl;
 
+import org.jlato.internal.bu.STreeState;
 import org.jlato.tree.Tree;
 
 public interface Decl extends Tree {
+
+	interface State extends STreeState<State> {
+
+	}
 }

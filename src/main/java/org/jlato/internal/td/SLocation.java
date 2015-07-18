@@ -103,20 +103,17 @@ public class SLocation<S extends STreeState<S>> {
 	/* Node methods */
 
 	@SuppressWarnings("unchecked")
-	public <A> A data(final int index) {
-		final S state = tree.state;
-		return (A) state.data(index);
+	public <A> A data(SProperty<S> property) {
+		return this.safeProperty(property);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Tree, A> T withData(int index, A attribute) {
-		final S state = tree.state;
-		final STree newTree = tree.withState(state.withData(index, attribute));
-		return (T) withTree(newTree).facade;
+	public <T extends Tree, A> T withData(SProperty<S> property, A attribute) {
+		return safePropertyReplace(property, attribute);
 	}
 
-	public <T extends Tree, A> T mutateData(int index, Mutation<A> mutation) {
-		return withData(index, mutation.mutate(this.<A>data(index)));
+	public <T extends Tree, A> T mutateData(SProperty<S> property, Mutation<A> mutation) {
+		return safePropertyMutate(property, mutation);
 	}
 
 	@SuppressWarnings("unchecked")

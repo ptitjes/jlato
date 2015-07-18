@@ -20,9 +20,7 @@
 package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.WRunRun;
-import org.jlato.internal.bu.WTokenRun;
+import org.jlato.internal.bu.*;
 import org.jlato.printer.Printer;
 
 import java.util.Iterator;
@@ -30,12 +28,12 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public class LSDump extends LexicalShape {
+public class LSDump<S extends STreeState<S>> extends LexicalShape {
 
-	private final int dataIndex;
+	private final SProperty<S> property;
 
-	public LSDump(int dataIndex) {
-		this.dataIndex = dataIndex;
+	public LSDump(SProperty<S> property) {
+		this.property = property;
 	}
 
 	@Override
@@ -49,7 +47,7 @@ public class LSDump extends LexicalShape {
 	}
 
 	public void render(STree tree, WRunRun run, Printer printer) {
-		final IndexedList<WTokenRun> data = (IndexedList<WTokenRun>) tree.state.data(dataIndex);
+		final IndexedList<WTokenRun> data = (IndexedList<WTokenRun>) property.retrieve((S) tree.state);
 		if (data != null) {
 			for (WTokenRun tokens : data) {
 				printer.dump(tokens);

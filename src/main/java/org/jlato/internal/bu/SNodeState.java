@@ -19,104 +19,26 @@
 
 package org.jlato.internal.bu;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Didier Villevalois
  */
-public class SNodeState extends STreeState<SNodeState> {
+public abstract class SNodeState<S extends SNodeState<S>> implements STreeState<S> {
 
-	public final ArrayList<Object> data;
-	public final ArrayList<STree<?>> children;
-
-	public SNodeState(ArrayList<STree<? extends STreeState<?>>> children) {
-		this(ArrayList.empty(), children);
-	}
-
-	public SNodeState(ArrayList<Object> data, ArrayList<STree<? extends STreeState<?>>> children) {
-		this.data = data;
-		this.children = children;
-	}
-
-	public static STraversal<SNodeState> childTraversal(int index) {
-		return new ChildTraversal(index);
+	public SNodeState() {
 	}
 
 	@Override
-	public STraversal<SNodeState> firstChild() {
-		if (children.isEmpty()) return null;
-		return childTraversal(-1).rightSibling(this);
+	public Iterable<SProperty<S>> allProperties() {
+		return Collections.emptyList();
 	}
 
-	@Override
-	public STraversal<SNodeState> lastChild() {
-		if (children.isEmpty()) return null;
-		return childTraversal(children.size()).leftSibling(this);
+	public void validate(STree<S> tree) {
+//		for (STree<?> child : children) {
+//			if (child == null) // TODO Add better error message
+//				throw new IllegalStateException();
+//			child.validate();
+//		}
 	}
-
-	public STree<?> child(int index) {
-		return children.get(index);
-	}
-
-	public SNodeState withChild(int index, STree<?> value) {
-		return new SNodeState(data, children.set(index, value));
-	}
-
-	public Object data(int index) {
-		return data.get(index);
-	}
-
-	public SNodeState withData(int index, Object value) {
-		return new SNodeState(data.set(index, value), children);
-	}
-
-	public void validate(STree tree) {
-		super.validate(tree);
-
-		for (STree child : children) {
-			if (child == null) // TODO Add better error message
-				throw new IllegalStateException();
-			child.state.validate(child);
-		}
-	}
-
-	public static class ChildTraversal extends STraversal<SNodeState> {
-
-		private final int index;
-
-		public ChildTraversal(int index) {
-			this.index = index;
-		}
-
-		@Override
-		public STree<?> traverse(SNodeState state) {
-			return state.child(index);
-		}
-
-		@Override
-		public SNodeState rebuildParentState(SNodeState state, STree<?> child) {
-			return state.withChild(index, child);
-		}
-
-		@Override
-		public STraversal<SNodeState> leftSibling(SNodeState state) {
-			int previousIndex = index - 1;
-			while (previousIndex >= 0) {
-				if (state.child(previousIndex) != null) return new ChildTraversal(previousIndex);
-				previousIndex--;
-			}
-			return null;
-		}
-
-		@Override
-		public STraversal<SNodeState> rightSibling(SNodeState state) {
-			int nextIndex = index + 1;
-			while (nextIndex < state.children.size()) {
-				if (state.child(nextIndex) != null) return new ChildTraversal(nextIndex);
-				nextIndex++;
-			}
-			return null;
-		}
-	}
-
 }

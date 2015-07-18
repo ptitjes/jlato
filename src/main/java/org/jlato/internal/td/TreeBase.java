@@ -22,12 +22,15 @@ package org.jlato.internal.td;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
+import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeState;
 import org.jlato.rewrite.MatchVisitor;
 import org.jlato.rewrite.Matcher;
 import org.jlato.rewrite.Substitution;
 import org.jlato.rewrite.TypeSafeMatcher;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 
 import java.util.LinkedList;
@@ -98,6 +101,18 @@ public abstract class TreeBase<S extends STreeState<S>, ST extends Tree, T exten
 	public static STree<? extends STreeState<?>> treeOf(Tree facade) {
 		return facade == null ? null : ((TreeBase<?, ?, ?>) facade).location.tree;
 	}
+
+	@SuppressWarnings("unchecked")
+	public static <S extends STreeState<S>> STree<S> nodeOf(Tree facade) {
+		return facade == null ? null : ((TreeBase<S, ?, ?>) facade).location.tree;
+	}
+/*
+
+	@SuppressWarnings("unchecked")
+	public static STree<SNodeOptionState> nodeOf(NodeOption facade) {
+		return facade == null ? null : ((TreeBase<SNodeOptionState, ?, ?>) facade).location.tree;
+	}
+*/
 
 	public static ArrayList<STree<? extends STreeState<?>>> treesOf(Tree... facades) {
 		final Builder<STree<?>, ArrayList<STree<?>>> builder = ArrayList.<STree<?>>factory().newBuilder();
