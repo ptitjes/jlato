@@ -19,28 +19,12 @@
 
 package org.jlato.internal.bu;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
-
 /**
  * @author Didier Villevalois
  */
-public class SLeafState extends STreeState<SLeafState> {
+public abstract class SProperty<P extends STreeState<P>> {
 
-	public SLeafState(ArrayList<Object> data) {
-		super(data);
-	}
+	public abstract Object retrieve(P state);
 
-	public SLeafState withData(int index, Object value) {
-		return new SLeafState(data.set(index, value));
-	}
-
-	@Override
-	public STraversal<SLeafState> firstChild() {
-		return null;
-	}
-
-	@Override
-	public STraversal<SLeafState> lastChild() {
-		return null;
-	}
+	public abstract P rebuildParentState(P state, Object data);
 }

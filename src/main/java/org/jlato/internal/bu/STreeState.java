@@ -19,6 +19,8 @@
 
 package org.jlato.internal.bu;
 
+import java.util.Collections;
+
 /**
  * @author Didier Villevalois
  */
@@ -27,6 +29,10 @@ public abstract class STreeState<S extends STreeState<S>> {
 	public abstract Object data(int index);
 
 	public abstract S withData(int index, Object value);
+
+	public Iterable<SProperty<S>> allProperties() {
+		return Collections.emptyList();
+	}
 
 	public abstract STraversal<S> firstChild();
 

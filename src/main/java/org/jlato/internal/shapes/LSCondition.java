@@ -47,6 +47,15 @@ public abstract class LSCondition {
 		};
 	}
 
+	public static <S extends STreeState<S>> LSCondition data(final SProperty<S> property) {
+		return new LSCondition() {
+			@Override
+			public boolean test(STree tree) {
+				return (Boolean) property.retrieve((S) tree.state);
+			}
+		};
+	}
+
 	public static LSCondition nonNull() {
 		return new LSCondition() {
 			public boolean test(STree tree) {

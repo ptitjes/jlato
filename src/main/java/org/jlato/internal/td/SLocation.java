@@ -19,6 +19,7 @@
 
 package org.jlato.internal.td;
 
+import org.jlato.internal.bu.SProperty;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeState;
@@ -116,6 +117,23 @@ public class SLocation<S extends STreeState<S>> {
 
 	public <T extends Tree, A> T mutateData(int index, Mutation<A> mutation) {
 		return withData(index, mutation.mutate(this.<A>data(index)));
+	}
+
+	@SuppressWarnings("unchecked")
+	public <A> A safeProperty(SProperty<S> property) {
+		final S state = tree.state;
+		return (A) property.retrieve(state);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends Tree, A> T safePropertyReplace(SProperty<S> property, A attribute) {
+		final S state = tree.state;
+		final STree newTree = tree.withState(property.rebuildParentState(state, attribute));
+		return (T) withTree(newTree).facade;
+	}
+
+	public <T extends Tree, A> T safePropertyMutate(SProperty<S> property, Mutation<A> mutation) {
+		return safePropertyReplace(property, mutation.mutate(this.<A>safeProperty(property)));
 	}
 
 	@SuppressWarnings("unchecked")
