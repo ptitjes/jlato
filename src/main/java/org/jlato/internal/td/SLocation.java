@@ -19,17 +19,14 @@
 
 package org.jlato.internal.td;
 
-import org.jlato.internal.bu.SProperty;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeState;
+import org.jlato.internal.bu.*;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
  */
-public class SLocation<S extends STreeState<S>> {
+public class SLocation<S extends STreeState> {
 
 	private final SContext<?> context;
 	public final STree<S> tree;
@@ -71,26 +68,26 @@ public class SLocation<S extends STreeState<S>> {
 	}
 
 	public SLocation<?> firstChild() {
-		STraversal<S> traversal = tree.state.firstChild();
+		STraversal traversal = tree.state.firstChild();
 		return traversal == null ? null : traverse(traversal);
 	}
 
 	public SLocation<?> lastChild() {
-		STraversal<S> traversal = tree.state.lastChild();
+		STraversal traversal = tree.state.lastChild();
 		return traversal == null ? null : traverse(traversal);
 	}
 
-	public SLocation<?> traverse(STraversal<S> traversal) {
+	public SLocation<?> traverse(STraversal traversal) {
 		return new SContext<S>(this, traversal).newLocation();
 	}
 
 	public SLocation<?> leftSibling() {
-		SContext<? extends STreeState<?>> leftSibling = context().leftSibling();
+		SContext<? extends STreeState> leftSibling = context().leftSibling();
 		return leftSibling == null ? null : leftSibling.newLocation();
 	}
 
 	public SLocation<?> rightSibling() {
-		SContext<? extends STreeState<?>> rightSibling = context().rightSibling();
+		SContext<? extends STreeState> rightSibling = context().rightSibling();
 		return rightSibling == null ? null : rightSibling.newLocation();
 	}
 
@@ -103,33 +100,33 @@ public class SLocation<S extends STreeState<S>> {
 	/* Node methods */
 
 	@SuppressWarnings("unchecked")
-	public <A> A safeProperty(SProperty<S> property) {
+	public <A> A safeProperty(STypeSafeProperty<S, A> property) {
 		final S state = tree.state;
 		return (A) property.retrieve(state);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Tree, A> T safePropertyReplace(SProperty<S> property, A attribute) {
+	public <T extends Tree, A> T safePropertyReplace(STypeSafeProperty<S, A> property, A attribute) {
 		final S state = tree.state;
-		final STree newTree = tree.withState(property.rebuildParentState(state, attribute));
+		final STree newTree = tree.withState((S) property.rebuildParentState(state, attribute));
 		return (T) withTree(newTree).facade;
 	}
 
-	public <T extends Tree, A> T safePropertyMutate(SProperty<S> property, Mutation<A> mutation) {
-		return safePropertyReplace(property, mutation.mutate(this.<A>safeProperty(property)));
+	public <T extends Tree, A> T safePropertyMutate(STypeSafeProperty<S, A> property, Mutation<A> mutation) {
+		return safePropertyReplace(property, mutation.mutate(safeProperty(property)));
 	}
 
 	@SuppressWarnings("unchecked")
-	public <C extends Tree> C safeTraversal(STraversal<S> traversal) {
+	public <C extends Tree> C safeTraversal(STypeSafeTraversal<S, C> traversal) {
 		return (C) traverse(traversal).facade;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Tree, C extends Tree> T safeTraversalReplace(STraversal<S> traversal, C child) {
+	public <T extends Tree, C extends Tree> T safeTraversalReplace(STypeSafeTraversal<S, C> traversal, C child) {
 		return (T) withTree(tree.traverseReplace(traversal, TreeBase.treeOf(child))).facade;
 	}
 
-	public <T extends Tree, C extends Tree> T safeTraversalMutate(STraversal<S> traversal, Mutation<C> mutation) {
-		return safeTraversalReplace(traversal, mutation.mutate(this.<C>safeTraversal(traversal)));
+	public <T extends Tree, C extends Tree> T safeTraversalMutate(STypeSafeTraversal<S, C> traversal, Mutation<C> mutation) {
+		return safeTraversalReplace(traversal, mutation.mutate(safeTraversal(traversal)));
 	}
 }

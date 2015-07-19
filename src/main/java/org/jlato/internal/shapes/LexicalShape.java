@@ -73,28 +73,28 @@ public abstract class LexicalShape {
 		return new LSAlternative(condition, shape, alternative);
 	}
 
-	public static <S extends STreeState<S>> LexicalShape dataOption(final SProperty<S> property, LexicalShape shape) {
+	public static <S extends STreeState> LexicalShape dataOption(final SProperty property, LexicalShape shape) {
 		return alternative(LSCondition.data(property), shape, null);
 	}
 
 	@Deprecated
-	public static LexicalShape nonNullChild(STraversal<? extends SNodeState> traversal, LexicalShape shape, LexicalShape alternative) {
+	public static LexicalShape nonNullChild(STraversal traversal, LexicalShape shape, LexicalShape alternative) {
 		return alternative(childIs(traversal, nonNull()), shape, alternative);
 	}
 
-	public static LexicalShape nonEmptyChildren(STraversal<? extends SNodeState> traversal, LexicalShape shape) {
+	public static LexicalShape nonEmptyChildren(STraversal traversal, LexicalShape shape) {
 		return alternative(childIs(traversal, not(emptyList())), shape, null);
 	}
 
-	public static LexicalShape nonEmptyChildren(STraversal<? extends SNodeState> traversal, LexicalShape shape, LexicalShape alternative) {
+	public static LexicalShape nonEmptyChildren(STraversal traversal, LexicalShape shape, LexicalShape alternative) {
 		return alternative(childIs(traversal, not(emptyList())), shape, alternative);
 	}
 
-	public static LexicalShape emptyChildren(STraversal<? extends SNodeState> traversal, LexicalShape shape) {
+	public static LexicalShape emptyChildren(STraversal traversal, LexicalShape shape) {
 		return nonEmptyChildren(traversal, null, shape);
 	}
 
-	public static LexicalShape emptyChildren(STraversal<? extends SNodeState> traversal, LexicalShape shape, LexicalShape alternative) {
+	public static LexicalShape emptyChildren(STraversal traversal, LexicalShape shape, LexicalShape alternative) {
 		return nonEmptyChildren(traversal, alternative, shape);
 	}
 
@@ -126,11 +126,11 @@ public abstract class LexicalShape {
 		return new LSNodeEitherElement(shape);
 	}
 
-	public static LexicalShape child(STraversal<? extends SNodeState> traversal) {
+	public static LexicalShape child(STraversal traversal) {
 		return child(traversal, defaultShape());
 	}
 
-	public static LexicalShape child(STraversal<? extends SNodeState> traversal, LexicalShape shape) {
+	public static LexicalShape child(STraversal traversal, LexicalShape shape) {
 		return new LSNodeChild(traversal, shape);
 	}
 

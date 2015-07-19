@@ -29,7 +29,7 @@ import java.util.Collections;
 /**
  * @author Didier Villevalois
  */
-public class SNodeEitherState implements STreeState<SNodeEitherState> {
+public class SNodeEitherState implements STreeState {
 
 	public final STree<?> element;
 	public final EitherSide side;
@@ -49,30 +49,30 @@ public class SNodeEitherState implements STreeState<SNodeEitherState> {
 		throw new UnsupportedOperationException();
 	}
 
-	public static STraversal<SNodeEitherState> elementTraversal() {
+	public static STraversal elementTraversal() {
 		return new ElementTraversal();
 	}
 
-	public static STraversal<SNodeEitherState> leftTraversal() {
+	public static STraversal leftTraversal() {
 		return new ElementTraversal(EitherSide.Left);
 	}
 
-	public static STraversal<SNodeEitherState> rightTraversal() {
+	public static STraversal rightTraversal() {
 		return new ElementTraversal(EitherSide.Right);
 	}
 
 	@Override
-	public Iterable<SProperty<SNodeEitherState>> allProperties() {
+	public Iterable<SProperty> allProperties() {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public STraversal<SNodeEitherState> firstChild() {
+	public STraversal firstChild() {
 		return elementTraversal();
 	}
 
 	@Override
-	public STraversal<SNodeEitherState> lastChild() {
+	public STraversal lastChild() {
 		return elementTraversal();
 	}
 
@@ -100,7 +100,7 @@ public class SNodeEitherState implements STreeState<SNodeEitherState> {
 		if (element != null) element.validate();
 	}
 
-	public static class ElementTraversal extends STraversal<SNodeEitherState> {
+	public static class ElementTraversal extends STraversal {
 
 		private final EitherSide side;
 
@@ -123,12 +123,12 @@ public class SNodeEitherState implements STreeState<SNodeEitherState> {
 		}
 
 		@Override
-		public STraversal<SNodeEitherState> leftSibling(SNodeEitherState state) {
+		public STraversal leftSibling(SNodeEitherState state) {
 			return null;
 		}
 
 		@Override
-		public STraversal<SNodeEitherState> rightSibling(SNodeEitherState state) {
+		public STraversal rightSibling(SNodeEitherState state) {
 			return null;
 		}
 	}

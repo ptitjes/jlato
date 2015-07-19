@@ -19,14 +19,16 @@
 
 package org.jlato.internal.bu;
 
+import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Kind;
+import org.jlato.tree.Tree;
 
 import java.util.Collections;
 
 /**
  * @author Didier Villevalois
  */
-public abstract class SNodeState<S extends SNodeState<S>> implements STreeState<S> {
+public abstract class SNodeState<S extends SNodeState<S>> implements STreeState {
 
 	public SNodeState() {
 	}
@@ -34,15 +36,23 @@ public abstract class SNodeState<S extends SNodeState<S>> implements STreeState<
 	public abstract Kind kind();
 
 	@Override
-	public Iterable<SProperty<S>> allProperties() {
+	public Iterable<SProperty> allProperties() {
 		return Collections.emptyList();
 	}
 
-	public void validate(STree<S> tree) {
+	public void validate(STree<?> tree) {
 //		for (STree<?> child : children) {
 //			if (child == null) // TODO Add better error message
 //				throw new IllegalStateException();
 //			child.validate();
 //		}
 	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public final Tree instantiate(SLocation<?> location) {
+		return doInstantiate((SLocation<S>) location);
+	}
+
+	protected abstract Tree doInstantiate(SLocation<S> location);
 }

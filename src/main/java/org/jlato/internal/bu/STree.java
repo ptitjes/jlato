@@ -19,7 +19,6 @@
 
 package org.jlato.internal.bu;
 
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SContext;
 import org.jlato.internal.td.SLocation;
 import org.jlato.tree.Tree;
@@ -27,7 +26,7 @@ import org.jlato.tree.Tree;
 /**
  * @author Didier Villevalois
  */
-public class STree<S extends STreeState<S>> {
+public class STree<S extends STreeState> {
 
 	public final S state;
 	public final WRunRun run;
@@ -53,12 +52,13 @@ public class STree<S extends STreeState<S>> {
 		return new STree<S>(state, run);
 	}
 
-	public STree<?> traverse(STraversal<S> traversal) {
+	public STree<?> traverse(STraversal traversal) {
 		return traversal.traverse(state);
 	}
 
-	public STree<S> traverseReplace(STraversal<S> traversal, STree<?> child) {
-		final S newState = traversal.rebuildParentState(state, child);
+	@SuppressWarnings("unchecked")
+	public STree<S> traverseReplace(STraversal traversal, STree<?> child) {
+		final S newState = (S) traversal.rebuildParentState(state, child);
 		return withState(newState);
 	}
 

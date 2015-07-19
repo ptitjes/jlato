@@ -31,7 +31,7 @@ import java.util.Comparator;
 /**
  * @author Didier Villevalois
  */
-public class STreeSetState implements STreeState<STreeSetState> {
+public class STreeSetState implements STreeState {
 
 	public final String rootPath;
 	public final TreeMap<String, STree<?>> trees;
@@ -55,23 +55,23 @@ public class STreeSetState implements STreeState<STreeSetState> {
 		throw new UnsupportedOperationException();
 	}
 
-	public static STraversal<STreeSetState> treeTraversal(String path) {
+	public static STraversal treeTraversal(String path) {
 		return new TreeTraversal(path);
 	}
 
 	@Override
-	public Iterable<SProperty<STreeSetState>> allProperties() {
+	public Iterable<SProperty> allProperties() {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public STraversal<STreeSetState> firstChild() {
+	public STraversal firstChild() {
 		// TODO
 		return null;
 	}
 
 	@Override
-	public STraversal<STreeSetState> lastChild() {
+	public STraversal lastChild() {
 		// TODO
 		return null;
 	}
@@ -100,7 +100,7 @@ public class STreeSetState implements STreeState<STreeSetState> {
 		}
 	};
 
-	public static class TreeTraversal extends STraversal<STreeSetState> {
+	public static class TreeTraversal extends STraversal {
 
 		private final String path;
 
@@ -119,13 +119,13 @@ public class STreeSetState implements STreeState<STreeSetState> {
 		}
 
 		@Override
-		public STraversal<STreeSetState> leftSibling(STreeSetState state) {
+		public STraversal leftSibling(STreeSetState state) {
 			// TODO
 			return null;
 		}
 
 		@Override
-		public STraversal<STreeSetState> rightSibling(STreeSetState state) {
+		public STraversal rightSibling(STreeSetState state) {
 			// TODO
 			return null;
 		}

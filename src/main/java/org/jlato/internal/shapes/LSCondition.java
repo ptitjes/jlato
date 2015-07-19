@@ -38,7 +38,7 @@ public abstract class LSCondition {
 		};
 	}
 
-	public static <S extends STreeState<S>> LSCondition data(final SProperty<S> property) {
+	public static <S extends STreeState> LSCondition data(final SProperty property) {
 		return new LSCondition() {
 			@Override
 			public boolean test(STree tree) {
@@ -63,7 +63,7 @@ public abstract class LSCondition {
 		};
 	}
 
-	public static LSCondition childIs(final STraversal<? extends SNodeState> traversal, final LSCondition condition) {
+	public static LSCondition childIs(final STraversal traversal, final LSCondition condition) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
 				return condition.test(tree.traverse(traversal));
@@ -71,7 +71,7 @@ public abstract class LSCondition {
 		};
 	}
 
-	public static LSCondition childHas(STraversal<? extends SNodeState> traversal, LSCondition condition) {
+	public static LSCondition childHas(STraversal traversal, LSCondition condition) {
 		return childIs(traversal, condition);
 	}
 

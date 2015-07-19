@@ -29,7 +29,7 @@ import java.util.Collections;
 /**
  * @author Didier Villevalois
  */
-public class SVarState implements STreeState<SVarState> {
+public class SVarState implements STreeState {
 
 	public final String name;
 
@@ -48,17 +48,17 @@ public class SVarState implements STreeState<SVarState> {
 	}
 
 	@Override
-	public Iterable<SProperty<SVarState>> allProperties() {
+	public Iterable<SProperty> allProperties() {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public STraversal<SVarState> firstChild() {
+	public STraversal firstChild() {
 		return null;
 	}
 
 	@Override
-	public STraversal<SVarState> lastChild() {
+	public STraversal lastChild() {
 		return null;
 	}
 

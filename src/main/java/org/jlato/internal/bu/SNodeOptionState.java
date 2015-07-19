@@ -29,7 +29,7 @@ import java.util.Collections;
 /**
  * @author Didier Villevalois
  */
-public class SNodeOptionState implements STreeState<SNodeOptionState> {
+public class SNodeOptionState implements STreeState {
 
 	public final STree<?> element;
 
@@ -47,22 +47,22 @@ public class SNodeOptionState implements STreeState<SNodeOptionState> {
 		throw new UnsupportedOperationException();
 	}
 
-	public static STraversal<SNodeOptionState> elementTraversal() {
+	public static STraversal elementTraversal() {
 		return new ElementTraversal();
 	}
 
 	@Override
-	public Iterable<SProperty<SNodeOptionState>> allProperties() {
+	public Iterable<SProperty> allProperties() {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public STraversal<SNodeOptionState> firstChild() {
+	public STraversal firstChild() {
 		return elementTraversal();
 	}
 
 	@Override
-	public STraversal<SNodeOptionState> lastChild() {
+	public STraversal lastChild() {
 		return elementTraversal();
 	}
 
@@ -79,7 +79,7 @@ public class SNodeOptionState implements STreeState<SNodeOptionState> {
 	}
 
 
-	public static class ElementTraversal extends STraversal<SNodeOptionState> {
+	public static class ElementTraversal extends STraversal {
 
 		public ElementTraversal() {
 		}
@@ -95,12 +95,12 @@ public class SNodeOptionState implements STreeState<SNodeOptionState> {
 		}
 
 		@Override
-		public STraversal<SNodeOptionState> leftSibling(SNodeOptionState state) {
+		public STraversal leftSibling(SNodeOptionState state) {
 			return null;
 		}
 
 		@Override
-		public STraversal<SNodeOptionState> rightSibling(SNodeOptionState state) {
+		public STraversal rightSibling(SNodeOptionState state) {
 			return null;
 		}
 	}

@@ -30,19 +30,19 @@ import java.util.Collections;
 /**
  * @author Didier Villevalois
  */
-public class SNodeListState implements STreeState<SNodeListState> {
+public class SNodeListState implements STreeState {
 
 	public final Vector<STree<?>> children;
 
 	public SNodeListState() {
-		this(Vector.<STree<? extends STreeState<?>>>empty());
+		this(Vector.<STree<? extends STreeState>>empty());
 	}
 
 	public SNodeListState(STree<?> element) {
-		this(Vector.<STree<? extends STreeState<?>>>empty().append(element));
+		this(Vector.<STree<? extends STreeState>>empty().append(element));
 	}
 
-	public SNodeListState(Vector<STree<? extends STreeState<?>>> children) {
+	public SNodeListState(Vector<STree<? extends STreeState>> children) {
 		this.children = children;
 	}
 
@@ -56,23 +56,23 @@ public class SNodeListState implements STreeState<SNodeListState> {
 		throw new UnsupportedOperationException();
 	}
 
-	public static STraversal<SNodeListState> elementTraversal(int index) {
+	public static STraversal elementTraversal(int index) {
 		return new ElementTraversal(index);
 	}
 
 	@Override
-	public Iterable<SProperty<SNodeListState>> allProperties() {
+	public Iterable<SProperty> allProperties() {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public STraversal<SNodeListState> firstChild() {
+	public STraversal firstChild() {
 		if (children.isEmpty()) return null;
 		return elementTraversal(-1).rightSibling(this);
 	}
 
 	@Override
-	public STraversal<SNodeListState> lastChild() {
+	public STraversal lastChild() {
 		if (children.isEmpty()) return null;
 		return elementTraversal(children.size()).leftSibling(this);
 	}
@@ -97,7 +97,7 @@ public class SNodeListState implements STreeState<SNodeListState> {
 		}
 	}
 
-	public static class ElementTraversal extends STraversal<SNodeListState> {
+	public static class ElementTraversal extends STraversal {
 
 		private final int index;
 
@@ -116,7 +116,7 @@ public class SNodeListState implements STreeState<SNodeListState> {
 		}
 
 		@Override
-		public STraversal<SNodeListState> leftSibling(SNodeListState state) {
+		public STraversal leftSibling(SNodeListState state) {
 			int previousIndex = index - 1;
 			while (previousIndex >= 0) {
 				if (state.child(previousIndex) != null) return new ElementTraversal(previousIndex);
@@ -126,7 +126,7 @@ public class SNodeListState implements STreeState<SNodeListState> {
 		}
 
 		@Override
-		public STraversal<SNodeListState> rightSibling(SNodeListState state) {
+		public STraversal rightSibling(SNodeListState state) {
 			int nextIndex = index + 1;
 			while (nextIndex < state.children.size()) {
 				if (state.child(nextIndex) != null) return new ElementTraversal(nextIndex);

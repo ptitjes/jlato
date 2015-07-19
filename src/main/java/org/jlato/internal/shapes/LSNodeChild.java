@@ -19,7 +19,6 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
 
@@ -28,9 +27,9 @@ import org.jlato.internal.bu.STree;
  */
 public final class LSNodeChild extends LSTraversal {
 
-	private final STraversal<? extends SNodeState> traversal;
+	private final STraversal traversal;
 
-	public LSNodeChild(STraversal<? extends SNodeState> traversal, LexicalShape shape) {
+	public LSNodeChild(STraversal traversal, LexicalShape shape) {
 		super(shape);
 		this.traversal = traversal;
 	}

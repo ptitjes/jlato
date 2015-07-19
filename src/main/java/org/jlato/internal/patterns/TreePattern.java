@@ -35,9 +35,9 @@ import org.jlato.tree.Tree;
  */
 public class TreePattern<T extends Tree> extends Pattern<T> {
 
-	private final STree<? extends STreeState<?>> pattern;
+	private final STree<? extends STreeState> pattern;
 
-	public TreePattern(STree<? extends STreeState<?>> pattern) {
+	public TreePattern(STree<? extends STreeState> pattern) {
 		this.pattern = pattern;
 	}
 
@@ -48,8 +48,8 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	}
 
 	protected static Substitution matchTree(STree<?> pattern, STree<?> tree, Substitution substitution) {
-		STreeState<?> patternState = pattern.state;
-		STreeState<?> state = tree.state;
+		STreeState patternState = pattern.state;
+		STreeState state = tree.state;
 		boolean isVariable = patternState instanceof SVarState;
 
 		if (isVariable) {
@@ -83,7 +83,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	}
 
 	protected static <S extends SNodeState<S>> Substitution mathData(S patternState, S state, Substitution substitution) {
-		for (SProperty<S> prop : patternState.allProperties()) {
+		for (SProperty prop : patternState.allProperties()) {
 			substitution = matchObject(prop.retrieve(patternState), prop.retrieve(state), substitution);
 			if (substitution == null) return null;
 		}
@@ -91,7 +91,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	}
 
 	protected static <S extends SNodeState<S>> Substitution mathChildren(S patternState, S state, Substitution substitution) {
-		STraversal<S> traversal = patternState.firstChild();
+		STraversal traversal = patternState.firstChild();
 		while (traversal != null) {
 			substitution = matchTree(traversal.traverse(patternState), traversal.traverse(state), substitution);
 			if (substitution == null) return null;
@@ -122,7 +122,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 
 	protected static Substitution matchObject(Object pattern, Object object, Substitution substitution) {
 		if (pattern instanceof STree) {
-			STreeState<?> patternState = ((STree) pattern).state;
+			STreeState patternState = ((STree) pattern).state;
 
 			if (patternState instanceof SVarState) {
 				String name = ((SVarState) patternState).name;
@@ -149,7 +149,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	}
 
 	private STree<?> buildTree(STree<?> pattern, Substitution substitution) {
-		STreeState<?> patternState = pattern.state;
+		STreeState patternState = pattern.state;
 		if (patternState instanceof SVarState) {
 			String name = ((SVarState) patternState).name;
 			return substitution.get(name);
@@ -189,7 +189,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		Builder<Object, ArrayList<Object>> childrenBuilder = ArrayList.<Object>factory().newBuilder();
 		for (Object childPattern : pattern) {
 			if (childPattern instanceof STree) {
-				STreeState<?> patternState = ((STree) childPattern).state;
+				STreeState patternState = ((STree) childPattern).state;
 				if (patternState instanceof SVarState) {
 					String name = ((SVarState) patternState).name;
 

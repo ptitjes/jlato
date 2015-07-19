@@ -19,12 +19,26 @@
 
 package org.jlato.internal.bu;
 
+import org.jlato.tree.Tree;
+
 /**
  * @author Didier Villevalois
  */
-public abstract class SProperty {
+public abstract class STypeSafeTraversal<P extends STreeState, T extends Tree> extends STraversal {
 
-	public abstract Object retrieve(STreeState state);
+	@Override
+	@SuppressWarnings("unchecked")
+	public final STree<?> traverse(STreeState state) {
+		return doTraverse((P) state);
+	}
 
-	public abstract STreeState rebuildParentState(STreeState state, Object value);
+	protected abstract STree<?> doTraverse(P state);
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public final STreeState rebuildParentState(STreeState state, STree<?> child) {
+		return doRebuildParentState((P) state, child);
+	}
+
+	protected abstract STreeState doRebuildParentState(P state, STree<?> child);
 }

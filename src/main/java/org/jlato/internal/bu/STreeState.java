@@ -21,23 +21,22 @@ package org.jlato.internal.bu;
 
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
-import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
  */
-public interface STreeState<S extends STreeState<S>> {
+public interface STreeState {
 
-	Iterable<SProperty<S>> allProperties();
+	Iterable<SProperty> allProperties();
 
-	STraversal<S> firstChild();
+	STraversal firstChild();
 
-	STraversal<S> lastChild();
+	STraversal lastChild();
 
-	void validate(STree<S> tree);
+	void validate(STree<?> tree);
 
-	Tree instantiate(SLocation<S> location);
+	Tree instantiate(SLocation<?> location);
 
 	LexicalShape shape();
 }

@@ -20,11 +20,9 @@
 package org.jlato.internal.td;
 
 import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
  */
-public interface SKind<S extends STreeState<S>> {
+public interface SKind<S extends STreeState> {
 }

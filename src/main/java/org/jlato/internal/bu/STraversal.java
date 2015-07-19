@@ -22,13 +22,13 @@ package org.jlato.internal.bu;
 /**
  * @author Didier Villevalois
  */
-public abstract class STraversal<P extends STreeState<P>> {
+public abstract class STraversal {
 
-	public abstract STree<?> traverse(P state);
+	public abstract STree<?> traverse(STreeState state);
 
-	public abstract P rebuildParentState(P state, STree<?> child);
+	public abstract STreeState rebuildParentState(STreeState state, STree<?> child);
 
-	public abstract STraversal<P> leftSibling(P state);
+	public abstract STraversal leftSibling(STreeState state);
 
-	public abstract STraversal<P> rightSibling(P state);
+	public abstract STraversal rightSibling(STreeState state);
 }

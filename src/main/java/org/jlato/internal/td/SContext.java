@@ -26,12 +26,12 @@ import org.jlato.internal.bu.STreeState;
 /**
  * @author Didier Villevalois
  */
-public final class SContext<P extends STreeState<P>> {
+public final class SContext<P extends STreeState> {
 
 	public final SLocation<P> parent;
-	public final STraversal<P> traversal;
+	public final STraversal traversal;
 
-	public SContext(SLocation<P> parent, STraversal<P> traversal) {
+	public SContext(SLocation<P> parent, STraversal traversal) {
 		this.parent = parent;
 		this.traversal = traversal;
 	}
@@ -40,8 +40,9 @@ public final class SContext<P extends STreeState<P>> {
 		return new SContext<P>(rebuiltParent(child), traversal);
 	}
 
+	@SuppressWarnings("unchecked")
 	private SLocation<P> rebuiltParent(STree<?> child) {
-		return parent.withTree(parent.tree.withState(traversal.rebuildParentState(parent.tree.state, child)));
+		return parent.withTree(parent.tree.traverseReplace(traversal, child));
 	}
 
 	public STree<?> peruse() {
@@ -54,12 +55,12 @@ public final class SContext<P extends STreeState<P>> {
 	}
 
 	public SContext<P> leftSibling() {
-		STraversal<P> leftSibling = traversal.leftSibling(parent.tree.state);
+		STraversal leftSibling = traversal.leftSibling(parent.tree.state);
 		return leftSibling == null ? null : new SContext<P>(parent, leftSibling);
 	}
 
 	public SContext<P> rightSibling() {
-		STraversal<P> rightSibling = traversal.rightSibling(parent.tree.state);
+		STraversal rightSibling = traversal.rightSibling(parent.tree.state);
 		return rightSibling == null ? null : new SContext<P>(parent, rightSibling);
 	}
 }

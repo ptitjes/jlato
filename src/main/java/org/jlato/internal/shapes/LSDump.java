@@ -28,11 +28,11 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public class LSDump<S extends STreeState<S>> extends LexicalShape {
+public class LSDump<S extends STreeState> extends LexicalShape {
 
-	private final SProperty<S> property;
+	private final SProperty property;
 
-	public LSDump(SProperty<S> property) {
+	public LSDump(SProperty property) {
 		this.property = property;
 	}
 

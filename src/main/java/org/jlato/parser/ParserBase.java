@@ -23,16 +23,9 @@ import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Kind;
-import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.decl.TypeDecl.TypeKind;
-import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.expr.Expr;
-import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.type.Type;
 
@@ -135,7 +128,7 @@ abstract class ParserBase {
 		return runStack.pop();
 	}
 
-	protected <S extends STreeState<S>> STree<S> enRun(STree<S> tree) {
+	protected <S extends STreeState> STree<S> enRun(STree<S> tree) {
 		if (!configuration.preserveWhitespaces) return tree;
 
 		try {
@@ -152,7 +145,7 @@ abstract class ParserBase {
 		}
 	}
 
-	protected <S extends STreeState<S>> STree<S> enRun(STree<S> tree, LexicalShape shape) {
+	protected <S extends STreeState> STree<S> enRun(STree<S> tree, LexicalShape shape) {
 		if (!configuration.preserveWhitespaces) return tree;
 
 		try {
@@ -168,7 +161,7 @@ abstract class ParserBase {
 		}
 	}
 
-	private <S extends STreeState<S>> STree<S> doEnRun(STree<S> tree, LexicalShape shape,
+	private <S extends STreeState> STree<S> doEnRun(STree<S> tree, LexicalShape shape,
 	                                   IndexedList<WTokenRun> tokens) {
 		try {
 			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
