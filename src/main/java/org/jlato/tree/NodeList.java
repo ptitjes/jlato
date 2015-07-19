@@ -98,7 +98,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 	}
 
 	public T get(final int index) {
-		return location.safeTraversal(SNodeListState.elementTraversal(index));
+		return (T) location.safeTraversal(SNodeListState.elementTraversal(index));
 	}
 
 	public NodeList<T> set(int index, T element) {

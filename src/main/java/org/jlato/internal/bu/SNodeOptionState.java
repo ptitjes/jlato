@@ -38,8 +38,9 @@ public class SNodeOptionState implements STreeState {
 	}
 
 	@Override
-	public Tree instantiate(SLocation<SNodeOptionState> location) {
-		return new NodeOption<Tree>(location);
+	@SuppressWarnings("unchecked")
+	public Tree instantiate(SLocation<?> location) {
+		return new NodeOption<Tree>((SLocation<SNodeOptionState>) location);
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class SNodeOptionState implements STreeState {
 		throw new UnsupportedOperationException();
 	}
 
-	public static STraversal elementTraversal() {
+	public static ElementTraversal elementTraversal() {
 		return new ElementTraversal();
 	}
 
@@ -74,33 +75,34 @@ public class SNodeOptionState implements STreeState {
 		return new SNodeOptionState(element);
 	}
 
-	public void validate(STree<SNodeOptionState> tree) {
+	@Override
+	public void validate(STree<?> tree) {
 		if (element != null) element.validate();
 	}
 
 
-	public static class ElementTraversal extends STraversal {
+	public static class ElementTraversal extends STypeSafeTraversal<SNodeOptionState, STreeState, Tree> {
 
 		public ElementTraversal() {
 		}
 
 		@Override
-		public STree<?> traverse(SNodeOptionState state) {
+		protected STree<?> doTraverse(SNodeOptionState state) {
 			return state.element;
 		}
 
 		@Override
-		public SNodeOptionState rebuildParentState(SNodeOptionState state, STree<?> child) {
+		protected SNodeOptionState doRebuildParentState(SNodeOptionState state, STree<STreeState> child) {
 			return state.withElement(child);
 		}
 
 		@Override
-		public STraversal leftSibling(SNodeOptionState state) {
+		public STraversal leftSibling(STreeState state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(SNodeOptionState state) {
+		public STraversal rightSibling(STreeState state) {
 			return null;
 		}
 	}

@@ -74,16 +74,18 @@ public class NodeOption<T extends Tree> extends TreeBase<SNodeOptionState, NodeO
 		return location.tree.state.element == treeOf(element);
 	}
 
+	@SuppressWarnings("unchecked")
 	public T get() {
-		return location.safeTraversal(SNodeOptionState.elementTraversal());
+		return (T) location.safeTraversal(SNodeOptionState.elementTraversal());
 	}
 
 	public NodeOption<T> set(T element) {
 		return location.safeTraversalReplace(SNodeOptionState.elementTraversal(), element);
 	}
 
+	@SuppressWarnings("unchecked")
 	public NodeOption<T> set(Mutation<T> mutation) {
-		return location.safeTraversalMutate(SNodeOptionState.elementTraversal(), mutation);
+		return location.safeTraversalMutate(SNodeOptionState.elementTraversal(), (Mutation<Tree>) mutation);
 	}
 
 	public NodeOption<T> setNone() {

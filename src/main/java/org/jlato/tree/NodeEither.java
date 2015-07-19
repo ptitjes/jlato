@@ -56,12 +56,14 @@ public class NodeEither<TL extends Tree, TR extends Tree> extends TreeBase<SNode
 		return location.tree.state.side == EitherSide.Right;
 	}
 
+	@SuppressWarnings("unchecked")
 	public TL left() {
-		return location.safeTraversal(SNodeEitherState.leftTraversal());
+		return (TL) location.safeTraversal(SNodeEitherState.leftTraversal());
 	}
 
+	@SuppressWarnings("unchecked")
 	public TR right() {
-		return location.safeTraversal(SNodeEitherState.rightTraversal());
+		return (TR) location.safeTraversal(SNodeEitherState.rightTraversal());
 	}
 
 	public NodeEither<TL, TR> setLeft(TL element) {

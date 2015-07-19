@@ -40,8 +40,9 @@ public class SNodeEitherState implements STreeState {
 	}
 
 	@Override
-	public Tree instantiate(SLocation<SNodeEitherState> location) {
-		return new NodeEither<Tree, Tree>(location);
+	@SuppressWarnings("unchecked")
+	public Tree instantiate(SLocation<?> location) {
+		return new NodeEither<Tree, Tree>((SLocation<SNodeEitherState>) location);
 	}
 
 	@Override
@@ -49,15 +50,15 @@ public class SNodeEitherState implements STreeState {
 		throw new UnsupportedOperationException();
 	}
 
-	public static STraversal elementTraversal() {
+	public static ElementTraversal elementTraversal() {
 		return new ElementTraversal();
 	}
 
-	public static STraversal leftTraversal() {
+	public static ElementTraversal leftTraversal() {
 		return new ElementTraversal(EitherSide.Left);
 	}
 
-	public static STraversal rightTraversal() {
+	public static ElementTraversal rightTraversal() {
 		return new ElementTraversal(EitherSide.Right);
 	}
 
@@ -96,11 +97,12 @@ public class SNodeEitherState implements STreeState {
 		return new SNodeEitherState(element, EitherSide.Right);
 	}
 
-	public void validate(STree tree) {
+	@Override
+	public void validate(STree<?> tree) {
 		if (element != null) element.validate();
 	}
 
-	public static class ElementTraversal extends STraversal {
+	public static class ElementTraversal extends STypeSafeTraversal<SNodeEitherState, STreeState, Tree> {
 
 		private final EitherSide side;
 
@@ -113,22 +115,22 @@ public class SNodeEitherState implements STreeState {
 		}
 
 		@Override
-		public STree<?> traverse(SNodeEitherState state) {
+		protected STree<?> doTraverse(SNodeEitherState state) {
 			return side == null || side == state.side ? state.element : null;
 		}
 
 		@Override
-		public SNodeEitherState rebuildParentState(SNodeEitherState state, STree<?> child) {
+		protected SNodeEitherState doRebuildParentState(SNodeEitherState state, STree<STreeState> child) {
 			return state.withElement(child).withSide(side != null ? side : state.side);
 		}
 
 		@Override
-		public STraversal leftSibling(SNodeEitherState state) {
+		public STraversal leftSibling(STreeState state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(SNodeEitherState state) {
+		public STraversal rightSibling(STreeState state) {
 			return null;
 		}
 	}

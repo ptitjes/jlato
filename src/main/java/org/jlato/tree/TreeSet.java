@@ -50,8 +50,9 @@ public class TreeSet<T extends Tree> extends TreeBase<STreeSetState, TreeSet<T>,
 		this(new SLocation<STreeSetState>(new STree<STreeSetState>(new STreeSetState(rootPath, trees))));
 	}
 
+	@SuppressWarnings("unchecked")
 	public T get(String path) {
-		return location.safeTraversal(STreeSetState.treeTraversal(path));
+		return (T) location.safeTraversal(STreeSetState.treeTraversal(path));
 	}
 
 	public TreeSet<T> put(String path, T tree) {

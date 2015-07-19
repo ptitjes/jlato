@@ -46,8 +46,9 @@ public class STreeSetState implements STreeState {
 	}
 
 	@Override
-	public Tree instantiate(SLocation<STreeSetState> location) {
-		return new TreeSet<Tree>(location);
+	@SuppressWarnings("unchecked")
+	public Tree instantiate(SLocation<?> location) {
+		return new TreeSet<Tree>((SLocation<STreeSetState>) location);
 	}
 
 	@Override
@@ -55,7 +56,7 @@ public class STreeSetState implements STreeState {
 		throw new UnsupportedOperationException();
 	}
 
-	public static STraversal treeTraversal(String path) {
+	public static TreeTraversal treeTraversal(String path) {
 		return new TreeTraversal(path);
 	}
 
@@ -89,7 +90,7 @@ public class STreeSetState implements STreeState {
 	}
 
 	@Override
-	public void validate(STree<STreeSetState> tree) {
+	public void validate(STree<?> tree) {
 		// TODO
 	}
 
@@ -100,7 +101,7 @@ public class STreeSetState implements STreeState {
 		}
 	};
 
-	public static class TreeTraversal extends STraversal {
+	public static class TreeTraversal extends STypeSafeTraversal<STreeSetState, STreeState, Tree> {
 
 		private final String path;
 
@@ -109,23 +110,23 @@ public class STreeSetState implements STreeState {
 		}
 
 		@Override
-		public STree<?> traverse(STreeSetState state) {
+		protected STree<?> doTraverse(STreeSetState state) {
 			return state.tree(path);
 		}
 
 		@Override
-		public STreeSetState rebuildParentState(STreeSetState state, STree<?> child) {
+		protected STreeSetState doRebuildParentState(STreeSetState state, STree<STreeState> child) {
 			return state.withTree(path, child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeSetState state) {
+		public STraversal leftSibling(STreeState state) {
 			// TODO
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeSetState state) {
+		public STraversal rightSibling(STreeState state) {
 			// TODO
 			return null;
 		}

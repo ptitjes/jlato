@@ -47,8 +47,18 @@ public class SNodeListState implements STreeState {
 	}
 
 	@Override
-	public Tree instantiate(SLocation<SNodeListState> location) {
-		return new NodeList<Tree>(location);
+	@SuppressWarnings("unchecked")
+	public Tree instantiate(SLocation<?> location) {
+		return new NodeList<Tree>((SLocation<SNodeListState>) location);
+	}
+
+	@Override
+	public void validate(STree<?> tree) {
+		for (STree child : children) {
+			if (child == null) // TODO Add better error message
+				throw new IllegalStateException();
+			child.validate();
+		}
 	}
 
 	@Override
@@ -56,7 +66,7 @@ public class SNodeListState implements STreeState {
 		throw new UnsupportedOperationException();
 	}
 
-	public static STraversal elementTraversal(int index) {
+	public static ElementTraversal elementTraversal(int index) {
 		return new ElementTraversal(index);
 	}
 
@@ -89,15 +99,7 @@ public class SNodeListState implements STreeState {
 		return new SNodeListState(children);
 	}
 
-	public void validate(STree<SNodeListState> tree) {
-		for (STree child : children) {
-			if (child == null) // TODO Add better error message
-				throw new IllegalStateException();
-			child.validate();
-		}
-	}
-
-	public static class ElementTraversal extends STraversal {
+	public static class ElementTraversal extends STypeSafeTraversal<SNodeListState, STreeState, Tree> {
 
 		private final int index;
 
@@ -106,30 +108,32 @@ public class SNodeListState implements STreeState {
 		}
 
 		@Override
-		public STree<?> traverse(SNodeListState state) {
+		protected STree<?> doTraverse(SNodeListState state) {
 			return state.child(index);
 		}
 
 		@Override
-		public SNodeListState rebuildParentState(SNodeListState state, STree<?> child) {
+		protected SNodeListState doRebuildParentState(SNodeListState state, STree<STreeState> child) {
 			return state.withChild(index, child);
 		}
 
 		@Override
-		public STraversal leftSibling(SNodeListState state) {
+		public STraversal leftSibling(STreeState state) {
 			int previousIndex = index - 1;
 			while (previousIndex >= 0) {
-				if (state.child(previousIndex) != null) return new ElementTraversal(previousIndex);
+				if (((SNodeListState) state).child(previousIndex) != null)
+					return new ElementTraversal(previousIndex);
 				previousIndex--;
 			}
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(SNodeListState state) {
+		public STraversal rightSibling(STreeState state) {
 			int nextIndex = index + 1;
-			while (nextIndex < state.children.size()) {
-				if (state.child(nextIndex) != null) return new ElementTraversal(nextIndex);
+			while (nextIndex < ((SNodeListState) state).children.size()) {
+				if (((SNodeListState) state).child(nextIndex) != null)
+					return new ElementTraversal(nextIndex);
 				nextIndex++;
 			}
 			return null;
