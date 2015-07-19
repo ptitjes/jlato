@@ -58,7 +58,7 @@ public class QuotesParser {
 			parserInstance.quotesMode = true;
 		}
 		else parserInstance.reset(reader);
-		return TreeBase.treeOf(context.callProduction(parserInstance));
+		return context.callProduction(parserInstance);
 	}
 
 	public <T extends Tree> STree<?> parse(ParseContext<T> context, String content) throws ParseException {
