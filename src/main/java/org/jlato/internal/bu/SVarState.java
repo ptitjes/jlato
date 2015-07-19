@@ -38,8 +38,8 @@ public class SVarState implements STreeState {
 	}
 
 	@Override
-	public Tree instantiate(SLocation<SVarState> location) {
-		return new FakeTree(location);
+	public Tree instantiate(SLocation<?> location) {
+		return new FakeTree((SLocation<SVarState>) location);
 	}
 
 	@Override
@@ -63,7 +63,8 @@ public class SVarState implements STreeState {
 	}
 
 	@Override
-	public void validate(STree<SVarState> tree) {
+	public void validate(STree<?> tree) {
+
 	}
 
 	class FakeTree extends TreeBase<SVarState, Tree, Tree> {

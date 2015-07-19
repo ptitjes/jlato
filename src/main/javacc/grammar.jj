@@ -1180,7 +1180,7 @@ STree<ImportDecl.State> ImportDecl():
 STree<SNodeListState> TypeDecls():
 {
 	STree<SNodeListState> types = emptyList();
-	STree<TypeDecl.State> typeDecl = null;
+	STree<? extends TypeDecl.State> typeDecl = null;
 }
 {
   { run(); }
@@ -1197,7 +1197,7 @@ STree<SNodeListState> TypeDecls():
 STree<SNodeListState> Modifiers():
 {
 	STree<SNodeListState> modifiers = emptyList();
-	STree<AnnotationExpr.State> ann;
+	STree<? extends AnnotationExpr.State> ann;
 }
 {
   { run(); }
@@ -1239,10 +1239,10 @@ STree<SNodeListState> Modifiers():
 /*
  * Decl syntax follows.
  */
-STree<TypeDecl.State> TypeDecl():
+STree<? extends TypeDecl.State> TypeDecl():
 {
 	STree<SNodeListState> modifiers;
-	STree<TypeDecl.State> ret;
+	STree<? extends TypeDecl.State> ret;
 }
 {
   { run(); }
@@ -1264,7 +1264,7 @@ STree<TypeDecl.State> TypeDecl():
 }
 
 
-STree<TypeDecl.State> ClassOrInterfaceDecl(STree<SNodeListState> modifiers):
+STree<? extends TypeDecl.State> ClassOrInterfaceDecl(STree<SNodeListState> modifiers):
 {
 	TypeDecl.TypeKind typeKind;
 	STree<Name.State> name;
@@ -1291,7 +1291,8 @@ STree<TypeDecl.State> ClassOrInterfaceDecl(STree<SNodeListState> modifiers):
     if (typeKind == TypeKind.Interface)
       return enRun(InterfaceDecl.make(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members));
     else {
-      QualifiedType superClassType = extendsClause == null || extendsClause.isEmpty() ? null : (QualifiedType) extendsClause.get(0);
+      STree<?> superClassType = extendsClause == null || extendsClause.state.children.isEmpty() ?
+        null : extendsClause.state.children.get(0);
       return enRun(ClassDecl.make(modifiers, name, ensureNotNull(typeParams), optionOf(superClassType), ensureNotNull(implementsClause), members));
     }
   }
@@ -1310,7 +1311,7 @@ STree<SNodeListState> ExtendsList(TypeKind typeKind):
     cit = AnnotatedQualifiedType() { ret = append(ret, cit); }
     ( "," cit = AnnotatedQualifiedType() { ret = append(ret, cit); } )*
     {
-      if (ret.size() > 1 && typeKind == TypeKind.Class)
+      if (ret.state.children.size() > 1 && typeKind == TypeKind.Class)
         throwParseException(token, "A class cannot extend more than one other class");
     }
   |
@@ -1343,7 +1344,7 @@ STree<SNodeListState> ImplementsList(TypeKind typeKind):
   { return enRun(ret, QualifiedType.implementsClauseShape); }
 }
 
-STree<TypeDecl.State> EnumDecl(STree<SNodeListState> modifiers):
+STree<? extends TypeDecl.State> EnumDecl(STree<SNodeListState> modifiers):
 {
 	STree<Name.State> name;
 	STree<SNodeListState> implementsClause = emptyList();
@@ -1386,7 +1387,7 @@ STree<EnumConstantDecl.State> EnumConstantDecl():
   { return enRun(EnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody))); }
 }
 
-STree<TypeDecl.State> AnnotationTypeDecl(STree<SNodeListState> modifiers):
+STree<AnnotationDecl.State> AnnotationTypeDecl(STree<SNodeListState> modifiers):
 {
 	STree<Name.State> name;
 	STree<SNodeListState> members;
@@ -1404,7 +1405,7 @@ STree<TypeDecl.State> AnnotationTypeDecl(STree<SNodeListState> modifiers):
 STree<SNodeListState> AnnotationTypeBody():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<MemberDecl.State> member;
+	STree<? extends MemberDecl.State> member;
 }
 {
   { run(); }
@@ -1420,10 +1421,10 @@ STree<SNodeListState> AnnotationTypeBody():
 }
 
 // TODO Merge with ClassOrInterfaceDecl production and do later checks programmaticaly
-STree<MemberDecl.State> AnnotationTypeBodyDecl():
+STree<? extends MemberDecl.State> AnnotationTypeBodyDecl():
 {
 	STree<SNodeListState> modifiers;
-	STree<MemberDecl.State> ret;
+	STree<? extends MemberDecl.State> ret;
 }
 {
   { run(); }
@@ -1452,11 +1453,11 @@ STree<MemberDecl.State> AnnotationTypeBodyDecl():
 // TODO Merge with MethodDecl production and do later checks programmaticaly
 STree<AnnotationMemberDecl.State> AnnotationTypeMemberDecl(STree<SNodeListState> modifiers):
 {
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 	STree<Name.State> name;
 	STree<SNodeListState> dims;
 	STree<SNodeOptionState> defaultVal = none();
-	STree<Expr.State> val = null;
+	STree<? extends Expr.State> val = null;
 }
 {
   // Run is started before modifiers
@@ -1465,7 +1466,7 @@ STree<AnnotationMemberDecl.State> AnnotationTypeMemberDecl(STree<SNodeListState>
   [
     { run(); }
     "default" val = MemberValue()
-    { defaultVal = enRun(defaultVal.set(val), AnnotationMemberDecl.defaultValShape); }
+    { defaultVal = enRun(optionOf(val), AnnotationMemberDecl.defaultValShape); }
   ]
   ";"
 
@@ -1527,7 +1528,7 @@ STree<SNodeListState> TypeBounds():
 STree<SNodeListState> ClassOrInterfaceBody(TypeKind typeKind):
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<MemberDecl.State> member;
+	STree<? extends MemberDecl.State> member;
 }
 {
   { run(); }
@@ -1539,7 +1540,7 @@ STree<SNodeListState> ClassOrInterfaceBody(TypeKind typeKind):
 
 STree<SNodeListState> ClassOrInterfaceBodyDecls(TypeKind typeKind):
 {
-	STree<MemberDecl.State> member;
+	STree<? extends MemberDecl.State> member;
 	STree<SNodeListState> ret = emptyList();
 }
 {
@@ -1553,10 +1554,10 @@ STree<SNodeListState> ClassOrInterfaceBodyDecls(TypeKind typeKind):
   { return enRun(ret, MemberDecl.membersShape); }
 }
 
-STree<MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind typeKind):
+STree<? extends MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind typeKind):
 {
 	STree<SNodeListState> modifiers;
-	STree<MemberDecl.State> ret;
+	STree<? extends MemberDecl.State> ret;
 }
 {
   { run(); }
@@ -1602,7 +1603,7 @@ STree<MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind typeKind):
 
 STree<FieldDecl.State> FieldDecl(STree<SNodeListState> modifiers):
 {
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 	STree<SNodeListState> variables = emptyList();
 	STree<VariableDeclarator.State> val;
 }
@@ -1616,7 +1617,7 @@ STree<FieldDecl.State> FieldDecl(STree<SNodeListState> modifiers):
 
 STree<LocalVariableDecl.State> VariableDecl(STree<SNodeListState> modifiers):
 {
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 	STree<SNodeListState> variables = emptyList();
 }
 {
@@ -1645,7 +1646,7 @@ STree<VariableDeclarator.State> VariableDeclarator():
 {
 	STree<VariableDeclaratorId.State> id;
 	STree<SNodeOptionState> init = none();
-	STree<Expr.State> initExpr = null;
+	STree<? extends Expr.State> initExpr = null;
 }
 {
   { run(); }
@@ -1654,7 +1655,7 @@ STree<VariableDeclarator.State> VariableDeclarator():
   [
     { run(); }
     "=" initExpr = VariableInitializer()
-    { init = enRun(init.set(initExpr), VariableDeclarator.initializerShape); }
+    { init = enRun(optionOf(initExpr), VariableDeclarator.initializerShape); }
   ]
 
   { return enRun(VariableDeclarator.make(id, init)); }
@@ -1689,9 +1690,9 @@ STree<SNodeListState> ArrayDims():
   { return enRun(arrayDims, ArrayDim.listShape); }
 }
 
-STree<Expr.State> VariableInitializer():
+STree<? extends Expr.State> VariableInitializer():
 {
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 }
 {
   ( ret = ArrayInitializer() | ret = Expression() )
@@ -1701,7 +1702,7 @@ STree<Expr.State> VariableInitializer():
 STree<ArrayInitializerExpr.State> ArrayInitializer():
 {
 	STree<SNodeListState> values = emptyList();
-	STree<Expr.State> val;
+	STree<? extends Expr.State> val;
 }
 {
   { run(); }
@@ -1722,7 +1723,7 @@ STree<ArrayInitializerExpr.State> ArrayInitializer():
 STree<MethodDecl.State> MethodDecl(STree<SNodeListState> modifiers):
 {
 	STree<SNodeListState> typeParameters = null;
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 	STree<Name.State> name;
 	STree<SNodeListState> parameters;
 	STree<SNodeListState> arrayDims;
@@ -1783,7 +1784,7 @@ STree<SNodeListState> FormalParameterList():
 STree<FormalParameter.State> FormalParameter():
 {
 	STree<SNodeListState> modifiers;
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 	boolean isVarArg = false;
 	STree<VariableDeclaratorId.State> id;
 }
@@ -1819,7 +1820,7 @@ STree<ConstructorDecl.State> ConstructorDecl(STree<SNodeListState> modifiers):
 	STree<ExplicitConstructorInvocationStmt.State> exConsInv = null;
 	STree<BlockStmt.State> block;
 	STree<SNodeListState> stmts = emptyList();
-	STree<Stmt.State> stmt;
+	STree<? extends Stmt.State> stmt;
 }
 {
   // Run is started before modifiers
@@ -1844,7 +1845,7 @@ STree<ExplicitConstructorInvocationStmt.State> ExplicitConstructorInvocation():
 {
 	boolean isThis = false;
 	STree<SNodeListState> args;
-	STree<Expr.State> expr = null;
+	STree<? extends Expr.State> expr = null;
 	STree<SNodeListState> typeArgs = null;
 }
 {
@@ -1871,7 +1872,7 @@ STree<ExplicitConstructorInvocationStmt.State> ExplicitConstructorInvocation():
 STree<SNodeListState> Statements():
 {
 	STree<SNodeListState> ret = null;
-	STree<Stmt.State> stmt;
+	STree<? extends Stmt.State> stmt;
 }
 {
   { run(); }
@@ -1896,9 +1897,9 @@ STree<InitializerDecl.State> InitializerDecl(STree<SNodeListState> modifiers):
  * Types
  **********************************************************************************************************************/
 
-STree<Type.State> Type(STree<SNodeListState> annotations):
+STree<? extends Type.State> Type(STree<SNodeListState> annotations):
 {
-	STree<Type.State> ret;
+	STree<? extends Type.State> ret;
 }
 {
   // Run may be started before annotations
@@ -1911,9 +1912,9 @@ STree<Type.State> Type(STree<SNodeListState> annotations):
   { return ret; }
 }
 
-STree<ReferenceType.State> ReferenceType(STree<SNodeListState> annotations):
+STree<? extends ReferenceType.State> ReferenceType(STree<SNodeListState> annotations):
 {
-	STree<ReferenceType.State> type;
+	STree<? extends ReferenceType.State> type;
 }
 {
   // Run may be started before annotations
@@ -1930,7 +1931,7 @@ STree<ReferenceType.State> ReferenceType(STree<SNodeListState> annotations):
 
 STree<ArrayType.State> ArrayType(STree<SNodeListState> annotations):
 {
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 	STree<SNodeListState> arrayDims;
 }
 {
@@ -1964,7 +1965,7 @@ STree<QualifiedType.State> QualifiedType(STree<SNodeListState> annotations):
   { ret = enRun(QualifiedType.make(annotations, scope, name, optionOf(typeArgs))); }
   (
     LOOKAHEAD(2)
-    { lateRun(); } "." { scope = enRun(scope.set(ret), QualifiedType.scopeShape); }
+    { lateRun(); } "." { scope = enRun(optionOf(ret), QualifiedType.scopeShape); }
 
     { lateRun(); }
     annotations = Annotations() name = Name()
@@ -1978,7 +1979,7 @@ STree<QualifiedType.State> QualifiedType(STree<SNodeListState> annotations):
 STree<SNodeListState> TypeArguments():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 }
 {
   { run(); }
@@ -1992,7 +1993,7 @@ STree<SNodeListState> TypeArguments():
 STree<SNodeListState> TypeArgumentsOrDiamond():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 }
 {
   { run(); }
@@ -2005,7 +2006,7 @@ STree<SNodeListState> TypeArgumentsOrDiamond():
 STree<SNodeListState> TypeArgumentList():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 }
 {
   type = TypeArgument() { ret = append(ret, type); }
@@ -2016,9 +2017,9 @@ STree<SNodeListState> TypeArgumentList():
   <NODE_LIST_VARIABLE> { return makeVar(getToken(0)); }
 }
 
-STree<Type.State> TypeArgument():
+STree<? extends Type.State> TypeArgument():
 {
-	STree<Type.State> ret;
+	STree<? extends Type.State> ret;
 	STree<SNodeListState> annotations = null;
 }
 {
@@ -2034,8 +2035,8 @@ STree<Type.State> TypeArgument():
 
 STree<WildcardType.State> Wildcard(STree<SNodeListState> annotations):
 {
-	STree<ReferenceType.State> ext = null;
-	STree<ReferenceType.State> sup = null;
+	STree<? extends ReferenceType.State> ext = null;
+	STree<? extends ReferenceType.State> sup = null;
 	STree<SNodeListState> boundAnnotations = null;
 }
 {
@@ -2077,9 +2078,9 @@ STree<PrimitiveType.State> PrimitiveType(STree<SNodeListState> annotations):
   { return enRun(PrimitiveType.make(annotations, primitive)); }
 }
 
-STree<Type.State> ResultType():
+STree<? extends Type.State> ResultType():
 {
-	STree<Type.State> ret;
+	STree<? extends Type.State> ret;
 }
 {
   (
@@ -2129,7 +2130,7 @@ STree<QualifiedName.State> QualifiedName():
   { run(); } name = Name() { ret = enRun(QualifiedName.make(qualifier, name)); }
   (
     LOOKAHEAD(2)
-    { lateRun(); } "." { qualifier = enRun(qualifier.set(ret), QualifiedName.qualifierShape); }
+    { lateRun(); } "." { qualifier = enRun(optionOf(ret), QualifiedName.qualifierShape); }
     { lateRun(); } name = Name() { ret = enRun(QualifiedName.make(qualifier, name)); }
   )*
   { return ret; }
@@ -2137,7 +2138,7 @@ STree<QualifiedName.State> QualifiedName():
 
 STree<Name.State> Name():
 {
-  Name name;
+    STree<Name.State> name;
 }
 {
   (
@@ -2155,7 +2156,7 @@ STree<Name.State> Name():
  * Expressions
  **********************************************************************************************************************/
 
-STree<Expr.State> Expression():
+STree<? extends Expr.State> Expression():
 // FIXME
 // This expansion has been written this way instead of :
 //   Assignment() | ConditionalExpression()
@@ -2165,21 +2166,21 @@ STree<Expr.State> Expression():
 // a primary Expr.  Consider adding a semantic predicate to work
 // around this.
 {
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 	AssignExpr.AssignOp op;
-	STree<Expr.State> value;
+	STree<? extends Expr.State> value;
 	STree<SNodeListState> params;
 }
 {
   (
     LOOKAHEAD( Name() "->" )
-    { run(); } ret = Name() "->" ret = LambdaBody(singletonList(makeFormalParameter((Name) ret)), false)
+    { run(); } ret = Name() "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<Name.State>) ret)), false)
   |
     LOOKAHEAD( "(" ")" "->" )
     { run(); } "(" ")" "->" ret = LambdaBody(emptyList(), true)
   |
     LOOKAHEAD( "(" Name() ")" "->" )
-    { run(); } "(" ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((Name) ret)), true)
+    { run(); } "(" ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<Name.State>) ret)), true)
   |
     LOOKAHEAD( "(" Name() "," )
     "(" params = InferredFormalParameterList() ")" "->" ret = LambdaBody(params, true)
@@ -2197,15 +2198,15 @@ STree<Expr.State> Expression():
 STree<LambdaExpr.State> LambdaBody(STree<SNodeListState> parameters, boolean parenthesis):
 {
 	STree<BlockStmt.State> block;
-	STree<Expr.State> expr;
+	STree<? extends Expr.State> expr;
 	STree<LambdaExpr.State> ret;
 }
 {
   // Run was started before parameters
   (
-    expr = Expression() { ret = enRun(LambdaExpr.make(parameters, parenthesis, expr)); }
+    expr = Expression() { ret = enRun(LambdaExpr.make(parameters, parenthesis, left(expr))); }
   |
-    block = Block() { ret = enRun(LambdaExpr.make(parameters, parenthesis, block)); }
+    block = Block() { ret = enRun(LambdaExpr.make(parameters, parenthesis, right(block))); }
   )
   { return ret; }
 }
@@ -2258,7 +2259,7 @@ STree<FormalParameter.State> InferredFormalParameter():
 }
 
 JAVACODE
-FormalParameter makeFormalParameter(Name name) {
+STree<FormalParameter.State> makeFormalParameter(STree<Name.State> name) {
   return FormalParameter.make(emptyList(), UnknownType.make(), false,
     VariableDeclaratorId.make(name, emptyList())
   );
@@ -2284,11 +2285,11 @@ AssignExpr.AssignOp AssignmentOperator():
   { return ret; }
 }
 
-STree<Expr.State> ConditionalExpression():
+STree<? extends Expr.State> ConditionalExpression():
 {
-	STree<Expr.State> ret;
-	STree<Expr.State> left;
-	STree<Expr.State> right;
+	STree<? extends Expr.State> ret;
+	STree<? extends Expr.State> left;
+	STree<? extends Expr.State> right;
 }
 {
   ret = ConditionalOrExpression()
@@ -2300,10 +2301,10 @@ STree<Expr.State> ConditionalExpression():
   { return ret; }
 }
 
-STree<Expr.State> ConditionalOrExpression():
+STree<? extends Expr.State> ConditionalOrExpression():
 {
-	STree<Expr.State> ret;
-	STree<Expr.State> right;
+	STree<? extends Expr.State> ret;
+	STree<? extends Expr.State> right;
 }
 {
   ret = ConditionalAndExpression()
@@ -2315,10 +2316,10 @@ STree<Expr.State> ConditionalOrExpression():
   { return ret; }
 }
 
-STree<Expr.State> ConditionalAndExpression():
+STree<? extends Expr.State> ConditionalAndExpression():
 {
-	STree<Expr.State> ret;
-	STree<Expr.State> right;
+	STree<? extends Expr.State> ret;
+	STree<? extends Expr.State> right;
 }
 {
   ret = InclusiveOrExpression()
@@ -2330,10 +2331,10 @@ STree<Expr.State> ConditionalAndExpression():
   { return ret; }
 }
 
-STree<Expr.State> InclusiveOrExpression():
+STree<? extends Expr.State> InclusiveOrExpression():
 {
-	STree<Expr.State> ret;
-	STree<Expr.State> right;
+	STree<? extends Expr.State> ret;
+	STree<? extends Expr.State> right;
 }
 {
   ret = ExclusiveOrExpression()
@@ -2345,10 +2346,10 @@ STree<Expr.State> InclusiveOrExpression():
   { return ret; }
 }
 
-STree<Expr.State> ExclusiveOrExpression():
+STree<? extends Expr.State> ExclusiveOrExpression():
 {
-	STree<Expr.State> ret;
-	STree<Expr.State> right;
+	STree<? extends Expr.State> ret;
+	STree<? extends Expr.State> right;
 }
 {
   ret = AndExpression()
@@ -2360,10 +2361,10 @@ STree<Expr.State> ExclusiveOrExpression():
   { return ret; }
 }
 
-STree<Expr.State> AndExpression():
+STree<? extends Expr.State> AndExpression():
 {
-	STree<Expr.State> ret;
-	STree<Expr.State> right;
+	STree<? extends Expr.State> ret;
+	STree<? extends Expr.State> right;
 }
 {
   ret = EqualityExpression()
@@ -2375,10 +2376,10 @@ STree<Expr.State> AndExpression():
   { return ret; }
 }
 
-STree<Expr.State> EqualityExpression():
+STree<? extends Expr.State> EqualityExpression():
 {
-	STree<Expr.State> ret;
-	STree<Expr.State> right;
+	STree<? extends Expr.State> ret;
+	STree<? extends Expr.State> right;
 	BinaryExpr.BinaryOp op;
 }
 {
@@ -2394,11 +2395,11 @@ STree<Expr.State> EqualityExpression():
   { return ret; }
 }
 
-STree<Expr.State> InstanceOfExpression():
+STree<? extends Expr.State> InstanceOfExpression():
 {
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 	STree<SNodeListState> annotations;
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 }
 {
   ret = RelationalExpression()
@@ -2411,10 +2412,10 @@ STree<Expr.State> InstanceOfExpression():
   { return ret; }
 }
 
-STree<Expr.State> RelationalExpression():
+STree<? extends Expr.State> RelationalExpression():
 {
-	STree<Expr.State> ret;
-	STree<Expr.State> right;
+	STree<? extends Expr.State> ret;
+	STree<? extends Expr.State> right;
 	BinaryExpr.BinaryOp op;
 }
 {
@@ -2432,10 +2433,10 @@ STree<Expr.State> RelationalExpression():
   { return ret; }
 }
 
-STree<Expr.State> ShiftExpression():
+STree<? extends Expr.State> ShiftExpression():
 {
-	STree<Expr.State> ret;
-	STree<Expr.State> right;
+	STree<? extends Expr.State> ret;
+	STree<? extends Expr.State> right;
 	BinaryExpr.BinaryOp op;
 }
 {
@@ -2452,10 +2453,10 @@ STree<Expr.State> ShiftExpression():
   { return ret; }
 }
 
-STree<Expr.State> AdditiveExpression():
+STree<? extends Expr.State> AdditiveExpression():
 {
-	STree<Expr.State> ret;
-	STree<Expr.State> right;
+	STree<? extends Expr.State> ret;
+	STree<? extends Expr.State> right;
 	BinaryExpr.BinaryOp op;
 }
 {
@@ -2471,10 +2472,10 @@ STree<Expr.State> AdditiveExpression():
   { return ret; }
 }
 
-STree<Expr.State> MultiplicativeExpression():
+STree<? extends Expr.State> MultiplicativeExpression():
 {
-	STree<Expr.State> ret;
-	STree<Expr.State> right;
+	STree<? extends Expr.State> ret;
+	STree<? extends Expr.State> right;
 	BinaryExpr.BinaryOp op;
 }
 {
@@ -2491,9 +2492,9 @@ STree<Expr.State> MultiplicativeExpression():
   { return ret; }
 }
 
-STree<Expr.State> UnaryExpression():
+STree<? extends Expr.State> UnaryExpression():
 {
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 	UnaryExpr.UnaryOp op;
 }
 {
@@ -2511,10 +2512,10 @@ STree<Expr.State> UnaryExpression():
   { return ret; }
 }
 
-STree<Expr.State> PrefixExpression():
+STree<? extends Expr.State> PrefixExpression():
 {
 	UnaryExpr.UnaryOp op;
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 }
 {
   { run(); }
@@ -2524,9 +2525,9 @@ STree<Expr.State> PrefixExpression():
   { return enRun(UnaryExpr.make(op, ret)); }
 }
 
-STree<Expr.State> UnaryExpressionNotPlusMinus():
+STree<? extends Expr.State> UnaryExpressionNotPlusMinus():
 {
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 	UnaryExpr.UnaryOp op;
 }
 {
@@ -2545,9 +2546,9 @@ STree<Expr.State> UnaryExpressionNotPlusMinus():
   { return ret; }
 }
 
-STree<Expr.State> PostfixExpression():
+STree<? extends Expr.State> PostfixExpression():
 {
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 	UnaryExpr.UnaryOp op;
 }
 {
@@ -2562,10 +2563,10 @@ STree<Expr.State> PostfixExpression():
   { return ret; }
 }
 
-STree<Expr.State> CastExpression():
+STree<? extends Expr.State> CastExpression():
 {
-	STree<Expr.State> ret;
-	STree<Type.State> type;
+	STree<? extends Expr.State> ret;
+	STree<? extends Type.State> type;
 	STree<SNodeListState> types = emptyList();
 	STree<SNodeListState> annotations = null;
 }
@@ -2584,9 +2585,9 @@ STree<Expr.State> CastExpression():
   { return ret; }
 }
 
-STree<Type.State> PrimitiveCastType():
+STree<? extends Type.State> PrimitiveCastType():
 {
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 	STree<SNodeListState> types = emptyList();
 	STree<SNodeListState> annotations = null;
 }
@@ -2595,9 +2596,9 @@ STree<Type.State> PrimitiveCastType():
   { return type; }
 }
 
-STree<Type.State> ReferenceCastType():
+STree<? extends Type.State> ReferenceCastType():
 {
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 	STree<SNodeListState> types = emptyList();
 	STree<SNodeListState> annotations = null;
 }
@@ -2619,37 +2620,37 @@ STree<Type.State> ReferenceCastType():
   { return type; }
 }
 
-STree<Expr.State> Literal():
+STree<? extends Expr.State> Literal():
 {
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 }
 {
   { run(); }
   (
-    <INTEGER_LITERAL>   { ret = new LiteralExpr<Integer>(Integer.class, token.image); }
+    <INTEGER_LITERAL>   { ret = LiteralExpr.make(Integer.class, token.image); }
   |
-    <LONG_LITERAL>      { ret = new LiteralExpr<Long>(Long.class, token.image); }
+    <LONG_LITERAL>      { ret = LiteralExpr.make(Long.class, token.image); }
   |
-    <FLOAT_LITERAL>     { ret = new LiteralExpr<Float>(Float.class, token.image); }
+    <FLOAT_LITERAL>     { ret = LiteralExpr.make(Float.class, token.image); }
   |
-    <DOUBLE_LITERAL>    { ret = new LiteralExpr<Double>(Double.class, token.image); }
+    <DOUBLE_LITERAL>    { ret = LiteralExpr.make(Double.class, token.image); }
   |
-    <CHARACTER_LITERAL> { ret = new LiteralExpr<Character>(Character.class, token.image); }
+    <CHARACTER_LITERAL> { ret = LiteralExpr.make(Character.class, token.image); }
   |
-    <STRING_LITERAL>    { ret = new LiteralExpr<String>(String.class, token.image); }
+    <STRING_LITERAL>    { ret = LiteralExpr.make(String.class, token.image); }
   |
-    "true"  { ret = new LiteralExpr<Boolean>(Boolean.class, token.image); }
+    "true"  { ret = LiteralExpr.make(Boolean.class, token.image); }
   |
-    "false" { ret = new LiteralExpr<Boolean>(Boolean.class, token.image); }
+    "false" { ret = LiteralExpr.make(Boolean.class, token.image); }
   |
-    "null"  { ret = new LiteralExpr<Void>(Void.class, token.image); }
+    "null"  { ret = LiteralExpr.make(Void.class, token.image); }
   )
   { return enRun(ret); }
 }
 
-STree<Expr.State> PrimaryExpression():
+STree<? extends Expr.State> PrimaryExpression():
 {
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 }
 {
   ret = PrimaryPrefix()
@@ -2660,9 +2661,9 @@ STree<Expr.State> PrimaryExpression():
   { return ret; }
 }
 
-STree<Expr.State> PrimaryExpressionWithoutSuperSuffix():
+STree<? extends Expr.State> PrimaryExpressionWithoutSuperSuffix():
 {
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 }
 {
   ret = PrimaryPrefix()
@@ -2673,12 +2674,12 @@ STree<Expr.State> PrimaryExpressionWithoutSuperSuffix():
   { return ret; }
 }
 
-STree<Expr.State> PrimaryPrefix():
+STree<? extends Expr.State> PrimaryPrefix():
 {
-	STree<Expr.State> ret = null;
+	STree<? extends Expr.State> ret = null;
 	STree<SNodeListState> typeArgs = null;
 	STree<SNodeListState> params;
-	STree<Type.State> type;
+	STree<? extends Type.State> type;
 }
 {
   (
@@ -2718,7 +2719,7 @@ STree<Expr.State> PrimaryPrefix():
     ret = Name()
     [
       { lateRun(); }
-      "->" ret = LambdaBody(singletonList(makeFormalParameter((Name) ret)), false)
+      "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<Name.State>) ret)), false)
     ]
   |
     { run(); }
@@ -2727,7 +2728,7 @@ STree<Expr.State> PrimaryPrefix():
       ")" "->" ret = LambdaBody(emptyList(), true)
     |
       LOOKAHEAD( Name() ")" "->" )
-      ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((Name) ret)), true)
+      ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<Name.State>) ret)), true)
     |
       LOOKAHEAD( Name() "," )
       params = InferredFormalParameterList() ")" "->" ret = LambdaBody(params, true)
@@ -2742,9 +2743,9 @@ STree<Expr.State> PrimaryPrefix():
   { return ret; }
 }
 
-STree<Expr.State> PrimarySuffix(Expr scope):
+STree<? extends Expr.State> PrimarySuffix(STree<? extends Expr.State> scope):
 {
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 }
 {
   // Run is started before scope
@@ -2760,9 +2761,9 @@ STree<Expr.State> PrimarySuffix(Expr scope):
   { return ret; }
 }
 
-STree<Expr.State> PrimarySuffixWithoutSuper(Expr scope):
+STree<? extends Expr.State> PrimarySuffixWithoutSuper(STree<? extends Expr.State> scope):
 {
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 	STree<Name.State> name;
 }
 {
@@ -2787,7 +2788,7 @@ STree<Expr.State> PrimarySuffixWithoutSuper(Expr scope):
   { return ret; }
 }
 
-STree<Expr.State> FieldAccess(Expr scope):
+STree<? extends Expr.State> FieldAccess(STree<? extends Expr.State> scope):
 {
 	STree<Name.State> name;
 }
@@ -2798,12 +2799,12 @@ STree<Expr.State> FieldAccess(Expr scope):
   { return enRun(FieldAccessExpr.make(optionOf(scope), name)); }
 }
 
-STree<Expr.State> MethodInvocation(Expr scope):
+STree<? extends Expr.State> MethodInvocation(STree<? extends Expr.State> scope):
 {
     STree<SNodeListState> typeArgs = null;
 	STree<Name.State> name;
     STree<SNodeListState> args = null;
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 }
 {
   // Run is started before scope
@@ -2816,7 +2817,7 @@ STree<Expr.State> MethodInvocation(Expr scope):
 STree<SNodeListState> Arguments():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<Expr.State> expr;
+	STree<? extends Expr.State> expr;
 }
 {
   { run(); }
@@ -2833,11 +2834,11 @@ STree<SNodeListState> Arguments():
   { return enRun(ret, Expr.argumentsShape); }
 }
 
-STree<Expr.State> MethodReferenceSuffix(Expr scope):
+STree<? extends Expr.State> MethodReferenceSuffix(STree<? extends Expr.State> scope):
 {
     STree<SNodeListState> typeArgs = null;
 	STree<Name.State> name;
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 }
 {
   // Run is started before scope
@@ -2848,10 +2849,10 @@ STree<Expr.State> MethodReferenceSuffix(Expr scope):
   { return ret; }
 }
 
-STree<Expr.State> AllocationExpression(Expr scope):
+STree<? extends Expr.State> AllocationExpression(STree<? extends Expr.State> scope):
 {
-	STree<Expr.State> ret;
-	STree<Type.State> type;
+	STree<? extends Expr.State> ret;
+	STree<? extends Type.State> type;
 	STree<SNodeListState> typeArgs = null;
 	STree<SNodeListState> anonymousBody = null;
 	STree<SNodeListState> args;
@@ -2875,15 +2876,15 @@ STree<Expr.State> AllocationExpression(Expr scope):
 	  ret = ArrayCreationExpr(type)
 	|
 	  args = Arguments() [ LOOKAHEAD( "{" ) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
-      { ret = enRun(ObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (QualifiedType) type, args, optionOf(anonymousBody))); }
+      { ret = enRun(ObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (STree<QualifiedType.State>) type, args, optionOf(anonymousBody))); }
     )
   )
   { return ret; }
 }
 
-STree<Expr.State> ArrayCreationExpr(Type componentType):
+STree<? extends Expr.State> ArrayCreationExpr(STree<? extends Type.State> componentType):
 {
-	STree<Expr.State> expr;
+	STree<? extends Expr.State> expr;
 	STree<SNodeListState> arrayDimExprs = emptyList();
 	STree<SNodeListState> arrayDims = emptyList();
 	STree<SNodeListState> annotations = null;
@@ -2906,7 +2907,7 @@ STree<SNodeListState> ArrayDimExprsMandatory():
 {
 	STree<SNodeListState> arrayDimExprs = emptyList();
 	STree<SNodeListState> annotations;
-	STree<Expr.State> expr;
+	STree<? extends Expr.State> expr;
 }
 {
   { run(); }
@@ -2939,9 +2940,9 @@ STree<SNodeListState> ArrayDimsMandatory():
  * Statements
  **********************************************************************************************************************/
 
-STree<Stmt.State> Statement():
+STree<? extends Stmt.State> Statement():
 {
-	STree<Stmt.State> ret;
+	STree<? extends Stmt.State> ret;
 }
 {
   (
@@ -2983,8 +2984,8 @@ STree<Stmt.State> Statement():
 
 STree<AssertStmt.State> AssertStatement():
 {
-	STree<Expr.State> check;
-	STree<Expr.State> msg = null;
+	STree<? extends Expr.State> check;
+	STree<? extends Expr.State> msg = null;
 }
 {
   { run(); }
@@ -2995,7 +2996,7 @@ STree<AssertStmt.State> AssertStatement():
 STree<LabeledStmt.State> LabeledStatement():
 {
 	STree<Name.State> label;
-	STree<Stmt.State> stmt;
+	STree<? extends Stmt.State> stmt;
 }
 {
   { run(); }
@@ -3016,11 +3017,11 @@ STree<BlockStmt.State> Block():
 /*
  * Classes inside block stametents can only be abstract or final. The semantic must check it.
  */
-STree<Stmt.State> BlockStatement():
+STree<? extends Stmt.State> BlockStatement():
 {
-	STree<Stmt.State> ret;
-	STree<Expr.State> expr;
-	STree<TypeDecl.State> typeDecl;
+	STree<? extends Stmt.State> ret;
+	STree<? extends Expr.State> expr;
+	STree<? extends TypeDecl.State> typeDecl;
 	STree<SNodeListState> modifiers;
 }
 {
@@ -3061,9 +3062,9 @@ STree<EmptyStmt.State> EmptyStatement():
 
 STree<ExpressionStmt.State> StatementExpression():
 {
-	STree<Expr.State> expr;
+	STree<? extends Expr.State> expr;
 	AssignExpr.AssignOp op;
-	STree<Expr.State> value;
+	STree<? extends Expr.State> value;
 }
 {
   { run(); }
@@ -3088,7 +3089,7 @@ STree<ExpressionStmt.State> StatementExpression():
 
 STree<SwitchStmt.State> SwitchStatement():
 {
-	STree<Expr.State> selector;
+	STree<? extends Expr.State> selector;
 	STree<SwitchCase.State> entry;
 	STree<SNodeListState> entries = emptyList();
 }
@@ -3104,7 +3105,7 @@ STree<SwitchStmt.State> SwitchStatement():
 
 STree<SwitchCase.State> SwitchEntry():
 {
-	STree<Expr.State> label = null;
+	STree<? extends Expr.State> label = null;
 	STree<SNodeListState> stmts;
 }
 {
@@ -3125,9 +3126,9 @@ STree<IfStmt.State> IfStatement():
  * is to tell JavaCC that we know what we are doing.
  */
 {
-	STree<Expr.State> condition;
-	STree<Stmt.State> thenStmt;
-	STree<Stmt.State> elseStmt = null;
+	STree<? extends Expr.State> condition;
+	STree<? extends Stmt.State> thenStmt;
+	STree<? extends Stmt.State> elseStmt = null;
 }
 {
   { run(); }
@@ -3137,8 +3138,8 @@ STree<IfStmt.State> IfStatement():
 
 STree<WhileStmt.State> WhileStatement():
 {
-	STree<Expr.State> condition;
-	STree<Stmt.State> body;
+	STree<? extends Expr.State> condition;
+	STree<? extends Stmt.State> body;
 }
 {
   { run(); }
@@ -3148,8 +3149,8 @@ STree<WhileStmt.State> WhileStatement():
 
 STree<DoStmt.State> DoStatement():
 {
-	STree<Expr.State> condition;
-	STree<Stmt.State> body;
+	STree<? extends Expr.State> condition;
+	STree<? extends Stmt.State> body;
 }
 {
   { run(); }
@@ -3157,14 +3158,13 @@ STree<DoStmt.State> DoStatement():
   { return enRun(DoStmt.make(body, condition)); }
 }
 
-STree<Stmt.State> ForStatement():
+STree<? extends Stmt.State> ForStatement():
 {
-	STree<String.State> id = null;
 	STree<VariableDeclarationExpr.State> varExpr = null;
-	STree<Expr.State> expr = null;
+	STree<? extends Expr.State> expr = null;
 	STree<SNodeListState> init = null;
 	STree<SNodeListState> update = null;
-	STree<Stmt.State> body;
+	STree<? extends Stmt.State> body;
 }
 {
   { run(); }
@@ -3185,7 +3185,7 @@ STree<Stmt.State> ForStatement():
 STree<SNodeListState> ForInit():
 {
 	STree<SNodeListState> ret;
-	STree<Expr.State> expr;
+	STree<? extends Expr.State> expr;
 }
 {
   (
@@ -3202,7 +3202,7 @@ STree<SNodeListState> ForInit():
 STree<SNodeListState> ExpressionList():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<Expr.State> expr;
+	STree<? extends Expr.State> expr;
 }
 {
   { run(); }
@@ -3241,7 +3241,7 @@ STree<ContinueStmt.State> ContinueStatement():
 
 STree<ReturnStmt.State> ReturnStatement():
 {
-	STree<Expr.State> expr = null;
+	STree<? extends Expr.State> expr = null;
 }
 {
   { run(); }
@@ -3251,7 +3251,7 @@ STree<ReturnStmt.State> ReturnStatement():
 
 STree<ThrowStmt.State> ThrowStatement():
 {
-	STree<Expr.State> expr;
+	STree<? extends Expr.State> expr;
 }
 {
   { run(); }
@@ -3261,7 +3261,7 @@ STree<ThrowStmt.State> ThrowStatement():
 
 STree<SynchronizedStmt.State> SynchronizedStatement():
 {
-	STree<Expr.State> expr;
+	STree<? extends Expr.State> expr;
 	STree<BlockStmt.State> block;
 }
 {
@@ -3325,7 +3325,7 @@ STree<CatchClause.State> CatchClause():
 STree<FormalParameter.State> CatchFormalParameter():
 {
 	STree<SNodeListState> modifiers;
-	STree<Type.State> exceptType;
+	STree<? extends Type.State> exceptType;
 	STree<SNodeListState> exceptTypes = emptyList();
 	STree<VariableDeclaratorId.State> exceptId;
 }
@@ -3395,7 +3395,7 @@ void RSIGNEDSHIFT():
 STree<SNodeListState> Annotations():
 {
 	STree<SNodeListState> annotations = emptyList();
-	STree<AnnotationExpr.State> annotation;
+	STree<? extends AnnotationExpr.State> annotation;
 }
 {
   { run(); }
@@ -3403,9 +3403,9 @@ STree<SNodeListState> Annotations():
   { return enRun(annotations, AnnotationExpr.singleLineAnnotationsShape); }
 }
 
-STree<AnnotationExpr.State> Annotation():
+STree<? extends AnnotationExpr.State> Annotation():
 {
-	STree<AnnotationExpr.State> ret;
+	STree<? extends AnnotationExpr.State> ret;
 }
 {
   (
@@ -3445,7 +3445,7 @@ STree<MarkerAnnotationExpr.State> MarkerAnnotation():
 STree<SingleMemberAnnotationExpr.State> SingleMemberAnnotation():
 {
 	STree<QualifiedName.State> name;
-	STree<Expr.State> memberVal;
+	STree<? extends Expr.State> memberVal;
 }
 {
   { run(); }
@@ -3467,7 +3467,7 @@ STree<SNodeListState> MemberValuePairs():
 STree<MemberValuePair.State> MemberValuePair():
 {
 	STree<Name.State> name;
-	STree<Expr.State> value;
+	STree<? extends Expr.State> value;
 }
 {
   { run(); }
@@ -3475,9 +3475,9 @@ STree<MemberValuePair.State> MemberValuePair():
   { return enRun(MemberValuePair.make(name, value)); }
 }
 
-STree<Expr.State> MemberValue():
+STree<? extends Expr.State> MemberValue():
 {
-	STree<Expr.State> ret;
+	STree<? extends Expr.State> ret;
 }
 {
   (
@@ -3490,10 +3490,10 @@ STree<Expr.State> MemberValue():
   { return ret; }
 }
 
-STree<Expr.State> MemberValueArrayInitializer():
+STree<? extends Expr.State> MemberValueArrayInitializer():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<Expr.State> member;
+	STree<? extends Expr.State> member;
 }
 {
   { run(); }

@@ -188,11 +188,11 @@ abstract class ParserBase {
 	}
 
 	// TODO This is really dirty and temporary until the parser parses STrees directly
-	protected STree<?> makeVar(Token token) {
+	protected <S extends STreeState> STree<S> makeVar(Token token) {
 		String image = token.image;
 		boolean nodeListVar = image.startsWith("..$");
 		String name = nodeListVar ? image.substring(3) : image.substring(1);
-		return new STree<SVarState>(new SVarState(name));
+		return (STree<S>) new STree<SVarState>(new SVarState(name));
 	}
 
 	// Interface with ParserImpl
@@ -214,11 +214,11 @@ abstract class ParserBase {
 
 	public abstract STree<ImportDecl.State> ImportDecl() throws ParseException;
 
-	public abstract STree<TypeDecl.State> TypeDecl() throws ParseException;
+	public abstract STree<? extends TypeDecl.State> TypeDecl() throws ParseException;
 
-	public abstract STree<MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
+	public abstract STree<? extends MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
 
-	public abstract STree<MemberDecl.State> AnnotationTypeBodyDecl() throws ParseException;
+	public abstract STree<? extends MemberDecl.State> AnnotationTypeBodyDecl() throws ParseException;
 
 	public abstract STree<SNodeListState> Modifiers() throws ParseException;
 
@@ -234,13 +234,13 @@ abstract class ParserBase {
 
 	public abstract STree<TypeParameter.State> TypeParameter() throws ParseException;
 
-	public abstract STree<Stmt.State> Statement() throws ParseException;
+	public abstract STree<? extends Stmt.State> Statement() throws ParseException;
 
-	public abstract STree<Expr.State> Expression() throws ParseException;
+	public abstract STree<? extends Expr.State> Expression() throws ParseException;
 
 	public abstract STree<SNodeListState> Annotations() throws ParseException;
 
-	public abstract STree<Type.State> Type(STree<SNodeListState> annotations) throws ParseException;
+	public abstract STree<? extends Type.State> Type(STree<SNodeListState> annotations) throws ParseException;
 
 	static class TokenBase {
 
@@ -277,6 +277,14 @@ abstract class ParserBase {
 
 	protected STree<SNodeOptionState> none() {
 		return new STree<SNodeOptionState>(new SNodeOptionState(null));
+	}
+
+	protected STree<SNodeEitherState> left(STree<?> element) {
+		return new STree<SNodeEitherState>(new SNodeEitherState(element, SNodeEitherState.EitherSide.Left));
+	}
+
+	protected STree<SNodeEitherState> right(STree<?> element) {
+		return new STree<SNodeEitherState>(new SNodeEitherState(element, SNodeEitherState.EitherSide.Right));
 	}
 
 	// Convenience class to get more data from a called production
