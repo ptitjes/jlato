@@ -36,6 +36,8 @@ import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, CompilationUnit> implements Tree {
 
@@ -90,6 +92,147 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 	public CompilationUnit withTypes(Mutation<NodeList<TypeDecl>> mutation) {
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements STreeState {
+
+		public final IndexedList<WTokenRun> preamble;
+
+		public final STree<PackageDecl.State> packageDecl;
+
+		public final STree<SNodeListState> imports;
+
+		public final STree<SNodeListState> types;
+
+		State(IndexedList<WTokenRun> preamble, STree<PackageDecl.State> packageDecl, STree<SNodeListState> imports, STree<SNodeListState> types) {
+			this.preamble = preamble;
+			this.packageDecl = packageDecl;
+			this.imports = imports;
+			this.types = types;
+		}
+
+		public CompilationUnit.State withPreamble(IndexedList<WTokenRun> preamble) {
+			return new CompilationUnit.State(preamble, packageDecl, imports, types);
+		}
+
+		public CompilationUnit.State withPackageDecl(STree<PackageDecl.State> packageDecl) {
+			return new CompilationUnit.State(preamble, packageDecl, imports, types);
+		}
+
+		public CompilationUnit.State withImports(STree<SNodeListState> imports) {
+			return new CompilationUnit.State(preamble, packageDecl, imports, types);
+		}
+
+		public CompilationUnit.State withTypes(STree<SNodeListState> types) {
+			return new CompilationUnit.State(preamble, packageDecl, imports, types);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.CompilationUnit;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<CompilationUnit.State> location) {
+			return new CompilationUnit(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return PACKAGE_DECL;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return TYPES;
+		}
+	}
+
+	private static STypeSafeTraversal<CompilationUnit.State, PackageDecl.State, PackageDecl> PACKAGE_DECL = new STypeSafeTraversal<CompilationUnit.State, PackageDecl.State, PackageDecl>() {
+
+		@Override
+		protected STree<?> doTraverse(CompilationUnit.State state) {
+			return state.packageDecl;
+		}
+
+		@Override
+		protected CompilationUnit.State doRebuildParentState(CompilationUnit.State state, STree<PackageDecl.State> child) {
+			return state.withPackageDecl(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return IMPORTS;
+		}
+	};
+
+	private static STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<ImportDecl>> IMPORTS = new STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<ImportDecl>>() {
+
+		@Override
+		protected STree<?> doTraverse(CompilationUnit.State state) {
+			return state.imports;
+		}
+
+		@Override
+		protected CompilationUnit.State doRebuildParentState(CompilationUnit.State state, STree<SNodeListState> child) {
+			return state.withImports(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return PACKAGE_DECL;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return TYPES;
+		}
+	};
+
+	private static STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<TypeDecl>> TYPES = new STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<TypeDecl>>() {
+
+		@Override
+		protected STree<?> doTraverse(CompilationUnit.State state) {
+			return state.types;
+		}
+
+		@Override
+		protected CompilationUnit.State doRebuildParentState(CompilationUnit.State state, STree<SNodeListState> child) {
+			return state.withTypes(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return IMPORTS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
+
+	private static STypeSafeProperty<CompilationUnit.State, IndexedList<WTokenRun>> PREAMBLE = new STypeSafeProperty<CompilationUnit.State, IndexedList<WTokenRun>>() {
+
+		@Override
+		protected IndexedList<WTokenRun> doRetrieve(CompilationUnit.State state) {
+			return state.preamble;
+		}
+
+		@Override
+		protected CompilationUnit.State doRebuildParentState(CompilationUnit.State state, IndexedList<WTokenRun> value) {
+			return state.withPreamble(value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			new LSDump<CompilationUnit.State>(PREAMBLE),

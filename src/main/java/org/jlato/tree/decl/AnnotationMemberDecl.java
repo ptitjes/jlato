@@ -40,6 +40,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, MemberDecl, AnnotationMemberDecl> implements MemberDecl {
 
@@ -123,6 +125,187 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 	public AnnotationMemberDecl withDefaultValue(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(DEFAULT_VALUE, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements MemberDecl.State {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<? extends Type.State> type;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeListState> dims;
+
+		public final STree<SNodeOptionState> defaultValue;
+
+		State(STree<SNodeListState> modifiers, STree<? extends Type.State> type, STree<Name.State> name, STree<SNodeListState> dims, STree<SNodeOptionState> defaultValue) {
+			this.modifiers = modifiers;
+			this.type = type;
+			this.name = name;
+			this.dims = dims;
+			this.defaultValue = defaultValue;
+		}
+
+		public AnnotationMemberDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new AnnotationMemberDecl.State(modifiers, type, name, dims, defaultValue);
+		}
+
+		public AnnotationMemberDecl.State withType(STree<? extends Type.State> type) {
+			return new AnnotationMemberDecl.State(modifiers, type, name, dims, defaultValue);
+		}
+
+		public AnnotationMemberDecl.State withName(STree<Name.State> name) {
+			return new AnnotationMemberDecl.State(modifiers, type, name, dims, defaultValue);
+		}
+
+		public AnnotationMemberDecl.State withDims(STree<SNodeListState> dims) {
+			return new AnnotationMemberDecl.State(modifiers, type, name, dims, defaultValue);
+		}
+
+		public AnnotationMemberDecl.State withDefaultValue(STree<SNodeOptionState> defaultValue) {
+			return new AnnotationMemberDecl.State(modifiers, type, name, dims, defaultValue);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.AnnotationMemberDecl;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<AnnotationMemberDecl.State> location) {
+			return new AnnotationMemberDecl(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return DEFAULT_VALUE;
+		}
+	}
+
+	private static STypeSafeTraversal<AnnotationMemberDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<AnnotationMemberDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
+
+		@Override
+		protected STree<?> doTraverse(AnnotationMemberDecl.State state) {
+			return state.modifiers;
+		}
+
+		@Override
+		protected AnnotationMemberDecl.State doRebuildParentState(AnnotationMemberDecl.State state, STree<SNodeListState> child) {
+			return state.withModifiers(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return TYPE;
+		}
+	};
+
+	private static STypeSafeTraversal<AnnotationMemberDecl.State, Type.State, Type> TYPE = new STypeSafeTraversal<AnnotationMemberDecl.State, Type.State, Type>() {
+
+		@Override
+		protected STree<?> doTraverse(AnnotationMemberDecl.State state) {
+			return state.type;
+		}
+
+		@Override
+		protected AnnotationMemberDecl.State doRebuildParentState(AnnotationMemberDecl.State state, STree<Type.State> child) {
+			return state.withType(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return NAME;
+		}
+	};
+
+	private static STypeSafeTraversal<AnnotationMemberDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<AnnotationMemberDecl.State, Name.State, Name>() {
+
+		@Override
+		protected STree<?> doTraverse(AnnotationMemberDecl.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected AnnotationMemberDecl.State doRebuildParentState(AnnotationMemberDecl.State state, STree<Name.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return TYPE;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return DIMS;
+		}
+	};
+
+	private static STypeSafeTraversal<AnnotationMemberDecl.State, SNodeListState, NodeList<ArrayDim>> DIMS = new STypeSafeTraversal<AnnotationMemberDecl.State, SNodeListState, NodeList<ArrayDim>>() {
+
+		@Override
+		protected STree<?> doTraverse(AnnotationMemberDecl.State state) {
+			return state.dims;
+		}
+
+		@Override
+		protected AnnotationMemberDecl.State doRebuildParentState(AnnotationMemberDecl.State state, STree<SNodeListState> child) {
+			return state.withDims(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return NAME;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return DEFAULT_VALUE;
+		}
+	};
+
+	private static STypeSafeTraversal<AnnotationMemberDecl.State, SNodeOptionState, NodeOption<Expr>> DEFAULT_VALUE = new STypeSafeTraversal<AnnotationMemberDecl.State, SNodeOptionState, NodeOption<Expr>>() {
+
+		@Override
+		protected STree<?> doTraverse(AnnotationMemberDecl.State state) {
+			return state.defaultValue;
+		}
+
+		@Override
+		protected AnnotationMemberDecl.State doRebuildParentState(AnnotationMemberDecl.State state, STree<SNodeOptionState> child) {
+			return state.withDefaultValue(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return DIMS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public static final LexicalShape defaultValShape = composite(token(LToken.Default), element());
 

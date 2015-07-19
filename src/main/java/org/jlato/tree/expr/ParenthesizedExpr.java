@@ -34,6 +34,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, ParenthesizedExpr> implements Expr {
 
@@ -64,6 +66,67 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 	public ParenthesizedExpr withInner(Mutation<Expr> mutation) {
 		return location.safeTraversalMutate(INNER, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final STree<? extends Expr.State> inner;
+
+		State(STree<? extends Expr.State> inner) {
+			this.inner = inner;
+		}
+
+		public ParenthesizedExpr.State withInner(STree<? extends Expr.State> inner) {
+			return new ParenthesizedExpr.State(inner);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ParenthesizedExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ParenthesizedExpr.State> location) {
+			return new ParenthesizedExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return INNER;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return INNER;
+		}
+	}
+
+	private static STypeSafeTraversal<ParenthesizedExpr.State, Expr.State, Expr> INNER = new STypeSafeTraversal<ParenthesizedExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(ParenthesizedExpr.State state) {
+			return state.inner;
+		}
+
+		@Override
+		protected ParenthesizedExpr.State doRebuildParentState(ParenthesizedExpr.State state, STree<Expr.State> child) {
+			return state.withInner(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft), child(INNER), token(LToken.ParenthesisRight)

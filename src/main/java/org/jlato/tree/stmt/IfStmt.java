@@ -43,6 +43,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt {
 
@@ -97,6 +99,127 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 	public IfStmt withElseStmt(Mutation<NodeOption<Stmt>> mutation) {
 		return location.safeTraversalMutate(ELSE_STMT, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Stmt.State {
+
+		public final STree<? extends Expr.State> condition;
+
+		public final STree<? extends Stmt.State> thenStmt;
+
+		public final STree<SNodeOptionState> elseStmt;
+
+		State(STree<? extends Expr.State> condition, STree<? extends Stmt.State> thenStmt, STree<SNodeOptionState> elseStmt) {
+			this.condition = condition;
+			this.thenStmt = thenStmt;
+			this.elseStmt = elseStmt;
+		}
+
+		public IfStmt.State withCondition(STree<? extends Expr.State> condition) {
+			return new IfStmt.State(condition, thenStmt, elseStmt);
+		}
+
+		public IfStmt.State withThenStmt(STree<? extends Stmt.State> thenStmt) {
+			return new IfStmt.State(condition, thenStmt, elseStmt);
+		}
+
+		public IfStmt.State withElseStmt(STree<SNodeOptionState> elseStmt) {
+			return new IfStmt.State(condition, thenStmt, elseStmt);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.IfStmt;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<IfStmt.State> location) {
+			return new IfStmt(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return CONDITION;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return ELSE_STMT;
+		}
+	}
+
+	private static STypeSafeTraversal<IfStmt.State, Expr.State, Expr> CONDITION = new STypeSafeTraversal<IfStmt.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(IfStmt.State state) {
+			return state.condition;
+		}
+
+		@Override
+		protected IfStmt.State doRebuildParentState(IfStmt.State state, STree<Expr.State> child) {
+			return state.withCondition(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return THEN_STMT;
+		}
+	};
+
+	private static STypeSafeTraversal<IfStmt.State, Stmt.State, Stmt> THEN_STMT = new STypeSafeTraversal<IfStmt.State, Stmt.State, Stmt>() {
+
+		@Override
+		protected STree<?> doTraverse(IfStmt.State state) {
+			return state.thenStmt;
+		}
+
+		@Override
+		protected IfStmt.State doRebuildParentState(IfStmt.State state, STree<Stmt.State> child) {
+			return state.withThenStmt(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return CONDITION;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return ELSE_STMT;
+		}
+	};
+
+	private static STypeSafeTraversal<IfStmt.State, SNodeOptionState, NodeOption<Stmt>> ELSE_STMT = new STypeSafeTraversal<IfStmt.State, SNodeOptionState, NodeOption<Stmt>>() {
+
+		@Override
+		protected STree<?> doTraverse(IfStmt.State state) {
+			return state.elseStmt;
+		}
+
+		@Override
+		protected IfStmt.State doRebuildParentState(IfStmt.State state, STree<SNodeOptionState> child) {
+			return state.withElseStmt(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return THEN_STMT;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.If), token(LToken.ParenthesisLeft).withSpacingBefore(space()),

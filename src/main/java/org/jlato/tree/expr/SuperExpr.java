@@ -37,6 +37,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implements Expr {
 
@@ -67,6 +69,67 @@ public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implem
 	public SuperExpr withClassExpr(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(CLASS_EXPR, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final STree<SNodeOptionState> classExpr;
+
+		State(STree<SNodeOptionState> classExpr) {
+			this.classExpr = classExpr;
+		}
+
+		public SuperExpr.State withClassExpr(STree<SNodeOptionState> classExpr) {
+			return new SuperExpr.State(classExpr);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.SuperExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<SuperExpr.State> location) {
+			return new SuperExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return CLASS_EXPR;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return CLASS_EXPR;
+		}
+	}
+
+	private static STypeSafeTraversal<SuperExpr.State, SNodeOptionState, NodeOption<Expr>> CLASS_EXPR = new STypeSafeTraversal<SuperExpr.State, SNodeOptionState, NodeOption<Expr>>() {
+
+		@Override
+		protected STree<?> doTraverse(SuperExpr.State state) {
+			return state.classExpr;
+		}
+
+		@Override
+		protected SuperExpr.State doRebuildParentState(SuperExpr.State state, STree<SNodeOptionState> child) {
+			return state.withClassExpr(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			when(childIs(CLASS_EXPR, some()), composite(child(CLASS_EXPR, element()), token(LToken.Dot))),

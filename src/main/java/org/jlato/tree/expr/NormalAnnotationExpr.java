@@ -37,6 +37,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, AnnotationExpr, NormalAnnotationExpr> implements AnnotationExpr {
 
@@ -79,6 +81,97 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 	public NormalAnnotationExpr withPairs(Mutation<NodeList<MemberValuePair>> mutation) {
 		return location.safeTraversalMutate(PAIRS, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements AnnotationExpr.State {
+
+		public final STree<QualifiedName.State> name;
+
+		public final STree<SNodeListState> pairs;
+
+		State(STree<QualifiedName.State> name, STree<SNodeListState> pairs) {
+			this.name = name;
+			this.pairs = pairs;
+		}
+
+		public NormalAnnotationExpr.State withName(STree<QualifiedName.State> name) {
+			return new NormalAnnotationExpr.State(name, pairs);
+		}
+
+		public NormalAnnotationExpr.State withPairs(STree<SNodeListState> pairs) {
+			return new NormalAnnotationExpr.State(name, pairs);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.NormalAnnotationExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<NormalAnnotationExpr.State> location) {
+			return new NormalAnnotationExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return NAME;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return PAIRS;
+		}
+	}
+
+	private static STypeSafeTraversal<NormalAnnotationExpr.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<NormalAnnotationExpr.State, QualifiedName.State, QualifiedName>() {
+
+		@Override
+		protected STree<?> doTraverse(NormalAnnotationExpr.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected NormalAnnotationExpr.State doRebuildParentState(NormalAnnotationExpr.State state, STree<QualifiedName.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return PAIRS;
+		}
+	};
+
+	private static STypeSafeTraversal<NormalAnnotationExpr.State, SNodeListState, NodeList<MemberValuePair>> PAIRS = new STypeSafeTraversal<NormalAnnotationExpr.State, SNodeListState, NodeList<MemberValuePair>>() {
+
+		@Override
+		protected STree<?> doTraverse(NormalAnnotationExpr.State state) {
+			return state.pairs;
+		}
+
+		@Override
+		protected NormalAnnotationExpr.State doRebuildParentState(NormalAnnotationExpr.State state, STree<SNodeListState> child) {
+			return state.withPairs(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return NAME;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME),

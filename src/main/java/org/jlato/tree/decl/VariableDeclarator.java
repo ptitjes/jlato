@@ -38,6 +38,8 @@ import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree, VariableDeclarator> implements Tree {
 
@@ -80,6 +82,97 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 	public VariableDeclarator withInit(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(INIT, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements STreeState {
+
+		public final STree<VariableDeclaratorId.State> id;
+
+		public final STree<SNodeOptionState> init;
+
+		State(STree<VariableDeclaratorId.State> id, STree<SNodeOptionState> init) {
+			this.id = id;
+			this.init = init;
+		}
+
+		public VariableDeclarator.State withId(STree<VariableDeclaratorId.State> id) {
+			return new VariableDeclarator.State(id, init);
+		}
+
+		public VariableDeclarator.State withInit(STree<SNodeOptionState> init) {
+			return new VariableDeclarator.State(id, init);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.VariableDeclarator;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<VariableDeclarator.State> location) {
+			return new VariableDeclarator(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return ID;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return INIT;
+		}
+	}
+
+	private static STypeSafeTraversal<VariableDeclarator.State, VariableDeclaratorId.State, VariableDeclaratorId> ID = new STypeSafeTraversal<VariableDeclarator.State, VariableDeclaratorId.State, VariableDeclaratorId>() {
+
+		@Override
+		protected STree<?> doTraverse(VariableDeclarator.State state) {
+			return state.id;
+		}
+
+		@Override
+		protected VariableDeclarator.State doRebuildParentState(VariableDeclarator.State state, STree<VariableDeclaratorId.State> child) {
+			return state.withId(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return INIT;
+		}
+	};
+
+	private static STypeSafeTraversal<VariableDeclarator.State, SNodeOptionState, NodeOption<Expr>> INIT = new STypeSafeTraversal<VariableDeclarator.State, SNodeOptionState, NodeOption<Expr>>() {
+
+		@Override
+		protected STree<?> doTraverse(VariableDeclarator.State state) {
+			return state.init;
+		}
+
+		@Override
+		protected VariableDeclarator.State doRebuildParentState(VariableDeclarator.State state, STree<SNodeOptionState> child) {
+			return state.withInit(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return ID;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public static final LexicalShape initializerShape = composite(
 			token(LToken.Assign).withSpacing(space(), space()),

@@ -40,6 +40,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, QualifiedType> implements ReferenceType {
 
@@ -106,6 +108,157 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 	public QualifiedType withTypeArgs(Mutation<NodeOption<NodeList<Type>>> mutation) {
 		return location.safeTraversalMutate(TYPE_ARGS, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements ReferenceType.State {
+
+		public final STree<SNodeListState> annotations;
+
+		public final STree<SNodeOptionState> scope;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeOptionState> typeArgs;
+
+		State(STree<SNodeListState> annotations, STree<SNodeOptionState> scope, STree<Name.State> name, STree<SNodeOptionState> typeArgs) {
+			this.annotations = annotations;
+			this.scope = scope;
+			this.name = name;
+			this.typeArgs = typeArgs;
+		}
+
+		public QualifiedType.State withAnnotations(STree<SNodeListState> annotations) {
+			return new QualifiedType.State(annotations, scope, name, typeArgs);
+		}
+
+		public QualifiedType.State withScope(STree<SNodeOptionState> scope) {
+			return new QualifiedType.State(annotations, scope, name, typeArgs);
+		}
+
+		public QualifiedType.State withName(STree<Name.State> name) {
+			return new QualifiedType.State(annotations, scope, name, typeArgs);
+		}
+
+		public QualifiedType.State withTypeArgs(STree<SNodeOptionState> typeArgs) {
+			return new QualifiedType.State(annotations, scope, name, typeArgs);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.QualifiedType;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<QualifiedType.State> location) {
+			return new QualifiedType(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return ANNOTATIONS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return TYPE_ARGS;
+		}
+	}
+
+	private static STypeSafeTraversal<QualifiedType.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<QualifiedType.State, SNodeListState, NodeList<AnnotationExpr>>() {
+
+		@Override
+		protected STree<?> doTraverse(QualifiedType.State state) {
+			return state.annotations;
+		}
+
+		@Override
+		protected QualifiedType.State doRebuildParentState(QualifiedType.State state, STree<SNodeListState> child) {
+			return state.withAnnotations(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return SCOPE;
+		}
+	};
+
+	private static STypeSafeTraversal<QualifiedType.State, SNodeOptionState, NodeOption<QualifiedType>> SCOPE = new STypeSafeTraversal<QualifiedType.State, SNodeOptionState, NodeOption<QualifiedType>>() {
+
+		@Override
+		protected STree<?> doTraverse(QualifiedType.State state) {
+			return state.scope;
+		}
+
+		@Override
+		protected QualifiedType.State doRebuildParentState(QualifiedType.State state, STree<SNodeOptionState> child) {
+			return state.withScope(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return ANNOTATIONS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return NAME;
+		}
+	};
+
+	private static STypeSafeTraversal<QualifiedType.State, Name.State, Name> NAME = new STypeSafeTraversal<QualifiedType.State, Name.State, Name>() {
+
+		@Override
+		protected STree<?> doTraverse(QualifiedType.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected QualifiedType.State doRebuildParentState(QualifiedType.State state, STree<Name.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return SCOPE;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return TYPE_ARGS;
+		}
+	};
+
+	private static STypeSafeTraversal<QualifiedType.State, SNodeOptionState, NodeOption<NodeList<Type>>> TYPE_ARGS = new STypeSafeTraversal<QualifiedType.State, SNodeOptionState, NodeOption<NodeList<Type>>>() {
+
+		@Override
+		protected STree<?> doTraverse(QualifiedType.State state) {
+			return state.typeArgs;
+		}
+
+		@Override
+		protected QualifiedType.State doRebuildParentState(QualifiedType.State state, STree<SNodeOptionState> child) {
+			return state.withTypeArgs(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return NAME;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public static final LexicalShape scopeShape = composite(element(), token(LToken.Dot));
 

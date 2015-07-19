@@ -33,6 +33,8 @@ import static org.jlato.internal.shapes.LexicalShape.token;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifier> implements ExtendedModifier {
 
@@ -79,6 +81,57 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 	public String toString() {
 		return location.safeProperty(KEYWORD).toString();
 	}
+
+	public static class State extends SNodeState<State>implements ExtendedModifier.State {
+
+		public final LToken keyword;
+
+		State(LToken keyword) {
+			this.keyword = keyword;
+		}
+
+		public Modifier.State withKeyword(LToken keyword) {
+			return new Modifier.State(keyword);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.Modifier;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<Modifier.State> location) {
+			return new Modifier(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return null;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return null;
+		}
+	}
+
+	private static STypeSafeProperty<Modifier.State, LToken> KEYWORD = new STypeSafeProperty<Modifier.State, LToken>() {
+
+		@Override
+		protected LToken doRetrieve(Modifier.State state) {
+			return state.keyword;
+		}
+
+		@Override
+		protected Modifier.State doRebuildParentState(Modifier.State state, LToken value) {
+			return state.withKeyword(value);
+		}
+	};
 
 	public final static LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {

@@ -36,6 +36,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class QualifiedName extends TreeBase<QualifiedName.State, Tree, QualifiedName> implements Tree {
 
@@ -98,6 +100,97 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 		final Name name = name();
 		return qualifier.isDefined() ? qualifier.get().toString() + "." + name.toString() : name.toString();
 	}
+
+	public static class State extends SNodeState<State>implements STreeState {
+
+		public final STree<SNodeOptionState> qualifier;
+
+		public final STree<Name.State> name;
+
+		State(STree<SNodeOptionState> qualifier, STree<Name.State> name) {
+			this.qualifier = qualifier;
+			this.name = name;
+		}
+
+		public QualifiedName.State withQualifier(STree<SNodeOptionState> qualifier) {
+			return new QualifiedName.State(qualifier, name);
+		}
+
+		public QualifiedName.State withName(STree<Name.State> name) {
+			return new QualifiedName.State(qualifier, name);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.QualifiedName;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<QualifiedName.State> location) {
+			return new QualifiedName(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return QUALIFIER;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return NAME;
+		}
+	}
+
+	private static STypeSafeTraversal<QualifiedName.State, SNodeOptionState, NodeOption<QualifiedName>> QUALIFIER = new STypeSafeTraversal<QualifiedName.State, SNodeOptionState, NodeOption<QualifiedName>>() {
+
+		@Override
+		protected STree<?> doTraverse(QualifiedName.State state) {
+			return state.qualifier;
+		}
+
+		@Override
+		protected QualifiedName.State doRebuildParentState(QualifiedName.State state, STree<SNodeOptionState> child) {
+			return state.withQualifier(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return NAME;
+		}
+	};
+
+	private static STypeSafeTraversal<QualifiedName.State, Name.State, Name> NAME = new STypeSafeTraversal<QualifiedName.State, Name.State, Name>() {
+
+		@Override
+		protected STree<?> doTraverse(QualifiedName.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected QualifiedName.State doRebuildParentState(QualifiedName.State state, STree<Name.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return QUALIFIER;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape qualifierShape = composite(element(), token(LToken.Dot));
 

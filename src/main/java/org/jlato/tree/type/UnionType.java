@@ -35,6 +35,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implements Type {
 
@@ -65,6 +67,67 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 	public UnionType withTypes(Mutation<NodeList<Type>> mutation) {
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Type.State {
+
+		public final STree<SNodeListState> types;
+
+		State(STree<SNodeListState> types) {
+			this.types = types;
+		}
+
+		public UnionType.State withTypes(STree<SNodeListState> types) {
+			return new UnionType.State(types);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.UnionType;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<UnionType.State> location) {
+			return new UnionType(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return TYPES;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return TYPES;
+		}
+	}
+
+	private static STypeSafeTraversal<UnionType.State, SNodeListState, NodeList<Type>> TYPES = new STypeSafeTraversal<UnionType.State, SNodeListState, NodeList<Type>>() {
+
+		@Override
+		protected STree<?> doTraverse(UnionType.State state) {
+			return state.types;
+		}
+
+		@Override
+		protected UnionType.State doRebuildParentState(UnionType.State state, STree<SNodeListState> child) {
+			return state.withTypes(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(TYPES, Type.unionShape)

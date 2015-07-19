@@ -35,6 +35,8 @@ import static org.jlato.internal.shapes.LexicalShape.composite;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stmt, TypeDeclarationStmt> implements Stmt {
 
@@ -65,6 +67,67 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 	public TypeDeclarationStmt withTypeDecl(Mutation<TypeDecl> mutation) {
 		return location.safeTraversalMutate(TYPE_DECL, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Stmt.State {
+
+		public final STree<? extends TypeDecl.State> typeDecl;
+
+		State(STree<? extends TypeDecl.State> typeDecl) {
+			this.typeDecl = typeDecl;
+		}
+
+		public TypeDeclarationStmt.State withTypeDecl(STree<? extends TypeDecl.State> typeDecl) {
+			return new TypeDeclarationStmt.State(typeDecl);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.TypeDeclarationStmt;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<TypeDeclarationStmt.State> location) {
+			return new TypeDeclarationStmt(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return TYPE_DECL;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return TYPE_DECL;
+		}
+	}
+
+	private static STypeSafeTraversal<TypeDeclarationStmt.State, TypeDecl.State, TypeDecl> TYPE_DECL = new STypeSafeTraversal<TypeDeclarationStmt.State, TypeDecl.State, TypeDecl>() {
+
+		@Override
+		protected STree<?> doTraverse(TypeDeclarationStmt.State state) {
+			return state.typeDecl;
+		}
+
+		@Override
+		protected TypeDeclarationStmt.State doRebuildParentState(TypeDeclarationStmt.State state, STree<TypeDecl.State> child) {
+			return state.withTypeDecl(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(TYPE_DECL)

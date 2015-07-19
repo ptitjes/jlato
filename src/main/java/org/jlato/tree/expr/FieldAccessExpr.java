@@ -38,6 +38,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, FieldAccessExpr> implements Expr {
 
@@ -80,6 +82,97 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 	public FieldAccessExpr withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(NAME, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final STree<SNodeOptionState> scope;
+
+		public final STree<Name.State> name;
+
+		State(STree<SNodeOptionState> scope, STree<Name.State> name) {
+			this.scope = scope;
+			this.name = name;
+		}
+
+		public FieldAccessExpr.State withScope(STree<SNodeOptionState> scope) {
+			return new FieldAccessExpr.State(scope, name);
+		}
+
+		public FieldAccessExpr.State withName(STree<Name.State> name) {
+			return new FieldAccessExpr.State(scope, name);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.FieldAccessExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<FieldAccessExpr.State> location) {
+			return new FieldAccessExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return SCOPE;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return NAME;
+		}
+	}
+
+	private static STypeSafeTraversal<FieldAccessExpr.State, SNodeOptionState, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<FieldAccessExpr.State, SNodeOptionState, NodeOption<Expr>>() {
+
+		@Override
+		protected STree<?> doTraverse(FieldAccessExpr.State state) {
+			return state.scope;
+		}
+
+		@Override
+		protected FieldAccessExpr.State doRebuildParentState(FieldAccessExpr.State state, STree<SNodeOptionState> child) {
+			return state.withScope(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return NAME;
+		}
+	};
+
+	private static STypeSafeTraversal<FieldAccessExpr.State, Name.State, Name> NAME = new STypeSafeTraversal<FieldAccessExpr.State, Name.State, Name>() {
+
+		@Override
+		protected STree<?> doTraverse(FieldAccessExpr.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected FieldAccessExpr.State doRebuildParentState(FieldAccessExpr.State state, STree<Name.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return SCOPE;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),

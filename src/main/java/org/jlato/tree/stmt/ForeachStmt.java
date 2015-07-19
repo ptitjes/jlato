@@ -37,6 +37,8 @@ import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> implements Stmt {
 
@@ -91,6 +93,127 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 	public ForeachStmt withBody(Mutation<Stmt> mutation) {
 		return location.safeTraversalMutate(BODY, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Stmt.State {
+
+		public final STree<VariableDeclarationExpr.State> var;
+
+		public final STree<? extends Expr.State> iterable;
+
+		public final STree<? extends Stmt.State> body;
+
+		State(STree<VariableDeclarationExpr.State> var, STree<? extends Expr.State> iterable, STree<? extends Stmt.State> body) {
+			this.var = var;
+			this.iterable = iterable;
+			this.body = body;
+		}
+
+		public ForeachStmt.State withVar(STree<VariableDeclarationExpr.State> var) {
+			return new ForeachStmt.State(var, iterable, body);
+		}
+
+		public ForeachStmt.State withIterable(STree<? extends Expr.State> iterable) {
+			return new ForeachStmt.State(var, iterable, body);
+		}
+
+		public ForeachStmt.State withBody(STree<? extends Stmt.State> body) {
+			return new ForeachStmt.State(var, iterable, body);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ForeachStmt;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ForeachStmt.State> location) {
+			return new ForeachStmt(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return VAR;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return BODY;
+		}
+	}
+
+	private static STypeSafeTraversal<ForeachStmt.State, VariableDeclarationExpr.State, VariableDeclarationExpr> VAR = new STypeSafeTraversal<ForeachStmt.State, VariableDeclarationExpr.State, VariableDeclarationExpr>() {
+
+		@Override
+		protected STree<?> doTraverse(ForeachStmt.State state) {
+			return state.var;
+		}
+
+		@Override
+		protected ForeachStmt.State doRebuildParentState(ForeachStmt.State state, STree<VariableDeclarationExpr.State> child) {
+			return state.withVar(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return ITERABLE;
+		}
+	};
+
+	private static STypeSafeTraversal<ForeachStmt.State, Expr.State, Expr> ITERABLE = new STypeSafeTraversal<ForeachStmt.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(ForeachStmt.State state) {
+			return state.iterable;
+		}
+
+		@Override
+		protected ForeachStmt.State doRebuildParentState(ForeachStmt.State state, STree<Expr.State> child) {
+			return state.withIterable(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return VAR;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return BODY;
+		}
+	};
+
+	private static STypeSafeTraversal<ForeachStmt.State, Stmt.State, Stmt> BODY = new STypeSafeTraversal<ForeachStmt.State, Stmt.State, Stmt>() {
+
+		@Override
+		protected STree<?> doTraverse(ForeachStmt.State state) {
+			return state.body;
+		}
+
+		@Override
+		protected ForeachStmt.State doRebuildParentState(ForeachStmt.State state, STree<Stmt.State> child) {
+			return state.withBody(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return ITERABLE;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),

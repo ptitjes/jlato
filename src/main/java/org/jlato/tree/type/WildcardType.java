@@ -40,6 +40,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardType> implements Type {
 
@@ -94,6 +96,127 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 	public WildcardType withSup(Mutation<NodeOption<ReferenceType>> mutation) {
 		return location.safeTraversalMutate(SUP, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Type.State {
+
+		public final STree<SNodeListState> annotations;
+
+		public final STree<SNodeOptionState> ext;
+
+		public final STree<SNodeOptionState> sup;
+
+		State(STree<SNodeListState> annotations, STree<SNodeOptionState> ext, STree<SNodeOptionState> sup) {
+			this.annotations = annotations;
+			this.ext = ext;
+			this.sup = sup;
+		}
+
+		public WildcardType.State withAnnotations(STree<SNodeListState> annotations) {
+			return new WildcardType.State(annotations, ext, sup);
+		}
+
+		public WildcardType.State withExt(STree<SNodeOptionState> ext) {
+			return new WildcardType.State(annotations, ext, sup);
+		}
+
+		public WildcardType.State withSup(STree<SNodeOptionState> sup) {
+			return new WildcardType.State(annotations, ext, sup);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.WildcardType;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<WildcardType.State> location) {
+			return new WildcardType(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return ANNOTATIONS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return SUP;
+		}
+	}
+
+	private static STypeSafeTraversal<WildcardType.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<WildcardType.State, SNodeListState, NodeList<AnnotationExpr>>() {
+
+		@Override
+		protected STree<?> doTraverse(WildcardType.State state) {
+			return state.annotations;
+		}
+
+		@Override
+		protected WildcardType.State doRebuildParentState(WildcardType.State state, STree<SNodeListState> child) {
+			return state.withAnnotations(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return EXT;
+		}
+	};
+
+	private static STypeSafeTraversal<WildcardType.State, SNodeOptionState, NodeOption<ReferenceType>> EXT = new STypeSafeTraversal<WildcardType.State, SNodeOptionState, NodeOption<ReferenceType>>() {
+
+		@Override
+		protected STree<?> doTraverse(WildcardType.State state) {
+			return state.ext;
+		}
+
+		@Override
+		protected WildcardType.State doRebuildParentState(WildcardType.State state, STree<SNodeOptionState> child) {
+			return state.withExt(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return ANNOTATIONS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return SUP;
+		}
+	};
+
+	private static STypeSafeTraversal<WildcardType.State, SNodeOptionState, NodeOption<ReferenceType>> SUP = new STypeSafeTraversal<WildcardType.State, SNodeOptionState, NodeOption<ReferenceType>>() {
+
+		@Override
+		protected STree<?> doTraverse(WildcardType.State state) {
+			return state.sup;
+		}
+
+		@Override
+		protected WildcardType.State doRebuildParentState(WildcardType.State state, STree<SNodeOptionState> child) {
+			return state.withSup(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return EXT;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),

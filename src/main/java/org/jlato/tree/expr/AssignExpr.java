@@ -36,6 +36,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> implements Expr {
 
@@ -90,6 +92,117 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 	public AssignExpr withValue(Mutation<Expr> mutation) {
 		return location.safeTraversalMutate(VALUE, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final STree<? extends Expr.State> target;
+
+		public final AssignOp operator;
+
+		public final STree<? extends Expr.State> value;
+
+		State(STree<? extends Expr.State> target, AssignOp operator, STree<? extends Expr.State> value) {
+			this.target = target;
+			this.operator = operator;
+			this.value = value;
+		}
+
+		public AssignExpr.State withTarget(STree<? extends Expr.State> target) {
+			return new AssignExpr.State(target, operator, value);
+		}
+
+		public AssignExpr.State withOperator(AssignOp operator) {
+			return new AssignExpr.State(target, operator, value);
+		}
+
+		public AssignExpr.State withValue(STree<? extends Expr.State> value) {
+			return new AssignExpr.State(target, operator, value);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.AssignExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<AssignExpr.State> location) {
+			return new AssignExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return TARGET;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return VALUE;
+		}
+	}
+
+	private static STypeSafeTraversal<AssignExpr.State, Expr.State, Expr> TARGET = new STypeSafeTraversal<AssignExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(AssignExpr.State state) {
+			return state.target;
+		}
+
+		@Override
+		protected AssignExpr.State doRebuildParentState(AssignExpr.State state, STree<Expr.State> child) {
+			return state.withTarget(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return VALUE;
+		}
+	};
+
+	private static STypeSafeTraversal<AssignExpr.State, Expr.State, Expr> VALUE = new STypeSafeTraversal<AssignExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(AssignExpr.State state) {
+			return state.value;
+		}
+
+		@Override
+		protected AssignExpr.State doRebuildParentState(AssignExpr.State state, STree<Expr.State> child) {
+			return state.withValue(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return TARGET;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
+
+	private static STypeSafeProperty<AssignExpr.State, AssignOp> OPERATOR = new STypeSafeProperty<AssignExpr.State, AssignOp>() {
+
+		@Override
+		protected AssignOp doRetrieve(AssignExpr.State state) {
+			return state.operator;
+		}
+
+		@Override
+		protected AssignExpr.State doRebuildParentState(AssignExpr.State state, AssignOp value) {
+			return state.withOperator(value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(TARGET),

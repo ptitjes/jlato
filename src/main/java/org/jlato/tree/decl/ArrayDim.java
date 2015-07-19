@@ -37,6 +37,8 @@ import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implements Tree {
 
@@ -67,6 +69,67 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 	public ArrayDim withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
 		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements STreeState {
+
+		public final STree<SNodeListState> annotations;
+
+		State(STree<SNodeListState> annotations) {
+			this.annotations = annotations;
+		}
+
+		public ArrayDim.State withAnnotations(STree<SNodeListState> annotations) {
+			return new ArrayDim.State(annotations);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ArrayDim;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ArrayDim.State> location) {
+			return new ArrayDim(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return ANNOTATIONS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return ANNOTATIONS;
+		}
+	}
+
+	private static STypeSafeTraversal<ArrayDim.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<ArrayDim.State, SNodeListState, NodeList<AnnotationExpr>>() {
+
+		@Override
+		protected STree<?> doTraverse(ArrayDim.State state) {
+			return state.annotations;
+		}
+
+		@Override
+		protected ArrayDim.State doRebuildParentState(ArrayDim.State state, STree<SNodeListState> child) {
+			return state.withAnnotations(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list(

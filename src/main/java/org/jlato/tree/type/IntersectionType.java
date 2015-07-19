@@ -35,6 +35,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class IntersectionType extends TreeBase<IntersectionType.State, Type, IntersectionType> implements Type {
 
@@ -65,6 +67,67 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 	public IntersectionType withTypes(Mutation<NodeList<Type>> mutation) {
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Type.State {
+
+		public final STree<SNodeListState> types;
+
+		State(STree<SNodeListState> types) {
+			this.types = types;
+		}
+
+		public IntersectionType.State withTypes(STree<SNodeListState> types) {
+			return new IntersectionType.State(types);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.IntersectionType;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<IntersectionType.State> location) {
+			return new IntersectionType(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return TYPES;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return TYPES;
+		}
+	}
+
+	private static STypeSafeTraversal<IntersectionType.State, SNodeListState, NodeList<Type>> TYPES = new STypeSafeTraversal<IntersectionType.State, SNodeListState, NodeList<Type>>() {
+
+		@Override
+		protected STree<?> doTraverse(IntersectionType.State state) {
+			return state.types;
+		}
+
+		@Override
+		protected IntersectionType.State doRebuildParentState(IntersectionType.State state, STree<SNodeListState> child) {
+			return state.withTypes(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(TYPES, Type.intersectionShape)

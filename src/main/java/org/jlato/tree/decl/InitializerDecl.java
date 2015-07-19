@@ -36,6 +36,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl, InitializerDecl> implements MemberDecl {
 
@@ -83,6 +85,97 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 	public InitializerDecl withBody(Mutation<BlockStmt> mutation) {
 		return location.safeTraversalMutate(BODY, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements MemberDecl.State {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<BlockStmt.State> body;
+
+		State(STree<SNodeListState> modifiers, STree<BlockStmt.State> body) {
+			this.modifiers = modifiers;
+			this.body = body;
+		}
+
+		public InitializerDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new InitializerDecl.State(modifiers, body);
+		}
+
+		public InitializerDecl.State withBody(STree<BlockStmt.State> body) {
+			return new InitializerDecl.State(modifiers, body);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.InitializerDecl;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<InitializerDecl.State> location) {
+			return new InitializerDecl(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return BODY;
+		}
+	}
+
+	private static STypeSafeTraversal<InitializerDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<InitializerDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
+
+		@Override
+		protected STree<?> doTraverse(InitializerDecl.State state) {
+			return state.modifiers;
+		}
+
+		@Override
+		protected InitializerDecl.State doRebuildParentState(InitializerDecl.State state, STree<SNodeListState> child) {
+			return state.withModifiers(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return BODY;
+		}
+	};
+
+	private static STypeSafeTraversal<InitializerDecl.State, BlockStmt.State, BlockStmt> BODY = new STypeSafeTraversal<InitializerDecl.State, BlockStmt.State, BlockStmt>() {
+
+		@Override
+		protected STree<?> doTraverse(InitializerDecl.State state) {
+			return state.body;
+		}
+
+		@Override
+		protected InitializerDecl.State doRebuildParentState(InitializerDecl.State state, STree<BlockStmt.State> child) {
+			return state.withBody(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

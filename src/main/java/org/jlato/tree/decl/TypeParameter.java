@@ -39,6 +39,8 @@ import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParameter> implements Tree {
 
@@ -93,6 +95,127 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 	public TypeParameter withBounds(Mutation<NodeList<Type>> mutation) {
 		return location.safeTraversalMutate(BOUNDS, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements STreeState {
+
+		public final STree<SNodeListState> annotations;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeListState> bounds;
+
+		State(STree<SNodeListState> annotations, STree<Name.State> name, STree<SNodeListState> bounds) {
+			this.annotations = annotations;
+			this.name = name;
+			this.bounds = bounds;
+		}
+
+		public TypeParameter.State withAnnotations(STree<SNodeListState> annotations) {
+			return new TypeParameter.State(annotations, name, bounds);
+		}
+
+		public TypeParameter.State withName(STree<Name.State> name) {
+			return new TypeParameter.State(annotations, name, bounds);
+		}
+
+		public TypeParameter.State withBounds(STree<SNodeListState> bounds) {
+			return new TypeParameter.State(annotations, name, bounds);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.TypeParameter;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<TypeParameter.State> location) {
+			return new TypeParameter(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return ANNOTATIONS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return BOUNDS;
+		}
+	}
+
+	private static STypeSafeTraversal<TypeParameter.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<TypeParameter.State, SNodeListState, NodeList<AnnotationExpr>>() {
+
+		@Override
+		protected STree<?> doTraverse(TypeParameter.State state) {
+			return state.annotations;
+		}
+
+		@Override
+		protected TypeParameter.State doRebuildParentState(TypeParameter.State state, STree<SNodeListState> child) {
+			return state.withAnnotations(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return NAME;
+		}
+	};
+
+	private static STypeSafeTraversal<TypeParameter.State, Name.State, Name> NAME = new STypeSafeTraversal<TypeParameter.State, Name.State, Name>() {
+
+		@Override
+		protected STree<?> doTraverse(TypeParameter.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected TypeParameter.State doRebuildParentState(TypeParameter.State state, STree<Name.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return ANNOTATIONS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return BOUNDS;
+		}
+	};
+
+	private static STypeSafeTraversal<TypeParameter.State, SNodeListState, NodeList<Type>> BOUNDS = new STypeSafeTraversal<TypeParameter.State, SNodeListState, NodeList<Type>>() {
+
+		@Override
+		protected STree<?> doTraverse(TypeParameter.State state) {
+			return state.bounds;
+		}
+
+		@Override
+		protected TypeParameter.State doRebuildParentState(TypeParameter.State state, STree<SNodeListState> child) {
+			return state.withBounds(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return NAME;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public static final LexicalShape boundsShape = list(
 			token(LToken.Extends).withSpacingBefore(space()),

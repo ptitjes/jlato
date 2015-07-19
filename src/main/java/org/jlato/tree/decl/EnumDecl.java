@@ -43,6 +43,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> implements TypeDecl {
 
@@ -130,6 +132,207 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	public EnumDecl withMembers(Mutation<NodeList<MemberDecl>> mutation) {
 		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements TypeDecl.State {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeListState> implementsClause;
+
+		public final STree<SNodeListState> enumConstants;
+
+		public final boolean trailingComma;
+
+		public final STree<SNodeListState> members;
+
+		State(STree<SNodeListState> modifiers, STree<Name.State> name, STree<SNodeListState> implementsClause, STree<SNodeListState> enumConstants, boolean trailingComma, STree<SNodeListState> members) {
+			this.modifiers = modifiers;
+			this.name = name;
+			this.implementsClause = implementsClause;
+			this.enumConstants = enumConstants;
+			this.trailingComma = trailingComma;
+			this.members = members;
+		}
+
+		public EnumDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
+		}
+
+		public EnumDecl.State withName(STree<Name.State> name) {
+			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
+		}
+
+		public EnumDecl.State withImplementsClause(STree<SNodeListState> implementsClause) {
+			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
+		}
+
+		public EnumDecl.State withEnumConstants(STree<SNodeListState> enumConstants) {
+			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
+		}
+
+		public EnumDecl.State withTrailingComma(boolean trailingComma) {
+			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
+		}
+
+		public EnumDecl.State withMembers(STree<SNodeListState> members) {
+			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.EnumDecl;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<EnumDecl.State> location) {
+			return new EnumDecl(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return MEMBERS;
+		}
+	}
+
+	private static STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
+
+		@Override
+		protected STree<?> doTraverse(EnumDecl.State state) {
+			return state.modifiers;
+		}
+
+		@Override
+		protected EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<SNodeListState> child) {
+			return state.withModifiers(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return NAME;
+		}
+	};
+
+	private static STypeSafeTraversal<EnumDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<EnumDecl.State, Name.State, Name>() {
+
+		@Override
+		protected STree<?> doTraverse(EnumDecl.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<Name.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return IMPLEMENTS_CLAUSE;
+		}
+	};
+
+	private static STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<QualifiedType>> IMPLEMENTS_CLAUSE = new STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<QualifiedType>>() {
+
+		@Override
+		protected STree<?> doTraverse(EnumDecl.State state) {
+			return state.implementsClause;
+		}
+
+		@Override
+		protected EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<SNodeListState> child) {
+			return state.withImplementsClause(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return NAME;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return ENUM_CONSTANTS;
+		}
+	};
+
+	private static STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<EnumConstantDecl>> ENUM_CONSTANTS = new STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<EnumConstantDecl>>() {
+
+		@Override
+		protected STree<?> doTraverse(EnumDecl.State state) {
+			return state.enumConstants;
+		}
+
+		@Override
+		protected EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<SNodeListState> child) {
+			return state.withEnumConstants(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return IMPLEMENTS_CLAUSE;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return MEMBERS;
+		}
+	};
+
+	private static STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<MemberDecl>>() {
+
+		@Override
+		protected STree<?> doTraverse(EnumDecl.State state) {
+			return state.members;
+		}
+
+		@Override
+		protected EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<SNodeListState> child) {
+			return state.withMembers(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return ENUM_CONSTANTS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
+
+	private static STypeSafeProperty<EnumDecl.State, Boolean> TRAILING_COMMA = new STypeSafeProperty<EnumDecl.State, Boolean>() {
+
+		@Override
+		protected Boolean doRetrieve(EnumDecl.State state) {
+			return state.trailingComma;
+		}
+
+		@Override
+		protected EnumDecl.State doRebuildParentState(EnumDecl.State state, Boolean value) {
+			return state.withTrailingComma(value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

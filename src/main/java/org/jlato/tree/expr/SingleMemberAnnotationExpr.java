@@ -35,6 +35,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationExpr.State, AnnotationExpr, SingleMemberAnnotationExpr> implements AnnotationExpr {
 
@@ -77,6 +79,97 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 	public SingleMemberAnnotationExpr withMemberValue(Mutation<Expr> mutation) {
 		return location.safeTraversalMutate(MEMBER_VALUE, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements AnnotationExpr.State {
+
+		public final STree<QualifiedName.State> name;
+
+		public final STree<? extends Expr.State> memberValue;
+
+		State(STree<QualifiedName.State> name, STree<? extends Expr.State> memberValue) {
+			this.name = name;
+			this.memberValue = memberValue;
+		}
+
+		public SingleMemberAnnotationExpr.State withName(STree<QualifiedName.State> name) {
+			return new SingleMemberAnnotationExpr.State(name, memberValue);
+		}
+
+		public SingleMemberAnnotationExpr.State withMemberValue(STree<? extends Expr.State> memberValue) {
+			return new SingleMemberAnnotationExpr.State(name, memberValue);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.SingleMemberAnnotationExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<SingleMemberAnnotationExpr.State> location) {
+			return new SingleMemberAnnotationExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return NAME;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return MEMBER_VALUE;
+		}
+	}
+
+	private static STypeSafeTraversal<SingleMemberAnnotationExpr.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<SingleMemberAnnotationExpr.State, QualifiedName.State, QualifiedName>() {
+
+		@Override
+		protected STree<?> doTraverse(SingleMemberAnnotationExpr.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected SingleMemberAnnotationExpr.State doRebuildParentState(SingleMemberAnnotationExpr.State state, STree<QualifiedName.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return MEMBER_VALUE;
+		}
+	};
+
+	private static STypeSafeTraversal<SingleMemberAnnotationExpr.State, Expr.State, Expr> MEMBER_VALUE = new STypeSafeTraversal<SingleMemberAnnotationExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(SingleMemberAnnotationExpr.State state) {
+			return state.memberValue;
+		}
+
+		@Override
+		protected SingleMemberAnnotationExpr.State doRebuildParentState(SingleMemberAnnotationExpr.State state, STree<Expr.State> child) {
+			return state.withMemberValue(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return NAME;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME),

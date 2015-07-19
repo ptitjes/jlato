@@ -36,6 +36,8 @@ import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExpr> implements Tree {
 
@@ -78,6 +80,97 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 	public ArrayDimExpr withExpr(Mutation<Expr> mutation) {
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements STreeState {
+
+		public final STree<SNodeListState> annotations;
+
+		public final STree<? extends Expr.State> expr;
+
+		State(STree<SNodeListState> annotations, STree<? extends Expr.State> expr) {
+			this.annotations = annotations;
+			this.expr = expr;
+		}
+
+		public ArrayDimExpr.State withAnnotations(STree<SNodeListState> annotations) {
+			return new ArrayDimExpr.State(annotations, expr);
+		}
+
+		public ArrayDimExpr.State withExpr(STree<? extends Expr.State> expr) {
+			return new ArrayDimExpr.State(annotations, expr);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ArrayDimExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ArrayDimExpr.State> location) {
+			return new ArrayDimExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return ANNOTATIONS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return EXPR;
+		}
+	}
+
+	private static STypeSafeTraversal<ArrayDimExpr.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<ArrayDimExpr.State, SNodeListState, NodeList<AnnotationExpr>>() {
+
+		@Override
+		protected STree<?> doTraverse(ArrayDimExpr.State state) {
+			return state.annotations;
+		}
+
+		@Override
+		protected ArrayDimExpr.State doRebuildParentState(ArrayDimExpr.State state, STree<SNodeListState> child) {
+			return state.withAnnotations(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return EXPR;
+		}
+	};
+
+	private static STypeSafeTraversal<ArrayDimExpr.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<ArrayDimExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(ArrayDimExpr.State state) {
+			return state.expr;
+		}
+
+		@Override
+		protected ArrayDimExpr.State doRebuildParentState(ArrayDimExpr.State state, STree<Expr.State> child) {
+			return state.withExpr(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return ANNOTATIONS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list(

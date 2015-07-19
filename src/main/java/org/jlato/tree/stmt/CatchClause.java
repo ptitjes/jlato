@@ -35,6 +35,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> implements Tree {
 
@@ -77,6 +79,97 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 	public CatchClause withCatchBlock(Mutation<BlockStmt> mutation) {
 		return location.safeTraversalMutate(CATCH_BLOCK, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements STreeState {
+
+		public final STree<FormalParameter.State> except;
+
+		public final STree<BlockStmt.State> catchBlock;
+
+		State(STree<FormalParameter.State> except, STree<BlockStmt.State> catchBlock) {
+			this.except = except;
+			this.catchBlock = catchBlock;
+		}
+
+		public CatchClause.State withExcept(STree<FormalParameter.State> except) {
+			return new CatchClause.State(except, catchBlock);
+		}
+
+		public CatchClause.State withCatchBlock(STree<BlockStmt.State> catchBlock) {
+			return new CatchClause.State(except, catchBlock);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.CatchClause;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<CatchClause.State> location) {
+			return new CatchClause(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return EXCEPT;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return CATCH_BLOCK;
+		}
+	}
+
+	private static STypeSafeTraversal<CatchClause.State, FormalParameter.State, FormalParameter> EXCEPT = new STypeSafeTraversal<CatchClause.State, FormalParameter.State, FormalParameter>() {
+
+		@Override
+		protected STree<?> doTraverse(CatchClause.State state) {
+			return state.except;
+		}
+
+		@Override
+		protected CatchClause.State doRebuildParentState(CatchClause.State state, STree<FormalParameter.State> child) {
+			return state.withExcept(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return CATCH_BLOCK;
+		}
+	};
+
+	private static STypeSafeTraversal<CatchClause.State, BlockStmt.State, BlockStmt> CATCH_BLOCK = new STypeSafeTraversal<CatchClause.State, BlockStmt.State, BlockStmt>() {
+
+		@Override
+		protected STree<?> doTraverse(CatchClause.State state) {
+			return state.catchBlock;
+		}
+
+		@Override
+		protected CatchClause.State doRebuildParentState(CatchClause.State state, STree<BlockStmt.State> child) {
+			return state.withCatchBlock(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return EXCEPT;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Catch).withSpacingBefore(space()),

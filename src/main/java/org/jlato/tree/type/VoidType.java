@@ -32,6 +32,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implements Type {
 
@@ -49,6 +51,37 @@ public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implement
 
 	public VoidType() {
 		super(new SLocation<VoidType.State>(make()));
+	}
+
+	public static class State extends SNodeState<State>implements Type.State {
+
+		State() {
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.VoidType;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<VoidType.State> location) {
+			return new VoidType(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return null;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return null;
+		}
 	}
 
 	public final static LexicalShape shape = token(LToken.Void);

@@ -40,6 +40,8 @@ import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.State, Expr, VariableDeclarationExpr> implements Expr {
 
@@ -70,6 +72,67 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 	public VariableDeclarationExpr withDeclaration(Mutation<LocalVariableDecl> mutation) {
 		return location.safeTraversalMutate(DECLARATION, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final STree<LocalVariableDecl.State> declaration;
+
+		State(STree<LocalVariableDecl.State> declaration) {
+			this.declaration = declaration;
+		}
+
+		public VariableDeclarationExpr.State withDeclaration(STree<LocalVariableDecl.State> declaration) {
+			return new VariableDeclarationExpr.State(declaration);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.VariableDeclarationExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<VariableDeclarationExpr.State> location) {
+			return new VariableDeclarationExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return DECLARATION;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return DECLARATION;
+		}
+	}
+
+	private static STypeSafeTraversal<VariableDeclarationExpr.State, LocalVariableDecl.State, LocalVariableDecl> DECLARATION = new STypeSafeTraversal<VariableDeclarationExpr.State, LocalVariableDecl.State, LocalVariableDecl>() {
+
+		@Override
+		protected STree<?> doTraverse(VariableDeclarationExpr.State state) {
+			return state.declaration;
+		}
+
+		@Override
+		protected VariableDeclarationExpr.State doRebuildParentState(VariableDeclarationExpr.State state, STree<LocalVariableDecl.State> child) {
+			return state.withDeclaration(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = child(DECLARATION);
 

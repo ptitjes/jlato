@@ -40,6 +40,8 @@ import static org.jlato.printer.SpacingConstraint.spacing;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> implements Stmt {
 
@@ -82,6 +84,97 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 	public LabeledStmt withStmt(Mutation<Stmt> mutation) {
 		return location.safeTraversalMutate(STMT, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Stmt.State {
+
+		public final STree<Name.State> label;
+
+		public final STree<? extends Stmt.State> stmt;
+
+		State(STree<Name.State> label, STree<? extends Stmt.State> stmt) {
+			this.label = label;
+			this.stmt = stmt;
+		}
+
+		public LabeledStmt.State withLabel(STree<Name.State> label) {
+			return new LabeledStmt.State(label, stmt);
+		}
+
+		public LabeledStmt.State withStmt(STree<? extends Stmt.State> stmt) {
+			return new LabeledStmt.State(label, stmt);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.LabeledStmt;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<LabeledStmt.State> location) {
+			return new LabeledStmt(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return LABEL;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return STMT;
+		}
+	}
+
+	private static STypeSafeTraversal<LabeledStmt.State, Name.State, Name> LABEL = new STypeSafeTraversal<LabeledStmt.State, Name.State, Name>() {
+
+		@Override
+		protected STree<?> doTraverse(LabeledStmt.State state) {
+			return state.label;
+		}
+
+		@Override
+		protected LabeledStmt.State doRebuildParentState(LabeledStmt.State state, STree<Name.State> child) {
+			return state.withLabel(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return STMT;
+		}
+	};
+
+	private static STypeSafeTraversal<LabeledStmt.State, Stmt.State, Stmt> STMT = new STypeSafeTraversal<LabeledStmt.State, Stmt.State, Stmt>() {
+
+		@Override
+		protected STree<?> doTraverse(LabeledStmt.State state) {
+			return state.stmt;
+		}
+
+		@Override
+		protected LabeledStmt.State doRebuildParentState(LabeledStmt.State state, STree<Stmt.State> child) {
+			return state.withStmt(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return LABEL;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			none().withIndentationAfter(indent(IndentationContext.LABEL)),

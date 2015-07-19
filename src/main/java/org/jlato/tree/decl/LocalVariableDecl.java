@@ -37,6 +37,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, LocalVariableDecl> implements Decl {
 
@@ -91,6 +93,127 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 	public LocalVariableDecl withVariables(Mutation<NodeList<VariableDeclarator>> mutation) {
 		return location.safeTraversalMutate(VARIABLES, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Decl.State {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<? extends Type.State> type;
+
+		public final STree<SNodeListState> variables;
+
+		State(STree<SNodeListState> modifiers, STree<? extends Type.State> type, STree<SNodeListState> variables) {
+			this.modifiers = modifiers;
+			this.type = type;
+			this.variables = variables;
+		}
+
+		public LocalVariableDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new LocalVariableDecl.State(modifiers, type, variables);
+		}
+
+		public LocalVariableDecl.State withType(STree<? extends Type.State> type) {
+			return new LocalVariableDecl.State(modifiers, type, variables);
+		}
+
+		public LocalVariableDecl.State withVariables(STree<SNodeListState> variables) {
+			return new LocalVariableDecl.State(modifiers, type, variables);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.LocalVariableDecl;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<LocalVariableDecl.State> location) {
+			return new LocalVariableDecl(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return VARIABLES;
+		}
+	}
+
+	private static STypeSafeTraversal<LocalVariableDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<LocalVariableDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
+
+		@Override
+		protected STree<?> doTraverse(LocalVariableDecl.State state) {
+			return state.modifiers;
+		}
+
+		@Override
+		protected LocalVariableDecl.State doRebuildParentState(LocalVariableDecl.State state, STree<SNodeListState> child) {
+			return state.withModifiers(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return TYPE;
+		}
+	};
+
+	private static STypeSafeTraversal<LocalVariableDecl.State, Type.State, Type> TYPE = new STypeSafeTraversal<LocalVariableDecl.State, Type.State, Type>() {
+
+		@Override
+		protected STree<?> doTraverse(LocalVariableDecl.State state) {
+			return state.type;
+		}
+
+		@Override
+		protected LocalVariableDecl.State doRebuildParentState(LocalVariableDecl.State state, STree<Type.State> child) {
+			return state.withType(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return VARIABLES;
+		}
+	};
+
+	private static STypeSafeTraversal<LocalVariableDecl.State, SNodeListState, NodeList<VariableDeclarator>> VARIABLES = new STypeSafeTraversal<LocalVariableDecl.State, SNodeListState, NodeList<VariableDeclarator>>() {
+
+		@Override
+		protected STree<?> doTraverse(LocalVariableDecl.State state) {
+			return state.variables;
+		}
+
+		@Override
+		protected LocalVariableDecl.State doRebuildParentState(LocalVariableDecl.State state, STree<SNodeListState> child) {
+			return state.withVariables(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return TYPE;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.singleLineShape),

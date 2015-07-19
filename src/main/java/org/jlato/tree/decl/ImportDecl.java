@@ -38,6 +38,8 @@ import static org.jlato.printer.SpacingConstraint.spacing;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> implements Tree {
 
@@ -84,6 +86,107 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 	public ImportDecl setOnDemand(boolean isOnDemand) {
 		return location.safePropertyReplace(ON_DEMAND, (Boolean) isOnDemand);
 	}
+
+	public static class State extends SNodeState<State>implements STreeState {
+
+		public final STree<QualifiedName.State> name;
+
+		public final boolean isStatic;
+
+		public final boolean isOnDemand;
+
+		State(STree<QualifiedName.State> name, boolean isStatic, boolean isOnDemand) {
+			this.name = name;
+			this.isStatic = isStatic;
+			this.isOnDemand = isOnDemand;
+		}
+
+		public ImportDecl.State withName(STree<QualifiedName.State> name) {
+			return new ImportDecl.State(name, isStatic, isOnDemand);
+		}
+
+		public ImportDecl.State setStatic(boolean isStatic) {
+			return new ImportDecl.State(name, isStatic, isOnDemand);
+		}
+
+		public ImportDecl.State setOnDemand(boolean isOnDemand) {
+			return new ImportDecl.State(name, isStatic, isOnDemand);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ImportDecl;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ImportDecl.State> location) {
+			return new ImportDecl(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return NAME;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return NAME;
+		}
+	}
+
+	private static STypeSafeTraversal<ImportDecl.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<ImportDecl.State, QualifiedName.State, QualifiedName>() {
+
+		@Override
+		protected STree<?> doTraverse(ImportDecl.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected ImportDecl.State doRebuildParentState(ImportDecl.State state, STree<QualifiedName.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
+
+	private static STypeSafeProperty<ImportDecl.State, Boolean> STATIC = new STypeSafeProperty<ImportDecl.State, Boolean>() {
+
+		@Override
+		protected Boolean doRetrieve(ImportDecl.State state) {
+			return state.isStatic;
+		}
+
+		@Override
+		protected ImportDecl.State doRebuildParentState(ImportDecl.State state, Boolean value) {
+			return state.setStatic(value);
+		}
+	};
+
+	private static STypeSafeProperty<ImportDecl.State, Boolean> ON_DEMAND = new STypeSafeProperty<ImportDecl.State, Boolean>() {
+
+		@Override
+		protected Boolean doRetrieve(ImportDecl.State state) {
+			return state.isOnDemand;
+		}
+
+		@Override
+		protected ImportDecl.State doRebuildParentState(ImportDecl.State state, Boolean value) {
+			return state.setOnDemand(value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Import),

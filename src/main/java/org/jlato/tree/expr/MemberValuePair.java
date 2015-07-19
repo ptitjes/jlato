@@ -34,6 +34,8 @@ import org.jlato.tree.name.Name;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, MemberValuePair> implements Tree {
 
@@ -65,7 +67,7 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	public Name value() {
+	public Expr value() {
 		return location.safeTraversal(VALUE);
 	}
 
@@ -76,6 +78,97 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 	public MemberValuePair withValue(Mutation<Expr> mutation) {
 		return location.safeTraversalMutate(VALUE, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements STreeState {
+
+		public final STree<Name.State> name;
+
+		public final STree<? extends Expr.State> value;
+
+		State(STree<Name.State> name, STree<? extends Expr.State> value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public MemberValuePair.State withName(STree<Name.State> name) {
+			return new MemberValuePair.State(name, value);
+		}
+
+		public MemberValuePair.State withValue(STree<? extends Expr.State> value) {
+			return new MemberValuePair.State(name, value);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.MemberValuePair;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<MemberValuePair.State> location) {
+			return new MemberValuePair(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return NAME;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return VALUE;
+		}
+	}
+
+	private static STypeSafeTraversal<MemberValuePair.State, Name.State, Name> NAME = new STypeSafeTraversal<MemberValuePair.State, Name.State, Name>() {
+
+		@Override
+		protected STree<?> doTraverse(MemberValuePair.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected MemberValuePair.State doRebuildParentState(MemberValuePair.State state, STree<Name.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return VALUE;
+		}
+	};
+
+	private static STypeSafeTraversal<MemberValuePair.State, Expr.State, Expr> VALUE = new STypeSafeTraversal<MemberValuePair.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(MemberValuePair.State state) {
+			return state.value;
+		}
+
+		@Override
+		protected MemberValuePair.State doRebuildParentState(MemberValuePair.State state, STree<Expr.State> child) {
+			return state.withValue(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return NAME;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(NAME), token(LToken.Assign), child(VALUE)

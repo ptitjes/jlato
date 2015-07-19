@@ -29,6 +29,8 @@ import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.none;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public interface AnnotationExpr extends Expr, ExtendedModifier {
 
@@ -37,6 +39,9 @@ public interface AnnotationExpr extends Expr, ExtendedModifier {
 	AnnotationExpr withName(QualifiedName name);
 
 	AnnotationExpr withName(Mutation<QualifiedName> mutation);
+
+	interface State extends Expr.State, ExtendedModifier.State {
+	}
 
 	LexicalShape singleLineAnnotationsShape = list(
 			none(),

@@ -35,8 +35,6 @@ import org.jlato.tree.expr.AnnotationExpr;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, PrimitiveType> implements Type {
 
@@ -48,12 +46,12 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		super(location);
 	}
 
-	public static STree<PrimitiveType.State> make(STree<SNodeListState> annotations, Primitive type) {
-		return new STree<PrimitiveType.State>(new PrimitiveType.State(annotations, type));
+	public static STree<PrimitiveType.State> make(STree<SNodeListState> annotations, Primitive primitive) {
+		return new STree<PrimitiveType.State>(new PrimitiveType.State(annotations, primitive));
 	}
 
-	public PrimitiveType(NodeList<AnnotationExpr> annotations, Primitive type) {
-		super(new SLocation<PrimitiveType.State>(make(TreeBase.<SNodeListState>nodeOf(annotations), type)));
+	public PrimitiveType(NodeList<AnnotationExpr> annotations, Primitive primitive) {
+		super(new SLocation<PrimitiveType.State>(make(TreeBase.<SNodeListState>nodeOf(annotations), primitive)));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
@@ -68,23 +66,104 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 
-	public Primitive type() {
+	public Primitive primitive() {
 		return location.safeProperty(PRIMITIVE);
 	}
 
-	public PrimitiveType withType(Primitive type) {
-		return location.safePropertyReplace(PRIMITIVE, type);
+	public PrimitiveType withType(Primitive primitive) {
+		return location.safePropertyReplace(PRIMITIVE, primitive);
 	}
 
 	public PrimitiveType withType(Mutation<Primitive> mutation) {
 		return location.safePropertyMutate(PRIMITIVE, mutation);
 	}
 
+	public static class State extends SNodeState<State>implements Type.State {
+
+		public final STree<SNodeListState> annotations;
+
+		public final Primitive primitive;
+
+		State(STree<SNodeListState> annotations, Primitive primitive) {
+			this.annotations = annotations;
+			this.primitive = primitive;
+		}
+
+		public PrimitiveType.State withAnnotations(STree<SNodeListState> annotations) {
+			return new PrimitiveType.State(annotations, primitive);
+		}
+
+		public PrimitiveType.State withPrimitive(Primitive primitive) {
+			return new PrimitiveType.State(annotations, primitive);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.PrimitiveType;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<PrimitiveType.State> location) {
+			return new PrimitiveType(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return ANNOTATIONS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return ANNOTATIONS;
+		}
+	}
+
+	private static STypeSafeTraversal<PrimitiveType.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<PrimitiveType.State, SNodeListState, NodeList<AnnotationExpr>>() {
+
+		@Override
+		protected STree<?> doTraverse(PrimitiveType.State state) {
+			return state.annotations;
+		}
+
+		@Override
+		protected PrimitiveType.State doRebuildParentState(PrimitiveType.State state, STree<SNodeListState> child) {
+			return state.withAnnotations(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
+
+	private static STypeSafeProperty<PrimitiveType.State, Primitive> PRIMITIVE = new STypeSafeProperty<PrimitiveType.State, Primitive>() {
+
+		@Override
+		protected Primitive doRetrieve(PrimitiveType.State state) {
+			return state.primitive;
+		}
+
+		@Override
+		protected PrimitiveType.State doRebuildParentState(PrimitiveType.State state, Primitive value) {
+			return state.withPrimitive(value);
+		}
+	};
+
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
-					return ((State) tree.state).type.token;
+					return ((State) tree.state).primitive.token;
 				}
 			})
 	);

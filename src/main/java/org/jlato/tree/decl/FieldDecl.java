@@ -37,6 +37,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> implements MemberDecl {
 
@@ -96,6 +98,127 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 	public FieldDecl withVariables(Mutation<NodeList<VariableDeclarator>> mutation) {
 		return location.safeTraversalMutate(VARIABLES, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements MemberDecl.State {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<? extends Type.State> type;
+
+		public final STree<SNodeListState> variables;
+
+		State(STree<SNodeListState> modifiers, STree<? extends Type.State> type, STree<SNodeListState> variables) {
+			this.modifiers = modifiers;
+			this.type = type;
+			this.variables = variables;
+		}
+
+		public FieldDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new FieldDecl.State(modifiers, type, variables);
+		}
+
+		public FieldDecl.State withType(STree<? extends Type.State> type) {
+			return new FieldDecl.State(modifiers, type, variables);
+		}
+
+		public FieldDecl.State withVariables(STree<SNodeListState> variables) {
+			return new FieldDecl.State(modifiers, type, variables);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.FieldDecl;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<FieldDecl.State> location) {
+			return new FieldDecl(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return VARIABLES;
+		}
+	}
+
+	private static STypeSafeTraversal<FieldDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<FieldDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
+
+		@Override
+		protected STree<?> doTraverse(FieldDecl.State state) {
+			return state.modifiers;
+		}
+
+		@Override
+		protected FieldDecl.State doRebuildParentState(FieldDecl.State state, STree<SNodeListState> child) {
+			return state.withModifiers(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return TYPE;
+		}
+	};
+
+	private static STypeSafeTraversal<FieldDecl.State, Type.State, Type> TYPE = new STypeSafeTraversal<FieldDecl.State, Type.State, Type>() {
+
+		@Override
+		protected STree<?> doTraverse(FieldDecl.State state) {
+			return state.type;
+		}
+
+		@Override
+		protected FieldDecl.State doRebuildParentState(FieldDecl.State state, STree<Type.State> child) {
+			return state.withType(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return VARIABLES;
+		}
+	};
+
+	private static STypeSafeTraversal<FieldDecl.State, SNodeListState, NodeList<VariableDeclarator>> VARIABLES = new STypeSafeTraversal<FieldDecl.State, SNodeListState, NodeList<VariableDeclarator>>() {
+
+		@Override
+		protected STree<?> doTraverse(FieldDecl.State state) {
+			return state.variables;
+		}
+
+		@Override
+		protected FieldDecl.State doRebuildParentState(FieldDecl.State state, STree<SNodeListState> child) {
+			return state.withVariables(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return TYPE;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

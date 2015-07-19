@@ -30,10 +30,15 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public interface MemberDecl extends Decl {
 
 	MemberKind memberKind();
+
+	interface State extends Decl.State {
+	}
 
 	LexicalShape bodyShape = list(true,
 			alternative(emptyList(),

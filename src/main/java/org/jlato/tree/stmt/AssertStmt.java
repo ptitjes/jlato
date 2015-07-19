@@ -39,6 +39,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> implements Stmt {
 
@@ -81,6 +83,97 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 	public AssertStmt withMsg(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(MSG, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Stmt.State {
+
+		public final STree<? extends Expr.State> check;
+
+		public final STree<SNodeOptionState> msg;
+
+		State(STree<? extends Expr.State> check, STree<SNodeOptionState> msg) {
+			this.check = check;
+			this.msg = msg;
+		}
+
+		public AssertStmt.State withCheck(STree<? extends Expr.State> check) {
+			return new AssertStmt.State(check, msg);
+		}
+
+		public AssertStmt.State withMsg(STree<SNodeOptionState> msg) {
+			return new AssertStmt.State(check, msg);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.AssertStmt;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<AssertStmt.State> location) {
+			return new AssertStmt(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return CHECK;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return MSG;
+		}
+	}
+
+	private static STypeSafeTraversal<AssertStmt.State, Expr.State, Expr> CHECK = new STypeSafeTraversal<AssertStmt.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(AssertStmt.State state) {
+			return state.check;
+		}
+
+		@Override
+		protected AssertStmt.State doRebuildParentState(AssertStmt.State state, STree<Expr.State> child) {
+			return state.withCheck(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return MSG;
+		}
+	};
+
+	private static STypeSafeTraversal<AssertStmt.State, SNodeOptionState, NodeOption<Expr>> MSG = new STypeSafeTraversal<AssertStmt.State, SNodeOptionState, NodeOption<Expr>>() {
+
+		@Override
+		protected STree<?> doTraverse(AssertStmt.State state) {
+			return state.msg;
+		}
+
+		@Override
+		protected AssertStmt.State doRebuildParentState(AssertStmt.State state, STree<SNodeOptionState> child) {
+			return state.withMsg(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return CHECK;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Assert),

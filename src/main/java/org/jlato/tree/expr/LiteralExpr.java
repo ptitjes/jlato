@@ -35,6 +35,8 @@ import static org.jlato.internal.shapes.LexicalShape.token;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExpr> implements Expr {
 
@@ -100,8 +102,79 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 	@SuppressWarnings("unchecked")
 	public LiteralExpr<T> withValue(T value) {
 		final Class<?> literalClass = location.tree.state.literalClass;
-		return (LiteralExpr<T>) location.safePropertyReplace((SProperty) STRING, Literals.<T>from((Class<T>) literalClass, value));
+		return (LiteralExpr<T>) location.safePropertyReplace(LITERAL_STRING, Literals.from((Class<T>) literalClass, value));
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final Class<?> literalClass;
+
+		public final String literalString;
+
+		State(Class<?> literalClass, String literalString) {
+			this.literalClass = literalClass;
+			this.literalString = literalString;
+		}
+
+		public LiteralExpr.State withLiteralClass(Class<?> literalClass) {
+			return new LiteralExpr.State(literalClass, literalString);
+		}
+
+		public LiteralExpr.State withLiteralString(String literalString) {
+			return new LiteralExpr.State(literalClass, literalString);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.LiteralExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<LiteralExpr.State> location) {
+			return new LiteralExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return null;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return null;
+		}
+	}
+
+	private static STypeSafeProperty<LiteralExpr.State, Class<?>> LITERAL_CLASS = new STypeSafeProperty<LiteralExpr.State, Class<?>>() {
+
+		@Override
+		protected Class<?> doRetrieve(LiteralExpr.State state) {
+			return state.literalClass;
+		}
+
+		@Override
+		protected LiteralExpr.State doRebuildParentState(LiteralExpr.State state, Class<?> value) {
+			return state.withLiteralClass(value);
+		}
+	};
+
+	private static STypeSafeProperty<LiteralExpr.State, String> LITERAL_STRING = new STypeSafeProperty<LiteralExpr.State, String>() {
+
+		@Override
+		protected String doRetrieve(LiteralExpr.State state) {
+			return state.literalString;
+		}
+
+		@Override
+		protected LiteralExpr.State doRebuildParentState(LiteralExpr.State state, String value) {
+			return state.withLiteralString(value);
+		}
+	};
 
 	public final static LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {

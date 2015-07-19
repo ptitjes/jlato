@@ -26,10 +26,15 @@ import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.none;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_BetweenTopLevelDecl;
 import static org.jlato.printer.SpacingConstraint.spacing;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public interface TypeDecl extends MemberDecl {
 
 	TypeKind typeKind();
+
+	interface State extends MemberDecl.State {
+	}
 
 	LexicalShape listShape = list(
 			none().withSpacingAfter(spacing(CompilationUnit_BetweenTopLevelDecl))

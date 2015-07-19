@@ -37,6 +37,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> implements Tree {
 
@@ -79,6 +81,97 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 	public PackageDecl withName(Mutation<QualifiedName> mutation) {
 		return location.safeTraversalMutate(NAME, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements STreeState {
+
+		public final STree<SNodeListState> annotations;
+
+		public final STree<QualifiedName.State> name;
+
+		State(STree<SNodeListState> annotations, STree<QualifiedName.State> name) {
+			this.annotations = annotations;
+			this.name = name;
+		}
+
+		public PackageDecl.State withAnnotations(STree<SNodeListState> annotations) {
+			return new PackageDecl.State(annotations, name);
+		}
+
+		public PackageDecl.State withName(STree<QualifiedName.State> name) {
+			return new PackageDecl.State(annotations, name);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.PackageDecl;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<PackageDecl.State> location) {
+			return new PackageDecl(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return ANNOTATIONS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return NAME;
+		}
+	}
+
+	private static STypeSafeTraversal<PackageDecl.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<PackageDecl.State, SNodeListState, NodeList<AnnotationExpr>>() {
+
+		@Override
+		protected STree<?> doTraverse(PackageDecl.State state) {
+			return state.annotations;
+		}
+
+		@Override
+		protected PackageDecl.State doRebuildParentState(PackageDecl.State state, STree<SNodeListState> child) {
+			return state.withAnnotations(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return NAME;
+		}
+	};
+
+	private static STypeSafeTraversal<PackageDecl.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<PackageDecl.State, QualifiedName.State, QualifiedName>() {
+
+		@Override
+		protected STree<?> doTraverse(PackageDecl.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected PackageDecl.State doRebuildParentState(PackageDecl.State state, STree<QualifiedName.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return ANNOTATIONS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),

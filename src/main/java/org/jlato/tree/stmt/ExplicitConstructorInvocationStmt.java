@@ -42,6 +42,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstructorInvocationStmt.State, Stmt, ExplicitConstructorInvocationStmt> implements Stmt {
 
@@ -74,11 +76,11 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	}
 
 	public boolean isThis() {
-		return location.safeProperty(IS_THIS);
+		return location.safeProperty(THIS);
 	}
 
 	public ExplicitConstructorInvocationStmt setThis(boolean isThis) {
-		return location.safePropertyReplace(IS_THIS, (Boolean) isThis);
+		return location.safePropertyReplace(THIS, (Boolean) isThis);
 	}
 
 	public NodeOption<Expr> expr() {
@@ -104,6 +106,147 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	public ExplicitConstructorInvocationStmt withArgs(Mutation<NodeList<Expr>> mutation) {
 		return location.safeTraversalMutate(ARGS, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Stmt.State {
+
+		public final STree<SNodeListState> typeArgs;
+
+		public final boolean isThis;
+
+		public final STree<SNodeOptionState> expr;
+
+		public final STree<SNodeListState> args;
+
+		State(STree<SNodeListState> typeArgs, boolean isThis, STree<SNodeOptionState> expr, STree<SNodeListState> args) {
+			this.typeArgs = typeArgs;
+			this.isThis = isThis;
+			this.expr = expr;
+			this.args = args;
+		}
+
+		public ExplicitConstructorInvocationStmt.State withTypeArgs(STree<SNodeListState> typeArgs) {
+			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
+		}
+
+		public ExplicitConstructorInvocationStmt.State setThis(boolean isThis) {
+			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
+		}
+
+		public ExplicitConstructorInvocationStmt.State withExpr(STree<SNodeOptionState> expr) {
+			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
+		}
+
+		public ExplicitConstructorInvocationStmt.State withArgs(STree<SNodeListState> args) {
+			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ExplicitConstructorInvocationStmt;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ExplicitConstructorInvocationStmt.State> location) {
+			return new ExplicitConstructorInvocationStmt(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return TYPE_ARGS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return ARGS;
+		}
+	}
+
+	private static STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeListState, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeListState, NodeList<Type>>() {
+
+		@Override
+		protected STree<?> doTraverse(ExplicitConstructorInvocationStmt.State state) {
+			return state.typeArgs;
+		}
+
+		@Override
+		protected ExplicitConstructorInvocationStmt.State doRebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<SNodeListState> child) {
+			return state.withTypeArgs(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return EXPR;
+		}
+	};
+
+	private static STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeOptionState, NodeOption<Expr>> EXPR = new STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeOptionState, NodeOption<Expr>>() {
+
+		@Override
+		protected STree<?> doTraverse(ExplicitConstructorInvocationStmt.State state) {
+			return state.expr;
+		}
+
+		@Override
+		protected ExplicitConstructorInvocationStmt.State doRebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<SNodeOptionState> child) {
+			return state.withExpr(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return TYPE_ARGS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return ARGS;
+		}
+	};
+
+	private static STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeListState, NodeList<Expr>> ARGS = new STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeListState, NodeList<Expr>>() {
+
+		@Override
+		protected STree<?> doTraverse(ExplicitConstructorInvocationStmt.State state) {
+			return state.args;
+		}
+
+		@Override
+		protected ExplicitConstructorInvocationStmt.State doRebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<SNodeListState> child) {
+			return state.withArgs(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return EXPR;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
+
+	private static STypeSafeProperty<ExplicitConstructorInvocationStmt.State, Boolean> THIS = new STypeSafeProperty<ExplicitConstructorInvocationStmt.State, Boolean>() {
+
+		@Override
+		protected Boolean doRetrieve(ExplicitConstructorInvocationStmt.State state) {
+			return state.isThis;
+		}
+
+		@Override
+		protected ExplicitConstructorInvocationStmt.State doRebuildParentState(ExplicitConstructorInvocationStmt.State state, Boolean value) {
+			return state.setThis(value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			when(childIs(EXPR, some()), composite(child(EXPR, element()), token(LToken.Dot))),

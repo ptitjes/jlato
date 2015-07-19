@@ -36,6 +36,8 @@ import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, SynchronizedStmt> implements Stmt {
 
@@ -78,6 +80,97 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 	public SynchronizedStmt withBlock(Mutation<BlockStmt> mutation) {
 		return location.safeTraversalMutate(BLOCK, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Stmt.State {
+
+		public final STree<? extends Expr.State> expr;
+
+		public final STree<BlockStmt.State> block;
+
+		State(STree<? extends Expr.State> expr, STree<BlockStmt.State> block) {
+			this.expr = expr;
+			this.block = block;
+		}
+
+		public SynchronizedStmt.State withExpr(STree<? extends Expr.State> expr) {
+			return new SynchronizedStmt.State(expr, block);
+		}
+
+		public SynchronizedStmt.State withBlock(STree<BlockStmt.State> block) {
+			return new SynchronizedStmt.State(expr, block);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.SynchronizedStmt;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<SynchronizedStmt.State> location) {
+			return new SynchronizedStmt(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return EXPR;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return BLOCK;
+		}
+	}
+
+	private static STypeSafeTraversal<SynchronizedStmt.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<SynchronizedStmt.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(SynchronizedStmt.State state) {
+			return state.expr;
+		}
+
+		@Override
+		protected SynchronizedStmt.State doRebuildParentState(SynchronizedStmt.State state, STree<Expr.State> child) {
+			return state.withExpr(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return BLOCK;
+		}
+	};
+
+	private static STypeSafeTraversal<SynchronizedStmt.State, BlockStmt.State, BlockStmt> BLOCK = new STypeSafeTraversal<SynchronizedStmt.State, BlockStmt.State, BlockStmt>() {
+
+		@Override
+		protected STree<?> doTraverse(SynchronizedStmt.State state) {
+			return state.block;
+		}
+
+		@Override
+		protected SynchronizedStmt.State doRebuildParentState(SynchronizedStmt.State state, STree<BlockStmt.State> child) {
+			return state.withBlock(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return EXPR;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Synchronized),

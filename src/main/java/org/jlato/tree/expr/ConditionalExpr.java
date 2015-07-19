@@ -35,6 +35,8 @@ import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, ConditionalExpr> implements Expr {
 
@@ -89,6 +91,127 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 	public ConditionalExpr withElseExpr(Mutation<Expr> mutation) {
 		return location.safeTraversalMutate(ELSE_EXPR, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final STree<? extends Expr.State> condition;
+
+		public final STree<? extends Expr.State> thenExpr;
+
+		public final STree<? extends Expr.State> elseExpr;
+
+		State(STree<? extends Expr.State> condition, STree<? extends Expr.State> thenExpr, STree<? extends Expr.State> elseExpr) {
+			this.condition = condition;
+			this.thenExpr = thenExpr;
+			this.elseExpr = elseExpr;
+		}
+
+		public ConditionalExpr.State withCondition(STree<? extends Expr.State> condition) {
+			return new ConditionalExpr.State(condition, thenExpr, elseExpr);
+		}
+
+		public ConditionalExpr.State withThenExpr(STree<? extends Expr.State> thenExpr) {
+			return new ConditionalExpr.State(condition, thenExpr, elseExpr);
+		}
+
+		public ConditionalExpr.State withElseExpr(STree<? extends Expr.State> elseExpr) {
+			return new ConditionalExpr.State(condition, thenExpr, elseExpr);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ConditionalExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ConditionalExpr.State> location) {
+			return new ConditionalExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return CONDITION;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return ELSE_EXPR;
+		}
+	}
+
+	private static STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr> CONDITION = new STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(ConditionalExpr.State state) {
+			return state.condition;
+		}
+
+		@Override
+		protected ConditionalExpr.State doRebuildParentState(ConditionalExpr.State state, STree<Expr.State> child) {
+			return state.withCondition(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return THEN_EXPR;
+		}
+	};
+
+	private static STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr> THEN_EXPR = new STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(ConditionalExpr.State state) {
+			return state.thenExpr;
+		}
+
+		@Override
+		protected ConditionalExpr.State doRebuildParentState(ConditionalExpr.State state, STree<Expr.State> child) {
+			return state.withThenExpr(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return CONDITION;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return ELSE_EXPR;
+		}
+	};
+
+	private static STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr> ELSE_EXPR = new STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(ConditionalExpr.State state) {
+			return state.elseExpr;
+		}
+
+		@Override
+		protected ConditionalExpr.State doRebuildParentState(ConditionalExpr.State state, STree<Expr.State> child) {
+			return state.withElseExpr(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return THEN_EXPR;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(CONDITION),

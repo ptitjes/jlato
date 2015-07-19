@@ -36,6 +36,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, AnnotationDecl> implements TypeDecl {
 
@@ -99,6 +101,127 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 	public AnnotationDecl withMembers(Mutation<NodeList<MemberDecl>> mutation) {
 		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements TypeDecl.State {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeListState> members;
+
+		State(STree<SNodeListState> modifiers, STree<Name.State> name, STree<SNodeListState> members) {
+			this.modifiers = modifiers;
+			this.name = name;
+			this.members = members;
+		}
+
+		public AnnotationDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new AnnotationDecl.State(modifiers, name, members);
+		}
+
+		public AnnotationDecl.State withName(STree<Name.State> name) {
+			return new AnnotationDecl.State(modifiers, name, members);
+		}
+
+		public AnnotationDecl.State withMembers(STree<SNodeListState> members) {
+			return new AnnotationDecl.State(modifiers, name, members);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.AnnotationDecl;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<AnnotationDecl.State> location) {
+			return new AnnotationDecl(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return MEMBERS;
+		}
+	}
+
+	private static STypeSafeTraversal<AnnotationDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<AnnotationDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
+
+		@Override
+		protected STree<?> doTraverse(AnnotationDecl.State state) {
+			return state.modifiers;
+		}
+
+		@Override
+		protected AnnotationDecl.State doRebuildParentState(AnnotationDecl.State state, STree<SNodeListState> child) {
+			return state.withModifiers(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return NAME;
+		}
+	};
+
+	private static STypeSafeTraversal<AnnotationDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<AnnotationDecl.State, Name.State, Name>() {
+
+		@Override
+		protected STree<?> doTraverse(AnnotationDecl.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected AnnotationDecl.State doRebuildParentState(AnnotationDecl.State state, STree<Name.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return MEMBERS;
+		}
+	};
+
+	private static STypeSafeTraversal<AnnotationDecl.State, SNodeListState, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<AnnotationDecl.State, SNodeListState, NodeList<MemberDecl>>() {
+
+		@Override
+		protected STree<?> doTraverse(AnnotationDecl.State state) {
+			return state.members;
+		}
+
+		@Override
+		protected AnnotationDecl.State doRebuildParentState(AnnotationDecl.State state, STree<SNodeListState> child) {
+			return state.withMembers(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return NAME;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS),

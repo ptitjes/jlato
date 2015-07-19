@@ -43,6 +43,8 @@ import static org.jlato.printer.SpacingConstraint.newLine;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> implements Tree {
 
@@ -85,6 +87,97 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 	public SwitchCase withStmts(Mutation<NodeList<Stmt>> mutation) {
 		return location.safeTraversalMutate(STMTS, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements STreeState {
+
+		public final STree<SNodeOptionState> label;
+
+		public final STree<SNodeListState> stmts;
+
+		State(STree<SNodeOptionState> label, STree<SNodeListState> stmts) {
+			this.label = label;
+			this.stmts = stmts;
+		}
+
+		public SwitchCase.State withLabel(STree<SNodeOptionState> label) {
+			return new SwitchCase.State(label, stmts);
+		}
+
+		public SwitchCase.State withStmts(STree<SNodeListState> stmts) {
+			return new SwitchCase.State(label, stmts);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.SwitchCase;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<SwitchCase.State> location) {
+			return new SwitchCase(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return LABEL;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return STMTS;
+		}
+	}
+
+	private static STypeSafeTraversal<SwitchCase.State, SNodeOptionState, NodeOption<Expr>> LABEL = new STypeSafeTraversal<SwitchCase.State, SNodeOptionState, NodeOption<Expr>>() {
+
+		@Override
+		protected STree<?> doTraverse(SwitchCase.State state) {
+			return state.label;
+		}
+
+		@Override
+		protected SwitchCase.State doRebuildParentState(SwitchCase.State state, STree<SNodeOptionState> child) {
+			return state.withLabel(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return STMTS;
+		}
+	};
+
+	private static STypeSafeTraversal<SwitchCase.State, SNodeListState, NodeList<Stmt>> STMTS = new STypeSafeTraversal<SwitchCase.State, SNodeListState, NodeList<Stmt>>() {
+
+		@Override
+		protected STree<?> doTraverse(SwitchCase.State state) {
+			return state.stmts;
+		}
+
+		@Override
+		protected SwitchCase.State doRebuildParentState(SwitchCase.State state, STree<SNodeListState> child) {
+			return state.withStmts(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return LABEL;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			alternative(childIs(LABEL, some()),

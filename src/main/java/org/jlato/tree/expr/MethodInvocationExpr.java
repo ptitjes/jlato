@@ -40,6 +40,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, Expr, MethodInvocationExpr> implements Expr {
 
@@ -106,6 +108,157 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 	public MethodInvocationExpr withArgs(Mutation<NodeList<Expr>> mutation) {
 		return location.safeTraversalMutate(ARGS, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final STree<SNodeOptionState> scope;
+
+		public final STree<SNodeListState> typeArgs;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeListState> args;
+
+		State(STree<SNodeOptionState> scope, STree<SNodeListState> typeArgs, STree<Name.State> name, STree<SNodeListState> args) {
+			this.scope = scope;
+			this.typeArgs = typeArgs;
+			this.name = name;
+			this.args = args;
+		}
+
+		public MethodInvocationExpr.State withScope(STree<SNodeOptionState> scope) {
+			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
+		}
+
+		public MethodInvocationExpr.State withTypeArgs(STree<SNodeListState> typeArgs) {
+			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
+		}
+
+		public MethodInvocationExpr.State withName(STree<Name.State> name) {
+			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
+		}
+
+		public MethodInvocationExpr.State withArgs(STree<SNodeListState> args) {
+			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.MethodInvocationExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<MethodInvocationExpr.State> location) {
+			return new MethodInvocationExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return SCOPE;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return ARGS;
+		}
+	}
+
+	private static STypeSafeTraversal<MethodInvocationExpr.State, SNodeOptionState, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<MethodInvocationExpr.State, SNodeOptionState, NodeOption<Expr>>() {
+
+		@Override
+		protected STree<?> doTraverse(MethodInvocationExpr.State state) {
+			return state.scope;
+		}
+
+		@Override
+		protected MethodInvocationExpr.State doRebuildParentState(MethodInvocationExpr.State state, STree<SNodeOptionState> child) {
+			return state.withScope(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return TYPE_ARGS;
+		}
+	};
+
+	private static STypeSafeTraversal<MethodInvocationExpr.State, SNodeListState, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<MethodInvocationExpr.State, SNodeListState, NodeList<Type>>() {
+
+		@Override
+		protected STree<?> doTraverse(MethodInvocationExpr.State state) {
+			return state.typeArgs;
+		}
+
+		@Override
+		protected MethodInvocationExpr.State doRebuildParentState(MethodInvocationExpr.State state, STree<SNodeListState> child) {
+			return state.withTypeArgs(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return SCOPE;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return NAME;
+		}
+	};
+
+	private static STypeSafeTraversal<MethodInvocationExpr.State, Name.State, Name> NAME = new STypeSafeTraversal<MethodInvocationExpr.State, Name.State, Name>() {
+
+		@Override
+		protected STree<?> doTraverse(MethodInvocationExpr.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected MethodInvocationExpr.State doRebuildParentState(MethodInvocationExpr.State state, STree<Name.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return TYPE_ARGS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return ARGS;
+		}
+	};
+
+	private static STypeSafeTraversal<MethodInvocationExpr.State, SNodeListState, NodeList<Expr>> ARGS = new STypeSafeTraversal<MethodInvocationExpr.State, SNodeListState, NodeList<Expr>>() {
+
+		@Override
+		protected STree<?> doTraverse(MethodInvocationExpr.State state) {
+			return state.args;
+		}
+
+		@Override
+		protected MethodInvocationExpr.State doRebuildParentState(MethodInvocationExpr.State state, STree<SNodeListState> child) {
+			return state.withArgs(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return NAME;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),

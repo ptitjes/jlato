@@ -39,6 +39,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implements Stmt {
 
@@ -69,6 +71,67 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 	public BlockStmt withStmts(Mutation<NodeList<Stmt>> mutation) {
 		return location.safeTraversalMutate(STMTS, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Stmt.State {
+
+		public final STree<SNodeListState> stmts;
+
+		State(STree<SNodeListState> stmts) {
+			this.stmts = stmts;
+		}
+
+		public BlockStmt.State withStmts(STree<SNodeListState> stmts) {
+			return new BlockStmt.State(stmts);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.BlockStmt;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<BlockStmt.State> location) {
+			return new BlockStmt(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return STMTS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return STMTS;
+		}
+	}
+
+	private static STypeSafeTraversal<BlockStmt.State, SNodeListState, NodeList<Stmt>> STMTS = new STypeSafeTraversal<BlockStmt.State, SNodeListState, NodeList<Stmt>>() {
+
+		@Override
+		protected STree<?> doTraverse(BlockStmt.State state) {
+			return state.stmts;
+		}
+
+		@Override
+		protected BlockStmt.State doRebuildParentState(BlockStmt.State state, STree<SNodeListState> child) {
+			return state.withStmts(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			nonEmptyChildren(STMTS,

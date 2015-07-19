@@ -34,6 +34,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, ArrayAccessExpr> implements Expr {
 
@@ -76,6 +78,97 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 	public ArrayAccessExpr withIndex(Mutation<Expr> mutation) {
 		return location.safeTraversalMutate(INDEX, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final STree<? extends Expr.State> name;
+
+		public final STree<? extends Expr.State> index;
+
+		State(STree<? extends Expr.State> name, STree<? extends Expr.State> index) {
+			this.name = name;
+			this.index = index;
+		}
+
+		public ArrayAccessExpr.State withName(STree<? extends Expr.State> name) {
+			return new ArrayAccessExpr.State(name, index);
+		}
+
+		public ArrayAccessExpr.State withIndex(STree<? extends Expr.State> index) {
+			return new ArrayAccessExpr.State(name, index);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ArrayAccessExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ArrayAccessExpr.State> location) {
+			return new ArrayAccessExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return NAME;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return INDEX;
+		}
+	}
+
+	private static STypeSafeTraversal<ArrayAccessExpr.State, Expr.State, Expr> NAME = new STypeSafeTraversal<ArrayAccessExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(ArrayAccessExpr.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected ArrayAccessExpr.State doRebuildParentState(ArrayAccessExpr.State state, STree<Expr.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return INDEX;
+		}
+	};
+
+	private static STypeSafeTraversal<ArrayAccessExpr.State, Expr.State, Expr> INDEX = new STypeSafeTraversal<ArrayAccessExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(ArrayAccessExpr.State state) {
+			return state.index;
+		}
+
+		@Override
+		protected ArrayAccessExpr.State doRebuildParentState(ArrayAccessExpr.State state, STree<Expr.State> child) {
+			return state.withIndex(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return NAME;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(NAME),

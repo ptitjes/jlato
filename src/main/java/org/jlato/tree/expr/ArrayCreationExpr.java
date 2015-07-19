@@ -41,6 +41,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, ArrayCreationExpr> implements Expr {
 
@@ -107,6 +109,157 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 	public ArrayCreationExpr withInit(Mutation<NodeOption<ArrayInitializerExpr>> mutation) {
 		return location.safeTraversalMutate(INIT, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final STree<? extends Type.State> type;
+
+		public final STree<SNodeListState> dimExprs;
+
+		public final STree<SNodeListState> dims;
+
+		public final STree<SNodeOptionState> init;
+
+		State(STree<? extends Type.State> type, STree<SNodeListState> dimExprs, STree<SNodeListState> dims, STree<SNodeOptionState> init) {
+			this.type = type;
+			this.dimExprs = dimExprs;
+			this.dims = dims;
+			this.init = init;
+		}
+
+		public ArrayCreationExpr.State withType(STree<? extends Type.State> type) {
+			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
+		}
+
+		public ArrayCreationExpr.State withDimExprs(STree<SNodeListState> dimExprs) {
+			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
+		}
+
+		public ArrayCreationExpr.State withDims(STree<SNodeListState> dims) {
+			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
+		}
+
+		public ArrayCreationExpr.State withInit(STree<SNodeOptionState> init) {
+			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ArrayCreationExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ArrayCreationExpr.State> location) {
+			return new ArrayCreationExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return TYPE;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return INIT;
+		}
+	}
+
+	private static STypeSafeTraversal<ArrayCreationExpr.State, Type.State, Type> TYPE = new STypeSafeTraversal<ArrayCreationExpr.State, Type.State, Type>() {
+
+		@Override
+		protected STree<?> doTraverse(ArrayCreationExpr.State state) {
+			return state.type;
+		}
+
+		@Override
+		protected ArrayCreationExpr.State doRebuildParentState(ArrayCreationExpr.State state, STree<Type.State> child) {
+			return state.withType(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return DIM_EXPRS;
+		}
+	};
+
+	private static STypeSafeTraversal<ArrayCreationExpr.State, SNodeListState, NodeList<ArrayDimExpr>> DIM_EXPRS = new STypeSafeTraversal<ArrayCreationExpr.State, SNodeListState, NodeList<ArrayDimExpr>>() {
+
+		@Override
+		protected STree<?> doTraverse(ArrayCreationExpr.State state) {
+			return state.dimExprs;
+		}
+
+		@Override
+		protected ArrayCreationExpr.State doRebuildParentState(ArrayCreationExpr.State state, STree<SNodeListState> child) {
+			return state.withDimExprs(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return TYPE;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return DIMS;
+		}
+	};
+
+	private static STypeSafeTraversal<ArrayCreationExpr.State, SNodeListState, NodeList<ArrayDim>> DIMS = new STypeSafeTraversal<ArrayCreationExpr.State, SNodeListState, NodeList<ArrayDim>>() {
+
+		@Override
+		protected STree<?> doTraverse(ArrayCreationExpr.State state) {
+			return state.dims;
+		}
+
+		@Override
+		protected ArrayCreationExpr.State doRebuildParentState(ArrayCreationExpr.State state, STree<SNodeListState> child) {
+			return state.withDims(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return DIM_EXPRS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return INIT;
+		}
+	};
+
+	private static STypeSafeTraversal<ArrayCreationExpr.State, SNodeOptionState, NodeOption<ArrayInitializerExpr>> INIT = new STypeSafeTraversal<ArrayCreationExpr.State, SNodeOptionState, NodeOption<ArrayInitializerExpr>>() {
+
+		@Override
+		protected STree<?> doTraverse(ArrayCreationExpr.State state) {
+			return state.init;
+		}
+
+		@Override
+		protected ArrayCreationExpr.State doRebuildParentState(ArrayCreationExpr.State state, STree<SNodeOptionState> child) {
+			return state.withInit(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return DIMS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.New),

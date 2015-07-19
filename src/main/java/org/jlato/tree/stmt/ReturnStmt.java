@@ -38,6 +38,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> implements Stmt {
 
@@ -68,6 +70,67 @@ public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> imp
 	public ReturnStmt withExpr(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Stmt.State {
+
+		public final STree<SNodeOptionState> expr;
+
+		State(STree<SNodeOptionState> expr) {
+			this.expr = expr;
+		}
+
+		public ReturnStmt.State withExpr(STree<SNodeOptionState> expr) {
+			return new ReturnStmt.State(expr);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ReturnStmt;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ReturnStmt.State> location) {
+			return new ReturnStmt(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return EXPR;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return EXPR;
+		}
+	}
+
+	private static STypeSafeTraversal<ReturnStmt.State, SNodeOptionState, NodeOption<Expr>> EXPR = new STypeSafeTraversal<ReturnStmt.State, SNodeOptionState, NodeOption<Expr>>() {
+
+		@Override
+		protected STree<?> doTraverse(ReturnStmt.State state) {
+			return state.expr;
+		}
+
+		@Override
+		protected ReturnStmt.State doRebuildParentState(ReturnStmt.State state, STree<SNodeOptionState> child) {
+			return state.withExpr(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Return),

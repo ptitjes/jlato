@@ -32,6 +32,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class EmptyMemberDecl extends TreeBase<EmptyMemberDecl.State, MemberDecl, EmptyMemberDecl> implements MemberDecl {
 
@@ -54,6 +56,37 @@ public class EmptyMemberDecl extends TreeBase<EmptyMemberDecl.State, MemberDecl,
 	@Override
 	public MemberKind memberKind() {
 		return MemberKind.Empty;
+	}
+
+	public static class State extends SNodeState<State>implements MemberDecl.State {
+
+		State() {
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.EmptyMemberDecl;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<EmptyMemberDecl.State> location) {
+			return new EmptyMemberDecl(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return null;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return null;
+		}
 	}
 
 	public final static LexicalShape shape = token(LToken.SemiColon);

@@ -31,6 +31,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class UnknownType extends TreeBase<UnknownType.State, Type, UnknownType> implements Type {
 
@@ -48,6 +50,37 @@ public class UnknownType extends TreeBase<UnknownType.State, Type, UnknownType> 
 
 	public UnknownType() {
 		super(new SLocation<UnknownType.State>(make()));
+	}
+
+	public static class State extends SNodeState<State>implements Type.State {
+
+		State() {
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.UnknownType;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<UnknownType.State> location) {
+			return new UnknownType(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return null;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return null;
+		}
 	}
 
 	public final static LexicalShape shape = none();

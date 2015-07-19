@@ -36,6 +36,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class FormalParameter extends TreeBase<FormalParameter.State, Tree, FormalParameter> implements Tree {
 
@@ -98,6 +100,147 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 	public FormalParameter withId(Mutation<VariableDeclaratorId> mutation) {
 		return location.safeTraversalMutate(ID, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements STreeState {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<? extends Type.State> type;
+
+		public final boolean isVarArgs;
+
+		public final STree<VariableDeclaratorId.State> id;
+
+		State(STree<SNodeListState> modifiers, STree<? extends Type.State> type, boolean isVarArgs, STree<VariableDeclaratorId.State> id) {
+			this.modifiers = modifiers;
+			this.type = type;
+			this.isVarArgs = isVarArgs;
+			this.id = id;
+		}
+
+		public FormalParameter.State withModifiers(STree<SNodeListState> modifiers) {
+			return new FormalParameter.State(modifiers, type, isVarArgs, id);
+		}
+
+		public FormalParameter.State withType(STree<? extends Type.State> type) {
+			return new FormalParameter.State(modifiers, type, isVarArgs, id);
+		}
+
+		public FormalParameter.State setVarArgs(boolean isVarArgs) {
+			return new FormalParameter.State(modifiers, type, isVarArgs, id);
+		}
+
+		public FormalParameter.State withId(STree<VariableDeclaratorId.State> id) {
+			return new FormalParameter.State(modifiers, type, isVarArgs, id);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.FormalParameter;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<FormalParameter.State> location) {
+			return new FormalParameter(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return ID;
+		}
+	}
+
+	private static STypeSafeTraversal<FormalParameter.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<FormalParameter.State, SNodeListState, NodeList<ExtendedModifier>>() {
+
+		@Override
+		protected STree<?> doTraverse(FormalParameter.State state) {
+			return state.modifiers;
+		}
+
+		@Override
+		protected FormalParameter.State doRebuildParentState(FormalParameter.State state, STree<SNodeListState> child) {
+			return state.withModifiers(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return TYPE;
+		}
+	};
+
+	private static STypeSafeTraversal<FormalParameter.State, Type.State, Type> TYPE = new STypeSafeTraversal<FormalParameter.State, Type.State, Type>() {
+
+		@Override
+		protected STree<?> doTraverse(FormalParameter.State state) {
+			return state.type;
+		}
+
+		@Override
+		protected FormalParameter.State doRebuildParentState(FormalParameter.State state, STree<Type.State> child) {
+			return state.withType(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return ID;
+		}
+	};
+
+	private static STypeSafeTraversal<FormalParameter.State, VariableDeclaratorId.State, VariableDeclaratorId> ID = new STypeSafeTraversal<FormalParameter.State, VariableDeclaratorId.State, VariableDeclaratorId>() {
+
+		@Override
+		protected STree<?> doTraverse(FormalParameter.State state) {
+			return state.id;
+		}
+
+		@Override
+		protected FormalParameter.State doRebuildParentState(FormalParameter.State state, STree<VariableDeclaratorId.State> child) {
+			return state.withId(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return TYPE;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
+
+	private static STypeSafeProperty<FormalParameter.State, Boolean> VAR_ARGS = new STypeSafeProperty<FormalParameter.State, Boolean>() {
+
+		@Override
+		protected Boolean doRetrieve(FormalParameter.State state) {
+			return state.isVarArgs;
+		}
+
+		@Override
+		protected FormalParameter.State doRebuildParentState(FormalParameter.State state, Boolean value) {
+			return state.setVarArgs(value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.singleLineShape),

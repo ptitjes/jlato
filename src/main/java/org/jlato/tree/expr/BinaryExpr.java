@@ -36,6 +36,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> implements Expr {
 
@@ -90,6 +92,117 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 	public BinaryExpr withRight(Mutation<Expr> mutation) {
 		return location.safeTraversalMutate(RIGHT, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final STree<? extends Expr.State> left;
+
+		public final BinaryOp operator;
+
+		public final STree<? extends Expr.State> right;
+
+		State(STree<? extends Expr.State> left, BinaryOp operator, STree<? extends Expr.State> right) {
+			this.left = left;
+			this.operator = operator;
+			this.right = right;
+		}
+
+		public BinaryExpr.State withLeft(STree<? extends Expr.State> left) {
+			return new BinaryExpr.State(left, operator, right);
+		}
+
+		public BinaryExpr.State withOperator(BinaryOp operator) {
+			return new BinaryExpr.State(left, operator, right);
+		}
+
+		public BinaryExpr.State withRight(STree<? extends Expr.State> right) {
+			return new BinaryExpr.State(left, operator, right);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.BinaryExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<BinaryExpr.State> location) {
+			return new BinaryExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return LEFT;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return RIGHT;
+		}
+	}
+
+	private static STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr> LEFT = new STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(BinaryExpr.State state) {
+			return state.left;
+		}
+
+		@Override
+		protected BinaryExpr.State doRebuildParentState(BinaryExpr.State state, STree<Expr.State> child) {
+			return state.withLeft(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return RIGHT;
+		}
+	};
+
+	private static STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr> RIGHT = new STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(BinaryExpr.State state) {
+			return state.right;
+		}
+
+		@Override
+		protected BinaryExpr.State doRebuildParentState(BinaryExpr.State state, STree<Expr.State> child) {
+			return state.withRight(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return LEFT;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
+
+	private static STypeSafeProperty<BinaryExpr.State, BinaryOp> OPERATOR = new STypeSafeProperty<BinaryExpr.State, BinaryOp>() {
+
+		@Override
+		protected BinaryOp doRetrieve(BinaryExpr.State state) {
+			return state.operator;
+		}
+
+		@Override
+		protected BinaryExpr.State doRebuildParentState(BinaryExpr.State state, BinaryOp value) {
+			return state.withOperator(value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(LEFT),

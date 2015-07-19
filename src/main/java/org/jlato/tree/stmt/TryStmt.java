@@ -40,6 +40,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements Stmt {
 
@@ -106,6 +108,157 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 	public TryStmt withFinallyBlock(Mutation<NodeOption<BlockStmt>> mutation) {
 		return location.safeTraversalMutate(FINALLY_BLOCK, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Stmt.State {
+
+		public final STree<SNodeListState> resources;
+
+		public final STree<BlockStmt.State> tryBlock;
+
+		public final STree<SNodeListState> catchs;
+
+		public final STree<SNodeOptionState> finallyBlock;
+
+		State(STree<SNodeListState> resources, STree<BlockStmt.State> tryBlock, STree<SNodeListState> catchs, STree<SNodeOptionState> finallyBlock) {
+			this.resources = resources;
+			this.tryBlock = tryBlock;
+			this.catchs = catchs;
+			this.finallyBlock = finallyBlock;
+		}
+
+		public TryStmt.State withResources(STree<SNodeListState> resources) {
+			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
+		}
+
+		public TryStmt.State withTryBlock(STree<BlockStmt.State> tryBlock) {
+			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
+		}
+
+		public TryStmt.State withCatchs(STree<SNodeListState> catchs) {
+			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
+		}
+
+		public TryStmt.State withFinallyBlock(STree<SNodeOptionState> finallyBlock) {
+			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.TryStmt;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<TryStmt.State> location) {
+			return new TryStmt(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return RESOURCES;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return FINALLY_BLOCK;
+		}
+	}
+
+	private static STypeSafeTraversal<TryStmt.State, SNodeListState, NodeList<VariableDeclarationExpr>> RESOURCES = new STypeSafeTraversal<TryStmt.State, SNodeListState, NodeList<VariableDeclarationExpr>>() {
+
+		@Override
+		protected STree<?> doTraverse(TryStmt.State state) {
+			return state.resources;
+		}
+
+		@Override
+		protected TryStmt.State doRebuildParentState(TryStmt.State state, STree<SNodeListState> child) {
+			return state.withResources(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return TRY_BLOCK;
+		}
+	};
+
+	private static STypeSafeTraversal<TryStmt.State, BlockStmt.State, BlockStmt> TRY_BLOCK = new STypeSafeTraversal<TryStmt.State, BlockStmt.State, BlockStmt>() {
+
+		@Override
+		protected STree<?> doTraverse(TryStmt.State state) {
+			return state.tryBlock;
+		}
+
+		@Override
+		protected TryStmt.State doRebuildParentState(TryStmt.State state, STree<BlockStmt.State> child) {
+			return state.withTryBlock(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return RESOURCES;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return CATCHS;
+		}
+	};
+
+	private static STypeSafeTraversal<TryStmt.State, SNodeListState, NodeList<CatchClause>> CATCHS = new STypeSafeTraversal<TryStmt.State, SNodeListState, NodeList<CatchClause>>() {
+
+		@Override
+		protected STree<?> doTraverse(TryStmt.State state) {
+			return state.catchs;
+		}
+
+		@Override
+		protected TryStmt.State doRebuildParentState(TryStmt.State state, STree<SNodeListState> child) {
+			return state.withCatchs(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return TRY_BLOCK;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return FINALLY_BLOCK;
+		}
+	};
+
+	private static STypeSafeTraversal<TryStmt.State, SNodeOptionState, NodeOption<BlockStmt>> FINALLY_BLOCK = new STypeSafeTraversal<TryStmt.State, SNodeOptionState, NodeOption<BlockStmt>>() {
+
+		@Override
+		protected STree<?> doTraverse(TryStmt.State state) {
+			return state.finallyBlock;
+		}
+
+		@Override
+		protected TryStmt.State doRebuildParentState(TryStmt.State state, STree<SNodeOptionState> child) {
+			return state.withFinallyBlock(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return CATCHS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Try).withSpacingAfter(space()),

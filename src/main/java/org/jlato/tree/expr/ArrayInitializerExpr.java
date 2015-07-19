@@ -36,6 +36,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, Expr, ArrayInitializerExpr> implements Expr {
 
@@ -66,6 +68,67 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 	public ArrayInitializerExpr withValues(Mutation<NodeList<Expr>> mutation) {
 		return location.safeTraversalMutate(VALUES, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final STree<SNodeListState> values;
+
+		State(STree<SNodeListState> values) {
+			this.values = values;
+		}
+
+		public ArrayInitializerExpr.State withValues(STree<SNodeListState> values) {
+			return new ArrayInitializerExpr.State(values);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ArrayInitializerExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ArrayInitializerExpr.State> location) {
+			return new ArrayInitializerExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return VALUES;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return VALUES;
+		}
+	}
+
+	private static STypeSafeTraversal<ArrayInitializerExpr.State, SNodeListState, NodeList<Expr>> VALUES = new STypeSafeTraversal<ArrayInitializerExpr.State, SNodeListState, NodeList<Expr>>() {
+
+		@Override
+		protected STree<?> doTraverse(ArrayInitializerExpr.State state) {
+			return state.values;
+		}
+
+		@Override
+		protected ArrayInitializerExpr.State doRebuildParentState(ArrayInitializerExpr.State state, STree<SNodeListState> child) {
+			return state.withValues(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			nonEmptyChildren(VALUES,

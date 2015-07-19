@@ -39,6 +39,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl, ConstructorDecl> implements MemberDecl {
 
@@ -134,6 +136,217 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 	public ConstructorDecl withBody(Mutation<BlockStmt> mutation) {
 		return location.safeTraversalMutate(BODY, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements MemberDecl.State {
+
+		public final STree<SNodeListState> modifiers;
+
+		public final STree<SNodeListState> typeParams;
+
+		public final STree<Name.State> name;
+
+		public final STree<SNodeListState> params;
+
+		public final STree<SNodeListState> throwsClause;
+
+		public final STree<BlockStmt.State> body;
+
+		State(STree<SNodeListState> modifiers, STree<SNodeListState> typeParams, STree<Name.State> name, STree<SNodeListState> params, STree<SNodeListState> throwsClause, STree<BlockStmt.State> body) {
+			this.modifiers = modifiers;
+			this.typeParams = typeParams;
+			this.name = name;
+			this.params = params;
+			this.throwsClause = throwsClause;
+			this.body = body;
+		}
+
+		public ConstructorDecl.State withModifiers(STree<SNodeListState> modifiers) {
+			return new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body);
+		}
+
+		public ConstructorDecl.State withTypeParams(STree<SNodeListState> typeParams) {
+			return new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body);
+		}
+
+		public ConstructorDecl.State withName(STree<Name.State> name) {
+			return new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body);
+		}
+
+		public ConstructorDecl.State withParams(STree<SNodeListState> params) {
+			return new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body);
+		}
+
+		public ConstructorDecl.State withThrowsClause(STree<SNodeListState> throwsClause) {
+			return new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body);
+		}
+
+		public ConstructorDecl.State withBody(STree<BlockStmt.State> body) {
+			return new ConstructorDecl.State(modifiers, typeParams, name, params, throwsClause, body);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ConstructorDecl;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ConstructorDecl.State> location) {
+			return new ConstructorDecl(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return BODY;
+		}
+	}
+
+	private static STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
+
+		@Override
+		protected STree<?> doTraverse(ConstructorDecl.State state) {
+			return state.modifiers;
+		}
+
+		@Override
+		protected ConstructorDecl.State doRebuildParentState(ConstructorDecl.State state, STree<SNodeListState> child) {
+			return state.withModifiers(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return TYPE_PARAMS;
+		}
+	};
+
+	private static STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<TypeParameter>> TYPE_PARAMS = new STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<TypeParameter>>() {
+
+		@Override
+		protected STree<?> doTraverse(ConstructorDecl.State state) {
+			return state.typeParams;
+		}
+
+		@Override
+		protected ConstructorDecl.State doRebuildParentState(ConstructorDecl.State state, STree<SNodeListState> child) {
+			return state.withTypeParams(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return MODIFIERS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return NAME;
+		}
+	};
+
+	private static STypeSafeTraversal<ConstructorDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<ConstructorDecl.State, Name.State, Name>() {
+
+		@Override
+		protected STree<?> doTraverse(ConstructorDecl.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected ConstructorDecl.State doRebuildParentState(ConstructorDecl.State state, STree<Name.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return TYPE_PARAMS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return PARAMS;
+		}
+	};
+
+	private static STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<FormalParameter>> PARAMS = new STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<FormalParameter>>() {
+
+		@Override
+		protected STree<?> doTraverse(ConstructorDecl.State state) {
+			return state.params;
+		}
+
+		@Override
+		protected ConstructorDecl.State doRebuildParentState(ConstructorDecl.State state, STree<SNodeListState> child) {
+			return state.withParams(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return NAME;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return THROWS_CLAUSE;
+		}
+	};
+
+	private static STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<QualifiedType>> THROWS_CLAUSE = new STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<QualifiedType>>() {
+
+		@Override
+		protected STree<?> doTraverse(ConstructorDecl.State state) {
+			return state.throwsClause;
+		}
+
+		@Override
+		protected ConstructorDecl.State doRebuildParentState(ConstructorDecl.State state, STree<SNodeListState> child) {
+			return state.withThrowsClause(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return PARAMS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return BODY;
+		}
+	};
+
+	private static STypeSafeTraversal<ConstructorDecl.State, BlockStmt.State, BlockStmt> BODY = new STypeSafeTraversal<ConstructorDecl.State, BlockStmt.State, BlockStmt>() {
+
+		@Override
+		protected STree<?> doTraverse(ConstructorDecl.State state) {
+			return state.body;
+		}
+
+		@Override
+		protected ConstructorDecl.State doRebuildParentState(ConstructorDecl.State state, STree<BlockStmt.State> child) {
+			return state.withBody(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return THROWS_CLAUSE;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),

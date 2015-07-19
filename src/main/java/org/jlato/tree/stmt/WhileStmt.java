@@ -36,6 +36,8 @@ import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implements Stmt {
 
@@ -78,6 +80,97 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 	public WhileStmt withBody(Mutation<Stmt> mutation) {
 		return location.safeTraversalMutate(BODY, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Stmt.State {
+
+		public final STree<? extends Expr.State> condition;
+
+		public final STree<? extends Stmt.State> body;
+
+		State(STree<? extends Expr.State> condition, STree<? extends Stmt.State> body) {
+			this.condition = condition;
+			this.body = body;
+		}
+
+		public WhileStmt.State withCondition(STree<? extends Expr.State> condition) {
+			return new WhileStmt.State(condition, body);
+		}
+
+		public WhileStmt.State withBody(STree<? extends Stmt.State> body) {
+			return new WhileStmt.State(condition, body);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.WhileStmt;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<WhileStmt.State> location) {
+			return new WhileStmt(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return CONDITION;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return BODY;
+		}
+	}
+
+	private static STypeSafeTraversal<WhileStmt.State, Expr.State, Expr> CONDITION = new STypeSafeTraversal<WhileStmt.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(WhileStmt.State state) {
+			return state.condition;
+		}
+
+		@Override
+		protected WhileStmt.State doRebuildParentState(WhileStmt.State state, STree<Expr.State> child) {
+			return state.withCondition(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return BODY;
+		}
+	};
+
+	private static STypeSafeTraversal<WhileStmt.State, Stmt.State, Stmt> BODY = new STypeSafeTraversal<WhileStmt.State, Stmt.State, Stmt>() {
+
+		@Override
+		protected STree<?> doTraverse(WhileStmt.State state) {
+			return state.body;
+		}
+
+		@Override
+		protected WhileStmt.State doRebuildParentState(WhileStmt.State state, STree<Stmt.State> child) {
+			return state.withBody(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return CONDITION;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.While), token(LToken.ParenthesisLeft).withSpacingBefore(space()),

@@ -40,6 +40,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> implements Expr {
 
@@ -98,6 +100,117 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 	public LambdaExpr withBody(Mutation<NodeEither<Expr, BlockStmt>> mutation) {
 		return location.safeTraversalMutate(BODY, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final STree<SNodeListState> params;
+
+		public final boolean hasParens;
+
+		public final STree<SNodeEitherState> body;
+
+		State(STree<SNodeListState> params, boolean hasParens, STree<SNodeEitherState> body) {
+			this.params = params;
+			this.hasParens = hasParens;
+			this.body = body;
+		}
+
+		public LambdaExpr.State withParams(STree<SNodeListState> params) {
+			return new LambdaExpr.State(params, hasParens, body);
+		}
+
+		public LambdaExpr.State setParens(boolean hasParens) {
+			return new LambdaExpr.State(params, hasParens, body);
+		}
+
+		public LambdaExpr.State withBody(STree<SNodeEitherState> body) {
+			return new LambdaExpr.State(params, hasParens, body);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.LambdaExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<LambdaExpr.State> location) {
+			return new LambdaExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return PARAMS;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return BODY;
+		}
+	}
+
+	private static STypeSafeTraversal<LambdaExpr.State, SNodeListState, NodeList<FormalParameter>> PARAMS = new STypeSafeTraversal<LambdaExpr.State, SNodeListState, NodeList<FormalParameter>>() {
+
+		@Override
+		protected STree<?> doTraverse(LambdaExpr.State state) {
+			return state.params;
+		}
+
+		@Override
+		protected LambdaExpr.State doRebuildParentState(LambdaExpr.State state, STree<SNodeListState> child) {
+			return state.withParams(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return BODY;
+		}
+	};
+
+	private static STypeSafeTraversal<LambdaExpr.State, SNodeEitherState, NodeEither<Expr, BlockStmt>> BODY = new STypeSafeTraversal<LambdaExpr.State, SNodeEitherState, NodeEither<Expr, BlockStmt>>() {
+
+		@Override
+		protected STree<?> doTraverse(LambdaExpr.State state) {
+			return state.body;
+		}
+
+		@Override
+		protected LambdaExpr.State doRebuildParentState(LambdaExpr.State state, STree<SNodeEitherState> child) {
+			return state.withBody(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return PARAMS;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
+
+	private static STypeSafeProperty<LambdaExpr.State, Boolean> PARENS = new STypeSafeProperty<LambdaExpr.State, Boolean>() {
+
+		@Override
+		protected Boolean doRetrieve(LambdaExpr.State state) {
+			return state.hasParens;
+		}
+
+		@Override
+		protected LambdaExpr.State doRebuildParentState(LambdaExpr.State state, Boolean value) {
+			return state.setParens(value);
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			when(data(PARENS), token(LToken.ParenthesisLeft)),

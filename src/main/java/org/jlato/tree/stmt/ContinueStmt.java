@@ -38,6 +38,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStmt> implements Stmt {
 
@@ -68,6 +70,67 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 	public ContinueStmt withId(Mutation<NodeOption<Name>> mutation) {
 		return location.safeTraversalMutate(ID, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements Stmt.State {
+
+		public final STree<SNodeOptionState> id;
+
+		State(STree<SNodeOptionState> id) {
+			this.id = id;
+		}
+
+		public ContinueStmt.State withId(STree<SNodeOptionState> id) {
+			return new ContinueStmt.State(id);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.ContinueStmt;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<ContinueStmt.State> location) {
+			return new ContinueStmt(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return ID;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return ID;
+		}
+	}
+
+	private static STypeSafeTraversal<ContinueStmt.State, SNodeOptionState, NodeOption<Name>> ID = new STypeSafeTraversal<ContinueStmt.State, SNodeOptionState, NodeOption<Name>>() {
+
+		@Override
+		protected STree<?> doTraverse(ContinueStmt.State state) {
+			return state.id;
+		}
+
+		@Override
+		protected ContinueStmt.State doRebuildParentState(ContinueStmt.State state, STree<SNodeOptionState> child) {
+			return state.withId(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Continue),

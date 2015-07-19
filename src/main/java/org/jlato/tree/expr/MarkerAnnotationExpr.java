@@ -35,6 +35,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, AnnotationExpr, MarkerAnnotationExpr> implements AnnotationExpr {
 
@@ -65,6 +67,67 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 	public MarkerAnnotationExpr withName(Mutation<QualifiedName> mutation) {
 		return location.safeTraversalMutate(NAME, mutation);
 	}
+
+	public static class State extends SNodeState<State>implements AnnotationExpr.State {
+
+		public final STree<QualifiedName.State> name;
+
+		State(STree<QualifiedName.State> name) {
+			this.name = name;
+		}
+
+		public MarkerAnnotationExpr.State withName(STree<QualifiedName.State> name) {
+			return new MarkerAnnotationExpr.State(name);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.MarkerAnnotationExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<MarkerAnnotationExpr.State> location) {
+			return new MarkerAnnotationExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return NAME;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return NAME;
+		}
+	}
+
+	private static STypeSafeTraversal<MarkerAnnotationExpr.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<MarkerAnnotationExpr.State, QualifiedName.State, QualifiedName>() {
+
+		@Override
+		protected STree<?> doTraverse(MarkerAnnotationExpr.State state) {
+			return state.name;
+		}
+
+		@Override
+		protected MarkerAnnotationExpr.State doRebuildParentState(MarkerAnnotationExpr.State state, STree<QualifiedName.State> child) {
+			return state.withName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
 
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME)

@@ -36,6 +36,8 @@ import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implements Expr {
 
@@ -86,6 +88,87 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 	public static boolean isPostfix(UnaryOp op) {
 		return op == UnaryOp.PostIncrement || op == UnaryOp.PostDecrement;
 	}
+
+	public static class State extends SNodeState<State>implements Expr.State {
+
+		public final UnaryOp operator;
+
+		public final STree<? extends Expr.State> expr;
+
+		State(UnaryOp operator, STree<? extends Expr.State> expr) {
+			this.operator = operator;
+			this.expr = expr;
+		}
+
+		public UnaryExpr.State withOperator(UnaryOp operator) {
+			return new UnaryExpr.State(operator, expr);
+		}
+
+		public UnaryExpr.State withExpr(STree<? extends Expr.State> expr) {
+			return new UnaryExpr.State(operator, expr);
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.UnaryExpr;
+		}
+
+		@Override
+		protected Tree doInstantiate(SLocation<UnaryExpr.State> location) {
+			return new UnaryExpr(location);
+		}
+
+		@Override
+		public LexicalShape shape() {
+			return shape;
+		}
+
+		@Override
+		public STraversal firstChild() {
+			return EXPR;
+		}
+
+		@Override
+		public STraversal lastChild() {
+			return EXPR;
+		}
+	}
+
+	private static STypeSafeTraversal<UnaryExpr.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<UnaryExpr.State, Expr.State, Expr>() {
+
+		@Override
+		protected STree<?> doTraverse(UnaryExpr.State state) {
+			return state.expr;
+		}
+
+		@Override
+		protected UnaryExpr.State doRebuildParentState(UnaryExpr.State state, STree<Expr.State> child) {
+			return state.withExpr(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STreeState state) {
+			return null;
+		}
+
+		@Override
+		public STraversal rightSibling(STreeState state) {
+			return null;
+		}
+	};
+
+	private static STypeSafeProperty<UnaryExpr.State, UnaryOp> OPERATOR = new STypeSafeProperty<UnaryExpr.State, UnaryOp>() {
+
+		@Override
+		protected UnaryOp doRetrieve(UnaryExpr.State state) {
+			return state.operator;
+		}
+
+		@Override
+		protected UnaryExpr.State doRebuildParentState(UnaryExpr.State state, UnaryOp value) {
+			return state.withOperator(value);
+		}
+	};
 
 	private final static LexicalShape opShape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
