@@ -45,7 +45,7 @@ public class TypeExpr extends TreeBase<TypeExpr.State, Expr, TypeExpr> implement
 		super(location);
 	}
 
-	public static STree<TypeExpr.State> make(STree<Type.State> type) {
+	public static STree<TypeExpr.State> make(STree<? extends Type.State> type) {
 		return new STree<TypeExpr.State>(new TypeExpr.State(type));
 	}
 

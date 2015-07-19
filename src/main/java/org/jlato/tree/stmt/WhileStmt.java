@@ -47,7 +47,7 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 		super(location);
 	}
 
-	public static STree<WhileStmt.State> make(STree<Expr.State> condition, STree<Stmt.State> body) {
+	public static STree<WhileStmt.State> make(STree<? extends Expr.State> condition, STree<? extends Stmt.State> body) {
 		return new STree<WhileStmt.State>(new WhileStmt.State(condition, body));
 	}
 

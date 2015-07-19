@@ -47,7 +47,7 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 		super(location);
 	}
 
-	public static STree<ArrayType.State> make(STree<Type.State> componentType, STree<SNodeListState> dims) {
+	public static STree<ArrayType.State> make(STree<? extends Type.State> componentType, STree<SNodeListState> dims) {
 		return new STree<ArrayType.State>(new ArrayType.State(componentType, dims));
 	}
 

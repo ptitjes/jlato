@@ -47,7 +47,7 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 		super(location);
 	}
 
-	public static STree<CastExpr.State> make(STree<Type.State> type, STree<Expr.State> expr) {
+	public static STree<CastExpr.State> make(STree<? extends Type.State> type, STree<? extends Expr.State> expr) {
 		return new STree<CastExpr.State>(new CastExpr.State(type, expr));
 	}
 

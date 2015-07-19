@@ -51,7 +51,7 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 		super(location);
 	}
 
-	public static STree<AnnotationMemberDecl.State> make(STree<SNodeListState> modifiers, STree<Type.State> type, STree<Name.State> name, STree<SNodeListState> dims, STree<SNodeOptionState> defaultValue) {
+	public static STree<AnnotationMemberDecl.State> make(STree<SNodeListState> modifiers, STree<? extends Type.State> type, STree<Name.State> name, STree<SNodeListState> dims, STree<SNodeOptionState> defaultValue) {
 		return new STree<AnnotationMemberDecl.State>(new AnnotationMemberDecl.State(modifiers, type, name, dims, defaultValue));
 	}
 

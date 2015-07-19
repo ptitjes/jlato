@@ -48,7 +48,7 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 		super(location);
 	}
 
-	public static STree<LocalVariableDecl.State> make(STree<SNodeListState> modifiers, STree<Type.State> type, STree<SNodeListState> variables) {
+	public static STree<LocalVariableDecl.State> make(STree<SNodeListState> modifiers, STree<? extends Type.State> type, STree<SNodeListState> variables) {
 		return new STree<LocalVariableDecl.State>(new LocalVariableDecl.State(modifiers, type, variables));
 	}
 

@@ -47,7 +47,7 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 		super(location);
 	}
 
-	public static STree<FormalParameter.State> make(STree<SNodeListState> modifiers, STree<Type.State> type, boolean isVarArgs, STree<VariableDeclaratorId.State> id) {
+	public static STree<FormalParameter.State> make(STree<SNodeListState> modifiers, STree<? extends Type.State> type, boolean isVarArgs, STree<VariableDeclaratorId.State> id) {
 		return new STree<FormalParameter.State>(new FormalParameter.State(modifiers, type, isVarArgs, id));
 	}
 

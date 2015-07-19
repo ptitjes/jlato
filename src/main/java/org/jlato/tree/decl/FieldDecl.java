@@ -48,7 +48,7 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 		super(location);
 	}
 
-	public static STree<FieldDecl.State> make(STree<SNodeListState> modifiers, STree<Type.State> type, STree<SNodeListState> variables) {
+	public static STree<FieldDecl.State> make(STree<SNodeListState> modifiers, STree<? extends Type.State> type, STree<SNodeListState> variables) {
 		return new STree<FieldDecl.State>(new FieldDecl.State(modifiers, type, variables));
 	}
 

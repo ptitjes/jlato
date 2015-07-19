@@ -52,7 +52,7 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 		super(location);
 	}
 
-	public static STree<SwitchStmt.State> make(STree<Expr.State> selector, STree<SNodeListState> cases) {
+	public static STree<SwitchStmt.State> make(STree<? extends Expr.State> selector, STree<SNodeListState> cases) {
 		return new STree<SwitchStmt.State>(new SwitchStmt.State(selector, cases));
 	}
 

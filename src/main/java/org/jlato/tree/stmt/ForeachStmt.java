@@ -48,7 +48,7 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 		super(location);
 	}
 
-	public static STree<ForeachStmt.State> make(STree<VariableDeclarationExpr.State> var, STree<Expr.State> iterable, STree<Stmt.State> body) {
+	public static STree<ForeachStmt.State> make(STree<VariableDeclarationExpr.State> var, STree<? extends Expr.State> iterable, STree<? extends Stmt.State> body) {
 		return new STree<ForeachStmt.State>(new ForeachStmt.State(var, iterable, body));
 	}
 

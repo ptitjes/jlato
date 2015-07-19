@@ -48,7 +48,7 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 		super(location);
 	}
 
-	public static STree<MethodReferenceExpr.State> make(STree<Expr.State> scope, STree<SNodeListState> typeArgs, STree<Name.State> name) {
+	public static STree<MethodReferenceExpr.State> make(STree<? extends Expr.State> scope, STree<SNodeListState> typeArgs, STree<Name.State> name) {
 		return new STree<MethodReferenceExpr.State>(new MethodReferenceExpr.State(scope, typeArgs, name));
 	}
 

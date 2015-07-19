@@ -48,7 +48,7 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 		super(location);
 	}
 
-	public static STree<ForStmt.State> make(STree<SNodeListState> init, STree<Expr.State> compare, STree<SNodeListState> update, STree<Stmt.State> body) {
+	public static STree<ForStmt.State> make(STree<SNodeListState> init, STree<? extends Expr.State> compare, STree<SNodeListState> update, STree<? extends Stmt.State> body) {
 		return new STree<ForStmt.State>(new ForStmt.State(init, compare, update, body));
 	}
 

@@ -45,7 +45,7 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 		super(location);
 	}
 
-	public static STree<ParenthesizedExpr.State> make(STree<Expr.State> inner) {
+	public static STree<ParenthesizedExpr.State> make(STree<? extends Expr.State> inner) {
 		return new STree<ParenthesizedExpr.State>(new ParenthesizedExpr.State(inner));
 	}
 

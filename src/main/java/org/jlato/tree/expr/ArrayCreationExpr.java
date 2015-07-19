@@ -52,7 +52,7 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 		super(location);
 	}
 
-	public static STree<ArrayCreationExpr.State> make(STree<Type.State> type, STree<SNodeListState> dimExprs, STree<SNodeListState> dims, STree<SNodeOptionState> init) {
+	public static STree<ArrayCreationExpr.State> make(STree<? extends Type.State> type, STree<SNodeListState> dimExprs, STree<SNodeListState> dims, STree<SNodeOptionState> init) {
 		return new STree<ArrayCreationExpr.State>(new ArrayCreationExpr.State(type, dimExprs, dims, init));
 	}
 

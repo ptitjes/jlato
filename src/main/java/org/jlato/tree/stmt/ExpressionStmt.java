@@ -46,7 +46,7 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 		super(location);
 	}
 
-	public static STree<ExpressionStmt.State> make(STree<Expr.State> expr) {
+	public static STree<ExpressionStmt.State> make(STree<? extends Expr.State> expr) {
 		return new STree<ExpressionStmt.State>(new ExpressionStmt.State(expr));
 	}
 

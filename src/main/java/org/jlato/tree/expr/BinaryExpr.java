@@ -47,7 +47,7 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		super(location);
 	}
 
-	public static STree<BinaryExpr.State> make(STree<Expr.State> left, BinaryOp operator, STree<Expr.State> right) {
+	public static STree<BinaryExpr.State> make(STree<? extends Expr.State> left, BinaryOp operator, STree<? extends Expr.State> right) {
 		return new STree<BinaryExpr.State>(new BinaryExpr.State(left, operator, right));
 	}
 

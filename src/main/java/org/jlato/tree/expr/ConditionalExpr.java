@@ -46,7 +46,7 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 		super(location);
 	}
 
-	public static STree<ConditionalExpr.State> make(STree<Expr.State> condition, STree<Expr.State> thenExpr, STree<Expr.State> elseExpr) {
+	public static STree<ConditionalExpr.State> make(STree<? extends Expr.State> condition, STree<? extends Expr.State> thenExpr, STree<? extends Expr.State> elseExpr) {
 		return new STree<ConditionalExpr.State>(new ConditionalExpr.State(condition, thenExpr, elseExpr));
 	}
 

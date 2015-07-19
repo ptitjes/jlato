@@ -50,7 +50,7 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 		super(location);
 	}
 
-	public static STree<MethodDecl.State> make(STree<SNodeListState> modifiers, STree<SNodeListState> typeParams, STree<Type.State> type, STree<Name.State> name, STree<SNodeListState> params, STree<SNodeListState> dims, STree<SNodeListState> throwsClause, STree<SNodeOptionState> body) {
+	public static STree<MethodDecl.State> make(STree<SNodeListState> modifiers, STree<SNodeListState> typeParams, STree<? extends Type.State> type, STree<Name.State> name, STree<SNodeListState> params, STree<SNodeListState> dims, STree<SNodeListState> throwsClause, STree<SNodeOptionState> body) {
 		return new STree<MethodDecl.State>(new MethodDecl.State(modifiers, typeParams, type, name, params, dims, throwsClause, body));
 	}
 

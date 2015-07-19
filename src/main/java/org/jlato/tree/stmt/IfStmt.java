@@ -54,7 +54,7 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 		super(location);
 	}
 
-	public static STree<IfStmt.State> make(STree<Expr.State> condition, STree<Stmt.State> thenStmt, STree<SNodeOptionState> elseStmt) {
+	public static STree<IfStmt.State> make(STree<? extends Expr.State> condition, STree<? extends Stmt.State> thenStmt, STree<SNodeOptionState> elseStmt) {
 		return new STree<IfStmt.State>(new IfStmt.State(condition, thenStmt, elseStmt));
 	}
 

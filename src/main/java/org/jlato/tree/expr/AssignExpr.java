@@ -47,7 +47,7 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		super(location);
 	}
 
-	public static STree<AssignExpr.State> make(STree<Expr.State> target, AssignOp operator, STree<Expr.State> value) {
+	public static STree<AssignExpr.State> make(STree<? extends Expr.State> target, AssignOp operator, STree<? extends Expr.State> value) {
 		return new STree<AssignExpr.State>(new AssignExpr.State(target, operator, value));
 	}
 
