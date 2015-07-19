@@ -24,7 +24,7 @@ import org.jlato.tree.Tree;
 /**
  * @author Didier Villevalois
  */
-public abstract class STypeSafeTraversal<P extends STreeState, T extends Tree> extends STraversal {
+public abstract class STypeSafeTraversal<P extends STreeState, S extends STreeState, T extends Tree> extends STraversal {
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -37,8 +37,8 @@ public abstract class STypeSafeTraversal<P extends STreeState, T extends Tree> e
 	@Override
 	@SuppressWarnings("unchecked")
 	public final STreeState rebuildParentState(STreeState state, STree<?> child) {
-		return doRebuildParentState((P) state, child);
+		return doRebuildParentState((P) state, (STree<S>) child);
 	}
 
-	protected abstract STreeState doRebuildParentState(P state, STree<?> child);
+	protected abstract P doRebuildParentState(P state, STree<S> child);
 }

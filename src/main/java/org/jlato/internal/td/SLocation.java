@@ -117,16 +117,16 @@ public class SLocation<S extends STreeState> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <C extends Tree> C safeTraversal(STypeSafeTraversal<S, C> traversal) {
+	public <C extends Tree> C safeTraversal(STypeSafeTraversal<S, ?, C> traversal) {
 		return (C) traverse(traversal).facade;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Tree, C extends Tree> T safeTraversalReplace(STypeSafeTraversal<S, C> traversal, C child) {
+	public <T extends Tree, C extends Tree> T safeTraversalReplace(STypeSafeTraversal<S, ?, C> traversal, C child) {
 		return (T) withTree(tree.traverseReplace(traversal, TreeBase.treeOf(child))).facade;
 	}
 
-	public <T extends Tree, C extends Tree> T safeTraversalMutate(STypeSafeTraversal<S, C> traversal, Mutation<C> mutation) {
+	public <T extends Tree, C extends Tree> T safeTraversalMutate(STypeSafeTraversal<S, ?, C> traversal, Mutation<C> mutation) {
 		return safeTraversalReplace(traversal, mutation.mutate(safeTraversal(traversal)));
 	}
 }
