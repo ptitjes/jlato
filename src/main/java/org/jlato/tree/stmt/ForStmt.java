@@ -102,7 +102,7 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<ForStmt.State> INIT = new STraversal<ForStmt.State>() {
+	private static final STraversal INIT = new STraversal() {
 
 		public STree<?> traverse(ForStmt.State state) {
 			return state.init;
@@ -112,15 +112,15 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 			return state.withInit((STree) child);
 		}
 
-		public STraversal<ForStmt.State> leftSibling(ForStmt.State state) {
+		public STraversal leftSibling(ForStmt.State state) {
 			return null;
 		}
 
-		public STraversal<ForStmt.State> rightSibling(ForStmt.State state) {
+		public STraversal rightSibling(ForStmt.State state) {
 			return COMPARE;
 		}
 	};
-	private static final STraversal<ForStmt.State> COMPARE = new STraversal<ForStmt.State>() {
+	private static final STraversal COMPARE = new STraversal() {
 
 		public STree<?> traverse(ForStmt.State state) {
 			return state.compare;
@@ -130,15 +130,15 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 			return state.withCompare((STree) child);
 		}
 
-		public STraversal<ForStmt.State> leftSibling(ForStmt.State state) {
+		public STraversal leftSibling(ForStmt.State state) {
 			return INIT;
 		}
 
-		public STraversal<ForStmt.State> rightSibling(ForStmt.State state) {
+		public STraversal rightSibling(ForStmt.State state) {
 			return UPDATE;
 		}
 	};
-	private static final STraversal<ForStmt.State> UPDATE = new STraversal<ForStmt.State>() {
+	private static final STraversal UPDATE = new STraversal() {
 
 		public STree<?> traverse(ForStmt.State state) {
 			return state.update;
@@ -148,15 +148,15 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 			return state.withUpdate((STree) child);
 		}
 
-		public STraversal<ForStmt.State> leftSibling(ForStmt.State state) {
+		public STraversal leftSibling(ForStmt.State state) {
 			return COMPARE;
 		}
 
-		public STraversal<ForStmt.State> rightSibling(ForStmt.State state) {
+		public STraversal rightSibling(ForStmt.State state) {
 			return BODY;
 		}
 	};
-	private static final STraversal<ForStmt.State> BODY = new STraversal<ForStmt.State>() {
+	private static final STraversal BODY = new STraversal() {
 
 		public STree<?> traverse(ForStmt.State state) {
 			return state.body;
@@ -166,11 +166,11 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 			return state.withBody((STree) child);
 		}
 
-		public STraversal<ForStmt.State> leftSibling(ForStmt.State state) {
+		public STraversal leftSibling(ForStmt.State state) {
 			return UPDATE;
 		}
 
-		public STraversal<ForStmt.State> rightSibling(ForStmt.State state) {
+		public STraversal rightSibling(ForStmt.State state) {
 			return null;
 		}
 	};
@@ -219,11 +219,11 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 			return new ForStmt.State(init, compare, update, body);
 		}
 
-		public STraversal<ForStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return INIT;
 		}
 
-		public STraversal<ForStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return BODY;
 		}
 

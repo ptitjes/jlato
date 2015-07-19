@@ -67,7 +67,7 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final STraversal<BreakStmt.State> ID = new STraversal<BreakStmt.State>() {
+	private static final STraversal ID = new STraversal() {
 
 		public STree<?> traverse(BreakStmt.State state) {
 			return state.id;
@@ -77,11 +77,11 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 			return state.withId((STree) child);
 		}
 
-		public STraversal<BreakStmt.State> leftSibling(BreakStmt.State state) {
+		public STraversal leftSibling(BreakStmt.State state) {
 			return null;
 		}
 
-		public STraversal<BreakStmt.State> rightSibling(BreakStmt.State state) {
+		public STraversal rightSibling(BreakStmt.State state) {
 			return null;
 		}
 	};
@@ -104,11 +104,11 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 			return new BreakStmt.State(id);
 		}
 
-		public STraversal<BreakStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return ID;
 		}
 
-		public STraversal<BreakStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return ID;
 		}
 

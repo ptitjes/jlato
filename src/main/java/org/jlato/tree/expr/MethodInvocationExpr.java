@@ -105,7 +105,7 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 		return location.safeTraversalMutate(ARGS, mutation);
 	}
 
-	private static final STraversal<MethodInvocationExpr.State> SCOPE = new STraversal<MethodInvocationExpr.State>() {
+	private static final STraversal SCOPE = new STraversal() {
 
 		public STree<?> traverse(MethodInvocationExpr.State state) {
 			return state.scope;
@@ -115,15 +115,15 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 			return state.withScope((STree) child);
 		}
 
-		public STraversal<MethodInvocationExpr.State> leftSibling(MethodInvocationExpr.State state) {
+		public STraversal leftSibling(MethodInvocationExpr.State state) {
 			return null;
 		}
 
-		public STraversal<MethodInvocationExpr.State> rightSibling(MethodInvocationExpr.State state) {
+		public STraversal rightSibling(MethodInvocationExpr.State state) {
 			return TYPE_ARGS;
 		}
 	};
-	private static final STraversal<MethodInvocationExpr.State> TYPE_ARGS = new STraversal<MethodInvocationExpr.State>() {
+	private static final STraversal TYPE_ARGS = new STraversal() {
 
 		public STree<?> traverse(MethodInvocationExpr.State state) {
 			return state.typeArgs;
@@ -133,15 +133,15 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 			return state.withTypeArgs((STree) child);
 		}
 
-		public STraversal<MethodInvocationExpr.State> leftSibling(MethodInvocationExpr.State state) {
+		public STraversal leftSibling(MethodInvocationExpr.State state) {
 			return SCOPE;
 		}
 
-		public STraversal<MethodInvocationExpr.State> rightSibling(MethodInvocationExpr.State state) {
+		public STraversal rightSibling(MethodInvocationExpr.State state) {
 			return NAME;
 		}
 	};
-	private static final STraversal<MethodInvocationExpr.State> NAME = new STraversal<MethodInvocationExpr.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(MethodInvocationExpr.State state) {
 			return state.name;
@@ -151,15 +151,15 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 			return state.withName((STree) child);
 		}
 
-		public STraversal<MethodInvocationExpr.State> leftSibling(MethodInvocationExpr.State state) {
+		public STraversal leftSibling(MethodInvocationExpr.State state) {
 			return TYPE_ARGS;
 		}
 
-		public STraversal<MethodInvocationExpr.State> rightSibling(MethodInvocationExpr.State state) {
+		public STraversal rightSibling(MethodInvocationExpr.State state) {
 			return ARGS;
 		}
 	};
-	private static final STraversal<MethodInvocationExpr.State> ARGS = new STraversal<MethodInvocationExpr.State>() {
+	private static final STraversal ARGS = new STraversal() {
 
 		public STree<?> traverse(MethodInvocationExpr.State state) {
 			return state.args;
@@ -169,11 +169,11 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 			return state.withArgs((STree) child);
 		}
 
-		public STraversal<MethodInvocationExpr.State> leftSibling(MethodInvocationExpr.State state) {
+		public STraversal leftSibling(MethodInvocationExpr.State state) {
 			return NAME;
 		}
 
-		public STraversal<MethodInvocationExpr.State> rightSibling(MethodInvocationExpr.State state) {
+		public STraversal rightSibling(MethodInvocationExpr.State state) {
 			return null;
 		}
 	};
@@ -218,11 +218,11 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
 		}
 
-		public STraversal<MethodInvocationExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return SCOPE;
 		}
 
-		public STraversal<MethodInvocationExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return ARGS;
 		}
 

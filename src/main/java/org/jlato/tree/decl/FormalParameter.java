@@ -29,7 +29,6 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
-import org.jlato.tree.type.UnknownType;
 
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.not;
@@ -98,7 +97,7 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final STraversal<FormalParameter.State> MODIFIERS = new STraversal<FormalParameter.State>() {
+	private static final STraversal MODIFIERS = new STraversal() {
 
 		public STree<?> traverse(FormalParameter.State state) {
 			return state.modifiers;
@@ -108,15 +107,15 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 			return state.withModifiers((STree) child);
 		}
 
-		public STraversal<FormalParameter.State> leftSibling(FormalParameter.State state) {
+		public STraversal leftSibling(FormalParameter.State state) {
 			return null;
 		}
 
-		public STraversal<FormalParameter.State> rightSibling(FormalParameter.State state) {
+		public STraversal rightSibling(FormalParameter.State state) {
 			return TYPE;
 		}
 	};
-	private static final STraversal<FormalParameter.State> TYPE = new STraversal<FormalParameter.State>() {
+	private static final STraversal TYPE = new STraversal() {
 
 		public STree<?> traverse(FormalParameter.State state) {
 			return state.type;
@@ -126,15 +125,15 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 			return state.withType((STree) child);
 		}
 
-		public STraversal<FormalParameter.State> leftSibling(FormalParameter.State state) {
+		public STraversal leftSibling(FormalParameter.State state) {
 			return MODIFIERS;
 		}
 
-		public STraversal<FormalParameter.State> rightSibling(FormalParameter.State state) {
+		public STraversal rightSibling(FormalParameter.State state) {
 			return ID;
 		}
 	};
-	private static final STraversal<FormalParameter.State> ID = new STraversal<FormalParameter.State>() {
+	private static final STraversal ID = new STraversal() {
 
 		public STree<?> traverse(FormalParameter.State state) {
 			return state.id;
@@ -144,16 +143,16 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 			return state.withId((STree) child);
 		}
 
-		public STraversal<FormalParameter.State> leftSibling(FormalParameter.State state) {
+		public STraversal leftSibling(FormalParameter.State state) {
 			return TYPE;
 		}
 
-		public STraversal<FormalParameter.State> rightSibling(FormalParameter.State state) {
+		public STraversal rightSibling(FormalParameter.State state) {
 			return null;
 		}
 	};
 
-	private static final SProperty<FormalParameter.State> VAR_ARGS = new SProperty<FormalParameter.State>() {
+	private static final SProperty VAR_ARGS = new SProperty() {
 
 		public Object retrieve(FormalParameter.State state) {
 			return state.isVarArgs;
@@ -211,11 +210,11 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 			return new FormalParameter.State(modifiers, type, isVarArgs, id);
 		}
 
-		public STraversal<FormalParameter.State> firstChild() {
+		public STraversal firstChild() {
 			return MODIFIERS;
 		}
 
-		public STraversal<FormalParameter.State> lastChild() {
+		public STraversal lastChild() {
 			return ID;
 		}
 

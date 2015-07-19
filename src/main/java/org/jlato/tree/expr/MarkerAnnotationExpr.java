@@ -64,7 +64,7 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal<MarkerAnnotationExpr.State> NAME = new STraversal<MarkerAnnotationExpr.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(MarkerAnnotationExpr.State state) {
 			return state.name;
@@ -74,11 +74,11 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 			return state.withName((STree) child);
 		}
 
-		public STraversal<MarkerAnnotationExpr.State> leftSibling(MarkerAnnotationExpr.State state) {
+		public STraversal leftSibling(MarkerAnnotationExpr.State state) {
 			return null;
 		}
 
-		public STraversal<MarkerAnnotationExpr.State> rightSibling(MarkerAnnotationExpr.State state) {
+		public STraversal rightSibling(MarkerAnnotationExpr.State state) {
 			return null;
 		}
 	};
@@ -99,11 +99,11 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 			return new MarkerAnnotationExpr.State(name);
 		}
 
-		public STraversal<MarkerAnnotationExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return NAME;
 		}
 
-		public STraversal<MarkerAnnotationExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return NAME;
 		}
 

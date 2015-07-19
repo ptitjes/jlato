@@ -77,7 +77,7 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 		return location.safeTraversalMutate(BLOCK, mutation);
 	}
 
-	private static final STraversal<SynchronizedStmt.State> EXPR = new STraversal<SynchronizedStmt.State>() {
+	private static final STraversal EXPR = new STraversal() {
 
 		public STree<?> traverse(SynchronizedStmt.State state) {
 			return state.expr;
@@ -87,15 +87,15 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 			return state.withExpr((STree) child);
 		}
 
-		public STraversal<SynchronizedStmt.State> leftSibling(SynchronizedStmt.State state) {
+		public STraversal leftSibling(SynchronizedStmt.State state) {
 			return null;
 		}
 
-		public STraversal<SynchronizedStmt.State> rightSibling(SynchronizedStmt.State state) {
+		public STraversal rightSibling(SynchronizedStmt.State state) {
 			return BLOCK;
 		}
 	};
-	private static final STraversal<SynchronizedStmt.State> BLOCK = new STraversal<SynchronizedStmt.State>() {
+	private static final STraversal BLOCK = new STraversal() {
 
 		public STree<?> traverse(SynchronizedStmt.State state) {
 			return state.block;
@@ -105,11 +105,11 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 			return state.withBlock((STree) child);
 		}
 
-		public STraversal<SynchronizedStmt.State> leftSibling(SynchronizedStmt.State state) {
+		public STraversal leftSibling(SynchronizedStmt.State state) {
 			return EXPR;
 		}
 
-		public STraversal<SynchronizedStmt.State> rightSibling(SynchronizedStmt.State state) {
+		public STraversal rightSibling(SynchronizedStmt.State state) {
 			return null;
 		}
 	};
@@ -141,11 +141,11 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 			return new SynchronizedStmt.State(expr, block);
 		}
 
-		public STraversal<SynchronizedStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return EXPR;
 		}
 
-		public STraversal<SynchronizedStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return BLOCK;
 		}
 

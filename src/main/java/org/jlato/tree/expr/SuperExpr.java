@@ -66,7 +66,7 @@ public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implem
 		return location.safeTraversalMutate(CLASS_EXPR, mutation);
 	}
 
-	private static final STraversal<SuperExpr.State> CLASS_EXPR = new STraversal<SuperExpr.State>() {
+	private static final STraversal CLASS_EXPR = new STraversal() {
 
 		public STree<?> traverse(SuperExpr.State state) {
 			return state.classExpr;
@@ -76,11 +76,11 @@ public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implem
 			return state.withClassExpr((STree) child);
 		}
 
-		public STraversal<SuperExpr.State> leftSibling(SuperExpr.State state) {
+		public STraversal leftSibling(SuperExpr.State state) {
 			return null;
 		}
 
-		public STraversal<SuperExpr.State> rightSibling(SuperExpr.State state) {
+		public STraversal rightSibling(SuperExpr.State state) {
 			return null;
 		}
 	};
@@ -102,11 +102,11 @@ public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implem
 			return new SuperExpr.State(classExpr);
 		}
 
-		public STraversal<SuperExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return CLASS_EXPR;
 		}
 
-		public STraversal<SuperExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return CLASS_EXPR;
 		}
 

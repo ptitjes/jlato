@@ -89,7 +89,7 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		return location.safeTraversalMutate(RIGHT, mutation);
 	}
 
-	private static final STraversal<BinaryExpr.State> LEFT = new STraversal<BinaryExpr.State>() {
+	private static final STraversal LEFT = new STraversal() {
 
 		public STree<?> traverse(BinaryExpr.State state) {
 			return state.left;
@@ -99,15 +99,15 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 			return state.withLeft((STree) child);
 		}
 
-		public STraversal<BinaryExpr.State> leftSibling(BinaryExpr.State state) {
+		public STraversal leftSibling(BinaryExpr.State state) {
 			return null;
 		}
 
-		public STraversal<BinaryExpr.State> rightSibling(BinaryExpr.State state) {
+		public STraversal rightSibling(BinaryExpr.State state) {
 			return RIGHT;
 		}
 	};
-	private static final STraversal<BinaryExpr.State> RIGHT = new STraversal<BinaryExpr.State>() {
+	private static final STraversal RIGHT = new STraversal() {
 
 		public STree<?> traverse(BinaryExpr.State state) {
 			return state.right;
@@ -117,16 +117,16 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 			return state.withRight((STree) child);
 		}
 
-		public STraversal<BinaryExpr.State> leftSibling(BinaryExpr.State state) {
+		public STraversal leftSibling(BinaryExpr.State state) {
 			return LEFT;
 		}
 
-		public STraversal<BinaryExpr.State> rightSibling(BinaryExpr.State state) {
+		public STraversal rightSibling(BinaryExpr.State state) {
 			return null;
 		}
 	};
 
-	private static final SProperty<BinaryExpr.State> OPERATOR = new SProperty<BinaryExpr.State>() {
+	private static final SProperty OPERATOR = new SProperty() {
 
 		public Object retrieve(BinaryExpr.State state) {
 			return state.operator;
@@ -207,11 +207,11 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 			return new BinaryExpr.State(left, operator, right);
 		}
 
-		public STraversal<BinaryExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return LEFT;
 		}
 
-		public STraversal<BinaryExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return RIGHT;
 		}
 

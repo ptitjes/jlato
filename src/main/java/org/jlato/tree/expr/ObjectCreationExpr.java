@@ -119,7 +119,7 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<ObjectCreationExpr.State> SCOPE = new STraversal<ObjectCreationExpr.State>() {
+	private static final STraversal SCOPE = new STraversal() {
 
 		public STree<?> traverse(ObjectCreationExpr.State state) {
 			return state.scope;
@@ -129,15 +129,15 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 			return state.withScope((STree) child);
 		}
 
-		public STraversal<ObjectCreationExpr.State> leftSibling(ObjectCreationExpr.State state) {
+		public STraversal leftSibling(ObjectCreationExpr.State state) {
 			return null;
 		}
 
-		public STraversal<ObjectCreationExpr.State> rightSibling(ObjectCreationExpr.State state) {
+		public STraversal rightSibling(ObjectCreationExpr.State state) {
 			return TYPE_ARGS;
 		}
 	};
-	private static final STraversal<ObjectCreationExpr.State> TYPE_ARGS = new STraversal<ObjectCreationExpr.State>() {
+	private static final STraversal TYPE_ARGS = new STraversal() {
 
 		public STree<?> traverse(ObjectCreationExpr.State state) {
 			return state.typeArgs;
@@ -147,15 +147,15 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 			return state.withTypeArgs((STree) child);
 		}
 
-		public STraversal<ObjectCreationExpr.State> leftSibling(ObjectCreationExpr.State state) {
+		public STraversal leftSibling(ObjectCreationExpr.State state) {
 			return SCOPE;
 		}
 
-		public STraversal<ObjectCreationExpr.State> rightSibling(ObjectCreationExpr.State state) {
+		public STraversal rightSibling(ObjectCreationExpr.State state) {
 			return TYPE;
 		}
 	};
-	private static final STraversal<ObjectCreationExpr.State> TYPE = new STraversal<ObjectCreationExpr.State>() {
+	private static final STraversal TYPE = new STraversal() {
 
 		public STree<?> traverse(ObjectCreationExpr.State state) {
 			return state.type;
@@ -165,15 +165,15 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 			return state.withType((STree) child);
 		}
 
-		public STraversal<ObjectCreationExpr.State> leftSibling(ObjectCreationExpr.State state) {
+		public STraversal leftSibling(ObjectCreationExpr.State state) {
 			return TYPE_ARGS;
 		}
 
-		public STraversal<ObjectCreationExpr.State> rightSibling(ObjectCreationExpr.State state) {
+		public STraversal rightSibling(ObjectCreationExpr.State state) {
 			return ARGS;
 		}
 	};
-	private static final STraversal<ObjectCreationExpr.State> ARGS = new STraversal<ObjectCreationExpr.State>() {
+	private static final STraversal ARGS = new STraversal() {
 
 		public STree<?> traverse(ObjectCreationExpr.State state) {
 			return state.args;
@@ -183,15 +183,15 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 			return state.withArgs((STree) child);
 		}
 
-		public STraversal<ObjectCreationExpr.State> leftSibling(ObjectCreationExpr.State state) {
+		public STraversal leftSibling(ObjectCreationExpr.State state) {
 			return TYPE;
 		}
 
-		public STraversal<ObjectCreationExpr.State> rightSibling(ObjectCreationExpr.State state) {
+		public STraversal rightSibling(ObjectCreationExpr.State state) {
 			return BODY;
 		}
 	};
-	private static final STraversal<ObjectCreationExpr.State> BODY = new STraversal<ObjectCreationExpr.State>() {
+	private static final STraversal BODY = new STraversal() {
 
 		public STree<?> traverse(ObjectCreationExpr.State state) {
 			return state.body;
@@ -201,11 +201,11 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 			return state.withBody((STree) child);
 		}
 
-		public STraversal<ObjectCreationExpr.State> leftSibling(ObjectCreationExpr.State state) {
+		public STraversal leftSibling(ObjectCreationExpr.State state) {
 			return ARGS;
 		}
 
-		public STraversal<ObjectCreationExpr.State> rightSibling(ObjectCreationExpr.State state) {
+		public STraversal rightSibling(ObjectCreationExpr.State state) {
 			return null;
 		}
 	};
@@ -259,11 +259,11 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 			return new ObjectCreationExpr.State(scope, typeArgs, type, args, body);
 		}
 
-		public STraversal<ObjectCreationExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return SCOPE;
 		}
 
-		public STraversal<ObjectCreationExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return BODY;
 		}
 

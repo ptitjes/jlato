@@ -84,7 +84,7 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 		return location.safeTraversalMutate(STMTS, mutation);
 	}
 
-	private static final STraversal<SwitchCase.State> LABEL = new STraversal<SwitchCase.State>() {
+	private static final STraversal LABEL = new STraversal() {
 
 		public STree<?> traverse(SwitchCase.State state) {
 			return state.label;
@@ -94,15 +94,15 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 			return state.withLabel((STree) child);
 		}
 
-		public STraversal<SwitchCase.State> leftSibling(SwitchCase.State state) {
+		public STraversal leftSibling(SwitchCase.State state) {
 			return null;
 		}
 
-		public STraversal<SwitchCase.State> rightSibling(SwitchCase.State state) {
+		public STraversal rightSibling(SwitchCase.State state) {
 			return STMTS;
 		}
 	};
-	private static final STraversal<SwitchCase.State> STMTS = new STraversal<SwitchCase.State>() {
+	private static final STraversal STMTS = new STraversal() {
 
 		public STree<?> traverse(SwitchCase.State state) {
 			return state.stmts;
@@ -112,11 +112,11 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 			return state.withStmts((STree) child);
 		}
 
-		public STraversal<SwitchCase.State> leftSibling(SwitchCase.State state) {
+		public STraversal leftSibling(SwitchCase.State state) {
 			return LABEL;
 		}
 
-		public STraversal<SwitchCase.State> rightSibling(SwitchCase.State state) {
+		public STraversal rightSibling(SwitchCase.State state) {
 			return null;
 		}
 	};
@@ -153,11 +153,11 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 			return new SwitchCase.State(label, stmts);
 		}
 
-		public STraversal<SwitchCase.State> firstChild() {
+		public STraversal firstChild() {
 			return LABEL;
 		}
 
-		public STraversal<SwitchCase.State> lastChild() {
+		public STraversal lastChild() {
 			return STMTS;
 		}
 

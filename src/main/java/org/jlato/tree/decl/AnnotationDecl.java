@@ -98,7 +98,7 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
 
-	private static final STraversal<AnnotationDecl.State> MODIFIERS = new STraversal<AnnotationDecl.State>() {
+	private static final STraversal MODIFIERS = new STraversal() {
 
 		public STree<?> traverse(AnnotationDecl.State state) {
 			return state.modifiers;
@@ -108,15 +108,15 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 			return state.withModifiers((STree) child);
 		}
 
-		public STraversal<AnnotationDecl.State> leftSibling(AnnotationDecl.State state) {
+		public STraversal leftSibling(AnnotationDecl.State state) {
 			return null;
 		}
 
-		public STraversal<AnnotationDecl.State> rightSibling(AnnotationDecl.State state) {
+		public STraversal rightSibling(AnnotationDecl.State state) {
 			return NAME;
 		}
 	};
-	private static final STraversal<AnnotationDecl.State> NAME = new STraversal<AnnotationDecl.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(AnnotationDecl.State state) {
 			return state.name;
@@ -126,15 +126,15 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 			return state.withName((STree) child);
 		}
 
-		public STraversal<AnnotationDecl.State> leftSibling(AnnotationDecl.State state) {
+		public STraversal leftSibling(AnnotationDecl.State state) {
 			return MODIFIERS;
 		}
 
-		public STraversal<AnnotationDecl.State> rightSibling(AnnotationDecl.State state) {
+		public STraversal rightSibling(AnnotationDecl.State state) {
 			return MEMBERS;
 		}
 	};
-	private static final STraversal<AnnotationDecl.State> MEMBERS = new STraversal<AnnotationDecl.State>() {
+	private static final STraversal MEMBERS = new STraversal() {
 
 		public STree<?> traverse(AnnotationDecl.State state) {
 			return state.members;
@@ -144,11 +144,11 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 			return state.withMembers((STree) child);
 		}
 
-		public STraversal<AnnotationDecl.State> leftSibling(AnnotationDecl.State state) {
+		public STraversal leftSibling(AnnotationDecl.State state) {
 			return NAME;
 		}
 
-		public STraversal<AnnotationDecl.State> rightSibling(AnnotationDecl.State state) {
+		public STraversal rightSibling(AnnotationDecl.State state) {
 			return null;
 		}
 	};
@@ -186,11 +186,11 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 			return new AnnotationDecl.State(modifiers, name, members);
 		}
 
-		public STraversal<AnnotationDecl.State> firstChild() {
+		public STraversal firstChild() {
 			return MODIFIERS;
 		}
 
-		public STraversal<AnnotationDecl.State> lastChild() {
+		public STraversal lastChild() {
 			return MEMBERS;
 		}
 

@@ -55,11 +55,11 @@ public class UnknownType extends TreeBase<UnknownType.State, Type, UnknownType> 
 		State() {
 		}
 
-		public STraversal<UnknownType.State> firstChild() {
+		public STraversal firstChild() {
 			return null;
 		}
 
-		public STraversal<UnknownType.State> lastChild() {
+		public STraversal lastChild() {
 			return null;
 		}
 

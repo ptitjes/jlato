@@ -44,7 +44,7 @@ public interface TypeDecl extends MemberDecl {
 		// Keep last comma
 	}
 
-	interface State extends STreeState<State> {
+	interface State extends MemberDecl.State {
 
 	}
 }

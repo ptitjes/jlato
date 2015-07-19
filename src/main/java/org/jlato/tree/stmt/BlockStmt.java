@@ -68,7 +68,7 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 		return location.safeTraversalMutate(STMTS, mutation);
 	}
 
-	private static final STraversal<BlockStmt.State> STMTS = new STraversal<BlockStmt.State>() {
+	private static final STraversal STMTS = new STraversal() {
 
 		public STree<?> traverse(BlockStmt.State state) {
 			return state.stmts;
@@ -78,11 +78,11 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 			return state.withStmts((STree) child);
 		}
 
-		public STraversal<BlockStmt.State> leftSibling(BlockStmt.State state) {
+		public STraversal leftSibling(BlockStmt.State state) {
 			return null;
 		}
 
-		public STraversal<BlockStmt.State> rightSibling(BlockStmt.State state) {
+		public STraversal rightSibling(BlockStmt.State state) {
 			return null;
 		}
 	};
@@ -120,11 +120,11 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 			return new BlockStmt.State(stmts);
 		}
 
-		public STraversal<BlockStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return STMTS;
 		}
 
-		public STraversal<BlockStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return STMTS;
 		}
 

@@ -78,7 +78,7 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal<PackageDecl.State> ANNOTATIONS = new STraversal<PackageDecl.State>() {
+	private static final STraversal ANNOTATIONS = new STraversal() {
 
 		public STree<?> traverse(PackageDecl.State state) {
 			return state.annotations;
@@ -88,15 +88,15 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 			return state.withAnnotations((STree) child);
 		}
 
-		public STraversal<PackageDecl.State> leftSibling(PackageDecl.State state) {
+		public STraversal leftSibling(PackageDecl.State state) {
 			return null;
 		}
 
-		public STraversal<PackageDecl.State> rightSibling(PackageDecl.State state) {
+		public STraversal rightSibling(PackageDecl.State state) {
 			return NAME;
 		}
 	};
-	private static final STraversal<PackageDecl.State> NAME = new STraversal<PackageDecl.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(PackageDecl.State state) {
 			return state.name;
@@ -106,11 +106,11 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 			return state.withName((STree) child);
 		}
 
-		public STraversal<PackageDecl.State> leftSibling(PackageDecl.State state) {
+		public STraversal leftSibling(PackageDecl.State state) {
 			return ANNOTATIONS;
 		}
 
-		public STraversal<PackageDecl.State> rightSibling(PackageDecl.State state) {
+		public STraversal rightSibling(PackageDecl.State state) {
 			return null;
 		}
 	};
@@ -141,11 +141,11 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 			return new PackageDecl.State(annotations, name);
 		}
 
-		public STraversal<PackageDecl.State> firstChild() {
+		public STraversal firstChild() {
 			return ANNOTATIONS;
 		}
 
-		public STraversal<PackageDecl.State> lastChild() {
+		public STraversal lastChild() {
 			return NAME;
 		}
 

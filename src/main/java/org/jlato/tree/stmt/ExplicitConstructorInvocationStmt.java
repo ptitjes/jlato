@@ -103,7 +103,7 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 		return location.safeTraversalMutate(ARGS, mutation);
 	}
 
-	private static final STraversal<ExplicitConstructorInvocationStmt.State> TYPE_ARGS = new STraversal<ExplicitConstructorInvocationStmt.State>() {
+	private static final STraversal TYPE_ARGS = new STraversal() {
 
 		public STree<?> traverse(ExplicitConstructorInvocationStmt.State state) {
 			return state.typeArgs;
@@ -113,15 +113,15 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 			return state.withTypeArgs((STree) child);
 		}
 
-		public STraversal<ExplicitConstructorInvocationStmt.State> leftSibling(ExplicitConstructorInvocationStmt.State state) {
+		public STraversal leftSibling(ExplicitConstructorInvocationStmt.State state) {
 			return null;
 		}
 
-		public STraversal<ExplicitConstructorInvocationStmt.State> rightSibling(ExplicitConstructorInvocationStmt.State state) {
+		public STraversal rightSibling(ExplicitConstructorInvocationStmt.State state) {
 			return EXPR;
 		}
 	};
-	private static final STraversal<ExplicitConstructorInvocationStmt.State> EXPR = new STraversal<ExplicitConstructorInvocationStmt.State>() {
+	private static final STraversal EXPR = new STraversal() {
 
 		public STree<?> traverse(ExplicitConstructorInvocationStmt.State state) {
 			return state.expr;
@@ -131,15 +131,15 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 			return state.withExpr((STree) child);
 		}
 
-		public STraversal<ExplicitConstructorInvocationStmt.State> leftSibling(ExplicitConstructorInvocationStmt.State state) {
+		public STraversal leftSibling(ExplicitConstructorInvocationStmt.State state) {
 			return TYPE_ARGS;
 		}
 
-		public STraversal<ExplicitConstructorInvocationStmt.State> rightSibling(ExplicitConstructorInvocationStmt.State state) {
+		public STraversal rightSibling(ExplicitConstructorInvocationStmt.State state) {
 			return ARGS;
 		}
 	};
-	private static final STraversal<ExplicitConstructorInvocationStmt.State> ARGS = new STraversal<ExplicitConstructorInvocationStmt.State>() {
+	private static final STraversal ARGS = new STraversal() {
 
 		public STree<?> traverse(ExplicitConstructorInvocationStmt.State state) {
 			return state.args;
@@ -149,16 +149,16 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 			return state.withArgs((STree) child);
 		}
 
-		public STraversal<ExplicitConstructorInvocationStmt.State> leftSibling(ExplicitConstructorInvocationStmt.State state) {
+		public STraversal leftSibling(ExplicitConstructorInvocationStmt.State state) {
 			return EXPR;
 		}
 
-		public STraversal<ExplicitConstructorInvocationStmt.State> rightSibling(ExplicitConstructorInvocationStmt.State state) {
+		public STraversal rightSibling(ExplicitConstructorInvocationStmt.State state) {
 			return null;
 		}
 	};
 
-	private static final SProperty<ExplicitConstructorInvocationStmt.State> IS_THIS = new SProperty<ExplicitConstructorInvocationStmt.State>() {
+	private static final SProperty IS_THIS = new SProperty() {
 
 		public Object retrieve(ExplicitConstructorInvocationStmt.State state) {
 			return state.isThis;
@@ -214,11 +214,11 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
 		}
 
-		public STraversal<ExplicitConstructorInvocationStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return TYPE_ARGS;
 		}
 
-		public STraversal<ExplicitConstructorInvocationStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return ARGS;
 		}
 

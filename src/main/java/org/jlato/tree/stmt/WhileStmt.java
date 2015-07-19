@@ -77,7 +77,7 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<WhileStmt.State> CONDITION = new STraversal<WhileStmt.State>() {
+	private static final STraversal CONDITION = new STraversal() {
 
 		public STree<?> traverse(WhileStmt.State state) {
 			return state.condition;
@@ -87,15 +87,15 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 			return state.withCondition((STree) child);
 		}
 
-		public STraversal<WhileStmt.State> leftSibling(WhileStmt.State state) {
+		public STraversal leftSibling(WhileStmt.State state) {
 			return null;
 		}
 
-		public STraversal<WhileStmt.State> rightSibling(WhileStmt.State state) {
+		public STraversal rightSibling(WhileStmt.State state) {
 			return BODY;
 		}
 	};
-	private static final STraversal<WhileStmt.State> BODY = new STraversal<WhileStmt.State>() {
+	private static final STraversal BODY = new STraversal() {
 
 		public STree<?> traverse(WhileStmt.State state) {
 			return state.body;
@@ -105,11 +105,11 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 			return state.withBody((STree) child);
 		}
 
-		public STraversal<WhileStmt.State> leftSibling(WhileStmt.State state) {
+		public STraversal leftSibling(WhileStmt.State state) {
 			return CONDITION;
 		}
 
-		public STraversal<WhileStmt.State> rightSibling(WhileStmt.State state) {
+		public STraversal rightSibling(WhileStmt.State state) {
 			return null;
 		}
 	};
@@ -140,11 +140,11 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 			return new WhileStmt.State(condition, body);
 		}
 
-		public STraversal<WhileStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return CONDITION;
 		}
 
-		public STraversal<WhileStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return BODY;
 		}
 

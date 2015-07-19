@@ -129,7 +129,7 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
 
-	private static final STraversal<EnumDecl.State> MODIFIERS = new STraversal<EnumDecl.State>() {
+	private static final STraversal MODIFIERS = new STraversal() {
 
 		public STree<?> traverse(EnumDecl.State state) {
 			return state.modifiers;
@@ -139,15 +139,15 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 			return state.withModifiers((STree) child);
 		}
 
-		public STraversal<EnumDecl.State> leftSibling(EnumDecl.State state) {
+		public STraversal leftSibling(EnumDecl.State state) {
 			return null;
 		}
 
-		public STraversal<EnumDecl.State> rightSibling(EnumDecl.State state) {
+		public STraversal rightSibling(EnumDecl.State state) {
 			return NAME;
 		}
 	};
-	private static final STraversal<EnumDecl.State> NAME = new STraversal<EnumDecl.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(EnumDecl.State state) {
 			return state.name;
@@ -157,15 +157,15 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 			return state.withName((STree) child);
 		}
 
-		public STraversal<EnumDecl.State> leftSibling(EnumDecl.State state) {
+		public STraversal leftSibling(EnumDecl.State state) {
 			return MODIFIERS;
 		}
 
-		public STraversal<EnumDecl.State> rightSibling(EnumDecl.State state) {
+		public STraversal rightSibling(EnumDecl.State state) {
 			return IMPLEMENTS_CLAUSE;
 		}
 	};
-	private static final STraversal<EnumDecl.State> IMPLEMENTS_CLAUSE = new STraversal<EnumDecl.State>() {
+	private static final STraversal IMPLEMENTS_CLAUSE = new STraversal() {
 
 		public STree<?> traverse(EnumDecl.State state) {
 			return state.implementsClause;
@@ -175,15 +175,15 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 			return state.withImplementsClause((STree) child);
 		}
 
-		public STraversal<EnumDecl.State> leftSibling(EnumDecl.State state) {
+		public STraversal leftSibling(EnumDecl.State state) {
 			return NAME;
 		}
 
-		public STraversal<EnumDecl.State> rightSibling(EnumDecl.State state) {
+		public STraversal rightSibling(EnumDecl.State state) {
 			return ENUM_CONSTANTS;
 		}
 	};
-	private static final STraversal<EnumDecl.State> ENUM_CONSTANTS = new STraversal<EnumDecl.State>() {
+	private static final STraversal ENUM_CONSTANTS = new STraversal() {
 
 		public STree<?> traverse(EnumDecl.State state) {
 			return state.enumConstants;
@@ -193,15 +193,15 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 			return state.withEnumConstants((STree) child);
 		}
 
-		public STraversal<EnumDecl.State> leftSibling(EnumDecl.State state) {
+		public STraversal leftSibling(EnumDecl.State state) {
 			return IMPLEMENTS_CLAUSE;
 		}
 
-		public STraversal<EnumDecl.State> rightSibling(EnumDecl.State state) {
+		public STraversal rightSibling(EnumDecl.State state) {
 			return MEMBERS;
 		}
 	};
-	private static final STraversal<EnumDecl.State> MEMBERS = new STraversal<EnumDecl.State>() {
+	private static final STraversal MEMBERS = new STraversal() {
 
 		public STree<?> traverse(EnumDecl.State state) {
 			return state.members;
@@ -211,16 +211,16 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 			return state.withMembers((STree) child);
 		}
 
-		public STraversal<EnumDecl.State> leftSibling(EnumDecl.State state) {
+		public STraversal leftSibling(EnumDecl.State state) {
 			return ENUM_CONSTANTS;
 		}
 
-		public STraversal<EnumDecl.State> rightSibling(EnumDecl.State state) {
+		public STraversal rightSibling(EnumDecl.State state) {
 			return null;
 		}
 	};
 
-	private static final SProperty<EnumDecl.State> TRAILING_COMMA = new SProperty<EnumDecl.State>() {
+	private static final SProperty TRAILING_COMMA = new SProperty() {
 
 		public Object retrieve(EnumDecl.State state) {
 			return state.trailingComma;
@@ -306,11 +306,11 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
 		}
 
-		public STraversal<EnumDecl.State> firstChild() {
+		public STraversal firstChild() {
 			return MODIFIERS;
 		}
 
-		public STraversal<EnumDecl.State> lastChild() {
+		public STraversal lastChild() {
 			return MEMBERS;
 		}
 

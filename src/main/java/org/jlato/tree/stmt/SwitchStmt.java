@@ -82,7 +82,7 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 		return location.safeTraversalMutate(CASES, mutation);
 	}
 
-	private static final STraversal<SwitchStmt.State> SELECTOR = new STraversal<SwitchStmt.State>() {
+	private static final STraversal SELECTOR = new STraversal() {
 
 		public STree<?> traverse(SwitchStmt.State state) {
 			return state.selector;
@@ -92,15 +92,15 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 			return state.withSelector((STree) child);
 		}
 
-		public STraversal<SwitchStmt.State> leftSibling(SwitchStmt.State state) {
+		public STraversal leftSibling(SwitchStmt.State state) {
 			return null;
 		}
 
-		public STraversal<SwitchStmt.State> rightSibling(SwitchStmt.State state) {
+		public STraversal rightSibling(SwitchStmt.State state) {
 			return CASES;
 		}
 	};
-	private static final STraversal<SwitchStmt.State> CASES = new STraversal<SwitchStmt.State>() {
+	private static final STraversal CASES = new STraversal() {
 
 		public STree<?> traverse(SwitchStmt.State state) {
 			return state.cases;
@@ -110,11 +110,11 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 			return state.withCases((STree) child);
 		}
 
-		public STraversal<SwitchStmt.State> leftSibling(SwitchStmt.State state) {
+		public STraversal leftSibling(SwitchStmt.State state) {
 			return SELECTOR;
 		}
 
-		public STraversal<SwitchStmt.State> rightSibling(SwitchStmt.State state) {
+		public STraversal rightSibling(SwitchStmt.State state) {
 			return null;
 		}
 	};
@@ -163,11 +163,11 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 			return new SwitchStmt.State(selector, cases);
 		}
 
-		public STraversal<SwitchStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return SELECTOR;
 		}
 
-		public STraversal<SwitchStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return CASES;
 		}
 

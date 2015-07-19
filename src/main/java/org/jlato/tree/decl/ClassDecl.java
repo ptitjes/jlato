@@ -139,7 +139,7 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
 
-	private static final STraversal<ClassDecl.State> MODIFIERS = new STraversal<ClassDecl.State>() {
+	private static final STraversal MODIFIERS = new STraversal() {
 
 		public STree<?> traverse(ClassDecl.State state) {
 			return state.modifiers;
@@ -149,15 +149,15 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 			return state.withModifiers((STree) child);
 		}
 
-		public STraversal<ClassDecl.State> leftSibling(ClassDecl.State state) {
+		public STraversal leftSibling(ClassDecl.State state) {
 			return null;
 		}
 
-		public STraversal<ClassDecl.State> rightSibling(ClassDecl.State state) {
+		public STraversal rightSibling(ClassDecl.State state) {
 			return NAME;
 		}
 	};
-	private static final STraversal<ClassDecl.State> NAME = new STraversal<ClassDecl.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(ClassDecl.State state) {
 			return state.name;
@@ -167,15 +167,15 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 			return state.withName((STree) child);
 		}
 
-		public STraversal<ClassDecl.State> leftSibling(ClassDecl.State state) {
+		public STraversal leftSibling(ClassDecl.State state) {
 			return MODIFIERS;
 		}
 
-		public STraversal<ClassDecl.State> rightSibling(ClassDecl.State state) {
+		public STraversal rightSibling(ClassDecl.State state) {
 			return TYPE_PARAMS;
 		}
 	};
-	private static final STraversal<ClassDecl.State> TYPE_PARAMS = new STraversal<ClassDecl.State>() {
+	private static final STraversal TYPE_PARAMS = new STraversal() {
 
 		public STree<?> traverse(ClassDecl.State state) {
 			return state.typeParams;
@@ -185,15 +185,15 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 			return state.withTypeParams((STree) child);
 		}
 
-		public STraversal<ClassDecl.State> leftSibling(ClassDecl.State state) {
+		public STraversal leftSibling(ClassDecl.State state) {
 			return NAME;
 		}
 
-		public STraversal<ClassDecl.State> rightSibling(ClassDecl.State state) {
+		public STraversal rightSibling(ClassDecl.State state) {
 			return EXTENDS_CLAUSE;
 		}
 	};
-	private static final STraversal<ClassDecl.State> EXTENDS_CLAUSE = new STraversal<ClassDecl.State>() {
+	private static final STraversal EXTENDS_CLAUSE = new STraversal() {
 
 		public STree<?> traverse(ClassDecl.State state) {
 			return state.extendsClause;
@@ -203,15 +203,15 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 			return state.withExtendsClause((STree) child);
 		}
 
-		public STraversal<ClassDecl.State> leftSibling(ClassDecl.State state) {
+		public STraversal leftSibling(ClassDecl.State state) {
 			return TYPE_PARAMS;
 		}
 
-		public STraversal<ClassDecl.State> rightSibling(ClassDecl.State state) {
+		public STraversal rightSibling(ClassDecl.State state) {
 			return IMPLEMENTS_CLAUSE;
 		}
 	};
-	private static final STraversal<ClassDecl.State> IMPLEMENTS_CLAUSE = new STraversal<ClassDecl.State>() {
+	private static final STraversal IMPLEMENTS_CLAUSE = new STraversal() {
 
 		public STree<?> traverse(ClassDecl.State state) {
 			return state.implementsClause;
@@ -221,15 +221,15 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 			return state.withImplementsClause((STree) child);
 		}
 
-		public STraversal<ClassDecl.State> leftSibling(ClassDecl.State state) {
+		public STraversal leftSibling(ClassDecl.State state) {
 			return EXTENDS_CLAUSE;
 		}
 
-		public STraversal<ClassDecl.State> rightSibling(ClassDecl.State state) {
+		public STraversal rightSibling(ClassDecl.State state) {
 			return MEMBERS;
 		}
 	};
-	private static final STraversal<ClassDecl.State> MEMBERS = new STraversal<ClassDecl.State>() {
+	private static final STraversal MEMBERS = new STraversal() {
 
 		public STree<?> traverse(ClassDecl.State state) {
 			return state.members;
@@ -239,11 +239,11 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 			return state.withMembers((STree) child);
 		}
 
-		public STraversal<ClassDecl.State> leftSibling(ClassDecl.State state) {
+		public STraversal leftSibling(ClassDecl.State state) {
 			return IMPLEMENTS_CLAUSE;
 		}
 
-		public STraversal<ClassDecl.State> rightSibling(ClassDecl.State state) {
+		public STraversal rightSibling(ClassDecl.State state) {
 			return null;
 		}
 	};
@@ -263,7 +263,7 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 			child(MEMBERS, MemberDecl.bodyShape)
 	);
 
-	public static class State extends SNodeState<State> {
+	public static class State extends SNodeState<State> implements TypeDecl.State {
 
 		public final STree<SNodeListState> modifiers;
 
@@ -310,15 +310,15 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 			return new ClassDecl.State(modifiers, name, typeParams, extendsClause, implementsClause, members);
 		}
 
-		public STraversal<ClassDecl.State> firstChild() {
+		public STraversal firstChild() {
 			return MODIFIERS;
 		}
 
-		public STraversal<ClassDecl.State> lastChild() {
+		public STraversal lastChild() {
 			return MEMBERS;
 		}
 
-		public Tree instantiate(SLocation<ClassDecl.State> location) {
+		public Tree doInstantiate(SLocation<ClassDecl.State> location) {
 			return new ClassDecl(location);
 		}
 

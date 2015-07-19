@@ -77,7 +77,7 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
-	private static final STraversal<ArrayType.State> COMPONENT_TYPE = new STraversal<ArrayType.State>() {
+	private static final STraversal COMPONENT_TYPE = new STraversal() {
 
 		public STree<?> traverse(ArrayType.State state) {
 			return state.componentType;
@@ -87,15 +87,15 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 			return state.withComponentType((STree) child);
 		}
 
-		public STraversal<ArrayType.State> leftSibling(ArrayType.State state) {
+		public STraversal leftSibling(ArrayType.State state) {
 			return null;
 		}
 
-		public STraversal<ArrayType.State> rightSibling(ArrayType.State state) {
+		public STraversal rightSibling(ArrayType.State state) {
 			return DIMS;
 		}
 	};
-	private static final STraversal<ArrayType.State> DIMS = new STraversal<ArrayType.State>() {
+	private static final STraversal DIMS = new STraversal() {
 
 		public STree<?> traverse(ArrayType.State state) {
 			return state.dims;
@@ -105,11 +105,11 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 			return state.withDims((STree) child);
 		}
 
-		public STraversal<ArrayType.State> leftSibling(ArrayType.State state) {
+		public STraversal leftSibling(ArrayType.State state) {
 			return COMPONENT_TYPE;
 		}
 
-		public STraversal<ArrayType.State> rightSibling(ArrayType.State state) {
+		public STraversal rightSibling(ArrayType.State state) {
 			return null;
 		}
 	};
@@ -138,11 +138,11 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 			return new ArrayType.State(componentType, dims);
 		}
 
-		public STraversal<ArrayType.State> firstChild() {
+		public STraversal firstChild() {
 			return COMPONENT_TYPE;
 		}
 
-		public STraversal<ArrayType.State> lastChild() {
+		public STraversal lastChild() {
 			return DIMS;
 		}
 

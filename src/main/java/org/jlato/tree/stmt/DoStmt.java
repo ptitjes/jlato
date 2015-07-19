@@ -77,7 +77,7 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 		return location.safeTraversalMutate(CONDITION, mutation);
 	}
 
-	private static final STraversal<DoStmt.State> BODY = new STraversal<DoStmt.State>() {
+	private static final STraversal BODY = new STraversal() {
 
 		public STree<?> traverse(DoStmt.State state) {
 			return state.body;
@@ -87,15 +87,15 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 			return state.withBody((STree) child);
 		}
 
-		public STraversal<DoStmt.State> leftSibling(DoStmt.State state) {
+		public STraversal leftSibling(DoStmt.State state) {
 			return null;
 		}
 
-		public STraversal<DoStmt.State> rightSibling(DoStmt.State state) {
+		public STraversal rightSibling(DoStmt.State state) {
 			return CONDITION;
 		}
 	};
-	private static final STraversal<DoStmt.State> CONDITION = new STraversal<DoStmt.State>() {
+	private static final STraversal CONDITION = new STraversal() {
 
 		public STree<?> traverse(DoStmt.State state) {
 			return state.condition;
@@ -105,11 +105,11 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 			return state.withCondition((STree) child);
 		}
 
-		public STraversal<DoStmt.State> leftSibling(DoStmt.State state) {
+		public STraversal leftSibling(DoStmt.State state) {
 			return BODY;
 		}
 
-		public STraversal<DoStmt.State> rightSibling(DoStmt.State state) {
+		public STraversal rightSibling(DoStmt.State state) {
 			return null;
 		}
 	};
@@ -143,11 +143,11 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 			return new DoStmt.State(body, condition);
 		}
 
-		public STraversal<DoStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return BODY;
 		}
 
-		public STraversal<DoStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return CONDITION;
 		}
 

@@ -64,7 +64,7 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final STraversal<IntersectionType.State> TYPES = new STraversal<IntersectionType.State>() {
+	private static final STraversal TYPES = new STraversal() {
 
 		public STree<?> traverse(IntersectionType.State state) {
 			return state.types;
@@ -74,11 +74,11 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 			return state.withTypes((STree) child);
 		}
 
-		public STraversal<IntersectionType.State> leftSibling(IntersectionType.State state) {
+		public STraversal leftSibling(IntersectionType.State state) {
 			return null;
 		}
 
-		public STraversal<IntersectionType.State> rightSibling(IntersectionType.State state) {
+		public STraversal rightSibling(IntersectionType.State state) {
 			return null;
 		}
 	};
@@ -99,11 +99,11 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 			return new IntersectionType.State(types);
 		}
 
-		public STraversal<IntersectionType.State> firstChild() {
+		public STraversal firstChild() {
 			return TYPES;
 		}
 
-		public STraversal<IntersectionType.State> lastChild() {
+		public STraversal lastChild() {
 			return TYPES;
 		}
 

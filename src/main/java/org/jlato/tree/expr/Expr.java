@@ -43,7 +43,7 @@ public interface Expr extends Tree {
 			token(LToken.Comma).withSpacingAfter(space())
 	);
 
-	interface State extends STreeState<State> {
+	interface State extends STreeState {
 
 	}
 }

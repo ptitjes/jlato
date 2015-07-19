@@ -112,7 +112,7 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 		return location.safeTraversalMutate(CLASS_BODY, mutation);
 	}
 
-	private static final STraversal<EnumConstantDecl.State> MODIFIERS = new STraversal<EnumConstantDecl.State>() {
+	private static final STraversal MODIFIERS = new STraversal() {
 
 		public STree<?> traverse(EnumConstantDecl.State state) {
 			return state.modifiers;
@@ -122,15 +122,15 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 			return state.withModifiers((STree) child);
 		}
 
-		public STraversal<EnumConstantDecl.State> leftSibling(EnumConstantDecl.State state) {
+		public STraversal leftSibling(EnumConstantDecl.State state) {
 			return null;
 		}
 
-		public STraversal<EnumConstantDecl.State> rightSibling(EnumConstantDecl.State state) {
+		public STraversal rightSibling(EnumConstantDecl.State state) {
 			return NAME;
 		}
 	};
-	private static final STraversal<EnumConstantDecl.State> NAME = new STraversal<EnumConstantDecl.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(EnumConstantDecl.State state) {
 			return state.name;
@@ -140,15 +140,15 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 			return state.withName((STree) child);
 		}
 
-		public STraversal<EnumConstantDecl.State> leftSibling(EnumConstantDecl.State state) {
+		public STraversal leftSibling(EnumConstantDecl.State state) {
 			return MODIFIERS;
 		}
 
-		public STraversal<EnumConstantDecl.State> rightSibling(EnumConstantDecl.State state) {
+		public STraversal rightSibling(EnumConstantDecl.State state) {
 			return ARGS;
 		}
 	};
-	private static final STraversal<EnumConstantDecl.State> ARGS = new STraversal<EnumConstantDecl.State>() {
+	private static final STraversal ARGS = new STraversal() {
 
 		public STree<?> traverse(EnumConstantDecl.State state) {
 			return state.args;
@@ -158,15 +158,15 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 			return state.withArgs((STree) child);
 		}
 
-		public STraversal<EnumConstantDecl.State> leftSibling(EnumConstantDecl.State state) {
+		public STraversal leftSibling(EnumConstantDecl.State state) {
 			return NAME;
 		}
 
-		public STraversal<EnumConstantDecl.State> rightSibling(EnumConstantDecl.State state) {
+		public STraversal rightSibling(EnumConstantDecl.State state) {
 			return CLASS_BODY;
 		}
 	};
-	private static final STraversal<EnumConstantDecl.State> CLASS_BODY = new STraversal<EnumConstantDecl.State>() {
+	private static final STraversal CLASS_BODY = new STraversal() {
 
 		public STree<?> traverse(EnumConstantDecl.State state) {
 			return state.classBody;
@@ -176,11 +176,11 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 			return state.withClassBody((STree) child);
 		}
 
-		public STraversal<EnumConstantDecl.State> leftSibling(EnumConstantDecl.State state) {
+		public STraversal leftSibling(EnumConstantDecl.State state) {
 			return ARGS;
 		}
 
-		public STraversal<EnumConstantDecl.State> rightSibling(EnumConstantDecl.State state) {
+		public STraversal rightSibling(EnumConstantDecl.State state) {
 			return null;
 		}
 	};
@@ -232,11 +232,11 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 			return new EnumConstantDecl.State(modifiers, name, args, classBody);
 		}
 
-		public STraversal<EnumConstantDecl.State> firstChild() {
+		public STraversal firstChild() {
 			return MODIFIERS;
 		}
 
-		public STraversal<EnumConstantDecl.State> lastChild() {
+		public STraversal lastChild() {
 			return CLASS_BODY;
 		}
 

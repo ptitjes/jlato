@@ -97,7 +97,7 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<LambdaExpr.State> PARAMS = new STraversal<LambdaExpr.State>() {
+	private static final STraversal PARAMS = new STraversal() {
 
 		public STree<?> traverse(LambdaExpr.State state) {
 			return state.params;
@@ -107,15 +107,15 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 			return state.withParams((STree) child);
 		}
 
-		public STraversal<LambdaExpr.State> leftSibling(LambdaExpr.State state) {
+		public STraversal leftSibling(LambdaExpr.State state) {
 			return null;
 		}
 
-		public STraversal<LambdaExpr.State> rightSibling(LambdaExpr.State state) {
+		public STraversal rightSibling(LambdaExpr.State state) {
 			return BODY;
 		}
 	};
-	private static final STraversal<LambdaExpr.State> BODY = new STraversal<LambdaExpr.State>() {
+	private static final STraversal BODY = new STraversal() {
 
 		public STree<?> traverse(LambdaExpr.State state) {
 			return state.body;
@@ -125,16 +125,16 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 			return state.withBody((STree) child);
 		}
 
-		public STraversal<LambdaExpr.State> leftSibling(LambdaExpr.State state) {
+		public STraversal leftSibling(LambdaExpr.State state) {
 			return PARAMS;
 		}
 
-		public STraversal<LambdaExpr.State> rightSibling(LambdaExpr.State state) {
+		public STraversal rightSibling(LambdaExpr.State state) {
 			return null;
 		}
 	};
 
-	private static final SProperty<LambdaExpr.State> PARENS = new SProperty<LambdaExpr.State>() {
+	private static final SProperty PARENS = new SProperty() {
 
 		public Object retrieve(LambdaExpr.State state) {
 			return state.hasParens;
@@ -179,11 +179,11 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 			return new LambdaExpr.State(params, hasParens, body);
 		}
 
-		public STraversal<LambdaExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return PARAMS;
 		}
 
-		public STraversal<LambdaExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return BODY;
 		}
 

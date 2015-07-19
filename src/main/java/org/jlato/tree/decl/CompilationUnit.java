@@ -89,7 +89,7 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final STraversal<CompilationUnit.State> PACKAGE_DECL = new STraversal<CompilationUnit.State>() {
+	private static final STraversal PACKAGE_DECL = new STraversal() {
 
 		public STree<?> traverse(CompilationUnit.State state) {
 			return state.packageDecl;
@@ -99,15 +99,15 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 			return state.withPackageDecl((STree) child);
 		}
 
-		public STraversal<CompilationUnit.State> leftSibling(CompilationUnit.State state) {
+		public STraversal leftSibling(CompilationUnit.State state) {
 			return null;
 		}
 
-		public STraversal<CompilationUnit.State> rightSibling(CompilationUnit.State state) {
+		public STraversal rightSibling(CompilationUnit.State state) {
 			return IMPORTS;
 		}
 	};
-	private static final STraversal<CompilationUnit.State> IMPORTS = new STraversal<CompilationUnit.State>() {
+	private static final STraversal IMPORTS = new STraversal() {
 
 		public STree<?> traverse(CompilationUnit.State state) {
 			return state.imports;
@@ -117,15 +117,15 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 			return state.withImports((STree) child);
 		}
 
-		public STraversal<CompilationUnit.State> leftSibling(CompilationUnit.State state) {
+		public STraversal leftSibling(CompilationUnit.State state) {
 			return PACKAGE_DECL;
 		}
 
-		public STraversal<CompilationUnit.State> rightSibling(CompilationUnit.State state) {
+		public STraversal rightSibling(CompilationUnit.State state) {
 			return TYPES;
 		}
 	};
-	private static final STraversal<CompilationUnit.State> TYPES = new STraversal<CompilationUnit.State>() {
+	private static final STraversal TYPES = new STraversal() {
 
 		public STree<?> traverse(CompilationUnit.State state) {
 			return state.types;
@@ -135,16 +135,16 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 			return state.withTypes((STree) child);
 		}
 
-		public STraversal<CompilationUnit.State> leftSibling(CompilationUnit.State state) {
+		public STraversal leftSibling(CompilationUnit.State state) {
 			return IMPORTS;
 		}
 
-		public STraversal<CompilationUnit.State> rightSibling(CompilationUnit.State state) {
+		public STraversal rightSibling(CompilationUnit.State state) {
 			return null;
 		}
 	};
 
-	private static final SProperty<CompilationUnit.State> PREAMBLE = new SProperty<CompilationUnit.State>() {
+	private static final SProperty PREAMBLE = new SProperty() {
 
 		public Object retrieve(CompilationUnit.State state) {
 			return state.preamble;
@@ -197,11 +197,11 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 			return new CompilationUnit.State(preamble, packageDecl, imports, types);
 		}
 
-		public STraversal<CompilationUnit.State> firstChild() {
+		public STraversal firstChild() {
 			return PACKAGE_DECL;
 		}
 
-		public STraversal<CompilationUnit.State> lastChild() {
+		public STraversal lastChild() {
 			return TYPES;
 		}
 

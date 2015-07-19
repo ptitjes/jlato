@@ -56,11 +56,11 @@ public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implement
 		State() {
 		}
 
-		public STraversal<VoidType.State> firstChild() {
+		public STraversal firstChild() {
 			return null;
 		}
 
-		public STraversal<VoidType.State> lastChild() {
+		public STraversal lastChild() {
 			return null;
 		}
 

@@ -69,7 +69,7 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 		return location.safeTraversalMutate(DECLARATION, mutation);
 	}
 
-	private static final STraversal<VariableDeclarationExpr.State> DECLARATION = new STraversal<VariableDeclarationExpr.State>() {
+	private static final STraversal DECLARATION = new STraversal() {
 
 		public STree<?> traverse(VariableDeclarationExpr.State state) {
 			return state.declaration;
@@ -79,11 +79,11 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 			return state.withDeclaration((STree) child);
 		}
 
-		public STraversal<VariableDeclarationExpr.State> leftSibling(VariableDeclarationExpr.State state) {
+		public STraversal leftSibling(VariableDeclarationExpr.State state) {
 			return null;
 		}
 
-		public STraversal<VariableDeclarationExpr.State> rightSibling(VariableDeclarationExpr.State state) {
+		public STraversal rightSibling(VariableDeclarationExpr.State state) {
 			return null;
 		}
 	};
@@ -112,11 +112,11 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 			return new VariableDeclarationExpr.State(declaration);
 		}
 
-		public STraversal<VariableDeclarationExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return DECLARATION;
 		}
 
-		public STraversal<VariableDeclarationExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return DECLARATION;
 		}
 

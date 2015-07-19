@@ -78,7 +78,7 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 		return location.safeTraversalMutate(PAIRS, mutation);
 	}
 
-	private static final STraversal<NormalAnnotationExpr.State> NAME = new STraversal<NormalAnnotationExpr.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(NormalAnnotationExpr.State state) {
 			return state.name;
@@ -88,15 +88,15 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 			return state.withName((STree) child);
 		}
 
-		public STraversal<NormalAnnotationExpr.State> leftSibling(NormalAnnotationExpr.State state) {
+		public STraversal leftSibling(NormalAnnotationExpr.State state) {
 			return null;
 		}
 
-		public STraversal<NormalAnnotationExpr.State> rightSibling(NormalAnnotationExpr.State state) {
+		public STraversal rightSibling(NormalAnnotationExpr.State state) {
 			return PAIRS;
 		}
 	};
-	private static final STraversal<NormalAnnotationExpr.State> PAIRS = new STraversal<NormalAnnotationExpr.State>() {
+	private static final STraversal PAIRS = new STraversal() {
 
 		public STree<?> traverse(NormalAnnotationExpr.State state) {
 			return state.pairs;
@@ -106,11 +106,11 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 			return state.withPairs((STree) child);
 		}
 
-		public STraversal<NormalAnnotationExpr.State> leftSibling(NormalAnnotationExpr.State state) {
+		public STraversal leftSibling(NormalAnnotationExpr.State state) {
 			return NAME;
 		}
 
-		public STraversal<NormalAnnotationExpr.State> rightSibling(NormalAnnotationExpr.State state) {
+		public STraversal rightSibling(NormalAnnotationExpr.State state) {
 			return null;
 		}
 	};
@@ -141,11 +141,11 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 			return new NormalAnnotationExpr.State(name, pairs);
 		}
 
-		public STraversal<NormalAnnotationExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return NAME;
 		}
 
-		public STraversal<NormalAnnotationExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return PAIRS;
 		}
 

@@ -34,7 +34,7 @@ public interface Stmt extends Tree {
 
 	LexicalShape listShape = list(none().withSpacingAfter(newLine()));
 
-	interface State extends STreeState<State> {
+	interface State extends STreeState {
 
 	}
 }

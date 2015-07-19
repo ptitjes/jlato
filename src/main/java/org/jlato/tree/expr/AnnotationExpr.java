@@ -50,7 +50,7 @@ public interface AnnotationExpr extends Expr, ExtendedModifier {
 			none().withSpacingAfter(newLine())
 	);
 
-	interface State extends STreeState<State> {
+	interface State extends STreeState {
 
 	}
 }

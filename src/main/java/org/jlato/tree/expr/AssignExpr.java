@@ -89,7 +89,7 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		return location.safeTraversalMutate(VALUE, mutation);
 	}
 
-	private static final STraversal<AssignExpr.State> TARGET = new STraversal<AssignExpr.State>() {
+	private static final STraversal TARGET = new STraversal() {
 
 		public STree<?> traverse(AssignExpr.State state) {
 			return state.target;
@@ -99,15 +99,15 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 			return state.withTarget((STree) child);
 		}
 
-		public STraversal<AssignExpr.State> leftSibling(AssignExpr.State state) {
+		public STraversal leftSibling(AssignExpr.State state) {
 			return null;
 		}
 
-		public STraversal<AssignExpr.State> rightSibling(AssignExpr.State state) {
+		public STraversal rightSibling(AssignExpr.State state) {
 			return VALUE;
 		}
 	};
-	private static final STraversal<AssignExpr.State> VALUE = new STraversal<AssignExpr.State>() {
+	private static final STraversal VALUE = new STraversal() {
 
 		public STree<?> traverse(AssignExpr.State state) {
 			return state.value;
@@ -117,16 +117,16 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 			return state.withValue((STree) child);
 		}
 
-		public STraversal<AssignExpr.State> leftSibling(AssignExpr.State state) {
+		public STraversal leftSibling(AssignExpr.State state) {
 			return TARGET;
 		}
 
-		public STraversal<AssignExpr.State> rightSibling(AssignExpr.State state) {
+		public STraversal rightSibling(AssignExpr.State state) {
 			return null;
 		}
 	};
 
-	private static final SProperty<AssignExpr.State> OPERATOR = new SProperty<AssignExpr.State>() {
+	private static final SProperty OPERATOR = new SProperty() {
 
 		public Object retrieve(AssignExpr.State state) {
 			return state.operator;
@@ -196,11 +196,11 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 			return new AssignExpr.State(target, operator, value);
 		}
 
-		public STraversal<AssignExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return TARGET;
 		}
 
-		public STraversal<AssignExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return VALUE;
 		}
 

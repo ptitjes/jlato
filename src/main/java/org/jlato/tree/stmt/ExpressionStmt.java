@@ -64,7 +64,7 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal<ExpressionStmt.State> EXPR = new STraversal<ExpressionStmt.State>() {
+	private static final STraversal EXPR = new STraversal() {
 
 		public STree<?> traverse(ExpressionStmt.State state) {
 			return state.expr;
@@ -74,11 +74,11 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 			return state.withExpr((STree) child);
 		}
 
-		public STraversal<ExpressionStmt.State> leftSibling(ExpressionStmt.State state) {
+		public STraversal leftSibling(ExpressionStmt.State state) {
 			return null;
 		}
 
-		public STraversal<ExpressionStmt.State> rightSibling(ExpressionStmt.State state) {
+		public STraversal rightSibling(ExpressionStmt.State state) {
 			return null;
 		}
 	};
@@ -99,11 +99,11 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 			return new ExpressionStmt.State(expr);
 		}
 
-		public STraversal<ExpressionStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return EXPR;
 		}
 
-		public STraversal<ExpressionStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return EXPR;
 		}
 

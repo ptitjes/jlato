@@ -83,7 +83,7 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 		return location.safePropertyReplace(ON_DEMAND, (Boolean) isOnDemand);
 	}
 
-	private static final STraversal<ImportDecl.State> NAME = new STraversal<ImportDecl.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(ImportDecl.State state) {
 			return state.name;
@@ -93,16 +93,16 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 			return state.withName((STree) child);
 		}
 
-		public STraversal<ImportDecl.State> leftSibling(ImportDecl.State state) {
+		public STraversal leftSibling(ImportDecl.State state) {
 			return null;
 		}
 
-		public STraversal<ImportDecl.State> rightSibling(ImportDecl.State state) {
+		public STraversal rightSibling(ImportDecl.State state) {
 			return null;
 		}
 	};
 
-	private static final SProperty<ImportDecl.State> STATIC = new SProperty<ImportDecl.State>() {
+	private static final SProperty STATIC = new SProperty() {
 
 		public Object retrieve(ImportDecl.State state) {
 			return state.isStatic;
@@ -112,7 +112,7 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 			return state.withStatic((Boolean) value);
 		}
 	};
-	private static final SProperty<ImportDecl.State> ON_DEMAND = new SProperty<ImportDecl.State>() {
+	private static final SProperty ON_DEMAND = new SProperty() {
 
 		public Object retrieve(ImportDecl.State state) {
 			return state.isOnDemand;
@@ -163,11 +163,11 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 			return new ImportDecl.State(name, isStatic, isOnDemand);
 		}
 
-		public STraversal<ImportDecl.State> firstChild() {
+		public STraversal firstChild() {
 			return NAME;
 		}
 
-		public STraversal<ImportDecl.State> lastChild() {
+		public STraversal lastChild() {
 			return NAME;
 		}
 

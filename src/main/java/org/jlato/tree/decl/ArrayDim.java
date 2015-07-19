@@ -66,7 +66,7 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 
-	private static final STraversal<ArrayDim.State> ANNOTATIONS = new STraversal<ArrayDim.State>() {
+	private static final STraversal ANNOTATIONS = new STraversal() {
 
 		public STree<?> traverse(ArrayDim.State state) {
 			return state.annotations;
@@ -76,11 +76,11 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 			return state.withAnnotations((STree) child);
 		}
 
-		public STraversal<ArrayDim.State> leftSibling(ArrayDim.State state) {
+		public STraversal leftSibling(ArrayDim.State state) {
 			return null;
 		}
 
-		public STraversal<ArrayDim.State> rightSibling(ArrayDim.State state) {
+		public STraversal rightSibling(ArrayDim.State state) {
 			return null;
 		}
 	};
@@ -108,11 +108,11 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 			return new ArrayDim.State(annotations);
 		}
 
-		public STraversal<ArrayDim.State> firstChild() {
+		public STraversal firstChild() {
 			return ANNOTATIONS;
 		}
 
-		public STraversal<ArrayDim.State> lastChild() {
+		public STraversal lastChild() {
 			return ANNOTATIONS;
 		}
 

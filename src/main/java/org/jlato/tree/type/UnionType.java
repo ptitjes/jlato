@@ -64,7 +64,7 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final STraversal<UnionType.State> TYPES = new STraversal<UnionType.State>() {
+	private static final STraversal TYPES = new STraversal() {
 
 		public STree<?> traverse(UnionType.State state) {
 			return state.types;
@@ -74,11 +74,11 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 			return state.withTypes((STree) child);
 		}
 
-		public STraversal<UnionType.State> leftSibling(UnionType.State state) {
+		public STraversal leftSibling(UnionType.State state) {
 			return null;
 		}
 
-		public STraversal<UnionType.State> rightSibling(UnionType.State state) {
+		public STraversal rightSibling(UnionType.State state) {
 			return null;
 		}
 	};
@@ -99,11 +99,11 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 			return new UnionType.State(types);
 		}
 
-		public STraversal<UnionType.State> firstChild() {
+		public STraversal firstChild() {
 			return TYPES;
 		}
 
-		public STraversal<UnionType.State> lastChild() {
+		public STraversal lastChild() {
 			return TYPES;
 		}
 

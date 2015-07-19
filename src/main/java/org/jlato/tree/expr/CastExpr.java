@@ -77,7 +77,7 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal<CastExpr.State> TYPE = new STraversal<CastExpr.State>() {
+	private static final STraversal TYPE = new STraversal() {
 
 		public STree<?> traverse(CastExpr.State state) {
 			return state.type;
@@ -87,15 +87,15 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 			return state.withType((STree) child);
 		}
 
-		public STraversal<CastExpr.State> leftSibling(CastExpr.State state) {
+		public STraversal leftSibling(CastExpr.State state) {
 			return null;
 		}
 
-		public STraversal<CastExpr.State> rightSibling(CastExpr.State state) {
+		public STraversal rightSibling(CastExpr.State state) {
 			return EXPR;
 		}
 	};
-	private static final STraversal<CastExpr.State> EXPR = new STraversal<CastExpr.State>() {
+	private static final STraversal EXPR = new STraversal() {
 
 		public STree<?> traverse(CastExpr.State state) {
 			return state.expr;
@@ -105,11 +105,11 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 			return state.withExpr((STree) child);
 		}
 
-		public STraversal<CastExpr.State> leftSibling(CastExpr.State state) {
+		public STraversal leftSibling(CastExpr.State state) {
 			return TYPE;
 		}
 
-		public STraversal<CastExpr.State> rightSibling(CastExpr.State state) {
+		public STraversal rightSibling(CastExpr.State state) {
 			return null;
 		}
 	};
@@ -137,11 +137,11 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 			return new CastExpr.State(type, expr);
 		}
 
-		public STraversal<CastExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return TYPE;
 		}
 
-		public STraversal<CastExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return EXPR;
 		}
 

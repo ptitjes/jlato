@@ -72,7 +72,7 @@ public interface MemberDecl extends Decl {
 		// Keep last comma
 	}
 
-	interface State extends STreeState<State> {
+	interface State extends STreeState {
 
 	}
 }

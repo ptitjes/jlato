@@ -90,7 +90,7 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal<MethodReferenceExpr.State> SCOPE = new STraversal<MethodReferenceExpr.State>() {
+	private static final STraversal SCOPE = new STraversal() {
 
 		public STree<?> traverse(MethodReferenceExpr.State state) {
 			return state.scope;
@@ -100,15 +100,15 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 			return state.withScope((STree) child);
 		}
 
-		public STraversal<MethodReferenceExpr.State> leftSibling(MethodReferenceExpr.State state) {
+		public STraversal leftSibling(MethodReferenceExpr.State state) {
 			return null;
 		}
 
-		public STraversal<MethodReferenceExpr.State> rightSibling(MethodReferenceExpr.State state) {
+		public STraversal rightSibling(MethodReferenceExpr.State state) {
 			return TYPE_ARGS;
 		}
 	};
-	private static final STraversal<MethodReferenceExpr.State> TYPE_ARGS = new STraversal<MethodReferenceExpr.State>() {
+	private static final STraversal TYPE_ARGS = new STraversal() {
 
 		public STree<?> traverse(MethodReferenceExpr.State state) {
 			return state.typeArgs;
@@ -118,15 +118,15 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 			return state.withTypeArgs((STree) child);
 		}
 
-		public STraversal<MethodReferenceExpr.State> leftSibling(MethodReferenceExpr.State state) {
+		public STraversal leftSibling(MethodReferenceExpr.State state) {
 			return SCOPE;
 		}
 
-		public STraversal<MethodReferenceExpr.State> rightSibling(MethodReferenceExpr.State state) {
+		public STraversal rightSibling(MethodReferenceExpr.State state) {
 			return NAME;
 		}
 	};
-	private static final STraversal<MethodReferenceExpr.State> NAME = new STraversal<MethodReferenceExpr.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(MethodReferenceExpr.State state) {
 			return state.name;
@@ -136,11 +136,11 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 			return state.withName((STree) child);
 		}
 
-		public STraversal<MethodReferenceExpr.State> leftSibling(MethodReferenceExpr.State state) {
+		public STraversal leftSibling(MethodReferenceExpr.State state) {
 			return TYPE_ARGS;
 		}
 
-		public STraversal<MethodReferenceExpr.State> rightSibling(MethodReferenceExpr.State state) {
+		public STraversal rightSibling(MethodReferenceExpr.State state) {
 			return null;
 		}
 	};
@@ -178,11 +178,11 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 			return new MethodReferenceExpr.State(scope, typeArgs, name);
 		}
 
-		public STraversal<MethodReferenceExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return SCOPE;
 		}
 
-		public STraversal<MethodReferenceExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return NAME;
 		}
 

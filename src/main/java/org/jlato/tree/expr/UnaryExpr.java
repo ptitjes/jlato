@@ -85,7 +85,7 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		return op == UnaryOp.PostIncrement || op == UnaryOp.PostDecrement;
 	}
 
-	private static final STraversal<UnaryExpr.State> EXPR = new STraversal<UnaryExpr.State>() {
+	private static final STraversal EXPR = new STraversal() {
 
 		public STree<?> traverse(UnaryExpr.State state) {
 			return state.expr;
@@ -95,16 +95,16 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 			return state.withExpr((STree) child);
 		}
 
-		public STraversal<UnaryExpr.State> leftSibling(UnaryExpr.State state) {
+		public STraversal leftSibling(UnaryExpr.State state) {
 			return null;
 		}
 
-		public STraversal<UnaryExpr.State> rightSibling(UnaryExpr.State state) {
+		public STraversal rightSibling(UnaryExpr.State state) {
 			return null;
 		}
 	};
 
-	private static final SProperty<UnaryExpr.State> OPERATOR = new SProperty<UnaryExpr.State>() {
+	private static final SProperty OPERATOR = new SProperty() {
 
 		public Object retrieve(UnaryExpr.State state) {
 			return state.operator;
@@ -171,11 +171,11 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 			return new UnaryExpr.State(operator, expr);
 		}
 
-		public STraversal<UnaryExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return EXPR;
 		}
 
-		public STraversal<UnaryExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return EXPR;
 		}
 

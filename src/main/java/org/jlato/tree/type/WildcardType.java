@@ -93,7 +93,7 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 		return location.safeTraversalMutate(SUP, mutation);
 	}
 
-	private static final STraversal<WildcardType.State> ANNOTATIONS = new STraversal<WildcardType.State>() {
+	private static final STraversal ANNOTATIONS = new STraversal() {
 
 		public STree<?> traverse(WildcardType.State state) {
 			return state.annotations;
@@ -103,15 +103,15 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 			return state.withAnnotations((STree) child);
 		}
 
-		public STraversal<WildcardType.State> leftSibling(WildcardType.State state) {
+		public STraversal leftSibling(WildcardType.State state) {
 			return null;
 		}
 
-		public STraversal<WildcardType.State> rightSibling(WildcardType.State state) {
+		public STraversal rightSibling(WildcardType.State state) {
 			return EXT;
 		}
 	};
-	private static final STraversal<WildcardType.State> EXT = new STraversal<WildcardType.State>() {
+	private static final STraversal EXT = new STraversal() {
 
 		public STree<?> traverse(WildcardType.State state) {
 			return state.ext;
@@ -121,15 +121,15 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 			return state.withExt((STree) child);
 		}
 
-		public STraversal<WildcardType.State> leftSibling(WildcardType.State state) {
+		public STraversal leftSibling(WildcardType.State state) {
 			return ANNOTATIONS;
 		}
 
-		public STraversal<WildcardType.State> rightSibling(WildcardType.State state) {
+		public STraversal rightSibling(WildcardType.State state) {
 			return SUP;
 		}
 	};
-	private static final STraversal<WildcardType.State> SUP = new STraversal<WildcardType.State>() {
+	private static final STraversal SUP = new STraversal() {
 
 		public STree<?> traverse(WildcardType.State state) {
 			return state.sup;
@@ -139,11 +139,11 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 			return state.withSup((STree) child);
 		}
 
-		public STraversal<WildcardType.State> leftSibling(WildcardType.State state) {
+		public STraversal leftSibling(WildcardType.State state) {
 			return EXT;
 		}
 
-		public STraversal<WildcardType.State> rightSibling(WildcardType.State state) {
+		public STraversal rightSibling(WildcardType.State state) {
 			return null;
 		}
 	};
@@ -181,11 +181,11 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 			return new WildcardType.State(annotations, ext, sup);
 		}
 
-		public STraversal<WildcardType.State> firstChild() {
+		public STraversal firstChild() {
 			return ANNOTATIONS;
 		}
 
-		public STraversal<WildcardType.State> lastChild() {
+		public STraversal lastChild() {
 			return SUP;
 		}
 

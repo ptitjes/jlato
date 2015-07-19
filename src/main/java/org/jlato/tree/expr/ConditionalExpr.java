@@ -88,7 +88,7 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 		return location.safeTraversalMutate(ELSE_EXPR, mutation);
 	}
 
-	private static final STraversal<ConditionalExpr.State> CONDITION = new STraversal<ConditionalExpr.State>() {
+	private static final STraversal CONDITION = new STraversal() {
 
 		public STree<?> traverse(ConditionalExpr.State state) {
 			return state.condition;
@@ -98,15 +98,15 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 			return state.withCondition((STree) child);
 		}
 
-		public STraversal<ConditionalExpr.State> leftSibling(ConditionalExpr.State state) {
+		public STraversal leftSibling(ConditionalExpr.State state) {
 			return null;
 		}
 
-		public STraversal<ConditionalExpr.State> rightSibling(ConditionalExpr.State state) {
+		public STraversal rightSibling(ConditionalExpr.State state) {
 			return THEN_EXPR;
 		}
 	};
-	private static final STraversal<ConditionalExpr.State> THEN_EXPR = new STraversal<ConditionalExpr.State>() {
+	private static final STraversal THEN_EXPR = new STraversal() {
 
 		public STree<?> traverse(ConditionalExpr.State state) {
 			return state.thenExpr;
@@ -116,15 +116,15 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 			return state.withThenExpr((STree) child);
 		}
 
-		public STraversal<ConditionalExpr.State> leftSibling(ConditionalExpr.State state) {
+		public STraversal leftSibling(ConditionalExpr.State state) {
 			return CONDITION;
 		}
 
-		public STraversal<ConditionalExpr.State> rightSibling(ConditionalExpr.State state) {
+		public STraversal rightSibling(ConditionalExpr.State state) {
 			return ELSE_EXPR;
 		}
 	};
-	private static final STraversal<ConditionalExpr.State> ELSE_EXPR = new STraversal<ConditionalExpr.State>() {
+	private static final STraversal ELSE_EXPR = new STraversal() {
 
 		public STree<?> traverse(ConditionalExpr.State state) {
 			return state.elseExpr;
@@ -134,11 +134,11 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 			return state.withElseExpr((STree) child);
 		}
 
-		public STraversal<ConditionalExpr.State> leftSibling(ConditionalExpr.State state) {
+		public STraversal leftSibling(ConditionalExpr.State state) {
 			return THEN_EXPR;
 		}
 
-		public STraversal<ConditionalExpr.State> rightSibling(ConditionalExpr.State state) {
+		public STraversal rightSibling(ConditionalExpr.State state) {
 			return null;
 		}
 	};
@@ -177,11 +177,11 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 			return new ConditionalExpr.State(condition, thenExpr, elseExpr);
 		}
 
-		public STraversal<ConditionalExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return CONDITION;
 		}
 
-		public STraversal<ConditionalExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return ELSE_EXPR;
 		}
 

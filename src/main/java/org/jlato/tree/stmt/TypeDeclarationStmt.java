@@ -64,7 +64,7 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 		return location.safeTraversalMutate(TYPE_DECL, mutation);
 	}
 
-	private static final STraversal<TypeDeclarationStmt.State> TYPE_DECL = new STraversal<TypeDeclarationStmt.State>() {
+	private static final STraversal TYPE_DECL = new STraversal() {
 
 		public STree<?> traverse(TypeDeclarationStmt.State state) {
 			return state.typeDecl;
@@ -74,11 +74,11 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 			return state.withTypeDecl((STree) child);
 		}
 
-		public STraversal<TypeDeclarationStmt.State> leftSibling(TypeDeclarationStmt.State state) {
+		public STraversal leftSibling(TypeDeclarationStmt.State state) {
 			return null;
 		}
 
-		public STraversal<TypeDeclarationStmt.State> rightSibling(TypeDeclarationStmt.State state) {
+		public STraversal rightSibling(TypeDeclarationStmt.State state) {
 			return null;
 		}
 	};
@@ -99,11 +99,11 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 			return new TypeDeclarationStmt.State(typeDecl);
 		}
 
-		public STraversal<TypeDeclarationStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return TYPE_DECL;
 		}
 
-		public STraversal<TypeDeclarationStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return TYPE_DECL;
 		}
 

@@ -157,7 +157,7 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<MethodDecl.State> MODIFIERS = new STraversal<MethodDecl.State>() {
+	private static final STraversal MODIFIERS = new STraversal() {
 
 		public STree<?> traverse(MethodDecl.State state) {
 			return state.modifiers;
@@ -167,15 +167,15 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 			return state.withModifiers((STree) child);
 		}
 
-		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+		public STraversal leftSibling(MethodDecl.State state) {
 			return null;
 		}
 
-		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+		public STraversal rightSibling(MethodDecl.State state) {
 			return TYPE_PARAMS;
 		}
 	};
-	private static final STraversal<MethodDecl.State> TYPE_PARAMS = new STraversal<MethodDecl.State>() {
+	private static final STraversal TYPE_PARAMS = new STraversal() {
 
 		public STree<?> traverse(MethodDecl.State state) {
 			return state.typeParams;
@@ -185,15 +185,15 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 			return state.withTypeParams((STree) child);
 		}
 
-		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+		public STraversal leftSibling(MethodDecl.State state) {
 			return MODIFIERS;
 		}
 
-		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+		public STraversal rightSibling(MethodDecl.State state) {
 			return TYPE;
 		}
 	};
-	private static final STraversal<MethodDecl.State> TYPE = new STraversal<MethodDecl.State>() {
+	private static final STraversal TYPE = new STraversal() {
 
 		public STree<?> traverse(MethodDecl.State state) {
 			return state.type;
@@ -203,15 +203,15 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 			return state.withType((STree) child);
 		}
 
-		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+		public STraversal leftSibling(MethodDecl.State state) {
 			return TYPE_PARAMS;
 		}
 
-		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+		public STraversal rightSibling(MethodDecl.State state) {
 			return NAME;
 		}
 	};
-	private static final STraversal<MethodDecl.State> NAME = new STraversal<MethodDecl.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(MethodDecl.State state) {
 			return state.name;
@@ -221,15 +221,15 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 			return state.withName((STree) child);
 		}
 
-		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+		public STraversal leftSibling(MethodDecl.State state) {
 			return TYPE;
 		}
 
-		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+		public STraversal rightSibling(MethodDecl.State state) {
 			return PARAMS;
 		}
 	};
-	private static final STraversal<MethodDecl.State> PARAMS = new STraversal<MethodDecl.State>() {
+	private static final STraversal PARAMS = new STraversal() {
 
 		public STree<?> traverse(MethodDecl.State state) {
 			return state.params;
@@ -239,15 +239,15 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 			return state.withParams((STree) child);
 		}
 
-		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+		public STraversal leftSibling(MethodDecl.State state) {
 			return NAME;
 		}
 
-		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+		public STraversal rightSibling(MethodDecl.State state) {
 			return DIMS;
 		}
 	};
-	private static final STraversal<MethodDecl.State> DIMS = new STraversal<MethodDecl.State>() {
+	private static final STraversal DIMS = new STraversal() {
 
 		public STree<?> traverse(MethodDecl.State state) {
 			return state.dims;
@@ -257,15 +257,15 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 			return state.withDims((STree) child);
 		}
 
-		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+		public STraversal leftSibling(MethodDecl.State state) {
 			return PARAMS;
 		}
 
-		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+		public STraversal rightSibling(MethodDecl.State state) {
 			return THROWS_CLAUSE;
 		}
 	};
-	private static final STraversal<MethodDecl.State> THROWS_CLAUSE = new STraversal<MethodDecl.State>() {
+	private static final STraversal THROWS_CLAUSE = new STraversal() {
 
 		public STree<?> traverse(MethodDecl.State state) {
 			return state.throwsClause;
@@ -275,15 +275,15 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 			return state.withThrowsClause((STree) child);
 		}
 
-		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+		public STraversal leftSibling(MethodDecl.State state) {
 			return DIMS;
 		}
 
-		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+		public STraversal rightSibling(MethodDecl.State state) {
 			return BODY;
 		}
 	};
-	private static final STraversal<MethodDecl.State> BODY = new STraversal<MethodDecl.State>() {
+	private static final STraversal BODY = new STraversal() {
 
 		public STree<?> traverse(MethodDecl.State state) {
 			return state.body;
@@ -293,11 +293,11 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 			return state.withBody((STree) child);
 		}
 
-		public STraversal<MethodDecl.State> leftSibling(MethodDecl.State state) {
+		public STraversal leftSibling(MethodDecl.State state) {
 			return THROWS_CLAUSE;
 		}
 
-		public STraversal<MethodDecl.State> rightSibling(MethodDecl.State state) {
+		public STraversal rightSibling(MethodDecl.State state) {
 			return null;
 		}
 	};
@@ -380,11 +380,11 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 			return new MethodDecl.State(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 		}
 
-		public STraversal<MethodDecl.State> firstChild() {
+		public STraversal firstChild() {
 			return MODIFIERS;
 		}
 
-		public STraversal<MethodDecl.State> lastChild() {
+		public STraversal lastChild() {
 			return BODY;
 		}
 

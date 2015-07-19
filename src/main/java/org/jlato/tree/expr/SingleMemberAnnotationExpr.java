@@ -76,7 +76,7 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 		return location.safeTraversalMutate(MEMBER_VALUE, mutation);
 	}
 
-	private static final STraversal<SingleMemberAnnotationExpr.State> NAME = new STraversal<SingleMemberAnnotationExpr.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(SingleMemberAnnotationExpr.State state) {
 			return state.name;
@@ -86,15 +86,15 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 			return state.withName((STree) child);
 		}
 
-		public STraversal<SingleMemberAnnotationExpr.State> leftSibling(SingleMemberAnnotationExpr.State state) {
+		public STraversal leftSibling(SingleMemberAnnotationExpr.State state) {
 			return null;
 		}
 
-		public STraversal<SingleMemberAnnotationExpr.State> rightSibling(SingleMemberAnnotationExpr.State state) {
+		public STraversal rightSibling(SingleMemberAnnotationExpr.State state) {
 			return MEMBER_VALUE;
 		}
 	};
-	private static final STraversal<SingleMemberAnnotationExpr.State> MEMBER_VALUE = new STraversal<SingleMemberAnnotationExpr.State>() {
+	private static final STraversal MEMBER_VALUE = new STraversal() {
 
 		public STree<?> traverse(SingleMemberAnnotationExpr.State state) {
 			return state.memberValue;
@@ -104,11 +104,11 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 			return state.withMemberValue((STree) child);
 		}
 
-		public STraversal<SingleMemberAnnotationExpr.State> leftSibling(SingleMemberAnnotationExpr.State state) {
+		public STraversal leftSibling(SingleMemberAnnotationExpr.State state) {
 			return NAME;
 		}
 
-		public STraversal<SingleMemberAnnotationExpr.State> rightSibling(SingleMemberAnnotationExpr.State state) {
+		public STraversal rightSibling(SingleMemberAnnotationExpr.State state) {
 			return null;
 		}
 	};
@@ -139,11 +139,11 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 			return new SingleMemberAnnotationExpr.State(name, memberValue);
 		}
 
-		public STraversal<SingleMemberAnnotationExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return NAME;
 		}
 
-		public STraversal<SingleMemberAnnotationExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return MEMBER_VALUE;
 		}
 

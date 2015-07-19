@@ -76,7 +76,7 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 		return location.safeTraversalMutate(CATCH_BLOCK, mutation);
 	}
 
-	private static final STraversal<CatchClause.State> EXCEPT = new STraversal<CatchClause.State>() {
+	private static final STraversal EXCEPT = new STraversal() {
 
 		public STree<?> traverse(CatchClause.State state) {
 			return state.except;
@@ -86,15 +86,15 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 			return state.withExcept((STree) child);
 		}
 
-		public STraversal<CatchClause.State> leftSibling(CatchClause.State state) {
+		public STraversal leftSibling(CatchClause.State state) {
 			return null;
 		}
 
-		public STraversal<CatchClause.State> rightSibling(CatchClause.State state) {
+		public STraversal rightSibling(CatchClause.State state) {
 			return CATCH_BLOCK;
 		}
 	};
-	private static final STraversal<CatchClause.State> CATCH_BLOCK = new STraversal<CatchClause.State>() {
+	private static final STraversal CATCH_BLOCK = new STraversal() {
 
 		public STree<?> traverse(CatchClause.State state) {
 			return state.catchBlock;
@@ -104,11 +104,11 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 			return state.withCatchBlock((STree) child);
 		}
 
-		public STraversal<CatchClause.State> leftSibling(CatchClause.State state) {
+		public STraversal leftSibling(CatchClause.State state) {
 			return EXCEPT;
 		}
 
-		public STraversal<CatchClause.State> rightSibling(CatchClause.State state) {
+		public STraversal rightSibling(CatchClause.State state) {
 			return null;
 		}
 	};
@@ -142,11 +142,11 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 			return new CatchClause.State(except, catchBlock);
 		}
 
-		public STraversal<CatchClause.State> firstChild() {
+		public STraversal firstChild() {
 			return EXCEPT;
 		}
 
-		public STraversal<CatchClause.State> lastChild() {
+		public STraversal lastChild() {
 			return CATCH_BLOCK;
 		}
 

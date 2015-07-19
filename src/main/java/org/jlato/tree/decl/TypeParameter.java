@@ -92,7 +92,7 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 		return location.safeTraversalMutate(BOUNDS, mutation);
 	}
 
-	private static final STraversal<TypeParameter.State> ANNOTATIONS = new STraversal<TypeParameter.State>() {
+	private static final STraversal ANNOTATIONS = new STraversal() {
 
 		public STree<?> traverse(TypeParameter.State state) {
 			return state.annotations;
@@ -102,15 +102,15 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 			return state.withAnnotations((STree) child);
 		}
 
-		public STraversal<TypeParameter.State> leftSibling(TypeParameter.State state) {
+		public STraversal leftSibling(TypeParameter.State state) {
 			return null;
 		}
 
-		public STraversal<TypeParameter.State> rightSibling(TypeParameter.State state) {
+		public STraversal rightSibling(TypeParameter.State state) {
 			return NAME;
 		}
 	};
-	private static final STraversal<TypeParameter.State> NAME = new STraversal<TypeParameter.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(TypeParameter.State state) {
 			return state.name;
@@ -120,15 +120,15 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 			return state.withName((STree) child);
 		}
 
-		public STraversal<TypeParameter.State> leftSibling(TypeParameter.State state) {
+		public STraversal leftSibling(TypeParameter.State state) {
 			return ANNOTATIONS;
 		}
 
-		public STraversal<TypeParameter.State> rightSibling(TypeParameter.State state) {
+		public STraversal rightSibling(TypeParameter.State state) {
 			return BOUNDS;
 		}
 	};
-	private static final STraversal<TypeParameter.State> BOUNDS = new STraversal<TypeParameter.State>() {
+	private static final STraversal BOUNDS = new STraversal() {
 
 		public STree<?> traverse(TypeParameter.State state) {
 			return state.bounds;
@@ -138,11 +138,11 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 			return state.withBounds((STree) child);
 		}
 
-		public STraversal<TypeParameter.State> leftSibling(TypeParameter.State state) {
+		public STraversal leftSibling(TypeParameter.State state) {
 			return NAME;
 		}
 
-		public STraversal<TypeParameter.State> rightSibling(TypeParameter.State state) {
+		public STraversal rightSibling(TypeParameter.State state) {
 			return null;
 		}
 	};
@@ -191,11 +191,11 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 			return new TypeParameter.State(annotations, name, bounds);
 		}
 
-		public STraversal<TypeParameter.State> firstChild() {
+		public STraversal firstChild() {
 			return ANNOTATIONS;
 		}
 
-		public STraversal<TypeParameter.State> lastChild() {
+		public STraversal lastChild() {
 			return BOUNDS;
 		}
 

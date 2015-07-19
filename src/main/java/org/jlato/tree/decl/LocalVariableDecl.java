@@ -90,7 +90,7 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 		return location.safeTraversalMutate(VARIABLES, mutation);
 	}
 
-	private static final STraversal<LocalVariableDecl.State> MODIFIERS = new STraversal<LocalVariableDecl.State>() {
+	private static final STraversal MODIFIERS = new STraversal() {
 
 		public STree<?> traverse(LocalVariableDecl.State state) {
 			return state.modifiers;
@@ -100,15 +100,15 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 			return state.withModifiers((STree) child);
 		}
 
-		public STraversal<LocalVariableDecl.State> leftSibling(LocalVariableDecl.State state) {
+		public STraversal leftSibling(LocalVariableDecl.State state) {
 			return null;
 		}
 
-		public STraversal<LocalVariableDecl.State> rightSibling(LocalVariableDecl.State state) {
+		public STraversal rightSibling(LocalVariableDecl.State state) {
 			return TYPE;
 		}
 	};
-	private static final STraversal<LocalVariableDecl.State> TYPE = new STraversal<LocalVariableDecl.State>() {
+	private static final STraversal TYPE = new STraversal() {
 
 		public STree<?> traverse(LocalVariableDecl.State state) {
 			return state.type;
@@ -118,15 +118,15 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 			return state.withType((STree) child);
 		}
 
-		public STraversal<LocalVariableDecl.State> leftSibling(LocalVariableDecl.State state) {
+		public STraversal leftSibling(LocalVariableDecl.State state) {
 			return MODIFIERS;
 		}
 
-		public STraversal<LocalVariableDecl.State> rightSibling(LocalVariableDecl.State state) {
+		public STraversal rightSibling(LocalVariableDecl.State state) {
 			return VARIABLES;
 		}
 	};
-	private static final STraversal<LocalVariableDecl.State> VARIABLES = new STraversal<LocalVariableDecl.State>() {
+	private static final STraversal VARIABLES = new STraversal() {
 
 		public STree<?> traverse(LocalVariableDecl.State state) {
 			return state.variables;
@@ -136,11 +136,11 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 			return state.withVariables((STree) child);
 		}
 
-		public STraversal<LocalVariableDecl.State> leftSibling(LocalVariableDecl.State state) {
+		public STraversal leftSibling(LocalVariableDecl.State state) {
 			return TYPE;
 		}
 
-		public STraversal<LocalVariableDecl.State> rightSibling(LocalVariableDecl.State state) {
+		public STraversal rightSibling(LocalVariableDecl.State state) {
 			return null;
 		}
 	};
@@ -177,11 +177,11 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 			return new LocalVariableDecl.State(modifiers, type, variables);
 		}
 
-		public STraversal<LocalVariableDecl.State> firstChild() {
+		public STraversal firstChild() {
 			return MODIFIERS;
 		}
 
-		public STraversal<LocalVariableDecl.State> lastChild() {
+		public STraversal lastChild() {
 			return VARIABLES;
 		}
 

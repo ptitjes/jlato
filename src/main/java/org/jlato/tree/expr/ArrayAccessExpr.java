@@ -75,7 +75,7 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 		return location.safeTraversalMutate(INDEX, mutation);
 	}
 
-	private static final STraversal<ArrayAccessExpr.State> NAME = new STraversal<ArrayAccessExpr.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(ArrayAccessExpr.State state) {
 			return state.name;
@@ -85,15 +85,15 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 			return state.withName((STree) child);
 		}
 
-		public STraversal<ArrayAccessExpr.State> leftSibling(ArrayAccessExpr.State state) {
+		public STraversal leftSibling(ArrayAccessExpr.State state) {
 			return null;
 		}
 
-		public STraversal<ArrayAccessExpr.State> rightSibling(ArrayAccessExpr.State state) {
+		public STraversal rightSibling(ArrayAccessExpr.State state) {
 			return INDEX;
 		}
 	};
-	private static final STraversal<ArrayAccessExpr.State> INDEX = new STraversal<ArrayAccessExpr.State>() {
+	private static final STraversal INDEX = new STraversal() {
 
 		public STree<?> traverse(ArrayAccessExpr.State state) {
 			return state.index;
@@ -103,11 +103,11 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 			return state.withIndex((STree) child);
 		}
 
-		public STraversal<ArrayAccessExpr.State> leftSibling(ArrayAccessExpr.State state) {
+		public STraversal leftSibling(ArrayAccessExpr.State state) {
 			return NAME;
 		}
 
-		public STraversal<ArrayAccessExpr.State> rightSibling(ArrayAccessExpr.State state) {
+		public STraversal rightSibling(ArrayAccessExpr.State state) {
 			return null;
 		}
 	};
@@ -136,11 +136,11 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 			return new ArrayAccessExpr.State(name, index);
 		}
 
-		public STraversal<ArrayAccessExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return NAME;
 		}
 
-		public STraversal<ArrayAccessExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return INDEX;
 		}
 

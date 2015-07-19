@@ -67,7 +67,7 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 		return location.safeProperty(KEYWORD).toString();
 	}
 
-	public static final SProperty<Modifier.State> KEYWORD = new SProperty<State>() {
+	public static final SProperty KEYWORD = new SProperty() {
 		@Override
 		public Object retrieve(State state) {
 			return state.keyword;
@@ -97,11 +97,11 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 			return new Modifier.State(keyword);
 		}
 
-		public STraversal<Modifier.State> firstChild() {
+		public STraversal firstChild() {
 			return null;
 		}
 
-		public STraversal<Modifier.State> lastChild() {
+		public STraversal lastChild() {
 			return null;
 		}
 

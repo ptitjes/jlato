@@ -76,7 +76,7 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
-	private static final STraversal<InstanceOfExpr.State> EXPR = new STraversal<InstanceOfExpr.State>() {
+	private static final STraversal EXPR = new STraversal() {
 
 		public STree<?> traverse(InstanceOfExpr.State state) {
 			return state.expr;
@@ -86,15 +86,15 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 			return state.withExpr((STree) child);
 		}
 
-		public STraversal<InstanceOfExpr.State> leftSibling(InstanceOfExpr.State state) {
+		public STraversal leftSibling(InstanceOfExpr.State state) {
 			return null;
 		}
 
-		public STraversal<InstanceOfExpr.State> rightSibling(InstanceOfExpr.State state) {
+		public STraversal rightSibling(InstanceOfExpr.State state) {
 			return TYPE;
 		}
 	};
-	private static final STraversal<InstanceOfExpr.State> TYPE = new STraversal<InstanceOfExpr.State>() {
+	private static final STraversal TYPE = new STraversal() {
 
 		public STree<?> traverse(InstanceOfExpr.State state) {
 			return state.type;
@@ -104,11 +104,11 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 			return state.withType((STree) child);
 		}
 
-		public STraversal<InstanceOfExpr.State> leftSibling(InstanceOfExpr.State state) {
+		public STraversal leftSibling(InstanceOfExpr.State state) {
 			return EXPR;
 		}
 
-		public STraversal<InstanceOfExpr.State> rightSibling(InstanceOfExpr.State state) {
+		public STraversal rightSibling(InstanceOfExpr.State state) {
 			return null;
 		}
 	};
@@ -138,11 +138,11 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 			return new InstanceOfExpr.State(expr, type);
 		}
 
-		public STraversal<InstanceOfExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return EXPR;
 		}
 
-		public STraversal<InstanceOfExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return TYPE;
 		}
 

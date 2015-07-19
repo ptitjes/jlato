@@ -78,7 +78,7 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		return location.safePropertyMutate(PRIMITIVE, mutation);
 	}
 
-	private static final STraversal<PrimitiveType.State> ANNOTATIONS = new STraversal<PrimitiveType.State>() {
+	private static final STraversal ANNOTATIONS = new STraversal() {
 
 		public STree<?> traverse(PrimitiveType.State state) {
 			return state.annotations;
@@ -88,16 +88,16 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 			return state.withAnnotations((STree) child);
 		}
 
-		public STraversal<PrimitiveType.State> leftSibling(PrimitiveType.State state) {
+		public STraversal leftSibling(PrimitiveType.State state) {
 			return null;
 		}
 
-		public STraversal<PrimitiveType.State> rightSibling(PrimitiveType.State state) {
+		public STraversal rightSibling(PrimitiveType.State state) {
 			return null;
 		}
 	};
 
-	private static final SProperty<PrimitiveType.State> PRIMITIVE = new SProperty<PrimitiveType.State>() {
+	private static final SProperty PRIMITIVE = new SProperty() {
 
 		public Object retrieve(PrimitiveType.State state) {
 			return state.type;
@@ -159,11 +159,11 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 			return new PrimitiveType.State(annotations, type);
 		}
 
-		public STraversal<PrimitiveType.State> firstChild() {
+		public STraversal firstChild() {
 			return ANNOTATIONS;
 		}
 
-		public STraversal<PrimitiveType.State> lastChild() {
+		public STraversal lastChild() {
 			return ANNOTATIONS;
 		}
 

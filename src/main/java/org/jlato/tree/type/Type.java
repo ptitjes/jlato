@@ -46,7 +46,7 @@ public interface Type extends Tree {
 
 	LexicalShape unionShape = list(token(LToken.BinOr).withSpacing(space(), space()));
 
-	interface State extends STreeState<State> {
+	interface State extends STreeState {
 
 	}
 }

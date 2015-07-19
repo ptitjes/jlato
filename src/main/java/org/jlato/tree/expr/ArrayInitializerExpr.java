@@ -65,7 +65,7 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 		return location.safeTraversalMutate(VALUES, mutation);
 	}
 
-	private static final STraversal<ArrayInitializerExpr.State> VALUES = new STraversal<ArrayInitializerExpr.State>() {
+	private static final STraversal VALUES = new STraversal() {
 
 		public STree<?> traverse(ArrayInitializerExpr.State state) {
 			return state.values;
@@ -75,11 +75,11 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 			return state.withValues((STree) child);
 		}
 
-		public STraversal<ArrayInitializerExpr.State> leftSibling(ArrayInitializerExpr.State state) {
+		public STraversal leftSibling(ArrayInitializerExpr.State state) {
 			return null;
 		}
 
-		public STraversal<ArrayInitializerExpr.State> rightSibling(ArrayInitializerExpr.State state) {
+		public STraversal rightSibling(ArrayInitializerExpr.State state) {
 			return null;
 		}
 	};
@@ -107,11 +107,11 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 			return new ArrayInitializerExpr.State(values);
 		}
 
-		public STraversal<ArrayInitializerExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return VALUES;
 		}
 
-		public STraversal<ArrayInitializerExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return VALUES;
 		}
 

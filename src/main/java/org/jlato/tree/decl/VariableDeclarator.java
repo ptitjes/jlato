@@ -79,7 +79,7 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 		return location.safeTraversalMutate(INIT, mutation);
 	}
 
-	private static final STraversal<VariableDeclarator.State> ID = new STraversal<VariableDeclarator.State>() {
+	private static final STraversal ID = new STraversal() {
 
 		public STree<?> traverse(VariableDeclarator.State state) {
 			return state.id;
@@ -89,15 +89,15 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 			return state.withId((STree) child);
 		}
 
-		public STraversal<VariableDeclarator.State> leftSibling(VariableDeclarator.State state) {
+		public STraversal leftSibling(VariableDeclarator.State state) {
 			return null;
 		}
 
-		public STraversal<VariableDeclarator.State> rightSibling(VariableDeclarator.State state) {
+		public STraversal rightSibling(VariableDeclarator.State state) {
 			return INIT;
 		}
 	};
-	private static final STraversal<VariableDeclarator.State> INIT = new STraversal<VariableDeclarator.State>() {
+	private static final STraversal INIT = new STraversal() {
 
 		public STree<?> traverse(VariableDeclarator.State state) {
 			return state.init;
@@ -107,11 +107,11 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 			return state.withInit((STree) child);
 		}
 
-		public STraversal<VariableDeclarator.State> leftSibling(VariableDeclarator.State state) {
+		public STraversal leftSibling(VariableDeclarator.State state) {
 			return ID;
 		}
 
-		public STraversal<VariableDeclarator.State> rightSibling(VariableDeclarator.State state) {
+		public STraversal rightSibling(VariableDeclarator.State state) {
 			return null;
 		}
 	};
@@ -147,11 +147,11 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 			return new VariableDeclarator.State(id, init);
 		}
 
-		public STraversal<VariableDeclarator.State> firstChild() {
+		public STraversal firstChild() {
 			return ID;
 		}
 
-		public STraversal<VariableDeclarator.State> lastChild() {
+		public STraversal lastChild() {
 			return INIT;
 		}
 

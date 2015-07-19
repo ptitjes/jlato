@@ -67,7 +67,7 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final STraversal<ContinueStmt.State> ID = new STraversal<ContinueStmt.State>() {
+	private static final STraversal ID = new STraversal() {
 
 		public STree<?> traverse(ContinueStmt.State state) {
 			return state.id;
@@ -77,11 +77,11 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 			return state.withId((STree) child);
 		}
 
-		public STraversal<ContinueStmt.State> leftSibling(ContinueStmt.State state) {
+		public STraversal leftSibling(ContinueStmt.State state) {
 			return null;
 		}
 
-		public STraversal<ContinueStmt.State> rightSibling(ContinueStmt.State state) {
+		public STraversal rightSibling(ContinueStmt.State state) {
 			return null;
 		}
 	};
@@ -104,11 +104,11 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 			return new ContinueStmt.State(id);
 		}
 
-		public STraversal<ContinueStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return ID;
 		}
 
-		public STraversal<ContinueStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return ID;
 		}
 

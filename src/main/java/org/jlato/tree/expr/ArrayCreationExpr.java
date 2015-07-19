@@ -106,7 +106,7 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 		return location.safeTraversalMutate(INIT, mutation);
 	}
 
-	private static final STraversal<ArrayCreationExpr.State> TYPE = new STraversal<ArrayCreationExpr.State>() {
+	private static final STraversal TYPE = new STraversal() {
 
 		public STree<?> traverse(ArrayCreationExpr.State state) {
 			return state.type;
@@ -116,15 +116,15 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 			return state.withType((STree) child);
 		}
 
-		public STraversal<ArrayCreationExpr.State> leftSibling(ArrayCreationExpr.State state) {
+		public STraversal leftSibling(ArrayCreationExpr.State state) {
 			return null;
 		}
 
-		public STraversal<ArrayCreationExpr.State> rightSibling(ArrayCreationExpr.State state) {
+		public STraversal rightSibling(ArrayCreationExpr.State state) {
 			return DIM_EXPRS;
 		}
 	};
-	private static final STraversal<ArrayCreationExpr.State> DIM_EXPRS = new STraversal<ArrayCreationExpr.State>() {
+	private static final STraversal DIM_EXPRS = new STraversal() {
 
 		public STree<?> traverse(ArrayCreationExpr.State state) {
 			return state.dimExprs;
@@ -134,15 +134,15 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 			return state.withDimExprs((STree) child);
 		}
 
-		public STraversal<ArrayCreationExpr.State> leftSibling(ArrayCreationExpr.State state) {
+		public STraversal leftSibling(ArrayCreationExpr.State state) {
 			return TYPE;
 		}
 
-		public STraversal<ArrayCreationExpr.State> rightSibling(ArrayCreationExpr.State state) {
+		public STraversal rightSibling(ArrayCreationExpr.State state) {
 			return DIMS;
 		}
 	};
-	private static final STraversal<ArrayCreationExpr.State> DIMS = new STraversal<ArrayCreationExpr.State>() {
+	private static final STraversal DIMS = new STraversal() {
 
 		public STree<?> traverse(ArrayCreationExpr.State state) {
 			return state.dims;
@@ -152,15 +152,15 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 			return state.withDims((STree) child);
 		}
 
-		public STraversal<ArrayCreationExpr.State> leftSibling(ArrayCreationExpr.State state) {
+		public STraversal leftSibling(ArrayCreationExpr.State state) {
 			return DIM_EXPRS;
 		}
 
-		public STraversal<ArrayCreationExpr.State> rightSibling(ArrayCreationExpr.State state) {
+		public STraversal rightSibling(ArrayCreationExpr.State state) {
 			return INIT;
 		}
 	};
-	private static final STraversal<ArrayCreationExpr.State> INIT = new STraversal<ArrayCreationExpr.State>() {
+	private static final STraversal INIT = new STraversal() {
 
 		public STree<?> traverse(ArrayCreationExpr.State state) {
 			return state.init;
@@ -170,11 +170,11 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 			return state.withInit((STree) child);
 		}
 
-		public STraversal<ArrayCreationExpr.State> leftSibling(ArrayCreationExpr.State state) {
+		public STraversal leftSibling(ArrayCreationExpr.State state) {
 			return DIMS;
 		}
 
-		public STraversal<ArrayCreationExpr.State> rightSibling(ArrayCreationExpr.State state) {
+		public STraversal rightSibling(ArrayCreationExpr.State state) {
 			return null;
 		}
 	};
@@ -225,11 +225,11 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
 		}
 
-		public STraversal<ArrayCreationExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return TYPE;
 		}
 
-		public STraversal<ArrayCreationExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return INIT;
 		}
 

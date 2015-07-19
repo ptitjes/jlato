@@ -77,7 +77,7 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal<ArrayDimExpr.State> ANNOTATIONS = new STraversal<ArrayDimExpr.State>() {
+	private static final STraversal ANNOTATIONS = new STraversal() {
 
 		public STree<?> traverse(ArrayDimExpr.State state) {
 			return state.annotations;
@@ -87,15 +87,15 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 			return state.withAnnotations((STree) child);
 		}
 
-		public STraversal<ArrayDimExpr.State> leftSibling(ArrayDimExpr.State state) {
+		public STraversal leftSibling(ArrayDimExpr.State state) {
 			return null;
 		}
 
-		public STraversal<ArrayDimExpr.State> rightSibling(ArrayDimExpr.State state) {
+		public STraversal rightSibling(ArrayDimExpr.State state) {
 			return EXPR;
 		}
 	};
-	private static final STraversal<ArrayDimExpr.State> EXPR = new STraversal<ArrayDimExpr.State>() {
+	private static final STraversal EXPR = new STraversal() {
 
 		public STree<?> traverse(ArrayDimExpr.State state) {
 			return state.expr;
@@ -105,11 +105,11 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 			return state.withExpr((STree) child);
 		}
 
-		public STraversal<ArrayDimExpr.State> leftSibling(ArrayDimExpr.State state) {
+		public STraversal leftSibling(ArrayDimExpr.State state) {
 			return ANNOTATIONS;
 		}
 
-		public STraversal<ArrayDimExpr.State> rightSibling(ArrayDimExpr.State state) {
+		public STraversal rightSibling(ArrayDimExpr.State state) {
 			return null;
 		}
 	};
@@ -144,11 +144,11 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 			return new ArrayDimExpr.State(annotations, expr);
 		}
 
-		public STraversal<ArrayDimExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return ANNOTATIONS;
 		}
 
-		public STraversal<ArrayDimExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return EXPR;
 		}
 

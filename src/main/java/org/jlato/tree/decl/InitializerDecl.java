@@ -91,7 +91,7 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 			return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
 		}
 	*/
-	private static final STraversal<InitializerDecl.State> MODIFIERS = new STraversal<InitializerDecl.State>() {
+	private static final STraversal MODIFIERS = new STraversal() {
 
 		public STree<?> traverse(InitializerDecl.State state) {
 			return state.modifiers;
@@ -101,15 +101,15 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 			return state.withModifiers((STree) child);
 		}
 
-		public STraversal<InitializerDecl.State> leftSibling(InitializerDecl.State state) {
+		public STraversal leftSibling(InitializerDecl.State state) {
 			return null;
 		}
 
-		public STraversal<InitializerDecl.State> rightSibling(InitializerDecl.State state) {
+		public STraversal rightSibling(InitializerDecl.State state) {
 			return BODY;
 		}
 	};
-	private static final STraversal<InitializerDecl.State> BODY = new STraversal<InitializerDecl.State>() {
+	private static final STraversal BODY = new STraversal() {
 
 		public STree<?> traverse(InitializerDecl.State state) {
 			return state.body;
@@ -119,11 +119,11 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 			return state.withBody((STree) child);
 		}
 
-		public STraversal<InitializerDecl.State> leftSibling(InitializerDecl.State state) {
+		public STraversal leftSibling(InitializerDecl.State state) {
 			return MODIFIERS;
 		}
 
-		public STraversal<InitializerDecl.State> rightSibling(InitializerDecl.State state) {
+		public STraversal rightSibling(InitializerDecl.State state) {
 			return null;
 		}
 	};
@@ -153,11 +153,11 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 			return new InitializerDecl.State(modifiers, body);
 		}
 
-		public STraversal<InitializerDecl.State> firstChild() {
+		public STraversal firstChild() {
 			return MODIFIERS;
 		}
 
-		public STraversal<InitializerDecl.State> lastChild() {
+		public STraversal lastChild() {
 			return BODY;
 		}
 

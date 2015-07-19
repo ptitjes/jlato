@@ -66,11 +66,11 @@ public class EmptyTypeDecl extends TreeBase<EmptyTypeDecl.State, TypeDecl, Empty
 		State() {
 		}
 
-		public STraversal<EmptyTypeDecl.State> firstChild() {
+		public STraversal firstChild() {
 			return null;
 		}
 
-		public STraversal<EmptyTypeDecl.State> lastChild() {
+		public STraversal lastChild() {
 			return null;
 		}
 

@@ -56,11 +56,11 @@ public class EmptyStmt extends TreeBase<EmptyStmt.State, Stmt, EmptyStmt> implem
 		State() {
 		}
 
-		public STraversal<EmptyStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return null;
 		}
 
-		public STraversal<EmptyStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return null;
 		}
 

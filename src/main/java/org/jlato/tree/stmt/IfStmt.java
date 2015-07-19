@@ -96,7 +96,7 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 		return location.safeTraversalMutate(ELSE_STMT, mutation);
 	}
 
-	private static final STraversal<IfStmt.State> CONDITION = new STraversal<IfStmt.State>() {
+	private static final STraversal CONDITION = new STraversal() {
 
 		public STree<?> traverse(IfStmt.State state) {
 			return state.condition;
@@ -106,15 +106,15 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 			return state.withCondition((STree) child);
 		}
 
-		public STraversal<IfStmt.State> leftSibling(IfStmt.State state) {
+		public STraversal leftSibling(IfStmt.State state) {
 			return null;
 		}
 
-		public STraversal<IfStmt.State> rightSibling(IfStmt.State state) {
+		public STraversal rightSibling(IfStmt.State state) {
 			return THEN_STMT;
 		}
 	};
-	private static final STraversal<IfStmt.State> THEN_STMT = new STraversal<IfStmt.State>() {
+	private static final STraversal THEN_STMT = new STraversal() {
 
 		public STree<?> traverse(IfStmt.State state) {
 			return state.thenStmt;
@@ -124,15 +124,15 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 			return state.withThenStmt((STree) child);
 		}
 
-		public STraversal<IfStmt.State> leftSibling(IfStmt.State state) {
+		public STraversal leftSibling(IfStmt.State state) {
 			return CONDITION;
 		}
 
-		public STraversal<IfStmt.State> rightSibling(IfStmt.State state) {
+		public STraversal rightSibling(IfStmt.State state) {
 			return ELSE_STMT;
 		}
 	};
-	private static final STraversal<IfStmt.State> ELSE_STMT = new STraversal<IfStmt.State>() {
+	private static final STraversal ELSE_STMT = new STraversal() {
 
 		public STree<?> traverse(IfStmt.State state) {
 			return state.elseStmt;
@@ -142,11 +142,11 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 			return state.withElseStmt((STree) child);
 		}
 
-		public STraversal<IfStmt.State> leftSibling(IfStmt.State state) {
+		public STraversal leftSibling(IfStmt.State state) {
 			return THEN_STMT;
 		}
 
-		public STraversal<IfStmt.State> rightSibling(IfStmt.State state) {
+		public STraversal rightSibling(IfStmt.State state) {
 			return null;
 		}
 	};
@@ -196,7 +196,7 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 			))
 	);
 
-	public static class State extends SNodeState<State> {
+	public static class State extends SNodeState<State> implements Stmt.State {
 
 		public final STree<Expr.State> condition;
 
@@ -222,15 +222,15 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 			return new IfStmt.State(condition, thenStmt, elseStmt);
 		}
 
-		public STraversal<IfStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return CONDITION;
 		}
 
-		public STraversal<IfStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return ELSE_STMT;
 		}
 
-		public Tree instantiate(SLocation<IfStmt.State> location) {
+		public Tree doInstantiate(SLocation<IfStmt.State> location) {
 			return new IfStmt(location);
 		}
 

@@ -105,7 +105,7 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 		return location.safeTraversalMutate(FINALLY_BLOCK, mutation);
 	}
 
-	private static final STraversal<TryStmt.State> RESOURCES = new STraversal<TryStmt.State>() {
+	private static final STraversal RESOURCES = new STraversal() {
 
 		public STree<?> traverse(TryStmt.State state) {
 			return state.resources;
@@ -115,15 +115,15 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 			return state.withResources((STree) child);
 		}
 
-		public STraversal<TryStmt.State> leftSibling(TryStmt.State state) {
+		public STraversal leftSibling(TryStmt.State state) {
 			return null;
 		}
 
-		public STraversal<TryStmt.State> rightSibling(TryStmt.State state) {
+		public STraversal rightSibling(TryStmt.State state) {
 			return TRY_BLOCK;
 		}
 	};
-	private static final STraversal<TryStmt.State> TRY_BLOCK = new STraversal<TryStmt.State>() {
+	private static final STraversal TRY_BLOCK = new STraversal() {
 
 		public STree<?> traverse(TryStmt.State state) {
 			return state.tryBlock;
@@ -133,15 +133,15 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 			return state.withTryBlock((STree) child);
 		}
 
-		public STraversal<TryStmt.State> leftSibling(TryStmt.State state) {
+		public STraversal leftSibling(TryStmt.State state) {
 			return RESOURCES;
 		}
 
-		public STraversal<TryStmt.State> rightSibling(TryStmt.State state) {
+		public STraversal rightSibling(TryStmt.State state) {
 			return CATCHS;
 		}
 	};
-	private static final STraversal<TryStmt.State> CATCHS = new STraversal<TryStmt.State>() {
+	private static final STraversal CATCHS = new STraversal() {
 
 		public STree<?> traverse(TryStmt.State state) {
 			return state.catchs;
@@ -151,15 +151,15 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 			return state.withCatchs((STree) child);
 		}
 
-		public STraversal<TryStmt.State> leftSibling(TryStmt.State state) {
+		public STraversal leftSibling(TryStmt.State state) {
 			return TRY_BLOCK;
 		}
 
-		public STraversal<TryStmt.State> rightSibling(TryStmt.State state) {
+		public STraversal rightSibling(TryStmt.State state) {
 			return FINALLY_BLOCK;
 		}
 	};
-	private static final STraversal<TryStmt.State> FINALLY_BLOCK = new STraversal<TryStmt.State>() {
+	private static final STraversal FINALLY_BLOCK = new STraversal() {
 
 		public STree<?> traverse(TryStmt.State state) {
 			return state.finallyBlock;
@@ -169,11 +169,11 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 			return state.withFinallyBlock((STree) child);
 		}
 
-		public STraversal<TryStmt.State> leftSibling(TryStmt.State state) {
+		public STraversal leftSibling(TryStmt.State state) {
 			return CATCHS;
 		}
 
-		public STraversal<TryStmt.State> rightSibling(TryStmt.State state) {
+		public STraversal rightSibling(TryStmt.State state) {
 			return null;
 		}
 	};
@@ -222,11 +222,11 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
 		}
 
-		public STraversal<TryStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return RESOURCES;
 		}
 
-		public STraversal<TryStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return FINALLY_BLOCK;
 		}
 

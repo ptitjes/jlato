@@ -105,7 +105,7 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 	}
 */
 
-	private static final STraversal<FieldDecl.State> MODIFIERS = new STraversal<FieldDecl.State>() {
+	private static final STraversal MODIFIERS = new STraversal() {
 
 		public STree<?> traverse(FieldDecl.State state) {
 			return state.modifiers;
@@ -115,15 +115,15 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 			return state.withModifiers((STree) child);
 		}
 
-		public STraversal<FieldDecl.State> leftSibling(FieldDecl.State state) {
+		public STraversal leftSibling(FieldDecl.State state) {
 			return null;
 		}
 
-		public STraversal<FieldDecl.State> rightSibling(FieldDecl.State state) {
+		public STraversal rightSibling(FieldDecl.State state) {
 			return TYPE;
 		}
 	};
-	private static final STraversal<FieldDecl.State> TYPE = new STraversal<FieldDecl.State>() {
+	private static final STraversal TYPE = new STraversal() {
 
 		public STree<?> traverse(FieldDecl.State state) {
 			return state.type;
@@ -133,15 +133,15 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 			return state.withType((STree) child);
 		}
 
-		public STraversal<FieldDecl.State> leftSibling(FieldDecl.State state) {
+		public STraversal leftSibling(FieldDecl.State state) {
 			return MODIFIERS;
 		}
 
-		public STraversal<FieldDecl.State> rightSibling(FieldDecl.State state) {
+		public STraversal rightSibling(FieldDecl.State state) {
 			return VARIABLES;
 		}
 	};
-	private static final STraversal<FieldDecl.State> VARIABLES = new STraversal<FieldDecl.State>() {
+	private static final STraversal VARIABLES = new STraversal() {
 
 		public STree<?> traverse(FieldDecl.State state) {
 			return state.variables;
@@ -151,11 +151,11 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 			return state.withVariables((STree) child);
 		}
 
-		public STraversal<FieldDecl.State> leftSibling(FieldDecl.State state) {
+		public STraversal leftSibling(FieldDecl.State state) {
 			return TYPE;
 		}
 
-		public STraversal<FieldDecl.State> rightSibling(FieldDecl.State state) {
+		public STraversal rightSibling(FieldDecl.State state) {
 			return null;
 		}
 	};
@@ -194,11 +194,11 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 			return new FieldDecl.State(modifiers, type, variables);
 		}
 
-		public STraversal<FieldDecl.State> firstChild() {
+		public STraversal firstChild() {
 			return MODIFIERS;
 		}
 
-		public STraversal<FieldDecl.State> lastChild() {
+		public STraversal lastChild() {
 			return VARIABLES;
 		}
 

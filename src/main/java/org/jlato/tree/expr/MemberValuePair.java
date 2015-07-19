@@ -75,7 +75,7 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 		return location.safeTraversalMutate(VALUE, mutation);
 	}
 
-	private static final STraversal<MemberValuePair.State> NAME = new STraversal<MemberValuePair.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(MemberValuePair.State state) {
 			return state.name;
@@ -85,15 +85,15 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 			return state.withName((STree) child);
 		}
 
-		public STraversal<MemberValuePair.State> leftSibling(MemberValuePair.State state) {
+		public STraversal leftSibling(MemberValuePair.State state) {
 			return null;
 		}
 
-		public STraversal<MemberValuePair.State> rightSibling(MemberValuePair.State state) {
+		public STraversal rightSibling(MemberValuePair.State state) {
 			return VALUE;
 		}
 	};
-	private static final STraversal<MemberValuePair.State> VALUE = new STraversal<MemberValuePair.State>() {
+	private static final STraversal VALUE = new STraversal() {
 
 		public STree<?> traverse(MemberValuePair.State state) {
 			return state.value;
@@ -103,11 +103,11 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 			return state.withValue((STree) child);
 		}
 
-		public STraversal<MemberValuePair.State> leftSibling(MemberValuePair.State state) {
+		public STraversal leftSibling(MemberValuePair.State state) {
 			return NAME;
 		}
 
-		public STraversal<MemberValuePair.State> rightSibling(MemberValuePair.State state) {
+		public STraversal rightSibling(MemberValuePair.State state) {
 			return null;
 		}
 	};
@@ -135,11 +135,11 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 			return new MemberValuePair.State(name, value);
 		}
 
-		public STraversal<MemberValuePair.State> firstChild() {
+		public STraversal firstChild() {
 			return NAME;
 		}
 
-		public STraversal<MemberValuePair.State> lastChild() {
+		public STraversal lastChild() {
 			return VALUE;
 		}
 

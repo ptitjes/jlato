@@ -64,7 +64,7 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal<ThrowStmt.State> EXPR = new STraversal<ThrowStmt.State>() {
+	private static final STraversal EXPR = new STraversal() {
 
 		public STree<?> traverse(ThrowStmt.State state) {
 			return state.expr;
@@ -74,11 +74,11 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 			return state.withExpr((STree) child);
 		}
 
-		public STraversal<ThrowStmt.State> leftSibling(ThrowStmt.State state) {
+		public STraversal leftSibling(ThrowStmt.State state) {
 			return null;
 		}
 
-		public STraversal<ThrowStmt.State> rightSibling(ThrowStmt.State state) {
+		public STraversal rightSibling(ThrowStmt.State state) {
 			return null;
 		}
 	};
@@ -99,11 +99,11 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 			return new ThrowStmt.State(expr);
 		}
 
-		public STraversal<ThrowStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return EXPR;
 		}
 
-		public STraversal<ThrowStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return EXPR;
 		}
 

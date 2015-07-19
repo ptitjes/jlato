@@ -80,7 +80,7 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 		return location.safeTraversalMutate(MSG, mutation);
 	}
 
-	private static final STraversal<AssertStmt.State> CHECK = new STraversal<AssertStmt.State>() {
+	private static final STraversal CHECK = new STraversal() {
 
 		public STree<?> traverse(AssertStmt.State state) {
 			return state.check;
@@ -90,15 +90,15 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 			return state.withCheck((STree) child);
 		}
 
-		public STraversal<AssertStmt.State> leftSibling(AssertStmt.State state) {
+		public STraversal leftSibling(AssertStmt.State state) {
 			return null;
 		}
 
-		public STraversal<AssertStmt.State> rightSibling(AssertStmt.State state) {
+		public STraversal rightSibling(AssertStmt.State state) {
 			return MSG;
 		}
 	};
-	private static final STraversal<AssertStmt.State> MSG = new STraversal<AssertStmt.State>() {
+	private static final STraversal MSG = new STraversal() {
 
 		public STree<?> traverse(AssertStmt.State state) {
 			return state.msg;
@@ -108,11 +108,11 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 			return state.withMsg((STree) child);
 		}
 
-		public STraversal<AssertStmt.State> leftSibling(AssertStmt.State state) {
+		public STraversal leftSibling(AssertStmt.State state) {
 			return CHECK;
 		}
 
-		public STraversal<AssertStmt.State> rightSibling(AssertStmt.State state) {
+		public STraversal rightSibling(AssertStmt.State state) {
 			return null;
 		}
 	};
@@ -146,11 +146,11 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 			return new AssertStmt.State(check, msg);
 		}
 
-		public STraversal<AssertStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return CHECK;
 		}
 
-		public STraversal<AssertStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return MSG;
 		}
 

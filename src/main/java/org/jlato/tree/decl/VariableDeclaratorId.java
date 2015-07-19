@@ -76,7 +76,7 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
-	private static final STraversal<VariableDeclaratorId.State> NAME = new STraversal<VariableDeclaratorId.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(VariableDeclaratorId.State state) {
 			return state.name;
@@ -86,15 +86,15 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 			return state.withName((STree) child);
 		}
 
-		public STraversal<VariableDeclaratorId.State> leftSibling(VariableDeclaratorId.State state) {
+		public STraversal leftSibling(VariableDeclaratorId.State state) {
 			return null;
 		}
 
-		public STraversal<VariableDeclaratorId.State> rightSibling(VariableDeclaratorId.State state) {
+		public STraversal rightSibling(VariableDeclaratorId.State state) {
 			return DIMS;
 		}
 	};
-	private static final STraversal<VariableDeclaratorId.State> DIMS = new STraversal<VariableDeclaratorId.State>() {
+	private static final STraversal DIMS = new STraversal() {
 
 		public STree<?> traverse(VariableDeclaratorId.State state) {
 			return state.dims;
@@ -104,11 +104,11 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 			return state.withDims((STree) child);
 		}
 
-		public STraversal<VariableDeclaratorId.State> leftSibling(VariableDeclaratorId.State state) {
+		public STraversal leftSibling(VariableDeclaratorId.State state) {
 			return NAME;
 		}
 
-		public STraversal<VariableDeclaratorId.State> rightSibling(VariableDeclaratorId.State state) {
+		public STraversal rightSibling(VariableDeclaratorId.State state) {
 			return null;
 		}
 	};
@@ -137,11 +137,11 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 			return new VariableDeclaratorId.State(name, dims);
 		}
 
-		public STraversal<VariableDeclaratorId.State> firstChild() {
+		public STraversal firstChild() {
 			return NAME;
 		}
 
-		public STraversal<VariableDeclaratorId.State> lastChild() {
+		public STraversal lastChild() {
 			return DIMS;
 		}
 

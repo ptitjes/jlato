@@ -97,7 +97,7 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 		return qualifier.isDefined() ? qualifier.get().toString() + "." + name.toString() : name.toString();
 	}
 
-	private static final STraversal<QualifiedName.State> QUALIFIER = new STraversal<QualifiedName.State>() {
+	private static final STraversal QUALIFIER = new STraversal() {
 
 		public STree<?> traverse(QualifiedName.State state) {
 			return state.qualifier;
@@ -107,15 +107,15 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 			return state.withQualifier((STree) child);
 		}
 
-		public STraversal<QualifiedName.State> leftSibling(QualifiedName.State state) {
+		public STraversal leftSibling(QualifiedName.State state) {
 			return null;
 		}
 
-		public STraversal<QualifiedName.State> rightSibling(QualifiedName.State state) {
+		public STraversal rightSibling(QualifiedName.State state) {
 			return NAME;
 		}
 	};
-	private static final STraversal<QualifiedName.State> NAME = new STraversal<QualifiedName.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(QualifiedName.State state) {
 			return state.name;
@@ -125,11 +125,11 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 			return state.withName((STree) child);
 		}
 
-		public STraversal<QualifiedName.State> leftSibling(QualifiedName.State state) {
+		public STraversal leftSibling(QualifiedName.State state) {
 			return QUALIFIER;
 		}
 
-		public STraversal<QualifiedName.State> rightSibling(QualifiedName.State state) {
+		public STraversal rightSibling(QualifiedName.State state) {
 			return null;
 		}
 	};
@@ -160,11 +160,11 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 			return new QualifiedName.State(qualifier, name);
 		}
 
-		public STraversal<QualifiedName.State> firstChild() {
+		public STraversal firstChild() {
 			return QUALIFIER;
 		}
 
-		public STraversal<QualifiedName.State> lastChild() {
+		public STraversal lastChild() {
 			return NAME;
 		}
 

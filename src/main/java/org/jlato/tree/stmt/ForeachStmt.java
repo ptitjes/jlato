@@ -90,7 +90,7 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal<ForeachStmt.State> VAR = new STraversal<ForeachStmt.State>() {
+	private static final STraversal VAR = new STraversal() {
 
 		public STree<?> traverse(ForeachStmt.State state) {
 			return state.var;
@@ -100,15 +100,15 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 			return state.withVar((STree) child);
 		}
 
-		public STraversal<ForeachStmt.State> leftSibling(ForeachStmt.State state) {
+		public STraversal leftSibling(ForeachStmt.State state) {
 			return null;
 		}
 
-		public STraversal<ForeachStmt.State> rightSibling(ForeachStmt.State state) {
+		public STraversal rightSibling(ForeachStmt.State state) {
 			return ITERABLE;
 		}
 	};
-	private static final STraversal<ForeachStmt.State> ITERABLE = new STraversal<ForeachStmt.State>() {
+	private static final STraversal ITERABLE = new STraversal() {
 
 		public STree<?> traverse(ForeachStmt.State state) {
 			return state.iterable;
@@ -118,15 +118,15 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 			return state.withIterable((STree) child);
 		}
 
-		public STraversal<ForeachStmt.State> leftSibling(ForeachStmt.State state) {
+		public STraversal leftSibling(ForeachStmt.State state) {
 			return VAR;
 		}
 
-		public STraversal<ForeachStmt.State> rightSibling(ForeachStmt.State state) {
+		public STraversal rightSibling(ForeachStmt.State state) {
 			return BODY;
 		}
 	};
-	private static final STraversal<ForeachStmt.State> BODY = new STraversal<ForeachStmt.State>() {
+	private static final STraversal BODY = new STraversal() {
 
 		public STree<?> traverse(ForeachStmt.State state) {
 			return state.body;
@@ -136,11 +136,11 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 			return state.withBody((STree) child);
 		}
 
-		public STraversal<ForeachStmt.State> leftSibling(ForeachStmt.State state) {
+		public STraversal leftSibling(ForeachStmt.State state) {
 			return ITERABLE;
 		}
 
-		public STraversal<ForeachStmt.State> rightSibling(ForeachStmt.State state) {
+		public STraversal rightSibling(ForeachStmt.State state) {
 			return null;
 		}
 	};
@@ -180,11 +180,11 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 			return new ForeachStmt.State(var, iterable, body);
 		}
 
-		public STraversal<ForeachStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return VAR;
 		}
 
-		public STraversal<ForeachStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return BODY;
 		}
 

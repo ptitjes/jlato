@@ -105,7 +105,7 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 		return location.safeTraversalMutate(TYPE_ARGS, mutation);
 	}
 
-	private static final STraversal<QualifiedType.State> ANNOTATIONS = new STraversal<QualifiedType.State>() {
+	private static final STraversal ANNOTATIONS = new STraversal() {
 
 		public STree<?> traverse(QualifiedType.State state) {
 			return state.annotations;
@@ -115,15 +115,15 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 			return state.withAnnotations((STree) child);
 		}
 
-		public STraversal<QualifiedType.State> leftSibling(QualifiedType.State state) {
+		public STraversal leftSibling(QualifiedType.State state) {
 			return null;
 		}
 
-		public STraversal<QualifiedType.State> rightSibling(QualifiedType.State state) {
+		public STraversal rightSibling(QualifiedType.State state) {
 			return SCOPE;
 		}
 	};
-	private static final STraversal<QualifiedType.State> SCOPE = new STraversal<QualifiedType.State>() {
+	private static final STraversal SCOPE = new STraversal() {
 
 		public STree<?> traverse(QualifiedType.State state) {
 			return state.scope;
@@ -133,15 +133,15 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 			return state.withScope((STree) child);
 		}
 
-		public STraversal<QualifiedType.State> leftSibling(QualifiedType.State state) {
+		public STraversal leftSibling(QualifiedType.State state) {
 			return ANNOTATIONS;
 		}
 
-		public STraversal<QualifiedType.State> rightSibling(QualifiedType.State state) {
+		public STraversal rightSibling(QualifiedType.State state) {
 			return NAME;
 		}
 	};
-	private static final STraversal<QualifiedType.State> NAME = new STraversal<QualifiedType.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(QualifiedType.State state) {
 			return state.name;
@@ -151,15 +151,15 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 			return state.withName((STree) child);
 		}
 
-		public STraversal<QualifiedType.State> leftSibling(QualifiedType.State state) {
+		public STraversal leftSibling(QualifiedType.State state) {
 			return SCOPE;
 		}
 
-		public STraversal<QualifiedType.State> rightSibling(QualifiedType.State state) {
+		public STraversal rightSibling(QualifiedType.State state) {
 			return TYPE_ARGS;
 		}
 	};
-	private static final STraversal<QualifiedType.State> TYPE_ARGS = new STraversal<QualifiedType.State>() {
+	private static final STraversal TYPE_ARGS = new STraversal() {
 
 		public STree<?> traverse(QualifiedType.State state) {
 			return state.typeArgs;
@@ -169,11 +169,11 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 			return state.withTypeArgs((STree) child);
 		}
 
-		public STraversal<QualifiedType.State> leftSibling(QualifiedType.State state) {
+		public STraversal leftSibling(QualifiedType.State state) {
 			return NAME;
 		}
 
-		public STraversal<QualifiedType.State> rightSibling(QualifiedType.State state) {
+		public STraversal rightSibling(QualifiedType.State state) {
 			return null;
 		}
 	};
@@ -238,11 +238,11 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 			return new QualifiedType.State(annotations, scope, name, typeArgs);
 		}
 
-		public STraversal<QualifiedType.State> firstChild() {
+		public STraversal firstChild() {
 			return ANNOTATIONS;
 		}
 
-		public STraversal<QualifiedType.State> lastChild() {
+		public STraversal lastChild() {
 			return TYPE_ARGS;
 		}
 

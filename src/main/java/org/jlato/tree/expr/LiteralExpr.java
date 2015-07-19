@@ -101,7 +101,7 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 		return (LiteralExpr<T>) location.safePropertyReplace((SProperty) STRING, Literals.<T>from((Class<T>) literalClass, value));
 	}
 
-	private static final SProperty<LiteralExpr.State> CLASS = new SProperty<State>() {
+	private static final SProperty CLASS = new SProperty() {
 		@Override
 		public Object retrieve(State state) {
 			return state.literalClass;
@@ -112,7 +112,7 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 			return state.withLiteralClass((Class<?>) value);
 		}
 	};
-	private static final SProperty<LiteralExpr.State> STRING = new SProperty<State>() {
+	private static final SProperty STRING = new SProperty() {
 		@Override
 		public Object retrieve(State state) {
 			return state.literalString;
@@ -151,11 +151,11 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 			return new LiteralExpr.State(literalClass, literalString);
 		}
 
-		public STraversal<LiteralExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return null;
 		}
 
-		public STraversal<LiteralExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return null;
 		}
 

@@ -66,7 +66,7 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 		return location.safeTraversalMutate(CLASS_EXPR, mutation);
 	}
 
-	private static final STraversal<ThisExpr.State> CLASS_EXPR = new STraversal<ThisExpr.State>() {
+	private static final STraversal CLASS_EXPR = new STraversal() {
 
 		public STree<?> traverse(ThisExpr.State state) {
 			return state.classExpr;
@@ -76,11 +76,11 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 			return state.withClassExpr((STree) child);
 		}
 
-		public STraversal<ThisExpr.State> leftSibling(ThisExpr.State state) {
+		public STraversal leftSibling(ThisExpr.State state) {
 			return null;
 		}
 
-		public STraversal<ThisExpr.State> rightSibling(ThisExpr.State state) {
+		public STraversal rightSibling(ThisExpr.State state) {
 			return null;
 		}
 	};
@@ -102,11 +102,11 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 			return new ThisExpr.State(classExpr);
 		}
 
-		public STraversal<ThisExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return CLASS_EXPR;
 		}
 
-		public STraversal<ThisExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return CLASS_EXPR;
 		}
 

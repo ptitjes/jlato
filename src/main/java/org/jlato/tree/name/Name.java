@@ -70,7 +70,7 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 		return name();
 	}
 
-	public static final SProperty<Name.State> IDENTIFIER = new SProperty<State>() {
+	public static final SProperty IDENTIFIER = new SProperty() {
 		@Override
 		public Object retrieve(State state) {
 			return state.identifier;
@@ -100,11 +100,11 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 			return new Name.State(identifier);
 		}
 
-		public STraversal<Name.State> firstChild() {
+		public STraversal firstChild() {
 			return null;
 		}
 
-		public STraversal<Name.State> lastChild() {
+		public STraversal lastChild() {
 			return null;
 		}
 

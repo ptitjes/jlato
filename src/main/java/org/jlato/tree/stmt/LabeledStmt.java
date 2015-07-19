@@ -81,7 +81,7 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 		return location.safeTraversalMutate(STMT, mutation);
 	}
 
-	private static final STraversal<LabeledStmt.State> LABEL = new STraversal<LabeledStmt.State>() {
+	private static final STraversal LABEL = new STraversal() {
 
 		public STree<?> traverse(LabeledStmt.State state) {
 			return state.label;
@@ -91,15 +91,15 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 			return state.withLabel((STree) child);
 		}
 
-		public STraversal<LabeledStmt.State> leftSibling(LabeledStmt.State state) {
+		public STraversal leftSibling(LabeledStmt.State state) {
 			return null;
 		}
 
-		public STraversal<LabeledStmt.State> rightSibling(LabeledStmt.State state) {
+		public STraversal rightSibling(LabeledStmt.State state) {
 			return STMT;
 		}
 	};
-	private static final STraversal<LabeledStmt.State> STMT = new STraversal<LabeledStmt.State>() {
+	private static final STraversal STMT = new STraversal() {
 
 		public STree<?> traverse(LabeledStmt.State state) {
 			return state.stmt;
@@ -109,11 +109,11 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 			return state.withStmt((STree) child);
 		}
 
-		public STraversal<LabeledStmt.State> leftSibling(LabeledStmt.State state) {
+		public STraversal leftSibling(LabeledStmt.State state) {
 			return LABEL;
 		}
 
-		public STraversal<LabeledStmt.State> rightSibling(LabeledStmt.State state) {
+		public STraversal rightSibling(LabeledStmt.State state) {
 			return null;
 		}
 	};
@@ -145,11 +145,11 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 			return new LabeledStmt.State(label, stmt);
 		}
 
-		public STraversal<LabeledStmt.State> firstChild() {
+		public STraversal firstChild() {
 			return LABEL;
 		}
 
-		public STraversal<LabeledStmt.State> lastChild() {
+		public STraversal lastChild() {
 			return STMT;
 		}
 

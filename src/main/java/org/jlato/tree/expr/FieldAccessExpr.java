@@ -79,7 +79,7 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal<FieldAccessExpr.State> SCOPE = new STraversal<FieldAccessExpr.State>() {
+	private static final STraversal SCOPE = new STraversal() {
 
 		public STree<?> traverse(FieldAccessExpr.State state) {
 			return state.scope;
@@ -89,15 +89,15 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 			return state.withScope((STree) child);
 		}
 
-		public STraversal<FieldAccessExpr.State> leftSibling(FieldAccessExpr.State state) {
+		public STraversal leftSibling(FieldAccessExpr.State state) {
 			return null;
 		}
 
-		public STraversal<FieldAccessExpr.State> rightSibling(FieldAccessExpr.State state) {
+		public STraversal rightSibling(FieldAccessExpr.State state) {
 			return NAME;
 		}
 	};
-	private static final STraversal<FieldAccessExpr.State> NAME = new STraversal<FieldAccessExpr.State>() {
+	private static final STraversal NAME = new STraversal() {
 
 		public STree<?> traverse(FieldAccessExpr.State state) {
 			return state.name;
@@ -107,11 +107,11 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 			return state.withName((STree) child);
 		}
 
-		public STraversal<FieldAccessExpr.State> leftSibling(FieldAccessExpr.State state) {
+		public STraversal leftSibling(FieldAccessExpr.State state) {
 			return SCOPE;
 		}
 
-		public STraversal<FieldAccessExpr.State> rightSibling(FieldAccessExpr.State state) {
+		public STraversal rightSibling(FieldAccessExpr.State state) {
 			return null;
 		}
 	};
@@ -140,11 +140,11 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 			return new FieldAccessExpr.State(scope, name);
 		}
 
-		public STraversal<FieldAccessExpr.State> firstChild() {
+		public STraversal firstChild() {
 			return SCOPE;
 		}
 
-		public STraversal<FieldAccessExpr.State> lastChild() {
+		public STraversal lastChild() {
 			return NAME;
 		}
 
