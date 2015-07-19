@@ -38,6 +38,8 @@ import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.spacing;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> implements Stmt {
 
@@ -81,43 +83,6 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 		return location.safeTraversalMutate(STMT, mutation);
 	}
 
-	private static final STraversal LABEL = new STraversal() {
-
-		public STree<?> traverse(LabeledStmt.State state) {
-			return state.label;
-		}
-
-		public LabeledStmt.State rebuildParentState(LabeledStmt.State state, STree<?> child) {
-			return state.withLabel((STree) child);
-		}
-
-		public STraversal leftSibling(LabeledStmt.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(LabeledStmt.State state) {
-			return STMT;
-		}
-	};
-	private static final STraversal STMT = new STraversal() {
-
-		public STree<?> traverse(LabeledStmt.State state) {
-			return state.stmt;
-		}
-
-		public LabeledStmt.State rebuildParentState(LabeledStmt.State state, STree<?> child) {
-			return state.withStmt((STree) child);
-		}
-
-		public STraversal leftSibling(LabeledStmt.State state) {
-			return LABEL;
-		}
-
-		public STraversal rightSibling(LabeledStmt.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			none().withIndentationAfter(indent(IndentationContext.LABEL)),
 			child(LABEL),
@@ -125,44 +90,4 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 			none().withIndentationBefore(unIndent(IndentationContext.LABEL)),
 			child(STMT)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Name.State> label;
-
-		public final STree<Stmt.State> stmt;
-
-		State(STree<Name.State> label, STree<Stmt.State> stmt) {
-			this.label = label;
-			this.stmt = stmt;
-		}
-
-		public LabeledStmt.State withLabel(STree<Name.State> label) {
-			return new LabeledStmt.State(label, stmt);
-		}
-
-		public LabeledStmt.State withStmt(STree<Stmt.State> stmt) {
-			return new LabeledStmt.State(label, stmt);
-		}
-
-		public STraversal firstChild() {
-			return LABEL;
-		}
-
-		public STraversal lastChild() {
-			return STMT;
-		}
-
-		public Tree instantiate(SLocation<LabeledStmt.State> location) {
-			return new LabeledStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.LabeledStmt;
-		}
-	}
 }

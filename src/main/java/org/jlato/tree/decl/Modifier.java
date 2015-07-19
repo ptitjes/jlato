@@ -31,6 +31,8 @@ import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifier> implements ExtendedModifier {
 
@@ -43,16 +45,27 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 	public static STree<Modifier.State> make(LToken keyword) {
 		return new STree<Modifier.State>(new Modifier.State(keyword));
 	}
+
 	public static final Modifier Protected = new Modifier(LToken.Protected);
+
 	public static final Modifier Private = new Modifier(LToken.Private);
+
 	public static final Modifier Abstract = new Modifier(LToken.Abstract);
+
 	public static final Modifier Default = new Modifier(LToken.Default);
+
 	public static final Modifier Static = new Modifier(LToken.Static);
+
 	public static final Modifier Final = new Modifier(LToken.Final);
+
 	public static final Modifier Transient = new Modifier(LToken.Transient);
+
 	public static final Modifier Volatile = new Modifier(LToken.Volatile);
+
 	public static final Modifier Synchronized = new Modifier(LToken.Synchronized);
+
 	public static final Modifier Native = new Modifier(LToken.Native);
+
 	public static final Modifier StrictFP = new Modifier(LToken.StrictFP);
 
 	protected Modifier(SLocation<Modifier.State> location) {
@@ -67,54 +80,9 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 		return location.safeProperty(KEYWORD).toString();
 	}
 
-	public static final SProperty KEYWORD = new SProperty() {
-		@Override
-		public Object retrieve(State state) {
-			return state.keyword;
-		}
-
-		@Override
-		public State rebuildParentState(State state, Object value) {
-			return state.withKeyword((LToken) value);
-		}
-	};
-
 	public final static LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
 			return ((State) tree.state).keyword;
 		}
 	});
-
-	public static class State extends SNodeState<State> {
-
-		public final LToken keyword;
-
-		State(LToken keyword) {
-			this.keyword = keyword;
-		}
-
-		public Modifier.State withKeyword(LToken keyword) {
-			return new Modifier.State(keyword);
-		}
-
-		public STraversal firstChild() {
-			return null;
-		}
-
-		public STraversal lastChild() {
-			return null;
-		}
-
-		public Tree instantiate(SLocation<Modifier.State> location) {
-			return new Modifier(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.Modifier;
-		}
-	}
 }

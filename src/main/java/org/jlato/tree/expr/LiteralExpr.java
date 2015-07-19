@@ -33,6 +33,8 @@ import org.jlato.tree.Tree;
 import static org.jlato.internal.shapes.LexicalShape.token;
 
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExpr> implements Expr {
 
@@ -101,29 +103,6 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 		return (LiteralExpr<T>) location.safePropertyReplace((SProperty) STRING, Literals.<T>from((Class<T>) literalClass, value));
 	}
 
-	private static final SProperty CLASS = new SProperty() {
-		@Override
-		public Object retrieve(State state) {
-			return state.literalClass;
-		}
-
-		@Override
-		public State rebuildParentState(State state, Object value) {
-			return state.withLiteralClass((Class<?>) value);
-		}
-	};
-	private static final SProperty STRING = new SProperty() {
-		@Override
-		public Object retrieve(State state) {
-			return state.literalString;
-		}
-
-		@Override
-		public State rebuildParentState(State state, Object value) {
-			return state.withLiteralString((String) value);
-		}
-	};
-
 	public final static LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
 			final Class<?> literalClass = ((State) tree.state).literalClass;
@@ -131,44 +110,4 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 			return new LToken(0, literalString); // TODO Fix
 		}
 	});
-
-	public static class State extends SNodeState<State> {
-
-		public final Class<?> literalClass;
-
-		public final String literalString;
-
-		State(Class<?> literalClass, String literalString) {
-			this.literalClass = literalClass;
-			this.literalString = literalString;
-		}
-
-		public LiteralExpr.State withLiteralClass(Class<?> literalClass) {
-			return new LiteralExpr.State(literalClass, literalString);
-		}
-
-		public LiteralExpr.State withLiteralString(String literalString) {
-			return new LiteralExpr.State(literalClass, literalString);
-		}
-
-		public STraversal firstChild() {
-			return null;
-		}
-
-		public STraversal lastChild() {
-			return null;
-		}
-
-		public Tree instantiate(SLocation<LiteralExpr.State> location) {
-			return new LiteralExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.LiteralExpr;
-		}
-	}
 }

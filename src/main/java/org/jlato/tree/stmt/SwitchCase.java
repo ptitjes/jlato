@@ -41,6 +41,8 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> implements Tree {
 
@@ -84,43 +86,6 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 		return location.safeTraversalMutate(STMTS, mutation);
 	}
 
-	private static final STraversal LABEL = new STraversal() {
-
-		public STree<?> traverse(SwitchCase.State state) {
-			return state.label;
-		}
-
-		public SwitchCase.State rebuildParentState(SwitchCase.State state, STree<?> child) {
-			return state.withLabel((STree) child);
-		}
-
-		public STraversal leftSibling(SwitchCase.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(SwitchCase.State state) {
-			return STMTS;
-		}
-	};
-	private static final STraversal STMTS = new STraversal() {
-
-		public STree<?> traverse(SwitchCase.State state) {
-			return state.stmts;
-		}
-
-		public SwitchCase.State rebuildParentState(SwitchCase.State state, STree<?> child) {
-			return state.withStmts((STree) child);
-		}
-
-		public STraversal leftSibling(SwitchCase.State state) {
-			return LABEL;
-		}
-
-		public STraversal rightSibling(SwitchCase.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			alternative(childIs(LABEL, some()),
 					composite(token(LToken.Case), child(LABEL, element())),
@@ -133,44 +98,4 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 	);
 
 	public static final LexicalShape listShape = list(none().withSpacingAfter(newLine()));
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeOptionState> label;
-
-		public final STree<SNodeListState> stmts;
-
-		State(STree<SNodeOptionState> label, STree<SNodeListState> stmts) {
-			this.label = label;
-			this.stmts = stmts;
-		}
-
-		public SwitchCase.State withLabel(STree<SNodeOptionState> label) {
-			return new SwitchCase.State(label, stmts);
-		}
-
-		public SwitchCase.State withStmts(STree<SNodeListState> stmts) {
-			return new SwitchCase.State(label, stmts);
-		}
-
-		public STraversal firstChild() {
-			return LABEL;
-		}
-
-		public STraversal lastChild() {
-			return STMTS;
-		}
-
-		public Tree instantiate(SLocation<SwitchCase.State> location) {
-			return new SwitchCase(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.SwitchCase;
-		}
-	}
 }

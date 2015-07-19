@@ -34,6 +34,8 @@ import org.jlato.tree.Tree;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class QualifiedName extends TreeBase<QualifiedName.State, Tree, QualifiedName> implements Tree {
 
@@ -97,87 +99,10 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 		return qualifier.isDefined() ? qualifier.get().toString() + "." + name.toString() : name.toString();
 	}
 
-	private static final STraversal QUALIFIER = new STraversal() {
-
-		public STree<?> traverse(QualifiedName.State state) {
-			return state.qualifier;
-		}
-
-		public QualifiedName.State rebuildParentState(QualifiedName.State state, STree<?> child) {
-			return state.withQualifier((STree) child);
-		}
-
-		public STraversal leftSibling(QualifiedName.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(QualifiedName.State state) {
-			return NAME;
-		}
-	};
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(QualifiedName.State state) {
-			return state.name;
-		}
-
-		public QualifiedName.State rebuildParentState(QualifiedName.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(QualifiedName.State state) {
-			return QUALIFIER;
-		}
-
-		public STraversal rightSibling(QualifiedName.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape qualifierShape = composite(element(), token(LToken.Dot));
 
 	public final static LexicalShape shape = composite(
 			child(QUALIFIER, when(some(), qualifierShape)),
 			child(NAME)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeOptionState> qualifier;
-
-		public final STree<Name.State> name;
-
-		State(STree<SNodeOptionState> qualifier, STree<Name.State> name) {
-			this.qualifier = qualifier;
-			this.name = name;
-		}
-
-		public QualifiedName.State withQualifier(STree<SNodeOptionState> qualifier) {
-			return new QualifiedName.State(qualifier, name);
-		}
-
-		public QualifiedName.State withName(STree<Name.State> name) {
-			return new QualifiedName.State(qualifier, name);
-		}
-
-		public STraversal firstChild() {
-			return QUALIFIER;
-		}
-
-		public STraversal lastChild() {
-			return NAME;
-		}
-
-		public Tree instantiate(SLocation<QualifiedName.State> location) {
-			return new QualifiedName(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.QualifiedName;
-		}
-	}
 }

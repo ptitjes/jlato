@@ -41,6 +41,8 @@ import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> implements TypeDecl {
 
@@ -129,108 +131,6 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 		return location.safeTraversalMutate(MEMBERS, mutation);
 	}
 
-	private static final STraversal MODIFIERS = new STraversal() {
-
-		public STree<?> traverse(EnumDecl.State state) {
-			return state.modifiers;
-		}
-
-		public EnumDecl.State rebuildParentState(EnumDecl.State state, STree<?> child) {
-			return state.withModifiers((STree) child);
-		}
-
-		public STraversal leftSibling(EnumDecl.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(EnumDecl.State state) {
-			return NAME;
-		}
-	};
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(EnumDecl.State state) {
-			return state.name;
-		}
-
-		public EnumDecl.State rebuildParentState(EnumDecl.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(EnumDecl.State state) {
-			return MODIFIERS;
-		}
-
-		public STraversal rightSibling(EnumDecl.State state) {
-			return IMPLEMENTS_CLAUSE;
-		}
-	};
-	private static final STraversal IMPLEMENTS_CLAUSE = new STraversal() {
-
-		public STree<?> traverse(EnumDecl.State state) {
-			return state.implementsClause;
-		}
-
-		public EnumDecl.State rebuildParentState(EnumDecl.State state, STree<?> child) {
-			return state.withImplementsClause((STree) child);
-		}
-
-		public STraversal leftSibling(EnumDecl.State state) {
-			return NAME;
-		}
-
-		public STraversal rightSibling(EnumDecl.State state) {
-			return ENUM_CONSTANTS;
-		}
-	};
-	private static final STraversal ENUM_CONSTANTS = new STraversal() {
-
-		public STree<?> traverse(EnumDecl.State state) {
-			return state.enumConstants;
-		}
-
-		public EnumDecl.State rebuildParentState(EnumDecl.State state, STree<?> child) {
-			return state.withEnumConstants((STree) child);
-		}
-
-		public STraversal leftSibling(EnumDecl.State state) {
-			return IMPLEMENTS_CLAUSE;
-		}
-
-		public STraversal rightSibling(EnumDecl.State state) {
-			return MEMBERS;
-		}
-	};
-	private static final STraversal MEMBERS = new STraversal() {
-
-		public STree<?> traverse(EnumDecl.State state) {
-			return state.members;
-		}
-
-		public EnumDecl.State rebuildParentState(EnumDecl.State state, STree<?> child) {
-			return state.withMembers((STree) child);
-		}
-
-		public STraversal leftSibling(EnumDecl.State state) {
-			return ENUM_CONSTANTS;
-		}
-
-		public STraversal rightSibling(EnumDecl.State state) {
-			return null;
-		}
-	};
-
-	private static final SProperty TRAILING_COMMA = new SProperty() {
-
-		public Object retrieve(EnumDecl.State state) {
-			return state.trailingComma;
-		}
-
-		public EnumDecl.State rebuildParentState(EnumDecl.State state, Object value) {
-			return state.withTrailingComma((Boolean) value);
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			token(LToken.Enum),
@@ -258,72 +158,4 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 			token(LToken.BraceRight)
 					.withIndentationBefore(unIndent(TYPE_BODY))
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> modifiers;
-
-		public final STree<Name.State> name;
-
-		public final STree<SNodeListState> implementsClause;
-
-		public final STree<SNodeListState> enumConstants;
-
-		public final boolean trailingComma;
-
-		public final STree<SNodeListState> members;
-
-		State(STree<SNodeListState> modifiers, STree<Name.State> name, STree<SNodeListState> implementsClause, STree<SNodeListState> enumConstants, boolean trailingComma, STree<SNodeListState> members) {
-			this.modifiers = modifiers;
-			this.name = name;
-			this.implementsClause = implementsClause;
-			this.enumConstants = enumConstants;
-			this.trailingComma = trailingComma;
-			this.members = members;
-		}
-
-		public EnumDecl.State withModifiers(STree<SNodeListState> modifiers) {
-			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
-		}
-
-		public EnumDecl.State withName(STree<Name.State> name) {
-			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
-		}
-
-		public EnumDecl.State withImplementsClause(STree<SNodeListState> implementsClause) {
-			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
-		}
-
-		public EnumDecl.State withEnumConstants(STree<SNodeListState> enumConstants) {
-			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
-		}
-
-		public EnumDecl.State withTrailingComma(boolean trailingComma) {
-			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
-		}
-
-		public EnumDecl.State withMembers(STree<SNodeListState> members) {
-			return new EnumDecl.State(modifiers, name, implementsClause, enumConstants, trailingComma, members);
-		}
-
-		public STraversal firstChild() {
-			return MODIFIERS;
-		}
-
-		public STraversal lastChild() {
-			return MEMBERS;
-		}
-
-		public Tree instantiate(SLocation<EnumDecl.State> location) {
-			return new EnumDecl(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.EnumDecl;
-		}
-	}
 }

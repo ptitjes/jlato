@@ -39,6 +39,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, ArrayCreationExpr> implements Expr {
 
@@ -106,79 +108,6 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 		return location.safeTraversalMutate(INIT, mutation);
 	}
 
-	private static final STraversal TYPE = new STraversal() {
-
-		public STree<?> traverse(ArrayCreationExpr.State state) {
-			return state.type;
-		}
-
-		public ArrayCreationExpr.State rebuildParentState(ArrayCreationExpr.State state, STree<?> child) {
-			return state.withType((STree) child);
-		}
-
-		public STraversal leftSibling(ArrayCreationExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ArrayCreationExpr.State state) {
-			return DIM_EXPRS;
-		}
-	};
-	private static final STraversal DIM_EXPRS = new STraversal() {
-
-		public STree<?> traverse(ArrayCreationExpr.State state) {
-			return state.dimExprs;
-		}
-
-		public ArrayCreationExpr.State rebuildParentState(ArrayCreationExpr.State state, STree<?> child) {
-			return state.withDimExprs((STree) child);
-		}
-
-		public STraversal leftSibling(ArrayCreationExpr.State state) {
-			return TYPE;
-		}
-
-		public STraversal rightSibling(ArrayCreationExpr.State state) {
-			return DIMS;
-		}
-	};
-	private static final STraversal DIMS = new STraversal() {
-
-		public STree<?> traverse(ArrayCreationExpr.State state) {
-			return state.dims;
-		}
-
-		public ArrayCreationExpr.State rebuildParentState(ArrayCreationExpr.State state, STree<?> child) {
-			return state.withDims((STree) child);
-		}
-
-		public STraversal leftSibling(ArrayCreationExpr.State state) {
-			return DIM_EXPRS;
-		}
-
-		public STraversal rightSibling(ArrayCreationExpr.State state) {
-			return INIT;
-		}
-	};
-	private static final STraversal INIT = new STraversal() {
-
-		public STree<?> traverse(ArrayCreationExpr.State state) {
-			return state.init;
-		}
-
-		public ArrayCreationExpr.State rebuildParentState(ArrayCreationExpr.State state, STree<?> child) {
-			return state.withInit((STree) child);
-		}
-
-		public STraversal leftSibling(ArrayCreationExpr.State state) {
-			return DIMS;
-		}
-
-		public STraversal rightSibling(ArrayCreationExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.New),
 			child(TYPE),
@@ -191,58 +120,4 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 					)
 			)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Type.State> type;
-
-		public final STree<SNodeListState> dimExprs;
-
-		public final STree<SNodeListState> dims;
-
-		public final STree<SNodeOptionState> init;
-
-		State(STree<Type.State> type, STree<SNodeListState> dimExprs, STree<SNodeListState> dims, STree<SNodeOptionState> init) {
-			this.type = type;
-			this.dimExprs = dimExprs;
-			this.dims = dims;
-			this.init = init;
-		}
-
-		public ArrayCreationExpr.State withType(STree<Type.State> type) {
-			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
-		}
-
-		public ArrayCreationExpr.State withDimExprs(STree<SNodeListState> dimExprs) {
-			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
-		}
-
-		public ArrayCreationExpr.State withDims(STree<SNodeListState> dims) {
-			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
-		}
-
-		public ArrayCreationExpr.State withInit(STree<SNodeOptionState> init) {
-			return new ArrayCreationExpr.State(type, dimExprs, dims, init);
-		}
-
-		public STraversal firstChild() {
-			return TYPE;
-		}
-
-		public STraversal lastChild() {
-			return INIT;
-		}
-
-		public Tree instantiate(SLocation<ArrayCreationExpr.State> location) {
-			return new ArrayCreationExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ArrayCreationExpr;
-		}
-	}
 }

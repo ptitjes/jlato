@@ -33,6 +33,8 @@ import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, Tree, VariableDeclaratorId> implements Tree {
 
@@ -76,85 +78,8 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(VariableDeclaratorId.State state) {
-			return state.name;
-		}
-
-		public VariableDeclaratorId.State rebuildParentState(VariableDeclaratorId.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(VariableDeclaratorId.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(VariableDeclaratorId.State state) {
-			return DIMS;
-		}
-	};
-	private static final STraversal DIMS = new STraversal() {
-
-		public STree<?> traverse(VariableDeclaratorId.State state) {
-			return state.dims;
-		}
-
-		public VariableDeclaratorId.State rebuildParentState(VariableDeclaratorId.State state, STree<?> child) {
-			return state.withDims((STree) child);
-		}
-
-		public STraversal leftSibling(VariableDeclaratorId.State state) {
-			return NAME;
-		}
-
-		public STraversal rightSibling(VariableDeclaratorId.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(NAME),
 			child(DIMS, list())
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Name.State> name;
-
-		public final STree<SNodeListState> dims;
-
-		State(STree<Name.State> name, STree<SNodeListState> dims) {
-			this.name = name;
-			this.dims = dims;
-		}
-
-		public VariableDeclaratorId.State withName(STree<Name.State> name) {
-			return new VariableDeclaratorId.State(name, dims);
-		}
-
-		public VariableDeclaratorId.State withDims(STree<SNodeListState> dims) {
-			return new VariableDeclaratorId.State(name, dims);
-		}
-
-		public STraversal firstChild() {
-			return NAME;
-		}
-
-		public STraversal lastChild() {
-			return DIMS;
-		}
-
-		public Tree instantiate(SLocation<VariableDeclaratorId.State> location) {
-			return new VariableDeclaratorId(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.VariableDeclaratorId;
-		}
-	}
 }

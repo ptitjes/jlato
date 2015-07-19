@@ -71,8 +71,4 @@ public interface MemberDecl extends Decl {
 		Type,
 		// Keep last comma
 	}
-
-	interface State extends STreeState {
-
-	}
 }

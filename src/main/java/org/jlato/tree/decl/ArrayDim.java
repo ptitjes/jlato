@@ -35,6 +35,8 @@ import org.jlato.tree.expr.AnnotationExpr;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implements Tree {
 
@@ -66,25 +68,6 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 
-	private static final STraversal ANNOTATIONS = new STraversal() {
-
-		public STree<?> traverse(ArrayDim.State state) {
-			return state.annotations;
-		}
-
-		public ArrayDim.State rebuildParentState(ArrayDim.State state, STree<?> child) {
-			return state.withAnnotations((STree) child);
-		}
-
-		public STraversal leftSibling(ArrayDim.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ArrayDim.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list(
 					none().withSpacingBefore(space()),
@@ -95,37 +78,4 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 	);
 
 	public static final LexicalShape listShape = list();
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> annotations;
-
-		State(STree<SNodeListState> annotations) {
-			this.annotations = annotations;
-		}
-
-		public ArrayDim.State withAnnotations(STree<SNodeListState> annotations) {
-			return new ArrayDim.State(annotations);
-		}
-
-		public STraversal firstChild() {
-			return ANNOTATIONS;
-		}
-
-		public STraversal lastChild() {
-			return ANNOTATIONS;
-		}
-
-		public Tree instantiate(SLocation<ArrayDim.State> location) {
-			return new ArrayDim(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ArrayDim;
-		}
-	}
 }

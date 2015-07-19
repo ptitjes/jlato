@@ -38,6 +38,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> implements Expr {
 
@@ -97,54 +99,6 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal PARAMS = new STraversal() {
-
-		public STree<?> traverse(LambdaExpr.State state) {
-			return state.params;
-		}
-
-		public LambdaExpr.State rebuildParentState(LambdaExpr.State state, STree<?> child) {
-			return state.withParams((STree) child);
-		}
-
-		public STraversal leftSibling(LambdaExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(LambdaExpr.State state) {
-			return BODY;
-		}
-	};
-	private static final STraversal BODY = new STraversal() {
-
-		public STree<?> traverse(LambdaExpr.State state) {
-			return state.body;
-		}
-
-		public LambdaExpr.State rebuildParentState(LambdaExpr.State state, STree<?> child) {
-			return state.withBody((STree) child);
-		}
-
-		public STraversal leftSibling(LambdaExpr.State state) {
-			return PARAMS;
-		}
-
-		public STraversal rightSibling(LambdaExpr.State state) {
-			return null;
-		}
-	};
-
-	private static final SProperty PARENS = new SProperty() {
-
-		public Object retrieve(LambdaExpr.State state) {
-			return state.hasParens;
-		}
-
-		public LambdaExpr.State rebuildParentState(LambdaExpr.State state, Object value) {
-			return state.withParens((Boolean) value);
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			when(data(PARENS), token(LToken.ParenthesisLeft)),
 			child(PARAMS, Expr.listShape),
@@ -152,51 +106,4 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 			token(LToken.Arrow).withSpacing(space(), space()),
 			child(BODY, leftOrRight())
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> params;
-
-		public final boolean hasParens;
-
-		public final STree<SNodeEitherState> body;
-
-		State(STree<SNodeListState> params, boolean hasParens, STree<SNodeEitherState> body) {
-			this.params = params;
-			this.hasParens = hasParens;
-			this.body = body;
-		}
-
-		public LambdaExpr.State withParams(STree<SNodeListState> params) {
-			return new LambdaExpr.State(params, hasParens, body);
-		}
-
-		public LambdaExpr.State withParens(boolean hasParens) {
-			return new LambdaExpr.State(params, hasParens, body);
-		}
-
-		public LambdaExpr.State withBody(STree<SNodeEitherState> body) {
-			return new LambdaExpr.State(params, hasParens, body);
-		}
-
-		public STraversal firstChild() {
-			return PARAMS;
-		}
-
-		public STraversal lastChild() {
-			return BODY;
-		}
-
-		public Tree instantiate(SLocation<LambdaExpr.State> location) {
-			return new LambdaExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.LambdaExpr;
-		}
-	}
 }

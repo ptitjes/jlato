@@ -49,8 +49,4 @@ public interface AnnotationExpr extends Expr, ExtendedModifier {
 			none().withSpacingAfter(newLine()),
 			none().withSpacingAfter(newLine())
 	);
-
-	interface State extends STreeState {
-
-	}
 }

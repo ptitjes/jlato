@@ -35,6 +35,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, AnnotationExpr, NormalAnnotationExpr> implements AnnotationExpr {
 
@@ -78,87 +80,10 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 		return location.safeTraversalMutate(PAIRS, mutation);
 	}
 
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(NormalAnnotationExpr.State state) {
-			return state.name;
-		}
-
-		public NormalAnnotationExpr.State rebuildParentState(NormalAnnotationExpr.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(NormalAnnotationExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(NormalAnnotationExpr.State state) {
-			return PAIRS;
-		}
-	};
-	private static final STraversal PAIRS = new STraversal() {
-
-		public STree<?> traverse(NormalAnnotationExpr.State state) {
-			return state.pairs;
-		}
-
-		public NormalAnnotationExpr.State rebuildParentState(NormalAnnotationExpr.State state, STree<?> child) {
-			return state.withPairs((STree) child);
-		}
-
-		public STraversal leftSibling(NormalAnnotationExpr.State state) {
-			return NAME;
-		}
-
-		public STraversal rightSibling(NormalAnnotationExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME),
 			token(LToken.ParenthesisLeft),
 			child(PAIRS, list(token(LToken.Comma).withSpacingAfter(space()))),
 			token(LToken.ParenthesisRight)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<QualifiedName.State> name;
-
-		public final STree<SNodeListState> pairs;
-
-		State(STree<QualifiedName.State> name, STree<SNodeListState> pairs) {
-			this.name = name;
-			this.pairs = pairs;
-		}
-
-		public NormalAnnotationExpr.State withName(STree<QualifiedName.State> name) {
-			return new NormalAnnotationExpr.State(name, pairs);
-		}
-
-		public NormalAnnotationExpr.State withPairs(STree<SNodeListState> pairs) {
-			return new NormalAnnotationExpr.State(name, pairs);
-		}
-
-		public STraversal firstChild() {
-			return NAME;
-		}
-
-		public STraversal lastChild() {
-			return PAIRS;
-		}
-
-		public Tree instantiate(SLocation<NormalAnnotationExpr.State> location) {
-			return new NormalAnnotationExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.NormalAnnotationExpr;
-		}
-	}
 }

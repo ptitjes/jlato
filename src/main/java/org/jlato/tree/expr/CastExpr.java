@@ -34,6 +34,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implements Expr {
 
@@ -77,84 +79,7 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal TYPE = new STraversal() {
-
-		public STree<?> traverse(CastExpr.State state) {
-			return state.type;
-		}
-
-		public CastExpr.State rebuildParentState(CastExpr.State state, STree<?> child) {
-			return state.withType((STree) child);
-		}
-
-		public STraversal leftSibling(CastExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(CastExpr.State state) {
-			return EXPR;
-		}
-	};
-	private static final STraversal EXPR = new STraversal() {
-
-		public STree<?> traverse(CastExpr.State state) {
-			return state.expr;
-		}
-
-		public CastExpr.State rebuildParentState(CastExpr.State state, STree<?> child) {
-			return state.withExpr((STree) child);
-		}
-
-		public STraversal leftSibling(CastExpr.State state) {
-			return TYPE;
-		}
-
-		public STraversal rightSibling(CastExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft), child(TYPE), token(LToken.ParenthesisRight).withSpacingAfter(space()), child(EXPR)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Type.State> type;
-
-		public final STree<Expr.State> expr;
-
-		State(STree<Type.State> type, STree<Expr.State> expr) {
-			this.type = type;
-			this.expr = expr;
-		}
-
-		public CastExpr.State withType(STree<Type.State> type) {
-			return new CastExpr.State(type, expr);
-		}
-
-		public CastExpr.State withExpr(STree<Expr.State> expr) {
-			return new CastExpr.State(type, expr);
-		}
-
-		public STraversal firstChild() {
-			return TYPE;
-		}
-
-		public STraversal lastChild() {
-			return EXPR;
-		}
-
-		public Tree instantiate(SLocation<CastExpr.State> location) {
-			return new CastExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.CastExpr;
-		}
-	}
 }

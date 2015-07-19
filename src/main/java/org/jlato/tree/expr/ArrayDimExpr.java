@@ -34,6 +34,8 @@ import org.jlato.tree.Tree;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExpr> implements Tree {
 
@@ -77,43 +79,6 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal ANNOTATIONS = new STraversal() {
-
-		public STree<?> traverse(ArrayDimExpr.State state) {
-			return state.annotations;
-		}
-
-		public ArrayDimExpr.State rebuildParentState(ArrayDimExpr.State state, STree<?> child) {
-			return state.withAnnotations((STree) child);
-		}
-
-		public STraversal leftSibling(ArrayDimExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ArrayDimExpr.State state) {
-			return EXPR;
-		}
-	};
-	private static final STraversal EXPR = new STraversal() {
-
-		public STree<?> traverse(ArrayDimExpr.State state) {
-			return state.expr;
-		}
-
-		public ArrayDimExpr.State rebuildParentState(ArrayDimExpr.State state, STree<?> child) {
-			return state.withExpr((STree) child);
-		}
-
-		public STraversal leftSibling(ArrayDimExpr.State state) {
-			return ANNOTATIONS;
-		}
-
-		public STraversal rightSibling(ArrayDimExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list(
 					none().withSpacingBefore(space()),
@@ -124,44 +89,4 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 	);
 
 	public static final LexicalShape listShape = list();
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> annotations;
-
-		public final STree<Expr.State> expr;
-
-		State(STree<SNodeListState> annotations, STree<Expr.State> expr) {
-			this.annotations = annotations;
-			this.expr = expr;
-		}
-
-		public ArrayDimExpr.State withAnnotations(STree<SNodeListState> annotations) {
-			return new ArrayDimExpr.State(annotations, expr);
-		}
-
-		public ArrayDimExpr.State withExpr(STree<Expr.State> expr) {
-			return new ArrayDimExpr.State(annotations, expr);
-		}
-
-		public STraversal firstChild() {
-			return ANNOTATIONS;
-		}
-
-		public STraversal lastChild() {
-			return EXPR;
-		}
-
-		public Tree instantiate(SLocation<ArrayDimExpr.State> location) {
-			return new ArrayDimExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ArrayDimExpr;
-		}
-	}
 }

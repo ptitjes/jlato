@@ -38,6 +38,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements Stmt {
 
@@ -105,79 +107,6 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 		return location.safeTraversalMutate(FINALLY_BLOCK, mutation);
 	}
 
-	private static final STraversal RESOURCES = new STraversal() {
-
-		public STree<?> traverse(TryStmt.State state) {
-			return state.resources;
-		}
-
-		public TryStmt.State rebuildParentState(TryStmt.State state, STree<?> child) {
-			return state.withResources((STree) child);
-		}
-
-		public STraversal leftSibling(TryStmt.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(TryStmt.State state) {
-			return TRY_BLOCK;
-		}
-	};
-	private static final STraversal TRY_BLOCK = new STraversal() {
-
-		public STree<?> traverse(TryStmt.State state) {
-			return state.tryBlock;
-		}
-
-		public TryStmt.State rebuildParentState(TryStmt.State state, STree<?> child) {
-			return state.withTryBlock((STree) child);
-		}
-
-		public STraversal leftSibling(TryStmt.State state) {
-			return RESOURCES;
-		}
-
-		public STraversal rightSibling(TryStmt.State state) {
-			return CATCHS;
-		}
-	};
-	private static final STraversal CATCHS = new STraversal() {
-
-		public STree<?> traverse(TryStmt.State state) {
-			return state.catchs;
-		}
-
-		public TryStmt.State rebuildParentState(TryStmt.State state, STree<?> child) {
-			return state.withCatchs((STree) child);
-		}
-
-		public STraversal leftSibling(TryStmt.State state) {
-			return TRY_BLOCK;
-		}
-
-		public STraversal rightSibling(TryStmt.State state) {
-			return FINALLY_BLOCK;
-		}
-	};
-	private static final STraversal FINALLY_BLOCK = new STraversal() {
-
-		public STree<?> traverse(TryStmt.State state) {
-			return state.finallyBlock;
-		}
-
-		public TryStmt.State rebuildParentState(TryStmt.State state, STree<?> child) {
-			return state.withFinallyBlock((STree) child);
-		}
-
-		public STraversal leftSibling(TryStmt.State state) {
-			return CATCHS;
-		}
-
-		public STraversal rightSibling(TryStmt.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.Try).withSpacingAfter(space()),
 			child(RESOURCES, VariableDeclarationExpr.resourcesShape),
@@ -188,58 +117,4 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 					child(FINALLY_BLOCK, element())
 			))
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> resources;
-
-		public final STree<BlockStmt.State> tryBlock;
-
-		public final STree<SNodeListState> catchs;
-
-		public final STree<SNodeOptionState> finallyBlock;
-
-		State(STree<SNodeListState> resources, STree<BlockStmt.State> tryBlock, STree<SNodeListState> catchs, STree<SNodeOptionState> finallyBlock) {
-			this.resources = resources;
-			this.tryBlock = tryBlock;
-			this.catchs = catchs;
-			this.finallyBlock = finallyBlock;
-		}
-
-		public TryStmt.State withResources(STree<SNodeListState> resources) {
-			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
-		}
-
-		public TryStmt.State withTryBlock(STree<BlockStmt.State> tryBlock) {
-			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
-		}
-
-		public TryStmt.State withCatchs(STree<SNodeListState> catchs) {
-			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
-		}
-
-		public TryStmt.State withFinallyBlock(STree<SNodeOptionState> finallyBlock) {
-			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
-		}
-
-		public STraversal firstChild() {
-			return RESOURCES;
-		}
-
-		public STraversal lastChild() {
-			return FINALLY_BLOCK;
-		}
-
-		public Tree instantiate(SLocation<TryStmt.State> location) {
-			return new TryStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.TryStmt;
-		}
-	}
 }

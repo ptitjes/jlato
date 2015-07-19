@@ -32,6 +32,8 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, MemberValuePair> implements Tree {
 
@@ -75,84 +77,7 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 		return location.safeTraversalMutate(VALUE, mutation);
 	}
 
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(MemberValuePair.State state) {
-			return state.name;
-		}
-
-		public MemberValuePair.State rebuildParentState(MemberValuePair.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(MemberValuePair.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(MemberValuePair.State state) {
-			return VALUE;
-		}
-	};
-	private static final STraversal VALUE = new STraversal() {
-
-		public STree<?> traverse(MemberValuePair.State state) {
-			return state.value;
-		}
-
-		public MemberValuePair.State rebuildParentState(MemberValuePair.State state, STree<?> child) {
-			return state.withValue((STree) child);
-		}
-
-		public STraversal leftSibling(MemberValuePair.State state) {
-			return NAME;
-		}
-
-		public STraversal rightSibling(MemberValuePair.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(NAME), token(LToken.Assign), child(VALUE)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Name.State> name;
-
-		public final STree<Expr.State> value;
-
-		State(STree<Name.State> name, STree<Expr.State> value) {
-			this.name = name;
-			this.value = value;
-		}
-
-		public MemberValuePair.State withName(STree<Name.State> name) {
-			return new MemberValuePair.State(name, value);
-		}
-
-		public MemberValuePair.State withValue(STree<Expr.State> value) {
-			return new MemberValuePair.State(name, value);
-		}
-
-		public STraversal firstChild() {
-			return NAME;
-		}
-
-		public STraversal lastChild() {
-			return VALUE;
-		}
-
-		public Tree instantiate(SLocation<MemberValuePair.State> location) {
-			return new MemberValuePair(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.MemberValuePair;
-		}
-	}
 }

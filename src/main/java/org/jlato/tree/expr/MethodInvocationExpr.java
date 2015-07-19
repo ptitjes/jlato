@@ -38,6 +38,8 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, Expr, MethodInvocationExpr> implements Expr {
 
@@ -105,137 +107,10 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 		return location.safeTraversalMutate(ARGS, mutation);
 	}
 
-	private static final STraversal SCOPE = new STraversal() {
-
-		public STree<?> traverse(MethodInvocationExpr.State state) {
-			return state.scope;
-		}
-
-		public MethodInvocationExpr.State rebuildParentState(MethodInvocationExpr.State state, STree<?> child) {
-			return state.withScope((STree) child);
-		}
-
-		public STraversal leftSibling(MethodInvocationExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(MethodInvocationExpr.State state) {
-			return TYPE_ARGS;
-		}
-	};
-	private static final STraversal TYPE_ARGS = new STraversal() {
-
-		public STree<?> traverse(MethodInvocationExpr.State state) {
-			return state.typeArgs;
-		}
-
-		public MethodInvocationExpr.State rebuildParentState(MethodInvocationExpr.State state, STree<?> child) {
-			return state.withTypeArgs((STree) child);
-		}
-
-		public STraversal leftSibling(MethodInvocationExpr.State state) {
-			return SCOPE;
-		}
-
-		public STraversal rightSibling(MethodInvocationExpr.State state) {
-			return NAME;
-		}
-	};
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(MethodInvocationExpr.State state) {
-			return state.name;
-		}
-
-		public MethodInvocationExpr.State rebuildParentState(MethodInvocationExpr.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(MethodInvocationExpr.State state) {
-			return TYPE_ARGS;
-		}
-
-		public STraversal rightSibling(MethodInvocationExpr.State state) {
-			return ARGS;
-		}
-	};
-	private static final STraversal ARGS = new STraversal() {
-
-		public STree<?> traverse(MethodInvocationExpr.State state) {
-			return state.args;
-		}
-
-		public MethodInvocationExpr.State rebuildParentState(MethodInvocationExpr.State state, STree<?> child) {
-			return state.withArgs((STree) child);
-		}
-
-		public STraversal leftSibling(MethodInvocationExpr.State state) {
-			return NAME;
-		}
-
-		public STraversal rightSibling(MethodInvocationExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
 			child(TYPE_ARGS, Type.typeArgumentsShape),
 			child(NAME),
 			child(ARGS, Expr.argumentsShape)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeOptionState> scope;
-
-		public final STree<SNodeListState> typeArgs;
-
-		public final STree<Name.State> name;
-
-		public final STree<SNodeListState> args;
-
-		State(STree<SNodeOptionState> scope, STree<SNodeListState> typeArgs, STree<Name.State> name, STree<SNodeListState> args) {
-			this.scope = scope;
-			this.typeArgs = typeArgs;
-			this.name = name;
-			this.args = args;
-		}
-
-		public MethodInvocationExpr.State withScope(STree<SNodeOptionState> scope) {
-			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
-		}
-
-		public MethodInvocationExpr.State withTypeArgs(STree<SNodeListState> typeArgs) {
-			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
-		}
-
-		public MethodInvocationExpr.State withName(STree<Name.State> name) {
-			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
-		}
-
-		public MethodInvocationExpr.State withArgs(STree<SNodeListState> args) {
-			return new MethodInvocationExpr.State(scope, typeArgs, name, args);
-		}
-
-		public STraversal firstChild() {
-			return SCOPE;
-		}
-
-		public STraversal lastChild() {
-			return ARGS;
-		}
-
-		public Tree instantiate(SLocation<MethodInvocationExpr.State> location) {
-			return new MethodInvocationExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.MethodInvocationExpr;
-		}
-	}
 }

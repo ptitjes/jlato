@@ -41,6 +41,8 @@ import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt {
 
@@ -96,61 +98,6 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 		return location.safeTraversalMutate(ELSE_STMT, mutation);
 	}
 
-	private static final STraversal CONDITION = new STraversal() {
-
-		public STree<?> traverse(IfStmt.State state) {
-			return state.condition;
-		}
-
-		public IfStmt.State rebuildParentState(IfStmt.State state, STree<?> child) {
-			return state.withCondition((STree) child);
-		}
-
-		public STraversal leftSibling(IfStmt.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(IfStmt.State state) {
-			return THEN_STMT;
-		}
-	};
-	private static final STraversal THEN_STMT = new STraversal() {
-
-		public STree<?> traverse(IfStmt.State state) {
-			return state.thenStmt;
-		}
-
-		public IfStmt.State rebuildParentState(IfStmt.State state, STree<?> child) {
-			return state.withThenStmt((STree) child);
-		}
-
-		public STraversal leftSibling(IfStmt.State state) {
-			return CONDITION;
-		}
-
-		public STraversal rightSibling(IfStmt.State state) {
-			return ELSE_STMT;
-		}
-	};
-	private static final STraversal ELSE_STMT = new STraversal() {
-
-		public STree<?> traverse(IfStmt.State state) {
-			return state.elseStmt;
-		}
-
-		public IfStmt.State rebuildParentState(IfStmt.State state, STree<?> child) {
-			return state.withElseStmt((STree) child);
-		}
-
-		public STraversal leftSibling(IfStmt.State state) {
-			return THEN_STMT;
-		}
-
-		public STraversal rightSibling(IfStmt.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.If), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
 			child(CONDITION),
@@ -195,51 +142,4 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 					)
 			))
 	);
-
-	public static class State extends SNodeState<State> implements Stmt.State {
-
-		public final STree<Expr.State> condition;
-
-		public final STree<Stmt.State> thenStmt;
-
-		public final STree<SNodeOptionState> elseStmt;
-
-		State(STree<Expr.State> condition, STree<Stmt.State> thenStmt, STree<SNodeOptionState> elseStmt) {
-			this.condition = condition;
-			this.thenStmt = thenStmt;
-			this.elseStmt = elseStmt;
-		}
-
-		public IfStmt.State withCondition(STree<Expr.State> condition) {
-			return new IfStmt.State(condition, thenStmt, elseStmt);
-		}
-
-		public IfStmt.State withThenStmt(STree<Stmt.State> thenStmt) {
-			return new IfStmt.State(condition, thenStmt, elseStmt);
-		}
-
-		public IfStmt.State withElseStmt(STree<SNodeOptionState> elseStmt) {
-			return new IfStmt.State(condition, thenStmt, elseStmt);
-		}
-
-		public STraversal firstChild() {
-			return CONDITION;
-		}
-
-		public STraversal lastChild() {
-			return ELSE_STMT;
-		}
-
-		public Tree doInstantiate(SLocation<IfStmt.State> location) {
-			return new IfStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.IfStmt;
-		}
-	}
 }

@@ -52,8 +52,4 @@ public interface ExtendedModifier extends Tree {
 					none().withSpacingAfter(newLine())
 			)
 	);
-
-	interface State extends STreeState {
-
-	}
 }

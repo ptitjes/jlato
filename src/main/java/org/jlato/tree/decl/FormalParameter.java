@@ -34,6 +34,8 @@ import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.not;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class FormalParameter extends TreeBase<FormalParameter.State, Tree, FormalParameter> implements Tree {
 
@@ -97,72 +99,6 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final STraversal MODIFIERS = new STraversal() {
-
-		public STree<?> traverse(FormalParameter.State state) {
-			return state.modifiers;
-		}
-
-		public FormalParameter.State rebuildParentState(FormalParameter.State state, STree<?> child) {
-			return state.withModifiers((STree) child);
-		}
-
-		public STraversal leftSibling(FormalParameter.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(FormalParameter.State state) {
-			return TYPE;
-		}
-	};
-	private static final STraversal TYPE = new STraversal() {
-
-		public STree<?> traverse(FormalParameter.State state) {
-			return state.type;
-		}
-
-		public FormalParameter.State rebuildParentState(FormalParameter.State state, STree<?> child) {
-			return state.withType((STree) child);
-		}
-
-		public STraversal leftSibling(FormalParameter.State state) {
-			return MODIFIERS;
-		}
-
-		public STraversal rightSibling(FormalParameter.State state) {
-			return ID;
-		}
-	};
-	private static final STraversal ID = new STraversal() {
-
-		public STree<?> traverse(FormalParameter.State state) {
-			return state.id;
-		}
-
-		public FormalParameter.State rebuildParentState(FormalParameter.State state, STree<?> child) {
-			return state.withId((STree) child);
-		}
-
-		public STraversal leftSibling(FormalParameter.State state) {
-			return TYPE;
-		}
-
-		public STraversal rightSibling(FormalParameter.State state) {
-			return null;
-		}
-	};
-
-	private static final SProperty VAR_ARGS = new SProperty() {
-
-		public Object retrieve(FormalParameter.State state) {
-			return state.isVarArgs;
-		}
-
-		public FormalParameter.State rebuildParentState(FormalParameter.State state, Object value) {
-			return state.withVarArgs((Boolean) value);
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.singleLineShape),
 			child(TYPE),
@@ -176,58 +112,4 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 			token(LToken.Comma).withSpacingAfter(space()),
 			none()
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> modifiers;
-
-		public final STree<Type.State> type;
-
-		public final boolean isVarArgs;
-
-		public final STree<VariableDeclaratorId.State> id;
-
-		State(STree<SNodeListState> modifiers, STree<Type.State> type, boolean isVarArgs, STree<VariableDeclaratorId.State> id) {
-			this.modifiers = modifiers;
-			this.type = type;
-			this.isVarArgs = isVarArgs;
-			this.id = id;
-		}
-
-		public FormalParameter.State withModifiers(STree<SNodeListState> modifiers) {
-			return new FormalParameter.State(modifiers, type, isVarArgs, id);
-		}
-
-		public FormalParameter.State withType(STree<Type.State> type) {
-			return new FormalParameter.State(modifiers, type, isVarArgs, id);
-		}
-
-		public FormalParameter.State withVarArgs(boolean isVarArgs) {
-			return new FormalParameter.State(modifiers, type, isVarArgs, id);
-		}
-
-		public FormalParameter.State withId(STree<VariableDeclaratorId.State> id) {
-			return new FormalParameter.State(modifiers, type, isVarArgs, id);
-		}
-
-		public STraversal firstChild() {
-			return MODIFIERS;
-		}
-
-		public STraversal lastChild() {
-			return ID;
-		}
-
-		public Tree instantiate(SLocation<FormalParameter.State> location) {
-			return new FormalParameter(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.FormalParameter;
-		}
-	}
 }

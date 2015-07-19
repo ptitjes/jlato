@@ -38,6 +38,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardType> implements Type {
 
@@ -93,112 +95,10 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 		return location.safeTraversalMutate(SUP, mutation);
 	}
 
-	private static final STraversal ANNOTATIONS = new STraversal() {
-
-		public STree<?> traverse(WildcardType.State state) {
-			return state.annotations;
-		}
-
-		public WildcardType.State rebuildParentState(WildcardType.State state, STree<?> child) {
-			return state.withAnnotations((STree) child);
-		}
-
-		public STraversal leftSibling(WildcardType.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(WildcardType.State state) {
-			return EXT;
-		}
-	};
-	private static final STraversal EXT = new STraversal() {
-
-		public STree<?> traverse(WildcardType.State state) {
-			return state.ext;
-		}
-
-		public WildcardType.State rebuildParentState(WildcardType.State state, STree<?> child) {
-			return state.withExt((STree) child);
-		}
-
-		public STraversal leftSibling(WildcardType.State state) {
-			return ANNOTATIONS;
-		}
-
-		public STraversal rightSibling(WildcardType.State state) {
-			return SUP;
-		}
-	};
-	private static final STraversal SUP = new STraversal() {
-
-		public STree<?> traverse(WildcardType.State state) {
-			return state.sup;
-		}
-
-		public WildcardType.State rebuildParentState(WildcardType.State state, STree<?> child) {
-			return state.withSup((STree) child);
-		}
-
-		public STraversal leftSibling(WildcardType.State state) {
-			return EXT;
-		}
-
-		public STraversal rightSibling(WildcardType.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
 			token(LToken.QuestionMark),
 			when(childIs(EXT, some()), composite(token(LToken.Extends).withSpacingBefore(space()), child(EXT, element()))),
 			when(childIs(SUP, some()), composite(token(LToken.Super).withSpacingBefore(space()), child(SUP, element())))
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> annotations;
-
-		public final STree<SNodeOptionState> ext;
-
-		public final STree<SNodeOptionState> sup;
-
-		State(STree<SNodeListState> annotations, STree<SNodeOptionState> ext, STree<SNodeOptionState> sup) {
-			this.annotations = annotations;
-			this.ext = ext;
-			this.sup = sup;
-		}
-
-		public WildcardType.State withAnnotations(STree<SNodeListState> annotations) {
-			return new WildcardType.State(annotations, ext, sup);
-		}
-
-		public WildcardType.State withExt(STree<SNodeOptionState> ext) {
-			return new WildcardType.State(annotations, ext, sup);
-		}
-
-		public WildcardType.State withSup(STree<SNodeOptionState> sup) {
-			return new WildcardType.State(annotations, ext, sup);
-		}
-
-		public STraversal firstChild() {
-			return ANNOTATIONS;
-		}
-
-		public STraversal lastChild() {
-			return SUP;
-		}
-
-		public Tree instantiate(SLocation<WildcardType.State> location) {
-			return new WildcardType(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.WildcardType;
-		}
-	}
 }

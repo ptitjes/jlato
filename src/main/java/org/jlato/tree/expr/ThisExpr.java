@@ -35,6 +35,8 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implements Expr {
 
@@ -66,60 +68,8 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 		return location.safeTraversalMutate(CLASS_EXPR, mutation);
 	}
 
-	private static final STraversal CLASS_EXPR = new STraversal() {
-
-		public STree<?> traverse(ThisExpr.State state) {
-			return state.classExpr;
-		}
-
-		public ThisExpr.State rebuildParentState(ThisExpr.State state, STree<?> child) {
-			return state.withClassExpr((STree) child);
-		}
-
-		public STraversal leftSibling(ThisExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ThisExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			when(childIs(CLASS_EXPR, some()), composite(child(CLASS_EXPR, element()), token(LToken.Dot))),
 			token(LToken.This)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeOptionState> classExpr;
-
-		State(STree<SNodeOptionState> classExpr) {
-			this.classExpr = classExpr;
-		}
-
-		public ThisExpr.State withClassExpr(STree<SNodeOptionState> classExpr) {
-			return new ThisExpr.State(classExpr);
-		}
-
-		public STraversal firstChild() {
-			return CLASS_EXPR;
-		}
-
-		public STraversal lastChild() {
-			return CLASS_EXPR;
-		}
-
-		public Tree instantiate(SLocation<ThisExpr.State> location) {
-			return new ThisExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ThisExpr;
-		}
-	}
 }

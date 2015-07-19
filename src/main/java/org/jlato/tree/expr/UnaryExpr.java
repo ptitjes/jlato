@@ -34,6 +34,8 @@ import org.jlato.tree.Mutation;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implements Expr {
 
@@ -85,36 +87,6 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		return op == UnaryOp.PostIncrement || op == UnaryOp.PostDecrement;
 	}
 
-	private static final STraversal EXPR = new STraversal() {
-
-		public STree<?> traverse(UnaryExpr.State state) {
-			return state.expr;
-		}
-
-		public UnaryExpr.State rebuildParentState(UnaryExpr.State state, STree<?> child) {
-			return state.withExpr((STree) child);
-		}
-
-		public STraversal leftSibling(UnaryExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(UnaryExpr.State state) {
-			return null;
-		}
-	};
-
-	private static final SProperty OPERATOR = new SProperty() {
-
-		public Object retrieve(UnaryExpr.State state) {
-			return state.operator;
-		}
-
-		public UnaryExpr.State rebuildParentState(UnaryExpr.State state, Object value) {
-			return state.withOperator((UnaryOp) value);
-		}
-	};
-
 	private final static LexicalShape opShape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
 			return ((State) tree.state).operator.token;
@@ -149,46 +121,6 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 
 		public String toString() {
 			return token.toString();
-		}
-	}
-
-	public static class State extends SNodeState<State> {
-
-		public final UnaryOp operator;
-
-		public final STree<Expr.State> expr;
-
-		State(UnaryOp operator, STree<Expr.State> expr) {
-			this.operator = operator;
-			this.expr = expr;
-		}
-
-		public UnaryExpr.State withOperator(UnaryOp operator) {
-			return new UnaryExpr.State(operator, expr);
-		}
-
-		public UnaryExpr.State withExpr(STree<Expr.State> expr) {
-			return new UnaryExpr.State(operator, expr);
-		}
-
-		public STraversal firstChild() {
-			return EXPR;
-		}
-
-		public STraversal lastChild() {
-			return EXPR;
-		}
-
-		public Tree instantiate(SLocation<UnaryExpr.State> location) {
-			return new UnaryExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.UnaryExpr;
 		}
 	}
 }

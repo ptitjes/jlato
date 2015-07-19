@@ -34,6 +34,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> implements Expr {
 
@@ -89,54 +91,6 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		return location.safeTraversalMutate(VALUE, mutation);
 	}
 
-	private static final STraversal TARGET = new STraversal() {
-
-		public STree<?> traverse(AssignExpr.State state) {
-			return state.target;
-		}
-
-		public AssignExpr.State rebuildParentState(AssignExpr.State state, STree<?> child) {
-			return state.withTarget((STree) child);
-		}
-
-		public STraversal leftSibling(AssignExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(AssignExpr.State state) {
-			return VALUE;
-		}
-	};
-	private static final STraversal VALUE = new STraversal() {
-
-		public STree<?> traverse(AssignExpr.State state) {
-			return state.value;
-		}
-
-		public AssignExpr.State rebuildParentState(AssignExpr.State state, STree<?> child) {
-			return state.withValue((STree) child);
-		}
-
-		public STraversal leftSibling(AssignExpr.State state) {
-			return TARGET;
-		}
-
-		public STraversal rightSibling(AssignExpr.State state) {
-			return null;
-		}
-	};
-
-	private static final SProperty OPERATOR = new SProperty() {
-
-		public Object retrieve(AssignExpr.State state) {
-			return state.operator;
-		}
-
-		public AssignExpr.State rebuildParentState(AssignExpr.State state, Object value) {
-			return state.withOperator((AssignOp) value);
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(TARGET),
 			token(new LSToken.Provider() {
@@ -167,53 +121,6 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 
 		AssignOp(LToken token) {
 			this.token = token;
-		}
-	}
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Expr.State> target;
-
-		public final AssignOp operator;
-
-		public final STree<Expr.State> value;
-
-		State(STree<Expr.State> target, AssignOp operator, STree<Expr.State> value) {
-			this.target = target;
-			this.operator = operator;
-			this.value = value;
-		}
-
-		public AssignExpr.State withTarget(STree<Expr.State> target) {
-			return new AssignExpr.State(target, operator, value);
-		}
-
-		public AssignExpr.State withOperator(AssignOp operator) {
-			return new AssignExpr.State(target, operator, value);
-		}
-
-		public AssignExpr.State withValue(STree<Expr.State> value) {
-			return new AssignExpr.State(target, operator, value);
-		}
-
-		public STraversal firstChild() {
-			return TARGET;
-		}
-
-		public STraversal lastChild() {
-			return VALUE;
-		}
-
-		public Tree instantiate(SLocation<AssignExpr.State> location) {
-			return new AssignExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.AssignExpr;
 		}
 	}
 }

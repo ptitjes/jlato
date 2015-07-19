@@ -40,6 +40,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstructorInvocationStmt.State, Stmt, ExplicitConstructorInvocationStmt> implements Stmt {
 
@@ -103,72 +105,6 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 		return location.safeTraversalMutate(ARGS, mutation);
 	}
 
-	private static final STraversal TYPE_ARGS = new STraversal() {
-
-		public STree<?> traverse(ExplicitConstructorInvocationStmt.State state) {
-			return state.typeArgs;
-		}
-
-		public ExplicitConstructorInvocationStmt.State rebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<?> child) {
-			return state.withTypeArgs((STree) child);
-		}
-
-		public STraversal leftSibling(ExplicitConstructorInvocationStmt.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ExplicitConstructorInvocationStmt.State state) {
-			return EXPR;
-		}
-	};
-	private static final STraversal EXPR = new STraversal() {
-
-		public STree<?> traverse(ExplicitConstructorInvocationStmt.State state) {
-			return state.expr;
-		}
-
-		public ExplicitConstructorInvocationStmt.State rebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<?> child) {
-			return state.withExpr((STree) child);
-		}
-
-		public STraversal leftSibling(ExplicitConstructorInvocationStmt.State state) {
-			return TYPE_ARGS;
-		}
-
-		public STraversal rightSibling(ExplicitConstructorInvocationStmt.State state) {
-			return ARGS;
-		}
-	};
-	private static final STraversal ARGS = new STraversal() {
-
-		public STree<?> traverse(ExplicitConstructorInvocationStmt.State state) {
-			return state.args;
-		}
-
-		public ExplicitConstructorInvocationStmt.State rebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<?> child) {
-			return state.withArgs((STree) child);
-		}
-
-		public STraversal leftSibling(ExplicitConstructorInvocationStmt.State state) {
-			return EXPR;
-		}
-
-		public STraversal rightSibling(ExplicitConstructorInvocationStmt.State state) {
-			return null;
-		}
-	};
-
-	private static final SProperty IS_THIS = new SProperty() {
-
-		public Object retrieve(ExplicitConstructorInvocationStmt.State state) {
-			return state.isThis;
-		}
-
-		public ExplicitConstructorInvocationStmt.State rebuildParentState(ExplicitConstructorInvocationStmt.State state, Object value) {
-			return state.withThis((Boolean) value);
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			when(childIs(EXPR, some()), composite(child(EXPR, element()), token(LToken.Dot))),
 			child(TYPE_ARGS, Type.typeArgumentsShape),
@@ -180,58 +116,4 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 			child(ARGS, Expr.argumentsShape),
 			token(LToken.SemiColon)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> typeArgs;
-
-		public final boolean isThis;
-
-		public final STree<SNodeOptionState> expr;
-
-		public final STree<SNodeListState> args;
-
-		State(STree<SNodeListState> typeArgs, boolean isThis, STree<SNodeOptionState> expr, STree<SNodeListState> args) {
-			this.typeArgs = typeArgs;
-			this.isThis = isThis;
-			this.expr = expr;
-			this.args = args;
-		}
-
-		public ExplicitConstructorInvocationStmt.State withTypeArgs(STree<SNodeListState> typeArgs) {
-			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
-		}
-
-		public ExplicitConstructorInvocationStmt.State withThis(boolean isThis) {
-			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
-		}
-
-		public ExplicitConstructorInvocationStmt.State withExpr(STree<SNodeOptionState> expr) {
-			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
-		}
-
-		public ExplicitConstructorInvocationStmt.State withArgs(STree<SNodeListState> args) {
-			return new ExplicitConstructorInvocationStmt.State(typeArgs, isThis, expr, args);
-		}
-
-		public STraversal firstChild() {
-			return TYPE_ARGS;
-		}
-
-		public STraversal lastChild() {
-			return ARGS;
-		}
-
-		public Tree instantiate(SLocation<ExplicitConstructorInvocationStmt.State> location) {
-			return new ExplicitConstructorInvocationStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ExplicitConstructorInvocationStmt;
-		}
-	}
 }

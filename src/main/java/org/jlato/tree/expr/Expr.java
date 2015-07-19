@@ -42,8 +42,4 @@ public interface Expr extends Tree {
 	LexicalShape listShape = list(
 			token(LToken.Comma).withSpacingAfter(space())
 	);
-
-	interface State extends STreeState {
-
-	}
 }

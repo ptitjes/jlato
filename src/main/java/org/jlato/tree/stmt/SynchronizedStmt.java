@@ -34,6 +34,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, SynchronizedStmt> implements Stmt {
 
@@ -77,43 +79,6 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 		return location.safeTraversalMutate(BLOCK, mutation);
 	}
 
-	private static final STraversal EXPR = new STraversal() {
-
-		public STree<?> traverse(SynchronizedStmt.State state) {
-			return state.expr;
-		}
-
-		public SynchronizedStmt.State rebuildParentState(SynchronizedStmt.State state, STree<?> child) {
-			return state.withExpr((STree) child);
-		}
-
-		public STraversal leftSibling(SynchronizedStmt.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(SynchronizedStmt.State state) {
-			return BLOCK;
-		}
-	};
-	private static final STraversal BLOCK = new STraversal() {
-
-		public STree<?> traverse(SynchronizedStmt.State state) {
-			return state.block;
-		}
-
-		public SynchronizedStmt.State rebuildParentState(SynchronizedStmt.State state, STree<?> child) {
-			return state.withBlock((STree) child);
-		}
-
-		public STraversal leftSibling(SynchronizedStmt.State state) {
-			return EXPR;
-		}
-
-		public STraversal rightSibling(SynchronizedStmt.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.Synchronized),
 			token(LToken.ParenthesisLeft).withSpacingBefore(space()),
@@ -121,44 +86,4 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			child(BLOCK)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Expr.State> expr;
-
-		public final STree<BlockStmt.State> block;
-
-		State(STree<Expr.State> expr, STree<BlockStmt.State> block) {
-			this.expr = expr;
-			this.block = block;
-		}
-
-		public SynchronizedStmt.State withExpr(STree<Expr.State> expr) {
-			return new SynchronizedStmt.State(expr, block);
-		}
-
-		public SynchronizedStmt.State withBlock(STree<BlockStmt.State> block) {
-			return new SynchronizedStmt.State(expr, block);
-		}
-
-		public STraversal firstChild() {
-			return EXPR;
-		}
-
-		public STraversal lastChild() {
-			return BLOCK;
-		}
-
-		public Tree instantiate(SLocation<SynchronizedStmt.State> location) {
-			return new SynchronizedStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.SynchronizedStmt;
-		}
-	}
 }

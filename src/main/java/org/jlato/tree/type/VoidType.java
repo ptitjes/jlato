@@ -30,6 +30,8 @@ import org.jlato.internal.td.TreeBase;
 import static org.jlato.internal.shapes.LexicalShape.token;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implements Type {
 
@@ -50,30 +52,4 @@ public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implement
 	}
 
 	public final static LexicalShape shape = token(LToken.Void);
-
-	public static class State extends SNodeState<State> {
-
-		State() {
-		}
-
-		public STraversal firstChild() {
-			return null;
-		}
-
-		public STraversal lastChild() {
-			return null;
-		}
-
-		public Tree instantiate(SLocation<VoidType.State> location) {
-			return new VoidType(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.VoidType;
-		}
-	}
 }

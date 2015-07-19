@@ -38,6 +38,8 @@ import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.State, Expr, VariableDeclarationExpr> implements Expr {
 
@@ -69,25 +71,6 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 		return location.safeTraversalMutate(DECLARATION, mutation);
 	}
 
-	private static final STraversal DECLARATION = new STraversal() {
-
-		public STree<?> traverse(VariableDeclarationExpr.State state) {
-			return state.declaration;
-		}
-
-		public VariableDeclarationExpr.State rebuildParentState(VariableDeclarationExpr.State state, STree<?> child) {
-			return state.withDeclaration((STree) child);
-		}
-
-		public STraversal leftSibling(VariableDeclarationExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(VariableDeclarationExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = child(DECLARATION);
 
 	public static final LexicalShape resourcesShape = list(
@@ -99,37 +82,4 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 					.withIndentationBefore(unIndent(TRY_RESOURCES))
 					.withSpacingAfter(space())
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<LocalVariableDecl.State> declaration;
-
-		State(STree<LocalVariableDecl.State> declaration) {
-			this.declaration = declaration;
-		}
-
-		public VariableDeclarationExpr.State withDeclaration(STree<LocalVariableDecl.State> declaration) {
-			return new VariableDeclarationExpr.State(declaration);
-		}
-
-		public STraversal firstChild() {
-			return DECLARATION;
-		}
-
-		public STraversal lastChild() {
-			return DECLARATION;
-		}
-
-		public Tree instantiate(SLocation<VariableDeclarationExpr.State> location) {
-			return new VariableDeclarationExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.VariableDeclarationExpr;
-		}
-	}
 }

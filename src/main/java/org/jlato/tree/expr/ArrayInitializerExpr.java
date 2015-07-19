@@ -34,6 +34,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, Expr, ArrayInitializerExpr> implements Expr {
 
@@ -65,25 +67,6 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 		return location.safeTraversalMutate(VALUES, mutation);
 	}
 
-	private static final STraversal VALUES = new STraversal() {
-
-		public STree<?> traverse(ArrayInitializerExpr.State state) {
-			return state.values;
-		}
-
-		public ArrayInitializerExpr.State rebuildParentState(ArrayInitializerExpr.State state, STree<?> child) {
-			return state.withValues((STree) child);
-		}
-
-		public STraversal leftSibling(ArrayInitializerExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ArrayInitializerExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			nonEmptyChildren(VALUES,
 					composite(
@@ -94,37 +77,4 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 					composite(token(LToken.BraceLeft), token(LToken.BraceRight))
 			)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> values;
-
-		State(STree<SNodeListState> values) {
-			this.values = values;
-		}
-
-		public ArrayInitializerExpr.State withValues(STree<SNodeListState> values) {
-			return new ArrayInitializerExpr.State(values);
-		}
-
-		public STraversal firstChild() {
-			return VALUES;
-		}
-
-		public STraversal lastChild() {
-			return VALUES;
-		}
-
-		public Tree instantiate(SLocation<ArrayInitializerExpr.State> location) {
-			return new ArrayInitializerExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ArrayInitializerExpr;
-		}
-	}
 }

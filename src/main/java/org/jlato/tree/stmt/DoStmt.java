@@ -34,6 +34,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt {
 
@@ -77,43 +79,6 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 		return location.safeTraversalMutate(CONDITION, mutation);
 	}
 
-	private static final STraversal BODY = new STraversal() {
-
-		public STree<?> traverse(DoStmt.State state) {
-			return state.body;
-		}
-
-		public DoStmt.State rebuildParentState(DoStmt.State state, STree<?> child) {
-			return state.withBody((STree) child);
-		}
-
-		public STraversal leftSibling(DoStmt.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(DoStmt.State state) {
-			return CONDITION;
-		}
-	};
-	private static final STraversal CONDITION = new STraversal() {
-
-		public STree<?> traverse(DoStmt.State state) {
-			return state.condition;
-		}
-
-		public DoStmt.State rebuildParentState(DoStmt.State state, STree<?> child) {
-			return state.withCondition((STree) child);
-		}
-
-		public STraversal leftSibling(DoStmt.State state) {
-			return BODY;
-		}
-
-		public STraversal rightSibling(DoStmt.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.Do).withSpacingAfter(space()),
 			child(BODY),
@@ -123,44 +88,4 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 			token(LToken.ParenthesisRight),
 			token(LToken.SemiColon)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Stmt.State> body;
-
-		public final STree<Expr.State> condition;
-
-		State(STree<Stmt.State> body, STree<Expr.State> condition) {
-			this.body = body;
-			this.condition = condition;
-		}
-
-		public DoStmt.State withBody(STree<Stmt.State> body) {
-			return new DoStmt.State(body, condition);
-		}
-
-		public DoStmt.State withCondition(STree<Expr.State> condition) {
-			return new DoStmt.State(body, condition);
-		}
-
-		public STraversal firstChild() {
-			return BODY;
-		}
-
-		public STraversal lastChild() {
-			return CONDITION;
-		}
-
-		public Tree instantiate(SLocation<DoStmt.State> location) {
-			return new DoStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.DoStmt;
-		}
-	}
 }

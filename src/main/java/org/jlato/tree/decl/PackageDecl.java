@@ -35,6 +35,8 @@ import org.jlato.tree.name.QualifiedName;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> implements Tree {
 
@@ -78,87 +80,10 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal ANNOTATIONS = new STraversal() {
-
-		public STree<?> traverse(PackageDecl.State state) {
-			return state.annotations;
-		}
-
-		public PackageDecl.State rebuildParentState(PackageDecl.State state, STree<?> child) {
-			return state.withAnnotations((STree) child);
-		}
-
-		public STraversal leftSibling(PackageDecl.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(PackageDecl.State state) {
-			return NAME;
-		}
-	};
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(PackageDecl.State state) {
-			return state.name;
-		}
-
-		public PackageDecl.State rebuildParentState(PackageDecl.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(PackageDecl.State state) {
-			return ANNOTATIONS;
-		}
-
-		public STraversal rightSibling(PackageDecl.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
 			token(LToken.Package),
 			child(NAME),
 			token(LToken.SemiColon)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> annotations;
-
-		public final STree<QualifiedName.State> name;
-
-		State(STree<SNodeListState> annotations, STree<QualifiedName.State> name) {
-			this.annotations = annotations;
-			this.name = name;
-		}
-
-		public PackageDecl.State withAnnotations(STree<SNodeListState> annotations) {
-			return new PackageDecl.State(annotations, name);
-		}
-
-		public PackageDecl.State withName(STree<QualifiedName.State> name) {
-			return new PackageDecl.State(annotations, name);
-		}
-
-		public STraversal firstChild() {
-			return ANNOTATIONS;
-		}
-
-		public STraversal lastChild() {
-			return NAME;
-		}
-
-		public Tree instantiate(SLocation<PackageDecl.State> location) {
-			return new PackageDecl(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.PackageDecl;
-		}
-	}
 }

@@ -34,6 +34,8 @@ import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl, InitializerDecl> implements MemberDecl {
 
@@ -82,95 +84,8 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	/*
-		public JavadocComment javadocComment() {
-			return location.nodeChild(JAVADOC_COMMENT);
-		}
-
-		public InitializerDecl withJavadocComment(JavadocComment javadocComment) {
-			return location.nodeWithChild(JAVADOC_COMMENT, javadocComment);
-		}
-	*/
-	private static final STraversal MODIFIERS = new STraversal() {
-
-		public STree<?> traverse(InitializerDecl.State state) {
-			return state.modifiers;
-		}
-
-		public InitializerDecl.State rebuildParentState(InitializerDecl.State state, STree<?> child) {
-			return state.withModifiers((STree) child);
-		}
-
-		public STraversal leftSibling(InitializerDecl.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(InitializerDecl.State state) {
-			return BODY;
-		}
-	};
-	private static final STraversal BODY = new STraversal() {
-
-		public STree<?> traverse(InitializerDecl.State state) {
-			return state.body;
-		}
-
-		public InitializerDecl.State rebuildParentState(InitializerDecl.State state, STree<?> child) {
-			return state.withBody((STree) child);
-		}
-
-		public STraversal leftSibling(InitializerDecl.State state) {
-			return MODIFIERS;
-		}
-
-		public STraversal rightSibling(InitializerDecl.State state) {
-			return null;
-		}
-	};
-//	private static final int JAVADOC_COMMENT = 3;
-
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(BODY)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> modifiers;
-
-		public final STree<BlockStmt.State> body;
-
-		State(STree<SNodeListState> modifiers, STree<BlockStmt.State> body) {
-			this.modifiers = modifiers;
-			this.body = body;
-		}
-
-		public InitializerDecl.State withModifiers(STree<SNodeListState> modifiers) {
-			return new InitializerDecl.State(modifiers, body);
-		}
-
-		public InitializerDecl.State withBody(STree<BlockStmt.State> body) {
-			return new InitializerDecl.State(modifiers, body);
-		}
-
-		public STraversal firstChild() {
-			return MODIFIERS;
-		}
-
-		public STraversal lastChild() {
-			return BODY;
-		}
-
-		public Tree instantiate(SLocation<InitializerDecl.State> location) {
-			return new InitializerDecl(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.InitializerDecl;
-		}
-	}
 }

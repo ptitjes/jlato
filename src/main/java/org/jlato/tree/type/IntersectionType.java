@@ -33,6 +33,8 @@ import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class IntersectionType extends TreeBase<IntersectionType.State, Type, IntersectionType> implements Type {
 
@@ -64,59 +66,7 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final STraversal TYPES = new STraversal() {
-
-		public STree<?> traverse(IntersectionType.State state) {
-			return state.types;
-		}
-
-		public IntersectionType.State rebuildParentState(IntersectionType.State state, STree<?> child) {
-			return state.withTypes((STree) child);
-		}
-
-		public STraversal leftSibling(IntersectionType.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(IntersectionType.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(TYPES, Type.intersectionShape)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> types;
-
-		State(STree<SNodeListState> types) {
-			this.types = types;
-		}
-
-		public IntersectionType.State withTypes(STree<SNodeListState> types) {
-			return new IntersectionType.State(types);
-		}
-
-		public STraversal firstChild() {
-			return TYPES;
-		}
-
-		public STraversal lastChild() {
-			return TYPES;
-		}
-
-		public Tree instantiate(SLocation<IntersectionType.State> location) {
-			return new IntersectionType(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.IntersectionType;
-		}
-	}
 }

@@ -22,8 +22,4 @@ package org.jlato.tree.type;
 import org.jlato.internal.bu.STreeState;
 
 public interface ReferenceType extends Type {
-
-	interface State extends STreeState {
-
-	}
 }

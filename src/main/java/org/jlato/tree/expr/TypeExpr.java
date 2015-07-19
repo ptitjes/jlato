@@ -32,6 +32,8 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LexicalShape.child;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class TypeExpr extends TreeBase<TypeExpr.State, Expr, TypeExpr> implements Expr {
 
@@ -63,57 +65,5 @@ public class TypeExpr extends TreeBase<TypeExpr.State, Expr, TypeExpr> implement
 		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
-	private static final STraversal TYPE = new STraversal() {
-
-		public STree<?> traverse(TypeExpr.State state) {
-			return state.type;
-		}
-
-		public TypeExpr.State rebuildParentState(TypeExpr.State state, STree<?> child) {
-			return state.withType((STree) child);
-		}
-
-		public STraversal leftSibling(TypeExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(TypeExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = child(TYPE);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Type.State> type;
-
-		State(STree<Type.State> type) {
-			this.type = type;
-		}
-
-		public TypeExpr.State withType(STree<Type.State> type) {
-			return new TypeExpr.State(type);
-		}
-
-		public STraversal firstChild() {
-			return TYPE;
-		}
-
-		public STraversal lastChild() {
-			return TYPE;
-		}
-
-		public Tree instantiate(SLocation<TypeExpr.State> location) {
-			return new TypeExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.TypeExpr;
-		}
-	}
 }

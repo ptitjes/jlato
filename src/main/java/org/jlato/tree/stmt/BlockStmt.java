@@ -37,6 +37,8 @@ import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implements Stmt {
 
@@ -68,25 +70,6 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 		return location.safeTraversalMutate(STMTS, mutation);
 	}
 
-	private static final STraversal STMTS = new STraversal() {
-
-		public STree<?> traverse(BlockStmt.State state) {
-			return state.stmts;
-		}
-
-		public BlockStmt.State rebuildParentState(BlockStmt.State state, STree<?> child) {
-			return state.withStmts((STree) child);
-		}
-
-		public STraversal leftSibling(BlockStmt.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(BlockStmt.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			nonEmptyChildren(STMTS,
 					composite(
@@ -107,37 +90,4 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 					)
 			)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> stmts;
-
-		State(STree<SNodeListState> stmts) {
-			this.stmts = stmts;
-		}
-
-		public BlockStmt.State withStmts(STree<SNodeListState> stmts) {
-			return new BlockStmt.State(stmts);
-		}
-
-		public STraversal firstChild() {
-			return STMTS;
-		}
-
-		public STraversal lastChild() {
-			return STMTS;
-		}
-
-		public Tree instantiate(SLocation<BlockStmt.State> location) {
-			return new BlockStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.BlockStmt;
-		}
-	}
 }

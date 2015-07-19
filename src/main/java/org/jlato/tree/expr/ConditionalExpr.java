@@ -33,6 +33,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, ConditionalExpr> implements Expr {
 
@@ -88,61 +90,6 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 		return location.safeTraversalMutate(ELSE_EXPR, mutation);
 	}
 
-	private static final STraversal CONDITION = new STraversal() {
-
-		public STree<?> traverse(ConditionalExpr.State state) {
-			return state.condition;
-		}
-
-		public ConditionalExpr.State rebuildParentState(ConditionalExpr.State state, STree<?> child) {
-			return state.withCondition((STree) child);
-		}
-
-		public STraversal leftSibling(ConditionalExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ConditionalExpr.State state) {
-			return THEN_EXPR;
-		}
-	};
-	private static final STraversal THEN_EXPR = new STraversal() {
-
-		public STree<?> traverse(ConditionalExpr.State state) {
-			return state.thenExpr;
-		}
-
-		public ConditionalExpr.State rebuildParentState(ConditionalExpr.State state, STree<?> child) {
-			return state.withThenExpr((STree) child);
-		}
-
-		public STraversal leftSibling(ConditionalExpr.State state) {
-			return CONDITION;
-		}
-
-		public STraversal rightSibling(ConditionalExpr.State state) {
-			return ELSE_EXPR;
-		}
-	};
-	private static final STraversal ELSE_EXPR = new STraversal() {
-
-		public STree<?> traverse(ConditionalExpr.State state) {
-			return state.elseExpr;
-		}
-
-		public ConditionalExpr.State rebuildParentState(ConditionalExpr.State state, STree<?> child) {
-			return state.withElseExpr((STree) child);
-		}
-
-		public STraversal leftSibling(ConditionalExpr.State state) {
-			return THEN_EXPR;
-		}
-
-		public STraversal rightSibling(ConditionalExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(CONDITION),
 			token(LToken.QuestionMark).withSpacing(space(), space()),
@@ -150,51 +97,4 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 			token(LToken.Colon).withSpacing(space(), space()),
 			child(ELSE_EXPR)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Expr.State> condition;
-
-		public final STree<Expr.State> thenExpr;
-
-		public final STree<Expr.State> elseExpr;
-
-		State(STree<Expr.State> condition, STree<Expr.State> thenExpr, STree<Expr.State> elseExpr) {
-			this.condition = condition;
-			this.thenExpr = thenExpr;
-			this.elseExpr = elseExpr;
-		}
-
-		public ConditionalExpr.State withCondition(STree<Expr.State> condition) {
-			return new ConditionalExpr.State(condition, thenExpr, elseExpr);
-		}
-
-		public ConditionalExpr.State withThenExpr(STree<Expr.State> thenExpr) {
-			return new ConditionalExpr.State(condition, thenExpr, elseExpr);
-		}
-
-		public ConditionalExpr.State withElseExpr(STree<Expr.State> elseExpr) {
-			return new ConditionalExpr.State(condition, thenExpr, elseExpr);
-		}
-
-		public STraversal firstChild() {
-			return CONDITION;
-		}
-
-		public STraversal lastChild() {
-			return ELSE_EXPR;
-		}
-
-		public Tree instantiate(SLocation<ConditionalExpr.State> location) {
-			return new ConditionalExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ConditionalExpr;
-		}
-	}
 }

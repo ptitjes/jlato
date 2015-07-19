@@ -38,6 +38,8 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, MemberDecl, AnnotationMemberDecl> implements MemberDecl {
 
@@ -122,97 +124,6 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 		return location.safeTraversalMutate(DEFAULT_VALUE, mutation);
 	}
 
-	private static final STraversal MODIFIERS = new STraversal() {
-
-		public STree<?> traverse(AnnotationMemberDecl.State state) {
-			return state.modifiers;
-		}
-
-		public AnnotationMemberDecl.State rebuildParentState(AnnotationMemberDecl.State state, STree<?> child) {
-			return state.withModifiers((STree) child);
-		}
-
-		public STraversal leftSibling(AnnotationMemberDecl.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(AnnotationMemberDecl.State state) {
-			return TYPE;
-		}
-	};
-	private static final STraversal TYPE = new STraversal() {
-
-		public STree<?> traverse(AnnotationMemberDecl.State state) {
-			return state.type;
-		}
-
-		public AnnotationMemberDecl.State rebuildParentState(AnnotationMemberDecl.State state, STree<?> child) {
-			return state.withType((STree) child);
-		}
-
-		public STraversal leftSibling(AnnotationMemberDecl.State state) {
-			return MODIFIERS;
-		}
-
-		public STraversal rightSibling(AnnotationMemberDecl.State state) {
-			return NAME;
-		}
-	};
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(AnnotationMemberDecl.State state) {
-			return state.name;
-		}
-
-		public AnnotationMemberDecl.State rebuildParentState(AnnotationMemberDecl.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(AnnotationMemberDecl.State state) {
-			return TYPE;
-		}
-
-		public STraversal rightSibling(AnnotationMemberDecl.State state) {
-			return DIMS;
-		}
-	};
-	private static final STraversal DIMS = new STraversal() {
-
-		public STree<?> traverse(AnnotationMemberDecl.State state) {
-			return state.dims;
-		}
-
-		public AnnotationMemberDecl.State rebuildParentState(AnnotationMemberDecl.State state, STree<?> child) {
-			return state.withDims((STree) child);
-		}
-
-		public STraversal leftSibling(AnnotationMemberDecl.State state) {
-			return NAME;
-		}
-
-		public STraversal rightSibling(AnnotationMemberDecl.State state) {
-			return DEFAULT_VALUE;
-		}
-	};
-	private static final STraversal DEFAULT_VALUE = new STraversal() {
-
-		public STree<?> traverse(AnnotationMemberDecl.State state) {
-			return state.defaultValue;
-		}
-
-		public AnnotationMemberDecl.State rebuildParentState(AnnotationMemberDecl.State state, STree<?> child) {
-			return state.withDefaultValue((STree) child);
-		}
-
-		public STraversal leftSibling(AnnotationMemberDecl.State state) {
-			return DIMS;
-		}
-
-		public STraversal rightSibling(AnnotationMemberDecl.State state) {
-			return null;
-		}
-	};
-
 	public static final LexicalShape defaultValShape = composite(token(LToken.Default), element());
 
 	public final static LexicalShape shape = composite(
@@ -222,65 +133,4 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 			child(DEFAULT_VALUE, when(some(), defaultValShape)),
 			token(LToken.SemiColon)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> modifiers;
-
-		public final STree<Type.State> type;
-
-		public final STree<Name.State> name;
-
-		public final STree<SNodeListState> dims;
-
-		public final STree<SNodeOptionState> defaultValue;
-
-		State(STree<SNodeListState> modifiers, STree<Type.State> type, STree<Name.State> name, STree<SNodeListState> dims, STree<SNodeOptionState> defaultValue) {
-			this.modifiers = modifiers;
-			this.type = type;
-			this.name = name;
-			this.dims = dims;
-			this.defaultValue = defaultValue;
-		}
-
-		public AnnotationMemberDecl.State withModifiers(STree<SNodeListState> modifiers) {
-			return new AnnotationMemberDecl.State(modifiers, type, name, dims, defaultValue);
-		}
-
-		public AnnotationMemberDecl.State withType(STree<Type.State> type) {
-			return new AnnotationMemberDecl.State(modifiers, type, name, dims, defaultValue);
-		}
-
-		public AnnotationMemberDecl.State withName(STree<Name.State> name) {
-			return new AnnotationMemberDecl.State(modifiers, type, name, dims, defaultValue);
-		}
-
-		public AnnotationMemberDecl.State withDims(STree<SNodeListState> dims) {
-			return new AnnotationMemberDecl.State(modifiers, type, name, dims, defaultValue);
-		}
-
-		public AnnotationMemberDecl.State withDefaultValue(STree<SNodeOptionState> defaultValue) {
-			return new AnnotationMemberDecl.State(modifiers, type, name, dims, defaultValue);
-		}
-
-		public STraversal firstChild() {
-			return MODIFIERS;
-		}
-
-		public STraversal lastChild() {
-			return DEFAULT_VALUE;
-		}
-
-		public Tree instantiate(SLocation<AnnotationMemberDecl.State> location) {
-			return new AnnotationMemberDecl(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.AnnotationMemberDecl;
-		}
-	}
 }

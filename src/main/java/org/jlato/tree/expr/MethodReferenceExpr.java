@@ -35,6 +35,8 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Expr, MethodReferenceExpr> implements Expr {
 
@@ -90,112 +92,10 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal SCOPE = new STraversal() {
-
-		public STree<?> traverse(MethodReferenceExpr.State state) {
-			return state.scope;
-		}
-
-		public MethodReferenceExpr.State rebuildParentState(MethodReferenceExpr.State state, STree<?> child) {
-			return state.withScope((STree) child);
-		}
-
-		public STraversal leftSibling(MethodReferenceExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(MethodReferenceExpr.State state) {
-			return TYPE_ARGS;
-		}
-	};
-	private static final STraversal TYPE_ARGS = new STraversal() {
-
-		public STree<?> traverse(MethodReferenceExpr.State state) {
-			return state.typeArgs;
-		}
-
-		public MethodReferenceExpr.State rebuildParentState(MethodReferenceExpr.State state, STree<?> child) {
-			return state.withTypeArgs((STree) child);
-		}
-
-		public STraversal leftSibling(MethodReferenceExpr.State state) {
-			return SCOPE;
-		}
-
-		public STraversal rightSibling(MethodReferenceExpr.State state) {
-			return NAME;
-		}
-	};
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(MethodReferenceExpr.State state) {
-			return state.name;
-		}
-
-		public MethodReferenceExpr.State rebuildParentState(MethodReferenceExpr.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(MethodReferenceExpr.State state) {
-			return TYPE_ARGS;
-		}
-
-		public STraversal rightSibling(MethodReferenceExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(SCOPE),
 			token(LToken.DoubleColon),
 			child(TYPE_ARGS, Type.typeArgumentsShape),
 			child(NAME)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Expr.State> scope;
-
-		public final STree<SNodeListState> typeArgs;
-
-		public final STree<Name.State> name;
-
-		State(STree<Expr.State> scope, STree<SNodeListState> typeArgs, STree<Name.State> name) {
-			this.scope = scope;
-			this.typeArgs = typeArgs;
-			this.name = name;
-		}
-
-		public MethodReferenceExpr.State withScope(STree<Expr.State> scope) {
-			return new MethodReferenceExpr.State(scope, typeArgs, name);
-		}
-
-		public MethodReferenceExpr.State withTypeArgs(STree<SNodeListState> typeArgs) {
-			return new MethodReferenceExpr.State(scope, typeArgs, name);
-		}
-
-		public MethodReferenceExpr.State withName(STree<Name.State> name) {
-			return new MethodReferenceExpr.State(scope, typeArgs, name);
-		}
-
-		public STraversal firstChild() {
-			return SCOPE;
-		}
-
-		public STraversal lastChild() {
-			return NAME;
-		}
-
-		public Tree instantiate(SLocation<MethodReferenceExpr.State> location) {
-			return new MethodReferenceExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.MethodReferenceExpr;
-		}
-	}
 }

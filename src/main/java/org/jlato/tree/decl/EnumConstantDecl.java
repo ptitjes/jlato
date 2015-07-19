@@ -40,6 +40,8 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.SpacingConstraint.spacing;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDecl, EnumConstantDecl> implements MemberDecl {
 
@@ -112,79 +114,6 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 		return location.safeTraversalMutate(CLASS_BODY, mutation);
 	}
 
-	private static final STraversal MODIFIERS = new STraversal() {
-
-		public STree<?> traverse(EnumConstantDecl.State state) {
-			return state.modifiers;
-		}
-
-		public EnumConstantDecl.State rebuildParentState(EnumConstantDecl.State state, STree<?> child) {
-			return state.withModifiers((STree) child);
-		}
-
-		public STraversal leftSibling(EnumConstantDecl.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(EnumConstantDecl.State state) {
-			return NAME;
-		}
-	};
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(EnumConstantDecl.State state) {
-			return state.name;
-		}
-
-		public EnumConstantDecl.State rebuildParentState(EnumConstantDecl.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(EnumConstantDecl.State state) {
-			return MODIFIERS;
-		}
-
-		public STraversal rightSibling(EnumConstantDecl.State state) {
-			return ARGS;
-		}
-	};
-	private static final STraversal ARGS = new STraversal() {
-
-		public STree<?> traverse(EnumConstantDecl.State state) {
-			return state.args;
-		}
-
-		public EnumConstantDecl.State rebuildParentState(EnumConstantDecl.State state, STree<?> child) {
-			return state.withArgs((STree) child);
-		}
-
-		public STraversal leftSibling(EnumConstantDecl.State state) {
-			return NAME;
-		}
-
-		public STraversal rightSibling(EnumConstantDecl.State state) {
-			return CLASS_BODY;
-		}
-	};
-	private static final STraversal CLASS_BODY = new STraversal() {
-
-		public STree<?> traverse(EnumConstantDecl.State state) {
-			return state.classBody;
-		}
-
-		public EnumConstantDecl.State rebuildParentState(EnumConstantDecl.State state, STree<?> child) {
-			return state.withClassBody((STree) child);
-		}
-
-		public STraversal leftSibling(EnumConstantDecl.State state) {
-			return ARGS;
-		}
-
-		public STraversal rightSibling(EnumConstantDecl.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(NAME),
@@ -198,58 +127,4 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 			token(LToken.Comma).withSpacingAfter(spacing(EnumBody_BetweenConstants)),
 			null
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> modifiers;
-
-		public final STree<Name.State> name;
-
-		public final STree<SNodeOptionState> args;
-
-		public final STree<SNodeOptionState> classBody;
-
-		State(STree<SNodeListState> modifiers, STree<Name.State> name, STree<SNodeOptionState> args, STree<SNodeOptionState> classBody) {
-			this.modifiers = modifiers;
-			this.name = name;
-			this.args = args;
-			this.classBody = classBody;
-		}
-
-		public EnumConstantDecl.State withModifiers(STree<SNodeListState> modifiers) {
-			return new EnumConstantDecl.State(modifiers, name, args, classBody);
-		}
-
-		public EnumConstantDecl.State withName(STree<Name.State> name) {
-			return new EnumConstantDecl.State(modifiers, name, args, classBody);
-		}
-
-		public EnumConstantDecl.State withArgs(STree<SNodeOptionState> args) {
-			return new EnumConstantDecl.State(modifiers, name, args, classBody);
-		}
-
-		public EnumConstantDecl.State withClassBody(STree<SNodeOptionState> classBody) {
-			return new EnumConstantDecl.State(modifiers, name, args, classBody);
-		}
-
-		public STraversal firstChild() {
-			return MODIFIERS;
-		}
-
-		public STraversal lastChild() {
-			return CLASS_BODY;
-		}
-
-		public Tree instantiate(SLocation<EnumConstantDecl.State> location) {
-			return new EnumConstantDecl(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.EnumConstantDecl;
-		}
-	}
 }

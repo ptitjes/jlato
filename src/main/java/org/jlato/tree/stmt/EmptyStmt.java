@@ -30,6 +30,8 @@ import org.jlato.internal.td.TreeBase;
 import static org.jlato.internal.shapes.LexicalShape.token;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class EmptyStmt extends TreeBase<EmptyStmt.State, Stmt, EmptyStmt> implements Stmt {
 
@@ -50,30 +52,4 @@ public class EmptyStmt extends TreeBase<EmptyStmt.State, Stmt, EmptyStmt> implem
 	}
 
 	public final static LexicalShape shape = token(LToken.SemiColon);
-
-	public static class State extends SNodeState<State> {
-
-		State() {
-		}
-
-		public STraversal firstChild() {
-			return null;
-		}
-
-		public STraversal lastChild() {
-			return null;
-		}
-
-		public Tree instantiate(SLocation<EmptyStmt.State> location) {
-			return new EmptyStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.EmptyStmt;
-		}
-	}
 }

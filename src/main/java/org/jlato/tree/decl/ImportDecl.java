@@ -36,6 +36,8 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUn
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> implements Tree {
 
@@ -83,46 +85,6 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 		return location.safePropertyReplace(ON_DEMAND, (Boolean) isOnDemand);
 	}
 
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(ImportDecl.State state) {
-			return state.name;
-		}
-
-		public ImportDecl.State rebuildParentState(ImportDecl.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(ImportDecl.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ImportDecl.State state) {
-			return null;
-		}
-	};
-
-	private static final SProperty STATIC = new SProperty() {
-
-		public Object retrieve(ImportDecl.State state) {
-			return state.isStatic;
-		}
-
-		public ImportDecl.State rebuildParentState(ImportDecl.State state, Object value) {
-			return state.withStatic((Boolean) value);
-		}
-	};
-	private static final SProperty ON_DEMAND = new SProperty() {
-
-		public Object retrieve(ImportDecl.State state) {
-			return state.isOnDemand;
-		}
-
-		public ImportDecl.State rebuildParentState(ImportDecl.State state, Object value) {
-			return state.withOnDemand((Boolean) value);
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.Import),
 			dataOption(STATIC, token(LToken.Static)),
@@ -136,51 +98,4 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 			none().withSpacingAfter(newLine()),
 			none().withSpacingAfter(spacing(CompilationUnit_AfterImports))
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<QualifiedName.State> name;
-
-		public final boolean isStatic;
-
-		public final boolean isOnDemand;
-
-		State(STree<QualifiedName.State> name, boolean isStatic, boolean isOnDemand) {
-			this.name = name;
-			this.isStatic = isStatic;
-			this.isOnDemand = isOnDemand;
-		}
-
-		public ImportDecl.State withName(STree<QualifiedName.State> name) {
-			return new ImportDecl.State(name, isStatic, isOnDemand);
-		}
-
-		public ImportDecl.State withStatic(boolean isStatic) {
-			return new ImportDecl.State(name, isStatic, isOnDemand);
-		}
-
-		public ImportDecl.State withOnDemand(boolean isOnDemand) {
-			return new ImportDecl.State(name, isStatic, isOnDemand);
-		}
-
-		public STraversal firstChild() {
-			return NAME;
-		}
-
-		public STraversal lastChild() {
-			return NAME;
-		}
-
-		public Tree instantiate(SLocation<ImportDecl.State> location) {
-			return new ImportDecl(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ImportDecl;
-		}
-	}
 }

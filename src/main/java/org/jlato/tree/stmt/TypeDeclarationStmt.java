@@ -33,6 +33,8 @@ import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stmt, TypeDeclarationStmt> implements Stmt {
 
@@ -64,59 +66,7 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 		return location.safeTraversalMutate(TYPE_DECL, mutation);
 	}
 
-	private static final STraversal TYPE_DECL = new STraversal() {
-
-		public STree<?> traverse(TypeDeclarationStmt.State state) {
-			return state.typeDecl;
-		}
-
-		public TypeDeclarationStmt.State rebuildParentState(TypeDeclarationStmt.State state, STree<?> child) {
-			return state.withTypeDecl((STree) child);
-		}
-
-		public STraversal leftSibling(TypeDeclarationStmt.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(TypeDeclarationStmt.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(TYPE_DECL)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<TypeDecl.State> typeDecl;
-
-		State(STree<TypeDecl.State> typeDecl) {
-			this.typeDecl = typeDecl;
-		}
-
-		public TypeDeclarationStmt.State withTypeDecl(STree<TypeDecl.State> typeDecl) {
-			return new TypeDeclarationStmt.State(typeDecl);
-		}
-
-		public STraversal firstChild() {
-			return TYPE_DECL;
-		}
-
-		public STraversal lastChild() {
-			return TYPE_DECL;
-		}
-
-		public Tree instantiate(SLocation<TypeDeclarationStmt.State> location) {
-			return new TypeDeclarationStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.TypeDeclarationStmt;
-		}
-	}
 }

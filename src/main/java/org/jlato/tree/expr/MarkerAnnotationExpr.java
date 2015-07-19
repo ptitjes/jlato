@@ -33,6 +33,8 @@ import org.jlato.tree.name.QualifiedName;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, AnnotationExpr, MarkerAnnotationExpr> implements AnnotationExpr {
 
@@ -64,59 +66,7 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(MarkerAnnotationExpr.State state) {
-			return state.name;
-		}
-
-		public MarkerAnnotationExpr.State rebuildParentState(MarkerAnnotationExpr.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(MarkerAnnotationExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(MarkerAnnotationExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.At), child(NAME)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<QualifiedName.State> name;
-
-		State(STree<QualifiedName.State> name) {
-			this.name = name;
-		}
-
-		public MarkerAnnotationExpr.State withName(STree<QualifiedName.State> name) {
-			return new MarkerAnnotationExpr.State(name);
-		}
-
-		public STraversal firstChild() {
-			return NAME;
-		}
-
-		public STraversal lastChild() {
-			return NAME;
-		}
-
-		public Tree instantiate(SLocation<MarkerAnnotationExpr.State> location) {
-			return new MarkerAnnotationExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.MarkerAnnotationExpr;
-		}
-	}
 }

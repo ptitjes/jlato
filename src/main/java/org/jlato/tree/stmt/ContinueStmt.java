@@ -36,6 +36,8 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStmt> implements Stmt {
 
@@ -67,61 +69,9 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 		return location.safeTraversalMutate(ID, mutation);
 	}
 
-	private static final STraversal ID = new STraversal() {
-
-		public STree<?> traverse(ContinueStmt.State state) {
-			return state.id;
-		}
-
-		public ContinueStmt.State rebuildParentState(ContinueStmt.State state, STree<?> child) {
-			return state.withId((STree) child);
-		}
-
-		public STraversal leftSibling(ContinueStmt.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ContinueStmt.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.Continue),
 			when(childIs(ID, some()), child(ID, element())),
 			token(LToken.SemiColon)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeOptionState> id;
-
-		State(STree<SNodeOptionState> id) {
-			this.id = id;
-		}
-
-		public ContinueStmt.State withId(STree<SNodeOptionState> id) {
-			return new ContinueStmt.State(id);
-		}
-
-		public STraversal firstChild() {
-			return ID;
-		}
-
-		public STraversal lastChild() {
-			return ID;
-		}
-
-		public Tree instantiate(SLocation<ContinueStmt.State> location) {
-			return new ContinueStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ContinueStmt;
-		}
-	}
 }

@@ -35,6 +35,8 @@ import org.jlato.tree.expr.AnnotationExpr;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, PrimitiveType> implements Type {
 
@@ -78,36 +80,6 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		return location.safePropertyMutate(PRIMITIVE, mutation);
 	}
 
-	private static final STraversal ANNOTATIONS = new STraversal() {
-
-		public STree<?> traverse(PrimitiveType.State state) {
-			return state.annotations;
-		}
-
-		public PrimitiveType.State rebuildParentState(PrimitiveType.State state, STree<?> child) {
-			return state.withAnnotations((STree) child);
-		}
-
-		public STraversal leftSibling(PrimitiveType.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(PrimitiveType.State state) {
-			return null;
-		}
-	};
-
-	private static final SProperty PRIMITIVE = new SProperty() {
-
-		public Object retrieve(PrimitiveType.State state) {
-			return state.type;
-		}
-
-		public PrimitiveType.State rebuildParentState(PrimitiveType.State state, Object value) {
-			return state.withType((Primitive) value);
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
 			token(new LSToken.Provider() {
@@ -137,46 +109,6 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 
 		public String toString() {
 			return token.toString();
-		}
-	}
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> annotations;
-
-		public final Primitive type;
-
-		State(STree<SNodeListState> annotations, Primitive type) {
-			this.annotations = annotations;
-			this.type = type;
-		}
-
-		public PrimitiveType.State withAnnotations(STree<SNodeListState> annotations) {
-			return new PrimitiveType.State(annotations, type);
-		}
-
-		public PrimitiveType.State withType(Primitive type) {
-			return new PrimitiveType.State(annotations, type);
-		}
-
-		public STraversal firstChild() {
-			return ANNOTATIONS;
-		}
-
-		public STraversal lastChild() {
-			return ANNOTATIONS;
-		}
-
-		public Tree instantiate(SLocation<PrimitiveType.State> location) {
-			return new PrimitiveType(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.PrimitiveType;
 		}
 	}
 }

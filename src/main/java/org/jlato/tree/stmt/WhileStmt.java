@@ -34,6 +34,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implements Stmt {
 
@@ -77,87 +79,10 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 		return location.safeTraversalMutate(BODY, mutation);
 	}
 
-	private static final STraversal CONDITION = new STraversal() {
-
-		public STree<?> traverse(WhileStmt.State state) {
-			return state.condition;
-		}
-
-		public WhileStmt.State rebuildParentState(WhileStmt.State state, STree<?> child) {
-			return state.withCondition((STree) child);
-		}
-
-		public STraversal leftSibling(WhileStmt.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(WhileStmt.State state) {
-			return BODY;
-		}
-	};
-	private static final STraversal BODY = new STraversal() {
-
-		public STree<?> traverse(WhileStmt.State state) {
-			return state.body;
-		}
-
-		public WhileStmt.State rebuildParentState(WhileStmt.State state, STree<?> child) {
-			return state.withBody((STree) child);
-		}
-
-		public STraversal leftSibling(WhileStmt.State state) {
-			return CONDITION;
-		}
-
-		public STraversal rightSibling(WhileStmt.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.While), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
 			child(CONDITION),
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			child(BODY)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Expr.State> condition;
-
-		public final STree<Stmt.State> body;
-
-		State(STree<Expr.State> condition, STree<Stmt.State> body) {
-			this.condition = condition;
-			this.body = body;
-		}
-
-		public WhileStmt.State withCondition(STree<Expr.State> condition) {
-			return new WhileStmt.State(condition, body);
-		}
-
-		public WhileStmt.State withBody(STree<Stmt.State> body) {
-			return new WhileStmt.State(condition, body);
-		}
-
-		public STraversal firstChild() {
-			return CONDITION;
-		}
-
-		public STraversal lastChild() {
-			return BODY;
-		}
-
-		public Tree instantiate(SLocation<WhileStmt.State> location) {
-			return new WhileStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.WhileStmt;
-		}
-	}
 }

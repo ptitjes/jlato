@@ -35,6 +35,8 @@ import static org.jlato.internal.shapes.LexicalShape.composite;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, LocalVariableDecl> implements Decl {
 
@@ -90,111 +92,9 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 		return location.safeTraversalMutate(VARIABLES, mutation);
 	}
 
-	private static final STraversal MODIFIERS = new STraversal() {
-
-		public STree<?> traverse(LocalVariableDecl.State state) {
-			return state.modifiers;
-		}
-
-		public LocalVariableDecl.State rebuildParentState(LocalVariableDecl.State state, STree<?> child) {
-			return state.withModifiers((STree) child);
-		}
-
-		public STraversal leftSibling(LocalVariableDecl.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(LocalVariableDecl.State state) {
-			return TYPE;
-		}
-	};
-	private static final STraversal TYPE = new STraversal() {
-
-		public STree<?> traverse(LocalVariableDecl.State state) {
-			return state.type;
-		}
-
-		public LocalVariableDecl.State rebuildParentState(LocalVariableDecl.State state, STree<?> child) {
-			return state.withType((STree) child);
-		}
-
-		public STraversal leftSibling(LocalVariableDecl.State state) {
-			return MODIFIERS;
-		}
-
-		public STraversal rightSibling(LocalVariableDecl.State state) {
-			return VARIABLES;
-		}
-	};
-	private static final STraversal VARIABLES = new STraversal() {
-
-		public STree<?> traverse(LocalVariableDecl.State state) {
-			return state.variables;
-		}
-
-		public LocalVariableDecl.State rebuildParentState(LocalVariableDecl.State state, STree<?> child) {
-			return state.withVariables((STree) child);
-		}
-
-		public STraversal leftSibling(LocalVariableDecl.State state) {
-			return TYPE;
-		}
-
-		public STraversal rightSibling(LocalVariableDecl.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.singleLineShape),
 			child(TYPE),
 			child(VARIABLES, VariableDeclarator.listShape).withSpacingBefore(space())
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> modifiers;
-
-		public final STree<Type.State> type;
-
-		public final STree<SNodeListState> variables;
-
-		State(STree<SNodeListState> modifiers, STree<Type.State> type, STree<SNodeListState> variables) {
-			this.modifiers = modifiers;
-			this.type = type;
-			this.variables = variables;
-		}
-
-		public LocalVariableDecl.State withModifiers(STree<SNodeListState> modifiers) {
-			return new LocalVariableDecl.State(modifiers, type, variables);
-		}
-
-		public LocalVariableDecl.State withType(STree<Type.State> type) {
-			return new LocalVariableDecl.State(modifiers, type, variables);
-		}
-
-		public LocalVariableDecl.State withVariables(STree<SNodeListState> variables) {
-			return new LocalVariableDecl.State(modifiers, type, variables);
-		}
-
-		public STraversal firstChild() {
-			return MODIFIERS;
-		}
-
-		public STraversal lastChild() {
-			return VARIABLES;
-		}
-
-		public Tree instantiate(SLocation<LocalVariableDecl.State> location) {
-			return new LocalVariableDecl(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.LocalVariableDecl;
-		}
-	}
 }

@@ -34,6 +34,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterPackageDecl;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, CompilationUnit> implements Tree {
 
@@ -89,72 +91,6 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 		return location.safeTraversalMutate(TYPES, mutation);
 	}
 
-	private static final STraversal PACKAGE_DECL = new STraversal() {
-
-		public STree<?> traverse(CompilationUnit.State state) {
-			return state.packageDecl;
-		}
-
-		public CompilationUnit.State rebuildParentState(CompilationUnit.State state, STree<?> child) {
-			return state.withPackageDecl((STree) child);
-		}
-
-		public STraversal leftSibling(CompilationUnit.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(CompilationUnit.State state) {
-			return IMPORTS;
-		}
-	};
-	private static final STraversal IMPORTS = new STraversal() {
-
-		public STree<?> traverse(CompilationUnit.State state) {
-			return state.imports;
-		}
-
-		public CompilationUnit.State rebuildParentState(CompilationUnit.State state, STree<?> child) {
-			return state.withImports((STree) child);
-		}
-
-		public STraversal leftSibling(CompilationUnit.State state) {
-			return PACKAGE_DECL;
-		}
-
-		public STraversal rightSibling(CompilationUnit.State state) {
-			return TYPES;
-		}
-	};
-	private static final STraversal TYPES = new STraversal() {
-
-		public STree<?> traverse(CompilationUnit.State state) {
-			return state.types;
-		}
-
-		public CompilationUnit.State rebuildParentState(CompilationUnit.State state, STree<?> child) {
-			return state.withTypes((STree) child);
-		}
-
-		public STraversal leftSibling(CompilationUnit.State state) {
-			return IMPORTS;
-		}
-
-		public STraversal rightSibling(CompilationUnit.State state) {
-			return null;
-		}
-	};
-
-	private static final SProperty PREAMBLE = new SProperty() {
-
-		public Object retrieve(CompilationUnit.State state) {
-			return state.preamble;
-		}
-
-		public CompilationUnit.State rebuildParentState(CompilationUnit.State state, Object value) {
-			return state.withPreamble((IndexedList<WTokenRun>) value);
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			new LSDump<CompilationUnit.State>(PREAMBLE),
 			child(PACKAGE_DECL),
@@ -163,58 +99,4 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 			child(TYPES, TypeDecl.listShape),
 			token(LToken.EOF).withSpacingBefore(newLine())
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final IndexedList<WTokenRun> preamble;
-
-		public final STree<PackageDecl.State> packageDecl;
-
-		public final STree<SNodeListState> imports;
-
-		public final STree<SNodeListState> types;
-
-		State(IndexedList<WTokenRun> preamble, STree<PackageDecl.State> packageDecl, STree<SNodeListState> imports, STree<SNodeListState> types) {
-			this.preamble = preamble;
-			this.packageDecl = packageDecl;
-			this.imports = imports;
-			this.types = types;
-		}
-
-		public CompilationUnit.State withPreamble(IndexedList<WTokenRun> preamble) {
-			return new CompilationUnit.State(preamble, packageDecl, imports, types);
-		}
-
-		public CompilationUnit.State withPackageDecl(STree<PackageDecl.State> packageDecl) {
-			return new CompilationUnit.State(preamble, packageDecl, imports, types);
-		}
-
-		public CompilationUnit.State withImports(STree<SNodeListState> imports) {
-			return new CompilationUnit.State(preamble, packageDecl, imports, types);
-		}
-
-		public CompilationUnit.State withTypes(STree<SNodeListState> types) {
-			return new CompilationUnit.State(preamble, packageDecl, imports, types);
-		}
-
-		public STraversal firstChild() {
-			return PACKAGE_DECL;
-		}
-
-		public STraversal lastChild() {
-			return TYPES;
-		}
-
-		public Tree instantiate(SLocation<CompilationUnit.State> location) {
-			return new CompilationUnit(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.CompilationUnit;
-		}
-	}
 }

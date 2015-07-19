@@ -32,6 +32,8 @@ import org.jlato.tree.Mutation;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, ParenthesizedExpr> implements Expr {
 
@@ -63,59 +65,7 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 		return location.safeTraversalMutate(INNER, mutation);
 	}
 
-	private static final STraversal INNER = new STraversal() {
-
-		public STree<?> traverse(ParenthesizedExpr.State state) {
-			return state.inner;
-		}
-
-		public ParenthesizedExpr.State rebuildParentState(ParenthesizedExpr.State state, STree<?> child) {
-			return state.withInner((STree) child);
-		}
-
-		public STraversal leftSibling(ParenthesizedExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ParenthesizedExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft), child(INNER), token(LToken.ParenthesisRight)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Expr.State> inner;
-
-		State(STree<Expr.State> inner) {
-			this.inner = inner;
-		}
-
-		public ParenthesizedExpr.State withInner(STree<Expr.State> inner) {
-			return new ParenthesizedExpr.State(inner);
-		}
-
-		public STraversal firstChild() {
-			return INNER;
-		}
-
-		public STraversal lastChild() {
-			return INNER;
-		}
-
-		public Tree instantiate(SLocation<ParenthesizedExpr.State> location) {
-			return new ParenthesizedExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ParenthesizedExpr;
-		}
-	}
 }

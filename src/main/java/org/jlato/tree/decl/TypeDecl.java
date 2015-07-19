@@ -43,8 +43,4 @@ public interface TypeDecl extends MemberDecl {
 		AnnotationType,
 		// Keep last comma
 	}
-
-	interface State extends MemberDecl.State {
-
-	}
 }

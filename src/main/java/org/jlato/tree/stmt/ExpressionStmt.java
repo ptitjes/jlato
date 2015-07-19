@@ -33,6 +33,8 @@ import org.jlato.tree.expr.Expr;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, ExpressionStmt> implements Stmt {
 
@@ -64,59 +66,7 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	private static final STraversal EXPR = new STraversal() {
-
-		public STree<?> traverse(ExpressionStmt.State state) {
-			return state.expr;
-		}
-
-		public ExpressionStmt.State rebuildParentState(ExpressionStmt.State state, STree<?> child) {
-			return state.withExpr((STree) child);
-		}
-
-		public STraversal leftSibling(ExpressionStmt.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ExpressionStmt.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(EXPR), token(LToken.SemiColon)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Expr.State> expr;
-
-		State(STree<Expr.State> expr) {
-			this.expr = expr;
-		}
-
-		public ExpressionStmt.State withExpr(STree<Expr.State> expr) {
-			return new ExpressionStmt.State(expr);
-		}
-
-		public STraversal firstChild() {
-			return EXPR;
-		}
-
-		public STraversal lastChild() {
-			return EXPR;
-		}
-
-		public Tree instantiate(SLocation<ExpressionStmt.State> location) {
-			return new ExpressionStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ExpressionStmt;
-		}
-	}
 }

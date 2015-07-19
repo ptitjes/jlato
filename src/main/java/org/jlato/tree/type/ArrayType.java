@@ -34,6 +34,8 @@ import org.jlato.tree.decl.VariableDeclaratorId;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayType> implements ReferenceType {
 
@@ -77,85 +79,8 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
-	private static final STraversal COMPONENT_TYPE = new STraversal() {
-
-		public STree<?> traverse(ArrayType.State state) {
-			return state.componentType;
-		}
-
-		public ArrayType.State rebuildParentState(ArrayType.State state, STree<?> child) {
-			return state.withComponentType((STree) child);
-		}
-
-		public STraversal leftSibling(ArrayType.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ArrayType.State state) {
-			return DIMS;
-		}
-	};
-	private static final STraversal DIMS = new STraversal() {
-
-		public STree<?> traverse(ArrayType.State state) {
-			return state.dims;
-		}
-
-		public ArrayType.State rebuildParentState(ArrayType.State state, STree<?> child) {
-			return state.withDims((STree) child);
-		}
-
-		public STraversal leftSibling(ArrayType.State state) {
-			return COMPONENT_TYPE;
-		}
-
-		public STraversal rightSibling(ArrayType.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(COMPONENT_TYPE),
 			child(DIMS, list())
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Type.State> componentType;
-
-		public final STree<SNodeListState> dims;
-
-		State(STree<Type.State> componentType, STree<SNodeListState> dims) {
-			this.componentType = componentType;
-			this.dims = dims;
-		}
-
-		public ArrayType.State withComponentType(STree<Type.State> componentType) {
-			return new ArrayType.State(componentType, dims);
-		}
-
-		public ArrayType.State withDims(STree<SNodeListState> dims) {
-			return new ArrayType.State(componentType, dims);
-		}
-
-		public STraversal firstChild() {
-			return COMPONENT_TYPE;
-		}
-
-		public STraversal lastChild() {
-			return DIMS;
-		}
-
-		public Tree instantiate(SLocation<ArrayType.State> location) {
-			return new ArrayType(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ArrayType;
-		}
-	}
 }

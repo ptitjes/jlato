@@ -33,6 +33,8 @@ import org.jlato.tree.decl.FormalParameter;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> implements Tree {
 
@@ -76,43 +78,6 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 		return location.safeTraversalMutate(CATCH_BLOCK, mutation);
 	}
 
-	private static final STraversal EXCEPT = new STraversal() {
-
-		public STree<?> traverse(CatchClause.State state) {
-			return state.except;
-		}
-
-		public CatchClause.State rebuildParentState(CatchClause.State state, STree<?> child) {
-			return state.withExcept((STree) child);
-		}
-
-		public STraversal leftSibling(CatchClause.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(CatchClause.State state) {
-			return CATCH_BLOCK;
-		}
-	};
-	private static final STraversal CATCH_BLOCK = new STraversal() {
-
-		public STree<?> traverse(CatchClause.State state) {
-			return state.catchBlock;
-		}
-
-		public CatchClause.State rebuildParentState(CatchClause.State state, STree<?> child) {
-			return state.withCatchBlock((STree) child);
-		}
-
-		public STraversal leftSibling(CatchClause.State state) {
-			return EXCEPT;
-		}
-
-		public STraversal rightSibling(CatchClause.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.Catch).withSpacingBefore(space()),
 			token(LToken.ParenthesisLeft).withSpacingBefore(space()),
@@ -122,44 +87,4 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 	);
 
 	public static final LexicalShape listShape = list();
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<FormalParameter.State> except;
-
-		public final STree<BlockStmt.State> catchBlock;
-
-		State(STree<FormalParameter.State> except, STree<BlockStmt.State> catchBlock) {
-			this.except = except;
-			this.catchBlock = catchBlock;
-		}
-
-		public CatchClause.State withExcept(STree<FormalParameter.State> except) {
-			return new CatchClause.State(except, catchBlock);
-		}
-
-		public CatchClause.State withCatchBlock(STree<BlockStmt.State> catchBlock) {
-			return new CatchClause.State(except, catchBlock);
-		}
-
-		public STraversal firstChild() {
-			return EXCEPT;
-		}
-
-		public STraversal lastChild() {
-			return CATCH_BLOCK;
-		}
-
-		public Tree instantiate(SLocation<CatchClause.State> location) {
-			return new CatchClause(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.CatchClause;
-		}
-	}
 }

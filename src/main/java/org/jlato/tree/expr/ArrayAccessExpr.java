@@ -32,6 +32,8 @@ import org.jlato.tree.Mutation;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, ArrayAccessExpr> implements Expr {
 
@@ -75,85 +77,8 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 		return location.safeTraversalMutate(INDEX, mutation);
 	}
 
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(ArrayAccessExpr.State state) {
-			return state.name;
-		}
-
-		public ArrayAccessExpr.State rebuildParentState(ArrayAccessExpr.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(ArrayAccessExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(ArrayAccessExpr.State state) {
-			return INDEX;
-		}
-	};
-	private static final STraversal INDEX = new STraversal() {
-
-		public STree<?> traverse(ArrayAccessExpr.State state) {
-			return state.index;
-		}
-
-		public ArrayAccessExpr.State rebuildParentState(ArrayAccessExpr.State state, STree<?> child) {
-			return state.withIndex((STree) child);
-		}
-
-		public STraversal leftSibling(ArrayAccessExpr.State state) {
-			return NAME;
-		}
-
-		public STraversal rightSibling(ArrayAccessExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(NAME),
 			token(LToken.BracketLeft), child(INDEX), token(LToken.BracketRight)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Expr.State> name;
-
-		public final STree<Expr.State> index;
-
-		State(STree<Expr.State> name, STree<Expr.State> index) {
-			this.name = name;
-			this.index = index;
-		}
-
-		public ArrayAccessExpr.State withName(STree<Expr.State> name) {
-			return new ArrayAccessExpr.State(name, index);
-		}
-
-		public ArrayAccessExpr.State withIndex(STree<Expr.State> index) {
-			return new ArrayAccessExpr.State(name, index);
-		}
-
-		public STraversal firstChild() {
-			return NAME;
-		}
-
-		public STraversal lastChild() {
-			return INDEX;
-		}
-
-		public Tree instantiate(SLocation<ArrayAccessExpr.State> location) {
-			return new ArrayAccessExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.ArrayAccessExpr;
-		}
-	}
 }

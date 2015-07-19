@@ -37,6 +37,8 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParameter> implements Tree {
 
@@ -92,61 +94,6 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 		return location.safeTraversalMutate(BOUNDS, mutation);
 	}
 
-	private static final STraversal ANNOTATIONS = new STraversal() {
-
-		public STree<?> traverse(TypeParameter.State state) {
-			return state.annotations;
-		}
-
-		public TypeParameter.State rebuildParentState(TypeParameter.State state, STree<?> child) {
-			return state.withAnnotations((STree) child);
-		}
-
-		public STraversal leftSibling(TypeParameter.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(TypeParameter.State state) {
-			return NAME;
-		}
-	};
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(TypeParameter.State state) {
-			return state.name;
-		}
-
-		public TypeParameter.State rebuildParentState(TypeParameter.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(TypeParameter.State state) {
-			return ANNOTATIONS;
-		}
-
-		public STraversal rightSibling(TypeParameter.State state) {
-			return BOUNDS;
-		}
-	};
-	private static final STraversal BOUNDS = new STraversal() {
-
-		public STree<?> traverse(TypeParameter.State state) {
-			return state.bounds;
-		}
-
-		public TypeParameter.State rebuildParentState(TypeParameter.State state, STree<?> child) {
-			return state.withBounds((STree) child);
-		}
-
-		public STraversal leftSibling(TypeParameter.State state) {
-			return NAME;
-		}
-
-		public STraversal rightSibling(TypeParameter.State state) {
-			return null;
-		}
-	};
-
 	public static final LexicalShape boundsShape = list(
 			token(LToken.Extends).withSpacingBefore(space()),
 			token(LToken.BinAnd).withSpacing(space(), space()),
@@ -164,51 +111,4 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 			token(LToken.Comma).withSpacingAfter(space()),
 			token(LToken.Greater).withSpacingAfter(space())
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> annotations;
-
-		public final STree<Name.State> name;
-
-		public final STree<SNodeListState> bounds;
-
-		State(STree<SNodeListState> annotations, STree<Name.State> name, STree<SNodeListState> bounds) {
-			this.annotations = annotations;
-			this.name = name;
-			this.bounds = bounds;
-		}
-
-		public TypeParameter.State withAnnotations(STree<SNodeListState> annotations) {
-			return new TypeParameter.State(annotations, name, bounds);
-		}
-
-		public TypeParameter.State withName(STree<Name.State> name) {
-			return new TypeParameter.State(annotations, name, bounds);
-		}
-
-		public TypeParameter.State withBounds(STree<SNodeListState> bounds) {
-			return new TypeParameter.State(annotations, name, bounds);
-		}
-
-		public STraversal firstChild() {
-			return ANNOTATIONS;
-		}
-
-		public STraversal lastChild() {
-			return BOUNDS;
-		}
-
-		public Tree instantiate(SLocation<TypeParameter.State> location) {
-			return new TypeParameter(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.TypeParameter;
-		}
-	}
 }

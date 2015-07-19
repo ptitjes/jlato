@@ -34,6 +34,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> implements Expr {
 
@@ -89,54 +91,6 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		return location.safeTraversalMutate(RIGHT, mutation);
 	}
 
-	private static final STraversal LEFT = new STraversal() {
-
-		public STree<?> traverse(BinaryExpr.State state) {
-			return state.left;
-		}
-
-		public BinaryExpr.State rebuildParentState(BinaryExpr.State state, STree<?> child) {
-			return state.withLeft((STree) child);
-		}
-
-		public STraversal leftSibling(BinaryExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(BinaryExpr.State state) {
-			return RIGHT;
-		}
-	};
-	private static final STraversal RIGHT = new STraversal() {
-
-		public STree<?> traverse(BinaryExpr.State state) {
-			return state.right;
-		}
-
-		public BinaryExpr.State rebuildParentState(BinaryExpr.State state, STree<?> child) {
-			return state.withRight((STree) child);
-		}
-
-		public STraversal leftSibling(BinaryExpr.State state) {
-			return LEFT;
-		}
-
-		public STraversal rightSibling(BinaryExpr.State state) {
-			return null;
-		}
-	};
-
-	private static final SProperty OPERATOR = new SProperty() {
-
-		public Object retrieve(BinaryExpr.State state) {
-			return state.operator;
-		}
-
-		public BinaryExpr.State rebuildParentState(BinaryExpr.State state, Object value) {
-			return state.withOperator((BinaryOp) value);
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(LEFT),
 			token(new LSToken.Provider() {
@@ -178,53 +132,6 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 
 		public String toString() {
 			return token.toString();
-		}
-	}
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Expr.State> left;
-
-		public final BinaryOp operator;
-
-		public final STree<Expr.State> right;
-
-		State(STree<Expr.State> left, BinaryOp operator, STree<Expr.State> right) {
-			this.left = left;
-			this.operator = operator;
-			this.right = right;
-		}
-
-		public BinaryExpr.State withLeft(STree<Expr.State> left) {
-			return new BinaryExpr.State(left, operator, right);
-		}
-
-		public BinaryExpr.State withOperator(BinaryOp operator) {
-			return new BinaryExpr.State(left, operator, right);
-		}
-
-		public BinaryExpr.State withRight(STree<Expr.State> right) {
-			return new BinaryExpr.State(left, operator, right);
-		}
-
-		public STraversal firstChild() {
-			return LEFT;
-		}
-
-		public STraversal lastChild() {
-			return RIGHT;
-		}
-
-		public Tree instantiate(SLocation<BinaryExpr.State> location) {
-			return new BinaryExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.BinaryExpr;
 		}
 	}
 }

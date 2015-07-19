@@ -36,6 +36,8 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, FieldAccessExpr> implements Expr {
 
@@ -79,85 +81,8 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 		return location.safeTraversalMutate(NAME, mutation);
 	}
 
-	private static final STraversal SCOPE = new STraversal() {
-
-		public STree<?> traverse(FieldAccessExpr.State state) {
-			return state.scope;
-		}
-
-		public FieldAccessExpr.State rebuildParentState(FieldAccessExpr.State state, STree<?> child) {
-			return state.withScope((STree) child);
-		}
-
-		public STraversal leftSibling(FieldAccessExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(FieldAccessExpr.State state) {
-			return NAME;
-		}
-	};
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(FieldAccessExpr.State state) {
-			return state.name;
-		}
-
-		public FieldAccessExpr.State rebuildParentState(FieldAccessExpr.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(FieldAccessExpr.State state) {
-			return SCOPE;
-		}
-
-		public STraversal rightSibling(FieldAccessExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
 			child(NAME)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeOptionState> scope;
-
-		public final STree<Name.State> name;
-
-		State(STree<SNodeOptionState> scope, STree<Name.State> name) {
-			this.scope = scope;
-			this.name = name;
-		}
-
-		public FieldAccessExpr.State withScope(STree<SNodeOptionState> scope) {
-			return new FieldAccessExpr.State(scope, name);
-		}
-
-		public FieldAccessExpr.State withName(STree<Name.State> name) {
-			return new FieldAccessExpr.State(scope, name);
-		}
-
-		public STraversal firstChild() {
-			return SCOPE;
-		}
-
-		public STraversal lastChild() {
-			return NAME;
-		}
-
-		public Tree instantiate(SLocation<FieldAccessExpr.State> location) {
-			return new FieldAccessExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.FieldAccessExpr;
-		}
-	}
 }

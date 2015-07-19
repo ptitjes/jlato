@@ -34,6 +34,8 @@ import org.jlato.tree.expr.Expr;
 import static org.jlato.internal.shapes.LexicalShape.token;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 
@@ -70,54 +72,9 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 		return name();
 	}
 
-	public static final SProperty IDENTIFIER = new SProperty() {
-		@Override
-		public Object retrieve(State state) {
-			return state.identifier;
-		}
-
-		@Override
-		public State rebuildParentState(State state, Object value) {
-			return state.withIdentifier((String) value);
-		}
-	};
-
 	public final static LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
 			return new LToken(ParserImplConstants.IDENTIFIER, ((State) tree.state).identifier);
 		}
 	});
-
-	public static class State extends SNodeState<State> {
-
-		public final String identifier;
-
-		State(String identifier) {
-			this.identifier = identifier;
-		}
-
-		public Name.State withIdentifier(String identifier) {
-			return new Name.State(identifier);
-		}
-
-		public STraversal firstChild() {
-			return null;
-		}
-
-		public STraversal lastChild() {
-			return null;
-		}
-
-		public Tree instantiate(SLocation<Name.State> location) {
-			return new Name(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.Name;
-		}
-	}
 }

@@ -33,6 +33,8 @@ import org.jlato.tree.type.Type;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, InstanceOfExpr> implements Expr {
 
@@ -76,86 +78,9 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 		return location.safeTraversalMutate(TYPE, mutation);
 	}
 
-	private static final STraversal EXPR = new STraversal() {
-
-		public STree<?> traverse(InstanceOfExpr.State state) {
-			return state.expr;
-		}
-
-		public InstanceOfExpr.State rebuildParentState(InstanceOfExpr.State state, STree<?> child) {
-			return state.withExpr((STree) child);
-		}
-
-		public STraversal leftSibling(InstanceOfExpr.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(InstanceOfExpr.State state) {
-			return TYPE;
-		}
-	};
-	private static final STraversal TYPE = new STraversal() {
-
-		public STree<?> traverse(InstanceOfExpr.State state) {
-			return state.type;
-		}
-
-		public InstanceOfExpr.State rebuildParentState(InstanceOfExpr.State state, STree<?> child) {
-			return state.withType((STree) child);
-		}
-
-		public STraversal leftSibling(InstanceOfExpr.State state) {
-			return EXPR;
-		}
-
-		public STraversal rightSibling(InstanceOfExpr.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			child(EXPR),
 			token(LToken.InstanceOf),
 			child(TYPE)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Expr.State> expr;
-
-		public final STree<Type.State> type;
-
-		State(STree<Expr.State> expr, STree<Type.State> type) {
-			this.expr = expr;
-			this.type = type;
-		}
-
-		public InstanceOfExpr.State withExpr(STree<Expr.State> expr) {
-			return new InstanceOfExpr.State(expr, type);
-		}
-
-		public InstanceOfExpr.State withType(STree<Type.State> type) {
-			return new InstanceOfExpr.State(expr, type);
-		}
-
-		public STraversal firstChild() {
-			return EXPR;
-		}
-
-		public STraversal lastChild() {
-			return TYPE;
-		}
-
-		public Tree instantiate(SLocation<InstanceOfExpr.State> location) {
-			return new InstanceOfExpr(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.InstanceOfExpr;
-		}
-	}
 }

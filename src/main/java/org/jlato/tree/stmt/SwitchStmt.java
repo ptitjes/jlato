@@ -39,6 +39,8 @@ import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> implements Stmt {
 
@@ -82,43 +84,6 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 		return location.safeTraversalMutate(CASES, mutation);
 	}
 
-	private static final STraversal SELECTOR = new STraversal() {
-
-		public STree<?> traverse(SwitchStmt.State state) {
-			return state.selector;
-		}
-
-		public SwitchStmt.State rebuildParentState(SwitchStmt.State state, STree<?> child) {
-			return state.withSelector((STree) child);
-		}
-
-		public STraversal leftSibling(SwitchStmt.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(SwitchStmt.State state) {
-			return CASES;
-		}
-	};
-	private static final STraversal CASES = new STraversal() {
-
-		public STree<?> traverse(SwitchStmt.State state) {
-			return state.cases;
-		}
-
-		public SwitchStmt.State rebuildParentState(SwitchStmt.State state, STree<?> child) {
-			return state.withCases((STree) child);
-		}
-
-		public STraversal leftSibling(SwitchStmt.State state) {
-			return SELECTOR;
-		}
-
-		public STraversal rightSibling(SwitchStmt.State state) {
-			return null;
-		}
-	};
-
 	public final static LexicalShape shape = composite(
 			token(LToken.Switch),
 			token(LToken.ParenthesisLeft).withSpacingBefore(spacing(SwitchStmt_AfterSwitchKeyword)),
@@ -143,44 +108,4 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 					)
 			)
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<Expr.State> selector;
-
-		public final STree<SNodeListState> cases;
-
-		State(STree<Expr.State> selector, STree<SNodeListState> cases) {
-			this.selector = selector;
-			this.cases = cases;
-		}
-
-		public SwitchStmt.State withSelector(STree<Expr.State> selector) {
-			return new SwitchStmt.State(selector, cases);
-		}
-
-		public SwitchStmt.State withCases(STree<SNodeListState> cases) {
-			return new SwitchStmt.State(selector, cases);
-		}
-
-		public STraversal firstChild() {
-			return SELECTOR;
-		}
-
-		public STraversal lastChild() {
-			return CASES;
-		}
-
-		public Tree instantiate(SLocation<SwitchStmt.State> location) {
-			return new SwitchStmt(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.SwitchStmt;
-		}
-	}
 }

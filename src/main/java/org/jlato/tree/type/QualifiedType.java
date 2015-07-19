@@ -38,6 +38,8 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 import org.jlato.internal.bu.*;
 import org.jlato.tree.Tree;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.td.*;
 
 public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, QualifiedType> implements ReferenceType {
 
@@ -105,79 +107,6 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 		return location.safeTraversalMutate(TYPE_ARGS, mutation);
 	}
 
-	private static final STraversal ANNOTATIONS = new STraversal() {
-
-		public STree<?> traverse(QualifiedType.State state) {
-			return state.annotations;
-		}
-
-		public QualifiedType.State rebuildParentState(QualifiedType.State state, STree<?> child) {
-			return state.withAnnotations((STree) child);
-		}
-
-		public STraversal leftSibling(QualifiedType.State state) {
-			return null;
-		}
-
-		public STraversal rightSibling(QualifiedType.State state) {
-			return SCOPE;
-		}
-	};
-	private static final STraversal SCOPE = new STraversal() {
-
-		public STree<?> traverse(QualifiedType.State state) {
-			return state.scope;
-		}
-
-		public QualifiedType.State rebuildParentState(QualifiedType.State state, STree<?> child) {
-			return state.withScope((STree) child);
-		}
-
-		public STraversal leftSibling(QualifiedType.State state) {
-			return ANNOTATIONS;
-		}
-
-		public STraversal rightSibling(QualifiedType.State state) {
-			return NAME;
-		}
-	};
-	private static final STraversal NAME = new STraversal() {
-
-		public STree<?> traverse(QualifiedType.State state) {
-			return state.name;
-		}
-
-		public QualifiedType.State rebuildParentState(QualifiedType.State state, STree<?> child) {
-			return state.withName((STree) child);
-		}
-
-		public STraversal leftSibling(QualifiedType.State state) {
-			return SCOPE;
-		}
-
-		public STraversal rightSibling(QualifiedType.State state) {
-			return TYPE_ARGS;
-		}
-	};
-	private static final STraversal TYPE_ARGS = new STraversal() {
-
-		public STree<?> traverse(QualifiedType.State state) {
-			return state.typeArgs;
-		}
-
-		public QualifiedType.State rebuildParentState(QualifiedType.State state, STree<?> child) {
-			return state.withTypeArgs((STree) child);
-		}
-
-		public STraversal leftSibling(QualifiedType.State state) {
-			return NAME;
-		}
-
-		public STraversal rightSibling(QualifiedType.State state) {
-			return null;
-		}
-	};
-
 	public static final LexicalShape scopeShape = composite(element(), token(LToken.Dot));
 
 	public final static LexicalShape shape = composite(
@@ -204,58 +133,4 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 			token(LToken.Comma).withSpacingAfter(space()),
 			null
 	);
-
-	public static class State extends SNodeState<State> {
-
-		public final STree<SNodeListState> annotations;
-
-		public final STree<SNodeOptionState> scope;
-
-		public final STree<Name.State> name;
-
-		public final STree<SNodeOptionState> typeArgs;
-
-		State(STree<SNodeListState> annotations, STree<SNodeOptionState> scope, STree<Name.State> name, STree<SNodeOptionState> typeArgs) {
-			this.annotations = annotations;
-			this.scope = scope;
-			this.name = name;
-			this.typeArgs = typeArgs;
-		}
-
-		public QualifiedType.State withAnnotations(STree<SNodeListState> annotations) {
-			return new QualifiedType.State(annotations, scope, name, typeArgs);
-		}
-
-		public QualifiedType.State withScope(STree<SNodeOptionState> scope) {
-			return new QualifiedType.State(annotations, scope, name, typeArgs);
-		}
-
-		public QualifiedType.State withName(STree<Name.State> name) {
-			return new QualifiedType.State(annotations, scope, name, typeArgs);
-		}
-
-		public QualifiedType.State withTypeArgs(STree<SNodeOptionState> typeArgs) {
-			return new QualifiedType.State(annotations, scope, name, typeArgs);
-		}
-
-		public STraversal firstChild() {
-			return ANNOTATIONS;
-		}
-
-		public STraversal lastChild() {
-			return TYPE_ARGS;
-		}
-
-		public Tree instantiate(SLocation<QualifiedType.State> location) {
-			return new QualifiedType(location);
-		}
-
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		public Kind kind() {
-			return Kind.QualifiedType;
-		}
-	}
 }
