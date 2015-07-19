@@ -1914,34 +1914,30 @@ STree<? extends Type.State> Type(STree<SNodeListState> annotations):
 
 STree<? extends ReferenceType.State> ReferenceType(STree<SNodeListState> annotations):
 {
+	STree<? extends Type.State> primitiveType;
 	STree<? extends ReferenceType.State> type;
-}
-{
-  // Run may be started before annotations
-
-  (
-    LOOKAHEAD( ( PrimitiveType() | QualifiedType() ) ArrayDimsMandatory() )
-    type = ArrayType(annotations)
-  |
-    type = QualifiedType(annotations)
-  )
-
-  { return type; }
-}
-
-STree<ArrayType.State> ArrayType(STree<SNodeListState> annotations):
-{
-	STree<? extends Type.State> type;
 	STree<SNodeListState> arrayDims;
 }
 {
   // Run may be started before annotations
 
-  ( type = PrimitiveType(annotations) | type = QualifiedType(annotations) )
-  { lateRun(); }
-  arrayDims = ArrayDimsMandatory()
+  (
+    LOOKAHEAD(2)
+    primitiveType = PrimitiveType(annotations)
+    { lateRun(); }
+    arrayDims = ArrayDimsMandatory()
+    { type = enRun(ArrayType.make(primitiveType, arrayDims)); }
+  |
+    type = QualifiedType(annotations)
+    [
+      LOOKAHEAD(2)
+      { lateRun(); }
+      arrayDims = ArrayDimsMandatory()
+      { type = enRun(ArrayType.make(type, arrayDims)); }
+    ]
+  )
 
-  { return enRun(ArrayType.make(type, arrayDims)); }
+  { return type; }
 }
 
 STree<QualifiedType.State> QualifiedType(STree<SNodeListState> annotations):
