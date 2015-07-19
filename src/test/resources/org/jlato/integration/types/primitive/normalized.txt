@@ -2,5 +2,5 @@
   class: org.jlato.tree.type.PrimitiveType,
   annotations: [
   ],
-  type: int,
+  primitive: int,
 }

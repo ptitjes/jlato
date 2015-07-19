@@ -6,5 +6,5 @@
       name: Meter,
     },
   ],
-  type: int,
+  primitive: int,
 }
