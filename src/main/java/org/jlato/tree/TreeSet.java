@@ -29,6 +29,7 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -73,7 +74,12 @@ public class TreeSet<T extends Tree> extends TreeBase<STreeSetState, TreeSet<T>,
 			final String path = pair.component1();
 			final STree tree = pair.component2();
 
-			final PrintWriter writer = new PrintWriter(new FileWriter(rootPath + path));
+			final File file = new File(rootPath + path);
+			if (!file.exists()) {
+				file.getParentFile().mkdirs();
+				file.createNewFile();
+			}
+			final PrintWriter writer = new PrintWriter(new FileWriter(file));
 			final Printer printer = new Printer(writer, format, formattingSettings);
 			printer.print(tree.asTree());
 			writer.close();
