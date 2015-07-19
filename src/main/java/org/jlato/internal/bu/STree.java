@@ -77,4 +77,19 @@ public class STree<S extends STreeState> {
 	public void validate() {
 		state.validate(this);
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		STree<?> sTree = (STree<?>) o;
+
+		return state.equals(sTree.state);
+	}
+
+	@Override
+	public int hashCode() {
+		return state.hashCode();
+	}
 }

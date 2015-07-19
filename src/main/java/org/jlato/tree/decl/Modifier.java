@@ -24,6 +24,7 @@ import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.parser.ParserImplConstants;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 
@@ -35,11 +36,37 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 		return Kind.Modifier;
 	}
 
-	public static final Modifier Public = new Modifier(LToken.Public);
-
 	public static STree<Modifier.State> make(LToken keyword) {
-		return new STree<Modifier.State>(new Modifier.State(keyword));
+		switch (keyword.kind) {
+			case ParserImplConstants.PUBLIC:
+				return State.Public;
+			case ParserImplConstants.PROTECTED:
+				return State.Protected;
+			case ParserImplConstants.PRIVATE:
+				return State.Private;
+			case ParserImplConstants.ABSTRACT:
+				return State.Abstract;
+			case ParserImplConstants.DEFAULT:
+				return State.Default;
+			case ParserImplConstants.STATIC:
+				return State.Static;
+			case ParserImplConstants.FINAL:
+				return State.Final;
+			case ParserImplConstants.TRANSIENT:
+				return State.Transient;
+			case ParserImplConstants.VOLATILE:
+				return State.Volatile;
+			case ParserImplConstants.SYNCHRONIZED:
+				return State.Synchronized;
+			case ParserImplConstants.NATIVE:
+				return State.Native;
+			case ParserImplConstants.STRICTFP:
+				return State.StrictFP;
+		}
+		throw new IllegalStateException();
 	}
+
+	public static final Modifier Public = new Modifier(LToken.Public);
 
 	public static final Modifier Protected = new Modifier(LToken.Protected);
 
@@ -67,7 +94,7 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 		super(location);
 	}
 
-	public Modifier(LToken keyword) {
+	private Modifier(LToken keyword) {
 		super(new SLocation<Modifier.State>(make(keyword)));
 	}
 
@@ -83,9 +110,29 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 			this.keyword = keyword;
 		}
 
-		public Modifier.State withKeyword(LToken keyword) {
-			return new Modifier.State(keyword);
-		}
+		public static final STree<State> Public = new STree<State>(new State(LToken.Public));
+
+		public static final STree<State> Protected = new STree<State>(new State(LToken.Protected));
+
+		public static final STree<State> Private = new STree<State>(new State(LToken.Private));
+
+		public static final STree<State> Abstract = new STree<State>(new State(LToken.Abstract));
+
+		public static final STree<State> Default = new STree<State>(new State(LToken.Default));
+
+		public static final STree<State> Static = new STree<State>(new State(LToken.Static));
+
+		public static final STree<State> Final = new STree<State>(new State(LToken.Final));
+
+		public static final STree<State> Transient = new STree<State>(new State(LToken.Transient));
+
+		public static final STree<State> Volatile = new STree<State>(new State(LToken.Volatile));
+
+		public static final STree<State> Synchronized = new STree<State>(new State(LToken.Synchronized));
+
+		public static final STree<State> Native = new STree<State>(new State(LToken.Native));
+
+		public static final STree<State> StrictFP = new STree<State>(new State(LToken.StrictFP));
 
 		@Override
 		public Kind kind() {
@@ -111,6 +158,21 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 		public STraversal lastChild() {
 			return null;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			State state = (State) o;
+
+			return keyword.kind == state.keyword.kind;
+		}
+
+		@Override
+		public int hashCode() {
+			return keyword != null ? ((Integer) keyword.kind).hashCode() : 0;
+		}
 	}
 
 	private static STypeSafeProperty<Modifier.State, LToken> KEYWORD = new STypeSafeProperty<Modifier.State, LToken>() {
@@ -122,7 +184,7 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 
 		@Override
 		protected Modifier.State doRebuildParentState(Modifier.State state, LToken value) {
-			return state.withKeyword(value);
+			throw new UnsupportedOperationException();
 		}
 	};
 
