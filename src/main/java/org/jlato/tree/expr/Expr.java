@@ -27,8 +27,6 @@ import org.jlato.tree.Tree;
 import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.token;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 /**
  * @author Didier Villevalois

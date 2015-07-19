@@ -20,21 +20,10 @@
 package org.jlato.parser;
 
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.td.TreeBase;
-import org.jlato.rewrite.Pattern;
 import org.jlato.tree.Tree;
-import org.jlato.tree.TreeSet;
-import org.jlato.tree.decl.CompilationUnit;
-import org.jlato.tree.decl.FormalParameter;
-import org.jlato.tree.expr.Expr;
-import org.jlato.tree.stmt.Stmt;
-import org.jlato.tree.type.Type;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.Reader;
+import java.io.StringReader;
 
 /**
  * @author Didier Villevalois
@@ -52,12 +41,11 @@ public class QuotesParser {
 		this.configuration = configuration;
 	}
 
-	private  <T extends Tree> STree<?> parse(ParseContext<T> context, Reader reader) throws ParseException {
+	private <T extends Tree> STree<?> parse(ParseContext<T> context, Reader reader) throws ParseException {
 		if (parserInstance == null) {
 			parserInstance = ParserBase.newInstance(reader, configuration);
 			parserInstance.quotesMode = true;
-		}
-		else parserInstance.reset(reader);
+		} else parserInstance.reset(reader);
 		return context.callProduction(parserInstance);
 	}
 

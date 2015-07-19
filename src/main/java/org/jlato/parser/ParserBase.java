@@ -162,7 +162,7 @@ abstract class ParserBase {
 	}
 
 	private <S extends STreeState> STree<S> doEnRun(STree<S> tree, LexicalShape shape,
-	                                   IndexedList<WTokenRun> tokens) {
+	                                                IndexedList<WTokenRun> tokens) {
 		try {
 			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
 			final WRunRun run = shape.enRun(tree, tokenIterator);

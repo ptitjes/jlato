@@ -19,23 +19,15 @@
 
 package org.jlato.tree.expr;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.tree.Kind;
 import org.jlato.tree.Mutation;
+import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-
-import org.jlato.tree.Tree;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, ParenthesizedExpr> implements Expr {
 
@@ -67,7 +59,7 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 		return location.safeTraversalMutate(INNER, mutation);
 	}
 
-	public static class State extends SNodeState<State>implements Expr.State {
+	public static class State extends SNodeState<State> implements Expr.State {
 
 		public final STree<? extends Expr.State> inner;
 

@@ -19,24 +19,16 @@
 
 package org.jlato.tree.expr;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.tree.Kind;
 import org.jlato.tree.Mutation;
+import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
-
-import org.jlato.tree.Tree;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, ConditionalExpr> implements Expr {
 
@@ -92,7 +84,7 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 		return location.safeTraversalMutate(ELSE_EXPR, mutation);
 	}
 
-	public static class State extends SNodeState<State>implements Expr.State {
+	public static class State extends SNodeState<State> implements Expr.State {
 
 		public final STree<? extends Expr.State> condition;
 

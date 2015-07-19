@@ -19,31 +19,18 @@
 
 package org.jlato.tree.stmt;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.tree.Mutation;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.NodeOption;
+import org.jlato.tree.*;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
-
-import org.jlato.internal.bu.*;
-import org.jlato.tree.Tree;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstructorInvocationStmt.State, Stmt, ExplicitConstructorInvocationStmt> implements Stmt {
 
@@ -107,7 +94,7 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 		return location.safeTraversalMutate(ARGS, mutation);
 	}
 
-	public static class State extends SNodeState<State>implements Stmt.State {
+	public static class State extends SNodeState<State> implements Stmt.State {
 
 		public final STree<SNodeListState> typeArgs;
 

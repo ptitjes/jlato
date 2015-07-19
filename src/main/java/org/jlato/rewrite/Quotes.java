@@ -19,7 +19,7 @@
 
 package org.jlato.rewrite;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.patterns.TreePattern;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;

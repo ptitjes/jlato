@@ -19,26 +19,18 @@
 
 package org.jlato.tree.decl;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.tree.Kind;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.tree.Tree;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> implements MemberDecl {
 
@@ -99,7 +91,7 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 		return location.safeTraversalMutate(VARIABLES, mutation);
 	}
 
-	public static class State extends SNodeState<State>implements MemberDecl.State {
+	public static class State extends SNodeState<State> implements MemberDecl.State {
 
 		public final STree<SNodeListState> modifiers;
 

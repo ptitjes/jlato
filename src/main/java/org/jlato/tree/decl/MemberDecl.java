@@ -20,7 +20,6 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LexicalShape;
 
 import static org.jlato.internal.shapes.LSCondition.emptyList;
@@ -30,8 +29,6 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public interface MemberDecl extends Decl {
 

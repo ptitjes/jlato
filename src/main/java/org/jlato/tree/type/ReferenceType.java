@@ -19,10 +19,6 @@
 
 package org.jlato.tree.type;
 
-import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
-
 public interface ReferenceType extends Type {
 
 	interface State extends Type.State {

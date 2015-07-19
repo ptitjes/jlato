@@ -19,29 +19,17 @@
 
 package org.jlato.tree.decl;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.tree.Mutation;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.NodeOption;
+import org.jlato.tree.*;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import org.jlato.internal.bu.*;
-import org.jlato.tree.Tree;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, MemberDecl, AnnotationMemberDecl> implements MemberDecl {
 
@@ -126,7 +114,7 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 		return location.safeTraversalMutate(DEFAULT_VALUE, mutation);
 	}
 
-	public static class State extends SNodeState<State>implements MemberDecl.State {
+	public static class State extends SNodeState<State> implements MemberDecl.State {
 
 		public final STree<SNodeListState> modifiers;
 

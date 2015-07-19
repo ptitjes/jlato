@@ -23,11 +23,11 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.rewrite.Pattern;
 import org.jlato.rewrite.Substitution;
+import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 
 /**

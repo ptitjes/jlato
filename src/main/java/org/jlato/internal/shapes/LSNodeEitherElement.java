@@ -20,7 +20,6 @@
 package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.SNodeEitherState;
-import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.STree;
 
 /**

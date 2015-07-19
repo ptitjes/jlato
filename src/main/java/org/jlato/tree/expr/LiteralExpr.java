@@ -19,24 +19,15 @@
 
 package org.jlato.tree.expr;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.Literals;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
-
-import org.jlato.internal.bu.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExpr> implements Expr {
 
@@ -105,7 +96,7 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 		return (LiteralExpr<T>) location.safePropertyReplace(LITERAL_STRING, Literals.from((Class<T>) literalClass, value));
 	}
 
-	public static class State extends SNodeState<State>implements Expr.State {
+	public static class State extends SNodeState<State> implements Expr.State {
 
 		public final Class<?> literalClass;
 

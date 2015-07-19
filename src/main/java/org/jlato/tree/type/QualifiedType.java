@@ -19,29 +19,17 @@
 
 package org.jlato.tree.type;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.tree.Mutation;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.NodeOption;
+import org.jlato.tree.*;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.tree.Tree;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, QualifiedType> implements ReferenceType {
 
@@ -109,7 +97,7 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 		return location.safeTraversalMutate(TYPE_ARGS, mutation);
 	}
 
-	public static class State extends SNodeState<State>implements ReferenceType.State {
+	public static class State extends SNodeState<State> implements ReferenceType.State {
 
 		public final STree<SNodeListState> annotations;
 

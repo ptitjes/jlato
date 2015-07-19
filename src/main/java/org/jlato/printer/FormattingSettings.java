@@ -42,6 +42,7 @@ public class FormattingSettings {
 		LABEL,
 		// Keep the last comma
 	}
+
 	public enum SpacingLocation {
 		DefaultNewLine(Line),
 		CompilationUnit_AfterPackageDecl(Line),
@@ -117,6 +118,7 @@ public class FormattingSettings {
 	private final String newLineImage;
 	private final TreeMap<IndentationContext, Integer> indentationLevels;
 	private final TreeMap<SpacingLocation, Spacing> spacingCounts;
+
 	public FormattingSettings() {
 		this("\t", "\n", new TreeMap<IndentationContext, Integer>(), new TreeMap<SpacingLocation, Spacing>());
 	}
@@ -164,4 +166,4 @@ public class FormattingSettings {
 		else return new Spacing(1, location.defaultUnit);
 	}
 
-	}
+}

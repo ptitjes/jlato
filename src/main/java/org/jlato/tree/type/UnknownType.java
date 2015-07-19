@@ -20,19 +20,15 @@
 package org.jlato.tree.type;
 
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.tree.Kind;
+import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.none;
-import org.jlato.internal.bu.*;
-import org.jlato.tree.Tree;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class UnknownType extends TreeBase<UnknownType.State, Type, UnknownType> implements Type {
 
@@ -52,7 +48,7 @@ public class UnknownType extends TreeBase<UnknownType.State, Type, UnknownType> 
 		super(new SLocation<UnknownType.State>(make()));
 	}
 
-	public static class State extends SNodeState<State>implements Type.State {
+	public static class State extends SNodeState<State> implements Type.State {
 
 		State() {
 		}

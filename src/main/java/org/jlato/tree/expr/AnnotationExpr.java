@@ -19,7 +19,6 @@
 
 package org.jlato.tree.expr;
 
-import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.decl.ExtendedModifier;
@@ -29,8 +28,6 @@ import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.none;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public interface AnnotationExpr extends Expr, ExtendedModifier {
 

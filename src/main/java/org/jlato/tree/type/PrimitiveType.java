@@ -19,22 +19,18 @@
 
 package org.jlato.tree.type;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.tree.Kind;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import org.jlato.internal.bu.*;
-import org.jlato.tree.Tree;
 
 public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, PrimitiveType> implements Type {
 
@@ -78,7 +74,7 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		return location.safePropertyMutate(PRIMITIVE, mutation);
 	}
 
-	public static class State extends SNodeState<State>implements Type.State {
+	public static class State extends SNodeState<State> implements Type.State {
 
 		public final STree<SNodeListState> annotations;
 

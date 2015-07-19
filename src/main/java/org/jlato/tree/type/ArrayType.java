@@ -19,25 +19,18 @@
 
 package org.jlato.tree.type;
 
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.tree.Kind;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.decl.VariableDeclaratorId;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import org.jlato.internal.bu.*;
-import org.jlato.tree.Tree;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayType> implements ReferenceType {
 
@@ -81,7 +74,7 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
-	public static class State extends SNodeState<State>implements ReferenceType.State {
+	public static class State extends SNodeState<State> implements ReferenceType.State {
 
 		public final STree<? extends Type.State> componentType;
 

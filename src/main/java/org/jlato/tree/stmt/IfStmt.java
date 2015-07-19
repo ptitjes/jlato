@@ -19,17 +19,15 @@
 
 package org.jlato.tree.stmt;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Kind;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.tree.Kind;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LSCondition.*;
@@ -39,12 +37,6 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
-import org.jlato.internal.bu.*;
-import org.jlato.tree.Tree;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
-import org.jlato.internal.bu.*;
-import org.jlato.internal.td.*;
 
 public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt {
 
@@ -100,7 +92,7 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 		return location.safeTraversalMutate(ELSE_STMT, mutation);
 	}
 
-	public static class State extends SNodeState<State>implements Stmt.State {
+	public static class State extends SNodeState<State> implements Stmt.State {
 
 		public final STree<? extends Expr.State> condition;
 

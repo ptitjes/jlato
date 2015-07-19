@@ -21,10 +21,8 @@ package org.jlato.parser;
 
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STree;
-import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.*;
-import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.type.Type;
