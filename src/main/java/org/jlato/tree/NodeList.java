@@ -26,6 +26,8 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.util.Function1;
+import org.jlato.util.Function2;
 
 import java.util.Iterator;
 
@@ -201,6 +203,24 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 
 		STree<SNodeListState> newTree = tree.withState(state.withChildren(newTrees.build()));
 		return (NodeList<T>) location.withTree(newTree).facade;
+	}
+
+	public <U extends Tree> NodeList<U> map(Function1<T, U> f) {
+		// TODO Optimize ?
+		NodeList<U> us = NodeList.empty();
+		for (T t : this) {
+			us = us.append(f.apply(t));
+		}
+		return us;
+	}
+
+	public <U extends Tree> U foldLeft(U z, Function2<U, T, U> f) {
+		// TODO Optimize ?
+		U result = z;
+		for (T t : this) {
+			result = f.apply(result, t);
+		}
+		return result;
 	}
 
 	public Iterator<T> iterator() {
