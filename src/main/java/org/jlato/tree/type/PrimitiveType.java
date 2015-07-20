@@ -66,11 +66,11 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		return location.safeProperty(PRIMITIVE);
 	}
 
-	public PrimitiveType withType(Primitive primitive) {
+	public PrimitiveType withPrimitive(Primitive primitive) {
 		return location.safePropertyReplace(PRIMITIVE, primitive);
 	}
 
-	public PrimitiveType withType(Mutation<Primitive> mutation) {
+	public PrimitiveType withPrimitive(Mutation<Primitive> mutation) {
 		return location.safePropertyMutate(PRIMITIVE, mutation);
 	}
 
