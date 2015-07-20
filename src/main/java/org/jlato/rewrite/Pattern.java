@@ -28,10 +28,15 @@ import org.jlato.tree.Tree;
 /**
  * @author Didier Villevalois
  */
-public abstract class Pattern<T> implements TypeSafeMatcher<T> {
+public abstract class Pattern<T> implements TypeSafeMatcher<T>, TypeSafeBuilder<T> {
 
 	public Substitution match(Object object) {
 		return match(object, Substitution.empty());
+	}
+
+	@Override
+	public T build() {
+		return build(Substitution.empty());
 	}
 
 	public abstract T build(Substitution substitution);
