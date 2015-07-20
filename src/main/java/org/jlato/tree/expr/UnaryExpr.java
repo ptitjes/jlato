@@ -41,24 +41,24 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		super(location);
 	}
 
-	public static STree<UnaryExpr.State> make(UnaryOp operator, STree<? extends Expr.State> expr) {
-		return new STree<UnaryExpr.State>(new UnaryExpr.State(operator, expr));
+	public static STree<UnaryExpr.State> make(UnaryOp op, STree<? extends Expr.State> expr) {
+		return new STree<UnaryExpr.State>(new UnaryExpr.State(op, expr));
 	}
 
-	public UnaryExpr(UnaryOp operator, Expr expr) {
-		super(new SLocation<UnaryExpr.State>(make(operator, TreeBase.<Expr.State>nodeOf(expr))));
+	public UnaryExpr(UnaryOp op, Expr expr) {
+		super(new SLocation<UnaryExpr.State>(make(op, TreeBase.<Expr.State>nodeOf(expr))));
 	}
 
 	public UnaryOp op() {
-		return location.safeProperty(OPERATOR);
+		return location.safeProperty(OP);
 	}
 
-	public UnaryExpr withOp(UnaryOp operator) {
-		return location.safePropertyReplace(OPERATOR, operator);
+	public UnaryExpr withOp(UnaryOp op) {
+		return location.safePropertyReplace(OP, op);
 	}
 
 	public UnaryExpr withOp(Mutation<UnaryOp> mutation) {
-		return location.safePropertyMutate(OPERATOR, mutation);
+		return location.safePropertyMutate(OP, mutation);
 	}
 
 	public Expr expr() {
@@ -83,21 +83,21 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 
 	public static class State extends SNodeState<State> implements Expr.State {
 
-		public final UnaryOp operator;
+		public final UnaryOp op;
 
 		public final STree<? extends Expr.State> expr;
 
-		State(UnaryOp operator, STree<? extends Expr.State> expr) {
-			this.operator = operator;
+		State(UnaryOp op, STree<? extends Expr.State> expr) {
+			this.op = op;
 			this.expr = expr;
 		}
 
-		public UnaryExpr.State withOperator(UnaryOp operator) {
-			return new UnaryExpr.State(operator, expr);
+		public UnaryExpr.State withOp(UnaryOp op) {
+			return new UnaryExpr.State(op, expr);
 		}
 
 		public UnaryExpr.State withExpr(STree<? extends Expr.State> expr) {
-			return new UnaryExpr.State(operator, expr);
+			return new UnaryExpr.State(op, expr);
 		}
 
 		@Override
@@ -132,7 +132,7 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 			if (o == null || getClass() != o.getClass())
 				return false;
 			UnaryExpr.State state = (UnaryExpr.State) o;
-			if (!operator.equals(state.operator))
+			if (!op.equals(state.op))
 				return false;
 			if (!expr.equals(state.expr))
 				return false;
@@ -142,7 +142,7 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + operator.hashCode();
+			result = 37 * result + op.hashCode();
 			result = 37 * result + expr.hashCode();
 			return result;
 		}
@@ -171,28 +171,28 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		}
 	};
 
-	private static STypeSafeProperty<UnaryExpr.State, UnaryOp> OPERATOR = new STypeSafeProperty<UnaryExpr.State, UnaryOp>() {
+	private static STypeSafeProperty<UnaryExpr.State, UnaryOp> OP = new STypeSafeProperty<UnaryExpr.State, UnaryOp>() {
 
 		@Override
 		protected UnaryOp doRetrieve(UnaryExpr.State state) {
-			return state.operator;
+			return state.op;
 		}
 
 		@Override
 		protected UnaryExpr.State doRebuildParentState(UnaryExpr.State state, UnaryOp value) {
-			return state.withOperator(value);
+			return state.withOp(value);
 		}
 	};
 
 	private final static LexicalShape opShape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
-			return ((State) tree.state).operator.token;
+			return ((State) tree.state).op.token;
 		}
 	});
 
 	public final static LexicalShape shape = alternative(new LSCondition() {
 		public boolean test(STree tree) {
-			final UnaryOp op = ((State) tree.state).operator;
+			final UnaryOp op = ((State) tree.state).op;
 			return isPrefix(op);
 		}
 	}, composite(opShape, child(EXPR)), composite(child(EXPR), opShape));

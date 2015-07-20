@@ -65,11 +65,11 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 		return location.safeTraversal(ANNOTATIONS);
 	}
 
-	public Type withAnnotations(NodeList<AnnotationExpr> annotations) {
+	public QualifiedType withAnnotations(NodeList<AnnotationExpr> annotations) {
 		return location.safeTraversalReplace(ANNOTATIONS, annotations);
 	}
 
-	public Type withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
+	public QualifiedType withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
 		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 

@@ -94,11 +94,11 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 		return location.safeTraversal(DIMS);
 	}
 
-	public VariableDeclaratorId withDims(NodeList<ArrayDim> dims) {
+	public AnnotationMemberDecl withDims(NodeList<ArrayDim> dims) {
 		return location.safeTraversalReplace(DIMS, dims);
 	}
 
-	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> mutation) {
+	public AnnotationMemberDecl withDims(Mutation<NodeList<ArrayDim>> mutation) {
 		return location.safeTraversalMutate(DIMS, mutation);
 	}
 

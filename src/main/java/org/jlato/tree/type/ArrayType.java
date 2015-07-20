@@ -66,11 +66,11 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 		return location.safeTraversal(DIMS);
 	}
 
-	public VariableDeclaratorId withDims(NodeList<ArrayDim> dims) {
+	public ArrayType withDims(NodeList<ArrayDim> dims) {
 		return location.safeTraversalReplace(DIMS, dims);
 	}
 
-	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> mutation) {
+	public ArrayType withDims(Mutation<NodeList<ArrayDim>> mutation) {
 		return location.safeTraversalMutate(DIMS, mutation);
 	}
 

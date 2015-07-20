@@ -73,7 +73,7 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		return location.safeProperty(PARENS);
 	}
 
-	public FormalParameter setParens(boolean hasParens) {
+	public LambdaExpr setParens(boolean hasParens) {
 		return location.safePropertyReplace(PARENS, (Boolean) hasParens);
 	}
 

@@ -42,41 +42,41 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 		super(location);
 	}
 
-	public static STree<Name.State> make(String identifier) {
-		return new STree<Name.State>(new Name.State(identifier));
+	public static STree<Name.State> make(String id) {
+		return new STree<Name.State>(new Name.State(id));
 	}
 
-	public Name(String identifier) {
-		super(new SLocation<Name.State>(make(identifier)));
+	public Name(String id) {
+		super(new SLocation<Name.State>(make(id)));
 	}
 
-	public String name() {
-		return location.safeProperty(IDENTIFIER).toString();
+	public String id() {
+		return location.safeProperty(ID).toString();
 	}
 
-	public Name withName(String name) {
-		return location.safePropertyReplace(IDENTIFIER, name);
+	public Name withId(String id) {
+		return location.safePropertyReplace(ID, id);
 	}
 
-	public Name withName(Mutation<String> mutation) {
-		return location.safePropertyMutate(IDENTIFIER, mutation);
+	public Name withId(Mutation<String> mutation) {
+		return location.safePropertyMutate(ID, mutation);
 	}
 
 	@Override
 	public String toString() {
-		return name();
+		return id();
 	}
 
 	public static class State extends SNodeState<State> implements Expr.State {
 
-		public final String identifier;
+		public final String id;
 
-		State(String identifier) {
-			this.identifier = identifier;
+		State(String id) {
+			this.id = id;
 		}
 
-		public Name.State withIdentifier(String identifier) {
-			return new Name.State(identifier);
+		public Name.State withId(String id) {
+			return new Name.State(id);
 		}
 
 		@Override
@@ -111,7 +111,7 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 			if (o == null || getClass() != o.getClass())
 				return false;
 			Name.State state = (Name.State) o;
-			if (!identifier.equals(state.identifier))
+			if (!id.equals(state.id))
 				return false;
 			return true;
 		}
@@ -119,27 +119,27 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + identifier.hashCode();
+			result = 37 * result + id.hashCode();
 			return result;
 		}
 	}
 
-	private static STypeSafeProperty<Name.State, String> IDENTIFIER = new STypeSafeProperty<Name.State, String>() {
+	private static STypeSafeProperty<Name.State, String> ID = new STypeSafeProperty<Name.State, String>() {
 
 		@Override
 		protected String doRetrieve(Name.State state) {
-			return state.identifier;
+			return state.id;
 		}
 
 		@Override
 		protected Name.State doRebuildParentState(Name.State state, String value) {
-			return state.withIdentifier(value);
+			return state.withId(value);
 		}
 	};
 
 	public final static LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
-			return new LToken(ParserImplConstants.IDENTIFIER, ((State) tree.state).identifier);
+			return new LToken(ParserImplConstants.IDENTIFIER, ((State) tree.state).id);
 		}
 	});
 }

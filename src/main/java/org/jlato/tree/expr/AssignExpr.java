@@ -41,12 +41,12 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		super(location);
 	}
 
-	public static STree<AssignExpr.State> make(STree<? extends Expr.State> target, AssignOp operator, STree<? extends Expr.State> value) {
-		return new STree<AssignExpr.State>(new AssignExpr.State(target, operator, value));
+	public static STree<AssignExpr.State> make(STree<? extends Expr.State> target, AssignOp op, STree<? extends Expr.State> value) {
+		return new STree<AssignExpr.State>(new AssignExpr.State(target, op, value));
 	}
 
-	public AssignExpr(Expr target, AssignOp operator, Expr value) {
-		super(new SLocation<AssignExpr.State>(make(TreeBase.<Expr.State>nodeOf(target), operator, TreeBase.<Expr.State>nodeOf(value))));
+	public AssignExpr(Expr target, AssignOp op, Expr value) {
+		super(new SLocation<AssignExpr.State>(make(TreeBase.<Expr.State>nodeOf(target), op, TreeBase.<Expr.State>nodeOf(value))));
 	}
 
 	public Expr target() {
@@ -62,15 +62,15 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 	}
 
 	public AssignOp op() {
-		return location.safeProperty(OPERATOR);
+		return location.safeProperty(OP);
 	}
 
-	public AssignExpr withOp(AssignOp operator) {
-		return location.safePropertyReplace(OPERATOR, operator);
+	public AssignExpr withOp(AssignOp op) {
+		return location.safePropertyReplace(OP, op);
 	}
 
 	public AssignExpr withOp(Mutation<AssignOp> mutation) {
-		return location.safePropertyMutate(OPERATOR, mutation);
+		return location.safePropertyMutate(OP, mutation);
 	}
 
 	public Expr value() {
@@ -89,26 +89,26 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 
 		public final STree<? extends Expr.State> target;
 
-		public final AssignOp operator;
+		public final AssignOp op;
 
 		public final STree<? extends Expr.State> value;
 
-		State(STree<? extends Expr.State> target, AssignOp operator, STree<? extends Expr.State> value) {
+		State(STree<? extends Expr.State> target, AssignOp op, STree<? extends Expr.State> value) {
 			this.target = target;
-			this.operator = operator;
+			this.op = op;
 			this.value = value;
 		}
 
 		public AssignExpr.State withTarget(STree<? extends Expr.State> target) {
-			return new AssignExpr.State(target, operator, value);
+			return new AssignExpr.State(target, op, value);
 		}
 
-		public AssignExpr.State withOperator(AssignOp operator) {
+		public AssignExpr.State withOp(AssignOp operator) {
 			return new AssignExpr.State(target, operator, value);
 		}
 
 		public AssignExpr.State withValue(STree<? extends Expr.State> value) {
-			return new AssignExpr.State(target, operator, value);
+			return new AssignExpr.State(target, op, value);
 		}
 
 		@Override
@@ -143,7 +143,7 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 			if (o == null || getClass() != o.getClass())
 				return false;
 			AssignExpr.State state = (AssignExpr.State) o;
-			if (!operator.equals(state.operator))
+			if (!op.equals(state.op))
 				return false;
 			if (!target.equals(state.target))
 				return false;
@@ -155,7 +155,7 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + operator.hashCode();
+			result = 37 * result + op.hashCode();
 			result = 37 * result + target.hashCode();
 			result = 37 * result + value.hashCode();
 			return result;
@@ -208,16 +208,16 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		}
 	};
 
-	private static STypeSafeProperty<AssignExpr.State, AssignOp> OPERATOR = new STypeSafeProperty<AssignExpr.State, AssignOp>() {
+	private static STypeSafeProperty<AssignExpr.State, AssignOp> OP = new STypeSafeProperty<AssignExpr.State, AssignOp>() {
 
 		@Override
 		protected AssignOp doRetrieve(AssignExpr.State state) {
-			return state.operator;
+			return state.op;
 		}
 
 		@Override
 		protected AssignExpr.State doRebuildParentState(AssignExpr.State state, AssignOp value) {
-			return state.withOperator(value);
+			return state.withOp(value);
 		}
 	};
 
@@ -225,7 +225,7 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 			child(TARGET),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
-					return ((State) tree.state).operator.token;
+					return ((State) tree.state).op.token;
 				}
 			}).withSpacing(space(), space()),
 			child(VALUE)

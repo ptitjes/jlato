@@ -121,11 +121,11 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 		return location.safeTraversal(DIMS);
 	}
 
-	public VariableDeclaratorId withDims(NodeList<ArrayDim> dims) {
+	public MethodDecl withDims(NodeList<ArrayDim> dims) {
 		return location.safeTraversalReplace(DIMS, dims);
 	}
 
-	public VariableDeclaratorId withDims(Mutation<NodeList<ArrayDim>> mutation) {
+	public MethodDecl withDims(Mutation<NodeList<ArrayDim>> mutation) {
 		return location.safeTraversalMutate(DIMS, mutation);
 	}
 
@@ -133,11 +133,11 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 		return location.safeTraversal(THROWS_CLAUSE);
 	}
 
-	public ConstructorDecl withThrowsClause(NodeList<QualifiedType> throwsClause) {
+	public MethodDecl withThrowsClause(NodeList<QualifiedType> throwsClause) {
 		return location.safeTraversalReplace(THROWS_CLAUSE, throwsClause);
 	}
 
-	public ConstructorDecl withThrowsClause(Mutation<NodeList<QualifiedType>> mutation) {
+	public MethodDecl withThrowsClause(Mutation<NodeList<QualifiedType>> mutation) {
 		return location.safeTraversalMutate(THROWS_CLAUSE, mutation);
 	}
 

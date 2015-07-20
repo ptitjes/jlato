@@ -54,11 +54,11 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		return location.safeTraversal(ANNOTATIONS);
 	}
 
-	public Type withAnnotations(NodeList<AnnotationExpr> annotations) {
+	public PrimitiveType withAnnotations(NodeList<AnnotationExpr> annotations) {
 		return location.safeTraversalReplace(ANNOTATIONS, annotations);
 	}
 
-	public Type withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
+	public PrimitiveType withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
 		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 

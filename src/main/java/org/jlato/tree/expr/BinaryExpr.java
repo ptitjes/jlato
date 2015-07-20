@@ -41,12 +41,12 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		super(location);
 	}
 
-	public static STree<BinaryExpr.State> make(STree<? extends Expr.State> left, BinaryOp operator, STree<? extends Expr.State> right) {
-		return new STree<BinaryExpr.State>(new BinaryExpr.State(left, operator, right));
+	public static STree<BinaryExpr.State> make(STree<? extends Expr.State> left, BinaryOp op, STree<? extends Expr.State> right) {
+		return new STree<BinaryExpr.State>(new BinaryExpr.State(left, op, right));
 	}
 
-	public BinaryExpr(Expr left, BinaryOp operator, Expr right) {
-		super(new SLocation<BinaryExpr.State>(make(TreeBase.<Expr.State>nodeOf(left), operator, TreeBase.<Expr.State>nodeOf(right))));
+	public BinaryExpr(Expr left, BinaryOp op, Expr right) {
+		super(new SLocation<BinaryExpr.State>(make(TreeBase.<Expr.State>nodeOf(left), op, TreeBase.<Expr.State>nodeOf(right))));
 	}
 
 	public Expr left() {
@@ -62,15 +62,15 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 	}
 
 	public BinaryOp op() {
-		return location.safeProperty(OPERATOR);
+		return location.safeProperty(OP);
 	}
 
-	public BinaryExpr withOp(BinaryOp operator) {
-		return location.safePropertyReplace(OPERATOR, operator);
+	public BinaryExpr withOp(BinaryOp op) {
+		return location.safePropertyReplace(OP, op);
 	}
 
 	public BinaryExpr withOp(Mutation<BinaryOp> mutation) {
-		return location.safePropertyMutate(OPERATOR, mutation);
+		return location.safePropertyMutate(OP, mutation);
 	}
 
 	public Expr right() {
@@ -89,26 +89,26 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 
 		public final STree<? extends Expr.State> left;
 
-		public final BinaryOp operator;
+		public final BinaryOp op;
 
 		public final STree<? extends Expr.State> right;
 
-		State(STree<? extends Expr.State> left, BinaryOp operator, STree<? extends Expr.State> right) {
+		State(STree<? extends Expr.State> left, BinaryOp op, STree<? extends Expr.State> right) {
 			this.left = left;
-			this.operator = operator;
+			this.op = op;
 			this.right = right;
 		}
 
 		public BinaryExpr.State withLeft(STree<? extends Expr.State> left) {
-			return new BinaryExpr.State(left, operator, right);
+			return new BinaryExpr.State(left, op, right);
 		}
 
-		public BinaryExpr.State withOperator(BinaryOp operator) {
+		public BinaryExpr.State withOp(BinaryOp operator) {
 			return new BinaryExpr.State(left, operator, right);
 		}
 
 		public BinaryExpr.State withRight(STree<? extends Expr.State> right) {
-			return new BinaryExpr.State(left, operator, right);
+			return new BinaryExpr.State(left, op, right);
 		}
 
 		@Override
@@ -143,7 +143,7 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 			if (o == null || getClass() != o.getClass())
 				return false;
 			BinaryExpr.State state = (BinaryExpr.State) o;
-			if (!operator.equals(state.operator))
+			if (!op.equals(state.op))
 				return false;
 			if (!left.equals(state.left))
 				return false;
@@ -155,7 +155,7 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + operator.hashCode();
+			result = 37 * result + op.hashCode();
 			result = 37 * result + left.hashCode();
 			result = 37 * result + right.hashCode();
 			return result;
@@ -208,16 +208,16 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		}
 	};
 
-	private static STypeSafeProperty<BinaryExpr.State, BinaryOp> OPERATOR = new STypeSafeProperty<BinaryExpr.State, BinaryOp>() {
+	private static STypeSafeProperty<BinaryExpr.State, BinaryOp> OP = new STypeSafeProperty<BinaryExpr.State, BinaryOp>() {
 
 		@Override
 		protected BinaryOp doRetrieve(BinaryExpr.State state) {
-			return state.operator;
+			return state.op;
 		}
 
 		@Override
 		protected BinaryExpr.State doRebuildParentState(BinaryExpr.State state, BinaryOp value) {
-			return state.withOperator(value);
+			return state.withOp(value);
 		}
 	};
 
@@ -225,7 +225,7 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 			child(LEFT),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
-					return ((State) tree.state).operator.token;
+					return ((State) tree.state).op.token;
 				}
 			}).withSpacing(space(), space()),
 			child(RIGHT)

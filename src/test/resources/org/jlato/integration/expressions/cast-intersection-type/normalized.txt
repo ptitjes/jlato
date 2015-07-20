@@ -2,7 +2,7 @@
   class: org.jlato.tree.expr.CastExpr,
   expr: {
     class: org.jlato.tree.name.Name,
-    name: v,
+    id: v,
   },
   type: {
     class: org.jlato.tree.type.IntersectionType,

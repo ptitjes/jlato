@@ -53,11 +53,11 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 		return location.safeTraversal(ANNOTATIONS);
 	}
 
-	public Type withAnnotations(NodeList<AnnotationExpr> annotations) {
+	public WildcardType withAnnotations(NodeList<AnnotationExpr> annotations) {
 		return location.safeTraversalReplace(ANNOTATIONS, annotations);
 	}
 
-	public Type withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
+	public WildcardType withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
 		return location.safeTraversalMutate(ANNOTATIONS, mutation);
 	}
 
