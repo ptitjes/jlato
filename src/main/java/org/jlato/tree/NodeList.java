@@ -137,6 +137,15 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
 
+	public NodeList<T> appendAll(NodeList<T> elements) {
+		// TODO Do that better
+		NodeList<T> newNodeList = this;
+		for (T element : elements) {
+			newNodeList = newNodeList.append(element);
+		}
+		return newNodeList;
+	}
+
 	@SuppressWarnings("unchecked")
 	public NodeList<T> insert(int index, T element) {
 		final STree<SNodeListState> tree = location.tree;
