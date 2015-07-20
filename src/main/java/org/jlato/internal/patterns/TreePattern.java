@@ -152,8 +152,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		STreeState patternState = pattern.state;
 		if (patternState instanceof SVarState) {
 			String name = ((SVarState) patternState).name;
-			return substitution.get(name);
-
+			return (STree<S>) TreeBase.treeOf((Tree) substitution.get(name));
 		} else if (patternState instanceof SNodeState) {
 			final SNodeState nodeState = (SNodeState) patternState;
 			return (STree<S>) buildNodeTree(nodeState.kind(), nodeState, substitution);
