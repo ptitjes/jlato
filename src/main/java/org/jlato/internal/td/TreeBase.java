@@ -24,6 +24,7 @@ import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeState;
+import org.jlato.printer.Printer;
 import org.jlato.rewrite.MatchVisitor;
 import org.jlato.rewrite.Matcher;
 import org.jlato.rewrite.Substitution;
@@ -55,6 +56,12 @@ public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends 
 	@SuppressWarnings("unchecked")
 	private T self() {
 		return (T) this;
+	}
+
+	@Override
+	public String toString() {
+		// TODO Add specific cases for NodeList, NodeOption, NodeEither
+		return Printer.printToString(this);
 	}
 
 	@Override
