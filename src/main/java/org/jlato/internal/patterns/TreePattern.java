@@ -148,41 +148,45 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		return (T) new SLocation(null, buildTree(pattern, substitution)).facade;
 	}
 
-	private STree<?> buildTree(STree<?> pattern, Substitution substitution) {
+	private <S extends STreeState> STree<S> buildTree(STree<S> pattern, Substitution substitution) {
 		STreeState patternState = pattern.state;
 		if (patternState instanceof SVarState) {
 			String name = ((SVarState) patternState).name;
 			return substitution.get(name);
 
 		} else if (patternState instanceof SNodeState) {
-			Kind kind = ((SNodeState) patternState).kind();
-			return buildNodeTree((Kind) kind, (SNodeState) patternState, substitution);
-
+			final SNodeState nodeState = (SNodeState) patternState;
+			return (STree<S>) buildNodeTree(nodeState.kind(), nodeState, substitution);
 		} else if (patternState instanceof SNodeOptionState) {
-			STree<?> elementPattern = ((SNodeOptionState) patternState).element;
-			STree<?> element = buildTree(elementPattern, substitution);
-			return new STree<SNodeOptionState>(
-					new SNodeOptionState(element));
-
+			return (STree<S>) buildNodeOptionTree((SNodeOptionState) patternState, substitution);
 		} else if (patternState instanceof SNodeListState) {
-			Builder<STree<?>, Vector<STree<?>>> elementsBuilder = Vector.<STree<?>>factory().newBuilder();
-			for (STree<?> elementPattern : ((SNodeListState) patternState).children) {
-				elementsBuilder.add(buildTree(elementPattern, substitution));
-			}
-			return new STree<SNodeListState>(
-					new SNodeListState(elementsBuilder.build()));
+			return (STree<S>) buildNodeListTree((SNodeListState) patternState, substitution);
 		}
 		return null;
 	}
 
-	private <S extends SNodeState<S>> STree<?> buildNodeTree(Kind kind, S patternState, Substitution substitution) {
-//		Builder<STree<?>, ArrayList<STree<?>>> childrenBuilder = ArrayList.<STree<?>>factory().newBuilder();
-//		for (STree<?> childPattern : ((SNodeState<?>) patternState).children) {
-//			childrenBuilder.add(buildTree(childPattern, substitution));
-//		}
-//		return new STree<SNodeState>(kind,
-//				new SNodeState(buildData(patternState.data, substitution), childrenBuilder.build()));
-		return null;
+	private <S extends SNodeState<S>> STree<S> buildNodeTree(Kind kind, S patternState, Substitution substitution) {
+		S buildState = patternState;
+
+		STraversal traversal = patternState.firstChild();
+		while (traversal != null) {
+			buildState = (S) traversal.rebuildParentState(buildState, buildTree(traversal.traverse(patternState), substitution));
+			traversal = traversal.rightSibling(patternState);
+		}
+		return new STree<S>(buildState);
+	}
+
+	private STree<SNodeOptionState> buildNodeOptionTree(SNodeOptionState patternState, Substitution substitution) {
+		final STree<? extends STreeState> elementTree = patternState.element == null ? null : buildTree(patternState.element, substitution);
+		return new STree<SNodeOptionState>(new SNodeOptionState(elementTree));
+	}
+
+	private STree<SNodeListState> buildNodeListTree(SNodeListState patternState, Substitution substitution) {
+		Builder<STree<?>, Vector<STree<?>>> childrenBuilder = Vector.<STree<?>>factory().newBuilder();
+		for (STree<?> childPattern : patternState.children) {
+			childrenBuilder.add(buildTree(childPattern, substitution));
+		}
+		return new STree<SNodeListState>(new SNodeListState(childrenBuilder.build()));
 	}
 
 	private ArrayList<Object> buildData(ArrayList<Object> pattern, Substitution substitution) {
