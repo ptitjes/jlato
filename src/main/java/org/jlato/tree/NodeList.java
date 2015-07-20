@@ -71,6 +71,91 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		return new NodeList<T>(t1, t2, t3, t4, t5, t6);
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17, T t18) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17, T t18, T t19) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17, T t18, T t19, T t20) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17, T t18, T t19, T t20, T t21) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17, T t18, T t19, T t20, T t21, T t22) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Tree> NodeList<T> of(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17, T t18, T t19, T t20, T t21, T t22, T t23) {
+		return new NodeList<T>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23);
+	}
+
 	public static <T extends Tree> NodeList<T> of(Iterable<T> ts) {
 		NodeList<T> list = empty();
 		for (T t : ts) {
