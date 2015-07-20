@@ -96,6 +96,25 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 		public STraversal lastChild() {
 			return EXPR;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ExpressionStmt.State state = (ExpressionStmt.State) o;
+			if (!expr.equals(state.expr))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + expr.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ExpressionStmt.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<ExpressionStmt.State, Expr.State, Expr>() {

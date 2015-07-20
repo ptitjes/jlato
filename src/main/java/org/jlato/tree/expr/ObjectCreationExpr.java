@@ -175,6 +175,37 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 		public STraversal lastChild() {
 			return BODY;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ObjectCreationExpr.State state = (ObjectCreationExpr.State) o;
+			if (!scope.equals(state.scope))
+				return false;
+			if (!typeArgs.equals(state.typeArgs))
+				return false;
+			if (!type.equals(state.type))
+				return false;
+			if (!args.equals(state.args))
+				return false;
+			if (!body.equals(state.body))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + scope.hashCode();
+			result = 37 * result + typeArgs.hashCode();
+			result = 37 * result + type.hashCode();
+			result = 37 * result + args.hashCode();
+			result = 37 * result + body.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ObjectCreationExpr.State, SNodeOptionState, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<ObjectCreationExpr.State, SNodeOptionState, NodeOption<Expr>>() {

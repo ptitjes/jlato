@@ -116,6 +116,28 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 		public STraversal lastChild() {
 			return BODY;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			WhileStmt.State state = (WhileStmt.State) o;
+			if (!condition.equals(state.condition))
+				return false;
+			if (!body.equals(state.body))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + condition.hashCode();
+			result = 37 * result + body.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<WhileStmt.State, Expr.State, Expr> CONDITION = new STypeSafeTraversal<WhileStmt.State, Expr.State, Expr>() {

@@ -98,6 +98,25 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 		public STraversal lastChild() {
 			return ANNOTATIONS;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ArrayDim.State state = (ArrayDim.State) o;
+			if (!annotations.equals(state.annotations))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + annotations.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ArrayDim.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<ArrayDim.State, SNodeListState, NodeList<AnnotationExpr>>() {

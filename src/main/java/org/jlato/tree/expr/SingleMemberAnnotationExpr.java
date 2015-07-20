@@ -115,6 +115,28 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 		public STraversal lastChild() {
 			return MEMBER_VALUE;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			SingleMemberAnnotationExpr.State state = (SingleMemberAnnotationExpr.State) o;
+			if (!name.equals(state.name))
+				return false;
+			if (!memberValue.equals(state.memberValue))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + name.hashCode();
+			result = 37 * result + memberValue.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<SingleMemberAnnotationExpr.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<SingleMemberAnnotationExpr.State, QualifiedName.State, QualifiedName>() {

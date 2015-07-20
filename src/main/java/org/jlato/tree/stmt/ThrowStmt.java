@@ -96,6 +96,25 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 		public STraversal lastChild() {
 			return EXPR;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ThrowStmt.State state = (ThrowStmt.State) o;
+			if (!expr.equals(state.expr))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + expr.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ThrowStmt.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<ThrowStmt.State, Expr.State, Expr>() {

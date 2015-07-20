@@ -122,6 +122,28 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 		public STraversal lastChild() {
 			return BODY;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			InitializerDecl.State state = (InitializerDecl.State) o;
+			if (!modifiers.equals(state.modifiers))
+				return false;
+			if (!body.equals(state.body))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + modifiers.hashCode();
+			result = 37 * result + body.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<InitializerDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<InitializerDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {

@@ -154,6 +154,34 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 		public STraversal lastChild() {
 			return ARGS;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			MethodInvocationExpr.State state = (MethodInvocationExpr.State) o;
+			if (!scope.equals(state.scope))
+				return false;
+			if (!typeArgs.equals(state.typeArgs))
+				return false;
+			if (!name.equals(state.name))
+				return false;
+			if (!args.equals(state.args))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + scope.hashCode();
+			result = 37 * result + typeArgs.hashCode();
+			result = 37 * result + name.hashCode();
+			result = 37 * result + args.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<MethodInvocationExpr.State, SNodeOptionState, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<MethodInvocationExpr.State, SNodeOptionState, NodeOption<Expr>>() {

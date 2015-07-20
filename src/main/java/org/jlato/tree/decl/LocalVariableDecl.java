@@ -137,6 +137,31 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 		public STraversal lastChild() {
 			return VARIABLES;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			LocalVariableDecl.State state = (LocalVariableDecl.State) o;
+			if (!modifiers.equals(state.modifiers))
+				return false;
+			if (!type.equals(state.type))
+				return false;
+			if (!variables.equals(state.variables))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + modifiers.hashCode();
+			result = 37 * result + type.hashCode();
+			result = 37 * result + variables.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<LocalVariableDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<LocalVariableDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {

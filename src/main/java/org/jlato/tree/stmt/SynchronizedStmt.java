@@ -116,6 +116,28 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 		public STraversal lastChild() {
 			return BLOCK;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			SynchronizedStmt.State state = (SynchronizedStmt.State) o;
+			if (!expr.equals(state.expr))
+				return false;
+			if (!block.equals(state.block))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + expr.hashCode();
+			result = 37 * result + block.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<SynchronizedStmt.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<SynchronizedStmt.State, Expr.State, Expr>() {

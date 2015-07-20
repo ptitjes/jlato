@@ -178,6 +178,37 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 		public STraversal lastChild() {
 			return DEFAULT_VALUE;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			AnnotationMemberDecl.State state = (AnnotationMemberDecl.State) o;
+			if (!modifiers.equals(state.modifiers))
+				return false;
+			if (!type.equals(state.type))
+				return false;
+			if (!name.equals(state.name))
+				return false;
+			if (!dims.equals(state.dims))
+				return false;
+			if (!defaultValue.equals(state.defaultValue))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + modifiers.hashCode();
+			result = 37 * result + type.hashCode();
+			result = 37 * result + name.hashCode();
+			result = 37 * result + dims.hashCode();
+			result = 37 * result + defaultValue.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<AnnotationMemberDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<AnnotationMemberDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {

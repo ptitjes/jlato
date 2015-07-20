@@ -118,6 +118,28 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 		public STraversal lastChild() {
 			return INIT;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			VariableDeclarator.State state = (VariableDeclarator.State) o;
+			if (!id.equals(state.id))
+				return false;
+			if (!init.equals(state.init))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + id.hashCode();
+			result = 37 * result + init.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<VariableDeclarator.State, VariableDeclaratorId.State, VariableDeclaratorId> ID = new STypeSafeTraversal<VariableDeclarator.State, VariableDeclaratorId.State, VariableDeclaratorId>() {

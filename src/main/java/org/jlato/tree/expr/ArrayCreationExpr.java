@@ -155,6 +155,34 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 		public STraversal lastChild() {
 			return INIT;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ArrayCreationExpr.State state = (ArrayCreationExpr.State) o;
+			if (!type.equals(state.type))
+				return false;
+			if (!dimExprs.equals(state.dimExprs))
+				return false;
+			if (!dims.equals(state.dims))
+				return false;
+			if (!init.equals(state.init))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + type.hashCode();
+			result = 37 * result + dimExprs.hashCode();
+			result = 37 * result + dims.hashCode();
+			result = 37 * result + init.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ArrayCreationExpr.State, Type.State, Type> TYPE = new STypeSafeTraversal<ArrayCreationExpr.State, Type.State, Type>() {

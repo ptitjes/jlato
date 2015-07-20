@@ -98,6 +98,25 @@ public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implem
 		public STraversal lastChild() {
 			return CLASS_EXPR;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			SuperExpr.State state = (SuperExpr.State) o;
+			if (!classExpr.equals(state.classExpr))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + classExpr.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<SuperExpr.State, SNodeOptionState, NodeOption<Expr>> CLASS_EXPR = new STypeSafeTraversal<SuperExpr.State, SNodeOptionState, NodeOption<Expr>>() {

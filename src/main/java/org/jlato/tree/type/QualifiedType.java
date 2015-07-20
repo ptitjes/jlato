@@ -154,6 +154,34 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 		public STraversal lastChild() {
 			return TYPE_ARGS;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			QualifiedType.State state = (QualifiedType.State) o;
+			if (!annotations.equals(state.annotations))
+				return false;
+			if (!scope.equals(state.scope))
+				return false;
+			if (!name.equals(state.name))
+				return false;
+			if (!typeArgs.equals(state.typeArgs))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + annotations.hashCode();
+			result = 37 * result + scope.hashCode();
+			result = 37 * result + name.hashCode();
+			result = 37 * result + typeArgs.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<QualifiedType.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<QualifiedType.State, SNodeListState, NodeList<AnnotationExpr>>() {

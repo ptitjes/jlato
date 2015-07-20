@@ -121,6 +121,28 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 		public STraversal lastChild() {
 			return CASES;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			SwitchStmt.State state = (SwitchStmt.State) o;
+			if (!selector.equals(state.selector))
+				return false;
+			if (!cases.equals(state.cases))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + selector.hashCode();
+			result = 37 * result + cases.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<SwitchStmt.State, Expr.State, Expr> SELECTOR = new STypeSafeTraversal<SwitchStmt.State, Expr.State, Expr>() {

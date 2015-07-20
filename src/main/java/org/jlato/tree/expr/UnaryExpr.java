@@ -124,6 +124,28 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		public STraversal lastChild() {
 			return EXPR;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			UnaryExpr.State state = (UnaryExpr.State) o;
+			if (!operator.equals(state.operator))
+				return false;
+			if (!expr.equals(state.expr))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + operator.hashCode();
+			result = 37 * result + expr.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<UnaryExpr.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<UnaryExpr.State, Expr.State, Expr>() {

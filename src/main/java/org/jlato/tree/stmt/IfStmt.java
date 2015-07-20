@@ -142,6 +142,31 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 		public STraversal lastChild() {
 			return ELSE_STMT;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			IfStmt.State state = (IfStmt.State) o;
+			if (!condition.equals(state.condition))
+				return false;
+			if (!thenStmt.equals(state.thenStmt))
+				return false;
+			if (!elseStmt.equals(state.elseStmt))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + condition.hashCode();
+			result = 37 * result + thenStmt.hashCode();
+			result = 37 * result + elseStmt.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<IfStmt.State, Expr.State, Expr> CONDITION = new STypeSafeTraversal<IfStmt.State, Expr.State, Expr>() {

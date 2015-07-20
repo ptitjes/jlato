@@ -101,6 +101,25 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 		public STraversal lastChild() {
 			return DECLARATION;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			VariableDeclarationExpr.State state = (VariableDeclarationExpr.State) o;
+			if (!declaration.equals(state.declaration))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + declaration.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<VariableDeclarationExpr.State, LocalVariableDecl.State, LocalVariableDecl> DECLARATION = new STypeSafeTraversal<VariableDeclarationExpr.State, LocalVariableDecl.State, LocalVariableDecl>() {

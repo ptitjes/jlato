@@ -100,6 +100,25 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 		public STraversal lastChild() {
 			return STMTS;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			BlockStmt.State state = (BlockStmt.State) o;
+			if (!stmts.equals(state.stmts))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + stmts.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<BlockStmt.State, SNodeListState, NodeList<Stmt>> STMTS = new STypeSafeTraversal<BlockStmt.State, SNodeListState, NodeList<Stmt>>() {

@@ -138,6 +138,31 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 		public STraversal lastChild() {
 			return BOUNDS;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			TypeParameter.State state = (TypeParameter.State) o;
+			if (!annotations.equals(state.annotations))
+				return false;
+			if (!name.equals(state.name))
+				return false;
+			if (!bounds.equals(state.bounds))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + annotations.hashCode();
+			result = 37 * result + name.hashCode();
+			result = 37 * result + bounds.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<TypeParameter.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<TypeParameter.State, SNodeListState, NodeList<AnnotationExpr>>() {

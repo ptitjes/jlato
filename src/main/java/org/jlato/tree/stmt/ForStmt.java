@@ -155,6 +155,34 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 		public STraversal lastChild() {
 			return BODY;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ForStmt.State state = (ForStmt.State) o;
+			if (!init.equals(state.init))
+				return false;
+			if (!compare.equals(state.compare))
+				return false;
+			if (!update.equals(state.update))
+				return false;
+			if (!body.equals(state.body))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + init.hashCode();
+			result = 37 * result + compare.hashCode();
+			result = 37 * result + update.hashCode();
+			result = 37 * result + body.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ForStmt.State, SNodeListState, NodeList<Expr>> INIT = new STypeSafeTraversal<ForStmt.State, SNodeListState, NodeList<Expr>>() {

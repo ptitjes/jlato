@@ -117,6 +117,28 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 		public STraversal lastChild() {
 			return PAIRS;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			NormalAnnotationExpr.State state = (NormalAnnotationExpr.State) o;
+			if (!name.equals(state.name))
+				return false;
+			if (!pairs.equals(state.pairs))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + name.hashCode();
+			result = 37 * result + pairs.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<NormalAnnotationExpr.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<NormalAnnotationExpr.State, QualifiedName.State, QualifiedName>() {

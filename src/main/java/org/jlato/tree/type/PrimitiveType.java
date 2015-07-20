@@ -117,6 +117,28 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		public STraversal lastChild() {
 			return ANNOTATIONS;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			PrimitiveType.State state = (PrimitiveType.State) o;
+			if (!primitive.equals(state.primitive))
+				return false;
+			if (!annotations.equals(state.annotations))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + primitive.hashCode();
+			result = 37 * result + annotations.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<PrimitiveType.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<PrimitiveType.State, SNodeListState, NodeList<AnnotationExpr>>() {

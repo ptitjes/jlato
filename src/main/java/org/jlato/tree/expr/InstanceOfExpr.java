@@ -115,6 +115,28 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 		public STraversal lastChild() {
 			return TYPE;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			InstanceOfExpr.State state = (InstanceOfExpr.State) o;
+			if (!expr.equals(state.expr))
+				return false;
+			if (!type.equals(state.type))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + expr.hashCode();
+			result = 37 * result + type.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<InstanceOfExpr.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<InstanceOfExpr.State, Expr.State, Expr>() {

@@ -116,6 +116,28 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 		public STraversal lastChild() {
 			return CATCH_BLOCK;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			CatchClause.State state = (CatchClause.State) o;
+			if (!except.equals(state.except))
+				return false;
+			if (!catchBlock.equals(state.catchBlock))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + except.hashCode();
+			result = 37 * result + catchBlock.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<CatchClause.State, FormalParameter.State, FormalParameter> EXCEPT = new STypeSafeTraversal<CatchClause.State, FormalParameter.State, FormalParameter>() {

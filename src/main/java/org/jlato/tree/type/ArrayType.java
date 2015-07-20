@@ -117,6 +117,28 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 		public STraversal lastChild() {
 			return DIMS;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ArrayType.State state = (ArrayType.State) o;
+			if (!componentType.equals(state.componentType))
+				return false;
+			if (!dims.equals(state.dims))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + componentType.hashCode();
+			result = 37 * result + dims.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ArrayType.State, Type.State, Type> COMPONENT_TYPE = new STypeSafeTraversal<ArrayType.State, Type.State, Type>() {

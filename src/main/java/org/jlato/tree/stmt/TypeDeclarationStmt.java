@@ -97,6 +97,25 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 		public STraversal lastChild() {
 			return TYPE_DECL;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			TypeDeclarationStmt.State state = (TypeDeclarationStmt.State) o;
+			if (!typeDecl.equals(state.typeDecl))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + typeDecl.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<TypeDeclarationStmt.State, TypeDecl.State, TypeDecl> TYPE_DECL = new STypeSafeTraversal<TypeDeclarationStmt.State, TypeDecl.State, TypeDecl>() {

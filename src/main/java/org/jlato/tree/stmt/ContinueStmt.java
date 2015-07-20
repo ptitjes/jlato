@@ -99,6 +99,25 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 		public STraversal lastChild() {
 			return ID;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ContinueStmt.State state = (ContinueStmt.State) o;
+			if (!id.equals(state.id))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + id.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ContinueStmt.State, SNodeOptionState, NodeOption<Name>> ID = new STypeSafeTraversal<ContinueStmt.State, SNodeOptionState, NodeOption<Name>>() {

@@ -129,6 +129,31 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 		public STraversal lastChild() {
 			return NAME;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ImportDecl.State state = (ImportDecl.State) o;
+			if (!isStatic != state.isStatic)
+				return false;
+			if (!isOnDemand != state.isOnDemand)
+				return false;
+			if (!name.equals(state.name))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + (isStatic ? 1 : 0);
+			result = 37 * result + (isOnDemand ? 1 : 0);
+			result = 37 * result + name.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ImportDecl.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<ImportDecl.State, QualifiedName.State, QualifiedName>() {

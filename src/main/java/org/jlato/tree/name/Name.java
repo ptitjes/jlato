@@ -103,6 +103,25 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 		public STraversal lastChild() {
 			return null;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			Name.State state = (Name.State) o;
+			if (!identifier.equals(state.identifier))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + identifier.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeProperty<Name.State, String> IDENTIFIER = new STypeSafeProperty<Name.State, String>() {

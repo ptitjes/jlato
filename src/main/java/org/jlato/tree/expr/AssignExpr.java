@@ -135,6 +135,31 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		public STraversal lastChild() {
 			return VALUE;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			AssignExpr.State state = (AssignExpr.State) o;
+			if (!operator.equals(state.operator))
+				return false;
+			if (!target.equals(state.target))
+				return false;
+			if (!value.equals(state.value))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + operator.hashCode();
+			result = 37 * result + target.hashCode();
+			result = 37 * result + value.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<AssignExpr.State, Expr.State, Expr> TARGET = new STypeSafeTraversal<AssignExpr.State, Expr.State, Expr>() {

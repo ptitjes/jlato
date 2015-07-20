@@ -114,6 +114,28 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 		public STraversal lastChild() {
 			return INDEX;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ArrayAccessExpr.State state = (ArrayAccessExpr.State) o;
+			if (!name.equals(state.name))
+				return false;
+			if (!index.equals(state.index))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + name.hashCode();
+			result = 37 * result + index.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ArrayAccessExpr.State, Expr.State, Expr> NAME = new STypeSafeTraversal<ArrayAccessExpr.State, Expr.State, Expr>() {

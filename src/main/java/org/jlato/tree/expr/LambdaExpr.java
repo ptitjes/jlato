@@ -139,6 +139,31 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		public STraversal lastChild() {
 			return BODY;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			LambdaExpr.State state = (LambdaExpr.State) o;
+			if (!hasParens != state.hasParens)
+				return false;
+			if (!params.equals(state.params))
+				return false;
+			if (!body.equals(state.body))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + (hasParens ? 1 : 0);
+			result = 37 * result + params.hashCode();
+			result = 37 * result + body.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<LambdaExpr.State, SNodeListState, NodeList<FormalParameter>> PARAMS = new STypeSafeTraversal<LambdaExpr.State, SNodeListState, NodeList<FormalParameter>>() {

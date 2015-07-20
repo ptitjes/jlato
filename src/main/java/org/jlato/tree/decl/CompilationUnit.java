@@ -146,6 +146,34 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 		public STraversal lastChild() {
 			return TYPES;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			CompilationUnit.State state = (CompilationUnit.State) o;
+			if (!preamble.equals(state.preamble))
+				return false;
+			if (!packageDecl.equals(state.packageDecl))
+				return false;
+			if (!imports.equals(state.imports))
+				return false;
+			if (!types.equals(state.types))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + preamble.hashCode();
+			result = 37 * result + packageDecl.hashCode();
+			result = 37 * result + imports.hashCode();
+			result = 37 * result + types.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<CompilationUnit.State, PackageDecl.State, PackageDecl> PACKAGE_DECL = new STypeSafeTraversal<CompilationUnit.State, PackageDecl.State, PackageDecl>() {

@@ -136,6 +136,31 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 		public STraversal lastChild() {
 			return BODY;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ForeachStmt.State state = (ForeachStmt.State) o;
+			if (!var.equals(state.var))
+				return false;
+			if (!iterable.equals(state.iterable))
+				return false;
+			if (!body.equals(state.body))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + var.hashCode();
+			result = 37 * result + iterable.hashCode();
+			result = 37 * result + body.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ForeachStmt.State, VariableDeclarationExpr.State, VariableDeclarationExpr> VAR = new STypeSafeTraversal<ForeachStmt.State, VariableDeclarationExpr.State, VariableDeclarationExpr>() {

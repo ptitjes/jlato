@@ -95,6 +95,25 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 		public STraversal lastChild() {
 			return INNER;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ParenthesizedExpr.State state = (ParenthesizedExpr.State) o;
+			if (!inner.equals(state.inner))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + inner.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ParenthesizedExpr.State, Expr.State, Expr> INNER = new STypeSafeTraversal<ParenthesizedExpr.State, Expr.State, Expr>() {

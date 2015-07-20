@@ -119,6 +119,28 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 		public STraversal lastChild() {
 			return STMTS;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			SwitchCase.State state = (SwitchCase.State) o;
+			if (!label.equals(state.label))
+				return false;
+			if (!stmts.equals(state.stmts))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + label.hashCode();
+			result = 37 * result + stmts.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<SwitchCase.State, SNodeOptionState, NodeOption<Expr>> LABEL = new STypeSafeTraversal<SwitchCase.State, SNodeOptionState, NodeOption<Expr>>() {

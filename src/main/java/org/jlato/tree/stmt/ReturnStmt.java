@@ -99,6 +99,25 @@ public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> imp
 		public STraversal lastChild() {
 			return EXPR;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ReturnStmt.State state = (ReturnStmt.State) o;
+			if (!expr.equals(state.expr))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + expr.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ReturnStmt.State, SNodeOptionState, NodeOption<Expr>> EXPR = new STypeSafeTraversal<ReturnStmt.State, SNodeOptionState, NodeOption<Expr>>() {

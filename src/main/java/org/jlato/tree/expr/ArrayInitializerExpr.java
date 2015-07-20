@@ -97,6 +97,25 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 		public STraversal lastChild() {
 			return VALUES;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ArrayInitializerExpr.State state = (ArrayInitializerExpr.State) o;
+			if (!values.equals(state.values))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + values.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ArrayInitializerExpr.State, SNodeListState, NodeList<Expr>> VALUES = new STypeSafeTraversal<ArrayInitializerExpr.State, SNodeListState, NodeList<Expr>>() {

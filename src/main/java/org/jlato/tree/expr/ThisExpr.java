@@ -98,6 +98,25 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 		public STraversal lastChild() {
 			return CLASS_EXPR;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ThisExpr.State state = (ThisExpr.State) o;
+			if (!classExpr.equals(state.classExpr))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + classExpr.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ThisExpr.State, SNodeOptionState, NodeOption<Expr>> CLASS_EXPR = new STypeSafeTraversal<ThisExpr.State, SNodeOptionState, NodeOption<Expr>>() {

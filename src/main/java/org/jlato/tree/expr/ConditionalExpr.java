@@ -134,6 +134,31 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 		public STraversal lastChild() {
 			return ELSE_EXPR;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ConditionalExpr.State state = (ConditionalExpr.State) o;
+			if (!condition.equals(state.condition))
+				return false;
+			if (!thenExpr.equals(state.thenExpr))
+				return false;
+			if (!elseExpr.equals(state.elseExpr))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + condition.hashCode();
+			result = 37 * result + thenExpr.hashCode();
+			result = 37 * result + elseExpr.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr> CONDITION = new STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr>() {

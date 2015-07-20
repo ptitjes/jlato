@@ -90,6 +90,25 @@ public class STreeSetState implements STreeState {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		STreeSetState that = (STreeSetState) o;
+
+		if (!rootPath.equals(that.rootPath)) return false;
+		return trees.equals(that.trees);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = rootPath.hashCode();
+		result = 31 * result + trees.hashCode();
+		return result;
+	}
+
+	@Override
 	public void validate(STree<?> tree) {
 		// TODO
 	}

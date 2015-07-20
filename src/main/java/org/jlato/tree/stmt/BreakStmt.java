@@ -99,6 +99,25 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 		public STraversal lastChild() {
 			return ID;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			BreakStmt.State state = (BreakStmt.State) o;
+			if (!id.equals(state.id))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + id.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<BreakStmt.State, SNodeOptionState, NodeOption<Name>> ID = new STypeSafeTraversal<BreakStmt.State, SNodeOptionState, NodeOption<Name>>() {

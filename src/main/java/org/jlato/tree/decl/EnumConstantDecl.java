@@ -161,6 +161,34 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 		public STraversal lastChild() {
 			return CLASS_BODY;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			EnumConstantDecl.State state = (EnumConstantDecl.State) o;
+			if (!modifiers.equals(state.modifiers))
+				return false;
+			if (!name.equals(state.name))
+				return false;
+			if (!args.equals(state.args))
+				return false;
+			if (!classBody.equals(state.classBody))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + modifiers.hashCode();
+			result = 37 * result + name.hashCode();
+			result = 37 * result + args.hashCode();
+			result = 37 * result + classBody.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<EnumConstantDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<EnumConstantDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {

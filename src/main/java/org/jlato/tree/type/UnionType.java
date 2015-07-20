@@ -97,6 +97,25 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 		public STraversal lastChild() {
 			return TYPES;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			UnionType.State state = (UnionType.State) o;
+			if (!types.equals(state.types))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + types.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<UnionType.State, SNodeListState, NodeList<Type>> TYPES = new STypeSafeTraversal<UnionType.State, SNodeListState, NodeList<Type>>() {

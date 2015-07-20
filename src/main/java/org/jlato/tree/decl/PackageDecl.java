@@ -117,6 +117,28 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 		public STraversal lastChild() {
 			return NAME;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			PackageDecl.State state = (PackageDecl.State) o;
+			if (!annotations.equals(state.annotations))
+				return false;
+			if (!name.equals(state.name))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + annotations.hashCode();
+			result = 37 * result + name.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<PackageDecl.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<PackageDecl.State, SNodeListState, NodeList<AnnotationExpr>>() {

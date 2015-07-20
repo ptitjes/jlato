@@ -115,6 +115,28 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 		public STraversal lastChild() {
 			return VALUE;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			MemberValuePair.State state = (MemberValuePair.State) o;
+			if (!name.equals(state.name))
+				return false;
+			if (!value.equals(state.value))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + name.hashCode();
+			result = 37 * result + value.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<MemberValuePair.State, Name.State, Name> NAME = new STypeSafeTraversal<MemberValuePair.State, Name.State, Name>() {

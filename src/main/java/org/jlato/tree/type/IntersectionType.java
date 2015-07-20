@@ -97,6 +97,25 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 		public STraversal lastChild() {
 			return TYPES;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			IntersectionType.State state = (IntersectionType.State) o;
+			if (!types.equals(state.types))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + types.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<IntersectionType.State, SNodeListState, NodeList<Type>> TYPES = new STypeSafeTraversal<IntersectionType.State, SNodeListState, NodeList<Type>>() {

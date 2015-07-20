@@ -154,6 +154,34 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 		public STraversal lastChild() {
 			return FINALLY_BLOCK;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			TryStmt.State state = (TryStmt.State) o;
+			if (!resources.equals(state.resources))
+				return false;
+			if (!tryBlock.equals(state.tryBlock))
+				return false;
+			if (!catchs.equals(state.catchs))
+				return false;
+			if (!finallyBlock.equals(state.finallyBlock))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + resources.hashCode();
+			result = 37 * result + tryBlock.hashCode();
+			result = 37 * result + catchs.hashCode();
+			result = 37 * result + finallyBlock.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<TryStmt.State, SNodeListState, NodeList<VariableDeclarationExpr>> RESOURCES = new STypeSafeTraversal<TryStmt.State, SNodeListState, NodeList<VariableDeclarationExpr>>() {

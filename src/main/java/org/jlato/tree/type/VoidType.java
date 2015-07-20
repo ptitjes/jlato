@@ -78,6 +78,21 @@ public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implement
 		public STraversal lastChild() {
 			return null;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			return result;
+		}
 	}
 
 	public final static LexicalShape shape = token(LToken.Void);

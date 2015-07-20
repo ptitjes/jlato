@@ -135,6 +135,31 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		public STraversal lastChild() {
 			return RIGHT;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			BinaryExpr.State state = (BinaryExpr.State) o;
+			if (!operator.equals(state.operator))
+				return false;
+			if (!left.equals(state.left))
+				return false;
+			if (!right.equals(state.right))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + operator.hashCode();
+			result = 37 * result + left.hashCode();
+			result = 37 * result + right.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr> LEFT = new STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr>() {

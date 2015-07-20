@@ -154,6 +154,34 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 		public STraversal lastChild() {
 			return ID;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			FormalParameter.State state = (FormalParameter.State) o;
+			if (!isVarArgs != state.isVarArgs)
+				return false;
+			if (!modifiers.equals(state.modifiers))
+				return false;
+			if (!type.equals(state.type))
+				return false;
+			if (!id.equals(state.id))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + (isVarArgs ? 1 : 0);
+			result = 37 * result + modifiers.hashCode();
+			result = 37 * result + type.hashCode();
+			result = 37 * result + id.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<FormalParameter.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<FormalParameter.State, SNodeListState, NodeList<ExtendedModifier>>() {

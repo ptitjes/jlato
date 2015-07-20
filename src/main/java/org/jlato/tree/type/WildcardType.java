@@ -135,6 +135,31 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 		public STraversal lastChild() {
 			return SUP;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			WildcardType.State state = (WildcardType.State) o;
+			if (!annotations.equals(state.annotations))
+				return false;
+			if (!ext.equals(state.ext))
+				return false;
+			if (!sup.equals(state.sup))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + annotations.hashCode();
+			result = 37 * result + ext.hashCode();
+			result = 37 * result + sup.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<WildcardType.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<WildcardType.State, SNodeListState, NodeList<AnnotationExpr>>() {

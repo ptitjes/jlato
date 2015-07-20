@@ -57,6 +57,21 @@ public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends 
 		return (T) this;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		TreeBase<?, ?, ?> treeBase = (TreeBase<?, ?, ?>) o;
+
+		return location.tree.equals(treeBase.location.tree);
+	}
+
+	@Override
+	public int hashCode() {
+		return location.tree.hashCode();
+	}
+
 	// Combinators
 
 	public <U extends Tree> T forAll(TypeSafeMatcher<U> matcher, MatchVisitor<U> visitor) {

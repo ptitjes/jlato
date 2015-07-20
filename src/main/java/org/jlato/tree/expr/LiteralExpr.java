@@ -139,6 +139,28 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 		public STraversal lastChild() {
 			return null;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			LiteralExpr.State state = (LiteralExpr.State) o;
+			if (!literalClass.equals(state.literalClass))
+				return false;
+			if (!literalString.equals(state.literalString))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + literalClass.hashCode();
+			result = 37 * result + literalString.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeProperty<LiteralExpr.State, Class<?>> LITERAL_CLASS = new STypeSafeProperty<LiteralExpr.State, Class<?>>() {

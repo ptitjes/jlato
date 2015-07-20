@@ -120,6 +120,28 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 		public STraversal lastChild() {
 			return STMT;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			LabeledStmt.State state = (LabeledStmt.State) o;
+			if (!label.equals(state.label))
+				return false;
+			if (!stmt.equals(state.stmt))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + label.hashCode();
+			result = 37 * result + stmt.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<LabeledStmt.State, Name.State, Name> LABEL = new STypeSafeTraversal<LabeledStmt.State, Name.State, Name>() {

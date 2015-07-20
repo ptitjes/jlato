@@ -136,6 +136,28 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 		public STraversal lastChild() {
 			return NAME;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			QualifiedName.State state = (QualifiedName.State) o;
+			if (!qualifier.equals(state.qualifier))
+				return false;
+			if (!name.equals(state.name))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + qualifier.hashCode();
+			result = 37 * result + name.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<QualifiedName.State, SNodeOptionState, NodeOption<QualifiedName>> QUALIFIER = new STypeSafeTraversal<QualifiedName.State, SNodeOptionState, NodeOption<QualifiedName>>() {

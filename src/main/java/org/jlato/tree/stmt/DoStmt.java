@@ -116,6 +116,28 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 		public STraversal lastChild() {
 			return CONDITION;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			DoStmt.State state = (DoStmt.State) o;
+			if (!body.equals(state.body))
+				return false;
+			if (!condition.equals(state.condition))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + body.hashCode();
+			result = 37 * result + condition.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<DoStmt.State, Stmt.State, Stmt> BODY = new STypeSafeTraversal<DoStmt.State, Stmt.State, Stmt>() {

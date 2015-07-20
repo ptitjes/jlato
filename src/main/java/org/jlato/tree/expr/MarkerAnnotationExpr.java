@@ -96,6 +96,25 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 		public STraversal lastChild() {
 			return NAME;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			MarkerAnnotationExpr.State state = (MarkerAnnotationExpr.State) o;
+			if (!name.equals(state.name))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + name.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<MarkerAnnotationExpr.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<MarkerAnnotationExpr.State, QualifiedName.State, QualifiedName>() {

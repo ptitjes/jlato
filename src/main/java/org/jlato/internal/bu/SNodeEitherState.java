@@ -98,6 +98,25 @@ public class SNodeEitherState implements STreeState {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		SNodeEitherState that = (SNodeEitherState) o;
+
+		if (!element.equals(that.element)) return false;
+		return side == that.side;
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = element.hashCode();
+		result = 31 * result + side.hashCode();
+		return result;
+	}
+
+	@Override
 	public void validate(STree<?> tree) {
 		if (element != null) element.validate();
 	}

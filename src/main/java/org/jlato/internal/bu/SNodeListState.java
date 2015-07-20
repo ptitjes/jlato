@@ -99,6 +99,22 @@ public class SNodeListState implements STreeState {
 		return new SNodeListState(children);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		SNodeListState that = (SNodeListState) o;
+
+		return children.equals(that.children);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return children.hashCode();
+	}
+
 	public static class ElementTraversal extends STypeSafeTraversal<SNodeListState, STreeState, Tree> {
 
 		private final int index;

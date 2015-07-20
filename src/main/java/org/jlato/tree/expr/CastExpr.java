@@ -116,6 +116,28 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 		public STraversal lastChild() {
 			return EXPR;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			CastExpr.State state = (CastExpr.State) o;
+			if (!type.equals(state.type))
+				return false;
+			if (!expr.equals(state.expr))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + type.hashCode();
+			result = 37 * result + expr.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<CastExpr.State, Type.State, Type> TYPE = new STypeSafeTraversal<CastExpr.State, Type.State, Type>() {

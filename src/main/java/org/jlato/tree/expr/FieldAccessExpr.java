@@ -118,6 +118,28 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 		public STraversal lastChild() {
 			return NAME;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			FieldAccessExpr.State state = (FieldAccessExpr.State) o;
+			if (!scope.equals(state.scope))
+				return false;
+			if (!name.equals(state.name))
+				return false;
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 17;
+			result = 37 * result + scope.hashCode();
+			result = 37 * result + name.hashCode();
+			return result;
+		}
 	}
 
 	private static STypeSafeTraversal<FieldAccessExpr.State, SNodeOptionState, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<FieldAccessExpr.State, SNodeOptionState, NodeOption<Expr>>() {

@@ -76,6 +76,22 @@ public class SNodeOptionState implements STreeState {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		SNodeOptionState that = (SNodeOptionState) o;
+
+		return !(element != null ? !element.equals(that.element) : that.element != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return element != null ? element.hashCode() : 0;
+	}
+
+	@Override
 	public void validate(STree<?> tree) {
 		if (element != null) element.validate();
 	}
