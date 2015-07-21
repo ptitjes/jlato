@@ -19,8 +19,7 @@
 
 package org.jlato.integration.utils;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -80,6 +79,20 @@ public class WGet {
 			if (!quiet) System.out.println("Redirect to URL : " + newUrl);
 		}
 
-		Files.copy(conn.getInputStream(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		copy(conn.getInputStream(), file);
+	}
+
+	private static void copy(InputStream inputStream, File file) throws IOException {
+		final FileOutputStream outputStream = new FileOutputStream(file);
+		copy(inputStream, outputStream);
+	}
+
+	private static void copy(InputStream inputStream, OutputStream outputStream)
+			throws IOException {
+		byte[] buffer = new byte[1024];
+		int length = 0;
+		while ((length = inputStream.read(buffer)) != -1) {
+			outputStream.write(buffer, 0, length);
+		}
 	}
 }
