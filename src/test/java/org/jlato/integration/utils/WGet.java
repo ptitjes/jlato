@@ -22,8 +22,6 @@ package org.jlato.integration.utils;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
 /**
  * @author Didier Villevalois
