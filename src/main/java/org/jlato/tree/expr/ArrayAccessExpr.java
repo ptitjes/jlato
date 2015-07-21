@@ -44,7 +44,7 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 	}
 
 	public ArrayAccessExpr(Expr name, Expr index) {
-		super(new SLocation<ArrayAccessExpr.State>(make(TreeBase.<Expr.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(index))));
+		super(new SLocation<ArrayAccessExpr.State>(make(TreeBase.<Expr.State>treeOf(name), TreeBase.<Expr.State>treeOf(index))));
 	}
 
 	public Expr name() {

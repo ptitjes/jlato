@@ -50,7 +50,7 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 	}
 
 	public CompilationUnit(IndexedList<WTokenRun> preamble, PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
-		super(new SLocation<CompilationUnit.State>(make(preamble, TreeBase.<PackageDecl.State>nodeOf(packageDecl), TreeBase.<SNodeListState>nodeOf(imports), TreeBase.<SNodeListState>nodeOf(types))));
+		super(new SLocation<CompilationUnit.State>(make(preamble, TreeBase.<PackageDecl.State>treeOf(packageDecl), TreeBase.<SNodeListState>treeOf(imports), TreeBase.<SNodeListState>treeOf(types))));
 	}
 
 	public PackageDecl packageDecl() {

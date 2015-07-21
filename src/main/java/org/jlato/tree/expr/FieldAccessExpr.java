@@ -48,7 +48,7 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 	}
 
 	public FieldAccessExpr(NodeOption<Expr> scope, Name name) {
-		super(new SLocation<FieldAccessExpr.State>(make(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<Name.State>nodeOf(name))));
+		super(new SLocation<FieldAccessExpr.State>(make(TreeBase.<SNodeOptionState>treeOf(scope), TreeBase.<Name.State>treeOf(name))));
 	}
 
 	public NodeOption<Expr> scope() {

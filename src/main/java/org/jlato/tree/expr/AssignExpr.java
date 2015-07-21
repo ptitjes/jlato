@@ -46,7 +46,7 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 	}
 
 	public AssignExpr(Expr target, AssignOp op, Expr value) {
-		super(new SLocation<AssignExpr.State>(make(TreeBase.<Expr.State>nodeOf(target), op, TreeBase.<Expr.State>nodeOf(value))));
+		super(new SLocation<AssignExpr.State>(make(TreeBase.<Expr.State>treeOf(target), op, TreeBase.<Expr.State>treeOf(value))));
 	}
 
 	public Expr target() {

@@ -46,7 +46,7 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 	}
 
 	public UnionType(NodeList<Type> types) {
-		super(new SLocation<UnionType.State>(make(TreeBase.<SNodeListState>nodeOf(types))));
+		super(new SLocation<UnionType.State>(make(TreeBase.<SNodeListState>treeOf(types))));
 	}
 
 	public NodeList<Type> types() {

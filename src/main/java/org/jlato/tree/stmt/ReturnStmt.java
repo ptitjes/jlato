@@ -48,7 +48,7 @@ public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> imp
 	}
 
 	public ReturnStmt(NodeOption<Expr> expr) {
-		super(new SLocation<ReturnStmt.State>(make(TreeBase.<SNodeOptionState>nodeOf(expr))));
+		super(new SLocation<ReturnStmt.State>(make(TreeBase.<SNodeOptionState>treeOf(expr))));
 	}
 
 	public NodeOption<Expr> expr() {

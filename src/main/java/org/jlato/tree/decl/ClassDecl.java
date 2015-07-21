@@ -47,7 +47,7 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	}
 
 	public ClassDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<TypeParameter> typeParams, NodeOption<QualifiedType> extendsClause, NodeList<QualifiedType> implementsClause, NodeList<MemberDecl> members) {
-		super(new SLocation<ClassDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(typeParams), TreeBase.<SNodeOptionState>nodeOf(extendsClause), TreeBase.<SNodeListState>nodeOf(implementsClause), TreeBase.<SNodeListState>nodeOf(members))));
+		super(new SLocation<ClassDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeListState>treeOf(typeParams), TreeBase.<SNodeOptionState>treeOf(extendsClause), TreeBase.<SNodeListState>treeOf(implementsClause), TreeBase.<SNodeListState>treeOf(members))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

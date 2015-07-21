@@ -45,7 +45,7 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 	}
 
 	public ExpressionStmt(Expr expr) {
-		super(new SLocation<ExpressionStmt.State>(make(TreeBase.<Expr.State>nodeOf(expr))));
+		super(new SLocation<ExpressionStmt.State>(make(TreeBase.<Expr.State>treeOf(expr))));
 	}
 
 	public Expr expr() {

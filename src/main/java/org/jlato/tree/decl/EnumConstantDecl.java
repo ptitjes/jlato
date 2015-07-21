@@ -48,7 +48,7 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 	}
 
 	public EnumConstantDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeOption<NodeList<Expr>> args, NodeOption<NodeList<MemberDecl>> classBody) {
-		super(new SLocation<EnumConstantDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeOptionState>nodeOf(args), TreeBase.<SNodeOptionState>nodeOf(classBody))));
+		super(new SLocation<EnumConstantDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeOptionState>treeOf(args), TreeBase.<SNodeOptionState>treeOf(classBody))));
 	}
 
 	@Override

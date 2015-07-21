@@ -19,7 +19,6 @@
 
 package org.jlato.internal.td;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.STree;
@@ -113,48 +112,14 @@ public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends 
 	// Convenience conversion helper methods
 	// TODO Move that elsewhere
 
-	public static SLocation<? extends STreeState> locationOf(Tree facade) {
-		return facade == null ? null : ((TreeBase<?, ?, ?>) facade).location;
-	}
-
-	public static STree<? extends STreeState> treeOf(Tree facade) {
-		return facade == null ? null : ((TreeBase<?, ?, ?>) facade).location.tree;
-	}
-
 	@SuppressWarnings("unchecked")
-	public static <S extends STreeState> STree<S> nodeOf(Tree facade) {
-		return facade == null ? null : ((TreeBase<S, ?, ?>) facade).location.tree;
-	}
-/*
-
-	@SuppressWarnings("unchecked")
-	public static STree<SNodeOptionState> nodeOf(NodeOption facade) {
-		return facade == null ? null : ((TreeBase<SNodeOptionState, ?, ?>) facade).location.tree;
-	}
-*/
-
-	public static ArrayList<STree<? extends STreeState>> treesOf(Tree... facades) {
-		final Builder<STree<?>, ArrayList<STree<?>>> builder = ArrayList.<STree<?>>factory().newBuilder();
-		for (Tree facade : facades) {
-			builder.add(treeOf(facade));
-		}
-		return builder.build();
+	public static <S extends STreeState> SLocation<S> locationOf(Tree facade) {
+		return facade == null ? null : ((TreeBase<S, ?, ?>) facade).location;
 	}
 
-	public static ArrayList<STree<? extends STreeState>> arrayOf(STree<?>... trees) {
-		final Builder<STree<?>, ArrayList<STree<?>>> builder = ArrayList.<STree<?>>factory().newBuilder();
-		for (STree<?> tree : trees) {
-			builder.add(tree);
-		}
-		return builder.build();
-	}
-
-	public static ArrayList<Object> dataOf(Object... attributes) {
-		final Builder<Object, ArrayList<Object>> builder = ArrayList.factory().newBuilder();
-		for (Object attribute : attributes) {
-			builder.add(attribute);
-		}
-		return builder.build();
+	public static <S extends STreeState> STree<S> treeOf(Tree facade) {
+		final SLocation<S> location = TreeBase.<S>locationOf(facade);
+		return location == null ? null : location.tree;
 	}
 
 	public static Vector<STree<? extends STreeState>> treeListOf(Tree... facades) {

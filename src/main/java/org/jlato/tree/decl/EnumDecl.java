@@ -53,7 +53,7 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	}
 
 	public EnumDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, boolean trailingComma, NodeList<MemberDecl> members) {
-		super(new SLocation<EnumDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(implementsClause), TreeBase.<SNodeListState>nodeOf(enumConstants), trailingComma, TreeBase.<SNodeListState>nodeOf(members))));
+		super(new SLocation<EnumDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeListState>treeOf(implementsClause), TreeBase.<SNodeListState>treeOf(enumConstants), trailingComma, TreeBase.<SNodeListState>treeOf(members))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

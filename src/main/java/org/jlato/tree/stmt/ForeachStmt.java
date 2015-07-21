@@ -47,7 +47,7 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 	}
 
 	public ForeachStmt(VariableDeclarationExpr var, Expr iterable, Stmt body) {
-		super(new SLocation<ForeachStmt.State>(make(TreeBase.<VariableDeclarationExpr.State>nodeOf(var), TreeBase.<Expr.State>nodeOf(iterable), TreeBase.<Stmt.State>nodeOf(body))));
+		super(new SLocation<ForeachStmt.State>(make(TreeBase.<VariableDeclarationExpr.State>treeOf(var), TreeBase.<Expr.State>treeOf(iterable), TreeBase.<Stmt.State>treeOf(body))));
 	}
 
 	public VariableDeclarationExpr var() {

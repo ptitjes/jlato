@@ -49,7 +49,7 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 	}
 
 	public SwitchCase(NodeOption<Expr> label, NodeList<Stmt> stmts) {
-		super(new SLocation<SwitchCase.State>(make(TreeBase.<SNodeOptionState>nodeOf(label), TreeBase.<SNodeListState>nodeOf(stmts))));
+		super(new SLocation<SwitchCase.State>(make(TreeBase.<SNodeOptionState>treeOf(label), TreeBase.<SNodeListState>treeOf(stmts))));
 	}
 
 	public NodeOption<Expr> label() {

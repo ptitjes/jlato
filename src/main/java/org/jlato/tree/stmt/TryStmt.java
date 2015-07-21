@@ -46,7 +46,7 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 	}
 
 	public TryStmt(NodeList<VariableDeclarationExpr> resources, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
-		super(new SLocation<TryStmt.State>(make(TreeBase.<SNodeListState>nodeOf(resources), TreeBase.<BlockStmt.State>nodeOf(tryBlock), TreeBase.<SNodeListState>nodeOf(catchs), TreeBase.<SNodeOptionState>nodeOf(finallyBlock))));
+		super(new SLocation<TryStmt.State>(make(TreeBase.<SNodeListState>treeOf(resources), TreeBase.<BlockStmt.State>treeOf(tryBlock), TreeBase.<SNodeListState>treeOf(catchs), TreeBase.<SNodeOptionState>treeOf(finallyBlock))));
 	}
 
 	public NodeList<VariableDeclarationExpr> resources() {

@@ -48,7 +48,7 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 	}
 
 	public ObjectCreationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeOption<NodeList<MemberDecl>> body) {
-		super(new SLocation<ObjectCreationExpr.State>(make(TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<QualifiedType.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(args), TreeBase.<SNodeOptionState>nodeOf(body))));
+		super(new SLocation<ObjectCreationExpr.State>(make(TreeBase.<SNodeOptionState>treeOf(scope), TreeBase.<SNodeListState>treeOf(typeArgs), TreeBase.<QualifiedType.State>treeOf(type), TreeBase.<SNodeListState>treeOf(args), TreeBase.<SNodeOptionState>treeOf(body))));
 	}
 
 	public NodeOption<Expr> scope() {

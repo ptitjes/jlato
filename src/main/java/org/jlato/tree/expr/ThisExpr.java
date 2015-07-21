@@ -47,7 +47,7 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 	}
 
 	public ThisExpr(NodeOption<Expr> classExpr) {
-		super(new SLocation<ThisExpr.State>(make(TreeBase.<SNodeOptionState>nodeOf(classExpr))));
+		super(new SLocation<ThisExpr.State>(make(TreeBase.<SNodeOptionState>treeOf(classExpr))));
 	}
 
 	public NodeOption<Expr> classExpr() {

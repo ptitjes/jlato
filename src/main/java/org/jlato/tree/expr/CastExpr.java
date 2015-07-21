@@ -46,7 +46,7 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 	}
 
 	public CastExpr(Type type, Expr expr) {
-		super(new SLocation<CastExpr.State>(make(TreeBase.<Type.State>nodeOf(type), TreeBase.<Expr.State>nodeOf(expr))));
+		super(new SLocation<CastExpr.State>(make(TreeBase.<Type.State>treeOf(type), TreeBase.<Expr.State>treeOf(expr))));
 	}
 
 	public Type type() {

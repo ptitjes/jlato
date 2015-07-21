@@ -45,7 +45,7 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 	}
 
 	public InstanceOfExpr(Expr expr, Type type) {
-		super(new SLocation<InstanceOfExpr.State>(make(TreeBase.<Expr.State>nodeOf(expr), TreeBase.<Type.State>nodeOf(type))));
+		super(new SLocation<InstanceOfExpr.State>(make(TreeBase.<Expr.State>treeOf(expr), TreeBase.<Type.State>treeOf(type))));
 	}
 
 	public Expr expr() {

@@ -46,7 +46,7 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 	}
 
 	public UnaryExpr(UnaryOp op, Expr expr) {
-		super(new SLocation<UnaryExpr.State>(make(op, TreeBase.<Expr.State>nodeOf(expr))));
+		super(new SLocation<UnaryExpr.State>(make(op, TreeBase.<Expr.State>treeOf(expr))));
 	}
 
 	public UnaryOp op() {

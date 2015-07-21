@@ -48,7 +48,7 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 	}
 
 	public BreakStmt(NodeOption<Name> id) {
-		super(new SLocation<BreakStmt.State>(make(TreeBase.<SNodeOptionState>nodeOf(id))));
+		super(new SLocation<BreakStmt.State>(make(TreeBase.<SNodeOptionState>treeOf(id))));
 	}
 
 	public NodeOption<Name> id() {

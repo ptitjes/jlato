@@ -46,7 +46,7 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 	}
 
 	public WhileStmt(Expr condition, Stmt body) {
-		super(new SLocation<WhileStmt.State>(make(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Stmt.State>nodeOf(body))));
+		super(new SLocation<WhileStmt.State>(make(TreeBase.<Expr.State>treeOf(condition), TreeBase.<Stmt.State>treeOf(body))));
 	}
 
 	public Expr condition() {

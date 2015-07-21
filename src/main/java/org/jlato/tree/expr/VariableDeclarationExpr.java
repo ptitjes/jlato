@@ -50,7 +50,7 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 	}
 
 	public VariableDeclarationExpr(LocalVariableDecl declaration) {
-		super(new SLocation<VariableDeclarationExpr.State>(make(TreeBase.<LocalVariableDecl.State>nodeOf(declaration))));
+		super(new SLocation<VariableDeclarationExpr.State>(make(TreeBase.<LocalVariableDecl.State>treeOf(declaration))));
 	}
 
 	public LocalVariableDecl declaration() {

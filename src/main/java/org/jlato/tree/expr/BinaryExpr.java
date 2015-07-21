@@ -46,7 +46,7 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 	}
 
 	public BinaryExpr(Expr left, BinaryOp op, Expr right) {
-		super(new SLocation<BinaryExpr.State>(make(TreeBase.<Expr.State>nodeOf(left), op, TreeBase.<Expr.State>nodeOf(right))));
+		super(new SLocation<BinaryExpr.State>(make(TreeBase.<Expr.State>treeOf(left), op, TreeBase.<Expr.State>treeOf(right))));
 	}
 
 	public Expr left() {

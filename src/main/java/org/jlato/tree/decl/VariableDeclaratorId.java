@@ -46,7 +46,7 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 	}
 
 	public VariableDeclaratorId(Name name, NodeList<ArrayDim> dims) {
-		super(new SLocation<VariableDeclaratorId.State>(make(TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(dims))));
+		super(new SLocation<VariableDeclaratorId.State>(make(TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeListState>treeOf(dims))));
 	}
 
 	public Name name() {

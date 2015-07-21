@@ -49,7 +49,7 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 	}
 
 	public BlockStmt(NodeList<Stmt> stmts) {
-		super(new SLocation<BlockStmt.State>(make(TreeBase.<SNodeListState>nodeOf(stmts))));
+		super(new SLocation<BlockStmt.State>(make(TreeBase.<SNodeListState>treeOf(stmts))));
 	}
 
 	public NodeList<Stmt> stmts() {

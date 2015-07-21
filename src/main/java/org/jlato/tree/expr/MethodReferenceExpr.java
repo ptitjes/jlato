@@ -47,7 +47,7 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 	}
 
 	public MethodReferenceExpr(Expr scope, NodeList<Type> typeArgs, Name name) {
-		super(new SLocation<MethodReferenceExpr.State>(make(TreeBase.<Expr.State>nodeOf(scope), TreeBase.<SNodeListState>nodeOf(typeArgs), TreeBase.<Name.State>nodeOf(name))));
+		super(new SLocation<MethodReferenceExpr.State>(make(TreeBase.<Expr.State>treeOf(scope), TreeBase.<SNodeListState>treeOf(typeArgs), TreeBase.<Name.State>treeOf(name))));
 	}
 
 	public Expr scope() {

@@ -48,7 +48,7 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 	}
 
 	public ImportDecl(QualifiedName name, boolean isStatic, boolean isOnDemand) {
-		super(new SLocation<ImportDecl.State>(make(TreeBase.<QualifiedName.State>nodeOf(name), isStatic, isOnDemand)));
+		super(new SLocation<ImportDecl.State>(make(TreeBase.<QualifiedName.State>treeOf(name), isStatic, isOnDemand)));
 	}
 
 	public QualifiedName name() {

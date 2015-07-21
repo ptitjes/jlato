@@ -45,7 +45,7 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 	}
 
 	public ConditionalExpr(Expr condition, Expr thenExpr, Expr elseExpr) {
-		super(new SLocation<ConditionalExpr.State>(make(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Expr.State>nodeOf(thenExpr), TreeBase.<Expr.State>nodeOf(elseExpr))));
+		super(new SLocation<ConditionalExpr.State>(make(TreeBase.<Expr.State>treeOf(condition), TreeBase.<Expr.State>treeOf(thenExpr), TreeBase.<Expr.State>treeOf(elseExpr))));
 	}
 
 	public Expr condition() {

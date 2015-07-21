@@ -49,7 +49,7 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 	}
 
 	public MethodDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, NodeOption<BlockStmt> body) {
-		super(new SLocation<MethodDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<SNodeListState>nodeOf(typeParams), TreeBase.<Type.State>nodeOf(type), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(params), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeListState>nodeOf(throwsClause), TreeBase.<SNodeOptionState>nodeOf(body))));
+		super(new SLocation<MethodDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<SNodeListState>treeOf(typeParams), TreeBase.<Type.State>treeOf(type), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeListState>treeOf(params), TreeBase.<SNodeListState>treeOf(dims), TreeBase.<SNodeListState>treeOf(throwsClause), TreeBase.<SNodeOptionState>treeOf(body))));
 	}
 
 	@Override

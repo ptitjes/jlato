@@ -50,7 +50,7 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 	}
 
 	public FormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		super(new SLocation<FormalParameter.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), isVarArgs, TreeBase.<VariableDeclaratorId.State>nodeOf(id))));
+		super(new SLocation<FormalParameter.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<Type.State>treeOf(type), isVarArgs, TreeBase.<VariableDeclaratorId.State>treeOf(id))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

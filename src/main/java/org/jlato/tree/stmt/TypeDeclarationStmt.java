@@ -46,7 +46,7 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 	}
 
 	public TypeDeclarationStmt(TypeDecl typeDecl) {
-		super(new SLocation<TypeDeclarationStmt.State>(make(TreeBase.<TypeDecl.State>nodeOf(typeDecl))));
+		super(new SLocation<TypeDeclarationStmt.State>(make(TreeBase.<TypeDecl.State>treeOf(typeDecl))));
 	}
 
 	public TypeDecl typeDecl() {

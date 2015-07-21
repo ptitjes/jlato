@@ -49,7 +49,7 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 	}
 
 	public TypeParameter(NodeList<AnnotationExpr> annotations, Name name, NodeList<Type> bounds) {
-		super(new SLocation<TypeParameter.State>(make(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(bounds))));
+		super(new SLocation<TypeParameter.State>(make(TreeBase.<SNodeListState>treeOf(annotations), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeListState>treeOf(bounds))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

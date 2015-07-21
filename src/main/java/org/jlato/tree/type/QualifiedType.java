@@ -46,7 +46,7 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 	}
 
 	public QualifiedType(NodeList<AnnotationExpr> annotations, NodeOption<QualifiedType> scope, Name name, NodeOption<NodeList<Type>> typeArgs) {
-		super(new SLocation<QualifiedType.State>(make(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<SNodeOptionState>nodeOf(scope), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeOptionState>nodeOf(typeArgs))));
+		super(new SLocation<QualifiedType.State>(make(TreeBase.<SNodeListState>treeOf(annotations), TreeBase.<SNodeOptionState>treeOf(scope), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeOptionState>treeOf(typeArgs))));
 	}
 
 	public NodeOption<QualifiedType> scope() {

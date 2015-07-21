@@ -46,7 +46,7 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 	}
 
 	public CatchClause(FormalParameter except, BlockStmt catchBlock) {
-		super(new SLocation<CatchClause.State>(make(TreeBase.<FormalParameter.State>nodeOf(except), TreeBase.<BlockStmt.State>nodeOf(catchBlock))));
+		super(new SLocation<CatchClause.State>(make(TreeBase.<FormalParameter.State>treeOf(except), TreeBase.<BlockStmt.State>treeOf(catchBlock))));
 	}
 
 	public FormalParameter except() {

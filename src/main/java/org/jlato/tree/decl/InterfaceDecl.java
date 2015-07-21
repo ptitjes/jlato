@@ -47,7 +47,7 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 	}
 
 	public InterfaceDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<TypeParameter> typeParams, NodeList<QualifiedType> extendsClause, NodeList<MemberDecl> members) {
-		super(new SLocation<InterfaceDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(typeParams), TreeBase.<SNodeListState>nodeOf(extendsClause), TreeBase.<SNodeListState>nodeOf(members))));
+		super(new SLocation<InterfaceDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeListState>treeOf(typeParams), TreeBase.<SNodeListState>treeOf(extendsClause), TreeBase.<SNodeListState>treeOf(members))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

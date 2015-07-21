@@ -47,7 +47,7 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 	}
 
 	public ArrayDim(NodeList<AnnotationExpr> annotations) {
-		super(new SLocation<ArrayDim.State>(make(TreeBase.<SNodeListState>nodeOf(annotations))));
+		super(new SLocation<ArrayDim.State>(make(TreeBase.<SNodeListState>treeOf(annotations))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

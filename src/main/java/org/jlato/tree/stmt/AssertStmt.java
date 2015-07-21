@@ -49,7 +49,7 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 	}
 
 	public AssertStmt(Expr check, NodeOption<Expr> msg) {
-		super(new SLocation<AssertStmt.State>(make(TreeBase.<Expr.State>nodeOf(check), TreeBase.<SNodeOptionState>nodeOf(msg))));
+		super(new SLocation<AssertStmt.State>(make(TreeBase.<Expr.State>treeOf(check), TreeBase.<SNodeOptionState>treeOf(msg))));
 	}
 
 	public Expr check() {

@@ -47,7 +47,7 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 	}
 
 	public NormalAnnotationExpr(QualifiedName name, NodeList<MemberValuePair> pairs) {
-		super(new SLocation<NormalAnnotationExpr.State>(make(TreeBase.<QualifiedName.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(pairs))));
+		super(new SLocation<NormalAnnotationExpr.State>(make(TreeBase.<QualifiedName.State>treeOf(name), TreeBase.<SNodeListState>treeOf(pairs))));
 	}
 
 	public QualifiedName name() {

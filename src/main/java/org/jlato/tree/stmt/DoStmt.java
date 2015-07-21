@@ -46,7 +46,7 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 	}
 
 	public DoStmt(Stmt body, Expr condition) {
-		super(new SLocation<DoStmt.State>(make(TreeBase.<Stmt.State>nodeOf(body), TreeBase.<Expr.State>nodeOf(condition))));
+		super(new SLocation<DoStmt.State>(make(TreeBase.<Stmt.State>treeOf(body), TreeBase.<Expr.State>treeOf(condition))));
 	}
 
 	public Stmt body() {

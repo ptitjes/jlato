@@ -47,7 +47,7 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 	}
 
 	public FieldDecl(NodeList<ExtendedModifier> modifiers, Type type, NodeList<VariableDeclarator> variables/*, JavadocComment javadocComment*/) {
-		super(new SLocation<FieldDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(variables))));
+		super(new SLocation<FieldDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<Type.State>treeOf(type), TreeBase.<SNodeListState>treeOf(variables))));
 	}
 
 	@Override

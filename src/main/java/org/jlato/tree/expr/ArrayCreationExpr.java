@@ -47,7 +47,7 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 	}
 
 	public ArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> init) {
-		super(new SLocation<ArrayCreationExpr.State>(make(TreeBase.<Type.State>nodeOf(type), TreeBase.<SNodeListState>nodeOf(dimExprs), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeOptionState>nodeOf(init))));
+		super(new SLocation<ArrayCreationExpr.State>(make(TreeBase.<Type.State>treeOf(type), TreeBase.<SNodeListState>treeOf(dimExprs), TreeBase.<SNodeListState>treeOf(dims), TreeBase.<SNodeOptionState>treeOf(init))));
 	}
 
 	public Type type() {

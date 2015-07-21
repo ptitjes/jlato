@@ -55,7 +55,7 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 	}
 
 	public QualifiedName(NodeOption<QualifiedName> qualifier, Name name) {
-		super(new SLocation<QualifiedName.State>(make(TreeBase.<SNodeOptionState>nodeOf(qualifier), TreeBase.<Name.State>nodeOf(name))));
+		super(new SLocation<QualifiedName.State>(make(TreeBase.<SNodeOptionState>treeOf(qualifier), TreeBase.<Name.State>treeOf(name))));
 	}
 
 	public NodeOption<QualifiedName> qualifier() {

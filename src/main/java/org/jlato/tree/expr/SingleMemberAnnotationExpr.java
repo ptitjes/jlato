@@ -45,7 +45,7 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 	}
 
 	public SingleMemberAnnotationExpr(QualifiedName name, Expr memberValue) {
-		super(new SLocation<SingleMemberAnnotationExpr.State>(make(TreeBase.<QualifiedName.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(memberValue))));
+		super(new SLocation<SingleMemberAnnotationExpr.State>(make(TreeBase.<QualifiedName.State>treeOf(name), TreeBase.<Expr.State>treeOf(memberValue))));
 	}
 
 	public QualifiedName name() {

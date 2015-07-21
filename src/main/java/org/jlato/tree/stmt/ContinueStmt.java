@@ -48,7 +48,7 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 	}
 
 	public ContinueStmt(NodeOption<Name> id) {
-		super(new SLocation<ContinueStmt.State>(make(TreeBase.<SNodeOptionState>nodeOf(id))));
+		super(new SLocation<ContinueStmt.State>(make(TreeBase.<SNodeOptionState>treeOf(id))));
 	}
 
 	public NodeOption<Name> id() {

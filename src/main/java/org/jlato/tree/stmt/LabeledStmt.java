@@ -50,7 +50,7 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 	}
 
 	public LabeledStmt(Name label, Stmt stmt) {
-		super(new SLocation<LabeledStmt.State>(make(TreeBase.<Name.State>nodeOf(label), TreeBase.<Stmt.State>nodeOf(stmt))));
+		super(new SLocation<LabeledStmt.State>(make(TreeBase.<Name.State>treeOf(label), TreeBase.<Stmt.State>treeOf(stmt))));
 	}
 
 	public Name label() {

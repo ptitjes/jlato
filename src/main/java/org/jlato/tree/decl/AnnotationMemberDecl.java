@@ -46,7 +46,7 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 	}
 
 	public AnnotationMemberDecl(NodeList<ExtendedModifier> modifiers, Type type, Name name, NodeList<ArrayDim> dims, NodeOption<Expr> defaultValue) {
-		super(new SLocation<AnnotationMemberDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Type.State>nodeOf(type), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(dims), TreeBase.<SNodeOptionState>nodeOf(defaultValue))));
+		super(new SLocation<AnnotationMemberDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<Type.State>treeOf(type), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeListState>treeOf(dims), TreeBase.<SNodeOptionState>treeOf(defaultValue))));
 	}
 
 	@Override

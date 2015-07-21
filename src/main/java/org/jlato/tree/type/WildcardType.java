@@ -46,7 +46,7 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 	}
 
 	public WildcardType(NodeList<AnnotationExpr> annotations, NodeOption<ReferenceType> ext, NodeOption<ReferenceType> sup) {
-		super(new SLocation<WildcardType.State>(make(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<SNodeOptionState>nodeOf(ext), TreeBase.<SNodeOptionState>nodeOf(sup))));
+		super(new SLocation<WildcardType.State>(make(TreeBase.<SNodeListState>treeOf(annotations), TreeBase.<SNodeOptionState>treeOf(ext), TreeBase.<SNodeOptionState>treeOf(sup))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

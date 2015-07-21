@@ -47,7 +47,7 @@ public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implem
 	}
 
 	public SuperExpr(NodeOption<Expr> classExpr) {
-		super(new SLocation<SuperExpr.State>(make(TreeBase.<SNodeOptionState>nodeOf(classExpr))));
+		super(new SLocation<SuperExpr.State>(make(TreeBase.<SNodeOptionState>treeOf(classExpr))));
 	}
 
 	public NodeOption<Expr> classExpr() {

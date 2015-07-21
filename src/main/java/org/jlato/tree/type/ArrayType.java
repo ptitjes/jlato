@@ -28,7 +28,6 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ArrayDim;
-import org.jlato.tree.decl.VariableDeclaratorId;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
@@ -47,7 +46,7 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 	}
 
 	public ArrayType(Type componentType, NodeList<ArrayDim> dims) {
-		super(new SLocation<ArrayType.State>(make(TreeBase.<Type.State>nodeOf(componentType), TreeBase.<SNodeListState>nodeOf(dims))));
+		super(new SLocation<ArrayType.State>(make(TreeBase.<Type.State>treeOf(componentType), TreeBase.<SNodeListState>treeOf(dims))));
 	}
 
 	public Type componentType() {

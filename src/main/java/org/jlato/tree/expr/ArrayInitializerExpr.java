@@ -46,7 +46,7 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 	}
 
 	public ArrayInitializerExpr(NodeList<Expr> values) {
-		super(new SLocation<ArrayInitializerExpr.State>(make(TreeBase.<SNodeListState>nodeOf(values))));
+		super(new SLocation<ArrayInitializerExpr.State>(make(TreeBase.<SNodeListState>treeOf(values))));
 	}
 
 	public NodeList<Expr> values() {

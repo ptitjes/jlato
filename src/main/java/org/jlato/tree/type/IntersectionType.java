@@ -46,7 +46,7 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 	}
 
 	public IntersectionType(NodeList<Type> types) {
-		super(new SLocation<IntersectionType.State>(make(TreeBase.<SNodeListState>nodeOf(types))));
+		super(new SLocation<IntersectionType.State>(make(TreeBase.<SNodeListState>treeOf(types))));
 	}
 
 	public NodeList<Type> types() {

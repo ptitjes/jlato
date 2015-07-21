@@ -45,7 +45,7 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 	}
 
 	public MemberValuePair(Name name, Expr value) {
-		super(new SLocation<MemberValuePair.State>(make(TreeBase.<Name.State>nodeOf(name), TreeBase.<Expr.State>nodeOf(value))));
+		super(new SLocation<MemberValuePair.State>(make(TreeBase.<Name.State>treeOf(name), TreeBase.<Expr.State>treeOf(value))));
 	}
 
 	public Name name() {

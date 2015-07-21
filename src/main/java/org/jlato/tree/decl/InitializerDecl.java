@@ -47,7 +47,7 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 	}
 
 	public InitializerDecl(NodeList<ExtendedModifier> modifiers, BlockStmt body/*, JavadocComment javadocComment*/) {
-		super(new SLocation<InitializerDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<BlockStmt.State>nodeOf(body))));
+		super(new SLocation<InitializerDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<BlockStmt.State>treeOf(body))));
 	}
 
 	@Override

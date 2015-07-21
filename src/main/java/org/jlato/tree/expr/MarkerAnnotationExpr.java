@@ -45,7 +45,7 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 	}
 
 	public MarkerAnnotationExpr(QualifiedName name) {
-		super(new SLocation<MarkerAnnotationExpr.State>(make(TreeBase.<QualifiedName.State>nodeOf(name))));
+		super(new SLocation<MarkerAnnotationExpr.State>(make(TreeBase.<QualifiedName.State>treeOf(name))));
 	}
 
 	public QualifiedName name() {

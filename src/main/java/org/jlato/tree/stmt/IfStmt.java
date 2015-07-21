@@ -53,7 +53,7 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 	}
 
 	public IfStmt(Expr condition, Stmt thenStmt, NodeOption<Stmt> elseStmt) {
-		super(new SLocation<IfStmt.State>(make(TreeBase.<Expr.State>nodeOf(condition), TreeBase.<Stmt.State>nodeOf(thenStmt), TreeBase.<SNodeOptionState>nodeOf(elseStmt))));
+		super(new SLocation<IfStmt.State>(make(TreeBase.<Expr.State>treeOf(condition), TreeBase.<Stmt.State>treeOf(thenStmt), TreeBase.<SNodeOptionState>treeOf(elseStmt))));
 	}
 
 	public Expr condition() {

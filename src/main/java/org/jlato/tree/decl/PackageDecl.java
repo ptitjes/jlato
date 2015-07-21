@@ -47,7 +47,7 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 	}
 
 	public PackageDecl(NodeList<AnnotationExpr> annotations, QualifiedName name) {
-		super(new SLocation<PackageDecl.State>(make(TreeBase.<SNodeListState>nodeOf(annotations), TreeBase.<QualifiedName.State>nodeOf(name))));
+		super(new SLocation<PackageDecl.State>(make(TreeBase.<SNodeListState>treeOf(annotations), TreeBase.<QualifiedName.State>treeOf(name))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

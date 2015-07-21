@@ -47,7 +47,7 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 	}
 
 	public PrimitiveType(NodeList<AnnotationExpr> annotations, Primitive primitive) {
-		super(new SLocation<PrimitiveType.State>(make(TreeBase.<SNodeListState>nodeOf(annotations), primitive)));
+		super(new SLocation<PrimitiveType.State>(make(TreeBase.<SNodeListState>treeOf(annotations), primitive)));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

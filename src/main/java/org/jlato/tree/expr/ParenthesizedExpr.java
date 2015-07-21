@@ -44,7 +44,7 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 	}
 
 	public ParenthesizedExpr(Expr inner) {
-		super(new SLocation<ParenthesizedExpr.State>(make(TreeBase.<Expr.State>nodeOf(inner))));
+		super(new SLocation<ParenthesizedExpr.State>(make(TreeBase.<Expr.State>treeOf(inner))));
 	}
 
 	public Expr inner() {

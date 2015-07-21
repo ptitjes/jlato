@@ -47,7 +47,7 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 	}
 
 	public ForStmt(NodeList<Expr> init, Expr compare, NodeList<Expr> update, Stmt body) {
-		super(new SLocation<ForStmt.State>(make(TreeBase.<SNodeListState>nodeOf(init), TreeBase.<Expr.State>nodeOf(compare), TreeBase.<SNodeListState>nodeOf(update), TreeBase.<Stmt.State>nodeOf(body))));
+		super(new SLocation<ForStmt.State>(make(TreeBase.<SNodeListState>treeOf(init), TreeBase.<Expr.State>treeOf(compare), TreeBase.<SNodeListState>treeOf(update), TreeBase.<Stmt.State>treeOf(body))));
 	}
 
 	public NodeList<Expr> init() {

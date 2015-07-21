@@ -46,7 +46,7 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 	}
 
 	public AnnotationDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<MemberDecl> members) {
-		super(new SLocation<AnnotationDecl.State>(make(TreeBase.<SNodeListState>nodeOf(modifiers), TreeBase.<Name.State>nodeOf(name), TreeBase.<SNodeListState>nodeOf(members))));
+		super(new SLocation<AnnotationDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeListState>treeOf(members))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {
