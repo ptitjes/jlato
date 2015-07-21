@@ -25,8 +25,8 @@ import java.util.Random;
 public class Arbitrary {
 
 	private static final int MAX_LIST_SIZE = 10;
-	private static final int MAX_STRING_SIZE = 10;
-	private static final int MAX_QUALIFIER_SIZE = 5;
+	private static final int MAX_STRING_SIZE = 6;
+	private static final int MAX_QUALIFIER_SIZE = 3;
 	private static final int MAX_BLOCK_SIZE = 20;
 
 	private Random random = new Random(753190246);
@@ -47,7 +47,7 @@ public class Arbitrary {
 		StringBuilder builder = new StringBuilder();
 		final int size = choice(MAX_STRING_SIZE);
 		for (int i = 0; i < size; i++) {
-			builder.append('a' + choice(26 - 1));
+			builder.append((char) ('a' + choice(26 - 1)));
 		}
 		return builder.toString();
 	}
