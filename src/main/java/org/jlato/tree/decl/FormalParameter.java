@@ -85,6 +85,10 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 		return location.safePropertyReplace(VAR_ARGS, (Boolean) isVarArgs);
 	}
 
+	public FormalParameter setVarArgs(Mutation<Boolean> mutation) {
+		return location.safePropertyMutate(VAR_ARGS, mutation);
+	}
+
 	public VariableDeclaratorId id() {
 		return location.safeTraversal(ID);
 	}

@@ -71,12 +71,20 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 		return location.safePropertyReplace(STATIC, (Boolean) isStatic);
 	}
 
+	public ImportDecl setStatic(Mutation<Boolean> mutation) {
+		return location.safePropertyMutate(STATIC, mutation);
+	}
+
 	public boolean isOnDemand() {
 		return location.safeProperty(ON_DEMAND);
 	}
 
 	public ImportDecl setOnDemand(boolean isOnDemand) {
 		return location.safePropertyReplace(ON_DEMAND, (Boolean) isOnDemand);
+	}
+
+	public ImportDecl setOnDemand(Mutation<Boolean> mutation) {
+		return location.safePropertyMutate(ON_DEMAND, mutation);
 	}
 
 	public static class State extends SNodeState<State> implements STreeState {

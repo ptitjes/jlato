@@ -70,6 +70,10 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 		return location.safePropertyReplace(THIS, (Boolean) isThis);
 	}
 
+	public ExplicitConstructorInvocationStmt setThis(Mutation<Boolean> mutation) {
+		return location.safePropertyMutate(THIS, mutation);
+	}
+
 	public NodeOption<Expr> expr() {
 		return location.safeTraversal(EXPR);
 	}

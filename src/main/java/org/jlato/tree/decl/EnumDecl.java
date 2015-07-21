@@ -121,6 +121,10 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 		return location.safePropertyReplace(TRAILING_COMMA, trailingComma);
 	}
 
+	public EnumDecl withTrailingComma(Mutation<Boolean> mutation) {
+		return location.safePropertyMutate(TRAILING_COMMA, mutation);
+	}
+
 	public NodeList<MemberDecl> members() {
 		return location.safeTraversal(MEMBERS);
 	}
