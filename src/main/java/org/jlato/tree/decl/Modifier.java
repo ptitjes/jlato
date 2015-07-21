@@ -90,6 +90,9 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 
 	public static final Modifier StrictFP = new Modifier(LToken.StrictFP);
 
+	private static final Modifier[] MODIFIERS =
+			new Modifier[]{Public, Protected, Private, Abstract, Default, Static, Final, Transient, Volatile, Synchronized, Native, StrictFP};
+
 	protected Modifier(SLocation<Modifier.State> location) {
 		super(location);
 	}
@@ -100,6 +103,10 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 
 	public String toString() {
 		return location.safeProperty(KEYWORD).toString();
+	}
+
+	public static Modifier[] values() {
+		return MODIFIERS;
 	}
 
 	public static class State extends SNodeState<State> implements ExtendedModifier.State {
