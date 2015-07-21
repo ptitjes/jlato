@@ -166,7 +166,7 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 			if (o == null || getClass() != o.getClass())
 				return false;
 			FormalParameter.State state = (FormalParameter.State) o;
-			if (!isVarArgs != state.isVarArgs)
+			if (isVarArgs != state.isVarArgs)
 				return false;
 			if (!modifiers.equals(state.modifiers))
 				return false;

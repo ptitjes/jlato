@@ -216,7 +216,7 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 			if (o == null || getClass() != o.getClass())
 				return false;
 			EnumDecl.State state = (EnumDecl.State) o;
-			if (!trailingComma != state.trailingComma)
+			if (trailingComma != state.trailingComma)
 				return false;
 			if (!modifiers.equals(state.modifiers))
 				return false;

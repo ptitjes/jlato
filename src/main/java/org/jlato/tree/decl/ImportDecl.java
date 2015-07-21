@@ -145,9 +145,9 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 			if (o == null || getClass() != o.getClass())
 				return false;
 			ImportDecl.State state = (ImportDecl.State) o;
-			if (!isStatic != state.isStatic)
+			if (isStatic != state.isStatic)
 				return false;
-			if (!isOnDemand != state.isOnDemand)
+			if (isOnDemand != state.isOnDemand)
 				return false;
 			if (!name.equals(state.name))
 				return false;
