@@ -109,7 +109,7 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 			if (o == null || getClass() != o.getClass())
 				return false;
 			VariableDeclarationExpr.State state = (VariableDeclarationExpr.State) o;
-			if (!declaration.equals(state.declaration))
+			if (declaration == null ? state.declaration != null : !declaration.equals(state.declaration))
 				return false;
 			return true;
 		}
@@ -117,7 +117,7 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + declaration.hashCode();
+			if (declaration != null) result = 37 * result + declaration.hashCode();
 			return result;
 		}
 	}

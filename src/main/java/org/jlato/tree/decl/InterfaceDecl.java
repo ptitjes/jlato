@@ -193,7 +193,7 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 			InterfaceDecl.State state = (InterfaceDecl.State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (!typeParams.equals(state.typeParams))
 				return false;
@@ -208,7 +208,7 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 		public int hashCode() {
 			int result = 17;
 			result = 37 * result + modifiers.hashCode();
-			result = 37 * result + name.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
 			result = 37 * result + typeParams.hashCode();
 			result = 37 * result + extendsClause.hashCode();
 			result = 37 * result + members.hashCode();

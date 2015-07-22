@@ -187,7 +187,7 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 				return false;
 			if (!typeArgs.equals(state.typeArgs))
 				return false;
-			if (!type.equals(state.type))
+			if (type == null ? state.type != null : !type.equals(state.type))
 				return false;
 			if (!args.equals(state.args))
 				return false;
@@ -201,7 +201,7 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 			int result = 17;
 			result = 37 * result + scope.hashCode();
 			result = 37 * result + typeArgs.hashCode();
-			result = 37 * result + type.hashCode();
+			if (type != null) result = 37 * result + type.hashCode();
 			result = 37 * result + args.hashCode();
 			result = 37 * result + body.hashCode();
 			return result;

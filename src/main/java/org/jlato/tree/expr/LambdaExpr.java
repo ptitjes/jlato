@@ -151,9 +151,9 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 			if (o == null || getClass() != o.getClass())
 				return false;
 			LambdaExpr.State state = (LambdaExpr.State) o;
-			if (hasParens != state.hasParens)
-				return false;
 			if (!params.equals(state.params))
+				return false;
+			if (hasParens != state.hasParens)
 				return false;
 			if (!body.equals(state.body))
 				return false;
@@ -163,8 +163,8 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + (hasParens ? 1 : 0);
 			result = 37 * result + params.hashCode();
+			result = 37 * result + (hasParens ? 1 : 0);
 			result = 37 * result + body.hashCode();
 			return result;
 		}

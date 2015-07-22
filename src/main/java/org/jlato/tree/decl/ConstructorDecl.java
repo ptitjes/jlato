@@ -212,13 +212,13 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 				return false;
 			if (!typeParams.equals(state.typeParams))
 				return false;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (!params.equals(state.params))
 				return false;
 			if (!throwsClause.equals(state.throwsClause))
 				return false;
-			if (!body.equals(state.body))
+			if (body == null ? state.body != null : !body.equals(state.body))
 				return false;
 			return true;
 		}
@@ -228,10 +228,10 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 			int result = 17;
 			result = 37 * result + modifiers.hashCode();
 			result = 37 * result + typeParams.hashCode();
-			result = 37 * result + name.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
 			result = 37 * result + params.hashCode();
 			result = 37 * result + throwsClause.hashCode();
-			result = 37 * result + body.hashCode();
+			if (body != null) result = 37 * result + body.hashCode();
 			return result;
 		}
 	}

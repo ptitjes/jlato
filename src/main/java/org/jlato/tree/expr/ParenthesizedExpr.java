@@ -103,7 +103,7 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 			if (o == null || getClass() != o.getClass())
 				return false;
 			ParenthesizedExpr.State state = (ParenthesizedExpr.State) o;
-			if (!inner.equals(state.inner))
+			if (inner == null ? state.inner != null : !inner.equals(state.inner))
 				return false;
 			return true;
 		}
@@ -111,7 +111,7 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + inner.hashCode();
+			if (inner != null) result = 37 * result + inner.hashCode();
 			return result;
 		}
 	}

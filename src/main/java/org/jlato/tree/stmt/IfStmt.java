@@ -150,9 +150,9 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 			if (o == null || getClass() != o.getClass())
 				return false;
 			IfStmt.State state = (IfStmt.State) o;
-			if (!condition.equals(state.condition))
+			if (condition == null ? state.condition != null : !condition.equals(state.condition))
 				return false;
-			if (!thenStmt.equals(state.thenStmt))
+			if (thenStmt == null ? state.thenStmt != null : !thenStmt.equals(state.thenStmt))
 				return false;
 			if (!elseStmt.equals(state.elseStmt))
 				return false;
@@ -162,8 +162,8 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + condition.hashCode();
-			result = 37 * result + thenStmt.hashCode();
+			if (condition != null) result = 37 * result + condition.hashCode();
+			if (thenStmt != null) result = 37 * result + thenStmt.hashCode();
 			result = 37 * result + elseStmt.hashCode();
 			return result;
 		}

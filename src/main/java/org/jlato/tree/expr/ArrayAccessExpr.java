@@ -122,9 +122,9 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 			if (o == null || getClass() != o.getClass())
 				return false;
 			ArrayAccessExpr.State state = (ArrayAccessExpr.State) o;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
-			if (!index.equals(state.index))
+			if (index == null ? state.index != null : !index.equals(state.index))
 				return false;
 			return true;
 		}
@@ -132,8 +132,8 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + name.hashCode();
-			result = 37 * result + index.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
+			if (index != null) result = 37 * result + index.hashCode();
 			return result;
 		}
 	}

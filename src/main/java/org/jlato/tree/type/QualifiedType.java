@@ -166,7 +166,7 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 				return false;
 			if (!scope.equals(state.scope))
 				return false;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (!typeArgs.equals(state.typeArgs))
 				return false;
@@ -178,7 +178,7 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 			int result = 17;
 			result = 37 * result + annotations.hashCode();
 			result = 37 * result + scope.hashCode();
-			result = 37 * result + name.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
 			result = 37 * result + typeArgs.hashCode();
 			return result;
 		}

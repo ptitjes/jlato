@@ -126,7 +126,7 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 			ArrayDimExpr.State state = (ArrayDimExpr.State) o;
 			if (!annotations.equals(state.annotations))
 				return false;
-			if (!expr.equals(state.expr))
+			if (expr == null ? state.expr != null : !expr.equals(state.expr))
 				return false;
 			return true;
 		}
@@ -135,7 +135,7 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 		public int hashCode() {
 			int result = 17;
 			result = 37 * result + annotations.hashCode();
-			result = 37 * result + expr.hashCode();
+			if (expr != null) result = 37 * result + expr.hashCode();
 			return result;
 		}
 	}

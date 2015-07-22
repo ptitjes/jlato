@@ -142,11 +142,11 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 			if (o == null || getClass() != o.getClass())
 				return false;
 			ConditionalExpr.State state = (ConditionalExpr.State) o;
-			if (!condition.equals(state.condition))
+			if (condition == null ? state.condition != null : !condition.equals(state.condition))
 				return false;
-			if (!thenExpr.equals(state.thenExpr))
+			if (thenExpr == null ? state.thenExpr != null : !thenExpr.equals(state.thenExpr))
 				return false;
-			if (!elseExpr.equals(state.elseExpr))
+			if (elseExpr == null ? state.elseExpr != null : !elseExpr.equals(state.elseExpr))
 				return false;
 			return true;
 		}
@@ -154,9 +154,9 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + condition.hashCode();
-			result = 37 * result + thenExpr.hashCode();
-			result = 37 * result + elseExpr.hashCode();
+			if (condition != null) result = 37 * result + condition.hashCode();
+			if (thenExpr != null) result = 37 * result + thenExpr.hashCode();
+			if (elseExpr != null) result = 37 * result + elseExpr.hashCode();
 			return result;
 		}
 	}

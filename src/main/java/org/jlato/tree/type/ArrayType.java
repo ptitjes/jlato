@@ -124,7 +124,7 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 			if (o == null || getClass() != o.getClass())
 				return false;
 			ArrayType.State state = (ArrayType.State) o;
-			if (!componentType.equals(state.componentType))
+			if (componentType == null ? state.componentType != null : !componentType.equals(state.componentType))
 				return false;
 			if (!dims.equals(state.dims))
 				return false;
@@ -134,7 +134,7 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + componentType.hashCode();
+			if (componentType != null) result = 37 * result + componentType.hashCode();
 			result = 37 * result + dims.hashCode();
 			return result;
 		}

@@ -143,11 +143,11 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 			if (o == null || getClass() != o.getClass())
 				return false;
 			BinaryExpr.State state = (BinaryExpr.State) o;
-			if (!op.equals(state.op))
+			if (left == null ? state.left != null : !left.equals(state.left))
 				return false;
-			if (!left.equals(state.left))
+			if (op == null ? state.op != null : !op.equals(state.op))
 				return false;
-			if (!right.equals(state.right))
+			if (right == null ? state.right != null : !right.equals(state.right))
 				return false;
 			return true;
 		}
@@ -155,9 +155,9 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + op.hashCode();
-			result = 37 * result + left.hashCode();
-			result = 37 * result + right.hashCode();
+			if (left != null) result = 37 * result + left.hashCode();
+			if (op != null) result = 37 * result + op.hashCode();
+			if (right != null) result = 37 * result + right.hashCode();
 			return result;
 		}
 	}

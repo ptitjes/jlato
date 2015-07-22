@@ -104,7 +104,7 @@ public class ClassExpr extends TreeBase<ClassExpr.State, Expr, ClassExpr> implem
 			if (o == null || getClass() != o.getClass())
 				return false;
 			ClassExpr.State state = (ClassExpr.State) o;
-			if (!type.equals(state.type))
+			if (type == null ? state.type != null : !type.equals(state.type))
 				return false;
 			return true;
 		}
@@ -112,7 +112,7 @@ public class ClassExpr extends TreeBase<ClassExpr.State, Expr, ClassExpr> implem
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + type.hashCode();
+			if (type != null) result = 37 * result + type.hashCode();
 			return result;
 		}
 	}

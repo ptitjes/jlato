@@ -143,11 +143,11 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 			if (o == null || getClass() != o.getClass())
 				return false;
 			AssignExpr.State state = (AssignExpr.State) o;
-			if (!op.equals(state.op))
+			if (target == null ? state.target != null : !target.equals(state.target))
 				return false;
-			if (!target.equals(state.target))
+			if (op == null ? state.op != null : !op.equals(state.op))
 				return false;
-			if (!value.equals(state.value))
+			if (value == null ? state.value != null : !value.equals(state.value))
 				return false;
 			return true;
 		}
@@ -155,9 +155,9 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + op.hashCode();
-			result = 37 * result + target.hashCode();
-			result = 37 * result + value.hashCode();
+			if (target != null) result = 37 * result + target.hashCode();
+			if (op != null) result = 37 * result + op.hashCode();
+			if (value != null) result = 37 * result + value.hashCode();
 			return result;
 		}
 	}

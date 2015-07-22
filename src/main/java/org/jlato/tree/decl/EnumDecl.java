@@ -216,15 +216,15 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 			if (o == null || getClass() != o.getClass())
 				return false;
 			EnumDecl.State state = (EnumDecl.State) o;
-			if (trailingComma != state.trailingComma)
-				return false;
 			if (!modifiers.equals(state.modifiers))
 				return false;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (!implementsClause.equals(state.implementsClause))
 				return false;
 			if (!enumConstants.equals(state.enumConstants))
+				return false;
+			if (trailingComma != state.trailingComma)
 				return false;
 			if (!members.equals(state.members))
 				return false;
@@ -234,11 +234,11 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + (trailingComma ? 1 : 0);
 			result = 37 * result + modifiers.hashCode();
-			result = 37 * result + name.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
 			result = 37 * result + implementsClause.hashCode();
 			result = 37 * result + enumConstants.hashCode();
+			result = 37 * result + (trailingComma ? 1 : 0);
 			result = 37 * result + members.hashCode();
 			return result;
 		}

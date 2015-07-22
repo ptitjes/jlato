@@ -124,9 +124,9 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 			if (o == null || getClass() != o.getClass())
 				return false;
 			SynchronizedStmt.State state = (SynchronizedStmt.State) o;
-			if (!expr.equals(state.expr))
+			if (expr == null ? state.expr != null : !expr.equals(state.expr))
 				return false;
-			if (!block.equals(state.block))
+			if (block == null ? state.block != null : !block.equals(state.block))
 				return false;
 			return true;
 		}
@@ -134,8 +134,8 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + expr.hashCode();
-			result = 37 * result + block.hashCode();
+			if (expr != null) result = 37 * result + expr.hashCode();
+			if (block != null) result = 37 * result + block.hashCode();
 			return result;
 		}
 	}

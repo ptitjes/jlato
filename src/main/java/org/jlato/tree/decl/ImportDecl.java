@@ -145,11 +145,11 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 			if (o == null || getClass() != o.getClass())
 				return false;
 			ImportDecl.State state = (ImportDecl.State) o;
+			if (name == null ? state.name != null : !name.equals(state.name))
+				return false;
 			if (isStatic != state.isStatic)
 				return false;
 			if (isOnDemand != state.isOnDemand)
-				return false;
-			if (!name.equals(state.name))
 				return false;
 			return true;
 		}
@@ -157,9 +157,9 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 		@Override
 		public int hashCode() {
 			int result = 17;
+			if (name != null) result = 37 * result + name.hashCode();
 			result = 37 * result + (isStatic ? 1 : 0);
 			result = 37 * result + (isOnDemand ? 1 : 0);
-			result = 37 * result + name.hashCode();
 			return result;
 		}
 	}

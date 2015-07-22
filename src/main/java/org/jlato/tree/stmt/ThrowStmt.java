@@ -104,7 +104,7 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 			if (o == null || getClass() != o.getClass())
 				return false;
 			ThrowStmt.State state = (ThrowStmt.State) o;
-			if (!expr.equals(state.expr))
+			if (expr == null ? state.expr != null : !expr.equals(state.expr))
 				return false;
 			return true;
 		}
@@ -112,7 +112,7 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + expr.hashCode();
+			if (expr != null) result = 37 * result + expr.hashCode();
 			return result;
 		}
 	}

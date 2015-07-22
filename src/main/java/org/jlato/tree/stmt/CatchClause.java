@@ -124,9 +124,9 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 			if (o == null || getClass() != o.getClass())
 				return false;
 			CatchClause.State state = (CatchClause.State) o;
-			if (!except.equals(state.except))
+			if (except == null ? state.except != null : !except.equals(state.except))
 				return false;
-			if (!catchBlock.equals(state.catchBlock))
+			if (catchBlock == null ? state.catchBlock != null : !catchBlock.equals(state.catchBlock))
 				return false;
 			return true;
 		}
@@ -134,8 +134,8 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + except.hashCode();
-			result = 37 * result + catchBlock.hashCode();
+			if (except != null) result = 37 * result + except.hashCode();
+			if (catchBlock != null) result = 37 * result + catchBlock.hashCode();
 			return result;
 		}
 	}

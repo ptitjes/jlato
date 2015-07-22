@@ -125,7 +125,7 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 			if (o == null || getClass() != o.getClass())
 				return false;
 			NormalAnnotationExpr.State state = (NormalAnnotationExpr.State) o;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (!pairs.equals(state.pairs))
 				return false;
@@ -135,7 +135,7 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + name.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
 			result = 37 * result + pairs.hashCode();
 			return result;
 		}

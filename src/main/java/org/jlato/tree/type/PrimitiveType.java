@@ -125,9 +125,9 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 			if (o == null || getClass() != o.getClass())
 				return false;
 			PrimitiveType.State state = (PrimitiveType.State) o;
-			if (!primitive.equals(state.primitive))
-				return false;
 			if (!annotations.equals(state.annotations))
+				return false;
+			if (primitive == null ? state.primitive != null : !primitive.equals(state.primitive))
 				return false;
 			return true;
 		}
@@ -135,8 +135,8 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + primitive.hashCode();
 			result = 37 * result + annotations.hashCode();
+			if (primitive != null) result = 37 * result + primitive.hashCode();
 			return result;
 		}
 	}

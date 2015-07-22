@@ -132,9 +132,9 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 			if (o == null || getClass() != o.getClass())
 				return false;
 			UnaryExpr.State state = (UnaryExpr.State) o;
-			if (!op.equals(state.op))
+			if (op == null ? state.op != null : !op.equals(state.op))
 				return false;
-			if (!expr.equals(state.expr))
+			if (expr == null ? state.expr != null : !expr.equals(state.expr))
 				return false;
 			return true;
 		}
@@ -142,8 +142,8 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + op.hashCode();
-			result = 37 * result + expr.hashCode();
+			if (op != null) result = 37 * result + op.hashCode();
+			if (expr != null) result = 37 * result + expr.hashCode();
 			return result;
 		}
 	}

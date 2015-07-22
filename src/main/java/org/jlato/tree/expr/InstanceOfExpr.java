@@ -123,9 +123,9 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 			if (o == null || getClass() != o.getClass())
 				return false;
 			InstanceOfExpr.State state = (InstanceOfExpr.State) o;
-			if (!expr.equals(state.expr))
+			if (expr == null ? state.expr != null : !expr.equals(state.expr))
 				return false;
-			if (!type.equals(state.type))
+			if (type == null ? state.type != null : !type.equals(state.type))
 				return false;
 			return true;
 		}
@@ -133,8 +133,8 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + expr.hashCode();
-			result = 37 * result + type.hashCode();
+			if (expr != null) result = 37 * result + expr.hashCode();
+			if (type != null) result = 37 * result + type.hashCode();
 			return result;
 		}
 	}

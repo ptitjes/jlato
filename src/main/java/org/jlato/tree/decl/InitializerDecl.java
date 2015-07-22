@@ -132,7 +132,7 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 			InitializerDecl.State state = (InitializerDecl.State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
-			if (!body.equals(state.body))
+			if (body == null ? state.body != null : !body.equals(state.body))
 				return false;
 			return true;
 		}
@@ -141,7 +141,7 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 		public int hashCode() {
 			int result = 17;
 			result = 37 * result + modifiers.hashCode();
-			result = 37 * result + body.hashCode();
+			if (body != null) result = 37 * result + body.hashCode();
 			return result;
 		}
 	}

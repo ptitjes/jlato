@@ -129,7 +129,7 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 			if (o == null || getClass() != o.getClass())
 				return false;
 			SwitchStmt.State state = (SwitchStmt.State) o;
-			if (!selector.equals(state.selector))
+			if (selector == null ? state.selector != null : !selector.equals(state.selector))
 				return false;
 			if (!cases.equals(state.cases))
 				return false;
@@ -139,7 +139,7 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + selector.hashCode();
+			if (selector != null) result = 37 * result + selector.hashCode();
 			result = 37 * result + cases.hashCode();
 			return result;
 		}

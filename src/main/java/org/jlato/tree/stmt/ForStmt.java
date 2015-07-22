@@ -165,11 +165,11 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 			ForStmt.State state = (ForStmt.State) o;
 			if (!init.equals(state.init))
 				return false;
-			if (!compare.equals(state.compare))
+			if (compare == null ? state.compare != null : !compare.equals(state.compare))
 				return false;
 			if (!update.equals(state.update))
 				return false;
-			if (!body.equals(state.body))
+			if (body == null ? state.body != null : !body.equals(state.body))
 				return false;
 			return true;
 		}
@@ -178,9 +178,9 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 		public int hashCode() {
 			int result = 17;
 			result = 37 * result + init.hashCode();
-			result = 37 * result + compare.hashCode();
+			if (compare != null) result = 37 * result + compare.hashCode();
 			result = 37 * result + update.hashCode();
-			result = 37 * result + body.hashCode();
+			if (body != null) result = 37 * result + body.hashCode();
 			return result;
 		}
 	}

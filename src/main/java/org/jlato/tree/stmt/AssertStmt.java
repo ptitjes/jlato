@@ -127,7 +127,7 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 			if (o == null || getClass() != o.getClass())
 				return false;
 			AssertStmt.State state = (AssertStmt.State) o;
-			if (!check.equals(state.check))
+			if (check == null ? state.check != null : !check.equals(state.check))
 				return false;
 			if (!msg.equals(state.msg))
 				return false;
@@ -137,7 +137,7 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + check.hashCode();
+			if (check != null) result = 37 * result + check.hashCode();
 			result = 37 * result + msg.hashCode();
 			return result;
 		}

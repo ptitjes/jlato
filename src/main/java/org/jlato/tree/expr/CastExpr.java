@@ -124,9 +124,9 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 			if (o == null || getClass() != o.getClass())
 				return false;
 			CastExpr.State state = (CastExpr.State) o;
-			if (!type.equals(state.type))
+			if (type == null ? state.type != null : !type.equals(state.type))
 				return false;
-			if (!expr.equals(state.expr))
+			if (expr == null ? state.expr != null : !expr.equals(state.expr))
 				return false;
 			return true;
 		}
@@ -134,8 +134,8 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + type.hashCode();
-			result = 37 * result + expr.hashCode();
+			if (type != null) result = 37 * result + type.hashCode();
+			if (expr != null) result = 37 * result + expr.hashCode();
 			return result;
 		}
 	}

@@ -250,9 +250,9 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 				return false;
 			if (!typeParams.equals(state.typeParams))
 				return false;
-			if (!type.equals(state.type))
+			if (type == null ? state.type != null : !type.equals(state.type))
 				return false;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (!params.equals(state.params))
 				return false;
@@ -270,8 +270,8 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 			int result = 17;
 			result = 37 * result + modifiers.hashCode();
 			result = 37 * result + typeParams.hashCode();
-			result = 37 * result + type.hashCode();
-			result = 37 * result + name.hashCode();
+			if (type != null) result = 37 * result + type.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
 			result = 37 * result + params.hashCode();
 			result = 37 * result + dims.hashCode();
 			result = 37 * result + throwsClause.hashCode();

@@ -128,9 +128,9 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 			if (o == null || getClass() != o.getClass())
 				return false;
 			LabeledStmt.State state = (LabeledStmt.State) o;
-			if (!label.equals(state.label))
+			if (label == null ? state.label != null : !label.equals(state.label))
 				return false;
-			if (!stmt.equals(state.stmt))
+			if (stmt == null ? state.stmt != null : !stmt.equals(state.stmt))
 				return false;
 			return true;
 		}
@@ -138,8 +138,8 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + label.hashCode();
-			result = 37 * result + stmt.hashCode();
+			if (label != null) result = 37 * result + label.hashCode();
+			if (stmt != null) result = 37 * result + stmt.hashCode();
 			return result;
 		}
 	}

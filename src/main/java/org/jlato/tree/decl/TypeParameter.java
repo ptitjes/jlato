@@ -148,7 +148,7 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 			TypeParameter.State state = (TypeParameter.State) o;
 			if (!annotations.equals(state.annotations))
 				return false;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (!bounds.equals(state.bounds))
 				return false;
@@ -159,7 +159,7 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 		public int hashCode() {
 			int result = 17;
 			result = 37 * result + annotations.hashCode();
-			result = 37 * result + name.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
 			result = 37 * result + bounds.hashCode();
 			return result;
 		}

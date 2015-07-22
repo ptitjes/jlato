@@ -171,7 +171,7 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 			EnumConstantDecl.State state = (EnumConstantDecl.State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (!args.equals(state.args))
 				return false;
@@ -184,7 +184,7 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 		public int hashCode() {
 			int result = 17;
 			result = 37 * result + modifiers.hashCode();
-			result = 37 * result + name.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
 			result = 37 * result + args.hashCode();
 			result = 37 * result + classBody.hashCode();
 			return result;

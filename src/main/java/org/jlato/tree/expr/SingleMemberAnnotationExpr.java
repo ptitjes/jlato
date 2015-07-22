@@ -123,9 +123,9 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 			if (o == null || getClass() != o.getClass())
 				return false;
 			SingleMemberAnnotationExpr.State state = (SingleMemberAnnotationExpr.State) o;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
-			if (!memberValue.equals(state.memberValue))
+			if (memberValue == null ? state.memberValue != null : !memberValue.equals(state.memberValue))
 				return false;
 			return true;
 		}
@@ -133,8 +133,8 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + name.hashCode();
-			result = 37 * result + memberValue.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
+			if (memberValue != null) result = 37 * result + memberValue.hashCode();
 			return result;
 		}
 	}

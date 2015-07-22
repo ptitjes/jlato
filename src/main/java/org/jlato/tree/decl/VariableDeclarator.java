@@ -126,7 +126,7 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 			if (o == null || getClass() != o.getClass())
 				return false;
 			VariableDeclarator.State state = (VariableDeclarator.State) o;
-			if (!id.equals(state.id))
+			if (id == null ? state.id != null : !id.equals(state.id))
 				return false;
 			if (!init.equals(state.init))
 				return false;
@@ -136,7 +136,7 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + id.hashCode();
+			if (id != null) result = 37 * result + id.hashCode();
 			result = 37 * result + init.hashCode();
 			return result;
 		}

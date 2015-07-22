@@ -144,11 +144,11 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 			if (o == null || getClass() != o.getClass())
 				return false;
 			ForeachStmt.State state = (ForeachStmt.State) o;
-			if (!var.equals(state.var))
+			if (var == null ? state.var != null : !var.equals(state.var))
 				return false;
-			if (!iterable.equals(state.iterable))
+			if (iterable == null ? state.iterable != null : !iterable.equals(state.iterable))
 				return false;
-			if (!body.equals(state.body))
+			if (body == null ? state.body != null : !body.equals(state.body))
 				return false;
 			return true;
 		}
@@ -156,9 +156,9 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + var.hashCode();
-			result = 37 * result + iterable.hashCode();
-			result = 37 * result + body.hashCode();
+			if (var != null) result = 37 * result + var.hashCode();
+			if (iterable != null) result = 37 * result + iterable.hashCode();
+			if (body != null) result = 37 * result + body.hashCode();
 			return result;
 		}
 	}

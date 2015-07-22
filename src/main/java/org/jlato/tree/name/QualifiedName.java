@@ -146,7 +146,7 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 			QualifiedName.State state = (QualifiedName.State) o;
 			if (!qualifier.equals(state.qualifier))
 				return false;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			return true;
 		}
@@ -155,7 +155,7 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 		public int hashCode() {
 			int result = 17;
 			result = 37 * result + qualifier.hashCode();
-			result = 37 * result + name.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
 			return result;
 		}
 	}

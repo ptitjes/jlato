@@ -212,7 +212,7 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 			ClassDecl.State state = (ClassDecl.State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (!typeParams.equals(state.typeParams))
 				return false;
@@ -229,7 +229,7 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 		public int hashCode() {
 			int result = 17;
 			result = 37 * result + modifiers.hashCode();
-			result = 37 * result + name.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
 			result = 37 * result + typeParams.hashCode();
 			result = 37 * result + extendsClause.hashCode();
 			result = 37 * result + implementsClause.hashCode();

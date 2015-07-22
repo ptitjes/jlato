@@ -124,9 +124,9 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 			if (o == null || getClass() != o.getClass())
 				return false;
 			WhileStmt.State state = (WhileStmt.State) o;
-			if (!condition.equals(state.condition))
+			if (condition == null ? state.condition != null : !condition.equals(state.condition))
 				return false;
-			if (!body.equals(state.body))
+			if (body == null ? state.body != null : !body.equals(state.body))
 				return false;
 			return true;
 		}
@@ -134,8 +134,8 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + condition.hashCode();
-			result = 37 * result + body.hashCode();
+			if (condition != null) result = 37 * result + condition.hashCode();
+			if (body != null) result = 37 * result + body.hashCode();
 			return result;
 		}
 	}

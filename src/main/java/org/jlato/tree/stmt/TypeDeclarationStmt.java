@@ -105,7 +105,7 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 			if (o == null || getClass() != o.getClass())
 				return false;
 			TypeDeclarationStmt.State state = (TypeDeclarationStmt.State) o;
-			if (!typeDecl.equals(state.typeDecl))
+			if (typeDecl == null ? state.typeDecl != null : !typeDecl.equals(state.typeDecl))
 				return false;
 			return true;
 		}
@@ -113,7 +113,7 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + typeDecl.hashCode();
+			if (typeDecl != null) result = 37 * result + typeDecl.hashCode();
 			return result;
 		}
 	}

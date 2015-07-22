@@ -144,11 +144,11 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 			if (o == null || getClass() != o.getClass())
 				return false;
 			MethodReferenceExpr.State state = (MethodReferenceExpr.State) o;
-			if (!scope.equals(state.scope))
+			if (scope == null ? state.scope != null : !scope.equals(state.scope))
 				return false;
 			if (!typeArgs.equals(state.typeArgs))
 				return false;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			return true;
 		}
@@ -156,9 +156,9 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + scope.hashCode();
+			if (scope != null) result = 37 * result + scope.hashCode();
 			result = 37 * result + typeArgs.hashCode();
-			result = 37 * result + name.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
 			return result;
 		}
 	}

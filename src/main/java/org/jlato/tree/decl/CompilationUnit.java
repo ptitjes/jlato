@@ -156,7 +156,7 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 			CompilationUnit.State state = (CompilationUnit.State) o;
 			if (preamble == null ? state.preamble != null : !preamble.equals(state.preamble))
 				return false;
-			if (!packageDecl.equals(state.packageDecl))
+			if (packageDecl == null ? state.packageDecl != null : !packageDecl.equals(state.packageDecl))
 				return false;
 			if (!imports.equals(state.imports))
 				return false;
@@ -169,7 +169,7 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 		public int hashCode() {
 			int result = 17;
 			if (preamble != null) result = 37 * result + preamble.hashCode();
-			result = 37 * result + packageDecl.hashCode();
+			if (packageDecl != null) result = 37 * result + packageDecl.hashCode();
 			result = 37 * result + imports.hashCode();
 			result = 37 * result + types.hashCode();
 			return result;

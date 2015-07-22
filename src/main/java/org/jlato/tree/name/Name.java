@@ -111,7 +111,7 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 			if (o == null || getClass() != o.getClass())
 				return false;
 			Name.State state = (Name.State) o;
-			if (!id.equals(state.id))
+			if (id == null ? state.id != null : !id.equals(state.id))
 				return false;
 			return true;
 		}
@@ -119,7 +119,7 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + id.hashCode();
+			if (id != null) result = 37 * result + id.hashCode();
 			return result;
 		}
 	}

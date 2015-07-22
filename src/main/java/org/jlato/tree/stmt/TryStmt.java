@@ -164,7 +164,7 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 			TryStmt.State state = (TryStmt.State) o;
 			if (!resources.equals(state.resources))
 				return false;
-			if (!tryBlock.equals(state.tryBlock))
+			if (tryBlock == null ? state.tryBlock != null : !tryBlock.equals(state.tryBlock))
 				return false;
 			if (!catchs.equals(state.catchs))
 				return false;
@@ -177,7 +177,7 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 		public int hashCode() {
 			int result = 17;
 			result = 37 * result + resources.hashCode();
-			result = 37 * result + tryBlock.hashCode();
+			if (tryBlock != null) result = 37 * result + tryBlock.hashCode();
 			result = 37 * result + catchs.hashCode();
 			result = 37 * result + finallyBlock.hashCode();
 			return result;

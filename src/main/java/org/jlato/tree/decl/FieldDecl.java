@@ -151,7 +151,7 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 			FieldDecl.State state = (FieldDecl.State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
-			if (!type.equals(state.type))
+			if (type == null ? state.type != null : !type.equals(state.type))
 				return false;
 			if (!variables.equals(state.variables))
 				return false;
@@ -162,7 +162,7 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 		public int hashCode() {
 			int result = 17;
 			result = 37 * result + modifiers.hashCode();
-			result = 37 * result + type.hashCode();
+			if (type != null) result = 37 * result + type.hashCode();
 			result = 37 * result + variables.hashCode();
 			return result;
 		}

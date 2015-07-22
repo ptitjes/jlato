@@ -123,9 +123,9 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 			if (o == null || getClass() != o.getClass())
 				return false;
 			MemberValuePair.State state = (MemberValuePair.State) o;
-			if (!name.equals(state.name))
+			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
-			if (!value.equals(state.value))
+			if (value == null ? state.value != null : !value.equals(state.value))
 				return false;
 			return true;
 		}
@@ -133,8 +133,8 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + name.hashCode();
-			result = 37 * result + value.hashCode();
+			if (name != null) result = 37 * result + name.hashCode();
+			if (value != null) result = 37 * result + value.hashCode();
 			return result;
 		}
 	}

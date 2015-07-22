@@ -163,7 +163,7 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 			if (o == null || getClass() != o.getClass())
 				return false;
 			ArrayCreationExpr.State state = (ArrayCreationExpr.State) o;
-			if (!type.equals(state.type))
+			if (type == null ? state.type != null : !type.equals(state.type))
 				return false;
 			if (!dimExprs.equals(state.dimExprs))
 				return false;
@@ -177,7 +177,7 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + type.hashCode();
+			if (type != null) result = 37 * result + type.hashCode();
 			result = 37 * result + dimExprs.hashCode();
 			result = 37 * result + dims.hashCode();
 			result = 37 * result + init.hashCode();

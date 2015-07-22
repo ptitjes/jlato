@@ -147,9 +147,9 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 			if (o == null || getClass() != o.getClass())
 				return false;
 			LiteralExpr.State state = (LiteralExpr.State) o;
-			if (!literalClass.equals(state.literalClass))
+			if (literalClass == null ? state.literalClass != null : !literalClass.equals(state.literalClass))
 				return false;
-			if (!literalString.equals(state.literalString))
+			if (literalString == null ? state.literalString != null : !literalString.equals(state.literalString))
 				return false;
 			return true;
 		}
@@ -157,8 +157,8 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + literalClass.hashCode();
-			result = 37 * result + literalString.hashCode();
+			if (literalClass != null) result = 37 * result + literalClass.hashCode();
+			if (literalString != null) result = 37 * result + literalString.hashCode();
 			return result;
 		}
 	}

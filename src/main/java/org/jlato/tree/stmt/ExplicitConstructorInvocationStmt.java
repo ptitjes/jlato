@@ -163,9 +163,9 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 			if (o == null || getClass() != o.getClass())
 				return false;
 			ExplicitConstructorInvocationStmt.State state = (ExplicitConstructorInvocationStmt.State) o;
-			if (isThis != state.isThis)
-				return false;
 			if (!typeArgs.equals(state.typeArgs))
+				return false;
+			if (isThis != state.isThis)
 				return false;
 			if (!expr.equals(state.expr))
 				return false;
@@ -177,8 +177,8 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + (isThis ? 1 : 0);
 			result = 37 * result + typeArgs.hashCode();
+			result = 37 * result + (isThis ? 1 : 0);
 			result = 37 * result + expr.hashCode();
 			result = 37 * result + args.hashCode();
 			return result;

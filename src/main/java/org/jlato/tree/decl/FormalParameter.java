@@ -166,13 +166,13 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 			if (o == null || getClass() != o.getClass())
 				return false;
 			FormalParameter.State state = (FormalParameter.State) o;
-			if (isVarArgs != state.isVarArgs)
-				return false;
 			if (!modifiers.equals(state.modifiers))
 				return false;
-			if (!type.equals(state.type))
+			if (type == null ? state.type != null : !type.equals(state.type))
 				return false;
-			if (!id.equals(state.id))
+			if (isVarArgs != state.isVarArgs)
+				return false;
+			if (id == null ? state.id != null : !id.equals(state.id))
 				return false;
 			return true;
 		}
@@ -180,10 +180,10 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + (isVarArgs ? 1 : 0);
 			result = 37 * result + modifiers.hashCode();
-			result = 37 * result + type.hashCode();
-			result = 37 * result + id.hashCode();
+			if (type != null) result = 37 * result + type.hashCode();
+			result = 37 * result + (isVarArgs ? 1 : 0);
+			if (id != null) result = 37 * result + id.hashCode();
 			return result;
 		}
 	}
