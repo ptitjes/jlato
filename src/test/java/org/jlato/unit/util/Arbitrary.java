@@ -13,12 +13,8 @@ import org.jlato.tree.type.PrimitiveType.Primitive;
 
 import static org.jlato.tree.TreeFactory.*;
 
-import org.jlato.unit.util.Arbitrary;
 import org.jlato.util.Function0;
 import org.jlato.util.Function2;
-import org.junit.*;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import java.util.Random;
 
@@ -29,7 +25,16 @@ public class Arbitrary {
 	private static final int MAX_QUALIFIER_SIZE = 3;
 	private static final int MAX_BLOCK_SIZE = 20;
 
+	private final boolean enableFalseNoneOrEmpty;
 	private Random random = new Random(753190246);
+
+	public Arbitrary() {
+		this(false);
+	}
+
+	public Arbitrary(boolean enableFalseNoneOrEmpty) {
+		this.enableFalseNoneOrEmpty = enableFalseNoneOrEmpty;
+	}
 
 	private int choice(int max) {
 		return random.nextInt(max);
@@ -44,7 +49,7 @@ public class Arbitrary {
 	}
 
 	public boolean arbitraryBoolean() {
-		return random.nextBoolean();
+		return enableFalseNoneOrEmpty ? random.nextBoolean() : true;
 	}
 
 	public String arbitraryString() {
@@ -58,7 +63,7 @@ public class Arbitrary {
 
 	public <T extends Tree> NodeList<T> arbitraryListOf(Function0<T> gen) {
 		NodeList<T> list = NodeList.empty();
-		final int size = choice(MAX_LIST_SIZE);
+		final int size = enableFalseNoneOrEmpty ? choice(MAX_LIST_SIZE) : nonNullChoice(MAX_LIST_SIZE);
 		for (int i = 0; i < size; i++) {
 			list = list.append(gen.apply());
 		}
@@ -66,8 +71,12 @@ public class Arbitrary {
 	}
 
 	public <T extends Tree> NodeOption<T> arbitraryOptionOf(Function0<T> gen) {
-		final boolean none = arbitraryBoolean();
-		return none ? NodeOption.<T>none() : NodeOption.of(gen.apply());
+		if (enableFalseNoneOrEmpty) {
+			final boolean none = arbitraryBoolean();
+			return none ? NodeOption.<T>none() : NodeOption.of(gen.apply());
+		} else {
+			return NodeOption.of(gen.apply());
+		}
 	}
 
 	public <T extends Tree> T anyArbitraryIn(Function0<T>... gens) {
