@@ -106,7 +106,7 @@ public abstract class TreeFactory {
 	}
 
 	public static ArrayInitializerExpr arrayInitializerExpr() {
-		return new ArrayInitializerExpr(NodeList.<Expr>empty());
+		return new ArrayInitializerExpr(NodeList.<Expr>empty(), false);
 	}
 
 	public static AssignExpr assignExpr() {

@@ -29,7 +29,9 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_BetweenConstants;
 import static org.jlato.printer.SpacingConstraint.space;
+import static org.jlato.printer.SpacingConstraint.spacing;
 
 public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, Expr, ArrayInitializerExpr> implements Expr {
 
@@ -41,12 +43,12 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 		super(location);
 	}
 
-	public static STree<ArrayInitializerExpr.State> make(STree<SNodeListState> values) {
-		return new STree<ArrayInitializerExpr.State>(new ArrayInitializerExpr.State(values));
+	public static STree<ArrayInitializerExpr.State> make(STree<SNodeListState> values, boolean trailingComma) {
+		return new STree<ArrayInitializerExpr.State>(new ArrayInitializerExpr.State(values, trailingComma));
 	}
 
-	public ArrayInitializerExpr(NodeList<Expr> values) {
-		super(new SLocation<ArrayInitializerExpr.State>(make(TreeBase.<SNodeListState>treeOf(values))));
+	public ArrayInitializerExpr(NodeList<Expr> values, boolean trailingComma) {
+		super(new SLocation<ArrayInitializerExpr.State>(make(TreeBase.<SNodeListState>treeOf(values), trailingComma)));
 	}
 
 	public NodeList<Expr> values() {
@@ -61,16 +63,34 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 		return location.safeTraversalMutate(VALUES, mutation);
 	}
 
+	public boolean trailingComma() {
+		return location.safeProperty(TRAILING_COMMA);
+	}
+
+	public ArrayInitializerExpr withTrailingComma(boolean trailingComma) {
+		return location.safePropertyReplace(TRAILING_COMMA, trailingComma);
+	}
+
+	public ArrayInitializerExpr withTrailingComma(Mutation<Boolean> mutation) {
+		return location.safePropertyMutate(TRAILING_COMMA, mutation);
+	}
+
 	public static class State extends SNodeState<State> implements Expr.State {
 
 		public final STree<SNodeListState> values;
+		public final boolean trailingComma;
 
-		State(STree<SNodeListState> values) {
+		State(STree<SNodeListState> values, boolean trailingComma) {
 			this.values = values;
+			this.trailingComma = trailingComma;
 		}
 
 		public ArrayInitializerExpr.State withValues(STree<SNodeListState> values) {
-			return new ArrayInitializerExpr.State(values);
+			return new ArrayInitializerExpr.State(values, trailingComma);
+		}
+
+		public ArrayInitializerExpr.State withTrailingComma(boolean trailingComma) {
+			return new ArrayInitializerExpr.State(values, trailingComma);
 		}
 
 		@Override
@@ -107,6 +127,8 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 			ArrayInitializerExpr.State state = (ArrayInitializerExpr.State) o;
 			if (!values.equals(state.values))
 				return false;
+			if (trailingComma != state.trailingComma)
+				return false;
 			return true;
 		}
 
@@ -114,6 +136,7 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 		public int hashCode() {
 			int result = 17;
 			result = 37 * result + values.hashCode();
+			result = 37 * result + (trailingComma ? 1 : 0);
 			return result;
 		}
 	}
@@ -141,14 +164,32 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 		}
 	};
 
+	private static STypeSafeProperty<ArrayInitializerExpr.State, Boolean> TRAILING_COMMA = new STypeSafeProperty<ArrayInitializerExpr.State, Boolean>() {
+
+		@Override
+		protected Boolean doRetrieve(ArrayInitializerExpr.State state) {
+			return state.trailingComma;
+		}
+
+		@Override
+		protected ArrayInitializerExpr.State doRebuildParentState(ArrayInitializerExpr.State state, Boolean value) {
+			return state.withTrailingComma(value);
+		}
+	};
+
 	public final static LexicalShape shape = composite(
 			nonEmptyChildren(VALUES,
 					composite(
 							token(LToken.BraceLeft).withSpacingAfter(space()),
 							child(VALUES, Expr.listShape),
+							dataOption(TRAILING_COMMA, token(LToken.Comma)),
 							token(LToken.BraceRight).withSpacingBefore(space())
 					),
-					composite(token(LToken.BraceLeft), token(LToken.BraceRight))
+					composite(
+							token(LToken.BraceLeft),
+							dataOption(TRAILING_COMMA, token(LToken.Comma)),
+							token(LToken.BraceRight)
+					)
 			)
 	);
 }

@@ -538,11 +538,15 @@ public class TreesLambdaAccessorsTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeList<Expr> values = arbitrary.arbitraryListExpr();
-			ArrayInitializerExpr t = arrayInitializerExpr().withValues(values);
+			boolean trailingComma = arbitrary.arbitraryBoolean();
+			ArrayInitializerExpr t = arrayInitializerExpr().withValues(values).withTrailingComma(trailingComma);
 			Assert.assertEquals(values, t.values());
+			Assert.assertEquals(trailingComma, t.trailingComma());
 			NodeList<Expr> values2 = arbitrary.arbitraryListExpr();
-			ArrayInitializerExpr t2 = t.withValues(mutationBy(values, values2));
+			boolean trailingComma2 = arbitrary.arbitraryBoolean();
+			ArrayInitializerExpr t2 = t.withValues(mutationBy(values, values2)).withTrailingComma(mutationBy(trailingComma, trailingComma2));
 			Assert.assertEquals(values2, t2.values());
+			Assert.assertEquals(trailingComma2, t2.trailingComma());
 		}
 	}
 

@@ -1364,7 +1364,7 @@ STree<? extends TypeDecl.State> EnumDecl(STree<SNodeListState> modifiers):
     ( LOOKAHEAD(2) "," entry = EnumConstantDecl() { constants = append(constants, entry); } )*
     { constants = enRun(constants, EnumConstantDecl.listShape); }
   ]
-  [ "," { trailingComma = true; } ] // TODO Add syntactic data about comma presence in EnumDecl
+  [ "," { trailingComma = true; } ]
   [ ";" members = ClassOrInterfaceBodyDecls(TypeKind.Enum) ]
   "}"
 
@@ -1703,6 +1703,7 @@ STree<ArrayInitializerExpr.State> ArrayInitializer():
 {
 	STree<SNodeListState> values = emptyList();
 	STree<? extends Expr.State> val;
+	boolean trailingComma = false;
 }
 {
   { run(); }
@@ -1714,10 +1715,10 @@ STree<ArrayInitializerExpr.State> ArrayInitializer():
     ( LOOKAHEAD(2) "," val = VariableInitializer() { values = append(values, val); } )*
     { values = enRun(values, Expr.listShape); }
   ]
-  [ "," ] // TODO Add syntactic data about comma presence in ArrayInitializerExpr
+  [ "," { trailingComma = true; } ]
   "}"
 
-  { return enRun(ArrayInitializerExpr.make(values)); }
+  { return enRun(ArrayInitializerExpr.make(values, trailingComma)); }
 }
 
 STree<MethodDecl.State> MethodDecl(STree<SNodeListState> modifiers):
@@ -3490,6 +3491,7 @@ STree<? extends Expr.State> MemberValueArrayInitializer():
 {
 	STree<SNodeListState> ret = emptyList();
 	STree<? extends Expr.State> member;
+	boolean trailingComma = false;
 }
 {
   { run(); }
@@ -3500,7 +3502,7 @@ STree<? extends Expr.State> MemberValueArrayInitializer():
     ( LOOKAHEAD(2) "," member = MemberValue() { ret = append(ret, member); } )*
     { ret = enRun(ret, Expr.listShape); }
   ]
-  [ "," ] // TODO Add syntactic data about comma presence in ArrayInitializerExpr
+  [ "," { trailingComma = true; } ]
   "}"
-  { return enRun(ArrayInitializerExpr.make(ret)); }
+  { return enRun(ArrayInitializerExpr.make(ret, trailingComma)); }
 }

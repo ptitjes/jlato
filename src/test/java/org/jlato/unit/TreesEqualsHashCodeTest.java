@@ -657,13 +657,17 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeList<Expr> values = arbitrary.arbitraryListExpr();
-			ArrayInitializerExpr expected = arrayInitializerExpr().withValues(values);
+			boolean trailingComma = arbitrary.arbitraryBoolean();
+			ArrayInitializerExpr expected = arrayInitializerExpr().withValues(values).withTrailingComma(trailingComma);
 			Assert.assertTrue(expected.equals(expected));
 			Assert.assertFalse(expected.equals(null));
 			ArrayInitializerExpr actual = arrayInitializerExpr();
 			Assert.assertFalse(expected.equals(actual));
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withValues(values);
+			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
+			actual = actual.withTrailingComma(trailingComma);
 			Assert.assertTrue(expected.equals(actual));
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}

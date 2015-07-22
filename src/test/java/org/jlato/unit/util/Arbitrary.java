@@ -259,7 +259,7 @@ public class Arbitrary {
 	}
 
 	public ArrayInitializerExpr arbitraryArrayInitializerExpr() {
-		return new ArrayInitializerExpr(arbitraryListExpr());
+		return new ArrayInitializerExpr(arbitraryListExpr(), arbitraryBoolean());
 	}
 
 	public NodeList<MemberDecl> arbitraryListMemberDecl() {

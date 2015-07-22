@@ -358,8 +358,10 @@ public class TreesAccessorsTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeList<Expr> values = arbitrary.arbitraryListExpr();
-			ArrayInitializerExpr t = arrayInitializerExpr().withValues(values);
+			boolean trailingComma = arbitrary.arbitraryBoolean();
+			ArrayInitializerExpr t = arrayInitializerExpr().withValues(values).withTrailingComma(trailingComma);
 			Assert.assertEquals(values, t.values());
+			Assert.assertEquals(trailingComma, t.trailingComma());
 		}
 	}
 
