@@ -86,9 +86,9 @@ final class ParserImpl extends ParserBase {
     private void throwParseException(Token token, String message) throws ParseException {
         StringBuilder buf = new StringBuilder();
         buf.append(message);
-        buf.append(": \"");
+        buf.append(": '");
         buf.append(token.image);
-        buf.append("\" at line ");
+        buf.append("' at line ");
         buf.append(token.beginLine);
         buf.append(", column ");
         buf.append(token.beginColumn);
@@ -1744,7 +1744,7 @@ STree<MethodDecl.State> MethodDecl(STree<SNodeListState> modifiers):
     ";"
     {
       if(modifiers != null && contains(modifiers, Modifier.make(LToken.Default)))
-	    throwParseException(token, "\"default\" methods must have a body");
+	    throwParseException(token, "default methods must have a body");
 	}
   )
 
