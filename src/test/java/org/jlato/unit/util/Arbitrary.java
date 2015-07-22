@@ -35,6 +35,10 @@ public class Arbitrary {
 		return random.nextInt(max);
 	}
 
+	private int nonNullChoice(int max) {
+		return random.nextInt(max - 1) + 1;
+	}
+
 	private <T> T choiceIn(T[] choices) {
 		return choices[choice(choices.length)];
 	}
@@ -45,7 +49,7 @@ public class Arbitrary {
 
 	public String arbitraryString() {
 		StringBuilder builder = new StringBuilder();
-		final int size = choice(MAX_STRING_SIZE);
+		final int size = nonNullChoice(MAX_STRING_SIZE);
 		for (int i = 0; i < size; i++) {
 			builder.append((char) ('a' + choice(26 - 1)));
 		}
@@ -91,7 +95,7 @@ public class Arbitrary {
 	}
 
 	public QualifiedName arbitraryQualifiedName() {
-		final int size = choice(MAX_QUALIFIER_SIZE - 1) + 1;
+		final int size = nonNullChoice(MAX_QUALIFIER_SIZE);
 		NodeList<Name> list = NodeList.empty();
 		for (int i = 0; i < size; i++) {
 			list = list.append(arbitraryName());
