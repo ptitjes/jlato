@@ -86,13 +86,6 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 		return qualifier().isDefined();
 	}
 
-	@Override
-	public String toString() {
-		final NodeOption<QualifiedName> qualifier = qualifier();
-		final Name name = name();
-		return qualifier.isDefined() ? qualifier.get().toString() + "." + name.toString() : name.toString();
-	}
-
 	public static class State extends SNodeState<State> implements STreeState {
 
 		public final STree<SNodeOptionState> qualifier;
