@@ -49,7 +49,6 @@ public class LiveIT {
 		parse("com.github.javaparser", "javaparser-core", "2.1.0", parser);
 	}
 
-	@Ignore("Bug to fix")
 	@Test
 	public void parsePreserveJavaParser() throws IOException, ParseException {
 		Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
@@ -62,7 +61,6 @@ public class LiveIT {
 		parse("com.javaslang", "javaslang", "1.2.2", parser);
 	}
 
-	@Ignore("Bug to fix")
 	@Test
 	public void parsePreserveJavaSLang() throws IOException, ParseException {
 		Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
