@@ -22,8 +22,8 @@ package org.jlato.rewrite;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import org.jlato.internal.patterns.DecoratedPattern;
-import org.jlato.tree.Predicate;
 import org.jlato.tree.Tree;
+import org.jlato.util.Function1;
 
 /**
  * @author Didier Villevalois
@@ -59,24 +59,24 @@ public abstract class Pattern<T> implements TypeSafeMatcher<T>, TypeSafeBuilder<
 		};
 	}
 
-	public Pattern<T> suchThat(final Predicate<T> predicate) {
+	public Pattern<T> suchThat(final Function1<? super T, Boolean> predicate) {
 		return new DecoratedPattern<T>(this) {
 			@Override
 			@SuppressWarnings("unchecked")
 			public Substitution match(Object object) {
 				Substitution match = super.match(object);
-				return match != null && predicate.test((T) object) ? match : null;
+				return match != null && predicate.apply((T) object) ? match : null;
 			}
 		};
 	}
 
-	public <U> Pattern<T> suchThat(final String var, final Predicate<U> predicate) {
+	public <U> Pattern<T> suchThat(final String var, final Function1<U, Boolean> predicate) {
 		return new DecoratedPattern<T>(this) {
 			@Override
 			@SuppressWarnings("unchecked")
 			public Substitution match(Object object) {
 				Substitution match = super.match(object);
-				return match != null && predicate.test((U) match.get(var)) ? match : null;
+				return match != null && predicate.apply(match.<U>get(var)) ? match : null;
 			}
 		};
 	}
