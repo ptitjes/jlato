@@ -14,7 +14,7 @@ public abstract class TreeFactory {
 	}
 
 	public static AnnotationMemberDecl annotationMemberDecl() {
-		return new AnnotationMemberDecl(NodeList.<ExtendedModifier>empty(), null, null, NodeList.<ArrayDim>empty(), null);
+		return new AnnotationMemberDecl(NodeList.<ExtendedModifier>empty(), null, null, NodeList.<ArrayDim>empty(), NodeOption.<Expr>none());
 	}
 
 	public static ArrayDim arrayDim() {
@@ -138,7 +138,7 @@ public abstract class TreeFactory {
 	}
 
 	public static LambdaExpr lambdaExpr() {
-		return new LambdaExpr(NodeList.<FormalParameter>empty(), true, (Expr) null);
+		return new LambdaExpr(NodeList.<FormalParameter>empty(), true, NodeEither.<Expr, BlockStmt>right(blockStmt()));
 	}
 
 	public static MarkerAnnotationExpr markerAnnotationExpr() {
