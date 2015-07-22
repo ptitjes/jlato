@@ -241,7 +241,7 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 	};
 
 	public final static LexicalShape shape = composite(
-			child(MODIFIERS),
+			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			token(LToken.At), token(LToken.Interface),
 			child(NAME),
 			child(MEMBERS, MemberDecl.bodyShape)

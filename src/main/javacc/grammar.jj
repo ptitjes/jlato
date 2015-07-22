@@ -2179,7 +2179,7 @@ STree<? extends Expr.State> Expression():
     { run(); } "(" ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<Name.State>) ret)), true)
   |
     LOOKAHEAD( "(" Name() "," )
-    "(" params = InferredFormalParameterList() ")" "->" ret = LambdaBody(params, true)
+    { run(); } "(" params = InferredFormalParameterList() ")" "->" ret = LambdaBody(params, true)
   |
     ret = ConditionalExpression()
     [
@@ -2242,7 +2242,7 @@ STree<SNodeListState> InferredFormalParameterList():
   { run(); }
   param = InferredFormalParameter() { ret = append(ret, param); }
   ( "," param = InferredFormalParameter() { ret = append(ret, param); } )*
-  { return enRun(ret); }
+  { return enRun(ret, FormalParameter.listShape); }
 }
 
 STree<FormalParameter.State> InferredFormalParameter():
