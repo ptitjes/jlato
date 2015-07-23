@@ -142,6 +142,9 @@ abstract class ParserBase {
 		} catch (EmptyStackException e) {
 			debugFailedPopTokens();
 			throw e;
+		} catch (IllegalStateException e) {
+			debugFailedPopTokens();
+			throw e;
 		}
 	}
 
@@ -328,7 +331,8 @@ abstract class ParserBase {
 	}
 
 	private void debugFailedEnRun(STree tree, LexicalShape shape, IndexedList<WTokenRun> tokens) {
-		System.out.println("Error at location: " + getToken(0).beginLine + ", " + getToken(0).beginColumn);
+		final Token token = getToken(0);
+		System.out.println("Error at location: " + token.beginLine + ", " + token.beginColumn + "; Token: " + token.image);
 
 		System.out.print("Failed to enRun tokens: ");
 		System.out.println(tokens);
