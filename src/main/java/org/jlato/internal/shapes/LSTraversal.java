@@ -40,19 +40,24 @@ public abstract class LSTraversal extends LSDecorated {
 	@Override
 	public boolean isDefined(STree tree) {
 		final STree child = traverse(tree);
-		return child != null && shape.isDefined(child);
+		return child != null && (child.run != null || shape.isDefined(child));
 	}
 
 	@Override
 	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
-		return null;
+		final STree child = traverse(tree);
+		if (child == null) return null;
+
+		if (child.run != null) return null;
+		return shape.enRun(child, tokenIterator);
 	}
 
 	public void render(STree tree, WRunRun run, Printer printer) {
 		final STree child = traverse(tree);
 		if (child == null) return;
 
-		shape.render(child, child.run, printer);
+		if (child.run != null) shape.render(child, child.run, printer);
+		else shape.render(child, run, printer);
 	}
 
 }
