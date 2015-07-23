@@ -60,7 +60,6 @@
 		<junit.version>4.11</junit.version>
 
 		<!-- Maven Plugins -->
-		<fileweaver.version>1.0</fileweaver.version>
 		<javacc-maven-plugin.version>2.6</javacc-maven-plugin.version>
 		<maven-clean-plugin.version>2.5</maven-clean-plugin.version>
 		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
@@ -68,6 +67,7 @@
 		<maven-install-plugin.version>2.4</maven-install-plugin.version>
 		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
 		<maven-release-plugin.version>2.5.1</maven-release-plugin.version>
+		<maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
 		<maven-failsafe-plugin.version>2.18.1</maven-failsafe-plugin.version>
 		<jacoco-maven-plugin.version>0.7.5.201505241946</jacoco-maven-plugin.version>
 		<coveralls-maven-plugin.version>3.1.0</coveralls-maven-plugin.version>
@@ -119,7 +119,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.10</version>
 				<executions>
 					<execution>
 						<id>copy</id>
@@ -214,6 +213,11 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${maven-surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>${maven-dependency-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
