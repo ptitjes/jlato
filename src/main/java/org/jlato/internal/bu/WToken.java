@@ -74,4 +74,9 @@ public class WToken {
 	public boolean isJavaDocComment() {
 		return kind == ParserImplConstants.JAVA_DOC_COMMENT;
 	}
+
+	@Override
+	public String toString() {
+		return string.replace("\n", "\\n").replace("\t", "\\t");
+	}
 }

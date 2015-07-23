@@ -80,4 +80,21 @@ public class WRunRun extends WRun {
 			return new WRunRun(newElements);
 		}
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[");
+
+		boolean first = true;
+		for (WRun element : elements) {
+			if (!first) builder.append(",");
+			else first = false;
+
+			builder.append(element.toString());
+		}
+
+		builder.append("]");
+		return builder.toString();
+	}
 }

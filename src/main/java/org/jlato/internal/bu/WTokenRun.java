@@ -21,6 +21,7 @@ package org.jlato.internal.bu;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
 import org.jlato.parser.ParserImplConstants;
+import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
@@ -77,5 +78,22 @@ public class WTokenRun extends WRun {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[");
+
+		boolean first = true;
+		for (WToken token : elements) {
+			if (!first) builder.append(",");
+			else first = false;
+
+			builder.append(token.toString());
+		}
+
+		builder.append("]");
+		return builder.toString();
 	}
 }
