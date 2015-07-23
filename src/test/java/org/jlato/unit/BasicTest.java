@@ -30,6 +30,7 @@ import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.ImportDecl;
 import org.jlato.tree.expr.Expr;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -43,7 +44,7 @@ import java.io.*;
 public class BasicTest {
 
 	@Test
-	public void testRun() throws FileNotFoundException, ParseException {
+	public void testRunImportDecl() throws FileNotFoundException, ParseException {
 		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
 		final String content = "import /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/;";
 
@@ -69,6 +70,18 @@ public class BasicTest {
 		Assert.assertEquals(
 				"import /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree.*/*after*/;",
 				Printer.printToString(importDecl4, true)
+		);
+	}
+
+	@Test
+	public void testRunMethodInvocationExpr() throws FileNotFoundException, ParseException {
+		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
+		final String content = "scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/)";
+
+		final Expr expr1 = parser.parse(ParseContext.Expression, content);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/)",
+				Printer.printToString(expr1, false)
 		);
 	}
 
