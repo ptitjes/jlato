@@ -52,6 +52,7 @@ public abstract class LSTraversal extends LSDecorated {
 		return shape.enRun(child, tokenIterator);
 	}
 
+	@Override
 	public void render(STree tree, WRunRun run, Printer printer) {
 		final STree child = traverse(tree);
 		if (child == null) return;
@@ -59,5 +60,4 @@ public abstract class LSTraversal extends LSDecorated {
 		if (child.run != null) shape.render(child, child.run, printer);
 		else shape.render(child, run, printer);
 	}
-
 }

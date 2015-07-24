@@ -55,16 +55,19 @@ public final class LSComposite extends LexicalShape {
 	@Override
 	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
 		final RunBuilder builder = new RunBuilder(tokenIterator);
-		for (LexicalShape shape : shapes) {
-			builder.handleNext(shape, tree);
-		}
+		iterateShapes(tree, builder);
 		return builder.build();
 	}
 
+	@Override
 	public void render(STree tree, WRunRun run, Printer printer) {
-		final RunRenderer renderer = new RunRenderer(run);
+		final RunRenderer renderer = new RunRenderer(printer, run);
+		iterateShapes(tree, renderer);
+	}
+
+	private void iterateShapes(STree tree, ShapeHandler builder) {
 		for (LexicalShape shape : shapes) {
-			renderer.renderNext(shape, tree, printer);
+			builder.handleNext(shape, tree);
 		}
 	}
 }

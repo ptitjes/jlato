@@ -30,17 +30,19 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public class RunRenderer {
+public class RunRenderer implements ShapeHandler {
 
+	private final Printer printer;
 	private final Iterator<WRun> elements;
 
 	private boolean firstShape = true;
 
-	public RunRenderer(WRunRun run) {
+	public RunRenderer(Printer printer, WRunRun run) {
+		this.printer = printer;
 		elements = run == null ? null : run.elements.iterator();
 	}
 
-	public void renderNext(LexicalShape shape, STree tree, Printer printer) {
+	public void handleNext(LexicalShape shape, STree tree) {
 		if (firstShape) firstShape = false;
 		else {
 			final WTokenRun tokens = (WTokenRun) safeNext(elements);

@@ -20,35 +20,11 @@
 package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.WRunRun;
-import org.jlato.internal.bu.WTokenRun;
-import org.jlato.printer.Printer;
-
-import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
  */
-public class LSDecorated extends LexicalShape {
+public interface ShapeHandler {
 
-	protected final LexicalShape shape;
-
-	public LSDecorated(LexicalShape shape) {
-		this.shape = shape;
-	}
-
-	@Override
-	public boolean isDefined(STree tree) {
-		return true;
-	}
-
-	@Override
-	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
-		return shape.enRun(tree, tokenIterator);
-	}
-
-	@Override
-	public void render(STree tree, WRunRun run, Printer printer) {
-		shape.render(tree, run, printer);
-	}
+	void handleNext(LexicalShape shape, STree tree);
 }

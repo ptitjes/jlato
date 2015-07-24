@@ -31,7 +31,7 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public class RunBuilder {
+public class RunBuilder implements ShapeHandler {
 
 	private final Iterator<WTokenRun> tokenIterator;
 

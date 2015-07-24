@@ -54,6 +54,7 @@ public final class LSAlternative extends LexicalShape {
 				alternative == null ? null : alternative.enRun(tree, tokenIterator);
 	}
 
+	@Override
 	public void render(STree tree, WRunRun run, Printer printer) {
 		if (condition.test(tree)) {
 			if (shape != null) shape.render(tree, run, printer);
@@ -61,5 +62,4 @@ public final class LSAlternative extends LexicalShape {
 			if (alternative != null) alternative.render(tree, run, printer);
 		}
 	}
-
 }

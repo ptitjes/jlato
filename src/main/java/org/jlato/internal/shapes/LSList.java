@@ -56,40 +56,22 @@ public final class LSList extends LexicalShape {
 	@Override
 	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
 		final RunBuilder builder = new RunBuilder(tokenIterator);
-
-		final SNodeListState state = (SNodeListState) tree.state;
-		final Vector<STree<?>> children = state.children;
-		final boolean isEmpty = children.isEmpty();
-
-		builder.handleNext(isEmpty && !renderIfEmpty ? none() : before, tree);
-
-		boolean firstElement = true;
-		STree previous = null;
-		for (STree child : children) {
-			if (firstElement) {
-				firstElement = false;
-			} else {
-				builder.handleNext(separator, previous);
-			}
-
-			builder.handleNext(shape, child);
-
-			previous = child;
-		}
-
-		builder.handleNext(isEmpty && !renderIfEmpty ? none() : after, tree);
-
+		iterateShapes(tree, builder);
 		return builder.build();
 	}
 
+	@Override
 	public void render(STree tree, WRunRun run, Printer printer) {
+		final RunRenderer renderer = new RunRenderer(printer, run);
+		iterateShapes(tree, renderer);
+	}
+
+	private void iterateShapes(STree tree, ShapeHandler renderer) {
 		final SNodeListState state = (SNodeListState) tree.state;
 		final Vector<STree<?>> children = state.children;
 		final boolean isEmpty = children.isEmpty();
 
-		final RunRenderer renderer = new RunRenderer(run);
-
-		renderer.renderNext(isEmpty && !renderIfEmpty ? none() : before, tree, printer);
+		renderer.handleNext(isEmpty && !renderIfEmpty ? none() : before, tree);
 
 		boolean firstElement = true;
 		STree previous = null;
@@ -97,15 +79,14 @@ public final class LSList extends LexicalShape {
 			if (firstElement) {
 				firstElement = false;
 			} else {
-				renderer.renderNext(separator, previous, printer);
+				renderer.handleNext(separator, previous);
 			}
 
-			renderer.renderNext(shape, child, printer);
+			renderer.handleNext(shape, child);
 
 			previous = child;
 		}
 
-		renderer.renderNext(isEmpty && !renderIfEmpty ? none() : after, tree, printer);
+		renderer.handleNext(isEmpty && !renderIfEmpty ? none() : after, tree);
 	}
-
 }

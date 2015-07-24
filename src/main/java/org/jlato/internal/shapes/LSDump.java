@@ -46,6 +46,7 @@ public class LSDump<S extends STreeState> extends LexicalShape {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void render(STree tree, WRunRun run, Printer printer) {
 		final IndexedList<WTokenRun> data = (IndexedList<WTokenRun>) property.retrieve((S) tree.state);
 		if (data != null) {

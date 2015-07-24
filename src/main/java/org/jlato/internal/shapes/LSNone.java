@@ -44,6 +44,7 @@ public final class LSNone extends LexicalShape {
 		return null;
 	}
 
+	@Override
 	public void render(STree tree, WRunRun run, Printer printer) {
 	}
 }

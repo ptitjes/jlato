@@ -52,6 +52,7 @@ public final class LSToken extends LexicalShape {
 		return null;
 	}
 
+	@Override
 	public void render(STree tree, WRunRun run, Printer printer) {
 		final LToken token = provider.tokenFor(tree);
 		if (token == null) throw new IllegalStateException();
@@ -71,6 +72,7 @@ public final class LSToken extends LexicalShape {
 			this.token = token;
 		}
 
+		@Override
 		public LToken tokenFor(STree tree) {
 			return token;
 		}
