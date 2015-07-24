@@ -2,7 +2,7 @@
 
 JLaTo is a Java Language Tools library.
 
-[![Build Status](https://travis-ci.org/ptitjes/jlato.png)](https://travis-ci.org/ptitjes/jlato)
+[![Build Status](https://travis-ci.org/ptitjes/jlato.svg?branch=master)](https://travis-ci.org/ptitjes/jlato)
 [![Coverage Status](https://coveralls.io/repos/ptitjes/jlato/badge.svg?branch=master&service=github)](https://coveralls.io/github/ptitjes/jlato?branch=master)
 
 ## Features
