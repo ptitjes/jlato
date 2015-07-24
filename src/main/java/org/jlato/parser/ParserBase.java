@@ -148,22 +148,6 @@ abstract class ParserBase {
 		}
 	}
 
-	protected <S extends STreeState> STree<S> enRun(STree<S> tree, LexicalShape shape) {
-		if (!configuration.preserveWhitespaces) return tree;
-
-		try {
-			final IndexedList<WTokenRun> tokens = popTokens();
-
-			if (tree == null) return null;
-
-			return doEnRun(tree, shape, tokens);
-
-		} catch (EmptyStackException e) {
-			debugFailedPopTokens();
-			throw e;
-		}
-	}
-
 	private <S extends STreeState> STree<S> doEnRun(STree<S> tree, LexicalShape shape,
 	                                                IndexedList<WTokenRun> tokens) {
 		try {
