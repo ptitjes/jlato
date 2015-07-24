@@ -70,6 +70,14 @@ public class SNodeListState implements STreeState {
 		return new ElementTraversal(index);
 	}
 
+	public static ElementTraversal firstTraversal() {
+		return new ElementTraversal(0);
+	}
+
+	public static ElementTraversal lastTraversal() {
+		return new ElementTraversal(-1);
+	}
+
 	@Override
 	public Iterable<SProperty> allProperties() {
 		return Collections.emptyList();
@@ -78,13 +86,13 @@ public class SNodeListState implements STreeState {
 	@Override
 	public STraversal firstChild() {
 		if (children.isEmpty()) return null;
-		return elementTraversal(-1).rightSibling(this);
+		return elementTraversal(0);
 	}
 
 	@Override
 	public STraversal lastChild() {
 		if (children.isEmpty()) return null;
-		return elementTraversal(children.size()).leftSibling(this);
+		return elementTraversal(children.size() - 1);
 	}
 
 	public STree<?> child(int index) {
@@ -125,33 +133,31 @@ public class SNodeListState implements STreeState {
 
 		@Override
 		protected STree<?> doTraverse(SNodeListState state) {
-			return state.child(index);
+			return state.child(index(state));
+		}
+
+		private int index(SNodeListState state) {
+			return index >= 0 ? index : state.children.size() + index;
 		}
 
 		@Override
 		protected SNodeListState doRebuildParentState(SNodeListState state, STree<STreeState> child) {
-			return state.withChild(index, child);
+			return state.withChild(index(state), child);
 		}
 
 		@Override
 		public STraversal leftSibling(STreeState state) {
-			int previousIndex = index - 1;
-			while (previousIndex >= 0) {
-				if (((SNodeListState) state).child(previousIndex) != null)
-					return new ElementTraversal(previousIndex);
-				previousIndex--;
-			}
+			final SNodeListState nodeListState = (SNodeListState) state;
+			int previousIndex = index(nodeListState) - 1;
+			if (previousIndex >= 0) return new ElementTraversal(previousIndex);
 			return null;
 		}
 
 		@Override
 		public STraversal rightSibling(STreeState state) {
-			int nextIndex = index + 1;
-			while (nextIndex < ((SNodeListState) state).children.size()) {
-				if (((SNodeListState) state).child(nextIndex) != null)
-					return new ElementTraversal(nextIndex);
-				nextIndex++;
-			}
+			final SNodeListState nodeListState = (SNodeListState) state;
+			int nextIndex = index(nodeListState) + 1;
+			if (nextIndex < nodeListState.children.size()) return new ElementTraversal(nextIndex);
 			return null;
 		}
 	}

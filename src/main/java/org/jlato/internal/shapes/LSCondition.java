@@ -47,22 +47,6 @@ public abstract class LSCondition {
 		};
 	}
 
-	public static LSCondition nonNull() {
-		return new LSCondition() {
-			public boolean test(STree tree) {
-				return tree != null;
-			}
-		};
-	}
-
-	public static LSCondition kind(final Kind kind) {
-		return new LSCondition() {
-			public boolean test(STree tree) {
-				return ((SNodeState) tree.state).kind() == kind;
-			}
-		};
-	}
-
 	public static LSCondition childIs(final STraversal traversal, final LSCondition condition) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
@@ -75,18 +59,15 @@ public abstract class LSCondition {
 		return childIs(traversal, condition);
 	}
 
-	public static LSCondition lastChildKind(final Kind kind) {
+	public static LSCondition kind(final Kind kind) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
-				final SNodeListState state = (SNodeListState) tree.state;
-				final Vector<STree<?>> children = state.children;
-				final Kind childKind = ((SNodeState) children.last().state).kind();
-				return childKind == kind;
+				return ((SNodeState) tree.state).kind() == kind;
 			}
 		};
 	}
 
-	public static LSCondition emptyList() {
+	public static LSCondition empty() {
 		return new LSCondition() {
 			@Override
 			public boolean test(STree tree) {
@@ -97,6 +78,16 @@ public abstract class LSCondition {
 		};
 	}
 
+	public static LSCondition some() {
+		return new LSCondition() {
+			@Override
+			public boolean test(STree tree) {
+				final SNodeOptionState state = (SNodeOptionState) tree.state;
+				final STree element = state.element;
+				return element != null;
+			}
+		};
+	}
 	public static LSCondition elementIs(final LSCondition condition) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
@@ -109,16 +100,5 @@ public abstract class LSCondition {
 
 	public static LSCondition elementHas(final LSCondition condition) {
 		return elementIs(condition);
-	}
-
-	public static LSCondition some() {
-		return new LSCondition() {
-			@Override
-			public boolean test(STree tree) {
-				final SNodeOptionState state = (SNodeOptionState) tree.state;
-				final STree element = state.element;
-				return element != null;
-			}
-		};
 	}
 }

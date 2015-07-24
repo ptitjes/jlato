@@ -19,13 +19,15 @@
 
 package org.jlato.tree.decl;
 
+import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STreeState;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 
+import static org.jlato.internal.shapes.LSCondition.childHas;
 import static org.jlato.internal.shapes.LSCondition.kind;
-import static org.jlato.internal.shapes.LSCondition.lastChildKind;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
@@ -38,11 +40,11 @@ public interface ExtendedModifier extends Tree {
 	interface State extends STreeState {
 	}
 
-	public static final LexicalShape singleLineShape = list(
+	LexicalShape singleLineShape = list(
 			none().withSpacingAfter(space())
 	);
 
-	public static final LexicalShape multiLineShape = list(
+	LexicalShape multiLineShape = list(
 			none(),
 			alternative(
 					kind(Kind.Modifier),
@@ -50,7 +52,7 @@ public interface ExtendedModifier extends Tree {
 					none().withSpacingAfter(newLine())
 			),
 			alternative(
-					lastChildKind(Kind.Modifier),
+					childHas(SNodeListState.lastTraversal(), kind(Kind.Modifier)),
 					none().withSpacingAfter(space()),
 					none().withSpacingAfter(newLine())
 			)

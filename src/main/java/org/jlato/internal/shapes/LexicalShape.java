@@ -77,17 +77,12 @@ public abstract class LexicalShape {
 		return alternative(LSCondition.data(property), shape, null);
 	}
 
-	@Deprecated
-	public static LexicalShape nonNullChild(STraversal traversal, LexicalShape shape, LexicalShape alternative) {
-		return alternative(childIs(traversal, nonNull()), shape, alternative);
-	}
-
 	public static LexicalShape nonEmptyChildren(STraversal traversal, LexicalShape shape) {
-		return alternative(childIs(traversal, not(emptyList())), shape, null);
+		return alternative(childIs(traversal, not(empty())), shape, null);
 	}
 
 	public static LexicalShape nonEmptyChildren(STraversal traversal, LexicalShape shape, LexicalShape alternative) {
-		return alternative(childIs(traversal, not(emptyList())), shape, alternative);
+		return alternative(childIs(traversal, not(empty())), shape, alternative);
 	}
 
 	public static LexicalShape emptyChildren(STraversal traversal, LexicalShape shape) {

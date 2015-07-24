@@ -22,7 +22,7 @@ package org.jlato.tree.decl;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.shapes.LexicalShape;
 
-import static org.jlato.internal.shapes.LSCondition.emptyList;
+import static org.jlato.internal.shapes.LSCondition.empty;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
@@ -38,7 +38,7 @@ public interface MemberDecl extends Decl {
 	}
 
 	LexicalShape bodyShape = list(true,
-			alternative(emptyList(),
+			alternative(empty(),
 					token(LToken.BraceLeft)
 							.withSpacing(space(), newLine())
 							.withIndentationAfter(indent(TYPE_BODY)),
@@ -47,7 +47,7 @@ public interface MemberDecl extends Decl {
 							.withIndentationAfter(indent(TYPE_BODY))
 			),
 			none().withSpacingAfter(spacing(ClassBody_BetweenMembers)),
-			alternative(emptyList(),
+			alternative(empty(),
 					token(LToken.BraceRight)
 							.withIndentationBefore(unIndent(TYPE_BODY)),
 					token(LToken.BraceRight)
