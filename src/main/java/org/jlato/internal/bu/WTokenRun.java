@@ -20,8 +20,8 @@
 package org.jlato.internal.bu;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
+import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.parser.ParserImplConstants;
-import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
@@ -30,12 +30,147 @@ public class WTokenRun extends WRun {
 
 	public final IndexedList<WToken> elements;
 
+	public WTokenRun() {
+		this(Vector.<WToken>empty());
+	}
+
 	public WTokenRun(IndexedList<WToken> elements) {
 		this.elements = elements;
 	}
 
 	public WTokenRun append(WToken element) {
 		return new WTokenRun(elements.append(element));
+	}
+
+	public TwoWaySplit splitTrailingComment() {
+		int splitIndex = splitIndexOfTrailingComment();
+		return new TwoWaySplit(
+				new WTokenRun(elements.take(splitIndex)),
+				new WTokenRun(elements.drop(splitIndex))
+		);
+	}
+
+	public TwoWaySplit splitLeadingComments() {
+		int splitIndex = splitIndexOfLeadingComments();
+		return new TwoWaySplit(
+				new WTokenRun(elements.take(splitIndex)),
+				new WTokenRun(elements.drop(splitIndex))
+		);
+	}
+
+	public ThreeWaySplit splitTrailingAndLeadingComments() {
+		if (containsOneCommentNoNewLine()) {
+			final TwoWaySplit leadingSplit = splitLeadingComments();
+
+			return new ThreeWaySplit(
+					new WTokenRun(),
+					leadingSplit.left,
+					leadingSplit.right
+			);
+		} else {
+			final TwoWaySplit trailingSplit = splitTrailingComment();
+			final TwoWaySplit leadingSplit = trailingSplit.right.splitLeadingComments();
+
+			return new ThreeWaySplit(
+					trailingSplit.left,
+					leadingSplit.left,
+					leadingSplit.right
+			);
+		}
+	}
+
+	public static class TwoWaySplit {
+		public final WTokenRun left;
+		public final WTokenRun right;
+
+		private TwoWaySplit(WTokenRun left, WTokenRun right) {
+			this.left = left;
+			this.right = right;
+		}
+	}
+
+	public static class ThreeWaySplit {
+		public final WTokenRun left;
+		public final WTokenRun middle;
+		public final WTokenRun right;
+
+		private ThreeWaySplit(WTokenRun left, WTokenRun middle, WTokenRun right) {
+			this.left = left;
+			this.middle = middle;
+			this.right = right;
+		}
+	}
+
+	private int splitIndexOfTrailingComment() {
+		// We expect to find one comment at beginning with no new line before
+		int splitIndex;
+		for (splitIndex = 0; splitIndex < elements.size(); splitIndex++) {
+			final WToken token = elements.get(splitIndex);
+			switch (token.kind) {
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case ParserImplConstants.JAVA_DOC_COMMENT:
+					return splitIndex + 1;
+				case ParserImplConstants.NEWLINE:
+					return splitIndex;
+				case ParserImplConstants.WHITESPACE:
+					break;
+				default:
+					// Checked at WToken instantiation
+					throw new IllegalStateException();
+			}
+		}
+		return splitIndex;
+	}
+
+	private int splitIndexOfLeadingComments() {
+		// We expect to find some comments at end with no empty line between or after
+		boolean emptyLine = false;
+		int splitIndex = elements.size();
+		for (int i = elements.size() - 1; i >= 0; i--) {
+			final WToken token = elements.get(i);
+			switch (token.kind) {
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case ParserImplConstants.JAVA_DOC_COMMENT:
+					emptyLine = false;
+					splitIndex = i;
+					break;
+				case ParserImplConstants.NEWLINE:
+					if (emptyLine) return splitIndex;
+					emptyLine = true;
+					break;
+				case ParserImplConstants.WHITESPACE:
+					break;
+				default:
+					// Checked at WToken instantiation
+					throw new IllegalStateException();
+			}
+		}
+		return splitIndex;
+	}
+
+	public boolean containsOneCommentNoNewLine() {
+		if (elements.size() > 3) return false;
+
+		int count = 0;
+		for (WToken token : elements) {
+			switch (token.kind) {
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case ParserImplConstants.JAVA_DOC_COMMENT:
+					count++;
+					break;
+				case ParserImplConstants.NEWLINE:
+					return false;
+				case ParserImplConstants.WHITESPACE:
+					break;
+				default:
+					// Checked at WToken instantiation
+					throw new IllegalStateException();
+			}
+		}
+		return count == 1;
 	}
 
 	public int emptyLineCount() {
@@ -95,5 +230,17 @@ public class WTokenRun extends WRun {
 
 		builder.append("]");
 		return builder.toString();
+	}
+
+	public static class Builder {
+		private final com.github.andrewoma.dexx.collection.Builder<WToken, Vector<WToken>> elements = Vector.<WToken>factory().newBuilder();
+
+		public void add(WToken token) {
+			elements.add(token);
+		}
+
+		public WTokenRun build() {
+			return new WTokenRun(elements.build());
+		}
 	}
 }

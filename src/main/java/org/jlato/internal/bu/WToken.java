@@ -26,6 +26,26 @@ import org.jlato.parser.ParserImplConstants;
  */
 public class WToken {
 
+	public static WToken newLine() {
+		return new WToken(ParserImplConstants.NEWLINE, "\n");
+	}
+
+	public static WToken singleLineComment(String image) {
+		return new WToken(ParserImplConstants.SINGLE_LINE_COMMENT, image);
+	}
+
+	public static WToken multiLineComment(String image) {
+		return new WToken(ParserImplConstants.MULTI_LINE_COMMENT, image);
+	}
+
+	public static WToken javaDocComment(String image) {
+		return new WToken(ParserImplConstants.JAVA_DOC_COMMENT, image);
+	}
+
+	public static WToken whitespace(String image) {
+		return new WToken(ParserImplConstants.WHITESPACE, image);
+	}
+
 	public final int kind;
 	public final String string;
 
