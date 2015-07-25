@@ -475,9 +475,9 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 			token(LToken.ParenthesisRight),
 			child(DIMS, ArrayDim.listShape),
 			child(THROWS_CLAUSE, QualifiedType.throwsClauseShape),
-			alternative(childIs(BODY, some()),
-					composite(none().withSpacingAfter(space()), child(BODY, element())),
+			child(BODY, alternative(some(),
+					element().withSpacingBefore(space()),
 					token(LToken.SemiColon)
-			)
+			))
 	);
 }

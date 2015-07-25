@@ -287,8 +287,9 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(NAME),
 			child(ARGS, when(some(), element(Expr.argumentsShape))),
-			child(CLASS_BODY, when(some(), element(MemberDecl.bodyShape))),
-			when(childIs(CLASS_BODY, some()), none().withSpacingAfter(spacing(EnumConstant_AfterBody)))
+			child(CLASS_BODY, when(some(),
+					composite(element(MemberDecl.bodyShape), none().withSpacingAfter(spacing(EnumConstant_AfterBody)))
+			))
 	);
 
 	public static final LexicalShape listShape = list(

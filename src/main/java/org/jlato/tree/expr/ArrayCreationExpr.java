@@ -282,11 +282,8 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 			child(TYPE),
 			child(DIM_EXPRS, list()),
 			child(DIMS, list()),
-			when(childIs(INIT, some()),
-					composite(
-							none().withSpacingAfter(space()),
-							child(INIT, element())
-					)
-			)
+			child(INIT, when(some(),
+					element().withSpacingBefore(space())
+			))
 	);
 }

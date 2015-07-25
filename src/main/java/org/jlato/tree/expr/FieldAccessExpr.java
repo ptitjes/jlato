@@ -189,7 +189,7 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 	};
 
 	public final static LexicalShape shape = composite(
-			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
+			child(SCOPE, when(some(), composite(element(), token(LToken.Dot)))),
 			child(NAME)
 	);
 }

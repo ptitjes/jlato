@@ -234,7 +234,7 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
 			token(LToken.QuestionMark),
-			when(childIs(EXT, some()), composite(token(LToken.Extends).withSpacingBefore(space()), child(EXT, element()))),
-			when(childIs(SUP, some()), composite(token(LToken.Super).withSpacingBefore(space()), child(SUP, element())))
+			child(EXT, when(some(), composite(token(LToken.Extends).withSpacing(space(), space()), element()))),
+			child(SUP, when(some(), composite(token(LToken.Super).withSpacing(space(), space()), element())))
 	);
 }

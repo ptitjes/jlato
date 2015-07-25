@@ -281,9 +281,8 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 			child(RESOURCES, VariableDeclarationExpr.resourcesShape),
 			child(TRY_BLOCK),
 			child(CATCHS, CatchClause.listShape),
-			when(childIs(FINALLY_BLOCK, some()), composite(
-					token(LToken.Finally).withSpacing(space(), space()),
-					child(FINALLY_BLOCK, element())
+			child(FINALLY_BLOCK, when(some(),
+					composite(token(LToken.Finally).withSpacing(space(), space()), element())
 			))
 	);
 }

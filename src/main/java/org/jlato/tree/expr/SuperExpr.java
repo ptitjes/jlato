@@ -143,7 +143,7 @@ public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implem
 	};
 
 	public final static LexicalShape shape = composite(
-			when(childIs(CLASS_EXPR, some()), composite(child(CLASS_EXPR, element()), token(LToken.Dot))),
+			child(CLASS_EXPR, when(some(), composite(element(), token(LToken.Dot)))),
 			token(LToken.Super)
 	);
 }

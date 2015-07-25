@@ -239,47 +239,46 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 	};
 
 	public final static LexicalShape shape = composite(
-			token(LToken.If), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
+			token(LToken.If).withSpacingAfter(space()),
+			token(LToken.ParenthesisLeft),
 			child(CONDITION),
 			token(LToken.ParenthesisRight),
-			alternative(childHas(THEN_STMT, LSCondition.kind(Kind.BlockStmt)),
-					composite(none().withSpacingAfter(space()), child(THEN_STMT)),
-					alternative(childHas(THEN_STMT, LSCondition.kind(Kind.ExpressionStmt)),
-							composite(
-									none().withSpacingAfter(spacing(IfStmt_ThenExpressionStmt)).withIndentationAfter(indent(BLOCK)),
-									child(THEN_STMT),
-									none().withIndentationBefore(unIndent(BLOCK)).withSpacingAfter(newLine())
-							),
-							composite(
-									none().withSpacingAfter(spacing(IfStmt_ThenOtherStmt)).withIndentationAfter(indent(BLOCK)),
-									child(THEN_STMT),
-									none().withIndentationBefore(unIndent(BLOCK)).withSpacingAfter(newLine())
+			child(THEN_STMT,
+					alternative(LSCondition.kind(Kind.BlockStmt),
+							defaultShape().withSpacingBefore(space()),
+							alternative(LSCondition.kind(Kind.ExpressionStmt),
+									defaultShape()
+											.withSpacingBefore(spacing(IfStmt_ThenExpressionStmt))
+											.withIndentationBefore(indent(BLOCK))
+											.withIndentationAfter(unIndent(BLOCK))
+											.withSpacingAfter(newLine()),
+									defaultShape()
+											.withSpacingBefore(spacing(IfStmt_ThenOtherStmt))
+											.withIndentationBefore(indent(BLOCK))
+											.withIndentationAfter(unIndent(BLOCK))
+											.withSpacingAfter(newLine())
 							)
 					)
 			),
-			when(childIs(ELSE_STMT, some()), composite(
+			child(ELSE_STMT, when(some(), composite(
 					token(LToken.Else).withSpacingBefore(space()),
-					alternative(childHas(ELSE_STMT, elementHas(LSCondition.kind(Kind.BlockStmt))),
-							composite(none().withSpacingAfter(space()), child(ELSE_STMT, element())),
-							alternative(childHas(ELSE_STMT, elementHas(LSCondition.kind(Kind.IfStmt))),
-									composite(
-											none().withSpacingAfter(spacing(IfStmt_ElseIfStmt)),
-											child(ELSE_STMT, element())
-									),
-									alternative(childHas(ELSE_STMT, elementHas(LSCondition.kind(Kind.ExpressionStmt))),
-											composite(
-													none().withSpacingAfter(spacing(IfStmt_ElseExpressionStmt)).withIndentationAfter(indent(BLOCK)),
-													child(ELSE_STMT, element()),
-													none().withIndentationBefore(unIndent(BLOCK))
-											),
-											composite(
-													none().withSpacingAfter(spacing(IfStmt_ElseOtherStmt)).withIndentationAfter(indent(BLOCK)),
-													child(ELSE_STMT, element()),
-													none().withIndentationBefore(unIndent(BLOCK)).withSpacingAfter(newLine())
-											)
+					element(alternative(LSCondition.kind(Kind.BlockStmt),
+							defaultShape().withSpacingBefore(space()),
+							alternative(LSCondition.kind(Kind.IfStmt),
+									defaultShape().withSpacingBefore(spacing(IfStmt_ElseIfStmt)),
+									alternative(LSCondition.kind(Kind.ExpressionStmt),
+											defaultShape()
+													.withSpacingBefore(spacing(IfStmt_ElseExpressionStmt))
+													.withIndentationBefore(indent(BLOCK))
+													.withIndentationAfter(unIndent(BLOCK)),
+											defaultShape()
+													.withSpacingBefore(spacing(IfStmt_ElseOtherStmt))
+													.withIndentationBefore(indent(BLOCK))
+													.withIndentationAfter(unIndent(BLOCK))
+													.withSpacingAfter(newLine())
 									)
 							)
-					)
-			))
+					))
+			)))
 	);
 }

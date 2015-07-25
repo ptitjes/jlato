@@ -268,7 +268,7 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	};
 
 	public final static LexicalShape shape = composite(
-			when(childIs(EXPR, some()), composite(child(EXPR, element()), token(LToken.Dot))),
+			child(EXPR, when(some(), composite(element(), token(LToken.Dot)))),
 			child(TYPE_ARGS, Type.typeArgumentsShape),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {

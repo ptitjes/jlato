@@ -286,13 +286,13 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 	);
 
 	public static final LexicalShape extendsClauseShape = list(
-			token(LToken.Extends),
+			token(LToken.Extends).withSpacing(space(), space()),
 			token(LToken.Comma).withSpacingAfter(space()),
 			null
 	);
 
 	public static final LexicalShape implementsClauseShape = list(
-			token(LToken.Implements),
+			token(LToken.Implements).withSpacing(space(), space()),
 			token(LToken.Comma).withSpacingAfter(space()),
 			null
 	);

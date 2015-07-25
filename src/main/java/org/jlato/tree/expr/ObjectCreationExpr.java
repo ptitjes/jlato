@@ -324,7 +324,7 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 	};
 
 	public final static LexicalShape shape = composite(
-			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
+			child(SCOPE, when(some(), composite(element(), token(LToken.Dot)))),
 			token(LToken.New).withSpacingAfter(space()),
 			child(TYPE_ARGS, Type.typeArgumentsShape),
 			child(TYPE),

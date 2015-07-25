@@ -145,7 +145,7 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Break),
-			when(childIs(ID, some()), child(ID, element())),
+			child(ID, when(some(), element())),
 			token(LToken.SemiColon)
 	);
 }

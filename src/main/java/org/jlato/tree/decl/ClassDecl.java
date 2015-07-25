@@ -381,12 +381,9 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 			token(LToken.Class),
 			child(NAME),
 			child(TYPE_PARAMS, TypeParameter.listShape),
-			when(childIs(EXTENDS_CLAUSE, some()),
-					child(EXTENDS_CLAUSE, composite(
-							token(LToken.Extends).withSpacing(space(), space()),
-							element()
-					))
-			),
+			child(EXTENDS_CLAUSE, when(some(),
+					composite(token(LToken.Extends).withSpacing(space(), space()), element())
+			)),
 			child(IMPLEMENTS_CLAUSE, QualifiedType.implementsClauseShape),
 			child(MEMBERS, MemberDecl.bodyShape)
 	);

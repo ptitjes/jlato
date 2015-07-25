@@ -192,9 +192,8 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 	public final static LexicalShape shape = composite(
 			token(LToken.Assert),
 			child(CHECK),
-			when(childIs(MSG, some()), composite(
-					token(LToken.Colon).withSpacing(space(), space()),
-					child(MSG, element())
+			child(MSG, when(some(),
+					composite(token(LToken.Colon).withSpacing(space(), space()), element())
 			)),
 			token(LToken.SemiColon)
 	);

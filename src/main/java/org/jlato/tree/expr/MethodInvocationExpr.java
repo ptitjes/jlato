@@ -277,7 +277,7 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 	};
 
 	public final static LexicalShape shape = composite(
-			when(childIs(SCOPE, some()), composite(child(SCOPE, element()), token(LToken.Dot))),
+			child(SCOPE, when(some(), composite(element(), token(LToken.Dot)))),
 			child(TYPE_ARGS, Type.typeArgumentsShape),
 			child(NAME),
 			child(ARGS, Expr.argumentsShape)
