@@ -73,26 +73,6 @@ public abstract class LexicalShape {
 		return new LSAlternative(condition, shape, alternative);
 	}
 
-	public static <S extends STreeState> LexicalShape dataOption(final SProperty property, LexicalShape shape) {
-		return alternative(LSCondition.data(property), shape, null);
-	}
-
-	public static LexicalShape nonEmptyChildren(STraversal traversal, LexicalShape shape) {
-		return alternative(childIs(traversal, not(empty())), shape, null);
-	}
-
-	public static LexicalShape nonEmptyChildren(STraversal traversal, LexicalShape shape, LexicalShape alternative) {
-		return alternative(childIs(traversal, not(empty())), shape, alternative);
-	}
-
-	public static LexicalShape emptyChildren(STraversal traversal, LexicalShape shape) {
-		return nonEmptyChildren(traversal, null, shape);
-	}
-
-	public static LexicalShape emptyChildren(STraversal traversal, LexicalShape shape, LexicalShape alternative) {
-		return nonEmptyChildren(traversal, alternative, shape);
-	}
-
 	public static LexicalShape composite(LexicalShape... shapes) {
 		return new LSComposite(shapes);
 	}

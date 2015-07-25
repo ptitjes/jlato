@@ -20,6 +20,7 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.*;
+import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
@@ -30,6 +31,8 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 
+import static org.jlato.internal.shapes.LSCondition.*;
+import static org.jlato.internal.shapes.LSCondition.empty;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_AfterConstants;
@@ -380,19 +383,15 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 			token(LToken.BraceLeft)
 					.withSpacingBefore(space())
 					.withIndentationAfter(indent(TYPE_BODY)),
-			nonEmptyChildren(ENUM_CONSTANTS,
-					child(ENUM_CONSTANTS, EnumConstantDecl.listShape)
-			),
-			dataOption(TRAILING_COMMA,
-					token(LToken.Comma).withSpacingAfter(spacing(EnumBody_BetweenConstants))
-			),
-			emptyChildren(MEMBERS,
-					emptyChildren(ENUM_CONSTANTS,
+			child(ENUM_CONSTANTS, EnumConstantDecl.listShape),
+			when(data(TRAILING_COMMA), token(LToken.Comma).withSpacingAfter(spacing(EnumBody_BetweenConstants))),
+			when(childIs(MEMBERS, empty()),
+					alternative(childIs(ENUM_CONSTANTS, empty()),
 							none().withSpacingAfter(newLine()),
 							none().withSpacingAfter(spacing(EnumBody_AfterConstants))
 					)
 			),
-			nonEmptyChildren(MEMBERS,
+			when(childIs(MEMBERS, not(empty())),
 					token(LToken.SemiColon).withSpacingAfter(spacing(EnumBody_AfterConstants))
 			),
 			child(MEMBERS, MemberDecl.membersShape),

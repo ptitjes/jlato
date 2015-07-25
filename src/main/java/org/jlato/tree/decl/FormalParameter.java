@@ -31,6 +31,7 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.data;
 import static org.jlato.internal.shapes.LSCondition.not;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
@@ -273,7 +274,7 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.singleLineShape),
 			child(TYPE),
-			dataOption(VAR_ARGS, token(LToken.Ellipsis)),
+			when(data(VAR_ARGS), token(LToken.Ellipsis)),
 			when(not(childIs(TYPE, LSCondition.kind(Kind.UnknownType))), none().withSpacingAfter(space())),
 			child(ID)
 	);

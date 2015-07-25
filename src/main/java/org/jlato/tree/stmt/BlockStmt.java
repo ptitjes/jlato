@@ -28,6 +28,9 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.empty;
+import static org.jlato.internal.shapes.LSCondition.not;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.IndentationConstraint.indent;
@@ -145,23 +148,20 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 	};
 
 	public final static LexicalShape shape = composite(
-			nonEmptyChildren(STMTS,
-					composite(
-							token(LToken.BraceLeft)
-									.withSpacingAfter(newLine())
-									.withIndentationAfter(indent(BLOCK)),
-							child(STMTS, listShape),
-							token(LToken.BraceRight)
-									.withIndentationBefore(unIndent(BLOCK))
-									.withSpacingBefore(newLine())
-					),
-					composite(
-							token(LToken.BraceLeft)
-									.withSpacingAfter(newLine())
-									.withIndentationAfter(indent(BLOCK)),
-							token(LToken.BraceRight)
-									.withIndentationBefore(unIndent(BLOCK))
-					)
-			)
+			alternative(childIs(STMTS, not(empty())), composite(
+					token(LToken.BraceLeft)
+							.withSpacingAfter(newLine())
+							.withIndentationAfter(indent(BLOCK)),
+					child(STMTS, listShape),
+					token(LToken.BraceRight)
+							.withIndentationBefore(unIndent(BLOCK))
+							.withSpacingBefore(newLine())
+			), composite(
+					token(LToken.BraceLeft)
+							.withSpacingAfter(newLine())
+							.withIndentationAfter(indent(BLOCK)),
+					token(LToken.BraceRight)
+							.withIndentationBefore(unIndent(BLOCK))
+			))
 	);
 }

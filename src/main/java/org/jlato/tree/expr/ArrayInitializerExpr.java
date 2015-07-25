@@ -28,10 +28,9 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_BetweenConstants;
 import static org.jlato.printer.SpacingConstraint.space;
-import static org.jlato.printer.SpacingConstraint.spacing;
 
 public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, Expr, ArrayInitializerExpr> implements Expr {
 
@@ -178,18 +177,15 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 	};
 
 	public final static LexicalShape shape = composite(
-			nonEmptyChildren(VALUES,
-					composite(
-							token(LToken.BraceLeft).withSpacingAfter(space()),
-							child(VALUES, Expr.listShape),
-							dataOption(TRAILING_COMMA, token(LToken.Comma)),
-							token(LToken.BraceRight).withSpacingBefore(space())
-					),
-					composite(
-							token(LToken.BraceLeft),
-							dataOption(TRAILING_COMMA, token(LToken.Comma)),
-							token(LToken.BraceRight)
-					)
-			)
+			alternative(childIs(VALUES, not(empty())), composite(
+					token(LToken.BraceLeft).withSpacingAfter(space()),
+					child(VALUES, Expr.listShape),
+					when(data(TRAILING_COMMA), token(LToken.Comma)),
+					token(LToken.BraceRight).withSpacingBefore(space())
+			), composite(
+					token(LToken.BraceLeft),
+					when(data(TRAILING_COMMA), token(LToken.Comma)),
+					token(LToken.BraceRight)
+			))
 	);
 }

@@ -29,6 +29,9 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.empty;
+import static org.jlato.internal.shapes.LSCondition.not;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.SwitchStmt_AfterSwitchKeyword;
@@ -196,23 +199,20 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 			token(LToken.ParenthesisLeft).withSpacingBefore(spacing(SwitchStmt_AfterSwitchKeyword)),
 			child(SELECTOR),
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
-			nonEmptyChildren(CASES,
-					composite(
-							token(LToken.BraceLeft)
-									.withSpacingAfter(newLine())
-									.withIndentationAfter(indent(BLOCK)),
-							child(CASES, SwitchCase.listShape),
-							token(LToken.BraceRight)
-									.withIndentationBefore(unIndent(BLOCK))
-									.withSpacingBefore(newLine())
-					),
-					composite(
-							token(LToken.BraceLeft)
-									.withSpacingAfter(newLine())
-									.withIndentationAfter(indent(BLOCK)),
-							token(LToken.BraceRight)
-									.withIndentationBefore(unIndent(BLOCK))
-					)
-			)
+			alternative(childIs(CASES, not(empty())), composite(
+					token(LToken.BraceLeft)
+							.withSpacingAfter(newLine())
+							.withIndentationAfter(indent(BLOCK)),
+					child(CASES, SwitchCase.listShape),
+					token(LToken.BraceRight)
+							.withIndentationBefore(unIndent(BLOCK))
+							.withSpacingBefore(newLine())
+			), composite(
+					token(LToken.BraceLeft)
+							.withSpacingAfter(newLine())
+							.withIndentationAfter(indent(BLOCK)),
+					token(LToken.BraceRight)
+							.withIndentationBefore(unIndent(BLOCK))
+			))
 	);
 }
