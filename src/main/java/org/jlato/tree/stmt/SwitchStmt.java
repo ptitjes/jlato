@@ -199,20 +199,23 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 			token(LToken.ParenthesisLeft).withSpacingBefore(spacing(SwitchStmt_AfterSwitchKeyword)),
 			child(SELECTOR),
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
-			alternative(childIs(CASES, not(empty())), composite(
-					token(LToken.BraceLeft)
-							.withSpacingAfter(newLine())
-							.withIndentationAfter(indent(BLOCK)),
-					child(CASES, SwitchCase.listShape),
-					token(LToken.BraceRight)
-							.withIndentationBefore(unIndent(BLOCK))
-							.withSpacingBefore(newLine())
-			), composite(
-					token(LToken.BraceLeft)
-							.withSpacingAfter(newLine())
-							.withIndentationAfter(indent(BLOCK)),
-					token(LToken.BraceRight)
-							.withIndentationBefore(unIndent(BLOCK))
-			))
+			alternative(childIs(CASES, not(empty())),
+					composite(
+							token(LToken.BraceLeft)
+									.withSpacingAfter(newLine())
+									.withIndentationAfter(indent(BLOCK)),
+							child(CASES, SwitchCase.listShape),
+							token(LToken.BraceRight)
+									.withIndentationBefore(unIndent(BLOCK))
+									.withSpacingBefore(newLine())
+					),
+					composite(
+							token(LToken.BraceLeft)
+									.withSpacingAfter(newLine())
+									.withIndentationAfter(indent(BLOCK)),
+							token(LToken.BraceRight)
+									.withIndentationBefore(unIndent(BLOCK))
+					)
+			)
 	);
 }
