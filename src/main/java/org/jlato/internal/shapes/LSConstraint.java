@@ -76,11 +76,6 @@ public final class LSConstraint extends LSDecorated {
 	}
 
 	@Override
-	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
-		return super.enRun(tree, tokenIterator);
-	}
-
-	@Override
 	public void render(STree tree, WRunRun run, Printer printer) {
 		if (spacingBefore != null) printer.encounteredSpacing(spacingBefore);
 		if (indentationBefore != null) printer.encounteredIndentation(indentationBefore);
