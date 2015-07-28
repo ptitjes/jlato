@@ -90,7 +90,7 @@ public abstract class LexicalShape {
 	}
 
 	public static LexicalShape element(LexicalShape shape) {
-		return new LSNodeOptionElement(shape);
+		return new LSTraversal(SNodeOptionState.elementTraversal(), shape);
 	}
 
 	public static LexicalShape leftOrRight() {
@@ -98,7 +98,7 @@ public abstract class LexicalShape {
 	}
 
 	public static LexicalShape leftOrRight(LexicalShape shape) {
-		return new LSNodeEitherElement(shape);
+		return new LSTraversal(SNodeEitherState.elementTraversal(), shape);
 	}
 
 	public static LexicalShape child(STraversal traversal) {
@@ -106,7 +106,7 @@ public abstract class LexicalShape {
 	}
 
 	public static LexicalShape child(STraversal traversal, LexicalShape shape) {
-		return new LSNodeChild(traversal, shape);
+		return new LSTraversal(traversal, shape);
 	}
 
 	public static LexicalShape list() {

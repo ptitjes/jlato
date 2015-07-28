@@ -19,9 +19,7 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.WRunRun;
-import org.jlato.internal.bu.WTokenRun;
+import org.jlato.internal.bu.*;
 import org.jlato.printer.Printer;
 
 import java.util.Iterator;
@@ -29,13 +27,18 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public abstract class LSTraversal extends LSDecorated {
+public class LSTraversal extends LSDecorated {
 
-	public LSTraversal(LexicalShape shape) {
+	private final STraversal traversal;
+
+	public LSTraversal(STraversal traversal, LexicalShape shape) {
 		super(shape);
+		this.traversal = traversal;
 	}
 
-	protected abstract STree traverse(STree tree);
+	protected STree traverse(STree tree) {
+		return tree.traverse(traversal);
+	}
 
 	@Override
 	public boolean isDefined(STree tree) {
