@@ -46,6 +46,12 @@ public interface AnnotationExpr extends Expr, ExtendedModifier {
 			none().withSpacingAfter(space())
 	);
 
+	LexicalShape singleLineAnnotationsShapeWithSpaceBefore = list(
+			none().withSpacingBefore(space()),
+			none().withSpacingBefore(space()),
+			none().withSpacingBefore(space())
+	);
+
 	LexicalShape multiLineAnnotationsShape = list(
 			none(),
 			none().withSpacingAfter(newLine()),

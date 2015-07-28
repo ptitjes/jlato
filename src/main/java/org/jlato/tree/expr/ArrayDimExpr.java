@@ -187,11 +187,7 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 	};
 
 	public final static LexicalShape shape = composite(
-			child(ANNOTATIONS, list(
-					none().withSpacingBefore(space()),
-					none().withSpacingBefore(space()),
-					none().withSpacingBefore(space())
-			)),
+			child(ANNOTATIONS, AnnotationExpr.singleLineAnnotationsShapeWithSpaceBefore),
 			token(LToken.BracketLeft), child(EXPR), token(LToken.BracketRight)
 	);
 
