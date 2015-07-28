@@ -166,12 +166,12 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 	private static STypeSafeProperty<LiteralExpr.State, Class<?>> LITERAL_CLASS = new STypeSafeProperty<LiteralExpr.State, Class<?>>() {
 
 		@Override
-		protected Class<?> doRetrieve(LiteralExpr.State state) {
+		public Class<?> doRetrieve(State state) {
 			return state.literalClass;
 		}
 
 		@Override
-		protected LiteralExpr.State doRebuildParentState(LiteralExpr.State state, Class<?> value) {
+		public LiteralExpr.State doRebuildParentState(State state, Class<?> value) {
 			return state.withLiteralClass(value);
 		}
 	};
@@ -179,12 +179,12 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 	private static STypeSafeProperty<LiteralExpr.State, String> LITERAL_STRING = new STypeSafeProperty<LiteralExpr.State, String>() {
 
 		@Override
-		protected String doRetrieve(LiteralExpr.State state) {
+		public String doRetrieve(State state) {
 			return state.literalString;
 		}
 
 		@Override
-		protected LiteralExpr.State doRebuildParentState(LiteralExpr.State state, String value) {
+		public LiteralExpr.State doRebuildParentState(State state, String value) {
 			return state.withLiteralString(value);
 		}
 	};

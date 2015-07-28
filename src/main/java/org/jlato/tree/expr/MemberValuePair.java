@@ -142,12 +142,12 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 	private static STypeSafeTraversal<MemberValuePair.State, Name.State, Name> NAME = new STypeSafeTraversal<MemberValuePair.State, Name.State, Name>() {
 
 		@Override
-		protected STree<?> doTraverse(MemberValuePair.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.name;
 		}
 
 		@Override
-		protected MemberValuePair.State doRebuildParentState(MemberValuePair.State state, STree<Name.State> child) {
+		public MemberValuePair.State doRebuildParentState(State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -165,12 +165,12 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 	private static STypeSafeTraversal<MemberValuePair.State, Expr.State, Expr> VALUE = new STypeSafeTraversal<MemberValuePair.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(MemberValuePair.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.value;
 		}
 
 		@Override
-		protected MemberValuePair.State doRebuildParentState(MemberValuePair.State state, STree<Expr.State> child) {
+		public MemberValuePair.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withValue(child);
 		}
 

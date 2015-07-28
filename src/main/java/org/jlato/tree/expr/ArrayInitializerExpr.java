@@ -143,12 +143,12 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 	private static STypeSafeTraversal<ArrayInitializerExpr.State, SNodeListState, NodeList<Expr>> VALUES = new STypeSafeTraversal<ArrayInitializerExpr.State, SNodeListState, NodeList<Expr>>() {
 
 		@Override
-		protected STree<?> doTraverse(ArrayInitializerExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.values;
 		}
 
 		@Override
-		protected ArrayInitializerExpr.State doRebuildParentState(ArrayInitializerExpr.State state, STree<SNodeListState> child) {
+		public ArrayInitializerExpr.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withValues(child);
 		}
 
@@ -166,12 +166,12 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 	private static STypeSafeProperty<ArrayInitializerExpr.State, Boolean> TRAILING_COMMA = new STypeSafeProperty<ArrayInitializerExpr.State, Boolean>() {
 
 		@Override
-		protected Boolean doRetrieve(ArrayInitializerExpr.State state) {
+		public Boolean doRetrieve(State state) {
 			return state.trailingComma;
 		}
 
 		@Override
-		protected ArrayInitializerExpr.State doRebuildParentState(ArrayInitializerExpr.State state, Boolean value) {
+		public ArrayInitializerExpr.State doRebuildParentState(State state, Boolean value) {
 			return state.withTrailingComma(value);
 		}
 	};

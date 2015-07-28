@@ -164,12 +164,12 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 	private static STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr> CONDITION = new STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(ConditionalExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.condition;
 		}
 
 		@Override
-		protected ConditionalExpr.State doRebuildParentState(ConditionalExpr.State state, STree<Expr.State> child) {
+		public ConditionalExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withCondition(child);
 		}
 
@@ -187,12 +187,12 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 	private static STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr> THEN_EXPR = new STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(ConditionalExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.thenExpr;
 		}
 
 		@Override
-		protected ConditionalExpr.State doRebuildParentState(ConditionalExpr.State state, STree<Expr.State> child) {
+		public ConditionalExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withThenExpr(child);
 		}
 
@@ -210,12 +210,12 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 	private static STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr> ELSE_EXPR = new STypeSafeTraversal<ConditionalExpr.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(ConditionalExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.elseExpr;
 		}
 
 		@Override
-		protected ConditionalExpr.State doRebuildParentState(ConditionalExpr.State state, STree<Expr.State> child) {
+		public ConditionalExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withElseExpr(child);
 		}
 

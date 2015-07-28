@@ -142,12 +142,12 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 	private static STypeSafeTraversal<SingleMemberAnnotationExpr.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<SingleMemberAnnotationExpr.State, QualifiedName.State, QualifiedName>() {
 
 		@Override
-		protected STree<?> doTraverse(SingleMemberAnnotationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.name;
 		}
 
 		@Override
-		protected SingleMemberAnnotationExpr.State doRebuildParentState(SingleMemberAnnotationExpr.State state, STree<QualifiedName.State> child) {
+		public SingleMemberAnnotationExpr.State doRebuildParentState(State state, STree<QualifiedName.State> child) {
 			return state.withName(child);
 		}
 
@@ -165,12 +165,12 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 	private static STypeSafeTraversal<SingleMemberAnnotationExpr.State, Expr.State, Expr> MEMBER_VALUE = new STypeSafeTraversal<SingleMemberAnnotationExpr.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(SingleMemberAnnotationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.memberValue;
 		}
 
 		@Override
-		protected SingleMemberAnnotationExpr.State doRebuildParentState(SingleMemberAnnotationExpr.State state, STree<Expr.State> child) {
+		public SingleMemberAnnotationExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withMemberValue(child);
 		}
 

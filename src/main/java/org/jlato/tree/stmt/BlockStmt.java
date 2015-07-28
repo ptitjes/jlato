@@ -127,12 +127,12 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 	private static STypeSafeTraversal<BlockStmt.State, SNodeListState, NodeList<Stmt>> STMTS = new STypeSafeTraversal<BlockStmt.State, SNodeListState, NodeList<Stmt>>() {
 
 		@Override
-		protected STree<?> doTraverse(BlockStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.stmts;
 		}
 
 		@Override
-		protected BlockStmt.State doRebuildParentState(BlockStmt.State state, STree<SNodeListState> child) {
+		public BlockStmt.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withStmts(child);
 		}
 

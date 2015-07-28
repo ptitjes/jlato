@@ -171,12 +171,12 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 	private static STypeSafeTraversal<FieldDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<FieldDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		protected STree<?> doTraverse(FieldDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		protected FieldDecl.State doRebuildParentState(FieldDecl.State state, STree<SNodeListState> child) {
+		public FieldDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -194,12 +194,12 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 	private static STypeSafeTraversal<FieldDecl.State, Type.State, Type> TYPE = new STypeSafeTraversal<FieldDecl.State, Type.State, Type>() {
 
 		@Override
-		protected STree<?> doTraverse(FieldDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.type;
 		}
 
 		@Override
-		protected FieldDecl.State doRebuildParentState(FieldDecl.State state, STree<Type.State> child) {
+		public FieldDecl.State doRebuildParentState(State state, STree<Type.State> child) {
 			return state.withType(child);
 		}
 
@@ -217,12 +217,12 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 	private static STypeSafeTraversal<FieldDecl.State, SNodeListState, NodeList<VariableDeclarator>> VARIABLES = new STypeSafeTraversal<FieldDecl.State, SNodeListState, NodeList<VariableDeclarator>>() {
 
 		@Override
-		protected STree<?> doTraverse(FieldDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.variables;
 		}
 
 		@Override
-		protected FieldDecl.State doRebuildParentState(FieldDecl.State state, STree<SNodeListState> child) {
+		public FieldDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withVariables(child);
 		}
 

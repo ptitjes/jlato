@@ -147,12 +147,12 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 	private static STypeSafeTraversal<LabeledStmt.State, Name.State, Name> LABEL = new STypeSafeTraversal<LabeledStmt.State, Name.State, Name>() {
 
 		@Override
-		protected STree<?> doTraverse(LabeledStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.label;
 		}
 
 		@Override
-		protected LabeledStmt.State doRebuildParentState(LabeledStmt.State state, STree<Name.State> child) {
+		public LabeledStmt.State doRebuildParentState(State state, STree<Name.State> child) {
 			return state.withLabel(child);
 		}
 
@@ -170,12 +170,12 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 	private static STypeSafeTraversal<LabeledStmt.State, Stmt.State, Stmt> STMT = new STypeSafeTraversal<LabeledStmt.State, Stmt.State, Stmt>() {
 
 		@Override
-		protected STree<?> doTraverse(LabeledStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.stmt;
 		}
 
 		@Override
-		protected LabeledStmt.State doRebuildParentState(LabeledStmt.State state, STree<Stmt.State> child) {
+		public LabeledStmt.State doRebuildParentState(State state, STree<Stmt.State> child) {
 			return state.withStmt(child);
 		}
 

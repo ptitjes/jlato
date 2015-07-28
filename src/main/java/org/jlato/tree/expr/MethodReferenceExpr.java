@@ -166,12 +166,12 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 	private static STypeSafeTraversal<MethodReferenceExpr.State, Expr.State, Expr> SCOPE = new STypeSafeTraversal<MethodReferenceExpr.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(MethodReferenceExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.scope;
 		}
 
 		@Override
-		protected MethodReferenceExpr.State doRebuildParentState(MethodReferenceExpr.State state, STree<Expr.State> child) {
+		public MethodReferenceExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withScope(child);
 		}
 
@@ -189,12 +189,12 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 	private static STypeSafeTraversal<MethodReferenceExpr.State, SNodeListState, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<MethodReferenceExpr.State, SNodeListState, NodeList<Type>>() {
 
 		@Override
-		protected STree<?> doTraverse(MethodReferenceExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.typeArgs;
 		}
 
 		@Override
-		protected MethodReferenceExpr.State doRebuildParentState(MethodReferenceExpr.State state, STree<SNodeListState> child) {
+		public MethodReferenceExpr.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withTypeArgs(child);
 		}
 
@@ -212,12 +212,12 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 	private static STypeSafeTraversal<MethodReferenceExpr.State, Name.State, Name> NAME = new STypeSafeTraversal<MethodReferenceExpr.State, Name.State, Name>() {
 
 		@Override
-		protected STree<?> doTraverse(MethodReferenceExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.name;
 		}
 
 		@Override
-		protected MethodReferenceExpr.State doRebuildParentState(MethodReferenceExpr.State state, STree<Name.State> child) {
+		public MethodReferenceExpr.State doRebuildParentState(State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 

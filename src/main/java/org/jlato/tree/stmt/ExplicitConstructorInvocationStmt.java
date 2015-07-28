@@ -28,7 +28,6 @@ import org.jlato.tree.*;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
@@ -188,12 +187,12 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	private static STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeListState, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeListState, NodeList<Type>>() {
 
 		@Override
-		protected STree<?> doTraverse(ExplicitConstructorInvocationStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.typeArgs;
 		}
 
 		@Override
-		protected ExplicitConstructorInvocationStmt.State doRebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<SNodeListState> child) {
+		public ExplicitConstructorInvocationStmt.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withTypeArgs(child);
 		}
 
@@ -211,12 +210,12 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	private static STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeOptionState, NodeOption<Expr>> EXPR = new STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		protected STree<?> doTraverse(ExplicitConstructorInvocationStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.expr;
 		}
 
 		@Override
-		protected ExplicitConstructorInvocationStmt.State doRebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<SNodeOptionState> child) {
+		public ExplicitConstructorInvocationStmt.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withExpr(child);
 		}
 
@@ -234,12 +233,12 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	private static STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeListState, NodeList<Expr>> ARGS = new STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeListState, NodeList<Expr>>() {
 
 		@Override
-		protected STree<?> doTraverse(ExplicitConstructorInvocationStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.args;
 		}
 
 		@Override
-		protected ExplicitConstructorInvocationStmt.State doRebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<SNodeListState> child) {
+		public ExplicitConstructorInvocationStmt.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withArgs(child);
 		}
 
@@ -257,12 +256,12 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	private static STypeSafeProperty<ExplicitConstructorInvocationStmt.State, Boolean> THIS = new STypeSafeProperty<ExplicitConstructorInvocationStmt.State, Boolean>() {
 
 		@Override
-		protected Boolean doRetrieve(ExplicitConstructorInvocationStmt.State state) {
+		public Boolean doRetrieve(State state) {
 			return state.isThis;
 		}
 
 		@Override
-		protected ExplicitConstructorInvocationStmt.State doRebuildParentState(ExplicitConstructorInvocationStmt.State state, Boolean value) {
+		public ExplicitConstructorInvocationStmt.State doRebuildParentState(State state, Boolean value) {
 			return state.setThis(value);
 		}
 	};

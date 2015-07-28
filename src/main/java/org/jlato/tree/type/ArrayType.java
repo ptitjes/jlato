@@ -143,12 +143,12 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 	private static STypeSafeTraversal<ArrayType.State, Type.State, Type> COMPONENT_TYPE = new STypeSafeTraversal<ArrayType.State, Type.State, Type>() {
 
 		@Override
-		protected STree<?> doTraverse(ArrayType.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.componentType;
 		}
 
 		@Override
-		protected ArrayType.State doRebuildParentState(ArrayType.State state, STree<Type.State> child) {
+		public ArrayType.State doRebuildParentState(State state, STree<Type.State> child) {
 			return state.withComponentType(child);
 		}
 
@@ -166,12 +166,12 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 	private static STypeSafeTraversal<ArrayType.State, SNodeListState, NodeList<ArrayDim>> DIMS = new STypeSafeTraversal<ArrayType.State, SNodeListState, NodeList<ArrayDim>>() {
 
 		@Override
-		protected STree<?> doTraverse(ArrayType.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.dims;
 		}
 
 		@Override
-		protected ArrayType.State doRebuildParentState(ArrayType.State state, STree<SNodeListState> child) {
+		public ArrayType.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withDims(child);
 		}
 

@@ -134,12 +134,12 @@ public class SNodeEitherState implements STreeState {
 		}
 
 		@Override
-		protected STree<?> doTraverse(SNodeEitherState state) {
+		public STree<?> doTraverse(SNodeEitherState state) {
 			return side == null || side == state.side ? state.element : null;
 		}
 
 		@Override
-		protected SNodeEitherState doRebuildParentState(SNodeEitherState state, STree<STreeState> child) {
+		public SNodeEitherState doRebuildParentState(SNodeEitherState state, STree<STreeState> child) {
 			return state.withElement(child).withSide(side != null ? side : state.side);
 		}
 

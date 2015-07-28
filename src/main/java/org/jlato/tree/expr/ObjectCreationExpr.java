@@ -28,7 +28,6 @@ import org.jlato.tree.decl.MemberDecl;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
@@ -211,12 +210,12 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 	private static STypeSafeTraversal<ObjectCreationExpr.State, SNodeOptionState, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<ObjectCreationExpr.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		protected STree<?> doTraverse(ObjectCreationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.scope;
 		}
 
 		@Override
-		protected ObjectCreationExpr.State doRebuildParentState(ObjectCreationExpr.State state, STree<SNodeOptionState> child) {
+		public ObjectCreationExpr.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withScope(child);
 		}
 
@@ -234,12 +233,12 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 	private static STypeSafeTraversal<ObjectCreationExpr.State, SNodeListState, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<ObjectCreationExpr.State, SNodeListState, NodeList<Type>>() {
 
 		@Override
-		protected STree<?> doTraverse(ObjectCreationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.typeArgs;
 		}
 
 		@Override
-		protected ObjectCreationExpr.State doRebuildParentState(ObjectCreationExpr.State state, STree<SNodeListState> child) {
+		public ObjectCreationExpr.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withTypeArgs(child);
 		}
 
@@ -257,12 +256,12 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 	private static STypeSafeTraversal<ObjectCreationExpr.State, QualifiedType.State, QualifiedType> TYPE = new STypeSafeTraversal<ObjectCreationExpr.State, QualifiedType.State, QualifiedType>() {
 
 		@Override
-		protected STree<?> doTraverse(ObjectCreationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.type;
 		}
 
 		@Override
-		protected ObjectCreationExpr.State doRebuildParentState(ObjectCreationExpr.State state, STree<QualifiedType.State> child) {
+		public ObjectCreationExpr.State doRebuildParentState(State state, STree<QualifiedType.State> child) {
 			return state.withType(child);
 		}
 
@@ -280,12 +279,12 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 	private static STypeSafeTraversal<ObjectCreationExpr.State, SNodeListState, NodeList<Expr>> ARGS = new STypeSafeTraversal<ObjectCreationExpr.State, SNodeListState, NodeList<Expr>>() {
 
 		@Override
-		protected STree<?> doTraverse(ObjectCreationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.args;
 		}
 
 		@Override
-		protected ObjectCreationExpr.State doRebuildParentState(ObjectCreationExpr.State state, STree<SNodeListState> child) {
+		public ObjectCreationExpr.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withArgs(child);
 		}
 
@@ -303,12 +302,12 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 	private static STypeSafeTraversal<ObjectCreationExpr.State, SNodeOptionState, NodeOption<NodeList<MemberDecl>>> BODY = new STypeSafeTraversal<ObjectCreationExpr.State, SNodeOptionState, NodeOption<NodeList<MemberDecl>>>() {
 
 		@Override
-		protected STree<?> doTraverse(ObjectCreationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.body;
 		}
 
 		@Override
-		protected ObjectCreationExpr.State doRebuildParentState(ObjectCreationExpr.State state, STree<SNodeOptionState> child) {
+		public ObjectCreationExpr.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withBody(child);
 		}
 

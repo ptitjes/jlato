@@ -185,12 +185,12 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 	private static STypeSafeProperty<Modifier.State, LToken> KEYWORD = new STypeSafeProperty<Modifier.State, LToken>() {
 
 		@Override
-		protected LToken doRetrieve(Modifier.State state) {
+		public LToken doRetrieve(State state) {
 			return state.keyword;
 		}
 
 		@Override
-		protected Modifier.State doRebuildParentState(Modifier.State state, LToken value) {
+		public Modifier.State doRebuildParentState(State state, LToken value) {
 			throw new UnsupportedOperationException();
 		}
 	};

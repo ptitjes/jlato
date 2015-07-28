@@ -173,12 +173,12 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 	private static STypeSafeTraversal<LambdaExpr.State, SNodeListState, NodeList<FormalParameter>> PARAMS = new STypeSafeTraversal<LambdaExpr.State, SNodeListState, NodeList<FormalParameter>>() {
 
 		@Override
-		protected STree<?> doTraverse(LambdaExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.params;
 		}
 
 		@Override
-		protected LambdaExpr.State doRebuildParentState(LambdaExpr.State state, STree<SNodeListState> child) {
+		public LambdaExpr.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withParams(child);
 		}
 
@@ -196,12 +196,12 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 	private static STypeSafeTraversal<LambdaExpr.State, SNodeEitherState, NodeEither<Expr, BlockStmt>> BODY = new STypeSafeTraversal<LambdaExpr.State, SNodeEitherState, NodeEither<Expr, BlockStmt>>() {
 
 		@Override
-		protected STree<?> doTraverse(LambdaExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.body;
 		}
 
 		@Override
-		protected LambdaExpr.State doRebuildParentState(LambdaExpr.State state, STree<SNodeEitherState> child) {
+		public LambdaExpr.State doRebuildParentState(State state, STree<SNodeEitherState> child) {
 			return state.withBody(child);
 		}
 
@@ -219,12 +219,12 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 	private static STypeSafeProperty<LambdaExpr.State, Boolean> PARENS = new STypeSafeProperty<LambdaExpr.State, Boolean>() {
 
 		@Override
-		protected Boolean doRetrieve(LambdaExpr.State state) {
+		public Boolean doRetrieve(State state) {
 			return state.hasParens;
 		}
 
 		@Override
-		protected LambdaExpr.State doRebuildParentState(LambdaExpr.State state, Boolean value) {
+		public LambdaExpr.State doRebuildParentState(State state, Boolean value) {
 			return state.setParens(value);
 		}
 	};

@@ -144,12 +144,12 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 	private static STypeSafeTraversal<NormalAnnotationExpr.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<NormalAnnotationExpr.State, QualifiedName.State, QualifiedName>() {
 
 		@Override
-		protected STree<?> doTraverse(NormalAnnotationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.name;
 		}
 
 		@Override
-		protected NormalAnnotationExpr.State doRebuildParentState(NormalAnnotationExpr.State state, STree<QualifiedName.State> child) {
+		public NormalAnnotationExpr.State doRebuildParentState(State state, STree<QualifiedName.State> child) {
 			return state.withName(child);
 		}
 
@@ -167,12 +167,12 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 	private static STypeSafeTraversal<NormalAnnotationExpr.State, SNodeListState, NodeList<MemberValuePair>> PAIRS = new STypeSafeTraversal<NormalAnnotationExpr.State, SNodeListState, NodeList<MemberValuePair>>() {
 
 		@Override
-		protected STree<?> doTraverse(NormalAnnotationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.pairs;
 		}
 
 		@Override
-		protected NormalAnnotationExpr.State doRebuildParentState(NormalAnnotationExpr.State state, STree<SNodeListState> child) {
+		public NormalAnnotationExpr.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withPairs(child);
 		}
 

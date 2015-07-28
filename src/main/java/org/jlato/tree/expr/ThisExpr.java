@@ -28,7 +28,6 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 
-import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
@@ -122,12 +121,12 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 	private static STypeSafeTraversal<ThisExpr.State, SNodeOptionState, NodeOption<Expr>> CLASS_EXPR = new STypeSafeTraversal<ThisExpr.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		protected STree<?> doTraverse(ThisExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.classExpr;
 		}
 
 		@Override
-		protected ThisExpr.State doRebuildParentState(ThisExpr.State state, STree<SNodeOptionState> child) {
+		public ThisExpr.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withClassExpr(child);
 		}
 

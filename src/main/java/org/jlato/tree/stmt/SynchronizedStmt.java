@@ -143,12 +143,12 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 	private static STypeSafeTraversal<SynchronizedStmt.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<SynchronizedStmt.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(SynchronizedStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.expr;
 		}
 
 		@Override
-		protected SynchronizedStmt.State doRebuildParentState(SynchronizedStmt.State state, STree<Expr.State> child) {
+		public SynchronizedStmt.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withExpr(child);
 		}
 
@@ -166,12 +166,12 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 	private static STypeSafeTraversal<SynchronizedStmt.State, BlockStmt.State, BlockStmt> BLOCK = new STypeSafeTraversal<SynchronizedStmt.State, BlockStmt.State, BlockStmt>() {
 
 		@Override
-		protected STree<?> doTraverse(SynchronizedStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.block;
 		}
 
 		@Override
-		protected SynchronizedStmt.State doRebuildParentState(SynchronizedStmt.State state, STree<BlockStmt.State> child) {
+		public SynchronizedStmt.State doRebuildParentState(State state, STree<BlockStmt.State> child) {
 			return state.withBlock(child);
 		}
 

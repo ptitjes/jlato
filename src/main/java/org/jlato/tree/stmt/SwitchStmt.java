@@ -151,12 +151,12 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 	private static STypeSafeTraversal<SwitchStmt.State, Expr.State, Expr> SELECTOR = new STypeSafeTraversal<SwitchStmt.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(SwitchStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.selector;
 		}
 
 		@Override
-		protected SwitchStmt.State doRebuildParentState(SwitchStmt.State state, STree<Expr.State> child) {
+		public SwitchStmt.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withSelector(child);
 		}
 
@@ -174,12 +174,12 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 	private static STypeSafeTraversal<SwitchStmt.State, SNodeListState, NodeList<SwitchCase>> CASES = new STypeSafeTraversal<SwitchStmt.State, SNodeListState, NodeList<SwitchCase>>() {
 
 		@Override
-		protected STree<?> doTraverse(SwitchStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.cases;
 		}
 
 		@Override
-		protected SwitchStmt.State doRebuildParentState(SwitchStmt.State state, STree<SNodeListState> child) {
+		public SwitchStmt.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withCases(child);
 		}
 

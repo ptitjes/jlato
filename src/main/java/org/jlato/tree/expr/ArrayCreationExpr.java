@@ -27,7 +27,6 @@ import org.jlato.tree.*;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
@@ -188,12 +187,12 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 	private static STypeSafeTraversal<ArrayCreationExpr.State, Type.State, Type> TYPE = new STypeSafeTraversal<ArrayCreationExpr.State, Type.State, Type>() {
 
 		@Override
-		protected STree<?> doTraverse(ArrayCreationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.type;
 		}
 
 		@Override
-		protected ArrayCreationExpr.State doRebuildParentState(ArrayCreationExpr.State state, STree<Type.State> child) {
+		public ArrayCreationExpr.State doRebuildParentState(State state, STree<Type.State> child) {
 			return state.withType(child);
 		}
 
@@ -211,12 +210,12 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 	private static STypeSafeTraversal<ArrayCreationExpr.State, SNodeListState, NodeList<ArrayDimExpr>> DIM_EXPRS = new STypeSafeTraversal<ArrayCreationExpr.State, SNodeListState, NodeList<ArrayDimExpr>>() {
 
 		@Override
-		protected STree<?> doTraverse(ArrayCreationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.dimExprs;
 		}
 
 		@Override
-		protected ArrayCreationExpr.State doRebuildParentState(ArrayCreationExpr.State state, STree<SNodeListState> child) {
+		public ArrayCreationExpr.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withDimExprs(child);
 		}
 
@@ -234,12 +233,12 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 	private static STypeSafeTraversal<ArrayCreationExpr.State, SNodeListState, NodeList<ArrayDim>> DIMS = new STypeSafeTraversal<ArrayCreationExpr.State, SNodeListState, NodeList<ArrayDim>>() {
 
 		@Override
-		protected STree<?> doTraverse(ArrayCreationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.dims;
 		}
 
 		@Override
-		protected ArrayCreationExpr.State doRebuildParentState(ArrayCreationExpr.State state, STree<SNodeListState> child) {
+		public ArrayCreationExpr.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withDims(child);
 		}
 
@@ -257,12 +256,12 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 	private static STypeSafeTraversal<ArrayCreationExpr.State, SNodeOptionState, NodeOption<ArrayInitializerExpr>> INIT = new STypeSafeTraversal<ArrayCreationExpr.State, SNodeOptionState, NodeOption<ArrayInitializerExpr>>() {
 
 		@Override
-		protected STree<?> doTraverse(ArrayCreationExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.init;
 		}
 
 		@Override
-		protected ArrayCreationExpr.State doRebuildParentState(ArrayCreationExpr.State state, STree<SNodeOptionState> child) {
+		public ArrayCreationExpr.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withInit(child);
 		}
 

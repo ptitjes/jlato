@@ -27,7 +27,6 @@ import org.jlato.tree.*;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
 
-import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
@@ -194,12 +193,12 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 	private static STypeSafeTraversal<EnumConstantDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<EnumConstantDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		protected STree<?> doTraverse(EnumConstantDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		protected EnumConstantDecl.State doRebuildParentState(EnumConstantDecl.State state, STree<SNodeListState> child) {
+		public EnumConstantDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -217,12 +216,12 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 	private static STypeSafeTraversal<EnumConstantDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<EnumConstantDecl.State, Name.State, Name>() {
 
 		@Override
-		protected STree<?> doTraverse(EnumConstantDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.name;
 		}
 
 		@Override
-		protected EnumConstantDecl.State doRebuildParentState(EnumConstantDecl.State state, STree<Name.State> child) {
+		public EnumConstantDecl.State doRebuildParentState(State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -240,12 +239,12 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 	private static STypeSafeTraversal<EnumConstantDecl.State, SNodeOptionState, NodeOption<NodeList<Expr>>> ARGS = new STypeSafeTraversal<EnumConstantDecl.State, SNodeOptionState, NodeOption<NodeList<Expr>>>() {
 
 		@Override
-		protected STree<?> doTraverse(EnumConstantDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.args;
 		}
 
 		@Override
-		protected EnumConstantDecl.State doRebuildParentState(EnumConstantDecl.State state, STree<SNodeOptionState> child) {
+		public EnumConstantDecl.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withArgs(child);
 		}
 
@@ -263,12 +262,12 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 	private static STypeSafeTraversal<EnumConstantDecl.State, SNodeOptionState, NodeOption<NodeList<MemberDecl>>> CLASS_BODY = new STypeSafeTraversal<EnumConstantDecl.State, SNodeOptionState, NodeOption<NodeList<MemberDecl>>>() {
 
 		@Override
-		protected STree<?> doTraverse(EnumConstantDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.classBody;
 		}
 
 		@Override
-		protected EnumConstantDecl.State doRebuildParentState(EnumConstantDecl.State state, STree<SNodeOptionState> child) {
+		public EnumConstantDecl.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withClassBody(child);
 		}
 

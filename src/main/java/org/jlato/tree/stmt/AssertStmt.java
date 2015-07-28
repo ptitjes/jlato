@@ -29,7 +29,6 @@ import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
-import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
@@ -146,12 +145,12 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 	private static STypeSafeTraversal<AssertStmt.State, Expr.State, Expr> CHECK = new STypeSafeTraversal<AssertStmt.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(AssertStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.check;
 		}
 
 		@Override
-		protected AssertStmt.State doRebuildParentState(AssertStmt.State state, STree<Expr.State> child) {
+		public AssertStmt.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withCheck(child);
 		}
 
@@ -169,12 +168,12 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 	private static STypeSafeTraversal<AssertStmt.State, SNodeOptionState, NodeOption<Expr>> MSG = new STypeSafeTraversal<AssertStmt.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		protected STree<?> doTraverse(AssertStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.msg;
 		}
 
 		@Override
-		protected AssertStmt.State doRebuildParentState(AssertStmt.State state, STree<SNodeOptionState> child) {
+		public AssertStmt.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withMsg(child);
 		}
 

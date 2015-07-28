@@ -103,12 +103,12 @@ public class SNodeOptionState implements STreeState {
 		}
 
 		@Override
-		protected STree<?> doTraverse(SNodeOptionState state) {
+		public STree<?> doTraverse(SNodeOptionState state) {
 			return state.element;
 		}
 
 		@Override
-		protected SNodeOptionState doRebuildParentState(SNodeOptionState state, STree<STreeState> child) {
+		public SNodeOptionState doRebuildParentState(SNodeOptionState state, STree<STreeState> child) {
 			return state.withElement(child);
 		}
 

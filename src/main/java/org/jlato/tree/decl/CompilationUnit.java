@@ -179,12 +179,12 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 	private static STypeSafeTraversal<CompilationUnit.State, PackageDecl.State, PackageDecl> PACKAGE_DECL = new STypeSafeTraversal<CompilationUnit.State, PackageDecl.State, PackageDecl>() {
 
 		@Override
-		protected STree<?> doTraverse(CompilationUnit.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.packageDecl;
 		}
 
 		@Override
-		protected CompilationUnit.State doRebuildParentState(CompilationUnit.State state, STree<PackageDecl.State> child) {
+		public CompilationUnit.State doRebuildParentState(State state, STree<PackageDecl.State> child) {
 			return state.withPackageDecl(child);
 		}
 
@@ -202,12 +202,12 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 	private static STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<ImportDecl>> IMPORTS = new STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<ImportDecl>>() {
 
 		@Override
-		protected STree<?> doTraverse(CompilationUnit.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.imports;
 		}
 
 		@Override
-		protected CompilationUnit.State doRebuildParentState(CompilationUnit.State state, STree<SNodeListState> child) {
+		public CompilationUnit.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withImports(child);
 		}
 
@@ -225,12 +225,12 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 	private static STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<TypeDecl>> TYPES = new STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<TypeDecl>>() {
 
 		@Override
-		protected STree<?> doTraverse(CompilationUnit.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.types;
 		}
 
 		@Override
-		protected CompilationUnit.State doRebuildParentState(CompilationUnit.State state, STree<SNodeListState> child) {
+		public CompilationUnit.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withTypes(child);
 		}
 
@@ -248,12 +248,12 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 	private static STypeSafeProperty<CompilationUnit.State, IndexedList<WTokenRun>> PREAMBLE = new STypeSafeProperty<CompilationUnit.State, IndexedList<WTokenRun>>() {
 
 		@Override
-		protected IndexedList<WTokenRun> doRetrieve(CompilationUnit.State state) {
+		public IndexedList<WTokenRun> doRetrieve(State state) {
 			return state.preamble;
 		}
 
 		@Override
-		protected CompilationUnit.State doRebuildParentState(CompilationUnit.State state, IndexedList<WTokenRun> value) {
+		public CompilationUnit.State doRebuildParentState(State state, IndexedList<WTokenRun> value) {
 			return state.withPreamble(value);
 		}
 	};

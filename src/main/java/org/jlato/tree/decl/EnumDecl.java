@@ -20,7 +20,6 @@
 package org.jlato.tree.decl;
 
 import org.jlato.internal.bu.*;
-import org.jlato.internal.shapes.LSCondition;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
@@ -250,12 +249,12 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	private static STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		protected STree<?> doTraverse(EnumDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		protected EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<SNodeListState> child) {
+		public EnumDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -273,12 +272,12 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	private static STypeSafeTraversal<EnumDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<EnumDecl.State, Name.State, Name>() {
 
 		@Override
-		protected STree<?> doTraverse(EnumDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.name;
 		}
 
 		@Override
-		protected EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<Name.State> child) {
+		public EnumDecl.State doRebuildParentState(State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -296,12 +295,12 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	private static STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<QualifiedType>> IMPLEMENTS_CLAUSE = new STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<QualifiedType>>() {
 
 		@Override
-		protected STree<?> doTraverse(EnumDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.implementsClause;
 		}
 
 		@Override
-		protected EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<SNodeListState> child) {
+		public EnumDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withImplementsClause(child);
 		}
 
@@ -319,12 +318,12 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	private static STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<EnumConstantDecl>> ENUM_CONSTANTS = new STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<EnumConstantDecl>>() {
 
 		@Override
-		protected STree<?> doTraverse(EnumDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.enumConstants;
 		}
 
 		@Override
-		protected EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<SNodeListState> child) {
+		public EnumDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withEnumConstants(child);
 		}
 
@@ -342,12 +341,12 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	private static STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<MemberDecl>>() {
 
 		@Override
-		protected STree<?> doTraverse(EnumDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.members;
 		}
 
 		@Override
-		protected EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<SNodeListState> child) {
+		public EnumDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withMembers(child);
 		}
 
@@ -365,12 +364,12 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	private static STypeSafeProperty<EnumDecl.State, Boolean> TRAILING_COMMA = new STypeSafeProperty<EnumDecl.State, Boolean>() {
 
 		@Override
-		protected Boolean doRetrieve(EnumDecl.State state) {
+		public Boolean doRetrieve(State state) {
 			return state.trailingComma;
 		}
 
 		@Override
-		protected EnumDecl.State doRebuildParentState(EnumDecl.State state, Boolean value) {
+		public EnumDecl.State doRebuildParentState(State state, Boolean value) {
 			return state.withTrailingComma(value);
 		}
 	};

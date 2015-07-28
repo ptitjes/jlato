@@ -156,12 +156,12 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 	private static STypeSafeTraversal<QualifiedName.State, SNodeOptionState, NodeOption<QualifiedName>> QUALIFIER = new STypeSafeTraversal<QualifiedName.State, SNodeOptionState, NodeOption<QualifiedName>>() {
 
 		@Override
-		protected STree<?> doTraverse(QualifiedName.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.qualifier;
 		}
 
 		@Override
-		protected QualifiedName.State doRebuildParentState(QualifiedName.State state, STree<SNodeOptionState> child) {
+		public QualifiedName.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withQualifier(child);
 		}
 
@@ -179,12 +179,12 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 	private static STypeSafeTraversal<QualifiedName.State, Name.State, Name> NAME = new STypeSafeTraversal<QualifiedName.State, Name.State, Name>() {
 
 		@Override
-		protected STree<?> doTraverse(QualifiedName.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.name;
 		}
 
 		@Override
-		protected QualifiedName.State doRebuildParentState(QualifiedName.State state, STree<Name.State> child) {
+		public QualifiedName.State doRebuildParentState(State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 

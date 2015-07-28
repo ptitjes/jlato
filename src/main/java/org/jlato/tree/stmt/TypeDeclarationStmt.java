@@ -121,12 +121,12 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 	private static STypeSafeTraversal<TypeDeclarationStmt.State, TypeDecl.State, TypeDecl> TYPE_DECL = new STypeSafeTraversal<TypeDeclarationStmt.State, TypeDecl.State, TypeDecl>() {
 
 		@Override
-		protected STree<?> doTraverse(TypeDeclarationStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.typeDecl;
 		}
 
 		@Override
-		protected TypeDeclarationStmt.State doRebuildParentState(TypeDeclarationStmt.State state, STree<TypeDecl.State> child) {
+		public TypeDeclarationStmt.State doRebuildParentState(State state, STree<TypeDecl.State> child) {
 			return state.withTypeDecl(child);
 		}
 

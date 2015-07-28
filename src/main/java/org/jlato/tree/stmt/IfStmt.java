@@ -172,12 +172,12 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 	private static STypeSafeTraversal<IfStmt.State, Expr.State, Expr> CONDITION = new STypeSafeTraversal<IfStmt.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(IfStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.condition;
 		}
 
 		@Override
-		protected IfStmt.State doRebuildParentState(IfStmt.State state, STree<Expr.State> child) {
+		public IfStmt.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withCondition(child);
 		}
 
@@ -195,12 +195,12 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 	private static STypeSafeTraversal<IfStmt.State, Stmt.State, Stmt> THEN_STMT = new STypeSafeTraversal<IfStmt.State, Stmt.State, Stmt>() {
 
 		@Override
-		protected STree<?> doTraverse(IfStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.thenStmt;
 		}
 
 		@Override
-		protected IfStmt.State doRebuildParentState(IfStmt.State state, STree<Stmt.State> child) {
+		public IfStmt.State doRebuildParentState(State state, STree<Stmt.State> child) {
 			return state.withThenStmt(child);
 		}
 
@@ -218,12 +218,12 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 	private static STypeSafeTraversal<IfStmt.State, SNodeOptionState, NodeOption<Stmt>> ELSE_STMT = new STypeSafeTraversal<IfStmt.State, SNodeOptionState, NodeOption<Stmt>>() {
 
 		@Override
-		protected STree<?> doTraverse(IfStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.elseStmt;
 		}
 
 		@Override
-		protected IfStmt.State doRebuildParentState(IfStmt.State state, STree<SNodeOptionState> child) {
+		public IfStmt.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withElseStmt(child);
 		}
 

@@ -192,12 +192,12 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 	private static STypeSafeTraversal<FormalParameter.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<FormalParameter.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		protected STree<?> doTraverse(FormalParameter.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		protected FormalParameter.State doRebuildParentState(FormalParameter.State state, STree<SNodeListState> child) {
+		public FormalParameter.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -215,12 +215,12 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 	private static STypeSafeTraversal<FormalParameter.State, Type.State, Type> TYPE = new STypeSafeTraversal<FormalParameter.State, Type.State, Type>() {
 
 		@Override
-		protected STree<?> doTraverse(FormalParameter.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.type;
 		}
 
 		@Override
-		protected FormalParameter.State doRebuildParentState(FormalParameter.State state, STree<Type.State> child) {
+		public FormalParameter.State doRebuildParentState(State state, STree<Type.State> child) {
 			return state.withType(child);
 		}
 
@@ -238,12 +238,12 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 	private static STypeSafeTraversal<FormalParameter.State, VariableDeclaratorId.State, VariableDeclaratorId> ID = new STypeSafeTraversal<FormalParameter.State, VariableDeclaratorId.State, VariableDeclaratorId>() {
 
 		@Override
-		protected STree<?> doTraverse(FormalParameter.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.id;
 		}
 
 		@Override
-		protected FormalParameter.State doRebuildParentState(FormalParameter.State state, STree<VariableDeclaratorId.State> child) {
+		public FormalParameter.State doRebuildParentState(State state, STree<VariableDeclaratorId.State> child) {
 			return state.withId(child);
 		}
 
@@ -261,12 +261,12 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 	private static STypeSafeProperty<FormalParameter.State, Boolean> VAR_ARGS = new STypeSafeProperty<FormalParameter.State, Boolean>() {
 
 		@Override
-		protected Boolean doRetrieve(FormalParameter.State state) {
+		public Boolean doRetrieve(State state) {
 			return state.isVarArgs;
 		}
 
 		@Override
-		protected FormalParameter.State doRebuildParentState(FormalParameter.State state, Boolean value) {
+		public FormalParameter.State doRebuildParentState(State state, Boolean value) {
 			return state.setVarArgs(value);
 		}
 	};

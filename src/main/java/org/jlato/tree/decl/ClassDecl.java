@@ -27,7 +27,6 @@ import org.jlato.tree.*;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 
-import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
@@ -241,12 +240,12 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	private static STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		protected STree<?> doTraverse(ClassDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		protected ClassDecl.State doRebuildParentState(ClassDecl.State state, STree<SNodeListState> child) {
+		public ClassDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -264,12 +263,12 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	private static STypeSafeTraversal<ClassDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<ClassDecl.State, Name.State, Name>() {
 
 		@Override
-		protected STree<?> doTraverse(ClassDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.name;
 		}
 
 		@Override
-		protected ClassDecl.State doRebuildParentState(ClassDecl.State state, STree<Name.State> child) {
+		public ClassDecl.State doRebuildParentState(State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -287,12 +286,12 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	private static STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<TypeParameter>> TYPE_PARAMS = new STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<TypeParameter>>() {
 
 		@Override
-		protected STree<?> doTraverse(ClassDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.typeParams;
 		}
 
 		@Override
-		protected ClassDecl.State doRebuildParentState(ClassDecl.State state, STree<SNodeListState> child) {
+		public ClassDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withTypeParams(child);
 		}
 
@@ -310,12 +309,12 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	private static STypeSafeTraversal<ClassDecl.State, SNodeOptionState, NodeOption<QualifiedType>> EXTENDS_CLAUSE = new STypeSafeTraversal<ClassDecl.State, SNodeOptionState, NodeOption<QualifiedType>>() {
 
 		@Override
-		protected STree<?> doTraverse(ClassDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.extendsClause;
 		}
 
 		@Override
-		protected ClassDecl.State doRebuildParentState(ClassDecl.State state, STree<SNodeOptionState> child) {
+		public ClassDecl.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withExtendsClause(child);
 		}
 
@@ -333,12 +332,12 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	private static STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<QualifiedType>> IMPLEMENTS_CLAUSE = new STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<QualifiedType>>() {
 
 		@Override
-		protected STree<?> doTraverse(ClassDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.implementsClause;
 		}
 
 		@Override
-		protected ClassDecl.State doRebuildParentState(ClassDecl.State state, STree<SNodeListState> child) {
+		public ClassDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withImplementsClause(child);
 		}
 
@@ -356,12 +355,12 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	private static STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<MemberDecl>>() {
 
 		@Override
-		protected STree<?> doTraverse(ClassDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.members;
 		}
 
 		@Override
-		protected ClassDecl.State doRebuildParentState(ClassDecl.State state, STree<SNodeListState> child) {
+		public ClassDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withMembers(child);
 		}
 

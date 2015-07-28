@@ -165,12 +165,12 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 	private static STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr> LEFT = new STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(BinaryExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.left;
 		}
 
 		@Override
-		protected BinaryExpr.State doRebuildParentState(BinaryExpr.State state, STree<Expr.State> child) {
+		public BinaryExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withLeft(child);
 		}
 
@@ -188,12 +188,12 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 	private static STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr> RIGHT = new STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(BinaryExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.right;
 		}
 
 		@Override
-		protected BinaryExpr.State doRebuildParentState(BinaryExpr.State state, STree<Expr.State> child) {
+		public BinaryExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withRight(child);
 		}
 
@@ -211,12 +211,12 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 	private static STypeSafeProperty<BinaryExpr.State, BinaryOp> OP = new STypeSafeProperty<BinaryExpr.State, BinaryOp>() {
 
 		@Override
-		protected BinaryOp doRetrieve(BinaryExpr.State state) {
+		public BinaryOp doRetrieve(State state) {
 			return state.op;
 		}
 
 		@Override
-		protected BinaryExpr.State doRebuildParentState(BinaryExpr.State state, BinaryOp value) {
+		public BinaryExpr.State doRebuildParentState(State state, BinaryOp value) {
 			return state.withOp(value);
 		}
 	};

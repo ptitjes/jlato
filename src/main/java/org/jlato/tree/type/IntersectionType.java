@@ -121,12 +121,12 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 	private static STypeSafeTraversal<IntersectionType.State, SNodeListState, NodeList<Type>> TYPES = new STypeSafeTraversal<IntersectionType.State, SNodeListState, NodeList<Type>>() {
 
 		@Override
-		protected STree<?> doTraverse(IntersectionType.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.types;
 		}
 
 		@Override
-		protected IntersectionType.State doRebuildParentState(IntersectionType.State state, STree<SNodeListState> child) {
+		public IntersectionType.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withTypes(child);
 		}
 

@@ -143,12 +143,12 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 	private static STypeSafeTraversal<CastExpr.State, Type.State, Type> TYPE = new STypeSafeTraversal<CastExpr.State, Type.State, Type>() {
 
 		@Override
-		protected STree<?> doTraverse(CastExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.type;
 		}
 
 		@Override
-		protected CastExpr.State doRebuildParentState(CastExpr.State state, STree<Type.State> child) {
+		public CastExpr.State doRebuildParentState(State state, STree<Type.State> child) {
 			return state.withType(child);
 		}
 
@@ -166,12 +166,12 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 	private static STypeSafeTraversal<CastExpr.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<CastExpr.State, Expr.State, Expr>() {
 
 		@Override
-		protected STree<?> doTraverse(CastExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.expr;
 		}
 
 		@Override
-		protected CastExpr.State doRebuildParentState(CastExpr.State state, STree<Expr.State> child) {
+		public CastExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
 			return state.withExpr(child);
 		}
 

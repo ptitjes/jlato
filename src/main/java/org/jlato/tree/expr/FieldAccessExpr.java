@@ -29,7 +29,6 @@ import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
-import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
@@ -145,12 +144,12 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 	private static STypeSafeTraversal<FieldAccessExpr.State, SNodeOptionState, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<FieldAccessExpr.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		protected STree<?> doTraverse(FieldAccessExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.scope;
 		}
 
 		@Override
-		protected FieldAccessExpr.State doRebuildParentState(FieldAccessExpr.State state, STree<SNodeOptionState> child) {
+		public FieldAccessExpr.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withScope(child);
 		}
 
@@ -168,12 +167,12 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 	private static STypeSafeTraversal<FieldAccessExpr.State, Name.State, Name> NAME = new STypeSafeTraversal<FieldAccessExpr.State, Name.State, Name>() {
 
 		@Override
-		protected STree<?> doTraverse(FieldAccessExpr.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.name;
 		}
 
 		@Override
-		protected FieldAccessExpr.State doRebuildParentState(FieldAccessExpr.State state, STree<Name.State> child) {
+		public FieldAccessExpr.State doRebuildParentState(State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 

@@ -32,7 +32,7 @@ public abstract class STypeSafeTraversal<P extends STreeState, S extends STreeSt
 		return doTraverse((P) state);
 	}
 
-	protected abstract STree<?> doTraverse(P state);
+	public abstract STree<?> doTraverse(P state);
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -40,5 +40,5 @@ public abstract class STypeSafeTraversal<P extends STreeState, S extends STreeSt
 		return doRebuildParentState((P) state, (STree<S>) child);
 	}
 
-	protected abstract P doRebuildParentState(P state, STree<S> child);
+	public abstract P doRebuildParentState(P state, STree<S> child);
 }

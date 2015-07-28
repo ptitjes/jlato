@@ -129,12 +129,12 @@ public class STreeSetState implements STreeState {
 		}
 
 		@Override
-		protected STree<?> doTraverse(STreeSetState state) {
+		public STree<?> doTraverse(STreeSetState state) {
 			return state.tree(path);
 		}
 
 		@Override
-		protected STreeSetState doRebuildParentState(STreeSetState state, STree<STreeState> child) {
+		public STreeSetState doRebuildParentState(STreeSetState state, STree<STreeState> child) {
 			return state.withTree(path, child);
 		}
 

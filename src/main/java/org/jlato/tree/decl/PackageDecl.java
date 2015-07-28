@@ -144,12 +144,12 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 	private static STypeSafeTraversal<PackageDecl.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<PackageDecl.State, SNodeListState, NodeList<AnnotationExpr>>() {
 
 		@Override
-		protected STree<?> doTraverse(PackageDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.annotations;
 		}
 
 		@Override
-		protected PackageDecl.State doRebuildParentState(PackageDecl.State state, STree<SNodeListState> child) {
+		public PackageDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withAnnotations(child);
 		}
 
@@ -167,12 +167,12 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 	private static STypeSafeTraversal<PackageDecl.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<PackageDecl.State, QualifiedName.State, QualifiedName>() {
 
 		@Override
-		protected STree<?> doTraverse(PackageDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.name;
 		}
 
 		@Override
-		protected PackageDecl.State doRebuildParentState(PackageDecl.State state, STree<QualifiedName.State> child) {
+		public PackageDecl.State doRebuildParentState(State state, STree<QualifiedName.State> child) {
 			return state.withName(child);
 		}
 

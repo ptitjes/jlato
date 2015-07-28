@@ -187,12 +187,12 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 	private static STypeSafeTraversal<QualifiedType.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<QualifiedType.State, SNodeListState, NodeList<AnnotationExpr>>() {
 
 		@Override
-		protected STree<?> doTraverse(QualifiedType.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.annotations;
 		}
 
 		@Override
-		protected QualifiedType.State doRebuildParentState(QualifiedType.State state, STree<SNodeListState> child) {
+		public QualifiedType.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withAnnotations(child);
 		}
 
@@ -210,12 +210,12 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 	private static STypeSafeTraversal<QualifiedType.State, SNodeOptionState, NodeOption<QualifiedType>> SCOPE = new STypeSafeTraversal<QualifiedType.State, SNodeOptionState, NodeOption<QualifiedType>>() {
 
 		@Override
-		protected STree<?> doTraverse(QualifiedType.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.scope;
 		}
 
 		@Override
-		protected QualifiedType.State doRebuildParentState(QualifiedType.State state, STree<SNodeOptionState> child) {
+		public QualifiedType.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withScope(child);
 		}
 
@@ -233,12 +233,12 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 	private static STypeSafeTraversal<QualifiedType.State, Name.State, Name> NAME = new STypeSafeTraversal<QualifiedType.State, Name.State, Name>() {
 
 		@Override
-		protected STree<?> doTraverse(QualifiedType.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.name;
 		}
 
 		@Override
-		protected QualifiedType.State doRebuildParentState(QualifiedType.State state, STree<Name.State> child) {
+		public QualifiedType.State doRebuildParentState(State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -256,12 +256,12 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 	private static STypeSafeTraversal<QualifiedType.State, SNodeOptionState, NodeOption<NodeList<Type>>> TYPE_ARGS = new STypeSafeTraversal<QualifiedType.State, SNodeOptionState, NodeOption<NodeList<Type>>>() {
 
 		@Override
-		protected STree<?> doTraverse(QualifiedType.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.typeArgs;
 		}
 
 		@Override
-		protected QualifiedType.State doRebuildParentState(QualifiedType.State state, STree<SNodeOptionState> child) {
+		public QualifiedType.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withTypeArgs(child);
 		}
 

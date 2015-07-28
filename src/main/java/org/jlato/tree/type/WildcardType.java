@@ -26,7 +26,6 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.*;
 import org.jlato.tree.expr.AnnotationExpr;
 
-import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
@@ -165,12 +164,12 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 	private static STypeSafeTraversal<WildcardType.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<WildcardType.State, SNodeListState, NodeList<AnnotationExpr>>() {
 
 		@Override
-		protected STree<?> doTraverse(WildcardType.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.annotations;
 		}
 
 		@Override
-		protected WildcardType.State doRebuildParentState(WildcardType.State state, STree<SNodeListState> child) {
+		public WildcardType.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withAnnotations(child);
 		}
 
@@ -188,12 +187,12 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 	private static STypeSafeTraversal<WildcardType.State, SNodeOptionState, NodeOption<ReferenceType>> EXT = new STypeSafeTraversal<WildcardType.State, SNodeOptionState, NodeOption<ReferenceType>>() {
 
 		@Override
-		protected STree<?> doTraverse(WildcardType.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.ext;
 		}
 
 		@Override
-		protected WildcardType.State doRebuildParentState(WildcardType.State state, STree<SNodeOptionState> child) {
+		public WildcardType.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withExt(child);
 		}
 
@@ -211,12 +210,12 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 	private static STypeSafeTraversal<WildcardType.State, SNodeOptionState, NodeOption<ReferenceType>> SUP = new STypeSafeTraversal<WildcardType.State, SNodeOptionState, NodeOption<ReferenceType>>() {
 
 		@Override
-		protected STree<?> doTraverse(WildcardType.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.sup;
 		}
 
 		@Override
-		protected WildcardType.State doRebuildParentState(WildcardType.State state, STree<SNodeOptionState> child) {
+		public WildcardType.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withSup(child);
 		}
 

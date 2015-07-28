@@ -132,7 +132,7 @@ public class SNodeListState implements STreeState {
 		}
 
 		@Override
-		protected STree<?> doTraverse(SNodeListState state) {
+		public STree<?> doTraverse(SNodeListState state) {
 			return state.child(index(state));
 		}
 
@@ -141,7 +141,7 @@ public class SNodeListState implements STreeState {
 		}
 
 		@Override
-		protected SNodeListState doRebuildParentState(SNodeListState state, STree<STreeState> child) {
+		public SNodeListState doRebuildParentState(SNodeListState state, STree<STreeState> child) {
 			return state.withChild(index(state), child);
 		}
 

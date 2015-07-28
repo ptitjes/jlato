@@ -26,7 +26,6 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.*;
 import org.jlato.tree.expr.Expr;
 
-import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
@@ -146,12 +145,12 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 	private static STypeSafeTraversal<SwitchCase.State, SNodeOptionState, NodeOption<Expr>> LABEL = new STypeSafeTraversal<SwitchCase.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		protected STree<?> doTraverse(SwitchCase.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.label;
 		}
 
 		@Override
-		protected SwitchCase.State doRebuildParentState(SwitchCase.State state, STree<SNodeOptionState> child) {
+		public SwitchCase.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withLabel(child);
 		}
 
@@ -169,12 +168,12 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 	private static STypeSafeTraversal<SwitchCase.State, SNodeListState, NodeList<Stmt>> STMTS = new STypeSafeTraversal<SwitchCase.State, SNodeListState, NodeList<Stmt>>() {
 
 		@Override
-		protected STree<?> doTraverse(SwitchCase.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.stmts;
 		}
 
 		@Override
-		protected SwitchCase.State doRebuildParentState(SwitchCase.State state, STree<SNodeListState> child) {
+		public SwitchCase.State doRebuildParentState(State state, STree<SNodeListState> child) {
 			return state.withStmts(child);
 		}
 

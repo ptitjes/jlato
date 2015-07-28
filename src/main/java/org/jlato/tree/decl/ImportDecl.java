@@ -168,12 +168,12 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 	private static STypeSafeTraversal<ImportDecl.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<ImportDecl.State, QualifiedName.State, QualifiedName>() {
 
 		@Override
-		protected STree<?> doTraverse(ImportDecl.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.name;
 		}
 
 		@Override
-		protected ImportDecl.State doRebuildParentState(ImportDecl.State state, STree<QualifiedName.State> child) {
+		public ImportDecl.State doRebuildParentState(State state, STree<QualifiedName.State> child) {
 			return state.withName(child);
 		}
 
@@ -191,12 +191,12 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 	private static STypeSafeProperty<ImportDecl.State, Boolean> STATIC = new STypeSafeProperty<ImportDecl.State, Boolean>() {
 
 		@Override
-		protected Boolean doRetrieve(ImportDecl.State state) {
+		public Boolean doRetrieve(State state) {
 			return state.isStatic;
 		}
 
 		@Override
-		protected ImportDecl.State doRebuildParentState(ImportDecl.State state, Boolean value) {
+		public ImportDecl.State doRebuildParentState(State state, Boolean value) {
 			return state.setStatic(value);
 		}
 	};
@@ -204,12 +204,12 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 	private static STypeSafeProperty<ImportDecl.State, Boolean> ON_DEMAND = new STypeSafeProperty<ImportDecl.State, Boolean>() {
 
 		@Override
-		protected Boolean doRetrieve(ImportDecl.State state) {
+		public Boolean doRetrieve(State state) {
 			return state.isOnDemand;
 		}
 
 		@Override
-		protected ImportDecl.State doRebuildParentState(ImportDecl.State state, Boolean value) {
+		public ImportDecl.State doRebuildParentState(State state, Boolean value) {
 			return state.setOnDemand(value);
 		}
 	};

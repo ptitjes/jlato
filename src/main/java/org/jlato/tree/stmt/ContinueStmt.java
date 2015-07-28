@@ -29,7 +29,6 @@ import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
-import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
@@ -123,12 +122,12 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 	private static STypeSafeTraversal<ContinueStmt.State, SNodeOptionState, NodeOption<Name>> ID = new STypeSafeTraversal<ContinueStmt.State, SNodeOptionState, NodeOption<Name>>() {
 
 		@Override
-		protected STree<?> doTraverse(ContinueStmt.State state) {
+		public STree<?> doTraverse(State state) {
 			return state.id;
 		}
 
 		@Override
-		protected ContinueStmt.State doRebuildParentState(ContinueStmt.State state, STree<SNodeOptionState> child) {
+		public ContinueStmt.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
 			return state.withId(child);
 		}
 

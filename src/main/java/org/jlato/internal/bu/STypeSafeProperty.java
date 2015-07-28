@@ -30,7 +30,7 @@ public abstract class STypeSafeProperty<P extends STreeState, T> extends SProper
 		return doRetrieve((P) state);
 	}
 
-	protected abstract T doRetrieve(P state);
+	public abstract T doRetrieve(P state);
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -38,5 +38,5 @@ public abstract class STypeSafeProperty<P extends STreeState, T> extends SProper
 		return doRebuildParentState((P) state, (T) value);
 	}
 
-	protected abstract P doRebuildParentState(P state, T value);
+	public abstract P doRebuildParentState(P state, T value);
 }
