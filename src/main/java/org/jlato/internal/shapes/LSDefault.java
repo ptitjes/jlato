@@ -52,6 +52,6 @@ public final class LSDefault extends LexicalShape {
 	@Override
 	public void render(STree tree, WRunRun run, Printer printer) {
 		final LexicalShape shape = shapeFor(tree);
-		if (shape != null) shape.render(tree, tree.run, printer);
+		if (shape != null) shape.render(tree, printer);
 	}
 }

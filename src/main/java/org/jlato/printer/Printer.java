@@ -191,8 +191,8 @@ public class Printer {
 	public void print(Tree tree) {
 		reset();
 		final STree sTree = TreeBase.treeOf(tree);
-		final LexicalShape shape = sTree.state.shape();
-		shape.render(sTree, sTree.run, this);
+		final LexicalShape shape = LexicalShape.defaultShape();
+		shape.render(sTree, this);
 	}
 
 	/**
@@ -204,7 +204,7 @@ public class Printer {
 		reset();
 		final STree sTree = TreeBase.treeOf(trees);
 		final LexicalShape shape = LexicalShape.list();
-		shape.render(sTree, sTree.run, this);
+		shape.render(sTree, this);
 	}
 
 	private int indentationLevel;

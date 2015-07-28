@@ -39,6 +39,10 @@ public abstract class LexicalShape {
 
 	public abstract WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator);
 
+	public void render(STree tree, Printer printer) {
+		render(tree, tree.run, printer);
+	}
+
 	public abstract void render(STree tree, WRunRun run, Printer printer);
 
 	public LSDecorated withSpacing(SpacingConstraint before, SpacingConstraint after) {
