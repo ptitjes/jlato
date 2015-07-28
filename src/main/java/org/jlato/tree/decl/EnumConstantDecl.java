@@ -288,7 +288,7 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 			child(NAME),
 			child(ARGS, when(some(), element(Expr.argumentsShape))),
 			child(CLASS_BODY, when(some(),
-					composite(element(MemberDecl.bodyShape), none().withSpacingAfter(spacing(EnumConstant_AfterBody)))
+					element(MemberDecl.bodyShape).withSpacingAfter(spacing(EnumConstant_AfterBody))
 			))
 	);
 
