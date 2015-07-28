@@ -40,7 +40,6 @@ public final class SContext<P extends STreeState> {
 		return new SContext<P>(rebuiltParent(child), traversal);
 	}
 
-	@SuppressWarnings("unchecked")
 	private SLocation<P> rebuiltParent(STree<?> child) {
 		return parent.withTree(parent.tree.traverseReplace(traversal, child));
 	}

@@ -82,34 +82,32 @@ public class SLocation<S extends STreeState> {
 	}
 
 	public SLocation<?> leftSibling() {
-		SContext<? extends STreeState> leftSibling = context().leftSibling();
+		SContext<?> leftSibling = context().leftSibling();
 		return leftSibling == null ? null : leftSibling.newLocation();
 	}
 
 	public SLocation<?> rightSibling() {
-		SContext<? extends STreeState> rightSibling = context().rightSibling();
+		SContext<?> rightSibling = context().rightSibling();
 		return rightSibling == null ? null : rightSibling.newLocation();
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T extends Tree> T replace(T replacement) {
-		final STree<S> newTree = TreeBase.treeOf(replacement);
+		return replaceTree(TreeBase.<S>treeOf(replacement));
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends Tree> T replaceTree(STree<S> newTree) {
 		return (T) withTree(newTree).facade;
 	}
 
 	/* Node methods */
 
-	@SuppressWarnings("unchecked")
 	public <A> A safeProperty(STypeSafeProperty<S, A> property) {
-		final S state = tree.state;
-		return (A) property.retrieve(state);
+		return property.doRetrieve(tree.state);
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T extends Tree, A> T safePropertyReplace(STypeSafeProperty<S, A> property, A attribute) {
-		final S state = tree.state;
-		final STree newTree = tree.withState((S) property.rebuildParentState(state, attribute));
-		return (T) withTree(newTree).facade;
+		return replaceTree(tree.withState(property.doRebuildParentState(tree.state, attribute)));
 	}
 
 	public <T extends Tree, A> T safePropertyMutate(STypeSafeProperty<S, A> property, Mutation<A> mutation) {
@@ -121,9 +119,8 @@ public class SLocation<S extends STreeState> {
 		return (C) traverse(traversal).facade;
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T extends Tree, C extends Tree> T safeTraversalReplace(STypeSafeTraversal<S, ?, C> traversal, C child) {
-		return (T) withTree(tree.traverseReplace(traversal, TreeBase.treeOf(child))).facade;
+		return replaceTree(tree.traverseReplace(traversal, TreeBase.treeOf(child)));
 	}
 
 	public <T extends Tree, C extends Tree> T safeTraversalMutate(STypeSafeTraversal<S, ?, C> traversal, Mutation<C> mutation) {
