@@ -42,7 +42,7 @@ public final class LSDefault extends LexicalShape {
 	}
 
 	@Override
-	public void enRun(DressingBuilder builder) {
+	public void dress(DressingBuilder builder) {
 		builder.addSubRun(null);
 	}
 

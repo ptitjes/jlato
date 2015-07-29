@@ -50,7 +50,7 @@ public final class LSComposite extends LexicalShape {
 	}
 
 	@Override
-	public void enRun(DressingBuilder builder) {
+	public void dress(DressingBuilder builder) {
 		builder.openRun();
 		for (LexicalShape shape : shapes) {
 			builder.handleNext(shape);

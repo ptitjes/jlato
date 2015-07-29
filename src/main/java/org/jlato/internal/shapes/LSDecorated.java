@@ -40,8 +40,8 @@ public class LSDecorated extends LexicalShape {
 	}
 
 	@Override
-	public void enRun(DressingBuilder builder) {
-		shape.enRun(builder);
+	public void dress(DressingBuilder builder) {
+		shape.dress(builder);
 	}
 
 	@Override

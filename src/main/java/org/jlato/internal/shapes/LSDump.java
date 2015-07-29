@@ -40,7 +40,7 @@ public class LSDump<S extends STreeState> extends LexicalShape {
 	}
 
 	@Override
-	public void enRun(DressingBuilder builder) {
+	public void dress(DressingBuilder builder) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -105,7 +105,7 @@ public class DressingBuilder<S extends STreeState> {
 				addSubRun(null);
 			} else addSubRun(tokenIterator.next());
 
-			shape.enRun(this);
+			shape.dress(this);
 		}
 	}
 

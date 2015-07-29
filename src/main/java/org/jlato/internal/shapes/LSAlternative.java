@@ -45,11 +45,11 @@ public final class LSAlternative extends LexicalShape {
 	}
 
 	@Override
-	public void enRun(DressingBuilder builder) {
+	public void dress(DressingBuilder builder) {
 		if (condition.test(builder.currentTree())) {
-			if (shape != null) shape.enRun(builder);
+			if (shape != null) shape.dress(builder);
 		} else {
-			if (alternative != null) alternative.enRun(builder);
+			if (alternative != null) alternative.dress(builder);
 		}
 	}
 

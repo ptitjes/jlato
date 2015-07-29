@@ -37,7 +37,7 @@ public abstract class LexicalShape {
 
 	public abstract boolean isDefined(STree tree);
 
-	public abstract void enRun(DressingBuilder builder);
+	public abstract void dress(DressingBuilder builder);
 
 	public void render(STree tree, Printer printer) {
 		if (tree.leading != null) printer.encounteredWhitespace(tree.leading);

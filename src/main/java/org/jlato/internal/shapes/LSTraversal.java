@@ -45,9 +45,9 @@ public class LSTraversal extends LSDecorated {
 	}
 
 	@Override
-	public void enRun(DressingBuilder builder) {
+	public void dress(DressingBuilder builder) {
 		builder.openChild(traversal);
-		shape.enRun(builder);
+		shape.dress(builder);
 		builder.closeChild();
 	}
 

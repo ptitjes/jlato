@@ -154,7 +154,7 @@ abstract class ParserBase {
 		try {
 			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
 			final DressingBuilder<S> builder = new DressingBuilder<S>(tree, tokenIterator);
-			shape.enRun(builder);
+			shape.dress(builder);
 			final STree<S> newTree = builder.build();
 
 			if (tokenIterator.hasNext()) {
