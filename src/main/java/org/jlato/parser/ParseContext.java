@@ -130,7 +130,7 @@ public abstract class ParseContext<T extends Tree> {
 	public final static ParseContext<Stmt> Statement = new ParseContext<Stmt>() {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
-			return parser.Statement();
+			return parser.BlockStatement();
 		}
 	};
 

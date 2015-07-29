@@ -223,7 +223,7 @@ abstract class ParserBase {
 
 	public abstract STree<TypeParameter.State> TypeParameter() throws ParseException;
 
-	public abstract STree<? extends Stmt.State> Statement() throws ParseException;
+	public abstract STree<? extends Stmt.State> BlockStatement() throws ParseException;
 
 	public abstract STree<? extends Expr.State> Expression() throws ParseException;
 
