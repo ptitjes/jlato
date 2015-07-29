@@ -17,7 +17,7 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.unit;
+package org.jlato.unit.lex;
 
 import org.jlato.internal.bu.WToken;
 import org.jlato.internal.bu.WTokenRun;

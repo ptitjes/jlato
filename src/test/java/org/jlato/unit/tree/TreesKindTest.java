@@ -1,4 +1,4 @@
-package org.jlato.unit;
+package org.jlato.unit.tree;
 
 import org.jlato.tree.Kind;
 import org.junit.Assert;
