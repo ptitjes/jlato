@@ -30,6 +30,7 @@ import org.jlato.printer.Printer;
 import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.ImportDecl;
 import org.jlato.tree.expr.Expr;
+import org.jlato.unit.util.BaseTestFromFiles;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +42,7 @@ import java.io.*;
  * @author Didier Villevalois
  */
 @RunWith(JUnit4.class)
-public class SamplesTest {
+public class SamplesTest extends BaseTestFromFiles {
 
 	@Test
 	public void testClass() throws IOException, ParseException {
@@ -65,29 +66,5 @@ public class SamplesTest {
 	public void randoopTest0() throws IOException, ParseException {
 		final String original = resourceAsString("org/jlato/samples/RandoopTest0.java");
 		Assert.assertEquals(original, parseAndPrint(original, true, false, FormattingSettings.Default));
-	}
-
-	private String parseAndPrint(String original, boolean preserveWhitespaces, boolean format, FormattingSettings formattingSettings) throws ParseException {
-		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(preserveWhitespaces));
-		final CompilationUnit cu = parser.parse(ParseContext.CompilationUnit, original);
-		STree tree = TreeBase.treeOf(cu);
-		tree.validate();
-		return Printer.printToString(cu, format, formattingSettings);
-	}
-
-	private String resourceAsString(String name) throws IOException {
-		final InputStream inputStream = ClassLoader.getSystemResourceAsStream(name);
-		return new String(readFully(inputStream), "UTF-8");
-	}
-
-	private byte[] readFully(InputStream inputStream)
-			throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		byte[] buffer = new byte[1024];
-		int length = 0;
-		while ((length = inputStream.read(buffer)) != -1) {
-			baos.write(buffer, 0, length);
-		}
-		return baos.toByteArray();
 	}
 }
