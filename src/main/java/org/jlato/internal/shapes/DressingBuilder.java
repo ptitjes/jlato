@@ -50,8 +50,6 @@ public class DressingBuilder<S extends STreeState> {
 
 		final RunStack parentStack = descendantStack.peek();
 		parentStack.tree = parentStack.tree.traverseReplace(childStack.traversal, childStack.tree);
-
-		parentStack.addSubRun(null);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -73,6 +71,16 @@ public class DressingBuilder<S extends STreeState> {
 
 	public void addNullRun() {
 		descendantStack.peek().addSubRun(null);
+	}
+
+	public void setTrailing(WTokenRun tokens) {
+		final RunStack childStack = descendantStack.peek();
+		childStack.tree = childStack.tree.withTrailing(tokens);
+	}
+
+	public void setLeading(WTokenRun tokens) {
+		final RunStack childStack = descendantStack.peek();
+		childStack.tree = childStack.tree.withLeading(tokens);
 	}
 
 	private class RunStack {
@@ -112,13 +120,15 @@ public class DressingBuilder<S extends STreeState> {
 		private Builder<WRun, ArrayList<WRun>> subRuns = ArrayList.<WRun>factory().newBuilder();
 		private boolean firstShape = true;
 		private boolean firstDefinedShape = true;
+		private LexicalShape lastDefinedShape = null;
+		private STree<?> lastDefinedDiscriminator = null;
 
 		public void handleNext(LexicalShape shape, STree<?> discriminator) {
 			final boolean defined = shape != null && shape.isDefined(discriminator);
 
 			if (!defined) {
 				if (firstShape) firstShape = false;
-				else addSubRun(null);
+				else addSubRun(WTokenRun.EMPTY);
 
 				addSubRun(null);
 			} else {
@@ -127,10 +137,34 @@ public class DressingBuilder<S extends STreeState> {
 					if (firstDefinedShape) firstDefinedShape = false;
 				} else if (firstDefinedShape) {
 					firstDefinedShape = false;
-					addSubRun(null);
-				} else addSubRun(tokenIterator.next());
+					addSubRun(WTokenRun.EMPTY);
+				} else {
+					WTokenRun tokens = tokenIterator.next();
+
+					final boolean acceptsTrailing = lastDefinedShape.acceptsTrailingWhitespace();
+					final boolean acceptsLeading = shape.acceptsLeadingWhitespace();
+					if (acceptsTrailing && acceptsLeading) {
+						final WTokenRun.ThreeWaySplit split = tokens.splitTrailingAndLeadingComments();
+						lastDefinedShape.dressTrailing(split.left, DressingBuilder.this);
+						tokens = split.middle;
+						shape.dressLeading(split.right, DressingBuilder.this);
+					} else if (acceptsTrailing) {
+						final WTokenRun.TwoWaySplit split = tokens.splitTrailingComment();
+						lastDefinedShape.dressTrailing(split.left, DressingBuilder.this);
+						tokens = split.right;
+					} else if (acceptsLeading) {
+						final WTokenRun.TwoWaySplit split = tokens.splitLeadingComments();
+						tokens = split.left;
+						shape.dressLeading(split.right, DressingBuilder.this);
+					}
+
+					addSubRun(tokens);
+				}
 
 				shape.dress(DressingBuilder.this, discriminator);
+
+				lastDefinedShape = shape;
+				lastDefinedDiscriminator = discriminator;
 			}
 		}
 

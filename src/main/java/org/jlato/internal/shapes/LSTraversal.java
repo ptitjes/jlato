@@ -45,9 +45,24 @@ public class LSTraversal extends LSDecorated {
 	}
 
 	@Override
-	public void dress(DressingBuilder builder, STree<?> discriminator) {
+	public void dress(DressingBuilder<?> builder, STree<?> discriminator) {
 		builder.openChild(traversal);
 		shape.dress(builder, discriminator.traverse(traversal));
+		builder.closeChild();
+		builder.addNullRun();
+	}
+
+	@Override
+	public void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder) {
+		builder.openChild(traversal);
+		shape.dressTrailing(tokens, builder);
+		builder.closeChild();
+	}
+
+	@Override
+	public void dressLeading(WTokenRun tokens, DressingBuilder<?> builder) {
+		builder.openChild(traversal);
+		shape.dressLeading(tokens, builder);
 		builder.closeChild();
 	}
 
@@ -56,7 +71,7 @@ public class LSTraversal extends LSDecorated {
 		final STree child = traverse(tree);
 		if (child == null) return;
 
-		if (child.run != null) shape.render(child, printer);
+		if (child.run != null) shape.render(child, child.run, printer);
 		else shape.render(child, run, printer);
 	}
 }

@@ -23,6 +23,7 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WRunRun;
+import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
 
 /**
@@ -58,12 +59,30 @@ public final class LSComposite extends LexicalShape {
 	}
 
 	@Override
-	public void dress(DressingBuilder builder, STree<?> discriminator) {
+	public void dress(DressingBuilder<?> builder, STree<?> discriminator) {
 		builder.openRun();
 		for (LexicalShape shape : shapes) {
 			builder.handleNext(shape, discriminator);
 		}
 		builder.closeRun();
+	}
+
+	@Override
+	public boolean acceptsTrailingWhitespace() {
+		return false;
+	}
+
+	@Override
+	public boolean acceptsLeadingWhitespace() {
+		return false;
+	}
+
+	@Override
+	public void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder) {
+	}
+
+	@Override
+	public void dressLeading(WTokenRun tokens, DressingBuilder<?> builder) {
 	}
 
 	@Override

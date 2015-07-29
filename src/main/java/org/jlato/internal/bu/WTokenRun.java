@@ -28,11 +28,9 @@ import org.jlato.parser.ParserImplConstants;
  */
 public class WTokenRun extends WRun {
 
-	public final IndexedList<WToken> elements;
+	public static final WTokenRun EMPTY = new WTokenRun(Vector.<WToken>empty());
 
-	public WTokenRun() {
-		this(Vector.<WToken>empty());
-	}
+	public final IndexedList<WToken> elements;
 
 	public WTokenRun(IndexedList<WToken> elements) {
 		this.elements = elements;
@@ -40,6 +38,14 @@ public class WTokenRun extends WRun {
 
 	public WTokenRun append(WToken element) {
 		return new WTokenRun(elements.append(element));
+	}
+
+	public WTokenRun appendAll(WTokenRun tokens) {
+		WTokenRun concatenation = this;
+		for (WToken token : tokens.elements) {
+			concatenation = concatenation.append(token);
+		}
+		return concatenation;
 	}
 
 	public TwoWaySplit splitTrailingComment() {
@@ -63,7 +69,7 @@ public class WTokenRun extends WRun {
 			final TwoWaySplit leadingSplit = splitLeadingComments();
 
 			return new ThreeWaySplit(
-					new WTokenRun(),
+					EMPTY,
 					leadingSplit.left,
 					leadingSplit.right
 			);

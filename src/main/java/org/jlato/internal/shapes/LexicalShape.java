@@ -41,7 +41,15 @@ public abstract class LexicalShape {
 
 	public abstract boolean isDefined(STree tree);
 
-	public abstract void dress(DressingBuilder builder, STree<?> discriminator);
+	public abstract void dress(DressingBuilder<?> builder, STree<?> discriminator);
+
+	public abstract boolean acceptsTrailingWhitespace();
+
+	public abstract boolean acceptsLeadingWhitespace();
+
+	public abstract void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder);
+
+	public abstract void dressLeading(WTokenRun tokens, DressingBuilder<?> builder);
 
 	public void render(STree tree, Printer printer) {
 		if (tree.leading != null) printer.encounteredWhitespace(tree.leading);

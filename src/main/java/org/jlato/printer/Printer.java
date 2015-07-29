@@ -230,11 +230,8 @@ public class Printer {
 	public void encounteredWhitespace(WTokenRun whitespace) {
 		if (whitespace == null) return;
 
-		// Only one token run should be found between meaningful content
-		// This is ensured in RunBuilder and in its RunRenderer counterpart
-		if (existingWhitespace != null) throw new IllegalStateException();
-
-		existingWhitespace = whitespace;
+		if (existingWhitespace == null) existingWhitespace = whitespace;
+		else existingWhitespace = existingWhitespace.appendAll(whitespace);
 	}
 
 	public void encounteredIndentation(IndentationConstraint constraint) {

@@ -40,8 +40,26 @@ public class LSDump<S extends STreeState> extends LexicalShape {
 	}
 
 	@Override
-	public void dress(DressingBuilder builder, STree<?> discriminator) {
+	public void dress(DressingBuilder<?> builder, STree<?> discriminator) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean acceptsTrailingWhitespace() {
+		return false;
+	}
+
+	@Override
+	public boolean acceptsLeadingWhitespace() {
+		return false;
+	}
+
+	@Override
+	public void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder) {
+	}
+
+	@Override
+	public void dressLeading(WTokenRun tokens, DressingBuilder<?> builder) {
 	}
 
 	@Override

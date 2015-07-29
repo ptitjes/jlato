@@ -23,6 +23,7 @@ import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WRunRun;
+import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
 
 /**
@@ -56,7 +57,7 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
-	public void dress(DressingBuilder builder, STree<?> discriminator) {
+	public void dress(DressingBuilder<?> builder, STree<?> discriminator) {
 		builder.openRun();
 
 		final SNodeListState state = (SNodeListState) discriminator.state;
@@ -76,6 +77,24 @@ public final class LSList extends LexicalShape {
 		builder.handleNext(isEmpty && !renderIfEmpty ? none() : after, discriminator);
 
 		builder.closeRun();
+	}
+
+	@Override
+	public boolean acceptsTrailingWhitespace() {
+		return false;
+	}
+
+	@Override
+	public boolean acceptsLeadingWhitespace() {
+		return false;
+	}
+
+	@Override
+	public void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder) {
+	}
+
+	@Override
+	public void dressLeading(WTokenRun tokens, DressingBuilder<?> builder) {
 	}
 
 	@Override

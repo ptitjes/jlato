@@ -21,6 +21,7 @@ package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WRunRun;
+import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
 
 /**
@@ -40,8 +41,28 @@ public class LSDecorated extends LexicalShape {
 	}
 
 	@Override
-	public void dress(DressingBuilder builder, STree<?> discriminator) {
+	public void dress(DressingBuilder<?> builder, STree<?> discriminator) {
 		shape.dress(builder, discriminator);
+	}
+
+	@Override
+	public boolean acceptsTrailingWhitespace() {
+		return shape.acceptsTrailingWhitespace();
+	}
+
+	@Override
+	public boolean acceptsLeadingWhitespace() {
+		return shape.acceptsLeadingWhitespace();
+	}
+
+	@Override
+	public void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder) {
+		shape.dressTrailing(tokens, builder);
+	}
+
+	@Override
+	public void dressLeading(WTokenRun tokens, DressingBuilder<?> builder) {
+		shape.dressLeading(tokens, builder);
 	}
 
 	@Override
