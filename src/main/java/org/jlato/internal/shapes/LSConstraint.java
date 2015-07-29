@@ -71,6 +71,11 @@ public final class LSConstraint extends LSDecorated {
 	}
 
 	@Override
+	public boolean opensSubRun() {
+		return shape.opensSubRun();
+	}
+
+	@Override
 	public boolean isDefined(STree tree) {
 		return shape.isDefined(tree);
 	}

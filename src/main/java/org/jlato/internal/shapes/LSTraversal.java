@@ -30,7 +30,7 @@ public class LSTraversal extends LSDecorated {
 	private final STraversal traversal;
 
 	public LSTraversal(STraversal traversal, LexicalShape shape) {
-		super(shape);
+		super(shape.opensSubRun() ? shape : new LSComposite(shape));
 		this.traversal = traversal;
 	}
 
@@ -45,9 +45,9 @@ public class LSTraversal extends LSDecorated {
 	}
 
 	@Override
-	public void dress(DressingBuilder builder) {
+	public void dress(DressingBuilder builder, STree<?> discriminator) {
 		builder.openChild(traversal);
-		shape.dress(builder);
+		shape.dress(builder, discriminator.traverse(traversal));
 		builder.closeChild();
 	}
 

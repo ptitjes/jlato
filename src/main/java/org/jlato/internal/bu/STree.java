@@ -29,15 +29,19 @@ import org.jlato.tree.Tree;
 public class STree<S extends STreeState> {
 
 	public final S state;
+	public final WTokenRun leading;
 	public final WRunRun run;
+	public final WTokenRun trailing;
 
 	public STree(S state) {
-		this(state, null);
+		this(state, null, null, null);
 	}
 
-	public STree(S state, WRunRun run) {
+	public STree(S state, WTokenRun leading, WRunRun run, WTokenRun trailing) {
 		this.state = state;
+		this.leading = leading;
 		this.run = run;
+		this.trailing = trailing;
 	}
 
 	public int width() {
@@ -45,11 +49,19 @@ public class STree<S extends STreeState> {
 	}
 
 	public STree<S> withState(S state) {
-		return new STree<S>(state, run);
+		return new STree<S>(state, leading, run, trailing);
 	}
 
 	public STree<S> withRun(WRunRun run) {
-		return new STree<S>(state, run);
+		return new STree<S>(state, leading, run, trailing);
+	}
+
+	public STree<S> withLeading(WTokenRun leading) {
+		return new STree<S>(state, leading, run, trailing);
+	}
+
+	public STree<S> withTrailing(WTokenRun trailing) {
+		return new STree<S>(state, leading, run, trailing);
 	}
 
 	public STree<?> traverse(STraversal traversal) {

@@ -147,24 +147,22 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 		}
 	};
 
-	public final static LexicalShape shape = composite(
-			alternative(childIs(STMTS, not(empty())),
-					composite(
-							token(LToken.BraceLeft)
-									.withSpacingAfter(newLine())
-									.withIndentationAfter(indent(BLOCK)),
-							child(STMTS, listShape),
-							token(LToken.BraceRight)
-									.withIndentationBefore(unIndent(BLOCK))
-									.withSpacingBefore(newLine())
-					),
-					composite(
-							token(LToken.BraceLeft)
-									.withSpacingAfter(newLine())
-									.withIndentationAfter(indent(BLOCK)),
-							token(LToken.BraceRight)
-									.withIndentationBefore(unIndent(BLOCK))
-					)
+	public final static LexicalShape shape = alternative(childIs(STMTS, not(empty())),
+			composite(
+					token(LToken.BraceLeft)
+							.withSpacingAfter(newLine())
+							.withIndentationAfter(indent(BLOCK)),
+					child(STMTS, listShape),
+					token(LToken.BraceRight)
+							.withIndentationBefore(unIndent(BLOCK))
+							.withSpacingBefore(newLine())
+			),
+			composite(
+					token(LToken.BraceLeft)
+							.withSpacingAfter(newLine())
+							.withIndentationAfter(indent(BLOCK)),
+					token(LToken.BraceRight)
+							.withIndentationBefore(unIndent(BLOCK))
 			)
 	);
 }

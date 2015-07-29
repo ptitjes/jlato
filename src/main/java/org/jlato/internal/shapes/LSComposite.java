@@ -45,15 +45,23 @@ public final class LSComposite extends LexicalShape {
 	}
 
 	@Override
-	public boolean isDefined(STree tree) {
+	public boolean opensSubRun() {
 		return true;
 	}
 
 	@Override
-	public void dress(DressingBuilder builder) {
+	public boolean isDefined(STree tree) {
+		for (LexicalShape shape : shapes) {
+			if (shape.isDefined(tree)) return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void dress(DressingBuilder builder, STree<?> discriminator) {
 		builder.openRun();
 		for (LexicalShape shape : shapes) {
-			builder.handleNext(shape);
+			builder.handleNext(shape, discriminator);
 		}
 		builder.closeRun();
 	}
@@ -61,12 +69,9 @@ public final class LSComposite extends LexicalShape {
 	@Override
 	public void render(STree tree, WRunRun run, Printer printer) {
 		final RunRenderer renderer = new RunRenderer(printer, run);
-		iterateShapes(tree, renderer);
-	}
 
-	private void iterateShapes(STree tree, ShapeHandler builder) {
 		for (LexicalShape shape : shapes) {
-			builder.handleNext(shape, tree);
+			renderer.handleNext(shape, tree);
 		}
 	}
 }

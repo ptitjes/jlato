@@ -45,8 +45,8 @@ public final class LSToken extends LexicalShape {
 	}
 
 	@Override
-	public void dress(DressingBuilder builder) {
-		builder.addSubRun(null);
+	public void dress(DressingBuilder builder, STree<?> discriminator) {
+		builder.addNullRun();
 	}
 
 	@Override

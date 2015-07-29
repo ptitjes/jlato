@@ -37,7 +37,7 @@ public final class LSNone extends LexicalShape {
 	}
 
 	@Override
-	public void dress(DressingBuilder builder) {
+	public void dress(DressingBuilder builder, STree<?> discriminator) {
 	}
 
 	@Override

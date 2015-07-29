@@ -30,7 +30,7 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public class RunRenderer implements ShapeHandler {
+public class RunRenderer {
 
 	private final Printer printer;
 	private final Iterator<WRun> elements;

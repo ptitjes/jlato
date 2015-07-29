@@ -35,9 +35,13 @@ public abstract class LexicalShape {
 
 	// TODO Add argument to follow lexical runs
 
+	public boolean opensSubRun() {
+		return false;
+	}
+
 	public abstract boolean isDefined(STree tree);
 
-	public abstract void dress(DressingBuilder builder);
+	public abstract void dress(DressingBuilder builder, STree<?> discriminator);
 
 	public void render(STree tree, Printer printer) {
 		if (tree.leading != null) printer.encounteredWhitespace(tree.leading);

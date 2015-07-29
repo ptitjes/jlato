@@ -45,11 +45,11 @@ public final class LSAlternative extends LexicalShape {
 	}
 
 	@Override
-	public void dress(DressingBuilder builder) {
-		if (condition.test(builder.currentTree())) {
-			if (shape != null) shape.dress(builder);
+	public void dress(DressingBuilder builder, STree<?> discriminator) {
+		if (condition.test(discriminator)) {
+			if (shape != null) shape.dress(builder, discriminator);
 		} else {
-			if (alternative != null) alternative.dress(builder);
+			if (alternative != null) alternative.dress(builder, discriminator);
 		}
 	}
 

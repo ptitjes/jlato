@@ -36,14 +36,18 @@ public final class LSDefault extends LexicalShape {
 	}
 
 	@Override
+	public boolean opensSubRun() {
+		return true;
+	}
+
+	@Override
 	public boolean isDefined(STree tree) {
 		final LexicalShape shape = shapeFor(tree);
 		return shape != null && shape.isDefined(tree);
 	}
 
 	@Override
-	public void dress(DressingBuilder builder) {
-		builder.addSubRun(null);
+	public void dress(DressingBuilder builder, STree<?> discriminator) {
 	}
 
 	@Override

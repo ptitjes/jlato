@@ -42,6 +42,11 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
+	public boolean opensSubRun() {
+		return true;
+	}
+
+	@Override
 	public boolean isDefined(STree tree) {
 		final SNodeListState state = (SNodeListState) tree.state;
 		final Vector<STree<?>> children = state.children;
@@ -51,28 +56,24 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
-	public void dress(DressingBuilder builder) {
+	public void dress(DressingBuilder builder, STree<?> discriminator) {
 		builder.openRun();
 
-		final SNodeListState state = (SNodeListState) builder.currentTree().state;
+		final SNodeListState state = (SNodeListState) discriminator.state;
 		final Vector<STree<?>> children = state.children;
 		final boolean isEmpty = children.isEmpty();
 
-		builder.handleNext(isEmpty && !renderIfEmpty ? none() : before);
+		builder.handleNext(isEmpty && !renderIfEmpty ? none() : before, discriminator);
 
 		for (int index = 0; index < children.size(); index++) {
 			if (index != 0) {
-				builder.openChild(SNodeListState.elementTraversal(index - 1));
-				builder.handleNext(separator);
-				builder.closeChild();
+				builder.handleNext(separator, children.get(index - 1));
 			}
 
-			builder.openChild(SNodeListState.elementTraversal(index));
-			builder.handleNext(shape);
-			builder.closeChild();
+			builder.handleNext(new LSTraversal(SNodeListState.elementTraversal(index), shape), discriminator);
 		}
 
-		builder.handleNext(isEmpty && !renderIfEmpty ? none() : after);
+		builder.handleNext(isEmpty && !renderIfEmpty ? none() : after, discriminator);
 
 		builder.closeRun();
 	}
@@ -80,10 +81,7 @@ public final class LSList extends LexicalShape {
 	@Override
 	public void render(STree tree, WRunRun run, Printer printer) {
 		final RunRenderer renderer = new RunRenderer(printer, run);
-		iterateShapes(tree, renderer);
-	}
 
-	private void iterateShapes(STree tree, ShapeHandler renderer) {
 		final SNodeListState state = (SNodeListState) tree.state;
 		final Vector<STree<?>> children = state.children;
 		final boolean isEmpty = children.isEmpty();

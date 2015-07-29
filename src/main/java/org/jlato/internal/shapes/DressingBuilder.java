@@ -32,90 +32,115 @@ import java.util.Stack;
 public class DressingBuilder<S extends STreeState> {
 
 	private final Iterator<WTokenRun> tokenIterator;
-
-	private Stack<STree<?>> treeStack = new Stack<STree<?>>();
-	private Stack<STraversal> traversalStack = new Stack<STraversal>();
-	private Stack<RunEnvironment> runStack = new Stack<RunEnvironment>();
+	private Stack<RunStack> descendantStack = new Stack<RunStack>();
 
 	public DressingBuilder(STree<S> tree, Iterator<WTokenRun> tokenIterator) {
-		treeStack.push(tree);
 		this.tokenIterator = tokenIterator;
+		descendantStack.push(new RunStack(null, tree));
 	}
 
 	public void openChild(STraversal traversal) {
-		traversalStack.push(traversal);
-		treeStack.push(currentTree().traverse(traversal));
-	}
+		final RunStack parentStack = descendantStack.peek();
 
-	public STree<?> currentTree() {
-		return treeStack.peek();
+		descendantStack.push(new RunStack(traversal, parentStack.tree.traverse(traversal)));
 	}
 
 	public void closeChild() {
-		final STree<?> child = treeStack.pop();
-		final STree<?> newChild = child/*.withRun(run)*/;
+		final RunStack childStack = descendantStack.pop();
 
-		final STree<?> parent = treeStack.pop();
-		final STree<?> newParent = parent.traverseReplace(traversalStack.pop(), newChild);
-		treeStack.push(newParent);
+		final RunStack parentStack = descendantStack.peek();
+		parentStack.tree = parentStack.tree.traverseReplace(childStack.traversal, childStack.tree);
+
+		parentStack.addSubRun(null);
 	}
 
 	@SuppressWarnings("unchecked")
 	public STree<S> build() {
-		return (STree<S>) treeStack.pop();
+		return (STree<S>) descendantStack.pop().tree;
 	}
 
 	public void openRun() {
-		runStack.push(new RunEnvironment());
-	}
-
-	private WRunRun doCloseRun() {
-		final Builder<WRun, ArrayList<WRun>> builder = runStack.pop().builder;
-		final ArrayList<WRun> subRunElements = builder.build();
-		return subRunElements.isEmpty() ? null : new WRunRun(subRunElements);
+		descendantStack.peek().openRun();
 	}
 
 	public void closeRun() {
-		final WRunRun subRun = doCloseRun();
-		if (runStack.isEmpty()) {
-			final STree<?> tree = treeStack.pop();
-			final STree<?> newTree = tree.withRun(subRun);
-			treeStack.push(newTree);
-		} else addSubRun(subRun);
+		descendantStack.peek().closeRun();
 	}
 
-	public void handleNext(LexicalShape shape) {
-		final STree<?> tree = currentTree();
+	public void handleNext(LexicalShape shape, STree<?> discriminator) {
+		descendantStack.peek().handleNext(shape, discriminator);
+	}
 
-		final RunEnvironment runEnvironment = runStack.peek();
+	public void addNullRun() {
+		descendantStack.peek().addSubRun(null);
+	}
 
-		final boolean defined = shape != null && shape.isDefined(tree);
+	private class RunStack {
+		private STraversal traversal;
+		private STree<?> tree;
+		private Stack<RunBuilder> runStack = new Stack<RunBuilder>();
 
-		if (!defined) {
-			if (runEnvironment.firstShape) runEnvironment.firstShape = false;
-			else addSubRun(null);
+		public RunStack(STraversal traversal, STree<?> tree) {
+			this.traversal = traversal;
+			this.tree = tree;
+		}
 
-			addSubRun(null);
-		} else {
-			if (runEnvironment.firstShape) {
-				runEnvironment.firstShape = false;
-				if (runEnvironment.firstDefinedShape) runEnvironment.firstDefinedShape = false;
-			} else if (runEnvironment.firstDefinedShape) {
-				runEnvironment.firstDefinedShape = false;
-				addSubRun(null);
-			} else addSubRun(tokenIterator.next());
+		public void openRun() {
+			runStack.push(new RunBuilder());
+		}
 
-			shape.dress(this);
+		public void closeRun() {
+			final RunBuilder runBuilder = runStack.pop();
+			final WRunRun run = runBuilder.build();
+
+			if (runStack.isEmpty()) {
+				if (tree.run == null && run != null) tree = tree.withRun(run);
+			} else addSubRun(run);
+		}
+
+		public void handleNext(LexicalShape shape, STree<?> discriminator) {
+			runStack.peek().handleNext(shape, discriminator);
+		}
+
+		public void addSubRun(WRun run) {
+			if (!runStack.isEmpty()) runStack.peek().addSubRun(run);
 		}
 	}
 
-	public void addSubRun(WRun run) {
-		if (!runStack.isEmpty()) runStack.peek().builder.add(run);
-	}
+	private class RunBuilder {
 
-	private class RunEnvironment {
-		private Builder<WRun, ArrayList<WRun>> builder = ArrayList.<WRun>factory().newBuilder();
+		private Builder<WRun, ArrayList<WRun>> subRuns = ArrayList.<WRun>factory().newBuilder();
 		private boolean firstShape = true;
 		private boolean firstDefinedShape = true;
+
+		public void handleNext(LexicalShape shape, STree<?> discriminator) {
+			final boolean defined = shape != null && shape.isDefined(discriminator);
+
+			if (!defined) {
+				if (firstShape) firstShape = false;
+				else addSubRun(null);
+
+				addSubRun(null);
+			} else {
+				if (firstShape) {
+					firstShape = false;
+					if (firstDefinedShape) firstDefinedShape = false;
+				} else if (firstDefinedShape) {
+					firstDefinedShape = false;
+					addSubRun(null);
+				} else addSubRun(tokenIterator.next());
+
+				shape.dress(DressingBuilder.this, discriminator);
+			}
+		}
+
+		public void addSubRun(WRun run) {
+			subRuns.add(run);
+		}
+
+		public WRunRun build() {
+			final ArrayList<WRun> subRunElements = subRuns.build();
+			return subRunElements.isEmpty() ? null : new WRunRun(subRunElements);
+		}
 	}
 }
