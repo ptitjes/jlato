@@ -21,10 +21,7 @@ package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WRunRun;
-import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
-
-import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
@@ -48,10 +45,12 @@ public final class LSAlternative extends LexicalShape {
 	}
 
 	@Override
-	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
-		return condition.test(tree) ?
-				shape == null ? null : shape.enRun(tree, tokenIterator) :
-				alternative == null ? null : alternative.enRun(tree, tokenIterator);
+	public void enRun(DressingBuilder builder) {
+		if (condition.test(builder.currentTree())) {
+			if (shape != null) shape.enRun(builder);
+		} else {
+			if (alternative != null) alternative.enRun(builder);
+		}
 	}
 
 	@Override

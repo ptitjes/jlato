@@ -23,8 +23,6 @@ import com.github.andrewoma.dexx.collection.IndexedList;
 import org.jlato.internal.bu.*;
 import org.jlato.printer.Printer;
 
-import java.util.Iterator;
-
 /**
  * @author Didier Villevalois
  */
@@ -42,7 +40,7 @@ public class LSDump<S extends STreeState> extends LexicalShape {
 	}
 
 	@Override
-	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
+	public void enRun(DressingBuilder builder) {
 		throw new UnsupportedOperationException();
 	}
 

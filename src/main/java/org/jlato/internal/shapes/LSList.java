@@ -23,10 +23,7 @@ import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WRunRun;
-import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
-
-import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
@@ -54,10 +51,30 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
-	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
-		final RunBuilder builder = new RunBuilder(tokenIterator);
-		iterateShapes(tree, builder);
-		return builder.build();
+	public void enRun(DressingBuilder builder) {
+		builder.openRun();
+
+		final SNodeListState state = (SNodeListState) builder.currentTree().state;
+		final Vector<STree<?>> children = state.children;
+		final boolean isEmpty = children.isEmpty();
+
+		builder.handleNext(isEmpty && !renderIfEmpty ? none() : before);
+
+		for (int index = 0; index < children.size(); index++) {
+			if (index != 0) {
+				builder.openChild(SNodeListState.elementTraversal(index - 1));
+				builder.handleNext(separator);
+				builder.closeChild();
+			}
+
+			builder.openChild(SNodeListState.elementTraversal(index));
+			builder.handleNext(shape);
+			builder.closeChild();
+		}
+
+		builder.handleNext(isEmpty && !renderIfEmpty ? none() : after);
+
+		builder.closeRun();
 	}
 
 	@Override

@@ -37,10 +37,12 @@ public abstract class LexicalShape {
 
 	public abstract boolean isDefined(STree tree);
 
-	public abstract WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator);
+	public abstract void enRun(DressingBuilder builder);
 
 	public void render(STree tree, Printer printer) {
+		if (tree.leading != null) printer.encounteredWhitespace(tree.leading);
 		render(tree, tree.run, printer);
+		if (tree.trailing != null) printer.encounteredWhitespace(tree.trailing);
 	}
 
 	public abstract void render(STree tree, WRunRun run, Printer printer);

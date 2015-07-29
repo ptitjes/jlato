@@ -22,8 +22,6 @@ package org.jlato.internal.shapes;
 import org.jlato.internal.bu.*;
 import org.jlato.printer.Printer;
 
-import java.util.Iterator;
-
 /**
  * @author Didier Villevalois
  */
@@ -47,12 +45,10 @@ public class LSTraversal extends LSDecorated {
 	}
 
 	@Override
-	public WRunRun enRun(STree tree, Iterator<WTokenRun> tokenIterator) {
-		final STree child = traverse(tree);
-		if (child == null) return null;
-
-		if (child.run != null) return null;
-		return shape.enRun(child, tokenIterator);
+	public void enRun(DressingBuilder builder) {
+		builder.openChild(traversal);
+		shape.enRun(builder);
+		builder.closeChild();
 	}
 
 	@Override

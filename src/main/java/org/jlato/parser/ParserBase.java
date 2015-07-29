@@ -22,6 +22,7 @@ package org.jlato.parser;
 import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.shapes.DressingBuilder;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.decl.TypeDecl.TypeKind;
@@ -152,7 +153,9 @@ abstract class ParserBase {
 	                                                IndexedList<WTokenRun> tokens) {
 		try {
 			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
-			final WRunRun run = shape.enRun(tree, tokenIterator);
+			final DressingBuilder<S> builder = new DressingBuilder<S>(tree, tokenIterator);
+			shape.enRun(builder);
+			final STree<S> newTree = builder.build();
 
 			if (tokenIterator.hasNext()) {
 				// Flow up the remaining whitespace run for consumption by parent tree
@@ -165,7 +168,6 @@ abstract class ParserBase {
 				}
 			}
 
-			final STree<S> newTree = tree.withRun(run);
 			return newTree;
 
 		} catch (NoSuchElementException e) {
