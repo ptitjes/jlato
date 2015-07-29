@@ -62,13 +62,13 @@ public class BasicTest {
 
 		final ImportDecl importDecl3 = importDecl2.setOnDemand(true);
 		Assert.assertEquals(
-				"import static /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree.*/*after*/;",
+				"import static /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/.*;",
 				Printer.printToString(importDecl3, true)
 		);
 
 		final ImportDecl importDecl4 = importDecl3.setStatic(false);
 		Assert.assertEquals(
-				"import /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree.*/*after*/;",
+				"import /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/.*;",
 				Printer.printToString(importDecl4, true)
 		);
 	}
@@ -76,11 +76,11 @@ public class BasicTest {
 	@Test
 	public void testRunMethodInvocationExpr() throws FileNotFoundException, ParseException {
 		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
-		final String content = "scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/)";
+		final String content = "scope/*a*/./*a*/method /*c*/ (/*1*/arg1/*2*/, /*3*/arg2/*4*/)";
 
 		final Expr expr1 = parser.parse(ParseContext.Expression, content);
 		Assert.assertEquals(
-				"scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/)",
+				"scope/*a*/./*a*/method /*c*/ (/*1*/arg1/*2*/, /*3*/arg2/*4*/)",
 				Printer.printToString(expr1, false)
 		);
 	}
