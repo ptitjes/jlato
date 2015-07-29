@@ -1,0 +1,60 @@
+package org.jlato.tree;
+
+import com.github.andrewoma.dexx.collection.ArrayList;
+import com.github.andrewoma.dexx.collection.Builder;
+import com.github.andrewoma.dexx.collection.Vector;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.td.SLocation;
+
+public abstract class TestClass {
+
+	protected final SLocation42 location;
+
+	protected TestClass(SLocation42 location) {
+		this.location = location;
+	}
+
+	public Tree42 parent() {
+		return location.parent();
+	}
+
+	public Tree42 root() {
+		return location.root();
+	}
+
+	public static STree42 treeOf(Tree42 facade) {
+		return facade == null ? null : facade.location.tree;
+	}
+
+	protected static ArrayList42<STree42> treesOf(Tree42... facades) {
+		final Builder42<STree42, ArrayList42<STree42>> builder = ArrayList.<STree42>factory().newBuilder();
+		for (Tree42 facade : facades) {
+			builder.add(treeOf(facade));
+		}
+		return builder.build();
+	}
+
+	protected static ArrayList42<Object42> dataOf(Object42... attributes) {
+		final Builder42<Object42, ArrayList42<Object42>> builder = ArrayList.factory().newBuilder();
+		for (Object42 attribute : attributes) {
+			builder.add(attribute);
+		}
+		return builder.build();
+	}
+
+	protected static Vector42<STree42> treeListOf(Tree42... facades) {
+		final Builder42<STree42, Vector42<STree42>> builder = Vector.<STree42>factory().newBuilder();
+		for (Tree42 facade : facades) {
+			builder.add(treeOf(facade));
+		}
+		return builder.build();
+	}
+
+	public interface Kind {
+
+		Tree42 instantiate(SLocation42 location);
+
+		LexicalShape42 shape();
+	}
+}
