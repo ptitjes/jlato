@@ -49,7 +49,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.jlato.internal.td.Traversal.forAll;
 import static org.jlato.rewrite.Quotes.*;
 
 /**
@@ -63,7 +62,6 @@ public class RewriteTest {
 		final String original = resourceAsString("org/jlato/samples/TestClass.java");
 		CompilationUnit cu = parse(original, true);
 
-
 		final Pattern<FormalParameter> paramPattern = param("$t $n").or(param("$t... $n"));
 		final Pattern<Type> typePattern = type("$t");
 
@@ -74,7 +72,7 @@ public class RewriteTest {
 
 				System.out.println(p.matches(paramPattern));
 
-				forAll(p, typePattern, new MatchVisitor<Type>() {
+				p.forAll(typePattern, new MatchVisitor<Type>() {
 					@Override
 					public Type visit(Type type, Substitution s) {
 						debug("Type", type);
