@@ -3410,9 +3410,9 @@ STree<SNodeListState> MemberValuePairs():
 	STree<MemberValuePair.State> pair;
 }
 {
-  { run(); }
-  pair = MemberValuePair() { ret = append(ret, pair); } ( "," pair = MemberValuePair() { ret = append(ret, pair); } )*
-  { return enRun(ret); }
+  pair = MemberValuePair() { ret = append(ret, pair); }
+  ( "," pair = MemberValuePair() { ret = append(ret, pair); } )*
+  { return ret; }
 }
 
 STree<MemberValuePair.State> MemberValuePair():
