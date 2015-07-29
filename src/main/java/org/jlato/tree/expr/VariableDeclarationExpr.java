@@ -108,7 +108,7 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			VariableDeclarationExpr.State state = (VariableDeclarationExpr.State) o;
+			State state = (State) o;
 			if (declaration == null ? state.declaration != null : !declaration.equals(state.declaration))
 				return false;
 			return true;

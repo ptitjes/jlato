@@ -162,7 +162,7 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ForStmt.State state = (ForStmt.State) o;
+			State state = (State) o;
 			if (!init.equals(state.init))
 				return false;
 			if (compare == null ? state.compare != null : !compare.equals(state.compare))

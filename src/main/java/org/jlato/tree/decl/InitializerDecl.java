@@ -129,7 +129,7 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			InitializerDecl.State state = (InitializerDecl.State) o;
+			State state = (State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
 			if (body == null ? state.body != null : !body.equals(state.body))

@@ -123,7 +123,7 @@ public class ArrayType extends TreeBase<ArrayType.State, ReferenceType, ArrayTyp
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ArrayType.State state = (ArrayType.State) o;
+			State state = (State) o;
 			if (componentType == null ? state.componentType != null : !componentType.equals(state.componentType))
 				return false;
 			if (!dims.equals(state.dims))

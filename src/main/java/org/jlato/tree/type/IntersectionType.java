@@ -104,7 +104,7 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			IntersectionType.State state = (IntersectionType.State) o;
+			State state = (State) o;
 			if (!types.equals(state.types))
 				return false;
 			return true;

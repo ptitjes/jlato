@@ -190,7 +190,7 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			InterfaceDecl.State state = (InterfaceDecl.State) o;
+			State state = (State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
 			if (name == null ? state.name != null : !name.equals(state.name))

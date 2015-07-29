@@ -141,7 +141,7 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			WildcardType.State state = (WildcardType.State) o;
+			State state = (State) o;
 			if (!annotations.equals(state.annotations))
 				return false;
 			if (!ext.equals(state.ext))

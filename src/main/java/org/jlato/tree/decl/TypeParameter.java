@@ -145,7 +145,7 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			TypeParameter.State state = (TypeParameter.State) o;
+			State state = (State) o;
 			if (!annotations.equals(state.annotations))
 				return false;
 			if (name == null ? state.name != null : !name.equals(state.name))

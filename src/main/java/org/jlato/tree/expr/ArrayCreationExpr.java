@@ -161,7 +161,7 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ArrayCreationExpr.State state = (ArrayCreationExpr.State) o;
+			State state = (State) o;
 			if (type == null ? state.type != null : !type.equals(state.type))
 				return false;
 			if (!dimExprs.equals(state.dimExprs))

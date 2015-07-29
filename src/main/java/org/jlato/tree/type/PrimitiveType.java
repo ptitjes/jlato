@@ -124,7 +124,7 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			PrimitiveType.State state = (PrimitiveType.State) o;
+			State state = (State) o;
 			if (!annotations.equals(state.annotations))
 				return false;
 			if (primitive == null ? state.primitive != null : !primitive.equals(state.primitive))

@@ -103,7 +103,7 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			MarkerAnnotationExpr.State state = (MarkerAnnotationExpr.State) o;
+			State state = (State) o;
 			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			return true;

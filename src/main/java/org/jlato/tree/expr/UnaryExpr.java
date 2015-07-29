@@ -131,7 +131,7 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			UnaryExpr.State state = (UnaryExpr.State) o;
+			State state = (State) o;
 			if (op == null ? state.op != null : !op.equals(state.op))
 				return false;
 			if (expr == null ? state.expr != null : !expr.equals(state.expr))

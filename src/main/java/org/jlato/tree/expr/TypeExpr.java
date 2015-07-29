@@ -103,7 +103,7 @@ public class TypeExpr extends TreeBase<TypeExpr.State, Expr, TypeExpr> implement
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			TypeExpr.State state = (TypeExpr.State) o;
+			State state = (State) o;
 			if (type == null ? state.type != null : !type.equals(state.type))
 				return false;
 			return true;

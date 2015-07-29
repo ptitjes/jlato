@@ -160,7 +160,7 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			TryStmt.State state = (TryStmt.State) o;
+			State state = (State) o;
 			if (!resources.equals(state.resources))
 				return false;
 			if (tryBlock == null ? state.tryBlock != null : !tryBlock.equals(state.tryBlock))

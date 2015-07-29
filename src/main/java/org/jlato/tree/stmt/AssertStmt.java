@@ -125,7 +125,7 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			AssertStmt.State state = (AssertStmt.State) o;
+			State state = (State) o;
 			if (check == null ? state.check != null : !check.equals(state.check))
 				return false;
 			if (!msg.equals(state.msg))

@@ -104,7 +104,7 @@ public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implem
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			SuperExpr.State state = (SuperExpr.State) o;
+			State state = (State) o;
 			if (!classExpr.equals(state.classExpr))
 				return false;
 			return true;

@@ -123,7 +123,7 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ArrayInitializerExpr.State state = (ArrayInitializerExpr.State) o;
+			State state = (State) o;
 			if (!values.equals(state.values))
 				return false;
 			if (trailingComma != state.trailingComma)

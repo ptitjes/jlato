@@ -149,7 +149,7 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			IfStmt.State state = (IfStmt.State) o;
+			State state = (State) o;
 			if (condition == null ? state.condition != null : !condition.equals(state.condition))
 				return false;
 			if (thenStmt == null ? state.thenStmt != null : !thenStmt.equals(state.thenStmt))

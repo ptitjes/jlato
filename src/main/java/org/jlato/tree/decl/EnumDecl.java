@@ -217,7 +217,7 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			EnumDecl.State state = (EnumDecl.State) o;
+			State state = (State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
 			if (name == null ? state.name != null : !name.equals(state.name))

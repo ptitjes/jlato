@@ -122,7 +122,7 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			MemberValuePair.State state = (MemberValuePair.State) o;
+			State state = (State) o;
 			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (value == null ? state.value != null : !value.equals(state.value))

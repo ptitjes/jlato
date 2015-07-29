@@ -142,7 +142,7 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			BinaryExpr.State state = (BinaryExpr.State) o;
+			State state = (State) o;
 			if (left == null ? state.left != null : !left.equals(state.left))
 				return false;
 			if (op == null ? state.op != null : !op.equals(state.op))

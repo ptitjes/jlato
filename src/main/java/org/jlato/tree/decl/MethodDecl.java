@@ -244,7 +244,7 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			MethodDecl.State state = (MethodDecl.State) o;
+			State state = (State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
 			if (!typeParams.equals(state.typeParams))

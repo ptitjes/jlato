@@ -124,7 +124,7 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			PackageDecl.State state = (PackageDecl.State) o;
+			State state = (State) o;
 			if (!annotations.equals(state.annotations))
 				return false;
 			if (name == null ? state.name != null : !name.equals(state.name))

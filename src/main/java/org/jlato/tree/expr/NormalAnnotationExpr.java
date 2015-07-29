@@ -124,7 +124,7 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			NormalAnnotationExpr.State state = (NormalAnnotationExpr.State) o;
+			State state = (State) o;
 			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (!pairs.equals(state.pairs))

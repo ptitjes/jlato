@@ -123,7 +123,7 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			VariableDeclaratorId.State state = (VariableDeclaratorId.State) o;
+			State state = (State) o;
 			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (!dims.equals(state.dims))

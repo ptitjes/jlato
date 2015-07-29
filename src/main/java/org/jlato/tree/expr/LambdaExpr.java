@@ -150,7 +150,7 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			LambdaExpr.State state = (LambdaExpr.State) o;
+			State state = (State) o;
 			if (!params.equals(state.params))
 				return false;
 			if (hasParens != state.hasParens)

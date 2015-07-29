@@ -110,7 +110,7 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			Name.State state = (Name.State) o;
+			State state = (State) o;
 			if (id == null ? state.id != null : !id.equals(state.id))
 				return false;
 			return true;

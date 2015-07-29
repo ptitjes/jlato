@@ -103,7 +103,7 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ExpressionStmt.State state = (ExpressionStmt.State) o;
+			State state = (State) o;
 			if (expr == null ? state.expr != null : !expr.equals(state.expr))
 				return false;
 			return true;

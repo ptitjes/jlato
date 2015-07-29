@@ -122,7 +122,7 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			InstanceOfExpr.State state = (InstanceOfExpr.State) o;
+			State state = (State) o;
 			if (expr == null ? state.expr != null : !expr.equals(state.expr))
 				return false;
 			if (type == null ? state.type != null : !type.equals(state.type))

@@ -103,7 +103,7 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ThrowStmt.State state = (ThrowStmt.State) o;
+			State state = (State) o;
 			if (expr == null ? state.expr != null : !expr.equals(state.expr))
 				return false;
 			return true;

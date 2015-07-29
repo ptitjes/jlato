@@ -161,7 +161,7 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ExplicitConstructorInvocationStmt.State state = (ExplicitConstructorInvocationStmt.State) o;
+			State state = (State) o;
 			if (!typeArgs.equals(state.typeArgs))
 				return false;
 			if (isThis != state.isThis)

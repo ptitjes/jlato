@@ -105,7 +105,7 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			BreakStmt.State state = (BreakStmt.State) o;
+			State state = (State) o;
 			if (!id.equals(state.id))
 				return false;
 			return true;

@@ -103,7 +103,7 @@ public class ClassExpr extends TreeBase<ClassExpr.State, Expr, ClassExpr> implem
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ClassExpr.State state = (ClassExpr.State) o;
+			State state = (State) o;
 			if (type == null ? state.type != null : !type.equals(state.type))
 				return false;
 			return true;

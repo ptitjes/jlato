@@ -123,7 +123,7 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			SynchronizedStmt.State state = (SynchronizedStmt.State) o;
+			State state = (State) o;
 			if (expr == null ? state.expr != null : !expr.equals(state.expr))
 				return false;
 			if (block == null ? state.block != null : !block.equals(state.block))

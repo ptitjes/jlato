@@ -123,7 +123,7 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			CastExpr.State state = (CastExpr.State) o;
+			State state = (State) o;
 			if (type == null ? state.type != null : !type.equals(state.type))
 				return false;
 			if (expr == null ? state.expr != null : !expr.equals(state.expr))

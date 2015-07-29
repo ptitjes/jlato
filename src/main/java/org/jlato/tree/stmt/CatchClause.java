@@ -123,7 +123,7 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			CatchClause.State state = (CatchClause.State) o;
+			State state = (State) o;
 			if (except == null ? state.except != null : !except.equals(state.except))
 				return false;
 			if (catchBlock == null ? state.catchBlock != null : !catchBlock.equals(state.catchBlock))

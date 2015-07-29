@@ -104,7 +104,7 @@ public class TypeDeclarationStmt extends TreeBase<TypeDeclarationStmt.State, Stm
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			TypeDeclarationStmt.State state = (TypeDeclarationStmt.State) o;
+			State state = (State) o;
 			if (typeDecl == null ? state.typeDecl != null : !typeDecl.equals(state.typeDecl))
 				return false;
 			return true;

@@ -104,7 +104,7 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ThisExpr.State state = (ThisExpr.State) o;
+			State state = (State) o;
 			if (!classExpr.equals(state.classExpr))
 				return false;
 			return true;

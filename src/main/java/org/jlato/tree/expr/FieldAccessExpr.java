@@ -124,7 +124,7 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			FieldAccessExpr.State state = (FieldAccessExpr.State) o;
+			State state = (State) o;
 			if (!scope.equals(state.scope))
 				return false;
 			if (name == null ? state.name != null : !name.equals(state.name))

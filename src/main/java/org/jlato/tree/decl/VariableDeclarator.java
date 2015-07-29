@@ -125,7 +125,7 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			VariableDeclarator.State state = (VariableDeclarator.State) o;
+			State state = (State) o;
 			if (id == null ? state.id != null : !id.equals(state.id))
 				return false;
 			if (!init.equals(state.init))

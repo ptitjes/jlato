@@ -104,7 +104,7 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			UnionType.State state = (UnionType.State) o;
+			State state = (State) o;
 			if (!types.equals(state.types))
 				return false;
 			return true;

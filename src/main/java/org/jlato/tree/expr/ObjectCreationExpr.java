@@ -181,7 +181,7 @@ public class ObjectCreationExpr extends TreeBase<ObjectCreationExpr.State, Expr,
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ObjectCreationExpr.State state = (ObjectCreationExpr.State) o;
+			State state = (State) o;
 			if (!scope.equals(state.scope))
 				return false;
 			if (!typeArgs.equals(state.typeArgs))

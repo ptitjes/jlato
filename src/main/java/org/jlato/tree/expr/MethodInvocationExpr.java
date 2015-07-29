@@ -160,7 +160,7 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			MethodInvocationExpr.State state = (MethodInvocationExpr.State) o;
+			State state = (State) o;
 			if (!scope.equals(state.scope))
 				return false;
 			if (!typeArgs.equals(state.typeArgs))

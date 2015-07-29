@@ -122,7 +122,7 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			SingleMemberAnnotationExpr.State state = (SingleMemberAnnotationExpr.State) o;
+			State state = (State) o;
 			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (memberValue == null ? state.memberValue != null : !memberValue.equals(state.memberValue))

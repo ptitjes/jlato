@@ -131,7 +131,7 @@ public class SwitchStmt extends TreeBase<SwitchStmt.State, Stmt, SwitchStmt> imp
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			SwitchStmt.State state = (SwitchStmt.State) o;
+			State state = (State) o;
 			if (selector == null ? state.selector != null : !selector.equals(state.selector))
 				return false;
 			if (!cases.equals(state.cases))

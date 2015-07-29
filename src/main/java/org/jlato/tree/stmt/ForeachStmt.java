@@ -143,7 +143,7 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ForeachStmt.State state = (ForeachStmt.State) o;
+			State state = (State) o;
 			if (var == null ? state.var != null : !var.equals(state.var))
 				return false;
 			if (iterable == null ? state.iterable != null : !iterable.equals(state.iterable))

@@ -142,7 +142,7 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			AssignExpr.State state = (AssignExpr.State) o;
+			State state = (State) o;
 			if (target == null ? state.target != null : !target.equals(state.target))
 				return false;
 			if (op == null ? state.op != null : !op.equals(state.op))

@@ -105,7 +105,7 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ContinueStmt.State state = (ContinueStmt.State) o;
+			State state = (State) o;
 			if (!id.equals(state.id))
 				return false;
 			return true;

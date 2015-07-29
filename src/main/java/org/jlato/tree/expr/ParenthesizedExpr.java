@@ -102,7 +102,7 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ParenthesizedExpr.State state = (ParenthesizedExpr.State) o;
+			State state = (State) o;
 			if (inner == null ? state.inner != null : !inner.equals(state.inner))
 				return false;
 			return true;

@@ -207,7 +207,7 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ConstructorDecl.State state = (ConstructorDecl.State) o;
+			State state = (State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
 			if (!typeParams.equals(state.typeParams))

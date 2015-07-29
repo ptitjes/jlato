@@ -161,7 +161,7 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			QualifiedType.State state = (QualifiedType.State) o;
+			State state = (State) o;
 			if (!annotations.equals(state.annotations))
 				return false;
 			if (!scope.equals(state.scope))

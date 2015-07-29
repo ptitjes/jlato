@@ -123,7 +123,7 @@ public class ArrayDimExpr extends TreeBase<ArrayDimExpr.State, Tree, ArrayDimExp
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ArrayDimExpr.State state = (ArrayDimExpr.State) o;
+			State state = (State) o;
 			if (!annotations.equals(state.annotations))
 				return false;
 			if (expr == null ? state.expr != null : !expr.equals(state.expr))

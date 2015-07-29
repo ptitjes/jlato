@@ -123,7 +123,7 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			WhileStmt.State state = (WhileStmt.State) o;
+			State state = (State) o;
 			if (condition == null ? state.condition != null : !condition.equals(state.condition))
 				return false;
 			if (body == null ? state.body != null : !body.equals(state.body))

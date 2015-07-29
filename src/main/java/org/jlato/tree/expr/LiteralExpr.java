@@ -146,7 +146,7 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			LiteralExpr.State state = (LiteralExpr.State) o;
+			State state = (State) o;
 			if (literalClass == null ? state.literalClass != null : !literalClass.equals(state.literalClass))
 				return false;
 			if (literalString == null ? state.literalString != null : !literalString.equals(state.literalString))

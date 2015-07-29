@@ -121,7 +121,7 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ArrayAccessExpr.State state = (ArrayAccessExpr.State) o;
+			State state = (State) o;
 			if (name == null ? state.name != null : !name.equals(state.name))
 				return false;
 			if (index == null ? state.index != null : !index.equals(state.index))

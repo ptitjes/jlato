@@ -141,7 +141,7 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ConditionalExpr.State state = (ConditionalExpr.State) o;
+			State state = (State) o;
 			if (condition == null ? state.condition != null : !condition.equals(state.condition))
 				return false;
 			if (thenExpr == null ? state.thenExpr != null : !thenExpr.equals(state.thenExpr))

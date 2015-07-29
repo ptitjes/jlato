@@ -151,7 +151,7 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			AnnotationDecl.State state = (AnnotationDecl.State) o;
+			State state = (State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
 			if (name == null ? state.name != null : !name.equals(state.name))

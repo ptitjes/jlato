@@ -123,7 +123,7 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			DoStmt.State state = (DoStmt.State) o;
+			State state = (State) o;
 			if (body == null ? state.body != null : !body.equals(state.body))
 				return false;
 			if (condition == null ? state.condition != null : !condition.equals(state.condition))

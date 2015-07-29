@@ -110,7 +110,7 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			BlockStmt.State state = (BlockStmt.State) o;
+			State state = (State) o;
 			if (!stmts.equals(state.stmts))
 				return false;
 			return true;

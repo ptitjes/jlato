@@ -143,7 +143,7 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			MethodReferenceExpr.State state = (MethodReferenceExpr.State) o;
+			State state = (State) o;
 			if (scope == null ? state.scope != null : !scope.equals(state.scope))
 				return false;
 			if (!typeArgs.equals(state.typeArgs))

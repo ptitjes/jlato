@@ -136,7 +136,7 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			QualifiedName.State state = (QualifiedName.State) o;
+			State state = (State) o;
 			if (!qualifier.equals(state.qualifier))
 				return false;
 			if (name == null ? state.name != null : !name.equals(state.name))

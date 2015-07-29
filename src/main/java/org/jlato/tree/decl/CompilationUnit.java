@@ -153,7 +153,7 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			CompilationUnit.State state = (CompilationUnit.State) o;
+			State state = (State) o;
 			if (preamble == null ? state.preamble != null : !preamble.equals(state.preamble))
 				return false;
 			if (packageDecl == null ? state.packageDecl != null : !packageDecl.equals(state.packageDecl))

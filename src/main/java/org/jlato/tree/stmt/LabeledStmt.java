@@ -127,7 +127,7 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			LabeledStmt.State state = (LabeledStmt.State) o;
+			State state = (State) o;
 			if (label == null ? state.label != null : !label.equals(state.label))
 				return false;
 			if (stmt == null ? state.stmt != null : !stmt.equals(state.stmt))

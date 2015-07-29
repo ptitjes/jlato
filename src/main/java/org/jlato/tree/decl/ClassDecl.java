@@ -208,7 +208,7 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ClassDecl.State state = (ClassDecl.State) o;
+			State state = (State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
 			if (name == null ? state.name != null : !name.equals(state.name))

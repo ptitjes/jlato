@@ -125,7 +125,7 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			SwitchCase.State state = (SwitchCase.State) o;
+			State state = (State) o;
 			if (!label.equals(state.label))
 				return false;
 			if (!stmts.equals(state.stmts))

@@ -167,7 +167,7 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			EnumConstantDecl.State state = (EnumConstantDecl.State) o;
+			State state = (State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
 			if (name == null ? state.name != null : !name.equals(state.name))

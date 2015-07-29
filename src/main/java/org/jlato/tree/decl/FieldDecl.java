@@ -148,7 +148,7 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			FieldDecl.State state = (FieldDecl.State) o;
+			State state = (State) o;
 			if (!modifiers.equals(state.modifiers))
 				return false;
 			if (type == null ? state.type != null : !type.equals(state.type))

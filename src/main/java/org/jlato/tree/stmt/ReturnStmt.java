@@ -105,7 +105,7 @@ public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> imp
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ReturnStmt.State state = (ReturnStmt.State) o;
+			State state = (State) o;
 			if (!expr.equals(state.expr))
 				return false;
 			return true;
