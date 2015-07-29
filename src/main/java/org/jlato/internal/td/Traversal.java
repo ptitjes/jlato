@@ -29,8 +29,12 @@ import org.jlato.tree.Tree;
  */
 public abstract class Traversal<T extends Tree> {
 
-	public static <R extends Tree, T extends Tree> R forAll(R from, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
-		return new DepthFirst<T>().traverse(from, matcher, visitor);
+	public static <R extends Tree, T extends Tree> R leftForAll(R from, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
+		return new LeftRightDepthFirst<T>().traverse(from, matcher, visitor);
+	}
+
+	public static <R extends Tree, T extends Tree> R rightForAll(R from, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
+		return new RightLeftDepthFirst<T>().traverse(from, matcher, visitor);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -43,7 +47,7 @@ public abstract class Traversal<T extends Tree> {
 
 	protected abstract SLocation doTraverse(SLocation location, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor);
 
-	public static class DepthFirst<T extends Tree> extends Traversal<T> {
+	public static abstract class DepthFirst<T extends Tree> extends Traversal<T> {
 
 		@Override
 		protected SLocation doTraverse(SLocation location, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
@@ -68,16 +72,42 @@ public abstract class Traversal<T extends Tree> {
 		}
 
 		private SLocation doTraverseChildren(SLocation location, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
-			SLocation child = location.firstChild();
+			SLocation child = child(location);
 			if (child == null) return location;
 
 			SLocation nextChild = child;
 			while (nextChild != null) {
 				child = doTraverse(nextChild, matcher, visitor);
-				nextChild = child.rightSibling();
+				nextChild = sibling(child);
 			}
 
 			return child.parent();
+		}
+
+		protected abstract SLocation child(SLocation location);
+
+		protected abstract SLocation sibling(SLocation location);
+	}
+
+	public static class LeftRightDepthFirst<T extends Tree> extends DepthFirst<T> {
+
+		protected SLocation child(SLocation location) {
+			return location.firstChild();
+		}
+
+		protected SLocation sibling(SLocation location) {
+			return location.rightSibling();
+		}
+	}
+
+	public static class RightLeftDepthFirst<T extends Tree> extends DepthFirst<T> {
+
+		protected SLocation child(SLocation location) {
+			return location.lastChild();
+		}
+
+		protected SLocation sibling(SLocation location) {
+			return location.leftSibling();
 		}
 	}
 }

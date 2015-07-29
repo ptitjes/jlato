@@ -81,7 +81,15 @@ public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends 
 	// Combinators
 
 	public <U extends Tree> T forAll(TypeSafeMatcher<U> matcher, MatchVisitor<U> visitor) {
-		return Traversal.forAll(self(), matcher, visitor);
+		return leftForAll(matcher, visitor);
+	}
+
+	public <U extends Tree> T leftForAll(TypeSafeMatcher<U> matcher, MatchVisitor<U> visitor) {
+		return Traversal.leftForAll(self(), matcher, visitor);
+	}
+
+	public <U extends Tree> T rightForAll(TypeSafeMatcher<U> matcher, MatchVisitor<U> visitor) {
+		return Traversal.rightForAll(self(), matcher, visitor);
 	}
 
 	public Substitution match(Matcher matcher) {
@@ -98,15 +106,34 @@ public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends 
 	}
 
 	public <U extends Tree> Iterable<U> findAll(TypeSafeMatcher<U> matcher) {
-		final LinkedList<U> list = new LinkedList<U>();
-		forAll(matcher, new MatchVisitor<U>() {
-			@Override
-			public U visit(U t, Substitution s) {
-				list.add(t);
-				return t;
-			}
-		});
-		return list;
+		return leftFindAll(matcher);
+	}
+
+	public <U extends Tree> Iterable<U> leftFindAll(TypeSafeMatcher<U> matcher) {
+		final MatchCollector<U> collector = new MatchCollector<U>();
+		leftForAll(matcher, collector);
+		return collector.getList();
+	}
+
+	public <U extends Tree> Iterable<U> rightFindAll(TypeSafeMatcher<U> matcher) {
+		final MatchCollector<U> collector = new MatchCollector<U>();
+		rightForAll(matcher, collector);
+		return collector.getList();
+	}
+
+	private static class MatchCollector<U extends Tree> implements MatchVisitor<U> {
+
+		private final LinkedList<U> list = new LinkedList<U>();
+
+		@Override
+		public U visit(U t, Substitution s) {
+			list.add(t);
+			return t;
+		}
+
+		public LinkedList<U> getList() {
+			return list;
+		}
 	}
 
 	// Convenience conversion helper methods
