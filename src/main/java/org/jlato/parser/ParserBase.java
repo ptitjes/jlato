@@ -197,39 +197,39 @@ abstract class ParserBase {
 		else return new WTokenRun(Vector.<WToken>empty());
 	}
 
-	public abstract STree<CompilationUnit.State> CompilationUnit() throws ParseException;
+	abstract STree<CompilationUnit.State> CompilationUnit() throws ParseException;
 
-	public abstract STree<PackageDecl.State> PackageDecl() throws ParseException;
+	abstract STree<PackageDecl.State> PackageDecl() throws ParseException;
 
-	public abstract STree<ImportDecl.State> ImportDecl() throws ParseException;
+	abstract STree<ImportDecl.State> ImportDecl() throws ParseException;
 
-	public abstract STree<? extends TypeDecl.State> TypeDecl() throws ParseException;
+	abstract STree<? extends TypeDecl.State> TypeDecl() throws ParseException;
 
-	public abstract STree<? extends MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
+	abstract STree<? extends MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
 
-	public abstract STree<? extends MemberDecl.State> AnnotationTypeBodyDecl() throws ParseException;
+	abstract STree<? extends MemberDecl.State> AnnotationTypeBodyDecl() throws ParseException;
 
-	public abstract STree<SNodeListState> Modifiers() throws ParseException;
+	abstract STree<SNodeListState> Modifiers() throws ParseException;
 
-	public abstract STree<MethodDecl.State> MethodDecl(STree<SNodeListState> modifiers) throws ParseException;
+	abstract STree<MethodDecl.State> MethodDecl(STree<SNodeListState> modifiers) throws ParseException;
 
-	public abstract STree<FieldDecl.State> FieldDecl(STree<SNodeListState> modifiers) throws ParseException;
+	abstract STree<FieldDecl.State> FieldDecl(STree<SNodeListState> modifiers) throws ParseException;
 
-	public abstract STree<AnnotationMemberDecl.State> AnnotationTypeMemberDecl(STree<SNodeListState> modifiers) throws ParseException;
+	abstract STree<AnnotationMemberDecl.State> AnnotationTypeMemberDecl(STree<SNodeListState> modifiers) throws ParseException;
 
-	public abstract STree<EnumConstantDecl.State> EnumConstantDecl() throws ParseException;
+	abstract STree<EnumConstantDecl.State> EnumConstantDecl() throws ParseException;
 
-	public abstract STree<FormalParameter.State> FormalParameter() throws ParseException;
+	abstract STree<FormalParameter.State> FormalParameter() throws ParseException;
 
-	public abstract STree<TypeParameter.State> TypeParameter() throws ParseException;
+	abstract STree<TypeParameter.State> TypeParameter() throws ParseException;
 
-	public abstract STree<? extends Stmt.State> BlockStatement() throws ParseException;
+	abstract STree<? extends Stmt.State> BlockStatement() throws ParseException;
 
-	public abstract STree<? extends Expr.State> Expression() throws ParseException;
+	abstract STree<? extends Expr.State> Expression() throws ParseException;
 
-	public abstract STree<SNodeListState> Annotations() throws ParseException;
+	abstract STree<SNodeListState> Annotations() throws ParseException;
 
-	public abstract STree<? extends Type.State> Type(STree<SNodeListState> annotations) throws ParseException;
+	abstract STree<? extends Type.State> Type(STree<SNodeListState> annotations) throws ParseException;
 
 	static class TokenBase {
 
