@@ -38,7 +38,6 @@ import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 
-import static org.jlato.internal.td.Traversal.forAll;
 import static org.jlato.rewrite.Quotes.param;
 import static org.jlato.rewrite.Quotes.type;
 
