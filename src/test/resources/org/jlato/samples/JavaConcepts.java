@@ -396,3 +396,36 @@ class Base {
 
 interface XXX extends Serializable, Cloneable {
 }
+
+;
+
+@interface AnAnnotation {
+
+    int value();
+}
+
+@interface AnAnnotationWithPairs {
+
+    int anIntMember();
+
+    int anIntMemberWithDefault() default 42;
+
+    String aStringMember();
+
+    String aStringMemberWithDefault() default "FortyTwo";
+}
+
+@AnAnnotation(42)
+@AnAnnotationWithPairs(anIntMember = 9, aStringMember = "Nine")
+class AnAnnotatedClass {
+
+    void method(AClassType object) {
+        AClassType o = (AClassType & AnInterfaceType) object;
+        F1<String, String> f1 = x -> x;
+        F1<String, String> f2 = (x) -> x;
+        F2<String, String, String> f3 = (x, y) -> x + y;
+        F2<String, String, String> f4 = (String x, String y) -> x + y;
+        F2<String, String, String> f5 = (F2<String, String, String>) (String x, String y) -> x + y;
+        F1<Int, String> toStr = Integer::toString;
+    }
+}
