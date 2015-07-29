@@ -19,23 +19,20 @@
 
 package org.jlato.unit;
 
-import org.jlato.internal.bu.STree; import org.jlato.internal.td.TreeBase;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
-import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
-import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.ImportDecl;
 import org.jlato.tree.expr.Expr;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * @author Didier Villevalois
@@ -86,62 +83,9 @@ public class BasicTest {
 	}
 
 	@Test
-	public void testPrinter() throws IOException, ParseException {
-		final String original = fileAsString("src/main/java/org/jlato/tree/Tree.java");
-		Assert.assertEquals(original, parseAndPrint(original, true, false, FormattingSettings.Default));
-	}
-
-	@Test
-	public void testClass() throws IOException, ParseException {
-		final String original = resourceAsString("org/jlato/samples/TestClass.java");
-		Assert.assertEquals(original, parseAndPrint(original, false, true, FormattingSettings.Default));
-		Assert.assertEquals(original, parseAndPrint(original, false, false, FormattingSettings.Default));
-		Assert.assertEquals(original, parseAndPrint(original, true, false, FormattingSettings.Default));
-		Assert.assertEquals(original, parseAndPrint(original, true, true, FormattingSettings.Default));
-	}
-
-	@Test
-	public void javaConcepts() throws IOException, ParseException {
-		final String original = resourceAsString("org/jlato/samples/JavaConcepts.java");
-		Assert.assertEquals(original, parseAndPrint(original, false, true, FormattingSettings.JavaParser));
-		Assert.assertEquals(original, parseAndPrint(original, false, false, FormattingSettings.JavaParser));
-		Assert.assertEquals(original, parseAndPrint(original, true, false, FormattingSettings.JavaParser));
-		Assert.assertEquals(original, parseAndPrint(original, true, true, FormattingSettings.JavaParser));
-	}
-
-	@Test
 	public void nameTest() throws IOException, ParseException {
 		final String original = "$name";
 		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
 		final Expr e = parser.parse(ParseContext.Expression, original);
-	}
-
-	private String parseAndPrint(String original, boolean preserveWhitespaces, boolean format, FormattingSettings formattingSettings) throws ParseException {
-		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(preserveWhitespaces));
-		final CompilationUnit cu = parser.parse(ParseContext.CompilationUnit, original);
-		STree tree = TreeBase.treeOf(cu);
-		tree.validate();
-		return Printer.printToString(cu, format, formattingSettings);
-	}
-
-	private String fileAsString(String name) throws IOException {
-		final InputStream inputStream = new FileInputStream(name);
-		return new String(readFully(inputStream), "UTF-8");
-	}
-
-	private String resourceAsString(String name) throws IOException {
-		final InputStream inputStream = ClassLoader.getSystemResourceAsStream(name);
-		return new String(readFully(inputStream), "UTF-8");
-	}
-
-	private byte[] readFully(InputStream inputStream)
-			throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		byte[] buffer = new byte[1024];
-		int length = 0;
-		while ((length = inputStream.read(buffer)) != -1) {
-			baos.write(buffer, 0, length);
-		}
-		return baos.toByteArray();
 	}
 }
