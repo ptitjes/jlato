@@ -23,12 +23,14 @@ import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.printer.SpacingConstraint;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, MemberValuePair> implements Tree {
 
@@ -186,6 +188,8 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 	};
 
 	public final static LexicalShape shape = composite(
-			child(NAME), token(LToken.Assign), child(VALUE)
+			child(NAME),
+			token(LToken.Assign).withSpacing(space(), space()),
+			child(VALUE)
 	);
 }

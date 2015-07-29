@@ -23,6 +23,7 @@ import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.printer.SpacingConstraint;
 import org.jlato.tree.*;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
@@ -30,6 +31,7 @@ import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, MemberDecl, AnnotationMemberDecl> implements MemberDecl {
 
@@ -326,7 +328,7 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 		}
 	};
 
-	public static final LexicalShape defaultValShape = composite(token(LToken.Default), element());
+	public static final LexicalShape defaultValShape = composite(token(LToken.Default).withSpacingBefore(space()), element());
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
