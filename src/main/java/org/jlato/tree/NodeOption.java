@@ -71,7 +71,8 @@ public class NodeOption<T extends Tree> extends TreeBase<SNodeOptionState, NodeO
 	}
 
 	public boolean contains(T element) {
-		return location.tree.state.element == treeOf(element);
+		final STree<?> actual = location.tree.state.element;
+		return actual != null ? actual.equals(treeOf(element)) : element == null;
 	}
 
 	@SuppressWarnings("unchecked")
