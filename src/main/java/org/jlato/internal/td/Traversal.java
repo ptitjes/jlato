@@ -29,28 +29,28 @@ import org.jlato.tree.Tree;
  */
 public abstract class Traversal<T extends Tree> {
 
-	public static <R extends Tree, T extends Tree> R leftForAll(R from, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
+	public static <R extends Tree, T extends Tree> R leftForAll(R from, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
 		return new LeftRightDepthFirst<T>().traverse(from, matcher, visitor);
 	}
 
-	public static <R extends Tree, T extends Tree> R rightForAll(R from, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
+	public static <R extends Tree, T extends Tree> R rightForAll(R from, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
 		return new RightLeftDepthFirst<T>().traverse(from, matcher, visitor);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <R extends Tree> R traverse(R tree, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
+	public <R extends Tree> R traverse(R tree, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
 		SLocation location = TreeBase.locationOf(tree);
 		return (R) doTraverse(location, matcher, visitor).facade;
 	}
 
 	// TODO Trampoline recursion
 
-	protected abstract SLocation doTraverse(SLocation location, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor);
+	protected abstract SLocation doTraverse(SLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor);
 
 	public static abstract class DepthFirst<T extends Tree> extends Traversal<T> {
 
 		@Override
-		protected SLocation doTraverse(SLocation location, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
+		protected SLocation doTraverse(SLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
 			// Visit this location
 			SLocation afterVisit = doVisit(location, matcher, visitor);
 
@@ -60,7 +60,7 @@ public abstract class Traversal<T extends Tree> {
 			return afterVisitChildren;
 		}
 
-		private SLocation doVisit(SLocation location, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
+		private SLocation doVisit(SLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
 			Tree facade = location.facade;
 			Substitution match = matcher.match(facade);
 			if (match != null) {
@@ -71,7 +71,7 @@ public abstract class Traversal<T extends Tree> {
 			}
 		}
 
-		private SLocation doTraverseChildren(SLocation location, TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
+		private SLocation doTraverseChildren(SLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
 			SLocation child = child(location);
 			if (child == null) return location;
 

@@ -80,15 +80,15 @@ public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends 
 
 	// Combinators
 
-	public <U extends Tree> T forAll(TypeSafeMatcher<U> matcher, MatchVisitor<U> visitor) {
+	public <U extends Tree> T forAll(TypeSafeMatcher<? extends U> matcher, MatchVisitor<U> visitor) {
 		return leftForAll(matcher, visitor);
 	}
 
-	public <U extends Tree> T leftForAll(TypeSafeMatcher<U> matcher, MatchVisitor<U> visitor) {
+	public <U extends Tree> T leftForAll(TypeSafeMatcher<? extends U> matcher, MatchVisitor<U> visitor) {
 		return Traversal.leftForAll(self(), matcher, visitor);
 	}
 
-	public <U extends Tree> T rightForAll(TypeSafeMatcher<U> matcher, MatchVisitor<U> visitor) {
+	public <U extends Tree> T rightForAll(TypeSafeMatcher<? extends U> matcher, MatchVisitor<U> visitor) {
 		return Traversal.rightForAll(self(), matcher, visitor);
 	}
 
@@ -100,7 +100,7 @@ public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends 
 		return matcher.match(this) != null;
 	}
 
-	public T match(TypeSafeMatcher<T> matcher, MatchVisitor<T> visitor) {
+	public T match(TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
 		Substitution match = matcher.match(this);
 		return match == null ? self() : visitor.visit(self(), match);
 	}
