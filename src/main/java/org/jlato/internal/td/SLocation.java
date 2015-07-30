@@ -116,7 +116,8 @@ public class SLocation<S extends STreeState> {
 
 	@SuppressWarnings("unchecked")
 	public <C extends Tree> C safeTraversal(STypeSafeTraversal<S, ?, C> traversal) {
-		return (C) traverse(traversal).facade;
+		final SLocation<?> location = traverse(traversal);
+		return location == null ? null : (C) location.facade;
 	}
 
 	public <T extends Tree, C extends Tree> T safeTraversalReplace(STypeSafeTraversal<S, ?, C> traversal, C child) {
