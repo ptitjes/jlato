@@ -21,6 +21,7 @@ package org.jlato.parser;
 
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STreeState;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.Expr;
@@ -44,28 +45,28 @@ public abstract class ParseContext<T extends Tree> {
 	public final static ParseContext<PackageDecl> PackageDecl = new ParseContext<PackageDecl>() {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
-			return parser.PackageDecl();
+			return wrapWithPrologAndEpilog(parser, parser.PackageDecl());
 		}
 	};
 
 	public final static ParseContext<ImportDecl> ImportDecl = new ParseContext<ImportDecl>() {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
-			return parser.ImportDecl();
+			return wrapWithPrologAndEpilog(parser, parser.ImportDecl());
 		}
 	};
 
 	public final static ParseContext<TypeDecl> TypeDecl = new ParseContext<TypeDecl>() {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
-			return parser.TypeDecl();
+			return wrapWithPrologAndEpilog(parser, parser.TypeDecl());
 		}
 	};
 
 	public final static ParseContext<MemberDecl> MemberDecl = new ParseContext<MemberDecl>() {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
-			return parser.ClassOrInterfaceBodyDecl(TypeKind.Class);
+			return wrapWithPrologAndEpilog(parser, parser.ClassOrInterfaceBodyDecl(TypeKind.Class));
 		}
 	};
 
@@ -78,7 +79,7 @@ public abstract class ParseContext<T extends Tree> {
 	public final static ParseContext<MemberDecl> Annotation_MemberDecl = new ParseContext<MemberDecl>() {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
-			return parser.AnnotationTypeBodyDecl();
+			return wrapWithPrologAndEpilog(parser, parser.AnnotationTypeBodyDecl());
 		}
 	};
 
@@ -86,7 +87,7 @@ public abstract class ParseContext<T extends Tree> {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
 			STree<SNodeListState> modifiers = parser.Modifiers();
-			return parser.MethodDecl(modifiers);
+			return wrapWithPrologAndEpilog(parser, parser.MethodDecl(modifiers));
 		}
 	};
 
@@ -94,7 +95,7 @@ public abstract class ParseContext<T extends Tree> {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
 			STree<SNodeListState> modifiers = parser.Modifiers();
-			return parser.FieldDecl(modifiers);
+			return wrapWithPrologAndEpilog(parser, parser.FieldDecl(modifiers));
 		}
 	};
 
@@ -102,42 +103,42 @@ public abstract class ParseContext<T extends Tree> {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
 			STree<SNodeListState> modifiers = parser.Modifiers();
-			return parser.AnnotationTypeMemberDecl(modifiers);
+			return wrapWithPrologAndEpilog(parser, parser.AnnotationTypeMemberDecl(modifiers));
 		}
 	};
 
 	public final static ParseContext<EnumConstantDecl> EnumConstantDecl = new ParseContext<org.jlato.tree.decl.EnumConstantDecl>() {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
-			return parser.EnumConstantDecl();
+			return wrapWithPrologAndEpilog(parser, parser.EnumConstantDecl());
 		}
 	};
 
 	public final static ParseContext<FormalParameter> Parameter = new ParseContext<FormalParameter>() {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
-			return parser.FormalParameter();
+			return wrapWithPrologAndEpilog(parser, parser.FormalParameter());
 		}
 	};
 
 	public final static ParseContext<TypeParameter> TypeParameter = new ParseContext<org.jlato.tree.decl.TypeParameter>() {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
-			return parser.TypeParameter();
+			return wrapWithPrologAndEpilog(parser, parser.TypeParameter());
 		}
 	};
 
 	public final static ParseContext<Stmt> Statement = new ParseContext<Stmt>() {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
-			return parser.BlockStatement();
+			return wrapWithPrologAndEpilog(parser, parser.BlockStatement());
 		}
 	};
 
 	public final static ParseContext<Expr> Expression = new ParseContext<Expr>() {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
-			return parser.Expression();
+			return wrapWithPrologAndEpilog(parser, parser.Expression());
 		}
 	};
 
@@ -145,9 +146,14 @@ public abstract class ParseContext<T extends Tree> {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
 			final STree<SNodeListState> annotations = parser.Annotations();
-			return parser.Type(annotations);
+			return wrapWithPrologAndEpilog(parser, parser.Type(annotations));
 		}
 	};
 
 	protected abstract STree<?> callProduction(ParserBase parser) throws ParseException;
+
+	protected <S extends STreeState> STree<S> wrapWithPrologAndEpilog(ParserBase parser, STree<S> tree) throws ParseException {
+		parser.Epilog();
+		return parser.dressWithPrologAndEpilog(tree);
+	}
 }

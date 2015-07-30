@@ -43,29 +43,29 @@ public class BasicTest {
 	@Test
 	public void testRunImportDecl() throws FileNotFoundException, ParseException {
 		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
-		final String content = "import /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/;";
+		final String content = "/*prolog*/ import /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/; /*epilog*/";
 
 		final ImportDecl importDecl1 = parser.parse(ParseContext.ImportDecl, content);
 		Assert.assertEquals(
-				"import /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/;",
+				"/*prolog*/ import /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/; /*epilog*/",
 				Printer.printToString(importDecl1, true)
 		);
 
 		final ImportDecl importDecl2 = importDecl1.setStatic(true);
 		Assert.assertEquals(
-				"import static /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/;",
+				"/*prolog*/ import static /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/; /*epilog*/",
 				Printer.printToString(importDecl2, true)
 		);
 
 		final ImportDecl importDecl3 = importDecl2.setOnDemand(true);
 		Assert.assertEquals(
-				"import static /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/.*;",
+				"/*prolog*/ import static /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/.*; /*epilog*/",
 				Printer.printToString(importDecl3, true)
 		);
 
 		final ImportDecl importDecl4 = importDecl3.setStatic(false);
 		Assert.assertEquals(
-				"import /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/.*;",
+				"/*prolog*/ import /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/.*; /*epilog*/",
 				Printer.printToString(importDecl4, true)
 		);
 	}
