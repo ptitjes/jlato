@@ -2796,12 +2796,12 @@ STree<SNodeListState> Arguments():
 {
   "("
   [
-    LOOKAHEAD({quotesMode})
-    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
-  |
     LOOKAHEAD(1)
     expr = Expression() { ret = append(ret, expr); }
     ( "," expr = Expression() { ret = append(ret, expr); } )*
+  |
+    LOOKAHEAD({quotesMode})
+    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
   ]
   ")"
   { return ret; }
