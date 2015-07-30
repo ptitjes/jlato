@@ -54,6 +54,9 @@ public class NodeContainersTest {
 		final String content = "scope.method(arg1, arg2)";
 		final MethodInvocationExpr expr = (MethodInvocationExpr) parser.parse(ParseContext.Expression, content);
 
+		Assert.assertTrue(expr.args().contains(name("arg1")));
+		Assert.assertTrue(expr.args().contains(name("arg2")));
+
 		Assert.assertEquals(
 				"scope.method(newArg, arg2)",
 				Printer.printToString(expr.withArgs(
@@ -145,16 +148,22 @@ public class NodeContainersTest {
 		Assert.assertTrue(!option1.isDefined());
 		Assert.assertTrue(option1.isNone());
 		Assert.assertEquals(null, option1.get());
+		Assert.assertTrue(!option1.contains(name("name")));
+		Assert.assertTrue(option1.contains(null));
 
 		NodeOption<Expr> option2 = option1.set(name("name"));
 		Assert.assertTrue(option2.isDefined());
 		Assert.assertTrue(option2.isSome());
 		Assert.assertEquals(name("name"), option2.get());
+		Assert.assertTrue(option2.contains(name("name")));
+		Assert.assertTrue(!option2.contains(null));
 
 		NodeOption<Expr> option3 = option2.setNone();
 		Assert.assertTrue(!option3.isDefined());
 		Assert.assertTrue(option3.isNone());
 		Assert.assertEquals(null, option3.get());
+		Assert.assertTrue(!option3.contains(name("name")));
+		Assert.assertTrue(option3.contains(null));
 	}
 
 	@Test
