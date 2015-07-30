@@ -193,6 +193,7 @@ public class Printer {
 		final STree sTree = TreeBase.treeOf(tree);
 		final LexicalShape shape = LexicalShape.defaultShape();
 		shape.render(sTree, this);
+		flush();
 	}
 
 	/**
@@ -205,6 +206,7 @@ public class Printer {
 		final STree sTree = TreeBase.treeOf(trees);
 		final LexicalShape shape = LexicalShape.list();
 		shape.render(sTree, this);
+		flush();
 	}
 
 	private int indentationLevel;
@@ -247,6 +249,10 @@ public class Printer {
 
 		writer.append(token.string);
 		afterAlpha = isAlpha;
+	}
+
+	private void flush() {
+		renderSpacing();
 	}
 
 	private void renderSpacing() {

@@ -63,7 +63,6 @@ abstract class ParserBase {
 	protected ParserConfiguration configuration;
 
 	protected boolean quotesMode = false;
-	protected IndexedList<WTokenRun> preamble;
 	private Stack<IndexedList<WTokenRun>> runStack = new Stack<IndexedList<WTokenRun>>();
 	private Token lastProcessedToken;
 
@@ -77,7 +76,7 @@ abstract class ParserBase {
 	protected void reset() {
 		lastProcessedToken = null;
 		runStack.clear();
-		preamble = Vector.empty();
+		runStack.push(Vector.<WTokenRun>empty());
 	}
 
 	protected void run() {
@@ -116,12 +115,7 @@ abstract class ParserBase {
 	private void pushWhitespace(WTokenRun whitespace) {
 		if (whitespace == null) return;
 
-		// TODO Handle root whitespace before first token better than with LSDump
-		if (!runStack.isEmpty()) {
-			runStack.push(runStack.pop().append(whitespace));
-		} else {
-			preamble = preamble.append(whitespace);
-		}
+		runStack.push(runStack.pop().append(whitespace));
 	}
 
 	private IndexedList<WTokenRun> popTokens() {
@@ -176,6 +170,18 @@ abstract class ParserBase {
 		}
 	}
 
+	protected <S extends STreeState> STree<S> dressWithPrologAndEpilog(STree<S> tree) {
+		if (!configuration.preserveWhitespaces) return tree;
+
+		assert runStack.size() == 1;
+		final IndexedList<WTokenRun> tokens = popTokens();
+		// TODO This assertion does not hold with com/github/javaparser/ast/comments/CommentsParser
+		// assert tokens.size() == 2;
+		final WTokenRun prolog = tokens.get(0);
+		final WTokenRun epilog = tokens.get(1);
+		return tree.withLeading(prolog).withTrailing(epilog);
+	}
+
 	// TODO This is really dirty and temporary until the parser parses STrees directly
 	protected <S extends STreeState> STree<S> makeVar(Token token) {
 		String image = token.image;
@@ -196,6 +202,8 @@ abstract class ParserBase {
 			return buildWhitespaceRunPart(token.specialToken).append(new WToken(token.kind, token.image));
 		else return new WTokenRun(Vector.<WToken>empty());
 	}
+
+	abstract void Epilog() throws ParseException;
 
 	abstract STree<CompilationUnit.State> CompilationUnit() throws ParseException;
 

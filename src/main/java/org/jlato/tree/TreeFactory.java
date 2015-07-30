@@ -26,7 +26,7 @@ public abstract class TreeFactory {
 	}
 
 	public static CompilationUnit compilationUnit() {
-		return new CompilationUnit(null, null, NodeList.<ImportDecl>empty(), NodeList.<TypeDecl>empty());
+		return new CompilationUnit(null, NodeList.<ImportDecl>empty(), NodeList.<TypeDecl>empty());
 	}
 
 	public static ConstructorDecl constructorDecl() {

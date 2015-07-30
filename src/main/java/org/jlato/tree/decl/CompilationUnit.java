@@ -19,9 +19,7 @@
 
 package org.jlato.tree.decl;
 
-import com.github.andrewoma.dexx.collection.IndexedList;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.shapes.LSDump;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
@@ -45,12 +43,12 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 		super(location);
 	}
 
-	public static STree<CompilationUnit.State> make(IndexedList<WTokenRun> preamble, STree<PackageDecl.State> packageDecl, STree<SNodeListState> imports, STree<SNodeListState> types) {
-		return new STree<CompilationUnit.State>(new CompilationUnit.State(preamble, packageDecl, imports, types));
+	public static STree<CompilationUnit.State> make(STree<PackageDecl.State> packageDecl, STree<SNodeListState> imports, STree<SNodeListState> types) {
+		return new STree<CompilationUnit.State>(new CompilationUnit.State(packageDecl, imports, types));
 	}
 
-	public CompilationUnit(IndexedList<WTokenRun> preamble, PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
-		super(new SLocation<CompilationUnit.State>(make(preamble, TreeBase.<PackageDecl.State>treeOf(packageDecl), TreeBase.<SNodeListState>treeOf(imports), TreeBase.<SNodeListState>treeOf(types))));
+	public CompilationUnit(PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
+		super(new SLocation<CompilationUnit.State>(make(TreeBase.<PackageDecl.State>treeOf(packageDecl), TreeBase.<SNodeListState>treeOf(imports), TreeBase.<SNodeListState>treeOf(types))));
 	}
 
 	public PackageDecl packageDecl() {
@@ -91,35 +89,28 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 
 	public static class State extends SNodeState<State> implements STreeState {
 
-		public final IndexedList<WTokenRun> preamble;
-
 		public final STree<PackageDecl.State> packageDecl;
 
 		public final STree<SNodeListState> imports;
 
 		public final STree<SNodeListState> types;
 
-		State(IndexedList<WTokenRun> preamble, STree<PackageDecl.State> packageDecl, STree<SNodeListState> imports, STree<SNodeListState> types) {
-			this.preamble = preamble;
+		State(STree<PackageDecl.State> packageDecl, STree<SNodeListState> imports, STree<SNodeListState> types) {
 			this.packageDecl = packageDecl;
 			this.imports = imports;
 			this.types = types;
 		}
 
-		public CompilationUnit.State withPreamble(IndexedList<WTokenRun> preamble) {
-			return new CompilationUnit.State(preamble, packageDecl, imports, types);
-		}
-
 		public CompilationUnit.State withPackageDecl(STree<PackageDecl.State> packageDecl) {
-			return new CompilationUnit.State(preamble, packageDecl, imports, types);
+			return new CompilationUnit.State(packageDecl, imports, types);
 		}
 
 		public CompilationUnit.State withImports(STree<SNodeListState> imports) {
-			return new CompilationUnit.State(preamble, packageDecl, imports, types);
+			return new CompilationUnit.State(packageDecl, imports, types);
 		}
 
 		public CompilationUnit.State withTypes(STree<SNodeListState> types) {
-			return new CompilationUnit.State(preamble, packageDecl, imports, types);
+			return new CompilationUnit.State(packageDecl, imports, types);
 		}
 
 		@Override
@@ -154,8 +145,6 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 			if (o == null || getClass() != o.getClass())
 				return false;
 			State state = (State) o;
-			if (preamble == null ? state.preamble != null : !preamble.equals(state.preamble))
-				return false;
 			if (packageDecl == null ? state.packageDecl != null : !packageDecl.equals(state.packageDecl))
 				return false;
 			if (!imports.equals(state.imports))
@@ -168,7 +157,6 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 		@Override
 		public int hashCode() {
 			int result = 17;
-			if (preamble != null) result = 37 * result + preamble.hashCode();
 			if (packageDecl != null) result = 37 * result + packageDecl.hashCode();
 			result = 37 * result + imports.hashCode();
 			result = 37 * result + types.hashCode();
@@ -245,25 +233,10 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 		}
 	};
 
-	private static STypeSafeProperty<CompilationUnit.State, IndexedList<WTokenRun>> PREAMBLE = new STypeSafeProperty<CompilationUnit.State, IndexedList<WTokenRun>>() {
-
-		@Override
-		public IndexedList<WTokenRun> doRetrieve(State state) {
-			return state.preamble;
-		}
-
-		@Override
-		public CompilationUnit.State doRebuildParentState(State state, IndexedList<WTokenRun> value) {
-			return state.withPreamble(value);
-		}
-	};
-
 	public final static LexicalShape shape = composite(
-			new LSDump<CompilationUnit.State>(PREAMBLE),
-			child(PACKAGE_DECL),
-			none().withSpacingAfter(spacing(CompilationUnit_AfterPackageDecl)),
+			child(PACKAGE_DECL).withSpacingAfter(spacing(CompilationUnit_AfterPackageDecl)),
 			child(IMPORTS, ImportDecl.listShape),
 			child(TYPES, TypeDecl.listShape),
-			token(LToken.EOF).withSpacingBefore(newLine())
+			none().withSpacingAfter(newLine())
 	);
 }

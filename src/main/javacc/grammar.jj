@@ -1125,6 +1125,7 @@ STree<CompilationUnit.State> CompilationUnit():
 	STree<PackageDecl.State> packageDecl = null;
 	STree<SNodeListState> imports;
 	STree<SNodeListState> types;
+	STree<CompilationUnit.State> compilationUnit;
 }
 {
   { run(); }
@@ -1132,10 +1133,18 @@ STree<CompilationUnit.State> CompilationUnit():
   [ LOOKAHEAD(PackageDecl()) packageDecl = PackageDecl() ]
   imports = ImportDecls()
   types = TypeDecls()
-  (<EOF> | "\u001A" /** ctrl+z char **/)
 
-  { return enRun(CompilationUnit.make(preamble, packageDecl, imports, types)); }
+  { compilationUnit = enRun(CompilationUnit.make(packageDecl, imports, types)); }
+
+  Epilog()
+  { return dressWithPrologAndEpilog(compilationUnit); }
 }
+
+void Epilog(): {}
+{
+  (<EOF> | "\u001A" /** ctrl+z char **/)
+}
+
 
 /**********************************************************************************************************************
  * Declarations
