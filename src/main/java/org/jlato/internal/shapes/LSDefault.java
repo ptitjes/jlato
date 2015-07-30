@@ -74,6 +74,9 @@ public final class LSDefault extends LexicalShape {
 	@Override
 	public void render(STree tree, WRunRun run, Printer printer) {
 		final LexicalShape shape = shapeFor(tree);
-		if (shape != null) shape.render(tree, printer);
+
+		if (tree.leading != null) printer.encounteredWhitespace(tree.leading);
+		shape.render(tree, printer);
+		if (tree.trailing != null) printer.encounteredWhitespace(tree.trailing);
 	}
 }

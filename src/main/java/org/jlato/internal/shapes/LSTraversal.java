@@ -71,7 +71,7 @@ public class LSTraversal extends LSDecorated {
 		final STree child = traverse(tree);
 		if (child == null) return;
 
-		if (child.run != null) shape.render(child, child.run, printer);
+		if (child.run != null) shape.render(child, printer);
 		else shape.render(child, run, printer);
 	}
 }
