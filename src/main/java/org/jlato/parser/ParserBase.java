@@ -292,6 +292,13 @@ abstract class ParserBase {
 
 	static class ByRef<T> {
 		public T value;
+
+		public ByRef() {
+		}
+
+		public ByRef(T value) {
+			this.value = value;
+		}
 	}
 
 	boolean isLambda() {

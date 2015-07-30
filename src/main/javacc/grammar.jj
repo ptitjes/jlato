@@ -3240,6 +3240,7 @@ STree<TryStmt.State> TryStatement():
 // TODO Make catchClauses/finallyClause counts less fatal
 {
 	STree<SNodeListState> resources = null;
+	ByRef<Boolean> trailingSemiColon = new ByRef<Boolean>(false);
 	STree<BlockStmt.State> tryBlock;
 	STree<BlockStmt.State> finallyBlock = null;
 	STree<SNodeListState> catchClauses = null;
@@ -3248,7 +3249,7 @@ STree<TryStmt.State> TryStatement():
   { run(); }
   "try"
   (
-    resources = ResourceSpecification()
+    resources = ResourceSpecification(trailingSemiColon)
     tryBlock = Block()
     [ catchClauses = CatchClauses() ]
     [ "finally" finallyBlock = Block() ]
@@ -3261,7 +3262,7 @@ STree<TryStmt.State> TryStatement():
       "finally" finallyBlock = Block()
     )
   )
-  { return dress(TryStmt.make(ensureNotNull(resources), tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock))); }
+  { return dress(TryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock))); }
 }
 
 STree<SNodeListState> CatchClauses():
@@ -3310,7 +3311,7 @@ STree<FormalParameter.State> CatchFormalParameter():
   { return dress(FormalParameter.make(modifiers, exceptType, false, exceptId)); }
 }
 
-STree<SNodeListState> ResourceSpecification() :
+STree<SNodeListState> ResourceSpecification(ByRef<Boolean> trailingSemiColon) :
 {
 	STree<SNodeListState> vars = emptyList();
 	STree<VariableDeclarationExpr.State> var;
@@ -3320,7 +3321,7 @@ STree<SNodeListState> ResourceSpecification() :
   // FIXME this is a bit more lenient than we need to be, eg allowing access modifiers like private
   var = VariableDeclExpression() { vars = append(vars, var); }
   ( LOOKAHEAD(2) ";" var = VariableDeclExpression() {vars = append(vars, var);} )*
-  [ LOOKAHEAD(2) ";" ] // TODO Add syntactic data about semi-colon presence in STree<SNodeListState>
+  [ LOOKAHEAD(2) ";" { trailingSemiColon.value = true; } ]
   ")"
   { return vars; }
 }

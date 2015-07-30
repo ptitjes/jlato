@@ -26,9 +26,15 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.*;
 import org.jlato.tree.expr.VariableDeclarationExpr;
 
-import static org.jlato.internal.shapes.LSCondition.some;
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.TRY_RESOURCES;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_BetweenConstants;
+import static org.jlato.printer.IndentationConstraint.indent;
+import static org.jlato.printer.IndentationConstraint.unIndent;
+import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
+import static org.jlato.printer.SpacingConstraint.spacing;
 
 public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements Stmt {
 
@@ -40,12 +46,12 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 		super(location);
 	}
 
-	public static STree<TryStmt.State> make(STree<SNodeListState> resources, STree<BlockStmt.State> tryBlock, STree<SNodeListState> catchs, STree<SNodeOptionState> finallyBlock) {
-		return new STree<TryStmt.State>(new TryStmt.State(resources, tryBlock, catchs, finallyBlock));
+	public static STree<TryStmt.State> make(STree<SNodeListState> resources, boolean trailingSemiColon, STree<BlockStmt.State> tryBlock, STree<SNodeListState> catchs, STree<SNodeOptionState> finallyBlock) {
+		return new STree<TryStmt.State>(new TryStmt.State(resources, trailingSemiColon, tryBlock, catchs, finallyBlock));
 	}
 
-	public TryStmt(NodeList<VariableDeclarationExpr> resources, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
-		super(new SLocation<TryStmt.State>(make(TreeBase.<SNodeListState>treeOf(resources), TreeBase.<BlockStmt.State>treeOf(tryBlock), TreeBase.<SNodeListState>treeOf(catchs), TreeBase.<SNodeOptionState>treeOf(finallyBlock))));
+	public TryStmt(NodeList<VariableDeclarationExpr> resources, boolean trailingSemiColon, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
+		super(new SLocation<TryStmt.State>(make(TreeBase.<SNodeListState>treeOf(resources), trailingSemiColon, TreeBase.<BlockStmt.State>treeOf(tryBlock), TreeBase.<SNodeListState>treeOf(catchs), TreeBase.<SNodeOptionState>treeOf(finallyBlock))));
 	}
 
 	public NodeList<VariableDeclarationExpr> resources() {
@@ -58,6 +64,18 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 
 	public TryStmt withResources(Mutation<NodeList<VariableDeclarationExpr>> mutation) {
 		return location.safeTraversalMutate(RESOURCES, mutation);
+	}
+
+	public boolean trailingSemiColon() {
+		return location.safeProperty(TRAILING_SEMI_COLON);
+	}
+
+	public TryStmt withTrailingSemiColon(boolean trailingSemiColon) {
+		return location.safePropertyReplace(TRAILING_SEMI_COLON, trailingSemiColon);
+	}
+
+	public TryStmt withTrailingSemiColon(Mutation<Boolean> mutation) {
+		return location.safePropertyMutate(TRAILING_SEMI_COLON, mutation);
 	}
 
 	public BlockStmt tryBlock() {
@@ -100,33 +118,40 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 
 		public final STree<SNodeListState> resources;
 
+		public final boolean trailingSemiColon;
+
 		public final STree<BlockStmt.State> tryBlock;
 
 		public final STree<SNodeListState> catchs;
 
 		public final STree<SNodeOptionState> finallyBlock;
 
-		State(STree<SNodeListState> resources, STree<BlockStmt.State> tryBlock, STree<SNodeListState> catchs, STree<SNodeOptionState> finallyBlock) {
+		State(STree<SNodeListState> resources, boolean trailingSemiColon, STree<BlockStmt.State> tryBlock, STree<SNodeListState> catchs, STree<SNodeOptionState> finallyBlock) {
 			this.resources = resources;
+			this.trailingSemiColon = trailingSemiColon;
 			this.tryBlock = tryBlock;
 			this.catchs = catchs;
 			this.finallyBlock = finallyBlock;
 		}
 
 		public TryStmt.State withResources(STree<SNodeListState> resources) {
-			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
+			return new TryStmt.State(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
+		}
+
+		public TryStmt.State withTrailingSemiColon(boolean trailingSemiColon) {
+			return new TryStmt.State(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
 		}
 
 		public TryStmt.State withTryBlock(STree<BlockStmt.State> tryBlock) {
-			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
+			return new TryStmt.State(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
 		}
 
 		public TryStmt.State withCatchs(STree<SNodeListState> catchs) {
-			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
+			return new TryStmt.State(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
 		}
 
 		public TryStmt.State withFinallyBlock(STree<SNodeOptionState> finallyBlock) {
-			return new TryStmt.State(resources, tryBlock, catchs, finallyBlock);
+			return new TryStmt.State(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
 		}
 
 		@Override
@@ -163,6 +188,8 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 			State state = (State) o;
 			if (!resources.equals(state.resources))
 				return false;
+			if (trailingSemiColon != state.trailingSemiColon)
+				return false;
 			if (tryBlock == null ? state.tryBlock != null : !tryBlock.equals(state.tryBlock))
 				return false;
 			if (!catchs.equals(state.catchs))
@@ -176,6 +203,7 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 		public int hashCode() {
 			int result = 17;
 			result = 37 * result + resources.hashCode();
+			result = 37 * result + (trailingSemiColon ? 1 : 0);
 			if (tryBlock != null) result = 37 * result + tryBlock.hashCode();
 			result = 37 * result + catchs.hashCode();
 			result = 37 * result + finallyBlock.hashCode();
@@ -275,9 +303,32 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 		}
 	};
 
+	private static STypeSafeProperty<TryStmt.State, Boolean> TRAILING_SEMI_COLON = new STypeSafeProperty<TryStmt.State, Boolean>() {
+
+		@Override
+		public Boolean doRetrieve(State state) {
+			return state.trailingSemiColon;
+		}
+
+		@Override
+		public TryStmt.State doRebuildParentState(State state, Boolean value) {
+			return state.withTrailingSemiColon(value);
+		}
+	};
+
 	public final static LexicalShape shape = composite(
 			token(LToken.Try).withSpacingAfter(space()),
-			child(RESOURCES, VariableDeclarationExpr.resourcesShape),
+			when(childIs(RESOURCES, not(empty())),
+					composite(
+							token(LToken.ParenthesisLeft)
+									.withIndentationAfter(indent(TRY_RESOURCES)),
+							child(RESOURCES, list(token(LToken.SemiColon).withSpacingAfter(newLine()))),
+							when(data(TRAILING_SEMI_COLON), token(LToken.SemiColon)),
+							token(LToken.ParenthesisRight)
+									.withIndentationBefore(unIndent(TRY_RESOURCES))
+									.withSpacingAfter(space())
+					)
+			),
 			child(TRY_BLOCK),
 			child(CATCHS, CatchClause.listShape),
 			child(FINALLY_BLOCK, when(some(),

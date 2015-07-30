@@ -146,14 +146,4 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 	};
 
 	public final static LexicalShape shape = child(DECLARATION);
-
-	public static final LexicalShape resourcesShape = list(
-			token(LToken.ParenthesisLeft)
-					.withIndentationAfter(indent(TRY_RESOURCES)),
-			token(LToken.SemiColon)
-					.withSpacingAfter(newLine()),
-			token(LToken.ParenthesisRight)
-					.withIndentationBefore(unIndent(TRY_RESOURCES))
-					.withSpacingAfter(space())
-	);
 }

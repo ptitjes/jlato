@@ -46,6 +46,7 @@
   finallyBlock: null,
   resources: [
   ],
+  trailingSemiColon: false,
   tryBlock: {
     class: org.jlato.tree.stmt.BlockStmt,
     stmts: [
