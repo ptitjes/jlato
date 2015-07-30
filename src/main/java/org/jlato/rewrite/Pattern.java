@@ -19,8 +19,6 @@
 
 package org.jlato.rewrite;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
-import com.github.andrewoma.dexx.collection.Builder;
 import org.jlato.internal.patterns.DecoratedPattern;
 import org.jlato.tree.Tree;
 import org.jlato.util.Function1;
@@ -40,14 +38,6 @@ public abstract class Pattern<T> implements TypeSafeMatcher<T>, TypeSafeBuilder<
 	}
 
 	public abstract T build(Substitution substitution);
-
-	protected static ArrayList<Pattern<?>> termsOf(Pattern<?>... terms) {
-		final Builder<Pattern<?>, ArrayList<Pattern<?>>> builder = ArrayList.<Pattern<?>>factory().newBuilder();
-		for (Pattern<?> attribute : terms) {
-			builder.add(attribute);
-		}
-		return builder.build();
-	}
 
 	public Pattern<T> or(final Pattern<T> other) {
 		return new DecoratedPattern<T>(this) {
