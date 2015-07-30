@@ -210,6 +210,11 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
 
+	public NodeList<T> prependAll(NodeList<? extends T> elements) {
+		// TODO Do that better
+		return insertAll(0, elements);
+	}
+
 	@SuppressWarnings("unchecked")
 	public NodeList<T> append(T element) {
 		final STree<SNodeListState> tree = location.tree;
@@ -227,7 +232,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
 
-	public NodeList<T> appendAll(NodeList<T> elements) {
+	public NodeList<T> appendAll(NodeList<? extends T> elements) {
 		// TODO Do that better
 		NodeList<T> newNodeList = this;
 		for (T element : elements) {
@@ -254,6 +259,16 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 			newTree = newTree.withDressing(dressing.withRun(insertAt(dressing.run, index, index == trees.size())));
 
 		return (NodeList<T>) location.withTree(newTree).facade;
+	}
+
+	public NodeList<T> insertAll(int index, NodeList<? extends T> elements) {
+		// TODO Do that better
+		NodeList<T> newNodeList = this;
+		for (T element : elements) {
+			newNodeList = newNodeList.insert(index, element);
+			index++;
+		}
+		return newNodeList;
 	}
 
 	private Vector<STree<?>> insertAt(Vector<STree<?>> trees, int index, STree<?> element) {
