@@ -23,7 +23,8 @@
           },
           init: {
             class: org.jlato.tree.expr.LiteralExpr,
-            value: ,
+            literalClass: java.lang.Integer,
+            literalString: 42,
           },
         },
       ],

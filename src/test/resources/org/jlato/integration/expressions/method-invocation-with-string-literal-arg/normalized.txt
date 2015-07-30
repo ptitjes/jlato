@@ -1,0 +1,14 @@
+{
+  class: org.jlato.tree.expr.MethodInvocationExpr,
+  args: [
+    {
+      class: org.jlato.tree.expr.LiteralExpr,
+      literalClass: java.lang.String,
+      literalString: "oh yeah",
+    },
+  ],
+  name: method,
+  scope: null,
+  typeArgs: [
+  ],
+}

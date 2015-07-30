@@ -25,6 +25,7 @@ import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.internal.bu.SNodeState;
+import org.jlato.tree.expr.LiteralExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.name.QualifiedName;
 
@@ -113,6 +114,7 @@ public class NormalizedJsonWriter {
 			String name = method.getName();
 
 			if (name.equals("toString") || name.equals("kind")) continue;
+			if (LiteralExpr.class.isAssignableFrom(treeClass) && name.equals("value")) continue;
 
 			methods.add(method);
 		}
@@ -136,6 +138,8 @@ public class NormalizedJsonWriter {
 					Name.class.isAssignableFrom(valueClass) ||
 					QualifiedName.class.isAssignableFrom(valueClass)) {
 				builder.append(value.toString());
+			} else if (Class.class.isAssignableFrom(valueClass)) {
+				builder.append(((Class<?>) value).getName());
 			} else if (NodeList.class.isAssignableFrom(valueClass)) {
 				NodeList<?> list = (NodeList<?>) value;
 				Class<?> elementClass = list.isEmpty() ? Object.class : list.get(0).getClass();

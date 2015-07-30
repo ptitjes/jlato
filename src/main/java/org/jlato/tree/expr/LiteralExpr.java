@@ -84,6 +84,15 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 	}
 
 	@SuppressWarnings("unchecked")
+	public Class<T> literalClass() {
+		return (Class<T>) location.tree.state.literalClass;
+	}
+
+	public String literalString() {
+		return location.tree.state.literalString;
+	}
+
+	@SuppressWarnings("unchecked")
 	public T value() {
 		final Class<?> literalClass = location.tree.state.literalClass;
 		final String literalString = location.tree.state.literalString;
