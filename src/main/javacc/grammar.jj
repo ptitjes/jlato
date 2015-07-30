@@ -1858,7 +1858,15 @@ STree<SNodeListState> Statements():
 	STree<? extends Stmt.State> stmt;
 }
 {
-  ( LOOKAHEAD(2) stmt = BlockStatement() { ret = append(ret, stmt); } )*
+  [
+    LOOKAHEAD(2)
+    (
+      ( LOOKAHEAD(2) stmt = BlockStatement() { ret = append(ret, stmt); } )+
+    |
+      LOOKAHEAD({quotesMode})
+      <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+    )
+  ]
   { return ret; }
 }
 
