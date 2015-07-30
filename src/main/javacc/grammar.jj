@@ -1410,12 +1410,12 @@ STree<SNodeListState> AnnotationTypeBody():
 }
 {
   "{"
-  (
+  [
+    ( member = AnnotationTypeBodyDecl() { ret = append(ret, member); } )+
+  |
     LOOKAHEAD({quotesMode})
     <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
-  |
-    ( member = AnnotationTypeBodyDecl() { ret = append(ret, member); } )*
-  )
+  ]
   "}"
   { return ret; }
 }
@@ -1528,7 +1528,7 @@ STree<SNodeListState> ClassOrInterfaceBody(TypeKind typeKind):
 }
 {
   "{"
-  ( member = ClassOrInterfaceBodyDecl(typeKind) { ret = append(ret, member); }  )*
+  ret = ClassOrInterfaceBodyDecls(typeKind)
   "}"
   { return ret; }
 }
@@ -1539,12 +1539,12 @@ STree<SNodeListState> ClassOrInterfaceBodyDecls(TypeKind typeKind):
 	STree<SNodeListState> ret = emptyList();
 }
 {
-  (
+  [
+    ( member = ClassOrInterfaceBodyDecl(typeKind) { ret = append(ret, member); } )+
+  |
     LOOKAHEAD({quotesMode})
     <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
-  |
-    ( member = ClassOrInterfaceBodyDecl(typeKind) { ret = append(ret, member); } )*
-  )
+  ]
   { return ret; }
 }
 
