@@ -1134,7 +1134,7 @@ STree<CompilationUnit.State> CompilationUnit():
   imports = ImportDecls()
   types = TypeDecls()
 
-  { compilationUnit = enRun(CompilationUnit.make(packageDecl, imports, types)); }
+  { compilationUnit = dress(CompilationUnit.make(packageDecl, imports, types)); }
 
   Epilog()
   { return dressWithPrologAndEpilog(compilationUnit); }
@@ -1160,7 +1160,7 @@ STree<PackageDecl.State> PackageDecl():
 
   annotations = Annotations() "package" name = QualifiedName() ";"
 
-  { return enRun(PackageDecl.make(annotations, name)); }
+  { return dress(PackageDecl.make(annotations, name)); }
 }
 
 STree<SNodeListState> ImportDecls():
@@ -1182,7 +1182,7 @@ STree<ImportDecl.State> ImportDecl():
 {
   { run(); }
   "import" [ "static" { isStatic = true; } ] name = QualifiedName() [ "." "*" { isAsterisk = true; } ] ";"
-  { return enRun(ImportDecl.make(name, isStatic, isAsterisk)); }
+  { return dress(ImportDecl.make(name, isStatic, isAsterisk)); }
 }
 
 STree<SNodeListState> TypeDecls():
@@ -1253,7 +1253,7 @@ STree<? extends TypeDecl.State> TypeDecl():
   { run(); }
 
   (
-    ";" { ret = enRun(EmptyTypeDecl.make()); }
+    ";" { ret = dress(EmptyTypeDecl.make()); }
   |
     modifiers = Modifiers()
     (
@@ -1294,11 +1294,11 @@ STree<? extends TypeDecl.State> ClassOrInterfaceDecl(STree<SNodeListState> modif
 
   {
     if (typeKind == TypeKind.Interface)
-      return enRun(InterfaceDecl.make(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members));
+      return dress(InterfaceDecl.make(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members));
     else {
       STree<?> superClassType = extendsClause == null || extendsClause.state.children.isEmpty() ?
         null : extendsClause.state.children.get(0);
-      return enRun(ClassDecl.make(modifiers, name, ensureNotNull(typeParams), optionOf(superClassType), ensureNotNull(implementsClause), members));
+      return dress(ClassDecl.make(modifiers, name, ensureNotNull(typeParams), optionOf(superClassType), ensureNotNull(implementsClause), members));
     }
   }
 }
@@ -1369,7 +1369,7 @@ STree<? extends TypeDecl.State> EnumDecl(STree<SNodeListState> modifiers):
   [ ";" members = ClassOrInterfaceBodyDecls(TypeKind.Enum) ]
   "}"
 
-  { return enRun(EnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))); }
+  { return dress(EnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))); }
 }
 
 STree<EnumConstantDecl.State> EnumConstantDecl():
@@ -1385,7 +1385,7 @@ STree<EnumConstantDecl.State> EnumConstantDecl():
   modifiers = Modifiers() name = Name()
   [ args = Arguments() ] [ classBody = ClassOrInterfaceBody(TypeKind.Class) ]
 
-  { return enRun(EnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody))); }
+  { return dress(EnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody))); }
 }
 
 STree<AnnotationDecl.State> AnnotationTypeDecl(STree<SNodeListState> modifiers):
@@ -1399,7 +1399,7 @@ STree<AnnotationDecl.State> AnnotationTypeDecl(STree<SNodeListState> modifiers):
   "@" "interface" name = Name()
   members = AnnotationTypeBody()
 
-  { return enRun(AnnotationDecl.make(modifiers, name, members)); }
+  { return dress(AnnotationDecl.make(modifiers, name, members)); }
 }
 
 // TODO Merge with ClassOrInterfaceBody production and do later checks programmaticaly
@@ -1430,7 +1430,7 @@ STree<? extends MemberDecl.State> AnnotationTypeBodyDecl():
   { run(); }
 
   (
-	";" { ret = enRun(EmptyTypeDecl.make()); }
+	";" { ret = dress(EmptyTypeDecl.make()); }
   |
     modifiers = Modifiers()
     (
@@ -1469,7 +1469,7 @@ STree<AnnotationMemberDecl.State> AnnotationTypeMemberDecl(STree<SNodeListState>
   ]
   ";"
 
-  { return enRun(AnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal)); }
+  { return dress(AnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal)); }
 }
 
 STree<SNodeListState> TypeParameters():
@@ -1500,7 +1500,7 @@ STree<TypeParameter.State> TypeParameter():
 {
   { run(); }
   annotations = Annotations() name = Name() [ typeBounds = TypeBounds() ]
-  { return enRun(TypeParameter.make(annotations, name, ensureNotNull(typeBounds))); }
+  { return dress(TypeParameter.make(annotations, name, ensureNotNull(typeBounds))); }
 }
 
 STree<SNodeListState> TypeBounds():
@@ -1557,7 +1557,7 @@ STree<? extends MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind typeKind):
   { run(); }
 
   (
-    ";" { ret = enRun(EmptyMemberDecl.make()); }
+    ";" { ret = dress(EmptyMemberDecl.make()); }
   |
     modifiers = Modifiers()
     {
@@ -1606,7 +1606,7 @@ STree<FieldDecl.State> FieldDecl(STree<SNodeListState> modifiers):
 
   type = Type(null) variables = VariableDeclarators() ";"
 
-  { return enRun(FieldDecl.make(modifiers, type, variables)); }
+  { return dress(FieldDecl.make(modifiers, type, variables)); }
 }
 
 STree<LocalVariableDecl.State> VariableDecl(STree<SNodeListState> modifiers):
@@ -1619,7 +1619,7 @@ STree<LocalVariableDecl.State> VariableDecl(STree<SNodeListState> modifiers):
 
   type = Type(null) variables = VariableDeclarators()
 
-  { return enRun(LocalVariableDecl.make(modifiers, type, variables)); }
+  { return dress(LocalVariableDecl.make(modifiers, type, variables)); }
 }
 
 STree<SNodeListState> VariableDeclarators():
@@ -1649,7 +1649,7 @@ STree<VariableDeclarator.State> VariableDeclarator():
     { init = optionOf(initExpr); }
   ]
 
-  { return enRun(VariableDeclarator.make(id, init)); }
+  { return dress(VariableDeclarator.make(id, init)); }
 }
 
 STree<VariableDeclaratorId.State> VariableDeclaratorId():
@@ -1662,7 +1662,7 @@ STree<VariableDeclaratorId.State> VariableDeclaratorId():
 
   name = Name() arrayDims = ArrayDims()
 
-  { return enRun(VariableDeclaratorId.make(name, arrayDims)); }
+  { return dress(VariableDeclaratorId.make(name, arrayDims)); }
 }
 
 STree<SNodeListState> ArrayDims():
@@ -1675,7 +1675,7 @@ STree<SNodeListState> ArrayDims():
     LOOKAHEAD( Annotations() "[" "]" )
     { run(); }
     annotations = Annotations() "[" "]"
-    { arrayDims = append(arrayDims, enRun(ArrayDim.make(annotations))); }
+    { arrayDims = append(arrayDims, dress(ArrayDim.make(annotations))); }
   )*
   { return arrayDims; }
 }
@@ -1705,7 +1705,7 @@ STree<ArrayInitializerExpr.State> ArrayInitializer():
   [ "," { trailingComma = true; } ]
   "}"
 
-  { return enRun(ArrayInitializerExpr.make(values, trailingComma)); }
+  { return dress(ArrayInitializerExpr.make(values, trailingComma)); }
 }
 
 STree<MethodDecl.State> MethodDecl(STree<SNodeListState> modifiers):
@@ -1735,7 +1735,7 @@ STree<MethodDecl.State> MethodDecl(STree<SNodeListState> modifiers):
 	}
   )
 
-  { return enRun(MethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))); }
+  { return dress(MethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))); }
 }
 
 STree<SNodeListState> FormalParameters():
@@ -1780,7 +1780,7 @@ STree<FormalParameter.State> FormalParameter():
 
   modifiers = Modifiers() type = Type(null) [ "..." { isVarArg = true; } ] id = VariableDeclaratorId()
 
-  { return enRun(FormalParameter.make(modifiers, type, isVarArg, id)); }
+  { return dress(FormalParameter.make(modifiers, type, isVarArg, id)); }
 }
 
 
@@ -1819,9 +1819,9 @@ STree<ConstructorDecl.State> ConstructorDecl(STree<SNodeListState> modifiers):
   [ LOOKAHEAD(ExplicitConstructorInvocation()) stmt = ExplicitConstructorInvocation() { stmts = append(stmts, stmt); } ]
   ( LOOKAHEAD(2) stmt = BlockStatement() { stmts = append(stmts, stmt); } )*
   "}"
-  { block = enRun(BlockStmt.make(stmts)); }
+  { block = dress(BlockStmt.make(stmts)); }
 
-  { return enRun(ConstructorDecl.make(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block)); }
+  { return dress(ConstructorDecl.make(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block)); }
 }
 
 STree<ExplicitConstructorInvocationStmt.State> ExplicitConstructorInvocation():
@@ -1849,7 +1849,7 @@ STree<ExplicitConstructorInvocationStmt.State> ExplicitConstructorInvocation():
     args = Arguments() ";"
   )
 
-  { return enRun(ExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args)); }
+  { return dress(ExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args)); }
 }
 
 STree<SNodeListState> Statements():
@@ -1871,7 +1871,7 @@ STree<InitializerDecl.State> InitializerDecl(STree<SNodeListState> modifiers):
 
   block = Block()
 
-  { return enRun(InitializerDecl.make(modifiers, block)); }
+  { return dress(InitializerDecl.make(modifiers, block)); }
 }
 
 
@@ -1908,14 +1908,14 @@ STree<? extends ReferenceType.State> ReferenceType(STree<SNodeListState> annotat
     primitiveType = PrimitiveType(annotations)
     { lateRun(); }
     arrayDims = ArrayDimsMandatory()
-    { type = enRun(ArrayType.make(primitiveType, arrayDims)); }
+    { type = dress(ArrayType.make(primitiveType, arrayDims)); }
   |
     type = QualifiedType(annotations)
     [
       LOOKAHEAD(2)
       { lateRun(); }
       arrayDims = ArrayDimsMandatory()
-      { type = enRun(ArrayType.make(type, arrayDims)); }
+      { type = dress(ArrayType.make(type, arrayDims)); }
     ]
   )
 
@@ -1940,7 +1940,7 @@ STree<QualifiedType.State> QualifiedType(STree<SNodeListState> annotations):
 
   name = Name()
   [ LOOKAHEAD(2) typeArgs = TypeArgumentsOrDiamond() ]
-  { ret = enRun(QualifiedType.make(annotations, scope, name, optionOf(typeArgs))); }
+  { ret = dress(QualifiedType.make(annotations, scope, name, optionOf(typeArgs))); }
   (
     LOOKAHEAD(2)
     "." { scope = optionOf(ret); }
@@ -1948,7 +1948,7 @@ STree<QualifiedType.State> QualifiedType(STree<SNodeListState> annotations):
     { lateRun(); }
     annotations = Annotations() name = Name()
     [ LOOKAHEAD(2) typeArgs = TypeArgumentsOrDiamond() ]
-    { ret = enRun(QualifiedType.make(annotations, scope, name, optionOf(typeArgs))); }
+    { ret = dress(QualifiedType.make(annotations, scope, name, optionOf(typeArgs))); }
   )*
 
   { return ret; }
@@ -2027,7 +2027,7 @@ STree<WildcardType.State> Wildcard(STree<SNodeListState> annotations):
   "?"
   [ "extends" { run(); } boundAnnotations = Annotations() ext = ReferenceType(boundAnnotations)
   | "super" { run(); } boundAnnotations = Annotations() sup = ReferenceType(boundAnnotations) ]
-  { return enRun(WildcardType.make(annotations, optionOf(ext), optionOf(sup))); }
+  { return dress(WildcardType.make(annotations, optionOf(ext), optionOf(sup))); }
 }
 
 STree<PrimitiveType.State> PrimitiveType(STree<SNodeListState> annotations):
@@ -2051,7 +2051,7 @@ STree<PrimitiveType.State> PrimitiveType(STree<SNodeListState> annotations):
   | "long"    { primitive = PrimitiveType.Primitive.Long; }
   | "float"   { primitive = PrimitiveType.Primitive.Float; }
   | "double"  { primitive = PrimitiveType.Primitive.Double; } )
-  { return enRun(PrimitiveType.make(annotations, primitive)); }
+  { return dress(PrimitiveType.make(annotations, primitive)); }
 }
 
 STree<? extends Type.State> ResultType():
@@ -2060,7 +2060,7 @@ STree<? extends Type.State> ResultType():
 }
 {
   (
-    { run(); } "void" { ret = enRun(VoidType.make()); }
+    { run(); } "void" { ret = dress(VoidType.make()); }
   |
     ret = Type(null)
   )
@@ -2078,7 +2078,7 @@ STree<SNodeListState> QualifiedTypeList():
   type = AnnotatedQualifiedType() { ret = append(ret, type); }
   ( "," type = AnnotatedQualifiedType() { ret = append(ret, type); } )*
 
-  { return enRun(ret); }
+  { return dress(ret); }
 }
 
 STree<QualifiedType.State> AnnotatedQualifiedType():
@@ -2103,12 +2103,12 @@ STree<QualifiedName.State> QualifiedName():
 	STree<Name.State> name;
 }
 {
-  { run(); } name = Name() { ret = enRun(QualifiedName.make(qualifier, name)); }
+  { run(); } name = Name() { ret = dress(QualifiedName.make(qualifier, name)); }
   (
     LOOKAHEAD(2)
     { lateRun(); }
     "." { qualifier = optionOf(ret); }
-    name = Name() { ret = enRun(QualifiedName.make(qualifier, name)); }
+    name = Name() { ret = dress(QualifiedName.make(qualifier, name)); }
   )*
   { return ret; }
 }
@@ -2121,7 +2121,7 @@ STree<Name.State> Name():
   (
     { run(); }
     <IDENTIFIER>
-    { name = enRun(Name.make(token.image)); }
+    { name = dress(Name.make(token.image)); }
   |
     LOOKAHEAD({quotesMode})
     <NODE_VARIABLE> { name = makeVar(token); }
@@ -2166,7 +2166,7 @@ STree<? extends Expr.State> Expression():
     [
       LOOKAHEAD(2)
       { lateRun(); } op = AssignmentOperator() value = Expression()
-      { ret = enRun(AssignExpr.make(ret, op, value)); }
+      { ret = dress(AssignExpr.make(ret, op, value)); }
     ]
   )
   { return ret; }
@@ -2181,9 +2181,9 @@ STree<LambdaExpr.State> LambdaBody(STree<SNodeListState> parameters, boolean par
 {
   // Run was started before parameters
   (
-    expr = Expression() { ret = enRun(LambdaExpr.make(parameters, parenthesis, left(expr))); }
+    expr = Expression() { ret = dress(LambdaExpr.make(parameters, parenthesis, left(expr))); }
   |
-    block = Block() { ret = enRun(LambdaExpr.make(parameters, parenthesis, right(block))); }
+    block = Block() { ret = dress(LambdaExpr.make(parameters, parenthesis, right(block))); }
   )
   { return ret; }
 }
@@ -2199,7 +2199,7 @@ STree<SNodeListState> LambdaParameters(ByRef<Boolean> parenthesis):
     param = InferredFormalParameter()
     {
       parenthesis.value = false;
-      ret = enRun(singletonList(param));
+      ret = dress(singletonList(param));
     }
   |
     "("
@@ -2272,7 +2272,7 @@ STree<? extends Expr.State> ConditionalExpression():
   [
     LOOKAHEAD(2)
     { lateRun(); } "?" left = Expression() ":" right = ConditionalExpression()
-    { ret = enRun(ConditionalExpr.make(ret, left, right)); }
+    { ret = dress(ConditionalExpr.make(ret, left, right)); }
   ]
   { return ret; }
 }
@@ -2287,7 +2287,7 @@ STree<? extends Expr.State> ConditionalOrExpression():
   (
     LOOKAHEAD(2)
     { lateRun(); } "||" right = ConditionalAndExpression()
-    { ret = enRun(BinaryExpr.make(ret, BinaryExpr.BinaryOp.Or, right)); }
+    { ret = dress(BinaryExpr.make(ret, BinaryExpr.BinaryOp.Or, right)); }
   )*
   { return ret; }
 }
@@ -2302,7 +2302,7 @@ STree<? extends Expr.State> ConditionalAndExpression():
   (
     LOOKAHEAD(2)
     { lateRun(); } "&&" right = InclusiveOrExpression()
-    { ret = enRun(BinaryExpr.make(ret, BinaryExpr.BinaryOp.And, right)); }
+    { ret = dress(BinaryExpr.make(ret, BinaryExpr.BinaryOp.And, right)); }
   )*
   { return ret; }
 }
@@ -2317,7 +2317,7 @@ STree<? extends Expr.State> InclusiveOrExpression():
   (
     LOOKAHEAD(2)
     { lateRun(); } "|" right = ExclusiveOrExpression()
-    { ret = enRun(BinaryExpr.make(ret, BinaryExpr.BinaryOp.BinOr, right)); }
+    { ret = dress(BinaryExpr.make(ret, BinaryExpr.BinaryOp.BinOr, right)); }
   )*
   { return ret; }
 }
@@ -2332,7 +2332,7 @@ STree<? extends Expr.State> ExclusiveOrExpression():
   (
     LOOKAHEAD(2)
     { lateRun(); } "^" right = AndExpression()
-    { ret = enRun(BinaryExpr.make(ret, BinaryExpr.BinaryOp.XOr, right)); }
+    { ret = dress(BinaryExpr.make(ret, BinaryExpr.BinaryOp.XOr, right)); }
   )*
   { return ret; }
 }
@@ -2347,7 +2347,7 @@ STree<? extends Expr.State> AndExpression():
   (
     LOOKAHEAD(2)
     { lateRun(); } "&" right = EqualityExpression()
-    { ret = enRun(BinaryExpr.make(ret, BinaryExpr.BinaryOp.BinAnd, right)); }
+    { ret = dress(BinaryExpr.make(ret, BinaryExpr.BinaryOp.BinAnd, right)); }
   )*
   { return ret; }
 }
@@ -2366,7 +2366,7 @@ STree<? extends Expr.State> EqualityExpression():
     ( "==" { op = BinaryExpr.BinaryOp.Equal; } |
       "!=" { op = BinaryExpr.BinaryOp.NotEqual; } )
     right = InstanceOfExpression()
-    { ret = enRun(BinaryExpr.make(ret, op, right)); }
+    { ret = dress(BinaryExpr.make(ret, op, right)); }
   )*
   { return ret; }
 }
@@ -2383,7 +2383,7 @@ STree<? extends Expr.State> InstanceOfExpression():
     LOOKAHEAD(2)
     { lateRun(); } "instanceof"
     { run(); } annotations = Annotations() type = Type(annotations)
-    { ret = enRun(InstanceOfExpr.make(ret, type)); }
+    { ret = dress(InstanceOfExpr.make(ret, type)); }
   ]
   { return ret; }
 }
@@ -2404,7 +2404,7 @@ STree<? extends Expr.State> RelationalExpression():
   	  "<=" { op = BinaryExpr.BinaryOp.LessOrEqual; } |
   	  ">=" { op = BinaryExpr.BinaryOp.GreaterOrEqual; } )
   	right = ShiftExpression()
-  	{ ret = enRun(BinaryExpr.make(ret, op, right)); }
+  	{ ret = dress(BinaryExpr.make(ret, op, right)); }
   )*
   { return ret; }
 }
@@ -2424,7 +2424,7 @@ STree<? extends Expr.State> ShiftExpression():
   	  RSIGNEDSHIFT()   { op = BinaryExpr.BinaryOp.RightSignedShift; } |
   	  RUNSIGNEDSHIFT() { op = BinaryExpr.BinaryOp.RightUnsignedShift; } )
   	right = AdditiveExpression()
-  	{ ret = enRun(BinaryExpr.make(ret, op, right)); }
+  	{ ret = dress(BinaryExpr.make(ret, op, right)); }
   )*
   { return ret; }
 }
@@ -2443,7 +2443,7 @@ STree<? extends Expr.State> AdditiveExpression():
   	( "+" { op = BinaryExpr.BinaryOp.Plus; } |
   	  "-" { op = BinaryExpr.BinaryOp.Minus; } )
   	right = MultiplicativeExpression()
-  	{ ret = enRun(BinaryExpr.make(ret, op, right)); }
+  	{ ret = dress(BinaryExpr.make(ret, op, right)); }
   )*
   { return ret; }
 }
@@ -2463,7 +2463,7 @@ STree<? extends Expr.State> MultiplicativeExpression():
   	  "/" { op = BinaryExpr.BinaryOp.Divide; } |
   	  "%" { op = BinaryExpr.BinaryOp.Remainder; } )
   	right = UnaryExpression()
-  	{ ret = enRun(BinaryExpr.make(ret, op, right)); }
+  	{ ret = dress(BinaryExpr.make(ret, op, right)); }
   )*
   { return ret; }
 }
@@ -2481,7 +2481,7 @@ STree<? extends Expr.State> UnaryExpression():
     ( "+" { op = UnaryExpr.UnaryOp.Positive; } |
       "-" { op = UnaryExpr.UnaryOp.Negative; } )
     ret = UnaryExpression()
-    { ret = enRun(UnaryExpr.make(op, ret)); }
+    { ret = dress(UnaryExpr.make(op, ret)); }
   |
     ret = UnaryExpressionNotPlusMinus()
   )
@@ -2498,7 +2498,7 @@ STree<? extends Expr.State> PrefixExpression():
   ( "++" { op = UnaryExpr.UnaryOp.PreIncrement; } |
     "--" { op = UnaryExpr.UnaryOp.PreDecrement; } )
   ret = UnaryExpression()
-  { return enRun(UnaryExpr.make(op, ret)); }
+  { return dress(UnaryExpr.make(op, ret)); }
 }
 
 STree<? extends Expr.State> UnaryExpressionNotPlusMinus():
@@ -2512,7 +2512,7 @@ STree<? extends Expr.State> UnaryExpressionNotPlusMinus():
 	( "~" { op = UnaryExpr.UnaryOp.Inverse; } |
 	  "!" { op = UnaryExpr.UnaryOp.Not; } )
 	ret = UnaryExpression()
-	{ ret = enRun(UnaryExpr.make(op, ret)); }
+	{ ret = dress(UnaryExpr.make(op, ret)); }
   |
     LOOKAHEAD(CastExpression())
     ret = CastExpression()
@@ -2534,7 +2534,7 @@ STree<? extends Expr.State> PostfixExpression():
     { lateRun(); }
     ( "++" { op = UnaryExpr.UnaryOp.PostIncrement; } |
       "--" { op = UnaryExpr.UnaryOp.PostDecrement; } )
-    { ret = enRun(UnaryExpr.make(op, ret)); }
+    { ret = dress(UnaryExpr.make(op, ret)); }
   ]
   { return ret; }
 }
@@ -2551,12 +2551,12 @@ STree<? extends Expr.State> CastExpression():
     LOOKAHEAD( "(" PrimitiveCastType() ")" )
     { run(); }
     "(" type = PrimitiveCastType() ")" ret = UnaryExpression()
-    { ret = enRun(CastExpr.make(type, ret)); }
+    { ret = dress(CastExpr.make(type, ret)); }
   |
     { run(); }
     "(" type = ReferenceCastType() ")"
     ret = UnaryExpressionNotPlusMinus()
-    { ret = enRun(CastExpr.make(type, ret)); }
+    { ret = dress(CastExpr.make(type, ret)); }
   )
   { return ret; }
 }
@@ -2589,7 +2589,7 @@ STree<? extends Type.State> ReferenceCastType():
       { run(); } annotations = Annotations() type = ReferenceType(annotations)
       { types = append(types, type); }
     )+
-    { type = enRun(IntersectionType.make(types)); }
+    { type = dress(IntersectionType.make(types)); }
   ]
   { return type; }
 }
@@ -2619,7 +2619,7 @@ STree<? extends Expr.State> Literal():
   |
     "null"  { ret = LiteralExpr.make(Void.class, token.image); }
   )
-  { return enRun(ret); }
+  { return dress(ret); }
 }
 
 STree<? extends Expr.State> PrimaryExpression():
@@ -2659,9 +2659,9 @@ STree<? extends Expr.State> PrimaryPrefix():
   (
     ret = Literal()
   |
-    { run(); } "this" { ret = enRun(ThisExpr.make(none())); }
+    { run(); } "this" { ret = dress(ThisExpr.make(none())); }
   |
-    { run(); } "super" { ret = enRun(SuperExpr.make(none())); }
+    { run(); } "super" { ret = dress(SuperExpr.make(none())); }
 	(
 	  { lateRun(); }
 	  "."
@@ -2679,7 +2679,7 @@ STree<? extends Expr.State> PrimaryPrefix():
     ret = AllocationExpression(null)
   |
     LOOKAHEAD( ResultType() "." "class" )
-    { run(); } type = ResultType() "." "class" { ret = enRun(ClassExpr.make(type)); }
+    { run(); } type = ResultType() "." "class" { ret = dress(ClassExpr.make(type)); }
   |
     LOOKAHEAD (ResultType() "::" )
     { run(); }
@@ -2711,7 +2711,7 @@ STree<? extends Expr.State> PrimaryPrefix():
       params = FormalParameterList() ")" "->" ret = LambdaBody(params, true)
     |
       ret = Expression() ")"
-      { ret = enRun(ParenthesizedExpr.make(ret)); }
+      { ret = dress(ParenthesizedExpr.make(ret)); }
     )
   )
   { return ret; }
@@ -2728,7 +2728,7 @@ STree<? extends Expr.State> PrimarySuffix(STree<? extends Expr.State> scope):
     LOOKAHEAD(2)
     ret = PrimarySuffixWithoutSuper(scope)
   |
-    "." "super" { ret = enRun(SuperExpr.make(optionOf(scope))); }
+    "." "super" { ret = dress(SuperExpr.make(optionOf(scope))); }
   |
     ret = MethodReferenceSuffix(scope)
   )
@@ -2746,7 +2746,7 @@ STree<? extends Expr.State> PrimarySuffixWithoutSuper(STree<? extends Expr.State
   (
     "."
     (
-      "this" { ret = enRun(ThisExpr.make(optionOf(scope))); }
+      "this" { ret = dress(ThisExpr.make(optionOf(scope))); }
     |
       ret = AllocationExpression(scope)
     |
@@ -2756,7 +2756,7 @@ STree<? extends Expr.State> PrimarySuffixWithoutSuper(STree<? extends Expr.State
       ret = FieldAccess(scope)
     )
   |
-    "[" ret = Expression() "]" { ret = enRun(ArrayAccessExpr.make(scope, ret)); }
+    "[" ret = Expression() "]" { ret = dress(ArrayAccessExpr.make(scope, ret)); }
   )
 
   { return ret; }
@@ -2770,7 +2770,7 @@ STree<? extends Expr.State> FieldAccess(STree<? extends Expr.State> scope):
   // Run is started before scope
 
   name = Name()
-  { return enRun(FieldAccessExpr.make(optionOf(scope), name)); }
+  { return dress(FieldAccessExpr.make(optionOf(scope), name)); }
 }
 
 STree<? extends Expr.State> MethodInvocation(STree<? extends Expr.State> scope):
@@ -2785,7 +2785,7 @@ STree<? extends Expr.State> MethodInvocation(STree<? extends Expr.State> scope):
 
   [ typeArgs = TypeArguments() ] name = Name()
   args = Arguments()
-  { return enRun(MethodInvocationExpr.make(optionOf(scope), ensureNotNull(typeArgs), name, args)); }
+  { return dress(MethodInvocationExpr.make(optionOf(scope), ensureNotNull(typeArgs), name, args)); }
 }
 
 STree<SNodeListState> Arguments():
@@ -2818,7 +2818,7 @@ STree<? extends Expr.State> MethodReferenceSuffix(STree<? extends Expr.State> sc
 
   "::" [typeArgs = TypeArguments() ]
   ( name = Name() | "new" { name = Name.make("new"); } )
-  { ret = enRun(MethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name)); }
+  { ret = dress(MethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name)); }
   { return ret; }
 }
 
@@ -2849,7 +2849,7 @@ STree<? extends Expr.State> AllocationExpression(STree<? extends Expr.State> sco
 	  ret = ArrayCreationExpr(type)
 	|
 	  args = Arguments() [ LOOKAHEAD( "{" ) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
-      { ret = enRun(ObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (STree<QualifiedType.State>) type, args, optionOf(anonymousBody))); }
+      { ret = dress(ObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (STree<QualifiedType.State>) type, args, optionOf(anonymousBody))); }
     )
   )
   { return ret; }
@@ -2868,11 +2868,11 @@ STree<? extends Expr.State> ArrayCreationExpr(STree<? extends Type.State> compon
     LOOKAHEAD( Annotations() "[" Expression() "]" )
     arrayDimExprs = ArrayDimExprsMandatory()
     arrayDims = ArrayDims()
-    { return enRun(ArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none())); }
+    { return dress(ArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none())); }
   |
     arrayDims = ArrayDimsMandatory()
     initializer = ArrayInitializer()
-    { return enRun(ArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer))); }
+    { return dress(ArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer))); }
   )
 }
 
@@ -2887,7 +2887,7 @@ STree<SNodeListState> ArrayDimExprsMandatory():
     LOOKAHEAD( Annotations() "[" Expression() "]" )
     { run(); }
     annotations = Annotations() "[" expr = Expression() "]"
-    { arrayDimExprs = append(arrayDimExprs, enRun(ArrayDimExpr.make(annotations, expr))); }
+    { arrayDimExprs = append(arrayDimExprs, dress(ArrayDimExpr.make(annotations, expr))); }
   )+
   { return arrayDimExprs; }
 }
@@ -2902,7 +2902,7 @@ STree<SNodeListState> ArrayDimsMandatory():
     LOOKAHEAD( Annotations() "[" "]" )
     { run(); }
     annotations = Annotations() "[" "]"
-    { arrayDims = append(arrayDims, enRun(ArrayDim.make(annotations))); }
+    { arrayDims = append(arrayDims, dress(ArrayDim.make(annotations))); }
   )+
   { return arrayDims; }
 }
@@ -2961,7 +2961,7 @@ STree<AssertStmt.State> AssertStatement():
 {
   { run(); }
   "assert" check = Expression() [ ":" msg = Expression() ] ";"
-  { return enRun(AssertStmt.make(check, optionOf(msg)));  }
+  { return dress(AssertStmt.make(check, optionOf(msg)));  }
 }
 
 STree<LabeledStmt.State> LabeledStatement():
@@ -2972,7 +2972,7 @@ STree<LabeledStmt.State> LabeledStatement():
 {
   { run(); }
   label = Name() ":" stmt = Statement()
-  { return enRun(LabeledStmt.make(label, stmt)); }
+  { return dress(LabeledStmt.make(label, stmt)); }
 }
 
 STree<BlockStmt.State> Block():
@@ -2982,7 +2982,7 @@ STree<BlockStmt.State> Block():
 {
   { run(); }
   "{" stmts = Statements() "}"
-  { return enRun(BlockStmt.make(ensureNotNull(stmts))); }
+  { return dress(BlockStmt.make(ensureNotNull(stmts))); }
 }
 
 /*
@@ -3000,12 +3000,12 @@ STree<? extends Stmt.State> BlockStatement():
     LOOKAHEAD( Modifiers() ("class" | "interface") )
     { run(); }
     { run(); } modifiers = Modifiers() typeDecl = ClassOrInterfaceDecl(modifiers)
-    { ret = enRun(TypeDeclarationStmt.make(typeDecl)); }
+    { ret = dress(TypeDeclarationStmt.make(typeDecl)); }
   |
     LOOKAHEAD( VariableDeclExpression() )
     { run(); }
     expr = VariableDeclExpression() ";"
-    { ret = enRun(ExpressionStmt.make(expr)); }
+    { ret = dress(ExpressionStmt.make(expr)); }
   |
     ret = Statement()
   )
@@ -3020,7 +3020,7 @@ STree<VariableDeclarationExpr.State> VariableDeclExpression():
 {
   { run(); }
   { run(); } modifiers = Modifiers() variableDecl = VariableDecl(modifiers)
-  { return enRun(VariableDeclarationExpr.make(variableDecl)); }
+  { return dress(VariableDeclarationExpr.make(variableDecl)); }
 }
 
 STree<EmptyStmt.State> EmptyStatement():
@@ -3028,7 +3028,7 @@ STree<EmptyStmt.State> EmptyStatement():
 {
   { run(); }
   ";"
-  { return enRun(EmptyStmt.make()); }
+  { return dress(EmptyStmt.make()); }
 }
 
 STree<ExpressionStmt.State> StatementExpression():
@@ -3045,17 +3045,17 @@ STree<ExpressionStmt.State> StatementExpression():
     expr = PrimaryExpression()
     [
       { lateRun(); } "++"
-      { expr = enRun(UnaryExpr.make(UnaryExpr.UnaryOp.PostIncrement, expr));  }
+      { expr = dress(UnaryExpr.make(UnaryExpr.UnaryOp.PostIncrement, expr));  }
     |
       { lateRun(); } "--"
-      { expr = enRun(UnaryExpr.make(UnaryExpr.UnaryOp.PostDecrement, expr));  }
+      { expr = dress(UnaryExpr.make(UnaryExpr.UnaryOp.PostDecrement, expr));  }
     |
       { lateRun(); } op = AssignmentOperator() value = Expression()
-      { expr = enRun(AssignExpr.make(expr, op, value)); }
+      { expr = dress(AssignExpr.make(expr, op, value)); }
     ]
   )
   ";"
-  { return enRun(ExpressionStmt.make(expr)); }
+  { return dress(ExpressionStmt.make(expr)); }
 }
 
 STree<SwitchStmt.State> SwitchStatement():
@@ -3069,7 +3069,7 @@ STree<SwitchStmt.State> SwitchStatement():
   "switch" "(" selector = Expression() ")" "{"
   ( entry = SwitchEntry() { entries = append(entries, entry); } )*
   "}"
-  { return enRun(SwitchStmt.make(selector, entries)); }
+  { return dress(SwitchStmt.make(selector, entries)); }
 }
 
 STree<SwitchCase.State> SwitchEntry():
@@ -3085,7 +3085,7 @@ STree<SwitchCase.State> SwitchEntry():
     "default"
   )
   ":" stmts = Statements()
-  { return enRun(SwitchCase.make(optionOf(label), ensureNotNull(stmts))); }
+  { return dress(SwitchCase.make(optionOf(label), ensureNotNull(stmts))); }
 }
 
 STree<IfStmt.State> IfStatement():
@@ -3102,7 +3102,7 @@ STree<IfStmt.State> IfStatement():
 {
   { run(); }
   "if" "(" condition = Expression() ")" thenStmt = Statement() [ LOOKAHEAD(1) "else" elseStmt = Statement() ]
-  { return enRun(IfStmt.make(condition, thenStmt, optionOf(elseStmt))); }
+  { return dress(IfStmt.make(condition, thenStmt, optionOf(elseStmt))); }
 }
 
 STree<WhileStmt.State> WhileStatement():
@@ -3113,7 +3113,7 @@ STree<WhileStmt.State> WhileStatement():
 {
   { run(); }
   "while" "(" condition = Expression() ")" body = Statement()
-  { return enRun(WhileStmt.make(condition, body)); }
+  { return dress(WhileStmt.make(condition, body)); }
 }
 
 STree<DoStmt.State> DoStatement():
@@ -3124,7 +3124,7 @@ STree<DoStmt.State> DoStatement():
 {
   { run(); }
   "do" body = Statement() "while" "(" condition = Expression() ")" ";"
-  { return enRun(DoStmt.make(body, condition)); }
+  { return dress(DoStmt.make(body, condition)); }
 }
 
 STree<? extends Stmt.State> ForStatement():
@@ -3146,8 +3146,8 @@ STree<? extends Stmt.State> ForStatement():
   )
   ")" body = Statement()
   {
-  	if (varExpr != null) return enRun(ForeachStmt.make(varExpr, expr, body));
-    else return enRun(ForStmt.make(init, expr, update, body));
+  	if (varExpr != null) return dress(ForeachStmt.make(varExpr, expr, body));
+    else return dress(ForStmt.make(init, expr, update, body));
   }
 }
 
@@ -3192,7 +3192,7 @@ STree<BreakStmt.State> BreakStatement():
 {
   { run(); }
   "break" [ id = Name() ] ";"
-  { return enRun(BreakStmt.make(optionOf(id))); }
+  { return dress(BreakStmt.make(optionOf(id))); }
 }
 
 STree<ContinueStmt.State> ContinueStatement():
@@ -3202,7 +3202,7 @@ STree<ContinueStmt.State> ContinueStatement():
 {
   { run(); }
   "continue" [ id = Name() ] ";"
-  { return enRun(ContinueStmt.make(optionOf(id))); }
+  { return dress(ContinueStmt.make(optionOf(id))); }
 }
 
 STree<ReturnStmt.State> ReturnStatement():
@@ -3212,7 +3212,7 @@ STree<ReturnStmt.State> ReturnStatement():
 {
   { run(); }
   "return" [ expr = Expression() ] ";"
-  { return enRun(ReturnStmt.make(optionOf(expr))); }
+  { return dress(ReturnStmt.make(optionOf(expr))); }
 }
 
 STree<ThrowStmt.State> ThrowStatement():
@@ -3222,7 +3222,7 @@ STree<ThrowStmt.State> ThrowStatement():
 {
   { run(); }
   "throw" expr = Expression() ";"
-  { return enRun(ThrowStmt.make(expr)); }
+  { return dress(ThrowStmt.make(expr)); }
 }
 
 STree<SynchronizedStmt.State> SynchronizedStatement():
@@ -3233,7 +3233,7 @@ STree<SynchronizedStmt.State> SynchronizedStatement():
 {
   { run(); }
   "synchronized" "(" expr = Expression() ")" block = Block()
-  { return enRun(SynchronizedStmt.make(expr, block)); }
+  { return dress(SynchronizedStmt.make(expr, block)); }
 }
 
 STree<TryStmt.State> TryStatement():
@@ -3261,7 +3261,7 @@ STree<TryStmt.State> TryStatement():
       "finally" finallyBlock = Block()
     )
   )
-  { return enRun(TryStmt.make(ensureNotNull(resources), tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock))); }
+  { return dress(TryStmt.make(ensureNotNull(resources), tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock))); }
 }
 
 STree<SNodeListState> CatchClauses():
@@ -3284,7 +3284,7 @@ STree<CatchClause.State> CatchClause():
 {
   { run(); }
   "catch" "(" param = CatchFormalParameter() ")" catchBlock = Block()
-  { return enRun(CatchClause.make(param, catchBlock)); }
+  { return dress(CatchClause.make(param, catchBlock)); }
 }
 
 STree<FormalParameter.State> CatchFormalParameter():
@@ -3303,11 +3303,11 @@ STree<FormalParameter.State> CatchFormalParameter():
     LOOKAHEAD("|")
     { lateRun(); }
     ( "|" exceptType = AnnotatedQualifiedType() { exceptTypes = append(exceptTypes, exceptType); } )+
-    { exceptType = enRun(UnionType.make(exceptTypes)); }
+    { exceptType = dress(UnionType.make(exceptTypes)); }
   ]
 
   exceptId = VariableDeclaratorId()
-  { return enRun(FormalParameter.make(modifiers, exceptType, false, exceptId)); }
+  { return dress(FormalParameter.make(modifiers, exceptType, false, exceptId)); }
 }
 
 STree<SNodeListState> ResourceSpecification() :
@@ -3389,7 +3389,7 @@ STree<NormalAnnotationExpr.State> NormalAnnotation():
 {
   { run(); }
   "@" name = QualifiedName() "(" [ pairs = MemberValuePairs() ] ")"
-  { return enRun(NormalAnnotationExpr.make(name, ensureNotNull(pairs))); }
+  { return dress(NormalAnnotationExpr.make(name, ensureNotNull(pairs))); }
 }
 
 STree<MarkerAnnotationExpr.State> MarkerAnnotation():
@@ -3399,7 +3399,7 @@ STree<MarkerAnnotationExpr.State> MarkerAnnotation():
 {
   { run(); }
   "@" name = QualifiedName()
-  { return enRun(MarkerAnnotationExpr.make(name)); }
+  { return dress(MarkerAnnotationExpr.make(name)); }
 }
 
 STree<SingleMemberAnnotationExpr.State> SingleMemberAnnotation():
@@ -3410,7 +3410,7 @@ STree<SingleMemberAnnotationExpr.State> SingleMemberAnnotation():
 {
   { run(); }
   "@" name = QualifiedName() "(" memberVal = MemberValue() ")"
-  { return enRun(SingleMemberAnnotationExpr.make(name, memberVal)); }
+  { return dress(SingleMemberAnnotationExpr.make(name, memberVal)); }
 }
 
 STree<SNodeListState> MemberValuePairs():
@@ -3432,7 +3432,7 @@ STree<MemberValuePair.State> MemberValuePair():
 {
   { run(); }
   name = Name() "=" value = MemberValue()
-  { return enRun(MemberValuePair.make(name, value)); }
+  { return dress(MemberValuePair.make(name, value)); }
 }
 
 STree<? extends Expr.State> MemberValue():
@@ -3465,5 +3465,5 @@ STree<? extends Expr.State> MemberValueArrayInitializer():
   ]
   [ "," { trailingComma = true; } ]
   "}"
-  { return enRun(ArrayInitializerExpr.make(ret, trailingComma)); }
+  { return dress(ArrayInitializerExpr.make(ret, trailingComma)); }
 }

@@ -123,7 +123,7 @@ abstract class ParserBase {
 		return runStack.pop();
 	}
 
-	protected <S extends STreeState> STree<S> enRun(STree<S> tree) {
+	protected <S extends STreeState> STree<S> dress(STree<S> tree) {
 		if (!configuration.preserveWhitespaces) return tree;
 
 		try {
@@ -132,7 +132,7 @@ abstract class ParserBase {
 			if (tree == null) return null;
 
 			final LexicalShape shape = tree.state.shape();
-			return doEnRun(tree, shape, tokens);
+			return doDress(tree, shape, tokens);
 
 		} catch (EmptyStackException e) {
 			debugFailedPopTokens();
@@ -143,7 +143,7 @@ abstract class ParserBase {
 		}
 	}
 
-	private <S extends STreeState> STree<S> doEnRun(STree<S> tree, LexicalShape shape,
+	private <S extends STreeState> STree<S> doDress(STree<S> tree, LexicalShape shape,
 	                                                IndexedList<WTokenRun> tokens) {
 		try {
 			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
