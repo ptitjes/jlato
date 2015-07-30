@@ -75,12 +75,20 @@ public class DressingBuilder<S extends STreeState> {
 
 	public void setTrailing(WTokenRun tokens) {
 		final RunStack childStack = descendantStack.peek();
-		childStack.tree = childStack.tree.withTrailing(tokens);
+
+		WDressing dressing = childStack.tree.dressing;
+		if (dressing == null) dressing = new WDressing();
+
+		childStack.tree = childStack.tree.withDressing(dressing.withTrailing(tokens));
 	}
 
 	public void setLeading(WTokenRun tokens) {
 		final RunStack childStack = descendantStack.peek();
-		childStack.tree = childStack.tree.withLeading(tokens);
+
+		WDressing dressing = childStack.tree.dressing;
+		if (dressing == null) dressing = new WDressing();
+
+		childStack.tree = childStack.tree.withDressing(dressing.withLeading(tokens));
 	}
 
 	private class RunStack {
@@ -102,7 +110,7 @@ public class DressingBuilder<S extends STreeState> {
 			final WRunRun run = runBuilder.build();
 
 			if (runStack.isEmpty()) {
-				if (tree.run == null && run != null) tree = tree.withRun(run);
+				if (tree.dressing == null && run != null) tree = tree.withDressing(new WDressing(run));
 			} else addSubRun(run);
 		}
 

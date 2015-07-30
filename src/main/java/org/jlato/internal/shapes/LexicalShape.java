@@ -52,7 +52,7 @@ public abstract class LexicalShape {
 	public abstract void dressLeading(WTokenRun tokens, DressingBuilder<?> builder);
 
 	public void render(STree tree, Printer printer) {
-		render(tree, tree.run, printer);
+		render(tree, tree.dressing == null ? null : tree.dressing.run, printer);
 	}
 
 	public abstract void render(STree tree, WRunRun run, Printer printer);

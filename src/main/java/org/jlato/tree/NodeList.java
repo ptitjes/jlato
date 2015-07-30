@@ -202,7 +202,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		final SNodeListState newState = state.withChildren(trees.prepend(treeOf(element)));
 		STree newTree = tree.withState(newState);
 
-		WRunRun run = tree.run;
+		WRunRun run = tree.dressing == null ? null : tree.dressing.run;
 		if (run != null) newTree = newTree.withRun(insertAt(run, 0, false));
 
 		return (NodeList<T>) location.withTree(newTree).facade;
@@ -218,7 +218,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		final SNodeListState newState = state.withChildren(trees.append(treeOf(element)));
 		STree newTree = tree.withState(newState);
 
-		WRunRun run = tree.run;
+		WRunRun run = tree.dressing == null ? null : tree.dressing.run;
 		if (run != null) newTree = newTree.withRun(insertAt(run, trees.size(), true));
 
 		return (NodeList<T>) location.withTree(newTree).facade;
@@ -246,7 +246,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		final SNodeListState newState = state.withChildren(insertAt(trees, index, treeOf(element)));
 		STree newTree = tree.withState(newState);
 
-		WRunRun run = tree.run;
+		WRunRun run = tree.dressing == null ? null : tree.dressing.run;
 		if (run != null) newTree = newTree.withRun(insertAt(run, index, index == trees.size()));
 
 		return (NodeList<T>) location.withTree(newTree).facade;

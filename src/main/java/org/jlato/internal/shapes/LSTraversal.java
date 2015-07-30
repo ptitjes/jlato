@@ -41,7 +41,7 @@ public class LSTraversal extends LSDecorated {
 	@Override
 	public boolean isDefined(STree tree) {
 		final STree child = traverse(tree);
-		return child != null && (child.run != null || shape.isDefined(child));
+		return child != null && (child.dressing != null || shape.isDefined(child));
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class LSTraversal extends LSDecorated {
 		final STree child = traverse(tree);
 		if (child == null) return;
 
-		if (child.run != null) shape.render(child, printer);
+		if (child.dressing != null) shape.render(child, printer);
 		else shape.render(child, run, printer);
 	}
 }

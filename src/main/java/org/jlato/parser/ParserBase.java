@@ -179,7 +179,11 @@ abstract class ParserBase {
 		// assert tokens.size() == 2;
 		final WTokenRun prolog = tokens.get(0);
 		final WTokenRun epilog = tokens.get(1);
-		return tree.withLeading(prolog).withTrailing(epilog);
+
+		WDressing dressing = tree.dressing;
+		if (dressing == null) dressing = new WDressing();
+
+		return tree.withDressing(dressing.withLeading(prolog).withTrailing(epilog));
 	}
 
 	// TODO This is really dirty and temporary until the parser parses STrees directly
