@@ -23,6 +23,7 @@ import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.WDressing;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
@@ -202,8 +203,9 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		final SNodeListState newState = state.withChildren(trees.prepend(treeOf(element)));
 		STree newTree = tree.withState(newState);
 
-		WRunRun run = tree.dressing == null ? null : tree.dressing.run;
-		if (run != null) newTree = newTree.withRun(insertAt(run, 0, false));
+		WDressing dressing = tree.dressing == null ? null : tree.dressing;
+		if (dressing != null && dressing.run != null)
+			newTree = newTree.withDressing(dressing.withRun(insertAt(dressing.run, 0, false)));
 
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
@@ -218,8 +220,9 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		final SNodeListState newState = state.withChildren(trees.append(treeOf(element)));
 		STree newTree = tree.withState(newState);
 
-		WRunRun run = tree.dressing == null ? null : tree.dressing.run;
-		if (run != null) newTree = newTree.withRun(insertAt(run, trees.size(), true));
+		WDressing dressing = tree.dressing == null ? null : tree.dressing;
+		if (dressing != null && dressing.run != null)
+			newTree = newTree.withDressing(dressing.withRun(insertAt(dressing.run, trees.size(), true)));
 
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
@@ -246,8 +249,9 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		final SNodeListState newState = state.withChildren(insertAt(trees, index, treeOf(element)));
 		STree newTree = tree.withState(newState);
 
-		WRunRun run = tree.dressing == null ? null : tree.dressing.run;
-		if (run != null) newTree = newTree.withRun(insertAt(run, index, index == trees.size()));
+		WDressing dressing = tree.dressing == null ? null : tree.dressing;
+		if (dressing != null && dressing.run != null)
+			newTree = newTree.withDressing(dressing.withRun(insertAt(dressing.run, index, index == trees.size())));
 
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}

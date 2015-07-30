@@ -48,10 +48,6 @@ public class STree<S extends STreeState> {
 		return new STree<S>(state, dressing);
 	}
 
-	public STree<S> withRun(WRunRun run) {
-		return new STree<S>(state, dressing.withRun(run));
-	}
-
 	public STree<S> withDressing(WDressing dressing) {
 		return new STree<S>(state, dressing);
 	}
