@@ -23,6 +23,7 @@ import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
+import org.jlato.printer.SpacingConstraint;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeOption;
@@ -31,6 +32,7 @@ import org.jlato.tree.expr.Expr;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> implements Stmt {
 
@@ -144,7 +146,7 @@ public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> imp
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Return),
-			child(EXPR, when(some(), element())),
+			child(EXPR, when(some(), element().withSpacingBefore(space()))),
 			token(LToken.SemiColon)
 	);
 }

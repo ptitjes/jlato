@@ -1,0 +1,1 @@
+return (null == targetRef) ? Objects::isNull : object -> targetRef.equals(object);

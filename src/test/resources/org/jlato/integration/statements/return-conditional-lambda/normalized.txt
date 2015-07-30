@@ -1,0 +1,70 @@
+{
+  class: org.jlato.tree.stmt.ReturnStmt,
+  expr: {
+    class: org.jlato.tree.expr.ConditionalExpr,
+    condition: {
+      class: org.jlato.tree.expr.ParenthesizedExpr,
+      inner: {
+        class: org.jlato.tree.expr.BinaryExpr,
+        left: {
+          class: org.jlato.tree.expr.LiteralExpr,
+          literalClass: java.lang.Void,
+          literalString: null,
+        },
+        op: ==,
+        right: {
+          class: org.jlato.tree.name.Name,
+          id: targetRef,
+        },
+      },
+    },
+    elseExpr: {
+      class: org.jlato.tree.expr.LambdaExpr,
+      body: {
+        class: org.jlato.tree.expr.MethodInvocationExpr,
+        args: [
+          object,
+        ],
+        name: equals,
+        scope: targetRef,
+        typeArgs: [
+        ],
+      },
+      hasParens: false,
+      params: [
+        {
+          class: org.jlato.tree.decl.FormalParameter,
+          id: {
+            class: org.jlato.tree.decl.VariableDeclaratorId,
+            dims: [
+            ],
+            name: object,
+          },
+          isVarArgs: false,
+          modifiers: [
+          ],
+          type: {
+            class: org.jlato.tree.type.UnknownType,
+          },
+        },
+      ],
+    },
+    thenExpr: {
+      class: org.jlato.tree.expr.MethodReferenceExpr,
+      name: isNull,
+      scope: {
+        class: org.jlato.tree.expr.TypeExpr,
+        type: {
+          class: org.jlato.tree.type.QualifiedType,
+          annotations: [
+          ],
+          name: Objects,
+          scope: null,
+          typeArgs: null,
+        },
+      },
+      typeArgs: [
+      ],
+    },
+  },
+}

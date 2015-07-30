@@ -31,6 +31,7 @@ import org.jlato.tree.name.Name;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implements Stmt {
 
@@ -144,7 +145,7 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 
 	public final static LexicalShape shape = composite(
 			token(LToken.Break),
-			child(ID, when(some(), element())),
+			child(ID, when(some(), element().withSpacingBefore(space()))),
 			token(LToken.SemiColon)
 	);
 }
