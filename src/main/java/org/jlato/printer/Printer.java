@@ -310,11 +310,13 @@ public class Printer {
 		// TODO Implement JavaDoc comment formatting
 		writer.append(image);
 		afterAlpha = false;
+		needsIndentation = false;
 	}
 
 	private void appendComment(String image) {
 		writer.append(image);
 		afterAlpha = false;
+		needsIndentation = false;
 	}
 
 	private void appendWhiteSpace(String string) {
