@@ -37,8 +37,6 @@ public abstract class Pattern<T> implements TypeSafeMatcher<T>, TypeSafeBuilder<
 		return build(Substitution.empty());
 	}
 
-	public abstract T build(Substitution substitution);
-
 	public Pattern<T> or(final Pattern<T> other) {
 		return new DecoratedPattern<T>(this) {
 			@Override
