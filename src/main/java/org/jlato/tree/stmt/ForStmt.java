@@ -278,7 +278,7 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 	};
 
 	public final static LexicalShape shape = composite(
-			token(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
+			keyword(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
 			child(INIT, list(token(LToken.Comma).withSpacingAfter(space()))),
 			token(LToken.SemiColon).withSpacingAfter(space()),
 			child(COMPARE),

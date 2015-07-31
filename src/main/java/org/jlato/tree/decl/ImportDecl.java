@@ -32,6 +32,7 @@ import static org.jlato.internal.shapes.LSCondition.data;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterImports;
 import static org.jlato.printer.SpacingConstraint.newLine;
+import static org.jlato.printer.SpacingConstraint.space;
 import static org.jlato.printer.SpacingConstraint.spacing;
 
 public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> implements Tree {
@@ -215,8 +216,8 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 	};
 
 	public final static LexicalShape shape = composite(
-			token(LToken.Import),
-			when(data(STATIC), token(LToken.Static)),
+			keyword(LToken.Import),
+			when(data(STATIC), keyword(LToken.Static)),
 			child(NAME),
 			when(data(ON_DEMAND), composite(token(LToken.Dot), token(LToken.Times))),
 			token(LToken.SemiColon)

@@ -187,7 +187,7 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 	};
 
 	public final static LexicalShape shape = composite(
-			token(LToken.Catch).withSpacingBefore(space()),
+			keyword(LToken.Catch),
 			token(LToken.ParenthesisLeft).withSpacingBefore(space()),
 			child(EXCEPT),
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),

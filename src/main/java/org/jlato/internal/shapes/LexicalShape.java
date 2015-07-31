@@ -24,9 +24,7 @@ import org.jlato.printer.IndentationConstraint;
 import org.jlato.printer.Printer;
 import org.jlato.printer.SpacingConstraint;
 
-import java.util.Iterator;
-
-import static org.jlato.internal.shapes.LSCondition.*;
+import static org.jlato.printer.SpacingConstraint.space;
 
 /**
  * @author Didier Villevalois
@@ -99,6 +97,14 @@ public abstract class LexicalShape {
 
 	public static LSToken token(LSToken.Provider tokenProvider) {
 		return new LSToken(tokenProvider);
+	}
+
+	public static LexicalShape keyword(LToken token) {
+		return token(token).withSpacing(space(), space());
+	}
+
+	public static LexicalShape keyword(LSToken.Provider tokenProvider) {
+		return token(tokenProvider).withSpacing(space(), space());
 	}
 
 	public static LexicalShape element() {

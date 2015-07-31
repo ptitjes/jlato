@@ -47,7 +47,6 @@ public class LToken {
 	public static final LToken Class = new LToken(ParserImplConstants.CLASS, "class");
 	public static final LToken Interface = new LToken(ParserImplConstants.INTERFACE, "interface");
 	public static final LToken Enum = new LToken(ParserImplConstants.ENUM, "enum");
-	public static final LToken AnnotationType = new LToken(ParserImplConstants.INTERFACE, "@interface"); // FIX
 
 	public static final LToken This = new LToken(ParserImplConstants.THIS, "this");
 	public static final LToken Super = new LToken(ParserImplConstants.SUPER, "super");
@@ -141,8 +140,6 @@ public class LToken {
 	public static final LToken BraceRight = new LToken(ParserImplConstants.RBRACE, "}");
 	public static final LToken ParenthesisLeft = new LToken(ParserImplConstants.LPAREN, "(");
 	public static final LToken ParenthesisRight = new LToken(ParserImplConstants.RPAREN, ")");
-
-	public static final LToken EOF = new LToken(ParserImplConstants.EOF, "");
 
 	public final int kind;
 	public final String string;

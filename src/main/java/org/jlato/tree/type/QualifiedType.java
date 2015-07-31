@@ -286,19 +286,19 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 	);
 
 	public static final LexicalShape extendsClauseShape = list(
-			token(LToken.Extends).withSpacing(space(), space()),
+			keyword(LToken.Extends),
 			token(LToken.Comma).withSpacingAfter(space()),
 			null
 	);
 
 	public static final LexicalShape implementsClauseShape = list(
-			token(LToken.Implements).withSpacing(space(), space()),
+			keyword(LToken.Implements),
 			token(LToken.Comma).withSpacingAfter(space()),
 			null
 	);
 
 	public static final LexicalShape throwsClauseShape = list(
-			token(LToken.Throws).withSpacingBefore(space()),
+			keyword(LToken.Throws),
 			token(LToken.Comma).withSpacingAfter(space()),
 			null
 	);

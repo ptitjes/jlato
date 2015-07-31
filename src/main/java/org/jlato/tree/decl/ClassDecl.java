@@ -377,11 +377,11 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
-			token(LToken.Class),
+			keyword(LToken.Class),
 			child(NAME),
 			child(TYPE_PARAMS, TypeParameter.listShape),
 			child(EXTENDS_CLAUSE, when(some(),
-					composite(token(LToken.Extends).withSpacing(space(), space()), element())
+					composite(keyword(LToken.Extends), element())
 			)),
 			child(IMPLEMENTS_CLAUSE, QualifiedType.implementsClauseShape),
 			child(MEMBERS, MemberDecl.bodyShape)

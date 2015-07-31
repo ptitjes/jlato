@@ -333,7 +333,7 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
-			token(LToken.Interface),
+			keyword(LToken.Interface),
 			child(NAME),
 			child(TYPE_PARAMS, TypeParameter.listShape),
 			child(EXTENDS_CLAUSE, QualifiedType.extendsClauseShape),

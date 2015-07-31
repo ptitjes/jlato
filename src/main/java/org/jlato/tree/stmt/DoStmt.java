@@ -187,9 +187,9 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 	};
 
 	public final static LexicalShape shape = composite(
-			token(LToken.Do).withSpacingAfter(space()),
+			keyword(LToken.Do),
 			child(BODY),
-			token(LToken.While).withSpacingBefore(space()),
+			keyword(LToken.While),
 			token(LToken.ParenthesisLeft).withSpacingBefore(space()),
 			child(CONDITION),
 			token(LToken.ParenthesisRight),

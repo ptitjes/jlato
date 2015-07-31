@@ -187,7 +187,7 @@ public class InstanceOfExpr extends TreeBase<InstanceOfExpr.State, Expr, Instanc
 
 	public final static LexicalShape shape = composite(
 			child(EXPR),
-			token(LToken.InstanceOf),
+			keyword(LToken.InstanceOf),
 			child(TYPE)
 	);
 }

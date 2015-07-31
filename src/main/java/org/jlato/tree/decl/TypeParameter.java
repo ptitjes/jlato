@@ -235,7 +235,7 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 	};
 
 	public static final LexicalShape boundsShape = list(
-			token(LToken.Extends).withSpacingBefore(space()),
+			keyword(LToken.Extends),
 			token(LToken.BinAnd).withSpacing(space(), space()),
 			none()
 	);

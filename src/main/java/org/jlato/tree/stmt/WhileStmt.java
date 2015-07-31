@@ -187,7 +187,8 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 	};
 
 	public final static LexicalShape shape = composite(
-			token(LToken.While), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
+			keyword(LToken.While),
+			token(LToken.ParenthesisLeft).withSpacingBefore(space()),
 			child(CONDITION),
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			child(BODY)

@@ -233,7 +233,7 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 	};
 
 	public final static LexicalShape shape = composite(
-			token(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
+			keyword(LToken.For), token(LToken.ParenthesisLeft).withSpacingBefore(space()),
 			child(VAR),
 			token(LToken.Colon).withSpacing(space(), space()),
 			child(ITERABLE),

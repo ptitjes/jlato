@@ -239,7 +239,7 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 	};
 
 	public final static LexicalShape shape = composite(
-			token(LToken.If).withSpacingAfter(space()),
+			keyword(LToken.If),
 			token(LToken.ParenthesisLeft),
 			child(CONDITION),
 			token(LToken.ParenthesisRight),
@@ -261,7 +261,7 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 					)
 			),
 			child(ELSE_STMT, when(some(), composite(
-					token(LToken.Else).withSpacingBefore(space()),
+					keyword(LToken.Else),
 					element(alternative(LSCondition.kind(Kind.BlockStmt),
 							defaultShape().withSpacingBefore(space()),
 							alternative(LSCondition.kind(Kind.IfStmt),

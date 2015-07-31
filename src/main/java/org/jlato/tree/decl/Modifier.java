@@ -25,10 +25,13 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.SpacingConstraint;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 
+import static org.jlato.internal.shapes.LexicalShape.keyword;
 import static org.jlato.internal.shapes.LexicalShape.token;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifier> implements ExtendedModifier {
 

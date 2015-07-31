@@ -376,7 +376,7 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 
 	public final static LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
-			token(LToken.Enum),
+			keyword(LToken.Enum),
 			child(NAME),
 			child(IMPLEMENTS_CLAUSE, QualifiedType.implementsClauseShape),
 			token(LToken.BraceLeft)

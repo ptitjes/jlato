@@ -189,7 +189,7 @@ public class PackageDecl extends TreeBase<PackageDecl.State, Tree, PackageDecl> 
 
 	public final static LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
-			token(LToken.Package),
+			keyword(LToken.Package),
 			child(NAME),
 			token(LToken.SemiColon)
 	);

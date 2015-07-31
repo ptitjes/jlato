@@ -317,7 +317,7 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 	};
 
 	public final static LexicalShape shape = composite(
-			token(LToken.Try).withSpacingAfter(space()),
+			keyword(LToken.Try),
 			when(childIs(RESOURCES, not(empty())),
 					composite(
 							token(LToken.ParenthesisLeft)
@@ -332,7 +332,7 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 			child(TRY_BLOCK),
 			child(CATCHS, CatchClause.listShape),
 			child(FINALLY_BLOCK, when(some(),
-					composite(token(LToken.Finally).withSpacing(space(), space()), element())
+					composite(keyword(LToken.Finally), element())
 			))
 	);
 }

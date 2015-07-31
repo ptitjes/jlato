@@ -29,6 +29,7 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 
+import static org.jlato.internal.shapes.LexicalShape.keyword;
 import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implements Type {
