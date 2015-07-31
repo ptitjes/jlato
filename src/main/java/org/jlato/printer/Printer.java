@@ -321,7 +321,7 @@ public class Printer {
 		trailingWhitespace = null;
 	}
 
-	public void dump(WTokenRun tokens) {
+	private void dump(WTokenRun tokens) {
 		for (WToken token : tokens.elements) {
 			switch (token.kind) {
 				case ParserImplConstants.JAVA_DOC_COMMENT:
