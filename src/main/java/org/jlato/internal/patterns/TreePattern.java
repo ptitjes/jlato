@@ -153,15 +153,21 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		if (patternState instanceof SVarState) {
 			String name = ((SVarState) patternState).name;
 			return TreeBase.treeOf((Tree) substitution.get(name));
-		} else if (patternState instanceof SNodeState) {
-			final SNodeState nodeState = (SNodeState) patternState;
-			return (STree<S>) buildNodeTree(nodeState.kind(), nodeState, substitution);
-		} else if (patternState instanceof SNodeOptionState) {
-			return (STree<S>) buildNodeOptionTree((SNodeOptionState) patternState, substitution);
-		} else if (patternState instanceof SNodeListState) {
-			return (STree<S>) buildNodeListTree((SNodeListState) patternState, substitution);
+		} else {
+			final STree<S> tree;
+			if (patternState instanceof SNodeState) {
+				final SNodeState nodeState = (SNodeState) patternState;
+				tree = (STree<S>) buildNodeTree(nodeState.kind(), nodeState, substitution);
+			} else if (patternState instanceof SNodeOptionState) {
+				tree = (STree<S>) buildNodeOptionTree((SNodeOptionState) patternState, substitution);
+			} else if (patternState instanceof SNodeListState) {
+				tree = (STree<S>) buildNodeListTree((SNodeListState) patternState, substitution);
+			} else {
+				// TODO Handle NodeEither
+				throw new UnsupportedOperationException();
+			}
+			return tree.withDressing(pattern.dressing);
 		}
-		return null;
 	}
 
 	private <S extends SNodeState<S>> STree<S> buildNodeTree(Kind kind, S patternState, Substitution substitution) {

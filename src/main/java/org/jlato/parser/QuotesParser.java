@@ -34,7 +34,7 @@ public class QuotesParser {
 	private ParserImpl parserInstance = null;
 
 	public QuotesParser() {
-		this(ParserConfiguration.Default);
+		this(ParserConfiguration.Default.preserveWhitespaces(true));
 	}
 
 	public QuotesParser(ParserConfiguration configuration) {
