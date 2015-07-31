@@ -108,6 +108,65 @@ public class NodeContainersTest {
 	}
 
 	@Test
+	public void nodeListManipulationsWithComments() throws FileNotFoundException, ParseException {
+		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
+		final String content = "scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/)";
+		final MethodInvocationExpr expr = (MethodInvocationExpr) parser.parse(ParseContext.Expression, content);
+
+		Assert.assertTrue(expr.args().contains(name("arg1")));
+		Assert.assertTrue(expr.args().contains(name("arg2")));
+
+		Assert.assertEquals(
+				"scope.method(newArg, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().set(0, name("newArg"))
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, newArg)",
+				Printer.printToString(expr.withArgs(
+						expr.args().set(1, name("newArg"))
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/, newArg)",
+				Printer.printToString(expr.withArgs(
+						expr.args().append(name("newArg"))
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/, newArg1, newArg2)",
+				Printer.printToString(expr.withArgs(
+						expr.args().appendAll(NodeList.of(name("newArg1"), name("newArg2")))
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(newArg, /*1*/arg1/*2*/, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().prepend(name("newArg"))
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(newArg1, newArg2, /*1*/arg1/*2*/, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().prependAll(NodeList.of(name("newArg1"), name("newArg2")))
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, newArg, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().insert(1, name("newArg"))
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, newArg1, newArg2, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().insertAll(1, NodeList.of(name("newArg1"), name("newArg2")))
+				), false)
+		);
+	}
+
+	@Test
 	public void nodeListStaticCreationHelpers() {
 		assertNodeListContent(NodeList.<Name>empty(), 0);
 		assertNodeListContent(NodeList.of(name(0)), 1);

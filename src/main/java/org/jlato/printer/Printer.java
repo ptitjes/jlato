@@ -215,6 +215,8 @@ public class Printer {
 
 	private Spacing spacing;
 	private WTokenRun existingWhitespace;
+	private WTokenRun leadingWhitespace;
+	private WTokenRun trailingWhitespace;
 
 	private void reset() {
 		indentationLevel = 0;
@@ -236,12 +238,28 @@ public class Printer {
 		else existingWhitespace = existingWhitespace.appendAll(whitespace);
 	}
 
+	public void encounteredLeading(WTokenRun whitespace) {
+		if (whitespace == null) return;
+
+		if (leadingWhitespace == null) leadingWhitespace = whitespace;
+		else leadingWhitespace = leadingWhitespace.appendAll(whitespace);
+	}
+
+	public void encounteredTrailing(WTokenRun whitespace) {
+		if (whitespace == null) return;
+
+		if (trailingWhitespace == null) trailingWhitespace = whitespace;
+		else trailingWhitespace = trailingWhitespace.appendAll(whitespace);
+	}
+
 	public void encounteredIndentation(IndentationConstraint constraint) {
 		indentationLevel += constraint.resolve(formattingSettings);
 	}
 
 	public void append(LToken token, boolean requiresFormatting) {
+		renderTrailing();
 		renderSpacing();
+		renderLeading();
 
 		boolean isAlpha = token.isKeyword() || token.isIdentifier();
 		if ((format || requiresFormatting) && needsIndentation) doPrintIndent();
@@ -252,7 +270,11 @@ public class Printer {
 	}
 
 	private void flush() {
-		renderSpacing();
+		if (trailingWhitespace != null) {
+			renderTrailing();
+		} else  {
+			renderSpacing();
+		}
 	}
 
 	private void renderSpacing() {
@@ -281,6 +303,22 @@ public class Printer {
 
 		spacing = Spacing.noSpace;
 		existingWhitespace = null;
+	}
+
+	private void renderLeading() {
+		if (leadingWhitespace == null) return;
+
+		dump(leadingWhitespace);
+
+		leadingWhitespace = null;
+	}
+
+	private void renderTrailing() {
+		if (trailingWhitespace == null) return;
+
+		dump(trailingWhitespace);
+
+		trailingWhitespace = null;
 	}
 
 	public void dump(WTokenRun tokens) {
