@@ -35,6 +35,17 @@ import static org.jlato.internal.bu.WTokenRun.NULL;
 public class WTokenRunTest {
 
 	@Test
+	public void splitTrailingWithOneSpace() {
+		final WTokenRun.Builder builder = new WTokenRun.Builder();
+		builder.add(WToken.whitespace(" "));
+		final WTokenRun run = builder.build();
+
+		final WTokenRun.TwoWaySplit split = run.splitTrailingComment();
+		Assert.assertEquals(NULL, split.left);
+		Assert.assertEquals(1, split.right.elements.size());
+	}
+
+	@Test
 	public void splitTrailingWithNoComment() {
 		final WTokenRun.Builder builder = new WTokenRun.Builder();
 		builder.add(WToken.newLine());
@@ -71,6 +82,17 @@ public class WTokenRunTest {
 		final WTokenRun.TwoWaySplit split = run.splitTrailingComment();
 		Assert.assertEquals(2, split.left.elements.size());
 		Assert.assertEquals(1, split.right.elements.size());
+	}
+
+	@Test
+	public void splitLeadingWithOneSpace() {
+		final WTokenRun.Builder builder = new WTokenRun.Builder();
+		builder.add(WToken.whitespace(" "));
+		final WTokenRun run = builder.build();
+
+		final WTokenRun.TwoWaySplit split = run.splitLeadingComments();
+		Assert.assertEquals(1, split.left.elements.size());
+		Assert.assertEquals(NULL, split.right);
 	}
 
 	@Test
@@ -135,6 +157,18 @@ public class WTokenRunTest {
 		final WTokenRun.TwoWaySplit split = run.splitLeadingComments();
 		Assert.assertEquals(6, split.left.elements.size());
 		Assert.assertEquals(3, split.right.elements.size());
+	}
+
+	@Test
+	public void splitTrailingLeadingWithOneSpace() {
+		final WTokenRun.Builder builder = new WTokenRun.Builder();
+		builder.add(WToken.whitespace(" "));
+		final WTokenRun run = builder.build();
+
+		final WTokenRun.ThreeWaySplit split = run.splitTrailingAndLeadingComments();
+		Assert.assertEquals(NULL, split.left);
+		Assert.assertEquals(1, split.middle.elements.size());
+		Assert.assertEquals(NULL, split.right);
 	}
 
 	@Test

@@ -110,16 +110,16 @@ public class WTokenRun extends WRun {
 
 	private int splitIndexOfTrailingComment() {
 		// We expect to find one comment at beginning with no new line before
-		int splitIndex;
-		for (splitIndex = 0; splitIndex < elements.size(); splitIndex++) {
-			final WToken token = elements.get(splitIndex);
+		//int splitIndex = 0;
+		for (int i = 0; i < elements.size(); i++) {
+			final WToken token = elements.get(i);
 			switch (token.kind) {
 				case ParserImplConstants.SINGLE_LINE_COMMENT:
 				case ParserImplConstants.MULTI_LINE_COMMENT:
 				case ParserImplConstants.JAVA_DOC_COMMENT:
-					return splitIndex + 1;
+					return i + 1;
 				case ParserImplConstants.NEWLINE:
-					return splitIndex;
+					return i;
 				case ParserImplConstants.WHITESPACE:
 					break;
 				default:
@@ -127,7 +127,7 @@ public class WTokenRun extends WRun {
 					throw new IllegalStateException();
 			}
 		}
-		return splitIndex;
+		return 0;
 	}
 
 	private int splitIndexOfLeadingComments() {
