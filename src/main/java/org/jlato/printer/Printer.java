@@ -209,6 +209,7 @@ public class Printer {
 		flush();
 	}
 
+	private boolean start;
 	private int indentationLevel;
 	private boolean needsIndentation;
 	private boolean afterAlpha;
@@ -219,6 +220,7 @@ public class Printer {
 	private WTokenRun trailingWhitespace;
 
 	private void reset() {
+		start = true;
 		indentationLevel = 0;
 		needsIndentation = true;
 		afterAlpha = false;
@@ -257,8 +259,10 @@ public class Printer {
 	}
 
 	public void append(LToken token, boolean requiresFormatting) {
-		renderTrailing();
-		renderSpacing();
+		if (!start) {
+			renderTrailing();
+			renderSpacing();
+		} else start = false;
 		renderLeading();
 
 		boolean isAlpha = token.isKeyword() || token.isIdentifier();
@@ -272,7 +276,7 @@ public class Printer {
 	private void flush() {
 		if (trailingWhitespace != null) {
 			renderTrailing();
-		} else  {
+		} else {
 			renderSpacing();
 		}
 	}
