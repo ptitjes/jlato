@@ -47,12 +47,14 @@ abstract class ParserBase {
 	public static ParserImpl newInstance(InputStream in, String encoding, ParserConfiguration configuration) {
 		ParserImpl parser = new ParserImpl(in, encoding);
 		parser.configure(configuration);
+		parser.reset();
 		return parser;
 	}
 
 	public static ParserImpl newInstance(Reader in, ParserConfiguration configuration) {
 		ParserImpl parser = new ParserImpl(in);
 		parser.configure(configuration);
+		parser.reset();
 		return parser;
 	}
 
@@ -67,7 +69,6 @@ abstract class ParserBase {
 	private Token lastProcessedToken;
 
 	public ParserBase() {
-		reset();
 	}
 
 	// Interface with ParserImpl
@@ -77,14 +78,16 @@ abstract class ParserBase {
 		lastProcessedToken = null;
 		runStack.clear();
 		runStack.push(Vector.<WTokenRun>empty());
+
+		if (lastProcessedToken == null) {
+			lastProcessedToken = getToken(0);
+		}
+		pushWhitespace(getToken(0));
 	}
 
 	protected void run() {
 		if (!configuration.preserveWhitespaces) return;
 
-		if (lastProcessedToken == null) {
-			lastProcessedToken = getToken(0);
-		}
 		pushWhitespace(getToken(1));
 		runStack.push(Vector.<WTokenRun>empty());
 	}
@@ -183,7 +186,9 @@ abstract class ParserBase {
 		WDressing dressing = tree.dressing;
 		if (dressing == null) dressing = new WDressing();
 
-		return tree.withDressing(dressing.withLeading(prolog).withTrailing(epilog));
+		if (!prolog.elements.isEmpty()) dressing = dressing.withLeading(prolog);
+		if (!epilog.elements.isEmpty()) dressing = dressing.withTrailing(epilog);
+		return tree.withDressing(dressing);
 	}
 
 	// TODO This is really dirty and temporary until the parser parses STrees directly
