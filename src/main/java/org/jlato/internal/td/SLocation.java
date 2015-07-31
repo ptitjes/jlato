@@ -96,7 +96,7 @@ public class SLocation<S extends STreeState> {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T extends Tree> T replaceTree(STree<S> newTree) {
+	public <T extends Tree> T replaceTree(STree<S> newTree) {
 		return (T) withTree(newTree).facade;
 	}
 

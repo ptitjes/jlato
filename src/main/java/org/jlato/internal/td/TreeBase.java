@@ -21,8 +21,7 @@ package org.jlato.internal.td;
 
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeState;
+import org.jlato.internal.bu.*;
 import org.jlato.printer.Printer;
 import org.jlato.rewrite.MatchVisitor;
 import org.jlato.rewrite.Matcher;
@@ -31,6 +30,9 @@ import org.jlato.rewrite.TypeSafeMatcher;
 import org.jlato.tree.Tree;
 
 import java.util.LinkedList;
+
+import static org.jlato.internal.bu.WToken.newLine;
+import static org.jlato.internal.bu.WToken.whitespace;
 
 /**
  * @author Didier Villevalois
@@ -134,6 +136,63 @@ public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends 
 		public LinkedList<U> getList() {
 			return list;
 		}
+	}
+
+	// Comment manipulation functions
+
+	// TODO Make those methods internal and have a front-end that use sensible defaults for the type of comments
+	// depending on the type of node:
+	// - multi-line followed by space for expr
+	// - single-line followed by new-line for statement
+
+	public T insertLeadingComment(String commentString) {
+		final WToken comment;
+		if (commentString.startsWith("/**") && commentString.endsWith("*/")) {
+			comment = WToken.javaDocComment(commentString);
+		} else if (commentString.startsWith("/*") && commentString.endsWith("*/")) {
+			comment = WToken.multiLineComment(commentString);
+		} else if (commentString.startsWith("//")) {
+			comment = WToken.singleLineComment(commentString);
+		} else throw new IllegalArgumentException();
+
+		final STree<S> tree = location.tree;
+		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
+
+		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
+		final WTokenRun newLeading;
+		if (comment.isJavaDocComment()) {
+			newLeading = leading.append(comment).append(newLine());
+		} else if (comment.isMultiLineComment()) {
+			newLeading = leading.append(comment).append(whitespace(" "));
+		} else {
+			newLeading = leading.append(comment).append(newLine());
+		}
+
+		return location.replaceTree(tree.withDressing(dressing.withLeading(newLeading)));
+	}
+
+	public T insertTrailingComment(String commentString) {
+		final WToken comment;
+		if (commentString.startsWith("/**") && commentString.endsWith("*/")) {
+			throw new IllegalArgumentException();
+		} else if (commentString.startsWith("/*") && commentString.endsWith("*/")) {
+			comment = WToken.multiLineComment(commentString);
+		} else if (commentString.startsWith("//")) {
+			comment = WToken.singleLineComment(commentString);
+		} else throw new IllegalArgumentException();
+
+		final STree<S> tree = location.tree;
+		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
+
+		final WTokenRun trailing = dressing.trailing == null ? WTokenRun.EMPTY : dressing.trailing;
+		final WTokenRun newTrailing;
+		if (comment.isMultiLineComment()) {
+			newTrailing = trailing.append(whitespace(" ")).append(comment);
+		} else {
+			newTrailing = trailing.append(whitespace(" ")).append(comment).append(newLine());
+		}
+
+		return location.replaceTree(tree.withDressing(dressing.withTrailing(newTrailing)));
 	}
 
 	// Convenience conversion helper methods
