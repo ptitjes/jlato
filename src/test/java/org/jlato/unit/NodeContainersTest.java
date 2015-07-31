@@ -24,6 +24,7 @@ import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.Printer;
+import org.jlato.rewrite.Quotes;
 import org.jlato.tree.NodeEither;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -164,6 +165,73 @@ public class NodeContainersTest {
 						expr.args().insertAll(1, NodeList.of(name("newArg1"), name("newArg2")))
 				), false)
 		);
+	}
+
+	@Test
+	public void nodeListManipulationsWithCommentsAndNewComments() throws FileNotFoundException, ParseException {
+		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
+		final String content = "scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/)";
+		final MethodInvocationExpr expr = (MethodInvocationExpr) parser.parse(ParseContext.Expression, content);
+
+		Assert.assertTrue(expr.args().contains(name("arg1")));
+		Assert.assertTrue(expr.args().contains(name("arg2")));
+
+		Assert.assertEquals(
+				"scope.method(/*leading*/newArg/*trailing*/, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().set(0, newArgWithComments())
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, /*leading*/newArg/*trailing*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().set(1, newArgWithComments())
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/, /*leading*/newArg/*trailing*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().append(newArgWithComments())
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/, /*leading1*/newArg1/*trailing1*/, /*leading2*/newArg2/*trailing2*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().appendAll(NodeList.of(newArgWithComments(1), newArgWithComments(2)))
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*leading*/newArg/*trailing*/, /*1*/arg1/*2*/, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().prepend(newArgWithComments())
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*leading1*/newArg1/*trailing1*/, /*leading2*/newArg2/*trailing2*/, /*1*/arg1/*2*/, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().prependAll(NodeList.of(newArgWithComments(1), newArgWithComments(2)))
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, /*leading*/newArg/*trailing*/, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().insert(1, newArgWithComments())
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, /*leading1*/newArg1/*trailing1*/, /*leading2*/newArg2/*trailing2*/, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().insertAll(1, NodeList.of(newArgWithComments(1), newArgWithComments(2)))
+				), false)
+		);
+	}
+
+	private Expr newArgWithComments() {
+		return Quotes.expr("/*leading*/newArg/*trailing*/").build();
+	}
+
+	private Expr newArgWithComments(int index) {
+		return Quotes.expr("/*leading" + index + "*/newArg" + index + "/*trailing" + index + "*/").build();
 	}
 
 	@Test
