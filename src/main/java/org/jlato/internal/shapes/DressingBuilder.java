@@ -136,7 +136,7 @@ public class DressingBuilder<S extends STreeState> {
 
 			if (!defined) {
 				if (firstShape) firstShape = false;
-				else addSubRun(WTokenRun.EMPTY);
+				else addSubRun(WTokenRun.NULL);
 
 				addSubRun(null);
 			} else {
@@ -145,7 +145,7 @@ public class DressingBuilder<S extends STreeState> {
 					if (firstDefinedShape) firstDefinedShape = false;
 				} else if (firstDefinedShape) {
 					firstDefinedShape = false;
-					addSubRun(WTokenRun.EMPTY);
+					addSubRun(WTokenRun.NULL);
 				} else {
 					WTokenRun tokens = tokenIterator.next();
 
