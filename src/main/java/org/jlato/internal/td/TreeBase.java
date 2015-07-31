@@ -145,7 +145,7 @@ public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends 
 	}
 
 	public static <S extends STreeState> STree<S> treeOf(Tree facade) {
-		final SLocation<S> location = TreeBase.<S>locationOf(facade);
+		final SLocation<S> location = TreeBase.locationOf(facade);
 		return location == null ? null : location.tree;
 	}
 
