@@ -20,10 +20,7 @@
 package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.WRunRun;
-import org.jlato.internal.bu.WTokenRun;
+import org.jlato.internal.bu.*;
 import org.jlato.printer.Printer;
 
 /**
@@ -49,6 +46,8 @@ public final class LSList extends LexicalShape {
 
 	@Override
 	public boolean isDefined(STree tree) {
+		if (tree.state instanceof SVarState) return true;
+
 		final SNodeListState state = (SNodeListState) tree.state;
 		final Vector<STree<?>> children = state.children;
 		return !children.isEmpty() || (renderIfEmpty &&
@@ -60,21 +59,29 @@ public final class LSList extends LexicalShape {
 	public void dress(DressingBuilder<?> builder, STree<?> discriminator) {
 		builder.openRun();
 
-		final SNodeListState state = (SNodeListState) discriminator.state;
-		final Vector<STree<?>> children = state.children;
-		final boolean isEmpty = children.isEmpty();
+		if (discriminator.state instanceof SVarState) {
+			builder.handleNext(before, discriminator);
 
-		builder.handleNext(isEmpty && !renderIfEmpty ? none() : before, discriminator);
+			builder.handleNext(shape, discriminator);
 
-		for (int index = 0; index < children.size(); index++) {
-			if (index != 0) {
-				builder.handleNext(separator, children.get(index - 1));
+			builder.handleNext(after, discriminator);
+		} else {
+			final SNodeListState state = (SNodeListState) discriminator.state;
+			final Vector<STree<?>> children = state.children;
+			final boolean isEmpty = children.isEmpty();
+
+			builder.handleNext(isEmpty && !renderIfEmpty ? none() : before, discriminator);
+
+			for (int index = 0; index < children.size(); index++) {
+				if (index != 0) {
+					builder.handleNext(separator, children.get(index - 1));
+				}
+
+				builder.handleNext(new LSTraversal(SNodeListState.elementTraversal(index), shape), discriminator);
 			}
 
-			builder.handleNext(new LSTraversal(SNodeListState.elementTraversal(index), shape), discriminator);
+			builder.handleNext(isEmpty && !renderIfEmpty ? none() : after, discriminator);
 		}
-
-		builder.handleNext(isEmpty && !renderIfEmpty ? none() : after, discriminator);
 
 		builder.closeRun();
 	}

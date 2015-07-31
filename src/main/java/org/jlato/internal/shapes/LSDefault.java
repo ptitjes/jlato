@@ -20,6 +20,7 @@
 package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.SVarState;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
@@ -43,6 +44,8 @@ public final class LSDefault extends LexicalShape {
 
 	@Override
 	public boolean isDefined(STree tree) {
+		if (tree.state instanceof SVarState) return true;
+
 		final LexicalShape shape = shapeFor(tree);
 		return shape != null && shape.isDefined(tree);
 	}

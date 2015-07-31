@@ -149,21 +149,23 @@ public class DressingBuilder<S extends STreeState> {
 				} else {
 					WTokenRun tokens = tokenIterator.next();
 
-					final boolean acceptsTrailing = lastDefinedShape.acceptsTrailingWhitespace();
-					final boolean acceptsLeading = shape.acceptsLeadingWhitespace();
-					if (acceptsTrailing && acceptsLeading) {
-						final WTokenRun.ThreeWaySplit split = tokens.splitTrailingAndLeadingComments();
-						lastDefinedShape.dressTrailing(split.left, DressingBuilder.this);
-						tokens = split.middle;
-						shape.dressLeading(split.right, DressingBuilder.this);
-					} else if (acceptsTrailing) {
-						final WTokenRun.TwoWaySplit split = tokens.splitTrailingComment();
-						lastDefinedShape.dressTrailing(split.left, DressingBuilder.this);
-						tokens = split.right;
-					} else if (acceptsLeading) {
-						final WTokenRun.TwoWaySplit split = tokens.splitLeadingComments();
-						tokens = split.left;
-						shape.dressLeading(split.right, DressingBuilder.this);
+					if (!(discriminator.state instanceof SVarState)) {
+						final boolean acceptsTrailing = lastDefinedShape.acceptsTrailingWhitespace();
+						final boolean acceptsLeading = shape.acceptsLeadingWhitespace();
+						if (acceptsTrailing && acceptsLeading) {
+							final WTokenRun.ThreeWaySplit split = tokens.splitTrailingAndLeadingComments();
+							lastDefinedShape.dressTrailing(split.left, DressingBuilder.this);
+							tokens = split.middle;
+							shape.dressLeading(split.right, DressingBuilder.this);
+						} else if (acceptsTrailing) {
+							final WTokenRun.TwoWaySplit split = tokens.splitTrailingComment();
+							lastDefinedShape.dressTrailing(split.left, DressingBuilder.this);
+							tokens = split.right;
+						} else if (acceptsLeading) {
+							final WTokenRun.TwoWaySplit split = tokens.splitLeadingComments();
+							tokens = split.left;
+							shape.dressLeading(split.right, DressingBuilder.this);
+						}
 					}
 
 					addSubRun(tokens);
