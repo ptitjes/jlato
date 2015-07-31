@@ -71,6 +71,8 @@ public abstract class LSCondition {
 		return new LSCondition() {
 			@Override
 			public boolean test(STree tree) {
+				if (tree.state instanceof SVarState) return false;
+
 				final SNodeListState state = (SNodeListState) tree.state;
 				final Vector<STree<?>> children = state.children;
 				return children == null || children.isEmpty();
