@@ -61,49 +61,49 @@ public class NodeContainersTest {
 				"scope.method(newArg, arg2)",
 				Printer.printToString(expr.withArgs(
 						expr.args().set(0, name("newArg"))
-				), true)
+				), false)
 		);
 		Assert.assertEquals(
 				"scope.method(arg1, newArg)",
 				Printer.printToString(expr.withArgs(
 						expr.args().set(1, name("newArg"))
-				), true)
+				), false)
 		);
 		Assert.assertEquals(
 				"scope.method(arg1, arg2, newArg)",
 				Printer.printToString(expr.withArgs(
 						expr.args().append(name("newArg"))
-				), true)
+				), false)
 		);
 		Assert.assertEquals(
 				"scope.method(arg1, arg2, newArg1, newArg2)",
 				Printer.printToString(expr.withArgs(
 						expr.args().appendAll(NodeList.of(name("newArg1"), name("newArg2")))
-				), true)
+				), false)
 		);
 		Assert.assertEquals(
 				"scope.method(newArg, arg1, arg2)",
 				Printer.printToString(expr.withArgs(
 						expr.args().prepend(name("newArg"))
-				), true)
+				), false)
 		);
 		Assert.assertEquals(
 				"scope.method(newArg1, newArg2, arg1, arg2)",
 				Printer.printToString(expr.withArgs(
 						expr.args().prependAll(NodeList.of(name("newArg1"), name("newArg2")))
-				), true)
+				), false)
 		);
 		Assert.assertEquals(
 				"scope.method(arg1, newArg, arg2)",
 				Printer.printToString(expr.withArgs(
 						expr.args().insert(1, name("newArg"))
-				), true)
+				), false)
 		);
 		Assert.assertEquals(
 				"scope.method(arg1, newArg1, newArg2, arg2)",
 				Printer.printToString(expr.withArgs(
 						expr.args().insertAll(1, NodeList.of(name("newArg1"), name("newArg2")))
-				), true)
+				), false)
 		);
 	}
 

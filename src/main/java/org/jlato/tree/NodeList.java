@@ -203,9 +203,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		final SNodeListState newState = state.withChildren(trees.prepend(treeOf(element)));
 		STree newTree = tree.withState(newState);
 
-		WDressing dressing = tree.dressing == null ? null : tree.dressing;
-		if (dressing != null && dressing.run != null)
-			newTree = newTree.withDressing(dressing.withRun(insertAt(dressing.run, 0, false)));
+		newTree = insertInDressing(newTree, 0, false);
 
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
@@ -225,9 +223,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		final SNodeListState newState = state.withChildren(trees.append(treeOf(element)));
 		STree newTree = tree.withState(newState);
 
-		WDressing dressing = tree.dressing == null ? null : tree.dressing;
-		if (dressing != null && dressing.run != null)
-			newTree = newTree.withDressing(dressing.withRun(insertAt(dressing.run, trees.size(), true)));
+		newTree = insertInDressing(newTree, trees.size(), true);
 
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
@@ -254,9 +250,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		final SNodeListState newState = state.withChildren(insertAt(trees, index, treeOf(element)));
 		STree newTree = tree.withState(newState);
 
-		WDressing dressing = tree.dressing == null ? null : tree.dressing;
-		if (dressing != null && dressing.run != null)
-			newTree = newTree.withDressing(dressing.withRun(insertAt(dressing.run, index, index == trees.size())));
+		newTree = insertInDressing(newTree, index, index == trees.size());
 
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
@@ -281,10 +275,18 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		return newTrees;
 	}
 
-	private WRunRun insertAt(WRunRun run, int index, boolean last) {
-		// If not last, count in the before shape
-		// If last, count in the missing separator shape
-		return run.insertBefore(index * 2 + (last ? 0 : 1), 2);
+	private STree insertInDressing(STree tree, int index, boolean last) {
+		WDressing dressing = tree.dressing == null ? null : tree.dressing;
+		if (dressing != null && dressing.run != null) {
+
+			final WRunRun run = dressing.run;
+			// If not last, insert before the element shape
+			// If last, insert after the last element shape
+			final WRunRun newRun = run.insert((index + (last ? -1 : 0)) * 2 + 1, 2, !last);
+
+			tree = tree.withDressing(dressing.withRun(newRun));
+		}
+		return tree;
 	}
 
 	@SuppressWarnings("unchecked")

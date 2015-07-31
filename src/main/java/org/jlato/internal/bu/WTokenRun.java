@@ -29,6 +29,7 @@ import org.jlato.parser.ParserImplConstants;
 public class WTokenRun extends WRun {
 
 	public static final WTokenRun EMPTY = new WTokenRun(Vector.<WToken>empty());
+	public static final WTokenRun NULL = null;
 
 	public final IndexedList<WToken> elements;
 
@@ -51,16 +52,16 @@ public class WTokenRun extends WRun {
 	public TwoWaySplit splitTrailingComment() {
 		int splitIndex = splitIndexOfTrailingComment();
 		return new TwoWaySplit(
-				new WTokenRun(elements.take(splitIndex)),
-				new WTokenRun(elements.drop(splitIndex))
+				splitIndex == 0 ? NULL : new WTokenRun(elements.take(splitIndex)),
+				splitIndex == elements.size() ? EMPTY : new WTokenRun(elements.drop(splitIndex))
 		);
 	}
 
 	public TwoWaySplit splitLeadingComments() {
 		int splitIndex = splitIndexOfLeadingComments();
 		return new TwoWaySplit(
-				new WTokenRun(elements.take(splitIndex)),
-				new WTokenRun(elements.drop(splitIndex))
+				splitIndex == 0 ? EMPTY : new WTokenRun(elements.take(splitIndex)),
+				splitIndex == elements.size() ? NULL : new WTokenRun(elements.drop(splitIndex))
 		);
 	}
 
@@ -69,7 +70,7 @@ public class WTokenRun extends WRun {
 			final TwoWaySplit leadingSplit = splitLeadingComments();
 
 			return new ThreeWaySplit(
-					EMPTY,
+					null,
 					leadingSplit.left,
 					leadingSplit.right
 			);

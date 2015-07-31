@@ -21,6 +21,8 @@ package org.jlato.internal.bu;
 
 import com.github.andrewoma.dexx.collection.IndexedList;
 
+import static org.jlato.internal.bu.WTokenRun.NULL;
+
 /**
  * @author Didier Villevalois
  */
@@ -32,32 +34,30 @@ public class WRunRun extends WRun {
 		this.elements = elements;
 	}
 
-	public WRunRun insertBefore(int index, int count) {
-		if (index < 1 || index >= (elements.size() + 1) / 2)
+	public WRunRun insert(int index, int count, boolean before) {
+		if (index < 1 || index >= elements.size() / 2)
 			throw new IllegalArgumentException();
 		if (count < 1)
 			throw new IllegalArgumentException();
 
-		int cutIndex = index * 2 - 1;
+		int cutIndex = index * 2 + (before ? 0 : +1);
 
-		WRun whitespace = elements.get(cutIndex);
 		IndexedList<WRun> left = elements.take(cutIndex);
-		IndexedList<WRun> right = elements.drop(cutIndex + 1);
+		IndexedList<WRun> right = elements.drop(cutIndex);
 
-		// Split the whitespace run
-		// TODO Implement splitting the whitespaces with user involvement ?
-		WRun leftSplit = null;
-		WRun rightSplit = whitespace;
+		IndexedList<WRun> newElements = left;
 
-		// Append the left split whitespaces run and a sub-shape run
-		IndexedList<WRun> newElements = left.append(leftSplit).append(null);
-
-		for (int i = 0; i < count - 1; i++) {
-			// Append a whitespaces run and a sub-shape run
-			newElements = newElements.append(null).append(null);
+		if (before) {
+			for (int i = 0; i < count; i++) {
+				// Append a sub-shape run and a whitespaces run
+				newElements = newElements.append(null).append(NULL);
+			}
+		} else {
+			for (int i = 0; i < count; i++) {
+				// Append a whitespaces run and a sub-shape run
+				newElements = newElements.append(NULL).append(null);
+			}
 		}
-		// Append the right split whitespaces run
-		newElements = newElements.append(rightSplit);
 
 		for (WRun element : right) {
 			newElements = newElements.append(element);
@@ -75,7 +75,7 @@ public class WRunRun extends WRun {
 			if (!first) builder.append(",");
 			else first = false;
 
-			builder.append(element.toString());
+			builder.append(element == null ? null : element.toString());
 		}
 
 		builder.append("]");

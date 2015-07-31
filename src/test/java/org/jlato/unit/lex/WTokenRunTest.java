@@ -26,6 +26,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static org.jlato.internal.bu.WTokenRun.NULL;
+
 /**
  * @author Didier Villevalois
  */
@@ -40,7 +42,7 @@ public class WTokenRunTest {
 		final WTokenRun run = builder.build();
 
 		final WTokenRun.TwoWaySplit split = run.splitTrailingComment();
-		Assert.assertEquals(0, split.left.elements.size());
+		Assert.assertEquals(NULL, split.left);
 		Assert.assertEquals(2, split.right.elements.size());
 	}
 
@@ -80,7 +82,7 @@ public class WTokenRunTest {
 
 		final WTokenRun.TwoWaySplit split = run.splitLeadingComments();
 		Assert.assertEquals(2, split.left.elements.size());
-		Assert.assertEquals(0, split.right.elements.size());
+		Assert.assertEquals(NULL, split.right);
 	}
 
 	@Test
@@ -147,7 +149,7 @@ public class WTokenRunTest {
 		final WTokenRun.ThreeWaySplit split = run.splitTrailingAndLeadingComments();
 		Assert.assertEquals(2, split.left.elements.size());
 		Assert.assertEquals(2, split.middle.elements.size());
-		Assert.assertEquals(0, split.right.elements.size());
+		Assert.assertEquals(NULL, split.right);
 	}
 
 	@Test
@@ -161,7 +163,7 @@ public class WTokenRunTest {
 		final WTokenRun run = builder.build();
 
 		final WTokenRun.ThreeWaySplit split = run.splitTrailingAndLeadingComments();
-		Assert.assertEquals(0, split.left.elements.size());
+		Assert.assertEquals(NULL, split.left);
 		Assert.assertEquals(2, split.middle.elements.size());
 		Assert.assertEquals(3, split.right.elements.size());
 	}
@@ -175,7 +177,7 @@ public class WTokenRunTest {
 		final WTokenRun run = builder.build();
 
 		final WTokenRun.ThreeWaySplit split = run.splitTrailingAndLeadingComments();
-		Assert.assertEquals(0, split.left.elements.size());
+		Assert.assertEquals(NULL, split.left);
 		Assert.assertEquals(1, split.middle.elements.size());
 		Assert.assertEquals(2, split.right.elements.size());
 	}
