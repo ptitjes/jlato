@@ -145,6 +145,7 @@ public abstract class ParseContext<T extends Tree> {
 	public final static ParseContext<Type> Type = new ParseContext<Type>() {
 		@Override
 		protected STree<?> callProduction(ParserBase parser) throws ParseException {
+			parser.run();
 			final STree<SNodeListState> annotations = parser.Annotations();
 			return wrapWithPrologAndEpilog(parser, parser.Type(annotations));
 		}
