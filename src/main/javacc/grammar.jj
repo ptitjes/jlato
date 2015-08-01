@@ -1364,6 +1364,9 @@ STree<? extends TypeDecl.State> EnumDecl(STree<SNodeListState> modifiers):
   [
     entry = EnumConstantDecl() { constants = append(constants, entry); }
     ( LOOKAHEAD(2) "," entry = EnumConstantDecl() { constants = append(constants, entry); } )*
+  |
+    LOOKAHEAD({quotesMode})
+    <NODE_LIST_VARIABLE> { constants = makeVar(getToken(0)); }
   ]
   [ "," { trailingComma = true; } ]
   [ ";" members = ClassOrInterfaceBodyDecls(TypeKind.Enum) ]
