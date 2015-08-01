@@ -49,14 +49,6 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		super(new SLocation<LambdaExpr.State>(make(TreeBase.<SNodeListState>treeOf(params), hasParens, TreeBase.<SNodeEitherState>treeOf(body))));
 	}
 
-	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParens, Expr body) {
-		super(new SLocation<LambdaExpr.State>(make(TreeBase.<SNodeListState>treeOf(params), hasParens, TreeBase.<SNodeEitherState>treeOf(body))));
-	}
-
-	public LambdaExpr(NodeList<FormalParameter> params, boolean hasParens, BlockStmt body) {
-		super(new SLocation<LambdaExpr.State>(make(TreeBase.<SNodeListState>treeOf(params), hasParens, TreeBase.<SNodeEitherState>treeOf(body))));
-	}
-
 	public NodeList<FormalParameter> params() {
 		return location.safeTraversal(PARAMS);
 	}
