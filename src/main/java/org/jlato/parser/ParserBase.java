@@ -150,9 +150,12 @@ abstract class ParserBase {
 	                                                IndexedList<WTokenRun> tokens) {
 		try {
 			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
-			final DressingBuilder<S> builder = new DressingBuilder<S>(tree, tokenIterator);
-			shape.dress(builder, tree);
-			final STree<S> newTree = builder.build();
+			final STree<S> newTree;
+			if (shape != null) {
+				final DressingBuilder<S> builder = new DressingBuilder<S>(tree, tokenIterator);
+				shape.dress(builder, tree);
+				newTree = builder.build();
+			} else newTree = tree;
 
 			if (tokenIterator.hasNext()) {
 				// Flow up the remaining whitespace run for consumption by parent tree
@@ -194,6 +197,8 @@ abstract class ParserBase {
 	// TODO This is really dirty and temporary until the parser parses STrees directly
 	protected <S extends STreeState> STree<S> makeVar() {
 		Token token = getToken(0);
+		pushWhitespace(token);
+
 		String image = token.image;
 		boolean nodeListVar = image.startsWith("..$");
 		String name = nodeListVar ? image.substring(3) : image.substring(1);

@@ -60,6 +60,16 @@ public class QuotesTest extends BaseTestFromFiles {
 	}
 
 	@Test
+	public void enclosedExpr() throws FileNotFoundException, ParseException {
+		Assert.assertEquals("(var ? true : false)", Printer.printToString(
+				expr("($e ? true : false)").build(Substitution.empty().bind("e", new Name("var")))
+		));
+		Assert.assertEquals("( ( var ) ? true : false)", Printer.printToString(
+				expr("( ( $e ) ? true : false)").build(Substitution.empty().bind("e", new Name("var")))
+		));
+	}
+
+	@Test
 	public void genMethod() {
 		NodeList<Stmt> stmts = NodeList.empty();
 		stmts = stmts.append(stmt("int result = 17;").build());
