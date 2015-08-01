@@ -192,7 +192,8 @@ abstract class ParserBase {
 	}
 
 	// TODO This is really dirty and temporary until the parser parses STrees directly
-	protected <S extends STreeState> STree<S> makeVar(Token token) {
+	protected <S extends STreeState> STree<S> makeVar() {
+		Token token = getToken(0);
 		String image = token.image;
 		boolean nodeListVar = image.startsWith("..$");
 		String name = nodeListVar ? image.substring(3) : image.substring(1);

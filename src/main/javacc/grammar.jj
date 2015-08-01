@@ -1116,6 +1116,22 @@ TOKEN :
   >
 }
 
+/**********************************************************************************************************************
+ * Quote variables
+ **********************************************************************************************************************/
+
+STree<SNodeListState> NodeListVar():{}
+{
+  <NODE_LIST_VARIABLE>
+  { return makeVar(); }
+}
+
+STree<Name.State> NodeVar():{}
+{
+  <NODE_VARIABLE>
+  { return makeVar(); }
+}
+
 /*****************************************
  * THE JAVA LANGUAGE GRAMMAR STARTS HERE *
  *****************************************/
@@ -1319,8 +1335,7 @@ STree<SNodeListState> ExtendsList(TypeKind typeKind):
         throwParseException(token, "A class cannot extend more than one other class");
     }
   |
-    LOOKAHEAD({quotesMode})
-    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+    LOOKAHEAD({quotesMode}) ret = NodeListVar()
   )
   { return ret; }
 }
@@ -1341,8 +1356,7 @@ STree<SNodeListState> ImplementsList(TypeKind typeKind):
         throwParseException(token, "An interface cannot implement other interfaces");
     }
   |
-    LOOKAHEAD({quotesMode})
-    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+    LOOKAHEAD({quotesMode}) ret = NodeListVar()
   )
   { return ret; }
 }
@@ -1365,8 +1379,7 @@ STree<? extends TypeDecl.State> EnumDecl(STree<SNodeListState> modifiers):
     entry = EnumConstantDecl() { constants = append(constants, entry); }
     ( LOOKAHEAD(2) "," entry = EnumConstantDecl() { constants = append(constants, entry); } )*
   |
-    LOOKAHEAD({quotesMode})
-    <NODE_LIST_VARIABLE> { constants = makeVar(getToken(0)); }
+    LOOKAHEAD({quotesMode}) constants = NodeListVar()
   ]
   [ "," { trailingComma = true; } ]
   [ ";" members = ClassOrInterfaceBodyDecls(TypeKind.Enum) ]
@@ -1416,8 +1429,7 @@ STree<SNodeListState> AnnotationTypeBody():
   [
     ( member = AnnotationTypeBodyDecl() { ret = append(ret, member); } )+
   |
-    LOOKAHEAD({quotesMode})
-    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+    LOOKAHEAD({quotesMode}) ret = NodeListVar()
   ]
   "}"
   { return ret; }
@@ -1486,8 +1498,7 @@ STree<SNodeListState> TypeParameters():
     tp = TypeParameter() { ret = append(ret, tp); }
     ( "," tp = TypeParameter() { ret = append(ret, tp); } )*
   |
-    LOOKAHEAD({quotesMode})
-    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+    LOOKAHEAD({quotesMode}) ret = NodeListVar()
   )
   ">"
 
@@ -1518,8 +1529,7 @@ STree<SNodeListState> TypeBounds():
     cit = AnnotatedQualifiedType() { ret = append(ret, cit); }
     ( "&" cit = AnnotatedQualifiedType() { ret = append(ret, cit); } )*
   |
-    LOOKAHEAD({quotesMode})
-    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+    LOOKAHEAD({quotesMode}) ret = NodeListVar()
   )
   { return ret; }
 }
@@ -1545,8 +1555,7 @@ STree<SNodeListState> ClassOrInterfaceBodyDecls(TypeKind typeKind):
   [
     ( member = ClassOrInterfaceBodyDecl(typeKind) { ret = append(ret, member); } )+
   |
-    LOOKAHEAD({quotesMode})
-    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+    LOOKAHEAD({quotesMode}) ret = NodeListVar()
   ]
   { return ret; }
 }
@@ -1765,8 +1774,7 @@ STree<SNodeListState> FormalParameterList():
     par = FormalParameter() { ret = append(ret, par); }
     ( "," par = FormalParameter() { ret = append(ret, par); } )*
   |
-    LOOKAHEAD({quotesMode})
-    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+    LOOKAHEAD({quotesMode}) ret = NodeListVar()
   )
   { return ret; }
 }
@@ -1866,8 +1874,7 @@ STree<SNodeListState> Statements():
     (
       ( LOOKAHEAD(2) stmt = BlockStatement() { ret = append(ret, stmt); } )+
     |
-      LOOKAHEAD({quotesMode})
-      <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+      LOOKAHEAD({quotesMode}) ret = NodeListVar()
     )
   ]
   { return ret; }
@@ -2001,7 +2008,7 @@ STree<SNodeListState> TypeArgumentList():
   { return ret; }
 |
   LOOKAHEAD({quotesMode})
-  <NODE_LIST_VARIABLE> { return makeVar(getToken(0)); }
+  <NODE_LIST_VARIABLE> { return makeVar(); }
 }
 
 STree<? extends Type.State> TypeArgument():
@@ -2134,8 +2141,7 @@ STree<Name.State> Name():
     <IDENTIFIER>
     { name = dress(Name.make(token.image)); }
   |
-    LOOKAHEAD({quotesMode})
-    <NODE_VARIABLE> { name = makeVar(token); }
+    LOOKAHEAD({quotesMode}) name = NodeVar()
   )
   { return name; }
 }
@@ -2811,8 +2817,7 @@ STree<SNodeListState> Arguments():
     expr = Expression() { ret = append(ret, expr); }
     ( "," expr = Expression() { ret = append(ret, expr); } )*
   |
-    LOOKAHEAD({quotesMode})
-    <NODE_LIST_VARIABLE> { ret = makeVar(getToken(0)); }
+    LOOKAHEAD({quotesMode}) ret = NodeListVar()
   ]
   ")"
   { return ret; }
