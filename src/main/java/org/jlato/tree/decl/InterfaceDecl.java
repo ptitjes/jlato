@@ -38,7 +38,7 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 		return Kind.InterfaceDecl;
 	}
 
-	protected InterfaceDecl(SLocation<InterfaceDecl.State> location) {
+	private InterfaceDecl(SLocation<InterfaceDecl.State> location) {
 		super(location);
 	}
 

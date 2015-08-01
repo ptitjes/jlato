@@ -39,7 +39,7 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 		return Kind.LocalVariableDecl;
 	}
 
-	protected LocalVariableDecl(SLocation<LocalVariableDecl.State> location) {
+	private LocalVariableDecl(SLocation<LocalVariableDecl.State> location) {
 		super(location);
 	}
 

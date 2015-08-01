@@ -46,7 +46,7 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 		return Kind.EnumDecl;
 	}
 
-	protected EnumDecl(SLocation<EnumDecl.State> location) {
+	private EnumDecl(SLocation<EnumDecl.State> location) {
 		super(location);
 	}
 

@@ -37,7 +37,7 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 		return Kind.ClassDecl;
 	}
 
-	protected ClassDecl(SLocation<ClassDecl.State> location) {
+	private ClassDecl(SLocation<ClassDecl.State> location) {
 		super(location);
 	}
 

@@ -39,7 +39,7 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 		return Kind.AnnotationDecl;
 	}
 
-	protected AnnotationDecl(SLocation<AnnotationDecl.State> location) {
+	private AnnotationDecl(SLocation<AnnotationDecl.State> location) {
 		super(location);
 	}
 
