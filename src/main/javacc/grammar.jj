@@ -1290,6 +1290,7 @@ STree<? extends TypeDecl.State> ClassOrInterfaceDecl(STree<SNodeListState> modif
 	TypeDecl.TypeKind typeKind;
 	STree<Name.State> name;
 	STree<SNodeListState> typeParams = null;
+	STree<QualifiedType.State> superClassType = null;
 	STree<SNodeListState> extendsClause = null;
 	STree<SNodeListState> implementsClause = null;
 	STree<SNodeListState> members;
@@ -1299,27 +1300,29 @@ STree<? extends TypeDecl.State> ClassOrInterfaceDecl(STree<SNodeListState> modif
 
   (
     "class" { typeKind = TypeKind.Class; }
+    name = Name()
+    [ typeParams = TypeParameters() ]
+    [ "extends" superClassType = AnnotatedQualifiedType() ]
+    [ implementsClause = ImplementsList(typeKind) ]
   |
     "interface" { typeKind = TypeKind.Interface; }
+    name = Name()
+    [ typeParams = TypeParameters() ]
+    [ extendsClause = ExtendsList() ]
+    [ implementsClause = ImplementsList(typeKind) ]
   )
-  name = Name()
-  [ typeParams = TypeParameters() ]
-  [ extendsClause = ExtendsList(typeKind) ]
-  [ implementsClause = ImplementsList(typeKind) ]
   members = ClassOrInterfaceBody(typeKind)
 
   {
     if (typeKind == TypeKind.Interface)
       return dress(InterfaceDecl.make(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members));
     else {
-      STree<?> superClassType = extendsClause == null || extendsClause.state.children.isEmpty() ?
-        null : extendsClause.state.children.get(0);
       return dress(ClassDecl.make(modifiers, name, ensureNotNull(typeParams), optionOf(superClassType), ensureNotNull(implementsClause), members));
     }
   }
 }
 
-STree<SNodeListState> ExtendsList(TypeKind typeKind):
+STree<SNodeListState> ExtendsList():
 {
 	STree<SNodeListState> ret = emptyList();
 	STree<QualifiedType.State> cit;
@@ -1330,10 +1333,6 @@ STree<SNodeListState> ExtendsList(TypeKind typeKind):
   (
     cit = AnnotatedQualifiedType() { ret = append(ret, cit); }
     ( "," cit = AnnotatedQualifiedType() { ret = append(ret, cit); } )*
-    {
-      if (ret.state.children.size() > 1 && typeKind == TypeKind.Class)
-        throwParseException(token, "A class cannot extend more than one other class");
-    }
   |
     LOOKAHEAD({quotesMode}) ret = NodeListVar()
   )
