@@ -89,8 +89,8 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 		return location.safeTraversal(INIT);
 	}
 
-	public ArrayCreationExpr withInit(NodeOption<ArrayInitializerExpr> initializer) {
-		return location.safeTraversalReplace(INIT, initializer);
+	public ArrayCreationExpr withInit(NodeOption<ArrayInitializerExpr> init) {
+		return location.safeTraversalReplace(INIT, init);
 	}
 
 	public ArrayCreationExpr withInit(Mutation<NodeOption<ArrayInitializerExpr>> mutation) {

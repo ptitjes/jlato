@@ -73,7 +73,7 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 	}
 
 	public ImportDecl setStatic(boolean isStatic) {
-		return location.safePropertyReplace(STATIC, (Boolean) isStatic);
+		return location.safePropertyReplace(STATIC, isStatic);
 	}
 
 	public ImportDecl setStatic(Mutation<Boolean> mutation) {
@@ -85,7 +85,7 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 	}
 
 	public ImportDecl setOnDemand(boolean isOnDemand) {
-		return location.safePropertyReplace(ON_DEMAND, (Boolean) isOnDemand);
+		return location.safePropertyReplace(ON_DEMAND, isOnDemand);
 	}
 
 	public ImportDecl setOnDemand(Mutation<Boolean> mutation) {

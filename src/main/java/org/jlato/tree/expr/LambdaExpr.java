@@ -68,7 +68,7 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 	}
 
 	public LambdaExpr setParens(boolean hasParens) {
-		return location.safePropertyReplace(PARENS, (Boolean) hasParens);
+		return location.safePropertyReplace(PARENS, hasParens);
 	}
 
 	public LambdaExpr setParens(Mutation<Boolean> mutation) {

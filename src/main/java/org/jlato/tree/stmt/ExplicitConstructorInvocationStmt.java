@@ -68,7 +68,7 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	}
 
 	public ExplicitConstructorInvocationStmt setThis(boolean isThis) {
-		return location.safePropertyReplace(THIS, (Boolean) isThis);
+		return location.safePropertyReplace(THIS, isThis);
 	}
 
 	public ExplicitConstructorInvocationStmt setThis(Mutation<Boolean> mutation) {
