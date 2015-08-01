@@ -26,6 +26,8 @@ import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.*;
 import org.jlato.tree.expr.VariableDeclarationExpr;
 
+import java.util.Collections;
+
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TRY_RESOURCES;
@@ -167,6 +169,11 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 		@Override
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		@Override
+		public Iterable<SProperty> allProperties() {
+			return Collections.<SProperty>singleton(TRAILING_SEMI_COLON);
 		}
 
 		@Override

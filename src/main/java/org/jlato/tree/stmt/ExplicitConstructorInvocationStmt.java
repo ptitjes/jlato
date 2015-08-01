@@ -28,6 +28,8 @@ import org.jlato.tree.*;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.type.Type;
 
+import java.util.Collections;
+
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
@@ -143,6 +145,11 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 		@Override
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		@Override
+		public Iterable<SProperty> allProperties() {
+			return Collections.<SProperty>singleton(THIS);
 		}
 
 		@Override

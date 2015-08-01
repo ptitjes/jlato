@@ -30,6 +30,8 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.type.Type;
 
+import java.util.Collections;
+
 import static org.jlato.internal.shapes.LSCondition.childIs;
 import static org.jlato.internal.shapes.LSCondition.data;
 import static org.jlato.internal.shapes.LSCondition.not;
@@ -148,6 +150,11 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 		@Override
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		@Override
+		public Iterable<SProperty> allProperties() {
+			return Collections.<SProperty>singleton(VAR_ARGS);
 		}
 
 		@Override

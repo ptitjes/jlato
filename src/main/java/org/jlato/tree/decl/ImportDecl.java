@@ -28,6 +28,9 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.QualifiedName;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import static org.jlato.internal.shapes.LSCondition.data;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterImports;
@@ -128,6 +131,11 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 		@Override
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		@Override
+		public Iterable<SProperty> allProperties() {
+			return Arrays.<SProperty>asList(STATIC, ON_DEMAND);
 		}
 
 		@Override

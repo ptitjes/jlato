@@ -30,6 +30,8 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 
+import java.util.Collections;
+
 import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
@@ -92,6 +94,11 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 		@Override
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		@Override
+		public Iterable<SProperty> allProperties() {
+			return Collections.<SProperty>singleton(ID);
 		}
 
 		@Override

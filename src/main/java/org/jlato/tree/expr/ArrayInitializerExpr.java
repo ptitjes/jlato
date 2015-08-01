@@ -28,6 +28,8 @@ import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
+import java.util.Collections;
+
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
@@ -105,6 +107,11 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 		@Override
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		@Override
+		public Iterable<SProperty> allProperties() {
+			return Collections.<SProperty>singleton(TRAILING_COMMA);
 		}
 
 		@Override

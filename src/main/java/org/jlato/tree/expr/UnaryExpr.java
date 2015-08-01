@@ -29,6 +29,8 @@ import org.jlato.tree.Kind;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 
+import java.util.Collections;
+
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implements Expr {
@@ -113,6 +115,11 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		@Override
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		@Override
+		public Iterable<SProperty> allProperties() {
+			return Collections.<SProperty>singleton(OP);
 		}
 
 		@Override

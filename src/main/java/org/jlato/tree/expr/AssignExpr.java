@@ -28,6 +28,8 @@ import org.jlato.tree.Kind;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 
+import java.util.Collections;
+
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
@@ -124,6 +126,11 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		@Override
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		@Override
+		public Iterable<SProperty> allProperties() {
+			return Collections.<SProperty>singleton(OP);
 		}
 
 		@Override

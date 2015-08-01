@@ -29,6 +29,8 @@ import org.jlato.printer.SpacingConstraint;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 
+import java.util.Collections;
+
 import static org.jlato.internal.shapes.LexicalShape.keyword;
 import static org.jlato.internal.shapes.LexicalShape.token;
 import static org.jlato.printer.SpacingConstraint.space;
@@ -157,6 +159,11 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 		@Override
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		@Override
+		public Iterable<SProperty> allProperties() {
+			return Collections.<SProperty>singleton(KEYWORD);
 		}
 
 		@Override

@@ -30,6 +30,8 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 
+import java.util.Collections;
+
 import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, PrimitiveType> implements Type {
@@ -106,6 +108,11 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		@Override
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		@Override
+		public Iterable<SProperty> allProperties() {
+			return Collections.<SProperty>singleton(PRIMITIVE);
 		}
 
 		@Override

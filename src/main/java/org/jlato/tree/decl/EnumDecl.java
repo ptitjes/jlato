@@ -30,6 +30,8 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 
+import java.util.Collections;
+
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LSCondition.empty;
 import static org.jlato.internal.shapes.LexicalShape.*;
@@ -199,6 +201,11 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 		@Override
 		public LexicalShape shape() {
 			return shape;
+		}
+
+		@Override
+		public Iterable<SProperty> allProperties() {
+			return Collections.<SProperty>singleton(TRAILING_COMMA);
 		}
 
 		@Override
