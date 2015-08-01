@@ -1827,8 +1827,17 @@ STree<ConstructorDecl.State> ConstructorDecl(STree<SNodeListState> modifiers):
 
   { run(); }
   "{"
-  [ LOOKAHEAD(ExplicitConstructorInvocation()) stmt = ExplicitConstructorInvocation() { stmts = append(stmts, stmt); } ]
-  ( LOOKAHEAD(2) stmt = BlockStatement() { stmts = append(stmts, stmt); } )*
+  [
+    LOOKAHEAD(2)
+    (
+      LOOKAHEAD(ExplicitConstructorInvocation()) stmt = ExplicitConstructorInvocation() { stmts = append(stmts, stmt); }
+    |
+      LOOKAHEAD(2) stmt = BlockStatement() { stmts = append(stmts, stmt); }
+    )
+    ( LOOKAHEAD(2) stmt = BlockStatement() { stmts = append(stmts, stmt); } )*
+  |
+    LOOKAHEAD({quotesMode}) stmts = NodeListVar()
+  ]
   "}"
   { block = dress(BlockStmt.make(stmts)); }
 
