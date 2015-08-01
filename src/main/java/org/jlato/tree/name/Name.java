@@ -53,7 +53,7 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 	}
 
 	public String id() {
-		return location.safeProperty(ID).toString();
+		return location.safeProperty(ID);
 	}
 
 	public Name withId(String id) {
