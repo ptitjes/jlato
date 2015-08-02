@@ -32,4 +32,13 @@ public enum UnaryOp {
 	PostIncrement,
 	PostDecrement,
 	// Keep last comma
+	;
+
+	public boolean isPrefix() {
+		return !isPostfix();
+	}
+
+	public boolean isPostfix() {
+		return this == UnaryOp.PostIncrement || this == UnaryOp.PostDecrement;
+	}
 }

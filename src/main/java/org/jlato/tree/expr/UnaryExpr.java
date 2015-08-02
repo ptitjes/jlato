@@ -75,14 +75,6 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		return location.safeTraversalMutate(EXPR, mutation);
 	}
 
-	public static boolean isPrefix(UnaryOp op) {
-		return !isPostfix(op);
-	}
-
-	public static boolean isPostfix(UnaryOp op) {
-		return op == UnaryOp.PostIncrement || op == UnaryOp.PostDecrement;
-	}
-
 	public static class State extends SNodeState<State> implements Expr.State {
 
 		public final UnaryOp op;
@@ -191,7 +183,7 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		}
 	};
 
-	private final static LexicalShape opShape = token(new LSToken.Provider() {
+	public final static LexicalShape opShape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
 			final UnaryOp op = ((State) tree.state).op;
 			switch (op) {
@@ -221,7 +213,7 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 	public static final LexicalShape shape = alternative(new LSCondition() {
 		public boolean test(STree tree) {
 			final UnaryOp op = ((State) tree.state).op;
-			return isPrefix(op);
+			return op.isPrefix();
 		}
 	}, composite(opShape, child(EXPR)), composite(child(EXPR), opShape));
 }
