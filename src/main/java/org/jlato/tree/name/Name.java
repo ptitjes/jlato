@@ -64,11 +64,6 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 		return location.safePropertyMutate(ID, mutation);
 	}
 
-	@Override
-	public String toString() {
-		return id();
-	}
-
 	public static class State extends SNodeState<State> implements Expr.State {
 
 		public final String id;

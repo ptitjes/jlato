@@ -197,8 +197,21 @@ public abstract class TreeFactory {
 		return new Name(null);
 	}
 
+	public static Name name(String string) {
+		return new Name(string);
+	}
+
 	public static QualifiedName qualifiedName() {
 		return new QualifiedName(NodeOption.<QualifiedName>none(), null);
+	}
+
+	public static QualifiedName qualifiedName(String nameString) {
+		final String[] split = nameString.split("\\.");
+		QualifiedName name = null;
+		for (String part : split) {
+			name = new QualifiedName(NodeOption.of(name), new Name(part));
+		}
+		return name;
 	}
 
 	public static AssertStmt assertStmt() {

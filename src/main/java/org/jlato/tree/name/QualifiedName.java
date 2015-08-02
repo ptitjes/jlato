@@ -37,21 +37,12 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 		return Kind.QualifiedName;
 	}
 
-	public static QualifiedName of(String nameString) {
-		final String[] split = nameString.split("\\.");
-		QualifiedName name = null;
-		for (String part : split) {
-			name = new QualifiedName(NodeOption.of(name), new Name(part));
-		}
-		return name;
+	private QualifiedName(SLocation<QualifiedName.State> location) {
+		super(location);
 	}
 
 	public static STree<QualifiedName.State> make(STree<SNodeOptionState> qualifier, STree<Name.State> name) {
 		return new STree<QualifiedName.State>(new QualifiedName.State(qualifier, name));
-	}
-
-	private QualifiedName(SLocation<QualifiedName.State> location) {
-		super(location);
 	}
 
 	public QualifiedName(NodeOption<QualifiedName> qualifier, Name name) {
@@ -80,10 +71,6 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 
 	public QualifiedName withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(NAME, mutation);
-	}
-
-	public boolean isQualified() {
-		return qualifier().isDefined();
 	}
 
 	public static class State extends SNodeState<State> implements STreeState {
