@@ -323,7 +323,7 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			keyword(LToken.Try),
 			when(childIs(RESOURCES, not(empty())),
 					composite(

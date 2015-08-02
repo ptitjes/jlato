@@ -199,7 +199,7 @@ public class QualifiedName extends TreeBase<QualifiedName.State, Tree, Qualified
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(QUALIFIER, when(some(), composite(element(), token(LToken.Dot)))),
 			child(NAME)
 	);

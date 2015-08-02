@@ -228,7 +228,7 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			when(data(PARENS), token(LToken.ParenthesisLeft)),
 			child(PARAMS, Expr.listShape),
 			when(data(PARENS), token(LToken.ParenthesisRight)),

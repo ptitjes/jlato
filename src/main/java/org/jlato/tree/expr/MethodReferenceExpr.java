@@ -232,7 +232,7 @@ public class MethodReferenceExpr extends TreeBase<MethodReferenceExpr.State, Exp
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(SCOPE),
 			token(LToken.DoubleColon),
 			child(TYPE_ARGS, Type.typeArgumentsShape),

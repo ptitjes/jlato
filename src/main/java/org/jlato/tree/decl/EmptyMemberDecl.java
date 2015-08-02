@@ -100,5 +100,5 @@ public class EmptyMemberDecl extends TreeBase<EmptyMemberDecl.State, MemberDecl,
 		}
 	}
 
-	public final static LexicalShape shape = token(LToken.SemiColon);
+	public static final LexicalShape shape = token(LToken.SemiColon);
 }

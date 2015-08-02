@@ -140,7 +140,7 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			keyword(LToken.Throw), child(EXPR), token(LToken.SemiColon)
 	);
 }

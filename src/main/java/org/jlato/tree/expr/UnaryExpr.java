@@ -197,7 +197,7 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		}
 	});
 
-	public final static LexicalShape shape = alternative(new LSCondition() {
+	public static final LexicalShape shape = alternative(new LSCondition() {
 		public boolean test(STree tree) {
 			final UnaryOp op = ((State) tree.state).op;
 			return isPrefix(op);

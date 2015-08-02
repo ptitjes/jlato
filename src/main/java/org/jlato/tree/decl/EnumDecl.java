@@ -381,7 +381,7 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			keyword(LToken.Enum),
 			child(NAME),

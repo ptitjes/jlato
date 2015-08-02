@@ -228,7 +228,7 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(TARGET),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {

@@ -276,7 +276,7 @@ public class ArrayCreationExpr extends TreeBase<ArrayCreationExpr.State, Expr, A
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			token(LToken.New),
 			child(TYPE),
 			child(DIM_EXPRS, list()),

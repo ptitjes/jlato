@@ -276,7 +276,7 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.singleLineShape),
 			child(TYPE),
 			when(data(VAR_ARGS), token(LToken.Ellipsis)),

@@ -145,5 +145,5 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 		}
 	};
 
-	public final static LexicalShape shape = child(DECLARATION);
+	public static final LexicalShape shape = child(DECLARATION);
 }

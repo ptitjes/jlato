@@ -95,5 +95,5 @@ public class EmptyStmt extends TreeBase<EmptyStmt.State, Stmt, EmptyStmt> implem
 		}
 	}
 
-	public final static LexicalShape shape = token(LToken.SemiColon);
+	public static final LexicalShape shape = token(LToken.SemiColon);
 }

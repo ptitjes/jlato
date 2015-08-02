@@ -144,7 +144,7 @@ public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> imp
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			token(LToken.Return),
 			child(EXPR, when(some(), element().withSpacingBefore(space()))),
 			token(LToken.SemiColon)

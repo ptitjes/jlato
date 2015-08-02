@@ -192,7 +192,7 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(BODY)
 	);

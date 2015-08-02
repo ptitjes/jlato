@@ -141,7 +141,7 @@ public class IntersectionType extends TreeBase<IntersectionType.State, Type, Int
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(TYPES, Type.intersectionShape)
 	);
 }

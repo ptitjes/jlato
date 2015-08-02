@@ -240,7 +240,7 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 			none()
 	);
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
 			child(NAME),
 			child(BOUNDS, boundsShape)

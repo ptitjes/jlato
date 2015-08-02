@@ -188,7 +188,7 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(LABEL, alternative(some(),
 					composite(keyword(LToken.Case), element()),
 					token(LToken.Default)

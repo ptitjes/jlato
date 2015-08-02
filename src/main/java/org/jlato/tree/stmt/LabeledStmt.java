@@ -190,7 +190,7 @@ public class LabeledStmt extends TreeBase<LabeledStmt.State, Stmt, LabeledStmt> 
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			none().withIndentationAfter(indent(IndentationContext.LABEL)),
 			child(LABEL),
 			token(LToken.Colon).withSpacingAfter(spacing(LabeledStmt_AfterLabel)),

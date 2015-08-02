@@ -230,7 +230,7 @@ public class ConditionalExpr extends TreeBase<ConditionalExpr.State, Expr, Condi
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(CONDITION),
 			token(LToken.QuestionMark).withSpacing(space(), space()),
 			child(THEN_EXPR),

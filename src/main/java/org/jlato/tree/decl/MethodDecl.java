@@ -463,7 +463,7 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(TYPE_PARAMS, TypeParameter.listShape),
 			child(TYPE),

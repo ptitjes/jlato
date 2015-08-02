@@ -330,7 +330,7 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 
 	public static final LexicalShape defaultValShape = composite(token(LToken.Default).withSpacingBefore(space()), element());
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(TYPE), child(NAME),
 			token(LToken.ParenthesisLeft), token(LToken.ParenthesisRight),

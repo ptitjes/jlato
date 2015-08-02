@@ -374,7 +374,7 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.multiLineShape),
 			child(TYPE_PARAMS, TypeParameter.listShape),
 			child(NAME),

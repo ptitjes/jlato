@@ -144,7 +144,7 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 		}
 	};
 
-	public final static LexicalShape shape = token(new LSToken.Provider() {
+	public static final LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
 			return new LToken(ParserImplConstants.IDENTIFIER, ((State) tree.state).id);
 		}

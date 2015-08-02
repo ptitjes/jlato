@@ -140,7 +140,7 @@ public class ClassExpr extends TreeBase<ClassExpr.State, Expr, ClassExpr> implem
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(TYPE),
 			token(LToken.Dot), token(LToken.Class)
 	);

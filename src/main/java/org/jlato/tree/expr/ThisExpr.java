@@ -141,7 +141,7 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(CLASS_EXPR, when(some(), composite(element(), token(LToken.Dot)))),
 			token(LToken.This)
 	);

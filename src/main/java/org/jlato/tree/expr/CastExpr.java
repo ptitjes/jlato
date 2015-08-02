@@ -186,7 +186,7 @@ public class CastExpr extends TreeBase<CastExpr.State, Expr, CastExpr> implement
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft), child(TYPE), token(LToken.ParenthesisRight).withSpacingAfter(space()), child(EXPR)
 	);
 }

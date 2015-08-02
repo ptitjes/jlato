@@ -139,7 +139,7 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			token(LToken.ParenthesisLeft), child(INNER), token(LToken.ParenthesisRight)
 	);
 }

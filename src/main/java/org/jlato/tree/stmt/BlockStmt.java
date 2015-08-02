@@ -147,7 +147,7 @@ public class BlockStmt extends TreeBase<BlockStmt.State, Stmt, BlockStmt> implem
 		}
 	};
 
-	public final static LexicalShape shape = alternative(childIs(STMTS, not(empty())),
+	public static final LexicalShape shape = alternative(childIs(STMTS, not(empty())),
 			composite(
 					token(LToken.BraceLeft)
 							.withSpacingAfter(newLine())

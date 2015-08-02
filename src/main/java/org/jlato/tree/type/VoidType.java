@@ -96,5 +96,5 @@ public class VoidType extends TreeBase<VoidType.State, Type, VoidType> implement
 		}
 	}
 
-	public final static LexicalShape shape = token(LToken.Void);
+	public static final LexicalShape shape = token(LToken.Void);
 }

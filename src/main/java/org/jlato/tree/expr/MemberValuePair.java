@@ -187,7 +187,7 @@ public class MemberValuePair extends TreeBase<MemberValuePair.State, Tree, Membe
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(NAME),
 			token(LToken.Assign).withSpacing(space(), space()),
 			child(VALUE)

@@ -142,7 +142,7 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(ANNOTATIONS, AnnotationExpr.singleLineAnnotationsShapeWithSpaceBefore),
 			token(LToken.BracketLeft), token(LToken.BracketRight)
 	);

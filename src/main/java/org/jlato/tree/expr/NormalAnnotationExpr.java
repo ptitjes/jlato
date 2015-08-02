@@ -187,7 +187,7 @@ public class NormalAnnotationExpr extends TreeBase<NormalAnnotationExpr.State, A
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			token(LToken.At), child(NAME),
 			token(LToken.ParenthesisLeft),
 			child(PAIRS, list(token(LToken.Comma).withSpacingAfter(space()))),

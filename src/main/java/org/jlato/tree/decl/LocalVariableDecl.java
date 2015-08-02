@@ -233,7 +233,7 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(MODIFIERS, ExtendedModifier.singleLineShape),
 			child(TYPE),
 			child(VARIABLES, VariableDeclarator.listShape).withSpacingBefore(space())

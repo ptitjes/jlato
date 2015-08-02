@@ -184,7 +184,7 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(NAME),
 			token(LToken.BracketLeft), child(INDEX), token(LToken.BracketRight)
 	);

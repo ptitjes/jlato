@@ -105,5 +105,5 @@ public class EmptyTypeDecl extends TreeBase<EmptyTypeDecl.State, TypeDecl, Empty
 		}
 	}
 
-	public final static LexicalShape shape = token(LToken.SemiColon);
+	public static final LexicalShape shape = token(LToken.SemiColon);
 }

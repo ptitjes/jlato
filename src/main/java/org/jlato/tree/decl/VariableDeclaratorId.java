@@ -186,7 +186,7 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(NAME),
 			child(DIMS, list())
 	);

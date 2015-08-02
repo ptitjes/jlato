@@ -185,7 +185,7 @@ public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationE
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			token(LToken.At), child(NAME),
 			token(LToken.ParenthesisLeft),
 			child(MEMBER_VALUE),

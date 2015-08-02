@@ -228,7 +228,7 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(LEFT),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {

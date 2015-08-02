@@ -193,10 +193,10 @@ public class VariableDeclarator extends TreeBase<VariableDeclarator.State, Tree,
 			element()
 	);
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(ID),
 			child(INIT, when(some(), initializerShape))
 	);
 
-	public final static LexicalShape listShape = list(none(), token(LToken.Comma).withSpacingAfter(space()), none());
+	public static final LexicalShape listShape = list(none(), token(LToken.Comma).withSpacingAfter(space()), none());
 }

@@ -184,7 +184,7 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {

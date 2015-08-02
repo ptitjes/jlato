@@ -183,7 +183,7 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			alternative(childIs(VALUES, not(empty())), composite(
 					token(LToken.BraceLeft).withSpacingAfter(space()),
 					child(VALUES, Expr.listShape),

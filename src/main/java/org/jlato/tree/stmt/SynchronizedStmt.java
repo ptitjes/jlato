@@ -186,7 +186,7 @@ public class SynchronizedStmt extends TreeBase<SynchronizedStmt.State, Stmt, Syn
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			token(LToken.Synchronized),
 			token(LToken.ParenthesisLeft).withSpacingBefore(space()),
 			child(EXPR),

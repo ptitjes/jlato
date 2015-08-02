@@ -278,7 +278,7 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 
 	public static final LexicalShape scopeShape = composite(element(), token(LToken.Dot));
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(SCOPE, when(some(), scopeShape)),
 			child(ANNOTATIONS, AnnotationExpr.singleLineAnnotationsShape),
 			child(NAME),

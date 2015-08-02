@@ -141,7 +141,7 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(TYPES, Type.unionShape)
 	);
 }

@@ -233,7 +233,7 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			child(PACKAGE_DECL).withSpacingAfter(spacing(CompilationUnit_AfterPackageDecl)),
 			child(IMPORTS, ImportDecl.listShape),
 			child(TYPES, TypeDecl.listShape),

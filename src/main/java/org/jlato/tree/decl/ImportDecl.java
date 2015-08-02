@@ -223,7 +223,7 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			keyword(LToken.Import),
 			when(data(STATIC), keyword(LToken.Static)),
 			child(NAME),

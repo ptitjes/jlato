@@ -94,5 +94,5 @@ public class UnknownType extends TreeBase<UnknownType.State, Type, UnknownType> 
 		}
 	}
 
-	public final static LexicalShape shape = none();
+	public static final LexicalShape shape = none();
 }

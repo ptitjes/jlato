@@ -140,5 +140,5 @@ public class TypeExpr extends TreeBase<TypeExpr.State, Expr, TypeExpr> implement
 		}
 	};
 
-	public final static LexicalShape shape = child(TYPE);
+	public static final LexicalShape shape = child(TYPE);
 }

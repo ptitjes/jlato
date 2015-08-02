@@ -143,7 +143,7 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 		}
 	};
 
-	public final static LexicalShape shape = composite(
+	public static final LexicalShape shape = composite(
 			token(LToken.Continue),
 			child(ID, when(some(), element().withSpacingBefore(space()))),
 			token(LToken.SemiColon)
