@@ -244,9 +244,9 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 			child(CONDITION),
 			token(LToken.ParenthesisRight),
 			child(THEN_STMT,
-					alternative(LSCondition.kind(Kind.BlockStmt),
+					alternative(withKind(Kind.BlockStmt),
 							defaultShape().withSpacingBefore(space()),
-							alternative(LSCondition.kind(Kind.ExpressionStmt),
+							alternative(withKind(Kind.ExpressionStmt),
 									defaultShape()
 											.withSpacingBefore(spacing(IfStmt_ThenExpressionStmt))
 											.withIndentationBefore(indent(BLOCK))
@@ -262,11 +262,11 @@ public class IfStmt extends TreeBase<IfStmt.State, Stmt, IfStmt> implements Stmt
 			),
 			child(ELSE_STMT, when(some(), composite(
 					keyword(LToken.Else),
-					element(alternative(LSCondition.kind(Kind.BlockStmt),
+					element(alternative(withKind(Kind.BlockStmt),
 							defaultShape().withSpacingBefore(space()),
-							alternative(LSCondition.kind(Kind.IfStmt),
+							alternative(withKind(Kind.IfStmt),
 									defaultShape().withSpacingBefore(spacing(IfStmt_ElseIfStmt)),
-									alternative(LSCondition.kind(Kind.ExpressionStmt),
+									alternative(withKind(Kind.ExpressionStmt),
 											defaultShape()
 													.withSpacingBefore(spacing(IfStmt_ElseExpressionStmt))
 													.withIndentationBefore(indent(BLOCK))

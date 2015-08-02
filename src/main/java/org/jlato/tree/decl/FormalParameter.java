@@ -32,9 +32,7 @@ import org.jlato.tree.type.Type;
 
 import java.util.Collections;
 
-import static org.jlato.internal.shapes.LSCondition.childIs;
-import static org.jlato.internal.shapes.LSCondition.data;
-import static org.jlato.internal.shapes.LSCondition.not;
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
@@ -282,7 +280,7 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 			child(MODIFIERS, ExtendedModifier.singleLineShape),
 			child(TYPE),
 			when(data(VAR_ARGS), token(LToken.Ellipsis)),
-			when(not(childIs(TYPE, LSCondition.kind(Kind.UnknownType))), none().withSpacingAfter(space())),
+			when(not(childIs(TYPE, withKind(Kind.UnknownType))), none().withSpacingAfter(space())),
 			child(ID)
 	);
 

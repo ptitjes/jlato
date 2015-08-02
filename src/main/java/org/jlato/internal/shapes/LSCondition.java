@@ -59,7 +59,7 @@ public abstract class LSCondition {
 		return childIs(traversal, condition);
 	}
 
-	public static LSCondition kind(final Kind kind) {
+	public static LSCondition withKind(final Kind kind) {
 		return new LSCondition() {
 			public boolean test(STree tree) {
 				return ((SNodeState) tree.state).kind() == kind;
