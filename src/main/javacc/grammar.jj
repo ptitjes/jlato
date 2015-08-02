@@ -2057,7 +2057,7 @@ STree<WildcardType.State> Wildcard(STree<SNodeListState> annotations):
 
 STree<PrimitiveType.State> PrimitiveType(STree<SNodeListState> annotations):
 {
-	PrimitiveType.Primitive primitive;
+	Primitive primitive;
 }
 {
   // Run may be started before annotations
@@ -2068,14 +2068,14 @@ STree<PrimitiveType.State> PrimitiveType(STree<SNodeListState> annotations):
     }
   }
 
-  ( "boolean" { primitive = PrimitiveType.Primitive.Boolean; }
-  | "char"    { primitive = PrimitiveType.Primitive.Char; }
-  | "byte"    { primitive = PrimitiveType.Primitive.Byte; }
-  | "short"   { primitive = PrimitiveType.Primitive.Short; }
-  | "int"     { primitive = PrimitiveType.Primitive.Int; }
-  | "long"    { primitive = PrimitiveType.Primitive.Long; }
-  | "float"   { primitive = PrimitiveType.Primitive.Float; }
-  | "double"  { primitive = PrimitiveType.Primitive.Double; } )
+  ( "boolean" { primitive = Primitive.Boolean; }
+  | "char"    { primitive = Primitive.Char; }
+  | "byte"    { primitive = Primitive.Byte; }
+  | "short"   { primitive = Primitive.Short; }
+  | "int"     { primitive = Primitive.Int; }
+  | "long"    { primitive = Primitive.Long; }
+  | "float"   { primitive = Primitive.Float; }
+  | "double"  { primitive = Primitive.Double; } )
   { return dress(PrimitiveType.make(annotations, primitive)); }
 }
 
@@ -2168,7 +2168,7 @@ STree<? extends Expr.State> Expression():
 // around this.
 {
 	STree<? extends Expr.State> ret;
-	AssignExpr.AssignOp op;
+	AssignOp op;
 	STree<? extends Expr.State> value;
 	STree<SNodeListState> params;
 }
@@ -2265,23 +2265,23 @@ STree<FormalParameter.State> makeFormalParameter(STree<Name.State> name) {
   );
 }
 
-AssignExpr.AssignOp AssignmentOperator():
+AssignOp AssignmentOperator():
 {
-	AssignExpr.AssignOp ret;
+	AssignOp ret;
 }
 {
-  ( "="    { ret = AssignExpr.AssignOp.Normal; }
-  | "*="   { ret = AssignExpr.AssignOp.Times; }
-  | "/="   { ret = AssignExpr.AssignOp.Divide; }
-  | "%="   { ret = AssignExpr.AssignOp.Remainder; }
-  | "+="   { ret = AssignExpr.AssignOp.Plus; }
-  | "-="   { ret = AssignExpr.AssignOp.Minus; }
-  | "<<="  { ret = AssignExpr.AssignOp.LeftShift; }
-  | ">>="  { ret = AssignExpr.AssignOp.RightSignedShift; }
-  | ">>>=" { ret = AssignExpr.AssignOp.RightUnsignedShift; }
-  | "&="   { ret = AssignExpr.AssignOp.And; }
-  | "^="   { ret = AssignExpr.AssignOp.XOr; }
-  | "|="   { ret = AssignExpr.AssignOp.Or; } )
+  ( "="    { ret = AssignOp.Normal; }
+  | "*="   { ret = AssignOp.Times; }
+  | "/="   { ret = AssignOp.Divide; }
+  | "%="   { ret = AssignOp.Remainder; }
+  | "+="   { ret = AssignOp.Plus; }
+  | "-="   { ret = AssignOp.Minus; }
+  | "<<="  { ret = AssignOp.LeftShift; }
+  | ">>="  { ret = AssignOp.RightSignedShift; }
+  | ">>>=" { ret = AssignOp.RightUnsignedShift; }
+  | "&="   { ret = AssignOp.And; }
+  | "^="   { ret = AssignOp.XOr; }
+  | "|="   { ret = AssignOp.Or; } )
   { return ret; }
 }
 
@@ -2311,7 +2311,7 @@ STree<? extends Expr.State> ConditionalOrExpression():
   (
     LOOKAHEAD(2)
     { lateRun(); } "||" right = ConditionalAndExpression()
-    { ret = dress(BinaryExpr.make(ret, BinaryExpr.BinaryOp.Or, right)); }
+    { ret = dress(BinaryExpr.make(ret, BinaryOp.Or, right)); }
   )*
   { return ret; }
 }
@@ -2326,7 +2326,7 @@ STree<? extends Expr.State> ConditionalAndExpression():
   (
     LOOKAHEAD(2)
     { lateRun(); } "&&" right = InclusiveOrExpression()
-    { ret = dress(BinaryExpr.make(ret, BinaryExpr.BinaryOp.And, right)); }
+    { ret = dress(BinaryExpr.make(ret, BinaryOp.And, right)); }
   )*
   { return ret; }
 }
@@ -2341,7 +2341,7 @@ STree<? extends Expr.State> InclusiveOrExpression():
   (
     LOOKAHEAD(2)
     { lateRun(); } "|" right = ExclusiveOrExpression()
-    { ret = dress(BinaryExpr.make(ret, BinaryExpr.BinaryOp.BinOr, right)); }
+    { ret = dress(BinaryExpr.make(ret, BinaryOp.BinOr, right)); }
   )*
   { return ret; }
 }
@@ -2356,7 +2356,7 @@ STree<? extends Expr.State> ExclusiveOrExpression():
   (
     LOOKAHEAD(2)
     { lateRun(); } "^" right = AndExpression()
-    { ret = dress(BinaryExpr.make(ret, BinaryExpr.BinaryOp.XOr, right)); }
+    { ret = dress(BinaryExpr.make(ret, BinaryOp.XOr, right)); }
   )*
   { return ret; }
 }
@@ -2371,7 +2371,7 @@ STree<? extends Expr.State> AndExpression():
   (
     LOOKAHEAD(2)
     { lateRun(); } "&" right = EqualityExpression()
-    { ret = dress(BinaryExpr.make(ret, BinaryExpr.BinaryOp.BinAnd, right)); }
+    { ret = dress(BinaryExpr.make(ret, BinaryOp.BinAnd, right)); }
   )*
   { return ret; }
 }
@@ -2380,15 +2380,15 @@ STree<? extends Expr.State> EqualityExpression():
 {
 	STree<? extends Expr.State> ret;
 	STree<? extends Expr.State> right;
-	BinaryExpr.BinaryOp op;
+	BinaryOp op;
 }
 {
   ret = InstanceOfExpression()
   (
     LOOKAHEAD(2)
     { lateRun(); }
-    ( "==" { op = BinaryExpr.BinaryOp.Equal; } |
-      "!=" { op = BinaryExpr.BinaryOp.NotEqual; } )
+    ( "==" { op = BinaryOp.Equal; } |
+      "!=" { op = BinaryOp.NotEqual; } )
     right = InstanceOfExpression()
     { ret = dress(BinaryExpr.make(ret, op, right)); }
   )*
@@ -2416,17 +2416,17 @@ STree<? extends Expr.State> RelationalExpression():
 {
 	STree<? extends Expr.State> ret;
 	STree<? extends Expr.State> right;
-	BinaryExpr.BinaryOp op;
+	BinaryOp op;
 }
 {
   ret = ShiftExpression()
   (
     LOOKAHEAD(2)
     { lateRun(); }
-  	( "<"  { op = BinaryExpr.BinaryOp.Less; } |
-  	  ">"  { op = BinaryExpr.BinaryOp.Greater; } |
-  	  "<=" { op = BinaryExpr.BinaryOp.LessOrEqual; } |
-  	  ">=" { op = BinaryExpr.BinaryOp.GreaterOrEqual; } )
+  	( "<"  { op = BinaryOp.Less; } |
+  	  ">"  { op = BinaryOp.Greater; } |
+  	  "<=" { op = BinaryOp.LessOrEqual; } |
+  	  ">=" { op = BinaryOp.GreaterOrEqual; } )
   	right = ShiftExpression()
   	{ ret = dress(BinaryExpr.make(ret, op, right)); }
   )*
@@ -2437,16 +2437,16 @@ STree<? extends Expr.State> ShiftExpression():
 {
 	STree<? extends Expr.State> ret;
 	STree<? extends Expr.State> right;
-	BinaryExpr.BinaryOp op;
+	BinaryOp op;
 }
 {
   ret = AdditiveExpression()
   (
     LOOKAHEAD(2)
     { lateRun(); }
-  	( "<<"             { op = BinaryExpr.BinaryOp.LeftShift; } |
-  	  RSIGNEDSHIFT()   { op = BinaryExpr.BinaryOp.RightSignedShift; } |
-  	  RUNSIGNEDSHIFT() { op = BinaryExpr.BinaryOp.RightUnsignedShift; } )
+  	( "<<"             { op = BinaryOp.LeftShift; } |
+  	  RSIGNEDSHIFT()   { op = BinaryOp.RightSignedShift; } |
+  	  RUNSIGNEDSHIFT() { op = BinaryOp.RightUnsignedShift; } )
   	right = AdditiveExpression()
   	{ ret = dress(BinaryExpr.make(ret, op, right)); }
   )*
@@ -2457,15 +2457,15 @@ STree<? extends Expr.State> AdditiveExpression():
 {
 	STree<? extends Expr.State> ret;
 	STree<? extends Expr.State> right;
-	BinaryExpr.BinaryOp op;
+	BinaryOp op;
 }
 {
   ret = MultiplicativeExpression()
   (
     LOOKAHEAD(2)
     { lateRun(); }
-  	( "+" { op = BinaryExpr.BinaryOp.Plus; } |
-  	  "-" { op = BinaryExpr.BinaryOp.Minus; } )
+  	( "+" { op = BinaryOp.Plus; } |
+  	  "-" { op = BinaryOp.Minus; } )
   	right = MultiplicativeExpression()
   	{ ret = dress(BinaryExpr.make(ret, op, right)); }
   )*
@@ -2476,16 +2476,16 @@ STree<? extends Expr.State> MultiplicativeExpression():
 {
 	STree<? extends Expr.State> ret;
 	STree<? extends Expr.State> right;
-	BinaryExpr.BinaryOp op;
+	BinaryOp op;
 }
 {
   ret = UnaryExpression()
   (
     LOOKAHEAD(2)
     { lateRun(); }
-  	( "*" { op = BinaryExpr.BinaryOp.Times; } |
-  	  "/" { op = BinaryExpr.BinaryOp.Divide; } |
-  	  "%" { op = BinaryExpr.BinaryOp.Remainder; } )
+  	( "*" { op = BinaryOp.Times; } |
+  	  "/" { op = BinaryOp.Divide; } |
+  	  "%" { op = BinaryOp.Remainder; } )
   	right = UnaryExpression()
   	{ ret = dress(BinaryExpr.make(ret, op, right)); }
   )*
@@ -2495,15 +2495,15 @@ STree<? extends Expr.State> MultiplicativeExpression():
 STree<? extends Expr.State> UnaryExpression():
 {
 	STree<? extends Expr.State> ret;
-	UnaryExpr.UnaryOp op;
+	UnaryOp op;
 }
 {
   (
     ret = PrefixExpression()
   |
     { run(); }
-    ( "+" { op = UnaryExpr.UnaryOp.Positive; } |
-      "-" { op = UnaryExpr.UnaryOp.Negative; } )
+    ( "+" { op = UnaryOp.Positive; } |
+      "-" { op = UnaryOp.Negative; } )
     ret = UnaryExpression()
     { ret = dress(UnaryExpr.make(op, ret)); }
   |
@@ -2514,13 +2514,13 @@ STree<? extends Expr.State> UnaryExpression():
 
 STree<? extends Expr.State> PrefixExpression():
 {
-	UnaryExpr.UnaryOp op;
+	UnaryOp op;
 	STree<? extends Expr.State> ret;
 }
 {
   { run(); }
-  ( "++" { op = UnaryExpr.UnaryOp.PreIncrement; } |
-    "--" { op = UnaryExpr.UnaryOp.PreDecrement; } )
+  ( "++" { op = UnaryOp.PreIncrement; } |
+    "--" { op = UnaryOp.PreDecrement; } )
   ret = UnaryExpression()
   { return dress(UnaryExpr.make(op, ret)); }
 }
@@ -2528,13 +2528,13 @@ STree<? extends Expr.State> PrefixExpression():
 STree<? extends Expr.State> UnaryExpressionNotPlusMinus():
 {
 	STree<? extends Expr.State> ret;
-	UnaryExpr.UnaryOp op;
+	UnaryOp op;
 }
 {
   (
     { run(); }
-	( "~" { op = UnaryExpr.UnaryOp.Inverse; } |
-	  "!" { op = UnaryExpr.UnaryOp.Not; } )
+	( "~" { op = UnaryOp.Inverse; } |
+	  "!" { op = UnaryOp.Not; } )
 	ret = UnaryExpression()
 	{ ret = dress(UnaryExpr.make(op, ret)); }
   |
@@ -2549,15 +2549,15 @@ STree<? extends Expr.State> UnaryExpressionNotPlusMinus():
 STree<? extends Expr.State> PostfixExpression():
 {
 	STree<? extends Expr.State> ret;
-	UnaryExpr.UnaryOp op;
+	UnaryOp op;
 }
 {
   ret = PrimaryExpression()
   [
   	LOOKAHEAD(2)
     { lateRun(); }
-    ( "++" { op = UnaryExpr.UnaryOp.PostIncrement; } |
-      "--" { op = UnaryExpr.UnaryOp.PostDecrement; } )
+    ( "++" { op = UnaryOp.PostIncrement; } |
+      "--" { op = UnaryOp.PostDecrement; } )
     { ret = dress(UnaryExpr.make(op, ret)); }
   ]
   { return ret; }
@@ -3057,7 +3057,7 @@ STree<EmptyStmt.State> EmptyStatement():
 STree<ExpressionStmt.State> StatementExpression():
 {
 	STree<? extends Expr.State> expr;
-	AssignExpr.AssignOp op;
+	AssignOp op;
 	STree<? extends Expr.State> value;
 }
 {
@@ -3068,10 +3068,10 @@ STree<ExpressionStmt.State> StatementExpression():
     expr = PrimaryExpression()
     [
       { lateRun(); } "++"
-      { expr = dress(UnaryExpr.make(UnaryExpr.UnaryOp.PostIncrement, expr));  }
+      { expr = dress(UnaryExpr.make(UnaryOp.PostIncrement, expr));  }
     |
       { lateRun(); } "--"
-      { expr = dress(UnaryExpr.make(UnaryExpr.UnaryOp.PostDecrement, expr));  }
+      { expr = dress(UnaryExpr.make(UnaryOp.PostDecrement, expr));  }
     |
       { lateRun(); } op = AssignmentOperator() value = Expression()
       { expr = dress(AssignExpr.make(expr, op, value)); }

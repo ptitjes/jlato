@@ -11,7 +11,7 @@
           literalClass: java.lang.Void,
           literalString: null,
         },
-        op: ==,
+        op: Equal,
         right: {
           class: org.jlato.tree.name.Name,
           id: targetRef,

@@ -193,7 +193,28 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 
 	private final static LexicalShape opShape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
-			return ((State) tree.state).op.token;
+			final UnaryOp op = ((State) tree.state).op;
+			switch (op) {
+				case Positive:
+					return LToken.Plus;
+				case Negative:
+					return LToken.Minus;
+				case PreIncrement:
+					return LToken.Increment;
+				case PreDecrement:
+					return LToken.Decrement;
+				case Not:
+					return LToken.Not;
+				case Inverse:
+					return LToken.Inverse;
+				case PostIncrement:
+					return LToken.Increment;
+				case PostDecrement:
+					return LToken.Decrement;
+				default:
+					// Can't happen by definition of enum
+					throw new IllegalStateException();
+			}
 		}
 	});
 
@@ -203,28 +224,4 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 			return isPrefix(op);
 		}
 	}, composite(opShape, child(EXPR)), composite(child(EXPR), opShape));
-
-	public enum UnaryOp {
-		Positive(LToken.Plus),
-		Negative(LToken.Minus),
-		PreIncrement(LToken.Increment),
-		PreDecrement(LToken.Decrement),
-		Not(LToken.Not),
-		Inverse(LToken.Inverse),
-		PostIncrement(LToken.Increment),
-		PostDecrement(LToken.Decrement),
-		// Keep last comma
-		;
-
-
-		protected final LToken token;
-
-		UnaryOp(LToken token) {
-			this.token = token;
-		}
-
-		public String toString() {
-			return token.toString();
-		}
-	}
 }

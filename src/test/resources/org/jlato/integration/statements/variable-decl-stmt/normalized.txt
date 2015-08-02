@@ -10,7 +10,7 @@
         class: org.jlato.tree.type.PrimitiveType,
         annotations: [
         ],
-        primitive: int,
+        primitive: Int,
       },
       variables: [
         {

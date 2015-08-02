@@ -188,31 +188,29 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 			child(ANNOTATIONS, list()),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
-					return ((State) tree.state).primitive.token;
+					final Primitive primitive = ((State) tree.state).primitive;
+					switch (primitive) {
+						case Boolean:
+							return LToken.Boolean;
+						case Char:
+							return LToken.Char;
+						case Byte:
+							return LToken.Byte;
+						case Short:
+							return LToken.Short;
+						case Int:
+							return LToken.Int;
+						case Long:
+							return LToken.Long;
+						case Float:
+							return LToken.Float;
+						case Double:
+							return LToken.Double;
+						default:
+							// Can't happen by definition of enum
+							throw new IllegalStateException();
+					}
 				}
 			})
 	);
-
-	public enum Primitive {
-		Boolean(LToken.Boolean),
-		Char(LToken.Char),
-		Byte(LToken.Byte),
-		Short(LToken.Short),
-		Int(LToken.Int),
-		Long(LToken.Long),
-		Float(LToken.Float),
-		Double(LToken.Double),
-		// Keep last comma
-		;
-
-		protected final LToken token;
-
-		Primitive(LToken token) {
-			this.token = token;
-		}
-
-		public String toString() {
-			return token.toString();
-		}
-	}
 }

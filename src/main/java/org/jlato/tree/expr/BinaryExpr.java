@@ -232,43 +232,52 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 			child(LEFT),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
-					return ((State) tree.state).op.token;
+					final BinaryOp op = ((State) tree.state).op;
+					switch (op) {
+						case Or:
+							return LToken.Or;
+						case And:
+							return LToken.And;
+						case BinOr:
+							return LToken.BinOr;
+						case BinAnd:
+							return LToken.BinAnd;
+						case XOr:
+							return LToken.XOr;
+						case Equal:
+							return LToken.Equal;
+						case NotEqual:
+							return LToken.NotEqual;
+						case Less:
+							return LToken.Less;
+						case Greater:
+							return LToken.Greater;
+						case LessOrEqual:
+							return LToken.LessOrEqual;
+						case GreaterOrEqual:
+							return LToken.GreaterOrEqual;
+						case LeftShift:
+							return LToken.LShift;
+						case RightSignedShift:
+							return LToken.RSignedShift;
+						case RightUnsignedShift:
+							return LToken.RUnsignedShift;
+						case Plus:
+							return LToken.Plus;
+						case Minus:
+							return LToken.Minus;
+						case Times:
+							return LToken.Times;
+						case Divide:
+							return LToken.Divide;
+						case Remainder:
+							return LToken.Remainder;
+						default:
+							// Can't happen by definition of enum
+							throw new IllegalStateException();
+					}
 				}
 			}).withSpacing(space(), space()),
 			child(RIGHT)
 	);
-
-	public enum BinaryOp {
-		Or(LToken.Or),
-		And(LToken.And),
-		BinOr(LToken.BinOr),
-		BinAnd(LToken.BinAnd),
-		XOr(LToken.XOr),
-		Equal(LToken.Equal),
-		NotEqual(LToken.NotEqual),
-		Less(LToken.Less),
-		Greater(LToken.Greater),
-		LessOrEqual(LToken.LessOrEqual),
-		GreaterOrEqual(LToken.GreaterOrEqual),
-		LeftShift(LToken.LShift),
-		RightSignedShift(LToken.RSignedShift),
-		RightUnsignedShift(LToken.RUnsignedShift),
-		Plus(LToken.Plus),
-		Minus(LToken.Minus),
-		Times(LToken.Times),
-		Divide(LToken.Divide),
-		Remainder(LToken.Remainder),
-		// Keep last comma
-		;
-
-		protected final LToken token;
-
-		BinaryOp(LToken token) {
-			this.token = token;
-		}
-
-		public String toString() {
-			return token.toString();
-		}
-	}
 }

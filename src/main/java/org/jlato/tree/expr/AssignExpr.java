@@ -232,32 +232,38 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 			child(TARGET),
 			token(new LSToken.Provider() {
 				public LToken tokenFor(STree tree) {
-					return ((State) tree.state).op.token;
+					final AssignOp op = ((State) tree.state).op;
+					switch (op) {
+						case Normal:
+							return LToken.Assign;
+						case Plus:
+							return LToken.AssignPlus;
+						case Minus:
+							return LToken.AssignMinus;
+						case Times:
+							return LToken.AssignTimes;
+						case Divide:
+							return LToken.AssignDivide;
+						case And:
+							return LToken.AssignAnd;
+						case Or:
+							return LToken.AssignOr;
+						case XOr:
+							return LToken.AssignXOr;
+						case Remainder:
+							return LToken.AssignRemainder;
+						case LeftShift:
+							return LToken.AssignLShift;
+						case RightSignedShift:
+							return LToken.AssignRSignedShift;
+						case RightUnsignedShift:
+							return LToken.AssignRUnsignedShift;
+						default:
+							// Can't happen by definition of enum
+							throw new IllegalStateException();
+					}
 				}
 			}).withSpacing(space(), space()),
 			child(VALUE)
 	);
-
-	public enum AssignOp {
-		Normal(LToken.Assign),
-		Plus(LToken.AssignPlus),
-		Minus(LToken.AssignMinus),
-		Times(LToken.AssignTimes),
-		Divide(LToken.AssignDivide),
-		And(LToken.AssignAnd),
-		Or(LToken.AssignOr),
-		XOr(LToken.AssignXOr),
-		Remainder(LToken.AssignRemainder),
-		LeftShift(LToken.AssignLShift),
-		RightSignedShift(LToken.AssignRSignedShift),
-		RightUnsignedShift(LToken.AssignRUnsignedShift),
-		// Keep last comma
-		;
-
-		protected final LToken token;
-
-		AssignOp(LToken token) {
-			this.token = token;
-		}
-	}
 }
