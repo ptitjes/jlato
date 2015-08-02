@@ -62,15 +62,6 @@ public class InterfaceDecl extends TreeBase<InterfaceDecl.State, TypeDecl, Inter
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 
-	@Override
-	public MemberKind memberKind() {
-		return MemberKind.Type;
-	}
-
-	public TypeKind typeKind() {
-		return TypeKind.Interface;
-	}
-
 	public Name name() {
 		return location.safeTraversal(NAME);
 	}

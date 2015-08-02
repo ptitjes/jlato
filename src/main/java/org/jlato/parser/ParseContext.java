@@ -28,7 +28,7 @@ import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.tree.decl.TypeDecl.TypeKind;
+import static org.jlato.parser.ParserBase.TypeKind;
 
 /**
  * @author Didier Villevalois

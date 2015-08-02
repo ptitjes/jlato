@@ -32,8 +32,6 @@ import static org.jlato.printer.SpacingConstraint.*;
 
 public interface MemberDecl extends Decl {
 
-	MemberKind memberKind();
-
 	interface State extends Decl.State {
 	}
 
@@ -61,16 +59,4 @@ public interface MemberDecl extends Decl {
 			none().withSpacingAfter(spacing(ClassBody_BetweenMembers)),
 			none().withSpacingAfter(spacing(ClassBody_AfterMembers))
 	);
-
-	enum MemberKind {
-		Empty,
-		Initializer,
-		Constructor,
-		Method,
-		AnnotationMember,
-		Field,
-		EnumConstant,
-		Type,
-		// Keep last comma
-	}
 }

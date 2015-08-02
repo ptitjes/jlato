@@ -25,7 +25,6 @@ import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.DressingBuilder;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.decl.*;
-import org.jlato.tree.decl.TypeDecl.TypeKind;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.type.Type;
@@ -253,6 +252,15 @@ abstract class ParserBase {
 	abstract STree<SNodeListState> Annotations() throws ParseException;
 
 	abstract STree<? extends Type.State> Type(STree<SNodeListState> annotations) throws ParseException;
+
+	public enum TypeKind {
+		Empty,
+		Class,
+		Interface,
+		Enum,
+		AnnotationType,
+		// Keep last comma
+	}
 
 	static class TokenBase {
 

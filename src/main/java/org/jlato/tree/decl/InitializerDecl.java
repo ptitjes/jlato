@@ -50,11 +50,6 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 		super(new SLocation<InitializerDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<BlockStmt.State>treeOf(body))));
 	}
 
-	@Override
-	public MemberKind memberKind() {
-		return MemberKind.Initializer;
-	}
-
 	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}

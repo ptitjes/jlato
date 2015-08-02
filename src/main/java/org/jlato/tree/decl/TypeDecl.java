@@ -28,21 +28,10 @@ import static org.jlato.printer.SpacingConstraint.spacing;
 
 public interface TypeDecl extends MemberDecl {
 
-	TypeKind typeKind();
-
 	interface State extends MemberDecl.State {
 	}
 
 	LexicalShape listShape = list(
 			none().withSpacingAfter(spacing(CompilationUnit_BetweenTopLevelDecl))
 	);
-
-	enum TypeKind {
-		Empty,
-		Class,
-		Interface,
-		Enum,
-		AnnotationType,
-		// Keep last comma
-	}
 }

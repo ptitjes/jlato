@@ -52,11 +52,6 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 		super(new SLocation<ConstructorDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<SNodeListState>treeOf(typeParams), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeListState>treeOf(params), TreeBase.<SNodeListState>treeOf(throwsClause), TreeBase.<BlockStmt.State>treeOf(body))));
 	}
 
-	@Override
-	public MemberKind memberKind() {
-		return MemberKind.Constructor;
-	}
-
 	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}

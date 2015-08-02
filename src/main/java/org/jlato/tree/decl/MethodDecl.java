@@ -51,11 +51,6 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 		super(new SLocation<MethodDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<SNodeListState>treeOf(typeParams), TreeBase.<Type.State>treeOf(type), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeListState>treeOf(params), TreeBase.<SNodeListState>treeOf(dims), TreeBase.<SNodeListState>treeOf(throwsClause), TreeBase.<SNodeOptionState>treeOf(body))));
 	}
 
-	@Override
-	public MemberKind memberKind() {
-		return MemberKind.Method;
-	}
-
 	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}

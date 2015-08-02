@@ -29,7 +29,6 @@ import org.jlato.tree.type.QualifiedType;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.SpacingConstraint.space;
 
 public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> implements TypeDecl {
 
@@ -59,15 +58,6 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 
 	public ClassDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
-	}
-
-	@Override
-	public MemberKind memberKind() {
-		return MemberKind.Type;
-	}
-
-	public TypeKind typeKind() {
-		return TypeKind.Class;
 	}
 
 	public Name name() {

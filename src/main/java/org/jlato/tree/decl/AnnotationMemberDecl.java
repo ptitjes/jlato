@@ -23,7 +23,6 @@ import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.printer.SpacingConstraint;
 import org.jlato.tree.*;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
@@ -49,11 +48,6 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 
 	public AnnotationMemberDecl(NodeList<ExtendedModifier> modifiers, Type type, Name name, NodeList<ArrayDim> dims, NodeOption<Expr> defaultValue) {
 		super(new SLocation<AnnotationMemberDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<Type.State>treeOf(type), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeListState>treeOf(dims), TreeBase.<SNodeOptionState>treeOf(defaultValue))));
-	}
-
-	@Override
-	public MemberKind memberKind() {
-		return MemberKind.AnnotationMember;
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

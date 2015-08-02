@@ -49,11 +49,6 @@ public class EmptyMemberDecl extends TreeBase<EmptyMemberDecl.State, MemberDecl,
 		super(new SLocation<EmptyMemberDecl.State>(make()));
 	}
 
-	@Override
-	public MemberKind memberKind() {
-		return MemberKind.Empty;
-	}
-
 	public static class State extends SNodeState<State> implements MemberDecl.State {
 
 		State() {

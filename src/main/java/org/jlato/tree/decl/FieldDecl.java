@@ -50,11 +50,6 @@ public class FieldDecl extends TreeBase<FieldDecl.State, MemberDecl, FieldDecl> 
 		super(new SLocation<FieldDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<Type.State>treeOf(type), TreeBase.<SNodeListState>treeOf(variables))));
 	}
 
-	@Override
-	public MemberKind memberKind() {
-		return MemberKind.Field;
-	}
-
 	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}

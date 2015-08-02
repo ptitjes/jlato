@@ -72,15 +72,6 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 		return location.safeTraversalMutate(MODIFIERS, mutation);
 	}
 
-	@Override
-	public MemberKind memberKind() {
-		return MemberKind.Type;
-	}
-
-	public TypeKind typeKind() {
-		return TypeKind.Enum;
-	}
-
 	public Name name() {
 		return location.safeTraversal(NAME);
 	}

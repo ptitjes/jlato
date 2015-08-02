@@ -50,11 +50,6 @@ public class EnumConstantDecl extends TreeBase<EnumConstantDecl.State, MemberDec
 		super(new SLocation<EnumConstantDecl.State>(make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeOptionState>treeOf(args), TreeBase.<SNodeOptionState>treeOf(classBody))));
 	}
 
-	@Override
-	public MemberKind memberKind() {
-		return MemberKind.EnumConstant;
-	}
-
 	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(MODIFIERS);
 	}

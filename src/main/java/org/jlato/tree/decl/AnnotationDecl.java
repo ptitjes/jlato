@@ -23,7 +23,6 @@ import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.printer.SpacingConstraint;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
@@ -61,15 +60,6 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 
 	public AnnotationDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(MODIFIERS, mutation);
-	}
-
-	@Override
-	public MemberKind memberKind() {
-		return MemberKind.Type;
-	}
-
-	public TypeKind typeKind() {
-		return TypeKind.AnnotationType;
 	}
 
 	public Name name() {
