@@ -39,7 +39,7 @@ public class SVarState implements STreeState {
 
 	@Override
 	public Tree instantiate(SLocation<?> location) {
-		return new FakeTree((SLocation<SVarState>) location);
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -64,12 +64,5 @@ public class SVarState implements STreeState {
 
 	@Override
 	public void validate(STree<?> tree) {
-
-	}
-
-	class FakeTree extends TreeBase<SVarState, Tree, Tree> {
-		protected FakeTree(SLocation<SVarState> location) {
-			super(location);
-		}
 	}
 }
