@@ -105,8 +105,8 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 			return new BinaryExpr.State(left, op, right);
 		}
 
-		public BinaryExpr.State withOp(BinaryOp operator) {
-			return new BinaryExpr.State(left, operator, right);
+		public BinaryExpr.State withOp(BinaryOp op) {
+			return new BinaryExpr.State(left, op, right);
 		}
 
 		public BinaryExpr.State withRight(STree<? extends Expr.State> right) {

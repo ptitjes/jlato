@@ -105,8 +105,8 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 			return new AssignExpr.State(target, op, value);
 		}
 
-		public AssignExpr.State withOp(AssignOp operator) {
-			return new AssignExpr.State(target, operator, value);
+		public AssignExpr.State withOp(AssignOp op) {
+			return new AssignExpr.State(target, op, value);
 		}
 
 		public AssignExpr.State withValue(STree<? extends Expr.State> value) {
