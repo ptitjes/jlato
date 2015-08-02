@@ -134,12 +134,12 @@ public class Name extends TreeBase<Name.State, Expr, Name> implements Expr {
 	private static STypeSafeProperty<Name.State, String> ID = new STypeSafeProperty<Name.State, String>() {
 
 		@Override
-		public String doRetrieve(State state) {
+		public String doRetrieve(Name.State state) {
 			return state.id;
 		}
 
 		@Override
-		public Name.State doRebuildParentState(State state, String value) {
+		public Name.State doRebuildParentState(Name.State state, String value) {
 			return state.withId(value);
 		}
 	};

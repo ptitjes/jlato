@@ -218,12 +218,12 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 	private static STypeSafeProperty<BinaryExpr.State, BinaryOp> OP = new STypeSafeProperty<BinaryExpr.State, BinaryOp>() {
 
 		@Override
-		public BinaryOp doRetrieve(State state) {
+		public BinaryOp doRetrieve(BinaryExpr.State state) {
 			return state.op;
 		}
 
 		@Override
-		public BinaryExpr.State doRebuildParentState(State state, BinaryOp value) {
+		public BinaryExpr.State doRebuildParentState(BinaryExpr.State state, BinaryOp value) {
 			return state.withOp(value);
 		}
 	};

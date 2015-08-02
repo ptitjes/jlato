@@ -371,12 +371,12 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	private static STypeSafeProperty<EnumDecl.State, Boolean> TRAILING_COMMA = new STypeSafeProperty<EnumDecl.State, Boolean>() {
 
 		@Override
-		public Boolean doRetrieve(State state) {
+		public Boolean doRetrieve(EnumDecl.State state) {
 			return state.trailingComma;
 		}
 
 		@Override
-		public EnumDecl.State doRebuildParentState(State state, Boolean value) {
+		public EnumDecl.State doRebuildParentState(EnumDecl.State state, Boolean value) {
 			return state.withTrailingComma(value);
 		}
 	};

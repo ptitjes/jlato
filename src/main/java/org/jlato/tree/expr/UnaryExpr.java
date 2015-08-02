@@ -181,12 +181,12 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 	private static STypeSafeProperty<UnaryExpr.State, UnaryOp> OP = new STypeSafeProperty<UnaryExpr.State, UnaryOp>() {
 
 		@Override
-		public UnaryOp doRetrieve(State state) {
+		public UnaryOp doRetrieve(UnaryExpr.State state) {
 			return state.op;
 		}
 
 		@Override
-		public UnaryExpr.State doRebuildParentState(State state, UnaryOp value) {
+		public UnaryExpr.State doRebuildParentState(UnaryExpr.State state, UnaryOp value) {
 			return state.withOp(value);
 		}
 	};

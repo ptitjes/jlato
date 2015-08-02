@@ -266,12 +266,12 @@ public class FormalParameter extends TreeBase<FormalParameter.State, Tree, Forma
 	private static STypeSafeProperty<FormalParameter.State, Boolean> VAR_ARGS = new STypeSafeProperty<FormalParameter.State, Boolean>() {
 
 		@Override
-		public Boolean doRetrieve(State state) {
+		public Boolean doRetrieve(FormalParameter.State state) {
 			return state.isVarArgs;
 		}
 
 		@Override
-		public FormalParameter.State doRebuildParentState(State state, Boolean value) {
+		public FormalParameter.State doRebuildParentState(FormalParameter.State state, Boolean value) {
 			return state.setVarArgs(value);
 		}
 	};

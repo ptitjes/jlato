@@ -218,12 +218,12 @@ public class LambdaExpr extends TreeBase<LambdaExpr.State, Expr, LambdaExpr> imp
 	private static STypeSafeProperty<LambdaExpr.State, Boolean> PARENS = new STypeSafeProperty<LambdaExpr.State, Boolean>() {
 
 		@Override
-		public Boolean doRetrieve(State state) {
+		public Boolean doRetrieve(LambdaExpr.State state) {
 			return state.hasParens;
 		}
 
 		@Override
-		public LambdaExpr.State doRebuildParentState(State state, Boolean value) {
+		public LambdaExpr.State doRebuildParentState(LambdaExpr.State state, Boolean value) {
 			return state.setParens(value);
 		}
 	};

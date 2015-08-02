@@ -173,12 +173,12 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 	private static STypeSafeProperty<ArrayInitializerExpr.State, Boolean> TRAILING_COMMA = new STypeSafeProperty<ArrayInitializerExpr.State, Boolean>() {
 
 		@Override
-		public Boolean doRetrieve(State state) {
+		public Boolean doRetrieve(ArrayInitializerExpr.State state) {
 			return state.trailingComma;
 		}
 
 		@Override
-		public ArrayInitializerExpr.State doRebuildParentState(State state, Boolean value) {
+		public ArrayInitializerExpr.State doRebuildParentState(ArrayInitializerExpr.State state, Boolean value) {
 			return state.withTrailingComma(value);
 		}
 	};

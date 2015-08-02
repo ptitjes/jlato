@@ -174,12 +174,12 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 	private static STypeSafeProperty<PrimitiveType.State, Primitive> PRIMITIVE = new STypeSafeProperty<PrimitiveType.State, Primitive>() {
 
 		@Override
-		public Primitive doRetrieve(State state) {
+		public Primitive doRetrieve(PrimitiveType.State state) {
 			return state.primitive;
 		}
 
 		@Override
-		public PrimitiveType.State doRebuildParentState(State state, Primitive value) {
+		public PrimitiveType.State doRebuildParentState(PrimitiveType.State state, Primitive value) {
 			return state.withPrimitive(value);
 		}
 	};

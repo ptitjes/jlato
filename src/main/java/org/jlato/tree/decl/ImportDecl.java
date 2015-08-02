@@ -200,12 +200,12 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 	private static STypeSafeProperty<ImportDecl.State, Boolean> STATIC = new STypeSafeProperty<ImportDecl.State, Boolean>() {
 
 		@Override
-		public Boolean doRetrieve(State state) {
+		public Boolean doRetrieve(ImportDecl.State state) {
 			return state.isStatic;
 		}
 
 		@Override
-		public ImportDecl.State doRebuildParentState(State state, Boolean value) {
+		public ImportDecl.State doRebuildParentState(ImportDecl.State state, Boolean value) {
 			return state.setStatic(value);
 		}
 	};
@@ -213,12 +213,12 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 	private static STypeSafeProperty<ImportDecl.State, Boolean> ON_DEMAND = new STypeSafeProperty<ImportDecl.State, Boolean>() {
 
 		@Override
-		public Boolean doRetrieve(State state) {
+		public Boolean doRetrieve(ImportDecl.State state) {
 			return state.isOnDemand;
 		}
 
 		@Override
-		public ImportDecl.State doRebuildParentState(State state, Boolean value) {
+		public ImportDecl.State doRebuildParentState(ImportDecl.State state, Boolean value) {
 			return state.setOnDemand(value);
 		}
 	};

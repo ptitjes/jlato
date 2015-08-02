@@ -218,12 +218,12 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 	private static STypeSafeProperty<AssignExpr.State, AssignOp> OP = new STypeSafeProperty<AssignExpr.State, AssignOp>() {
 
 		@Override
-		public AssignOp doRetrieve(State state) {
+		public AssignOp doRetrieve(AssignExpr.State state) {
 			return state.op;
 		}
 
 		@Override
-		public AssignExpr.State doRebuildParentState(State state, AssignOp value) {
+		public AssignExpr.State doRebuildParentState(AssignExpr.State state, AssignOp value) {
 			return state.withOp(value);
 		}
 	};

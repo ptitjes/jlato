@@ -263,12 +263,12 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	private static STypeSafeProperty<ExplicitConstructorInvocationStmt.State, Boolean> THIS = new STypeSafeProperty<ExplicitConstructorInvocationStmt.State, Boolean>() {
 
 		@Override
-		public Boolean doRetrieve(State state) {
+		public Boolean doRetrieve(ExplicitConstructorInvocationStmt.State state) {
 			return state.isThis;
 		}
 
 		@Override
-		public ExplicitConstructorInvocationStmt.State doRebuildParentState(State state, Boolean value) {
+		public ExplicitConstructorInvocationStmt.State doRebuildParentState(ExplicitConstructorInvocationStmt.State state, Boolean value) {
 			return state.setThis(value);
 		}
 	};

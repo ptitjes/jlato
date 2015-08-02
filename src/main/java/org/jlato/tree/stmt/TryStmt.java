@@ -313,12 +313,12 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 	private static STypeSafeProperty<TryStmt.State, Boolean> TRAILING_SEMI_COLON = new STypeSafeProperty<TryStmt.State, Boolean>() {
 
 		@Override
-		public Boolean doRetrieve(State state) {
+		public Boolean doRetrieve(TryStmt.State state) {
 			return state.trailingSemiColon;
 		}
 
 		@Override
-		public TryStmt.State doRebuildParentState(State state, Boolean value) {
+		public TryStmt.State doRebuildParentState(TryStmt.State state, Boolean value) {
 			return state.withTrailingSemiColon(value);
 		}
 	};
