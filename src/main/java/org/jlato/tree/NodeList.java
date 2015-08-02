@@ -189,6 +189,14 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		return (T) location.safeTraversal(SNodeListState.elementTraversal(index));
 	}
 
+	public T first() {
+		return (T) location.safeTraversal(SNodeListState.firstTraversal());
+	}
+
+	public T last() {
+		return (T) location.safeTraversal(SNodeListState.lastTraversal());
+	}
+
 	public NodeList<T> set(int index, T element) {
 		return location.safeTraversalReplace(SNodeListState.elementTraversal(index), element);
 	}
