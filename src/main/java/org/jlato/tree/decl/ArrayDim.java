@@ -122,12 +122,12 @@ public class ArrayDim extends TreeBase<ArrayDim.State, Tree, ArrayDim> implement
 	private static STypeSafeTraversal<ArrayDim.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<ArrayDim.State, SNodeListState, NodeList<AnnotationExpr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ArrayDim.State state) {
 			return state.annotations;
 		}
 
 		@Override
-		public ArrayDim.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ArrayDim.State doRebuildParentState(ArrayDim.State state, STree<SNodeListState> child) {
 			return state.withAnnotations(child);
 		}
 

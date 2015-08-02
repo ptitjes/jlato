@@ -172,12 +172,12 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 	private static STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr> LEFT = new STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(BinaryExpr.State state) {
 			return state.left;
 		}
 
 		@Override
-		public BinaryExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public BinaryExpr.State doRebuildParentState(BinaryExpr.State state, STree<Expr.State> child) {
 			return state.withLeft(child);
 		}
 
@@ -195,12 +195,12 @@ public class BinaryExpr extends TreeBase<BinaryExpr.State, Expr, BinaryExpr> imp
 	private static STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr> RIGHT = new STypeSafeTraversal<BinaryExpr.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(BinaryExpr.State state) {
 			return state.right;
 		}
 
 		@Override
-		public BinaryExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public BinaryExpr.State doRebuildParentState(BinaryExpr.State state, STree<Expr.State> child) {
 			return state.withRight(child);
 		}
 

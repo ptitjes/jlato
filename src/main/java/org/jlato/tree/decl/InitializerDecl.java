@@ -149,12 +149,12 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 	private static STypeSafeTraversal<InitializerDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<InitializerDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(InitializerDecl.State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public InitializerDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public InitializerDecl.State doRebuildParentState(InitializerDecl.State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -172,12 +172,12 @@ public class InitializerDecl extends TreeBase<InitializerDecl.State, MemberDecl,
 	private static STypeSafeTraversal<InitializerDecl.State, BlockStmt.State, BlockStmt> BODY = new STypeSafeTraversal<InitializerDecl.State, BlockStmt.State, BlockStmt>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(InitializerDecl.State state) {
 			return state.body;
 		}
 
 		@Override
-		public InitializerDecl.State doRebuildParentState(State state, STree<BlockStmt.State> child) {
+		public InitializerDecl.State doRebuildParentState(InitializerDecl.State state, STree<BlockStmt.State> child) {
 			return state.withBody(child);
 		}
 

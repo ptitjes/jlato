@@ -282,12 +282,12 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 	private static STypeSafeTraversal<MethodDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<MethodDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MethodDecl.State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public MethodDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public MethodDecl.State doRebuildParentState(MethodDecl.State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -305,12 +305,12 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 	private static STypeSafeTraversal<MethodDecl.State, SNodeListState, NodeList<TypeParameter>> TYPE_PARAMS = new STypeSafeTraversal<MethodDecl.State, SNodeListState, NodeList<TypeParameter>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MethodDecl.State state) {
 			return state.typeParams;
 		}
 
 		@Override
-		public MethodDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public MethodDecl.State doRebuildParentState(MethodDecl.State state, STree<SNodeListState> child) {
 			return state.withTypeParams(child);
 		}
 
@@ -328,12 +328,12 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 	private static STypeSafeTraversal<MethodDecl.State, Type.State, Type> TYPE = new STypeSafeTraversal<MethodDecl.State, Type.State, Type>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MethodDecl.State state) {
 			return state.type;
 		}
 
 		@Override
-		public MethodDecl.State doRebuildParentState(State state, STree<Type.State> child) {
+		public MethodDecl.State doRebuildParentState(MethodDecl.State state, STree<Type.State> child) {
 			return state.withType(child);
 		}
 
@@ -351,12 +351,12 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 	private static STypeSafeTraversal<MethodDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<MethodDecl.State, Name.State, Name>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MethodDecl.State state) {
 			return state.name;
 		}
 
 		@Override
-		public MethodDecl.State doRebuildParentState(State state, STree<Name.State> child) {
+		public MethodDecl.State doRebuildParentState(MethodDecl.State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -374,12 +374,12 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 	private static STypeSafeTraversal<MethodDecl.State, SNodeListState, NodeList<FormalParameter>> PARAMS = new STypeSafeTraversal<MethodDecl.State, SNodeListState, NodeList<FormalParameter>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MethodDecl.State state) {
 			return state.params;
 		}
 
 		@Override
-		public MethodDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public MethodDecl.State doRebuildParentState(MethodDecl.State state, STree<SNodeListState> child) {
 			return state.withParams(child);
 		}
 
@@ -397,12 +397,12 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 	private static STypeSafeTraversal<MethodDecl.State, SNodeListState, NodeList<ArrayDim>> DIMS = new STypeSafeTraversal<MethodDecl.State, SNodeListState, NodeList<ArrayDim>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MethodDecl.State state) {
 			return state.dims;
 		}
 
 		@Override
-		public MethodDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public MethodDecl.State doRebuildParentState(MethodDecl.State state, STree<SNodeListState> child) {
 			return state.withDims(child);
 		}
 
@@ -420,12 +420,12 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 	private static STypeSafeTraversal<MethodDecl.State, SNodeListState, NodeList<QualifiedType>> THROWS_CLAUSE = new STypeSafeTraversal<MethodDecl.State, SNodeListState, NodeList<QualifiedType>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MethodDecl.State state) {
 			return state.throwsClause;
 		}
 
 		@Override
-		public MethodDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public MethodDecl.State doRebuildParentState(MethodDecl.State state, STree<SNodeListState> child) {
 			return state.withThrowsClause(child);
 		}
 
@@ -443,12 +443,12 @@ public class MethodDecl extends TreeBase<MethodDecl.State, MemberDecl, MethodDec
 	private static STypeSafeTraversal<MethodDecl.State, SNodeOptionState, NodeOption<BlockStmt>> BODY = new STypeSafeTraversal<MethodDecl.State, SNodeOptionState, NodeOption<BlockStmt>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MethodDecl.State state) {
 			return state.body;
 		}
 
 		@Override
-		public MethodDecl.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public MethodDecl.State doRebuildParentState(MethodDecl.State state, STree<SNodeOptionState> child) {
 			return state.withBody(child);
 		}
 

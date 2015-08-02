@@ -256,12 +256,12 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	private static STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(EnumDecl.State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public EnumDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -279,12 +279,12 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	private static STypeSafeTraversal<EnumDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<EnumDecl.State, Name.State, Name>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(EnumDecl.State state) {
 			return state.name;
 		}
 
 		@Override
-		public EnumDecl.State doRebuildParentState(State state, STree<Name.State> child) {
+		public EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -302,12 +302,12 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	private static STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<QualifiedType>> IMPLEMENTS_CLAUSE = new STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<QualifiedType>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(EnumDecl.State state) {
 			return state.implementsClause;
 		}
 
 		@Override
-		public EnumDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<SNodeListState> child) {
 			return state.withImplementsClause(child);
 		}
 
@@ -325,12 +325,12 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	private static STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<EnumConstantDecl>> ENUM_CONSTANTS = new STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<EnumConstantDecl>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(EnumDecl.State state) {
 			return state.enumConstants;
 		}
 
 		@Override
-		public EnumDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<SNodeListState> child) {
 			return state.withEnumConstants(child);
 		}
 
@@ -348,12 +348,12 @@ public class EnumDecl extends TreeBase<EnumDecl.State, TypeDecl, EnumDecl> imple
 	private static STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<EnumDecl.State, SNodeListState, NodeList<MemberDecl>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(EnumDecl.State state) {
 			return state.members;
 		}
 
 		@Override
-		public EnumDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public EnumDecl.State doRebuildParentState(EnumDecl.State state, STree<SNodeListState> child) {
 			return state.withMembers(child);
 		}
 

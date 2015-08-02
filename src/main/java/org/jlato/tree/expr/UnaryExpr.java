@@ -158,12 +158,12 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 	private static STypeSafeTraversal<UnaryExpr.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<UnaryExpr.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(UnaryExpr.State state) {
 			return state.expr;
 		}
 
 		@Override
-		public UnaryExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public UnaryExpr.State doRebuildParentState(UnaryExpr.State state, STree<Expr.State> child) {
 			return state.withExpr(child);
 		}
 

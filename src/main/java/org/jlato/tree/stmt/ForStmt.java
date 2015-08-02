@@ -188,12 +188,12 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 	private static STypeSafeTraversal<ForStmt.State, SNodeListState, NodeList<Expr>> INIT = new STypeSafeTraversal<ForStmt.State, SNodeListState, NodeList<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ForStmt.State state) {
 			return state.init;
 		}
 
 		@Override
-		public ForStmt.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ForStmt.State doRebuildParentState(ForStmt.State state, STree<SNodeListState> child) {
 			return state.withInit(child);
 		}
 
@@ -211,12 +211,12 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 	private static STypeSafeTraversal<ForStmt.State, Expr.State, Expr> COMPARE = new STypeSafeTraversal<ForStmt.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ForStmt.State state) {
 			return state.compare;
 		}
 
 		@Override
-		public ForStmt.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public ForStmt.State doRebuildParentState(ForStmt.State state, STree<Expr.State> child) {
 			return state.withCompare(child);
 		}
 
@@ -234,12 +234,12 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 	private static STypeSafeTraversal<ForStmt.State, SNodeListState, NodeList<Expr>> UPDATE = new STypeSafeTraversal<ForStmt.State, SNodeListState, NodeList<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ForStmt.State state) {
 			return state.update;
 		}
 
 		@Override
-		public ForStmt.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ForStmt.State doRebuildParentState(ForStmt.State state, STree<SNodeListState> child) {
 			return state.withUpdate(child);
 		}
 
@@ -257,12 +257,12 @@ public class ForStmt extends TreeBase<ForStmt.State, Stmt, ForStmt> implements S
 	private static STypeSafeTraversal<ForStmt.State, Stmt.State, Stmt> BODY = new STypeSafeTraversal<ForStmt.State, Stmt.State, Stmt>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ForStmt.State state) {
 			return state.body;
 		}
 
 		@Override
-		public ForStmt.State doRebuildParentState(State state, STree<Stmt.State> child) {
+		public ForStmt.State doRebuildParentState(ForStmt.State state, STree<Stmt.State> child) {
 			return state.withBody(child);
 		}
 

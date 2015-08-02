@@ -240,12 +240,12 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	private static STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ClassDecl.State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public ClassDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ClassDecl.State doRebuildParentState(ClassDecl.State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -263,12 +263,12 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	private static STypeSafeTraversal<ClassDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<ClassDecl.State, Name.State, Name>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ClassDecl.State state) {
 			return state.name;
 		}
 
 		@Override
-		public ClassDecl.State doRebuildParentState(State state, STree<Name.State> child) {
+		public ClassDecl.State doRebuildParentState(ClassDecl.State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -286,12 +286,12 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	private static STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<TypeParameter>> TYPE_PARAMS = new STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<TypeParameter>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ClassDecl.State state) {
 			return state.typeParams;
 		}
 
 		@Override
-		public ClassDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ClassDecl.State doRebuildParentState(ClassDecl.State state, STree<SNodeListState> child) {
 			return state.withTypeParams(child);
 		}
 
@@ -309,12 +309,12 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	private static STypeSafeTraversal<ClassDecl.State, SNodeOptionState, NodeOption<QualifiedType>> EXTENDS_CLAUSE = new STypeSafeTraversal<ClassDecl.State, SNodeOptionState, NodeOption<QualifiedType>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ClassDecl.State state) {
 			return state.extendsClause;
 		}
 
 		@Override
-		public ClassDecl.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public ClassDecl.State doRebuildParentState(ClassDecl.State state, STree<SNodeOptionState> child) {
 			return state.withExtendsClause(child);
 		}
 
@@ -332,12 +332,12 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	private static STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<QualifiedType>> IMPLEMENTS_CLAUSE = new STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<QualifiedType>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ClassDecl.State state) {
 			return state.implementsClause;
 		}
 
 		@Override
-		public ClassDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ClassDecl.State doRebuildParentState(ClassDecl.State state, STree<SNodeListState> child) {
 			return state.withImplementsClause(child);
 		}
 
@@ -355,12 +355,12 @@ public class ClassDecl extends TreeBase<ClassDecl.State, TypeDecl, ClassDecl> im
 	private static STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<ClassDecl.State, SNodeListState, NodeList<MemberDecl>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ClassDecl.State state) {
 			return state.members;
 		}
 
 		@Override
-		public ClassDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ClassDecl.State doRebuildParentState(ClassDecl.State state, STree<SNodeListState> child) {
 			return state.withMembers(child);
 		}
 

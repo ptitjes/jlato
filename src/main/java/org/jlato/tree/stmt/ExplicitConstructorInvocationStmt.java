@@ -194,12 +194,12 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	private static STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeListState, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeListState, NodeList<Type>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ExplicitConstructorInvocationStmt.State state) {
 			return state.typeArgs;
 		}
 
 		@Override
-		public ExplicitConstructorInvocationStmt.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ExplicitConstructorInvocationStmt.State doRebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<SNodeListState> child) {
 			return state.withTypeArgs(child);
 		}
 
@@ -217,12 +217,12 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	private static STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeOptionState, NodeOption<Expr>> EXPR = new STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ExplicitConstructorInvocationStmt.State state) {
 			return state.expr;
 		}
 
 		@Override
-		public ExplicitConstructorInvocationStmt.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public ExplicitConstructorInvocationStmt.State doRebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<SNodeOptionState> child) {
 			return state.withExpr(child);
 		}
 
@@ -240,12 +240,12 @@ public class ExplicitConstructorInvocationStmt extends TreeBase<ExplicitConstruc
 	private static STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeListState, NodeList<Expr>> ARGS = new STypeSafeTraversal<ExplicitConstructorInvocationStmt.State, SNodeListState, NodeList<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ExplicitConstructorInvocationStmt.State state) {
 			return state.args;
 		}
 
 		@Override
-		public ExplicitConstructorInvocationStmt.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ExplicitConstructorInvocationStmt.State doRebuildParentState(ExplicitConstructorInvocationStmt.State state, STree<SNodeListState> child) {
 			return state.withArgs(child);
 		}
 

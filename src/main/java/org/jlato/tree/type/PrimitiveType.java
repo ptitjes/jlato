@@ -151,12 +151,12 @@ public class PrimitiveType extends TreeBase<PrimitiveType.State, Type, Primitive
 	private static STypeSafeTraversal<PrimitiveType.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<PrimitiveType.State, SNodeListState, NodeList<AnnotationExpr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(PrimitiveType.State state) {
 			return state.annotations;
 		}
 
 		@Override
-		public PrimitiveType.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public PrimitiveType.State doRebuildParentState(PrimitiveType.State state, STree<SNodeListState> child) {
 			return state.withAnnotations(child);
 		}
 

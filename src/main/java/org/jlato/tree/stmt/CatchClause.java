@@ -143,12 +143,12 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 	private static STypeSafeTraversal<CatchClause.State, FormalParameter.State, FormalParameter> EXCEPT = new STypeSafeTraversal<CatchClause.State, FormalParameter.State, FormalParameter>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(CatchClause.State state) {
 			return state.except;
 		}
 
 		@Override
-		public CatchClause.State doRebuildParentState(State state, STree<FormalParameter.State> child) {
+		public CatchClause.State doRebuildParentState(CatchClause.State state, STree<FormalParameter.State> child) {
 			return state.withExcept(child);
 		}
 
@@ -166,12 +166,12 @@ public class CatchClause extends TreeBase<CatchClause.State, Tree, CatchClause> 
 	private static STypeSafeTraversal<CatchClause.State, BlockStmt.State, BlockStmt> CATCH_BLOCK = new STypeSafeTraversal<CatchClause.State, BlockStmt.State, BlockStmt>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(CatchClause.State state) {
 			return state.catchBlock;
 		}
 
 		@Override
-		public CatchClause.State doRebuildParentState(State state, STree<BlockStmt.State> child) {
+		public CatchClause.State doRebuildParentState(CatchClause.State state, STree<BlockStmt.State> child) {
 			return state.withCatchBlock(child);
 		}
 

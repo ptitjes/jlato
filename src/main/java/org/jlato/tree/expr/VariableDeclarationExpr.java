@@ -125,12 +125,12 @@ public class VariableDeclarationExpr extends TreeBase<VariableDeclarationExpr.St
 	private static STypeSafeTraversal<VariableDeclarationExpr.State, LocalVariableDecl.State, LocalVariableDecl> DECLARATION = new STypeSafeTraversal<VariableDeclarationExpr.State, LocalVariableDecl.State, LocalVariableDecl>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(VariableDeclarationExpr.State state) {
 			return state.declaration;
 		}
 
 		@Override
-		public VariableDeclarationExpr.State doRebuildParentState(State state, STree<LocalVariableDecl.State> child) {
+		public VariableDeclarationExpr.State doRebuildParentState(VariableDeclarationExpr.State state, STree<LocalVariableDecl.State> child) {
 			return state.withDeclaration(child);
 		}
 

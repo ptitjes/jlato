@@ -143,12 +143,12 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 	private static STypeSafeTraversal<DoStmt.State, Stmt.State, Stmt> BODY = new STypeSafeTraversal<DoStmt.State, Stmt.State, Stmt>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(DoStmt.State state) {
 			return state.body;
 		}
 
 		@Override
-		public DoStmt.State doRebuildParentState(State state, STree<Stmt.State> child) {
+		public DoStmt.State doRebuildParentState(DoStmt.State state, STree<Stmt.State> child) {
 			return state.withBody(child);
 		}
 
@@ -166,12 +166,12 @@ public class DoStmt extends TreeBase<DoStmt.State, Stmt, DoStmt> implements Stmt
 	private static STypeSafeTraversal<DoStmt.State, Expr.State, Expr> CONDITION = new STypeSafeTraversal<DoStmt.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(DoStmt.State state) {
 			return state.condition;
 		}
 
 		@Override
-		public DoStmt.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public DoStmt.State doRebuildParentState(DoStmt.State state, STree<Expr.State> child) {
 			return state.withCondition(child);
 		}
 

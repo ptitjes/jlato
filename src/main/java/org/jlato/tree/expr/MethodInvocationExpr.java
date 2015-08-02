@@ -186,12 +186,12 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 	private static STypeSafeTraversal<MethodInvocationExpr.State, SNodeOptionState, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<MethodInvocationExpr.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MethodInvocationExpr.State state) {
 			return state.scope;
 		}
 
 		@Override
-		public MethodInvocationExpr.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public MethodInvocationExpr.State doRebuildParentState(MethodInvocationExpr.State state, STree<SNodeOptionState> child) {
 			return state.withScope(child);
 		}
 
@@ -209,12 +209,12 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 	private static STypeSafeTraversal<MethodInvocationExpr.State, SNodeListState, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<MethodInvocationExpr.State, SNodeListState, NodeList<Type>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MethodInvocationExpr.State state) {
 			return state.typeArgs;
 		}
 
 		@Override
-		public MethodInvocationExpr.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public MethodInvocationExpr.State doRebuildParentState(MethodInvocationExpr.State state, STree<SNodeListState> child) {
 			return state.withTypeArgs(child);
 		}
 
@@ -232,12 +232,12 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 	private static STypeSafeTraversal<MethodInvocationExpr.State, Name.State, Name> NAME = new STypeSafeTraversal<MethodInvocationExpr.State, Name.State, Name>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MethodInvocationExpr.State state) {
 			return state.name;
 		}
 
 		@Override
-		public MethodInvocationExpr.State doRebuildParentState(State state, STree<Name.State> child) {
+		public MethodInvocationExpr.State doRebuildParentState(MethodInvocationExpr.State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -255,12 +255,12 @@ public class MethodInvocationExpr extends TreeBase<MethodInvocationExpr.State, E
 	private static STypeSafeTraversal<MethodInvocationExpr.State, SNodeListState, NodeList<Expr>> ARGS = new STypeSafeTraversal<MethodInvocationExpr.State, SNodeListState, NodeList<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MethodInvocationExpr.State state) {
 			return state.args;
 		}
 
 		@Override
-		public MethodInvocationExpr.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public MethodInvocationExpr.State doRebuildParentState(MethodInvocationExpr.State state, STree<SNodeListState> child) {
 			return state.withArgs(child);
 		}
 

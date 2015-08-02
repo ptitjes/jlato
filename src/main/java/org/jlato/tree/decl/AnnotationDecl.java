@@ -176,12 +176,12 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 	private static STypeSafeTraversal<AnnotationDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<AnnotationDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(AnnotationDecl.State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public AnnotationDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public AnnotationDecl.State doRebuildParentState(AnnotationDecl.State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -199,12 +199,12 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 	private static STypeSafeTraversal<AnnotationDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<AnnotationDecl.State, Name.State, Name>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(AnnotationDecl.State state) {
 			return state.name;
 		}
 
 		@Override
-		public AnnotationDecl.State doRebuildParentState(State state, STree<Name.State> child) {
+		public AnnotationDecl.State doRebuildParentState(AnnotationDecl.State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -222,12 +222,12 @@ public class AnnotationDecl extends TreeBase<AnnotationDecl.State, TypeDecl, Ann
 	private static STypeSafeTraversal<AnnotationDecl.State, SNodeListState, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<AnnotationDecl.State, SNodeListState, NodeList<MemberDecl>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(AnnotationDecl.State state) {
 			return state.members;
 		}
 
 		@Override
-		public AnnotationDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public AnnotationDecl.State doRebuildParentState(AnnotationDecl.State state, STree<SNodeListState> child) {
 			return state.withMembers(child);
 		}
 

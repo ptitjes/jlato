@@ -164,12 +164,12 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 	private static STypeSafeTraversal<WildcardType.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<WildcardType.State, SNodeListState, NodeList<AnnotationExpr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(WildcardType.State state) {
 			return state.annotations;
 		}
 
 		@Override
-		public WildcardType.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public WildcardType.State doRebuildParentState(WildcardType.State state, STree<SNodeListState> child) {
 			return state.withAnnotations(child);
 		}
 
@@ -187,12 +187,12 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 	private static STypeSafeTraversal<WildcardType.State, SNodeOptionState, NodeOption<ReferenceType>> EXT = new STypeSafeTraversal<WildcardType.State, SNodeOptionState, NodeOption<ReferenceType>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(WildcardType.State state) {
 			return state.ext;
 		}
 
 		@Override
-		public WildcardType.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public WildcardType.State doRebuildParentState(WildcardType.State state, STree<SNodeOptionState> child) {
 			return state.withExt(child);
 		}
 
@@ -210,12 +210,12 @@ public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardTyp
 	private static STypeSafeTraversal<WildcardType.State, SNodeOptionState, NodeOption<ReferenceType>> SUP = new STypeSafeTraversal<WildcardType.State, SNodeOptionState, NodeOption<ReferenceType>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(WildcardType.State state) {
 			return state.sup;
 		}
 
 		@Override
-		public WildcardType.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public WildcardType.State doRebuildParentState(WildcardType.State state, STree<SNodeOptionState> child) {
 			return state.withSup(child);
 		}
 

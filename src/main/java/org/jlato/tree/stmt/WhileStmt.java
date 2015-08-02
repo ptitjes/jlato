@@ -143,12 +143,12 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 	private static STypeSafeTraversal<WhileStmt.State, Expr.State, Expr> CONDITION = new STypeSafeTraversal<WhileStmt.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(WhileStmt.State state) {
 			return state.condition;
 		}
 
 		@Override
-		public WhileStmt.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public WhileStmt.State doRebuildParentState(WhileStmt.State state, STree<Expr.State> child) {
 			return state.withCondition(child);
 		}
 
@@ -166,12 +166,12 @@ public class WhileStmt extends TreeBase<WhileStmt.State, Stmt, WhileStmt> implem
 	private static STypeSafeTraversal<WhileStmt.State, Stmt.State, Stmt> BODY = new STypeSafeTraversal<WhileStmt.State, Stmt.State, Stmt>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(WhileStmt.State state) {
 			return state.body;
 		}
 
 		@Override
-		public WhileStmt.State doRebuildParentState(State state, STree<Stmt.State> child) {
+		public WhileStmt.State doRebuildParentState(WhileStmt.State state, STree<Stmt.State> child) {
 			return state.withBody(child);
 		}
 

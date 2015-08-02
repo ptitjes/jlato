@@ -120,12 +120,12 @@ public class ExpressionStmt extends TreeBase<ExpressionStmt.State, Stmt, Express
 	private static STypeSafeTraversal<ExpressionStmt.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<ExpressionStmt.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ExpressionStmt.State state) {
 			return state.expr;
 		}
 
 		@Override
-		public ExpressionStmt.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public ExpressionStmt.State doRebuildParentState(ExpressionStmt.State state, STree<Expr.State> child) {
 			return state.withExpr(child);
 		}
 

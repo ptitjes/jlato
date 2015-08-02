@@ -123,12 +123,12 @@ public class BreakStmt extends TreeBase<BreakStmt.State, Stmt, BreakStmt> implem
 	private static STypeSafeTraversal<BreakStmt.State, SNodeOptionState, NodeOption<Name>> ID = new STypeSafeTraversal<BreakStmt.State, SNodeOptionState, NodeOption<Name>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(BreakStmt.State state) {
 			return state.id;
 		}
 
 		@Override
-		public BreakStmt.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public BreakStmt.State doRebuildParentState(BreakStmt.State state, STree<SNodeOptionState> child) {
 			return state.withId(child);
 		}
 

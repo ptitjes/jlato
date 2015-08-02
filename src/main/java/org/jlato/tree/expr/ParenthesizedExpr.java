@@ -119,12 +119,12 @@ public class ParenthesizedExpr extends TreeBase<ParenthesizedExpr.State, Expr, P
 	private static STypeSafeTraversal<ParenthesizedExpr.State, Expr.State, Expr> INNER = new STypeSafeTraversal<ParenthesizedExpr.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ParenthesizedExpr.State state) {
 			return state.inner;
 		}
 
 		@Override
-		public ParenthesizedExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public ParenthesizedExpr.State doRebuildParentState(ParenthesizedExpr.State state, STree<Expr.State> child) {
 			return state.withInner(child);
 		}
 

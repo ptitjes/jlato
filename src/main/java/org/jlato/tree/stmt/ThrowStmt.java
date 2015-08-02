@@ -120,12 +120,12 @@ public class ThrowStmt extends TreeBase<ThrowStmt.State, Stmt, ThrowStmt> implem
 	private static STypeSafeTraversal<ThrowStmt.State, Expr.State, Expr> EXPR = new STypeSafeTraversal<ThrowStmt.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ThrowStmt.State state) {
 			return state.expr;
 		}
 
 		@Override
-		public ThrowStmt.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public ThrowStmt.State doRebuildParentState(ThrowStmt.State state, STree<Expr.State> child) {
 			return state.withExpr(child);
 		}
 

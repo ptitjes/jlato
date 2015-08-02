@@ -216,12 +216,12 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 	private static STypeSafeTraversal<AnnotationMemberDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<AnnotationMemberDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(AnnotationMemberDecl.State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public AnnotationMemberDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public AnnotationMemberDecl.State doRebuildParentState(AnnotationMemberDecl.State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -239,12 +239,12 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 	private static STypeSafeTraversal<AnnotationMemberDecl.State, Type.State, Type> TYPE = new STypeSafeTraversal<AnnotationMemberDecl.State, Type.State, Type>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(AnnotationMemberDecl.State state) {
 			return state.type;
 		}
 
 		@Override
-		public AnnotationMemberDecl.State doRebuildParentState(State state, STree<Type.State> child) {
+		public AnnotationMemberDecl.State doRebuildParentState(AnnotationMemberDecl.State state, STree<Type.State> child) {
 			return state.withType(child);
 		}
 
@@ -262,12 +262,12 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 	private static STypeSafeTraversal<AnnotationMemberDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<AnnotationMemberDecl.State, Name.State, Name>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(AnnotationMemberDecl.State state) {
 			return state.name;
 		}
 
 		@Override
-		public AnnotationMemberDecl.State doRebuildParentState(State state, STree<Name.State> child) {
+		public AnnotationMemberDecl.State doRebuildParentState(AnnotationMemberDecl.State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -285,12 +285,12 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 	private static STypeSafeTraversal<AnnotationMemberDecl.State, SNodeListState, NodeList<ArrayDim>> DIMS = new STypeSafeTraversal<AnnotationMemberDecl.State, SNodeListState, NodeList<ArrayDim>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(AnnotationMemberDecl.State state) {
 			return state.dims;
 		}
 
 		@Override
-		public AnnotationMemberDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public AnnotationMemberDecl.State doRebuildParentState(AnnotationMemberDecl.State state, STree<SNodeListState> child) {
 			return state.withDims(child);
 		}
 
@@ -308,12 +308,12 @@ public class AnnotationMemberDecl extends TreeBase<AnnotationMemberDecl.State, M
 	private static STypeSafeTraversal<AnnotationMemberDecl.State, SNodeOptionState, NodeOption<Expr>> DEFAULT_VALUE = new STypeSafeTraversal<AnnotationMemberDecl.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(AnnotationMemberDecl.State state) {
 			return state.defaultValue;
 		}
 
 		@Override
-		public AnnotationMemberDecl.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public AnnotationMemberDecl.State doRebuildParentState(AnnotationMemberDecl.State state, STree<SNodeOptionState> child) {
 			return state.withDefaultValue(child);
 		}
 

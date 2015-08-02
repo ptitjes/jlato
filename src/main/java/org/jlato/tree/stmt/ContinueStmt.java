@@ -123,12 +123,12 @@ public class ContinueStmt extends TreeBase<ContinueStmt.State, Stmt, ContinueStm
 	private static STypeSafeTraversal<ContinueStmt.State, SNodeOptionState, NodeOption<Name>> ID = new STypeSafeTraversal<ContinueStmt.State, SNodeOptionState, NodeOption<Name>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ContinueStmt.State state) {
 			return state.id;
 		}
 
 		@Override
-		public ContinueStmt.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public ContinueStmt.State doRebuildParentState(ContinueStmt.State state, STree<SNodeOptionState> child) {
 			return state.withId(child);
 		}
 

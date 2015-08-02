@@ -172,12 +172,12 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 	private static STypeSafeTraversal<AssignExpr.State, Expr.State, Expr> TARGET = new STypeSafeTraversal<AssignExpr.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(AssignExpr.State state) {
 			return state.target;
 		}
 
 		@Override
-		public AssignExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public AssignExpr.State doRebuildParentState(AssignExpr.State state, STree<Expr.State> child) {
 			return state.withTarget(child);
 		}
 
@@ -195,12 +195,12 @@ public class AssignExpr extends TreeBase<AssignExpr.State, Expr, AssignExpr> imp
 	private static STypeSafeTraversal<AssignExpr.State, Expr.State, Expr> VALUE = new STypeSafeTraversal<AssignExpr.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(AssignExpr.State state) {
 			return state.value;
 		}
 
 		@Override
-		public AssignExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public AssignExpr.State doRebuildParentState(AssignExpr.State state, STree<Expr.State> child) {
 			return state.withValue(child);
 		}
 

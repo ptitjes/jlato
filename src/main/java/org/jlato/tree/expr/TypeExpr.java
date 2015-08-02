@@ -120,12 +120,12 @@ public class TypeExpr extends TreeBase<TypeExpr.State, Expr, TypeExpr> implement
 	private static STypeSafeTraversal<TypeExpr.State, Type.State, Type> TYPE = new STypeSafeTraversal<TypeExpr.State, Type.State, Type>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(TypeExpr.State state) {
 			return state.type;
 		}
 
 		@Override
-		public TypeExpr.State doRebuildParentState(State state, STree<Type.State> child) {
+		public TypeExpr.State doRebuildParentState(TypeExpr.State state, STree<Type.State> child) {
 			return state.withType(child);
 		}
 

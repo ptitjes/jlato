@@ -121,12 +121,12 @@ public class SuperExpr extends TreeBase<SuperExpr.State, Expr, SuperExpr> implem
 	private static STypeSafeTraversal<SuperExpr.State, SNodeOptionState, NodeOption<Expr>> CLASS_EXPR = new STypeSafeTraversal<SuperExpr.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(SuperExpr.State state) {
 			return state.classExpr;
 		}
 
 		@Override
-		public SuperExpr.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public SuperExpr.State doRebuildParentState(SuperExpr.State state, STree<SNodeOptionState> child) {
 			return state.withClassExpr(child);
 		}
 

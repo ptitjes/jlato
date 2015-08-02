@@ -143,12 +143,12 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 	private static STypeSafeTraversal<VariableDeclaratorId.State, Name.State, Name> NAME = new STypeSafeTraversal<VariableDeclaratorId.State, Name.State, Name>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(VariableDeclaratorId.State state) {
 			return state.name;
 		}
 
 		@Override
-		public VariableDeclaratorId.State doRebuildParentState(State state, STree<Name.State> child) {
+		public VariableDeclaratorId.State doRebuildParentState(VariableDeclaratorId.State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -166,12 +166,12 @@ public class VariableDeclaratorId extends TreeBase<VariableDeclaratorId.State, T
 	private static STypeSafeTraversal<VariableDeclaratorId.State, SNodeListState, NodeList<ArrayDim>> DIMS = new STypeSafeTraversal<VariableDeclaratorId.State, SNodeListState, NodeList<ArrayDim>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(VariableDeclaratorId.State state) {
 			return state.dims;
 		}
 
 		@Override
-		public VariableDeclaratorId.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public VariableDeclaratorId.State doRebuildParentState(VariableDeclaratorId.State state, STree<SNodeListState> child) {
 			return state.withDims(child);
 		}
 

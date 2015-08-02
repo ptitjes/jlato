@@ -120,12 +120,12 @@ public class MarkerAnnotationExpr extends TreeBase<MarkerAnnotationExpr.State, A
 	private static STypeSafeTraversal<MarkerAnnotationExpr.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<MarkerAnnotationExpr.State, QualifiedName.State, QualifiedName>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(MarkerAnnotationExpr.State state) {
 			return state.name;
 		}
 
 		@Override
-		public MarkerAnnotationExpr.State doRebuildParentState(State state, STree<QualifiedName.State> child) {
+		public MarkerAnnotationExpr.State doRebuildParentState(MarkerAnnotationExpr.State state, STree<QualifiedName.State> child) {
 			return state.withName(child);
 		}
 

@@ -145,12 +145,12 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 	private static STypeSafeTraversal<SwitchCase.State, SNodeOptionState, NodeOption<Expr>> LABEL = new STypeSafeTraversal<SwitchCase.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(SwitchCase.State state) {
 			return state.label;
 		}
 
 		@Override
-		public SwitchCase.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public SwitchCase.State doRebuildParentState(SwitchCase.State state, STree<SNodeOptionState> child) {
 			return state.withLabel(child);
 		}
 
@@ -168,12 +168,12 @@ public class SwitchCase extends TreeBase<SwitchCase.State, Tree, SwitchCase> imp
 	private static STypeSafeTraversal<SwitchCase.State, SNodeListState, NodeList<Stmt>> STMTS = new STypeSafeTraversal<SwitchCase.State, SNodeListState, NodeList<Stmt>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(SwitchCase.State state) {
 			return state.stmts;
 		}
 
 		@Override
-		public SwitchCase.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public SwitchCase.State doRebuildParentState(SwitchCase.State state, STree<SNodeListState> child) {
 			return state.withStmts(child);
 		}
 

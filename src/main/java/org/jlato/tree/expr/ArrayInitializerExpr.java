@@ -150,12 +150,12 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 	private static STypeSafeTraversal<ArrayInitializerExpr.State, SNodeListState, NodeList<Expr>> VALUES = new STypeSafeTraversal<ArrayInitializerExpr.State, SNodeListState, NodeList<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ArrayInitializerExpr.State state) {
 			return state.values;
 		}
 
 		@Override
-		public ArrayInitializerExpr.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ArrayInitializerExpr.State doRebuildParentState(ArrayInitializerExpr.State state, STree<SNodeListState> child) {
 			return state.withValues(child);
 		}
 

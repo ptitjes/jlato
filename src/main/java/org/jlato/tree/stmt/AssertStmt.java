@@ -145,12 +145,12 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 	private static STypeSafeTraversal<AssertStmt.State, Expr.State, Expr> CHECK = new STypeSafeTraversal<AssertStmt.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(AssertStmt.State state) {
 			return state.check;
 		}
 
 		@Override
-		public AssertStmt.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public AssertStmt.State doRebuildParentState(AssertStmt.State state, STree<Expr.State> child) {
 			return state.withCheck(child);
 		}
 
@@ -168,12 +168,12 @@ public class AssertStmt extends TreeBase<AssertStmt.State, Stmt, AssertStmt> imp
 	private static STypeSafeTraversal<AssertStmt.State, SNodeOptionState, NodeOption<Expr>> MSG = new STypeSafeTraversal<AssertStmt.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(AssertStmt.State state) {
 			return state.msg;
 		}
 
 		@Override
-		public AssertStmt.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public AssertStmt.State doRebuildParentState(AssertStmt.State state, STree<SNodeOptionState> child) {
 			return state.withMsg(child);
 		}
 

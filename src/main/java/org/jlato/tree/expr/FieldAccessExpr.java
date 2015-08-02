@@ -144,12 +144,12 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 	private static STypeSafeTraversal<FieldAccessExpr.State, SNodeOptionState, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<FieldAccessExpr.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(FieldAccessExpr.State state) {
 			return state.scope;
 		}
 
 		@Override
-		public FieldAccessExpr.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public FieldAccessExpr.State doRebuildParentState(FieldAccessExpr.State state, STree<SNodeOptionState> child) {
 			return state.withScope(child);
 		}
 
@@ -167,12 +167,12 @@ public class FieldAccessExpr extends TreeBase<FieldAccessExpr.State, Expr, Field
 	private static STypeSafeTraversal<FieldAccessExpr.State, Name.State, Name> NAME = new STypeSafeTraversal<FieldAccessExpr.State, Name.State, Name>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(FieldAccessExpr.State state) {
 			return state.name;
 		}
 
 		@Override
-		public FieldAccessExpr.State doRebuildParentState(State state, STree<Name.State> child) {
+		public FieldAccessExpr.State doRebuildParentState(FieldAccessExpr.State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 

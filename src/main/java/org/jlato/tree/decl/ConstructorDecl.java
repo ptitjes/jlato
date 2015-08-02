@@ -239,12 +239,12 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 	private static STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ConstructorDecl.State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public ConstructorDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ConstructorDecl.State doRebuildParentState(ConstructorDecl.State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -262,12 +262,12 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 	private static STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<TypeParameter>> TYPE_PARAMS = new STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<TypeParameter>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ConstructorDecl.State state) {
 			return state.typeParams;
 		}
 
 		@Override
-		public ConstructorDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ConstructorDecl.State doRebuildParentState(ConstructorDecl.State state, STree<SNodeListState> child) {
 			return state.withTypeParams(child);
 		}
 
@@ -285,12 +285,12 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 	private static STypeSafeTraversal<ConstructorDecl.State, Name.State, Name> NAME = new STypeSafeTraversal<ConstructorDecl.State, Name.State, Name>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ConstructorDecl.State state) {
 			return state.name;
 		}
 
 		@Override
-		public ConstructorDecl.State doRebuildParentState(State state, STree<Name.State> child) {
+		public ConstructorDecl.State doRebuildParentState(ConstructorDecl.State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -308,12 +308,12 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 	private static STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<FormalParameter>> PARAMS = new STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<FormalParameter>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ConstructorDecl.State state) {
 			return state.params;
 		}
 
 		@Override
-		public ConstructorDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ConstructorDecl.State doRebuildParentState(ConstructorDecl.State state, STree<SNodeListState> child) {
 			return state.withParams(child);
 		}
 
@@ -331,12 +331,12 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 	private static STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<QualifiedType>> THROWS_CLAUSE = new STypeSafeTraversal<ConstructorDecl.State, SNodeListState, NodeList<QualifiedType>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ConstructorDecl.State state) {
 			return state.throwsClause;
 		}
 
 		@Override
-		public ConstructorDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public ConstructorDecl.State doRebuildParentState(ConstructorDecl.State state, STree<SNodeListState> child) {
 			return state.withThrowsClause(child);
 		}
 
@@ -354,12 +354,12 @@ public class ConstructorDecl extends TreeBase<ConstructorDecl.State, MemberDecl,
 	private static STypeSafeTraversal<ConstructorDecl.State, BlockStmt.State, BlockStmt> BODY = new STypeSafeTraversal<ConstructorDecl.State, BlockStmt.State, BlockStmt>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ConstructorDecl.State state) {
 			return state.body;
 		}
 
 		@Override
-		public ConstructorDecl.State doRebuildParentState(State state, STree<BlockStmt.State> child) {
+		public ConstructorDecl.State doRebuildParentState(ConstructorDecl.State state, STree<BlockStmt.State> child) {
 			return state.withBody(child);
 		}
 

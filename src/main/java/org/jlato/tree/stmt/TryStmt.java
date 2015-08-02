@@ -221,12 +221,12 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 	private static STypeSafeTraversal<TryStmt.State, SNodeListState, NodeList<VariableDeclarationExpr>> RESOURCES = new STypeSafeTraversal<TryStmt.State, SNodeListState, NodeList<VariableDeclarationExpr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(TryStmt.State state) {
 			return state.resources;
 		}
 
 		@Override
-		public TryStmt.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public TryStmt.State doRebuildParentState(TryStmt.State state, STree<SNodeListState> child) {
 			return state.withResources(child);
 		}
 
@@ -244,12 +244,12 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 	private static STypeSafeTraversal<TryStmt.State, BlockStmt.State, BlockStmt> TRY_BLOCK = new STypeSafeTraversal<TryStmt.State, BlockStmt.State, BlockStmt>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(TryStmt.State state) {
 			return state.tryBlock;
 		}
 
 		@Override
-		public TryStmt.State doRebuildParentState(State state, STree<BlockStmt.State> child) {
+		public TryStmt.State doRebuildParentState(TryStmt.State state, STree<BlockStmt.State> child) {
 			return state.withTryBlock(child);
 		}
 
@@ -267,12 +267,12 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 	private static STypeSafeTraversal<TryStmt.State, SNodeListState, NodeList<CatchClause>> CATCHS = new STypeSafeTraversal<TryStmt.State, SNodeListState, NodeList<CatchClause>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(TryStmt.State state) {
 			return state.catchs;
 		}
 
 		@Override
-		public TryStmt.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public TryStmt.State doRebuildParentState(TryStmt.State state, STree<SNodeListState> child) {
 			return state.withCatchs(child);
 		}
 
@@ -290,12 +290,12 @@ public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements S
 	private static STypeSafeTraversal<TryStmt.State, SNodeOptionState, NodeOption<BlockStmt>> FINALLY_BLOCK = new STypeSafeTraversal<TryStmt.State, SNodeOptionState, NodeOption<BlockStmt>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(TryStmt.State state) {
 			return state.finallyBlock;
 		}
 
 		@Override
-		public TryStmt.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public TryStmt.State doRebuildParentState(TryStmt.State state, STree<SNodeOptionState> child) {
 			return state.withFinallyBlock(child);
 		}
 

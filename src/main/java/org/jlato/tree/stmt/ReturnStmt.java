@@ -124,12 +124,12 @@ public class ReturnStmt extends TreeBase<ReturnStmt.State, Stmt, ReturnStmt> imp
 	private static STypeSafeTraversal<ReturnStmt.State, SNodeOptionState, NodeOption<Expr>> EXPR = new STypeSafeTraversal<ReturnStmt.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ReturnStmt.State state) {
 			return state.expr;
 		}
 
 		@Override
-		public ReturnStmt.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public ReturnStmt.State doRebuildParentState(ReturnStmt.State state, STree<SNodeOptionState> child) {
 			return state.withExpr(child);
 		}
 

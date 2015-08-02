@@ -121,12 +121,12 @@ public class ThisExpr extends TreeBase<ThisExpr.State, Expr, ThisExpr> implement
 	private static STypeSafeTraversal<ThisExpr.State, SNodeOptionState, NodeOption<Expr>> CLASS_EXPR = new STypeSafeTraversal<ThisExpr.State, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ThisExpr.State state) {
 			return state.classExpr;
 		}
 
 		@Override
-		public ThisExpr.State doRebuildParentState(State state, STree<SNodeOptionState> child) {
+		public ThisExpr.State doRebuildParentState(ThisExpr.State state, STree<SNodeOptionState> child) {
 			return state.withClassExpr(child);
 		}
 

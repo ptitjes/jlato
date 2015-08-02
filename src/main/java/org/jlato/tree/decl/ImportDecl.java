@@ -177,12 +177,12 @@ public class ImportDecl extends TreeBase<ImportDecl.State, Tree, ImportDecl> imp
 	private static STypeSafeTraversal<ImportDecl.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<ImportDecl.State, QualifiedName.State, QualifiedName>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ImportDecl.State state) {
 			return state.name;
 		}
 
 		@Override
-		public ImportDecl.State doRebuildParentState(State state, STree<QualifiedName.State> child) {
+		public ImportDecl.State doRebuildParentState(ImportDecl.State state, STree<QualifiedName.State> child) {
 			return state.withName(child);
 		}
 

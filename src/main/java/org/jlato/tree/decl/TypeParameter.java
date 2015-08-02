@@ -168,12 +168,12 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 	private static STypeSafeTraversal<TypeParameter.State, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<TypeParameter.State, SNodeListState, NodeList<AnnotationExpr>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(TypeParameter.State state) {
 			return state.annotations;
 		}
 
 		@Override
-		public TypeParameter.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public TypeParameter.State doRebuildParentState(TypeParameter.State state, STree<SNodeListState> child) {
 			return state.withAnnotations(child);
 		}
 
@@ -191,12 +191,12 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 	private static STypeSafeTraversal<TypeParameter.State, Name.State, Name> NAME = new STypeSafeTraversal<TypeParameter.State, Name.State, Name>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(TypeParameter.State state) {
 			return state.name;
 		}
 
 		@Override
-		public TypeParameter.State doRebuildParentState(State state, STree<Name.State> child) {
+		public TypeParameter.State doRebuildParentState(TypeParameter.State state, STree<Name.State> child) {
 			return state.withName(child);
 		}
 
@@ -214,12 +214,12 @@ public class TypeParameter extends TreeBase<TypeParameter.State, Tree, TypeParam
 	private static STypeSafeTraversal<TypeParameter.State, SNodeListState, NodeList<Type>> BOUNDS = new STypeSafeTraversal<TypeParameter.State, SNodeListState, NodeList<Type>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(TypeParameter.State state) {
 			return state.bounds;
 		}
 
 		@Override
-		public TypeParameter.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public TypeParameter.State doRebuildParentState(TypeParameter.State state, STree<SNodeListState> child) {
 			return state.withBounds(child);
 		}
 

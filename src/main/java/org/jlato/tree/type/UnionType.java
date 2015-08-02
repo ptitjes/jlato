@@ -121,12 +121,12 @@ public class UnionType extends TreeBase<UnionType.State, Type, UnionType> implem
 	private static STypeSafeTraversal<UnionType.State, SNodeListState, NodeList<Type>> TYPES = new STypeSafeTraversal<UnionType.State, SNodeListState, NodeList<Type>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(UnionType.State state) {
 			return state.types;
 		}
 
 		@Override
-		public UnionType.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public UnionType.State doRebuildParentState(UnionType.State state, STree<SNodeListState> child) {
 			return state.withTypes(child);
 		}
 

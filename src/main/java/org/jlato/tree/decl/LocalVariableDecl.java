@@ -167,12 +167,12 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 	private static STypeSafeTraversal<LocalVariableDecl.State, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<LocalVariableDecl.State, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(LocalVariableDecl.State state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public LocalVariableDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public LocalVariableDecl.State doRebuildParentState(LocalVariableDecl.State state, STree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -190,12 +190,12 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 	private static STypeSafeTraversal<LocalVariableDecl.State, Type.State, Type> TYPE = new STypeSafeTraversal<LocalVariableDecl.State, Type.State, Type>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(LocalVariableDecl.State state) {
 			return state.type;
 		}
 
 		@Override
-		public LocalVariableDecl.State doRebuildParentState(State state, STree<Type.State> child) {
+		public LocalVariableDecl.State doRebuildParentState(LocalVariableDecl.State state, STree<Type.State> child) {
 			return state.withType(child);
 		}
 
@@ -213,12 +213,12 @@ public class LocalVariableDecl extends TreeBase<LocalVariableDecl.State, Decl, L
 	private static STypeSafeTraversal<LocalVariableDecl.State, SNodeListState, NodeList<VariableDeclarator>> VARIABLES = new STypeSafeTraversal<LocalVariableDecl.State, SNodeListState, NodeList<VariableDeclarator>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(LocalVariableDecl.State state) {
 			return state.variables;
 		}
 
 		@Override
-		public LocalVariableDecl.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public LocalVariableDecl.State doRebuildParentState(LocalVariableDecl.State state, STree<SNodeListState> child) {
 			return state.withVariables(child);
 		}
 

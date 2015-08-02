@@ -167,12 +167,12 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 	private static STypeSafeTraversal<CompilationUnit.State, PackageDecl.State, PackageDecl> PACKAGE_DECL = new STypeSafeTraversal<CompilationUnit.State, PackageDecl.State, PackageDecl>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(CompilationUnit.State state) {
 			return state.packageDecl;
 		}
 
 		@Override
-		public CompilationUnit.State doRebuildParentState(State state, STree<PackageDecl.State> child) {
+		public CompilationUnit.State doRebuildParentState(CompilationUnit.State state, STree<PackageDecl.State> child) {
 			return state.withPackageDecl(child);
 		}
 
@@ -190,12 +190,12 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 	private static STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<ImportDecl>> IMPORTS = new STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<ImportDecl>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(CompilationUnit.State state) {
 			return state.imports;
 		}
 
 		@Override
-		public CompilationUnit.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public CompilationUnit.State doRebuildParentState(CompilationUnit.State state, STree<SNodeListState> child) {
 			return state.withImports(child);
 		}
 
@@ -213,12 +213,12 @@ public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, Compi
 	private static STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<TypeDecl>> TYPES = new STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<TypeDecl>>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(CompilationUnit.State state) {
 			return state.types;
 		}
 
 		@Override
-		public CompilationUnit.State doRebuildParentState(State state, STree<SNodeListState> child) {
+		public CompilationUnit.State doRebuildParentState(CompilationUnit.State state, STree<SNodeListState> child) {
 			return state.withTypes(child);
 		}
 

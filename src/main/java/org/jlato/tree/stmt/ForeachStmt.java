@@ -166,12 +166,12 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 	private static STypeSafeTraversal<ForeachStmt.State, VariableDeclarationExpr.State, VariableDeclarationExpr> VAR = new STypeSafeTraversal<ForeachStmt.State, VariableDeclarationExpr.State, VariableDeclarationExpr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ForeachStmt.State state) {
 			return state.var;
 		}
 
 		@Override
-		public ForeachStmt.State doRebuildParentState(State state, STree<VariableDeclarationExpr.State> child) {
+		public ForeachStmt.State doRebuildParentState(ForeachStmt.State state, STree<VariableDeclarationExpr.State> child) {
 			return state.withVar(child);
 		}
 
@@ -189,12 +189,12 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 	private static STypeSafeTraversal<ForeachStmt.State, Expr.State, Expr> ITERABLE = new STypeSafeTraversal<ForeachStmt.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ForeachStmt.State state) {
 			return state.iterable;
 		}
 
 		@Override
-		public ForeachStmt.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public ForeachStmt.State doRebuildParentState(ForeachStmt.State state, STree<Expr.State> child) {
 			return state.withIterable(child);
 		}
 
@@ -212,12 +212,12 @@ public class ForeachStmt extends TreeBase<ForeachStmt.State, Stmt, ForeachStmt> 
 	private static STypeSafeTraversal<ForeachStmt.State, Stmt.State, Stmt> BODY = new STypeSafeTraversal<ForeachStmt.State, Stmt.State, Stmt>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ForeachStmt.State state) {
 			return state.body;
 		}
 
 		@Override
-		public ForeachStmt.State doRebuildParentState(State state, STree<Stmt.State> child) {
+		public ForeachStmt.State doRebuildParentState(ForeachStmt.State state, STree<Stmt.State> child) {
 			return state.withBody(child);
 		}
 

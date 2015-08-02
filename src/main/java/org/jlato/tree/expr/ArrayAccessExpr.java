@@ -141,12 +141,12 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 	private static STypeSafeTraversal<ArrayAccessExpr.State, Expr.State, Expr> NAME = new STypeSafeTraversal<ArrayAccessExpr.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ArrayAccessExpr.State state) {
 			return state.name;
 		}
 
 		@Override
-		public ArrayAccessExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public ArrayAccessExpr.State doRebuildParentState(ArrayAccessExpr.State state, STree<Expr.State> child) {
 			return state.withName(child);
 		}
 
@@ -164,12 +164,12 @@ public class ArrayAccessExpr extends TreeBase<ArrayAccessExpr.State, Expr, Array
 	private static STypeSafeTraversal<ArrayAccessExpr.State, Expr.State, Expr> INDEX = new STypeSafeTraversal<ArrayAccessExpr.State, Expr.State, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(State state) {
+		public STree<?> doTraverse(ArrayAccessExpr.State state) {
 			return state.index;
 		}
 
 		@Override
-		public ArrayAccessExpr.State doRebuildParentState(State state, STree<Expr.State> child) {
+		public ArrayAccessExpr.State doRebuildParentState(ArrayAccessExpr.State state, STree<Expr.State> child) {
 			return state.withIndex(child);
 		}
 
