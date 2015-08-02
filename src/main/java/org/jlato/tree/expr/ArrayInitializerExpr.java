@@ -79,6 +79,7 @@ public class ArrayInitializerExpr extends TreeBase<ArrayInitializerExpr.State, E
 	public static class State extends SNodeState<State> implements Expr.State {
 
 		public final STree<SNodeListState> values;
+
 		public final boolean trailingComma;
 
 		State(STree<SNodeListState> values, boolean trailingComma) {
