@@ -49,18 +49,6 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 		super(new SLocation<QualifiedType.State>(make(TreeBase.<SNodeListState>treeOf(annotations), TreeBase.<SNodeOptionState>treeOf(scope), TreeBase.<Name.State>treeOf(name), TreeBase.<SNodeOptionState>treeOf(typeArgs))));
 	}
 
-	public NodeOption<QualifiedType> scope() {
-		return location.safeTraversal(SCOPE);
-	}
-
-	public QualifiedType withScope(NodeOption<QualifiedType> scope) {
-		return location.safeTraversalReplace(SCOPE, scope);
-	}
-
-	public QualifiedType withScope(Mutation<NodeOption<QualifiedType>> mutation) {
-		return location.safeTraversalMutate(SCOPE, mutation);
-	}
-
 	public NodeList<AnnotationExpr> annotations() {
 		return location.safeTraversal(ANNOTATIONS);
 	}
@@ -71,6 +59,18 @@ public class QualifiedType extends TreeBase<QualifiedType.State, ReferenceType, 
 
 	public QualifiedType withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
 		return location.safeTraversalMutate(ANNOTATIONS, mutation);
+	}
+
+	public NodeOption<QualifiedType> scope() {
+		return location.safeTraversal(SCOPE);
+	}
+
+	public QualifiedType withScope(NodeOption<QualifiedType> scope) {
+		return location.safeTraversalReplace(SCOPE, scope);
+	}
+
+	public QualifiedType withScope(Mutation<NodeOption<QualifiedType>> mutation) {
+		return location.safeTraversalMutate(SCOPE, mutation);
 	}
 
 	public Name name() {
