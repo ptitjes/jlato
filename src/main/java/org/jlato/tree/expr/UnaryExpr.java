@@ -183,7 +183,7 @@ public class UnaryExpr extends TreeBase<UnaryExpr.State, Expr, UnaryExpr> implem
 		}
 	};
 
-	public final static LexicalShape opShape = token(new LSToken.Provider() {
+	public static final LexicalShape opShape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
 			final UnaryOp op = ((State) tree.state).op;
 			switch (op) {
