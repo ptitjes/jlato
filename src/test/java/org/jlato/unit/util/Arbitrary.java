@@ -220,17 +220,17 @@ public class Arbitrary {
 		}, new Function0<Expr>() {
 			@Override
 			public Expr apply() {
-				return LiteralExpr.of(arbitraryBoolean());
+				return literalExpr(arbitraryBoolean());
 			}
 		}, new Function0<Expr>() {
 			@Override
 			public Expr apply() {
-				return LiteralExpr.of(choice(32));
+				return literalExpr(choice(32));
 			}
 		}, new Function0<Expr>() {
 			@Override
 			public Expr apply() {
-				return LiteralExpr.of(arbitraryString());
+				return literalExpr(arbitraryString());
 			}
 		});
 	}

@@ -35,44 +35,8 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 		return Kind.LiteralExpr;
 	}
 
-	public static <T> STree<LiteralExpr.State> make(Class<?> literalClass, String literalString) {
+	public static STree<LiteralExpr.State> make(Class<?> literalClass, String literalString) {
 		return new STree<LiteralExpr.State>(new LiteralExpr.State(literalClass, literalString));
-	}
-
-	public static LiteralExpr<Void> nullLiteral() {
-		return of(Void.class, null);
-	}
-
-	public static LiteralExpr<Boolean> of(boolean value) {
-		return of(Boolean.class, value);
-	}
-
-	public static LiteralExpr<Integer> of(int value) {
-		return of(Integer.class, value);
-	}
-
-	public static LiteralExpr<Long> of(long value) {
-		return of(Long.class, value);
-	}
-
-	public static LiteralExpr<Float> of(float value) {
-		return of(Float.class, value);
-	}
-
-	public static LiteralExpr<Double> of(double value) {
-		return of(Double.class, value);
-	}
-
-	public static LiteralExpr<Character> of(char value) {
-		return of(Character.class, value);
-	}
-
-	public static LiteralExpr<String> of(String value) {
-		return of(String.class, value);
-	}
-
-	public static <T> LiteralExpr<T> of(Class<T> literalClass, T literalValue) {
-		return new LiteralExpr<T>(literalClass, Literals.from(literalClass, literalValue));
 	}
 
 	protected LiteralExpr(SLocation<LiteralExpr.State> location) {
