@@ -195,6 +195,16 @@ public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends 
 		return location.replaceTree(tree.withDressing(dressing.withTrailing(newTrailing)));
 	}
 
+	public T insertNewLineBefore() {
+		final STree<S> tree = location.tree;
+		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
+
+		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
+		final WTokenRun newLeading = leading.append(newLine());
+
+		return location.replaceTree(tree.withDressing(dressing.withLeading(newLeading)));
+	}
+
 	// Convenience conversion helper methods
 	// TODO Move that elsewhere
 
