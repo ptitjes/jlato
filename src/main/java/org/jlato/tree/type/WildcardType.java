@@ -25,10 +25,10 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.*;
 import org.jlato.tree.expr.AnnotationExpr;
+import org.jlato.util.Mutation;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.SpacingConstraint.space;
 
 public class WildcardType extends TreeBase<WildcardType.State, Type, WildcardType> implements Type {
 

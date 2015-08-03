@@ -25,18 +25,17 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.*;
 import org.jlato.tree.expr.VariableDeclarationExpr;
+import org.jlato.util.Mutation;
 
 import java.util.Collections;
 
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TRY_RESOURCES;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_BetweenConstants;
 import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.space;
-import static org.jlato.printer.SpacingConstraint.spacing;
 
 public class TryStmt extends TreeBase<TryStmt.State, Stmt, TryStmt> implements Stmt {
 

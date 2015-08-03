@@ -20,9 +20,9 @@
 package org.jlato.tree.expr;
 
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.Mutation;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.name.QualifiedName;
+import org.jlato.util.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.none;

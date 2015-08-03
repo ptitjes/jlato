@@ -22,16 +22,10 @@ package org.jlato.unit.rewrite;
 import org.jlato.parser.ParseException;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.rewrite.MatchVisitor;
-import org.jlato.rewrite.Pattern;
 import org.jlato.rewrite.Substitution;
 import org.jlato.rewrite.TypeSafeMatcher;
-import org.jlato.tree.Mutation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.CompilationUnit;
-import org.jlato.tree.decl.FormalParameter;
-import org.jlato.tree.name.Name;
-import org.jlato.tree.type.QualifiedType;
-import org.jlato.tree.type.Type;
 import org.jlato.unit.util.BaseTestFromFiles;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,9 +33,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.IOException;
-
-import static org.jlato.rewrite.Quotes.param;
-import static org.jlato.rewrite.Quotes.type;
 
 /**
  * @author Didier Villevalois

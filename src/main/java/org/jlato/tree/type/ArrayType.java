@@ -24,10 +24,10 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
-import org.jlato.tree.Mutation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ArrayDim;
+import org.jlato.util.Mutation;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 

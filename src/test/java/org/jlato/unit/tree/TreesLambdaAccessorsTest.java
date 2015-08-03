@@ -8,6 +8,7 @@ import org.jlato.tree.stmt.*;
 import org.jlato.tree.type.*;
 import static org.jlato.tree.TreeFactory.*;
 import org.jlato.unit.util.Arbitrary;
+import org.jlato.util.Mutation;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

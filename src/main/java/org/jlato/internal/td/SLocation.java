@@ -20,7 +20,7 @@
 package org.jlato.internal.td;
 
 import org.jlato.internal.bu.*;
-import org.jlato.tree.Mutation;
+import org.jlato.util.Mutation;
 import org.jlato.tree.Tree;
 
 /**

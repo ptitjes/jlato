@@ -29,6 +29,7 @@ import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.util.Function1;
 import org.jlato.util.Function2;
+import org.jlato.util.Mutation;
 
 import java.util.Iterator;
 

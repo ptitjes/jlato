@@ -24,7 +24,7 @@ import org.jlato.printer.FormattingSettings;
 import org.jlato.rewrite.MatchVisitor;
 import org.jlato.rewrite.Pattern;
 import org.jlato.rewrite.Substitution;
-import org.jlato.tree.Mutation;
+import org.jlato.util.Mutation;
 import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.name.Name;
