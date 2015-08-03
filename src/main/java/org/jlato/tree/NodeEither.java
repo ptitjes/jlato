@@ -79,7 +79,7 @@ public class NodeEither<TL extends Tree, TR extends Tree> extends TreeBase<SNode
 		builder.append(start);
 
 		Tree tree = location.safeTraversal(SNodeEitherState.elementTraversal());
-		if (tree != null) builder.append(tree.toString());
+		builder.append(tree);
 
 		builder.append(end);
 		return builder.toString();

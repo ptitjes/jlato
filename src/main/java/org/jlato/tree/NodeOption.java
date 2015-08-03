@@ -102,7 +102,7 @@ public class NodeOption<T extends Tree> extends TreeBase<SNodeOptionState, NodeO
 		builder.append(start);
 
 		Tree tree = location.safeTraversal(SNodeOptionState.elementTraversal());
-		if (tree != null) builder.append(tree.toString());
+		builder.append(tree);
 
 		builder.append(end);
 		return builder.toString();

@@ -350,8 +350,8 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 			if (!first) builder.append(sep);
 			else first = false;
 
-			Tree next = tree.asTree();
-			builder.append(next.toString());
+			Tree next = tree == null ? null : tree.asTree();
+			builder.append(next);
 		}
 
 		builder.append(end);
