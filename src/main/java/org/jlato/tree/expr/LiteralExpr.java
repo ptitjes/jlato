@@ -63,12 +63,6 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 		return (T) Literals.valueFor(literalClass, literalString);
 	}
 
-	@SuppressWarnings("unchecked")
-	public LiteralExpr<T> withValue(T value) {
-		final Class<?> literalClass = location.tree.state.literalClass;
-		return (LiteralExpr<T>) location.safePropertyReplace(LITERAL_STRING, Literals.from((Class<T>) literalClass, value));
-	}
-
 	public static class State extends SNodeState<State> implements Expr.State {
 
 		public final Class<?> literalClass;
@@ -164,7 +158,6 @@ public class LiteralExpr<T> extends TreeBase<LiteralExpr.State, Expr, LiteralExp
 
 	public final static LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
-			final Class<?> literalClass = ((State) tree.state).literalClass;
 			final String literalString = ((State) tree.state).literalString;
 			return new LToken(0, literalString); // TODO Fix
 		}
