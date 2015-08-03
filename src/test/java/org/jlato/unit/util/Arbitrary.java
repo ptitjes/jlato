@@ -353,7 +353,7 @@ public class Arbitrary {
 			@Override
 			public ExtendedModifier apply() {
 				boolean annotation = arbitraryBoolean();
-				return annotation ? arbitraryAnnotationExpr() : choiceIn(Modifier.values());
+				return annotation ? arbitraryAnnotationExpr() : modifier(choiceIn(ModifierKeyword.values()));
 			}
 		});
 	}

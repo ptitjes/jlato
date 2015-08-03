@@ -24,127 +24,78 @@ import org.jlato.internal.shapes.LSToken;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
-import org.jlato.parser.ParserImplConstants;
-import org.jlato.printer.SpacingConstraint;
-import org.jlato.tree.Kind;
-import org.jlato.tree.Tree;
+import org.jlato.tree.*;
+import org.jlato.util.Mutation;
 
 import java.util.Collections;
 
-import static org.jlato.internal.shapes.LexicalShape.keyword;
 import static org.jlato.internal.shapes.LexicalShape.token;
-import static org.jlato.printer.SpacingConstraint.space;
 
 public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifier> implements ExtendedModifier {
+
+	public static final Modifier Public = new Modifier(ModifierKeyword.Public);
+
+	public static final Modifier Protected = new Modifier(ModifierKeyword.Protected);
+
+	public static final Modifier Private = new Modifier(ModifierKeyword.Private);
+
+	public static final Modifier Abstract = new Modifier(ModifierKeyword.Abstract);
+
+	public static final Modifier Default = new Modifier(ModifierKeyword.Default);
+
+	public static final Modifier Static = new Modifier(ModifierKeyword.Static);
+
+	public static final Modifier Final = new Modifier(ModifierKeyword.Final);
+
+	public static final Modifier Transient = new Modifier(ModifierKeyword.Transient);
+
+	public static final Modifier Volatile = new Modifier(ModifierKeyword.Volatile);
+
+	public static final Modifier Synchronized = new Modifier(ModifierKeyword.Synchronized);
+
+	public static final Modifier Native = new Modifier(ModifierKeyword.Native);
+
+	public static final Modifier StrictFP = new Modifier(ModifierKeyword.StrictFP);
 
 	public Kind kind() {
 		return Kind.Modifier;
 	}
 
-	public static STree<Modifier.State> make(LToken keyword) {
-		switch (keyword.kind) {
-			case ParserImplConstants.PUBLIC:
-				return State.Public;
-			case ParserImplConstants.PROTECTED:
-				return State.Protected;
-			case ParserImplConstants.PRIVATE:
-				return State.Private;
-			case ParserImplConstants.ABSTRACT:
-				return State.Abstract;
-			case ParserImplConstants.DEFAULT:
-				return State.Default;
-			case ParserImplConstants.STATIC:
-				return State.Static;
-			case ParserImplConstants.FINAL:
-				return State.Final;
-			case ParserImplConstants.TRANSIENT:
-				return State.Transient;
-			case ParserImplConstants.VOLATILE:
-				return State.Volatile;
-			case ParserImplConstants.SYNCHRONIZED:
-				return State.Synchronized;
-			case ParserImplConstants.NATIVE:
-				return State.Native;
-			case ParserImplConstants.STRICTFP:
-				return State.StrictFP;
-		}
-		throw new IllegalStateException();
-	}
-
-	public static final Modifier Public = new Modifier(LToken.Public);
-
-	public static final Modifier Protected = new Modifier(LToken.Protected);
-
-	public static final Modifier Private = new Modifier(LToken.Private);
-
-	public static final Modifier Abstract = new Modifier(LToken.Abstract);
-
-	public static final Modifier Default = new Modifier(LToken.Default);
-
-	public static final Modifier Static = new Modifier(LToken.Static);
-
-	public static final Modifier Final = new Modifier(LToken.Final);
-
-	public static final Modifier Transient = new Modifier(LToken.Transient);
-
-	public static final Modifier Volatile = new Modifier(LToken.Volatile);
-
-	public static final Modifier Synchronized = new Modifier(LToken.Synchronized);
-
-	public static final Modifier Native = new Modifier(LToken.Native);
-
-	public static final Modifier StrictFP = new Modifier(LToken.StrictFP);
-
-	private static final Modifier[] MODIFIERS =
-			new Modifier[]{Public, Protected, Private, Abstract, Default, Static, Final, Transient, Volatile, Synchronized, Native, StrictFP};
-
-	protected Modifier(SLocation<Modifier.State> location) {
+	private Modifier(SLocation<Modifier.State> location) {
 		super(location);
 	}
 
-	private Modifier(LToken keyword) {
+	public static STree<Modifier.State> make(ModifierKeyword keyword) {
+		return new STree<Modifier.State>(new Modifier.State(keyword));
+	}
+
+	public Modifier(ModifierKeyword keyword) {
 		super(new SLocation<Modifier.State>(make(keyword)));
 	}
 
-	public String toString() {
-		return location.safeProperty(KEYWORD).toString();
+	public ModifierKeyword keyword() {
+		return location.safeProperty(KEYWORD);
 	}
 
-	public static Modifier[] values() {
-		return MODIFIERS;
+	public Modifier withKeyword(ModifierKeyword keyword) {
+		return location.safePropertyReplace(KEYWORD, keyword);
+	}
+
+	public Modifier withKeyword(Mutation<ModifierKeyword> mutation) {
+		return location.safePropertyMutate(KEYWORD, mutation);
 	}
 
 	public static class State extends SNodeState<State> implements ExtendedModifier.State {
 
-		public final LToken keyword;
+		public final ModifierKeyword keyword;
 
-		State(LToken keyword) {
+		State(ModifierKeyword keyword) {
 			this.keyword = keyword;
 		}
 
-		public static final STree<State> Public = new STree<State>(new State(LToken.Public));
-
-		public static final STree<State> Protected = new STree<State>(new State(LToken.Protected));
-
-		public static final STree<State> Private = new STree<State>(new State(LToken.Private));
-
-		public static final STree<State> Abstract = new STree<State>(new State(LToken.Abstract));
-
-		public static final STree<State> Default = new STree<State>(new State(LToken.Default));
-
-		public static final STree<State> Static = new STree<State>(new State(LToken.Static));
-
-		public static final STree<State> Final = new STree<State>(new State(LToken.Final));
-
-		public static final STree<State> Transient = new STree<State>(new State(LToken.Transient));
-
-		public static final STree<State> Volatile = new STree<State>(new State(LToken.Volatile));
-
-		public static final STree<State> Synchronized = new STree<State>(new State(LToken.Synchronized));
-
-		public static final STree<State> Native = new STree<State>(new State(LToken.Native));
-
-		public static final STree<State> StrictFP = new STree<State>(new State(LToken.StrictFP));
+		public Modifier.State withKeyword(ModifierKeyword keyword) {
+			return new Modifier.State(keyword);
+		}
 
 		@Override
 		public Kind kind() {
@@ -178,36 +129,69 @@ public class Modifier extends TreeBase<Modifier.State, ExtendedModifier, Modifie
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
 			State state = (State) o;
-
-			return keyword.kind == state.keyword.kind;
+			if (keyword == null ? state.keyword != null : !keyword.equals(state.keyword))
+				return false;
+			return true;
 		}
 
 		@Override
 		public int hashCode() {
-			return keyword != null ? ((Integer) keyword.kind).hashCode() : 0;
+			int result = 17;
+			if (keyword != null) result = 37 * result + keyword.hashCode();
+			return result;
 		}
 	}
 
-	private static STypeSafeProperty<Modifier.State, LToken> KEYWORD = new STypeSafeProperty<Modifier.State, LToken>() {
+	private static STypeSafeProperty<Modifier.State, ModifierKeyword> KEYWORD = new STypeSafeProperty<Modifier.State, ModifierKeyword>() {
 
 		@Override
-		public LToken doRetrieve(State state) {
+		public ModifierKeyword doRetrieve(Modifier.State state) {
 			return state.keyword;
 		}
 
 		@Override
-		public Modifier.State doRebuildParentState(State state, LToken value) {
-			throw new UnsupportedOperationException();
+		public Modifier.State doRebuildParentState(Modifier.State state, ModifierKeyword value) {
+			return state.withKeyword(value);
 		}
 	};
 
-	public final static LexicalShape shape = token(new LSToken.Provider() {
+	public static final LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(STree tree) {
-			return ((State) tree.state).keyword;
+			final ModifierKeyword keyword = ((State) tree.state).keyword;
+			switch (keyword) {
+				case Public:
+					return LToken.Public;
+				case Protected:
+					return LToken.Protected;
+				case Private:
+					return LToken.Private;
+				case Abstract:
+					return LToken.Abstract;
+				case Default:
+					return LToken.Default;
+				case Static:
+					return LToken.Static;
+				case Final:
+					return LToken.Final;
+				case Transient:
+					return LToken.Transient;
+				case Volatile:
+					return LToken.Volatile;
+				case Synchronized:
+					return LToken.Synchronized;
+				case Native:
+					return LToken.Native;
+				case StrictFP:
+					return LToken.StrictFP;
+				default:
+					// Can't happen by definition of enum
+					throw new IllegalStateException();
+			}
 		}
 	});
 }

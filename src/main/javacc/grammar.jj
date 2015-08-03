@@ -1225,29 +1225,29 @@ STree<SNodeListState> Modifiers():
   (
     LOOKAHEAD(2)
     (
-      "public" { modifiers = append(modifiers, Modifier.make(LToken.Public)); }
+      "public" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Public)); }
     |
-      "protected" { modifiers = append(modifiers, Modifier.make(LToken.Protected)); }
+      "protected" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Protected)); }
     |
-      "private" { modifiers = append(modifiers, Modifier.make(LToken.Private)); }
+      "private" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Private)); }
     |
-      "abstract" { modifiers = append(modifiers, Modifier.make(LToken.Abstract)); }
+      "abstract" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Abstract)); }
     |
-      "default" { modifiers = append(modifiers, Modifier.make(LToken.Default)); }
+      "default" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Default)); }
     |
-      "static" { modifiers = append(modifiers, Modifier.make(LToken.Static)); }
+      "static" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Static)); }
     |
-      "final" { modifiers = append(modifiers, Modifier.make(LToken.Final)); }
+      "final" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Final)); }
     |
-      "transient" { modifiers = append(modifiers, Modifier.make(LToken.Transient)); }
+      "transient" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Transient)); }
     |
-      "volatile" { modifiers = append(modifiers, Modifier.make(LToken.Volatile)); }
+      "volatile" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Volatile)); }
     |
-      "synchronized" { modifiers = append(modifiers, Modifier.make(LToken.Synchronized)); }
+      "synchronized" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Synchronized)); }
     |
-      "native" { modifiers = append(modifiers, Modifier.make(LToken.Native)); }
+      "native" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Native)); }
     |
-      "strictfp" { modifiers = append(modifiers, Modifier.make(LToken.StrictFP)); }
+      "strictfp" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.StrictFP)); }
     |
       ann = Annotation() { modifiers = append(modifiers, ann); }
     )
@@ -1571,7 +1571,7 @@ STree<? extends MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind typeKind):
   |
     modifiers = Modifiers()
     {
-      if (modifiers != null && contains(modifiers, Modifier.make(LToken.Default)) && typeKind != TypeKind.Interface)
+      if (modifiers != null && contains(modifiers, Modifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface)
         throwParseException(token, "Only interfaces can have default members");
     }
     (
@@ -1740,7 +1740,7 @@ STree<MethodDecl.State> MethodDecl(STree<SNodeListState> modifiers):
   |
     ";"
     {
-      if(modifiers != null && contains(modifiers, Modifier.make(LToken.Default)))
+      if(modifiers != null && contains(modifiers, Modifier.make(ModifierKeyword.Default)))
 	    throwParseException(token, "default methods must have a body");
 	}
   )

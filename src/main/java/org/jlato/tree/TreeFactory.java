@@ -148,6 +148,15 @@ public abstract class TreeFactory {
 	}
 
 	@Deprecated
+	public static Modifier modifier() {
+		return new Modifier(null);
+	}
+
+	public static Modifier modifier(ModifierKeyword keyword) {
+		return new Modifier(keyword);
+	}
+
+	@Deprecated
 	public static PackageDecl packageDecl() {
 		return new PackageDecl(NodeList.<AnnotationExpr>empty(), null);
 	}
