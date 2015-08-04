@@ -22,8 +22,7 @@ package org.jlato.internal.bu;
 import com.github.andrewoma.dexx.collection.TreeMap;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
-import org.jlato.tree.Tree;
-import org.jlato.tree.TreeSet;
+import org.jlato.tree.*;
 
 import java.util.Collections;
 import java.util.Comparator;

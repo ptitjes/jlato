@@ -1,22 +1,17 @@
 package org.jlato.internal.bu.name;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.SProperty;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STypeSafeProperty;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.expr.SExpr;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LSToken;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.name.TDName;
 import org.jlato.parser.ParserImplConstants;
-import org.jlato.tree.Kind;
-import org.jlato.tree.Tree;
+import org.jlato.tree.*;
 
 import java.util.Collections;
 
-import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class SName extends SNodeState<SName> implements SExpr {
 

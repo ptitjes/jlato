@@ -19,7 +19,7 @@
 
 package org.jlato.internal.bu;
 
-import org.jlato.tree.Tree;
+import org.jlato.tree.*;
 
 /**
  * @author Didier Villevalois

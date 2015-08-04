@@ -1,25 +1,20 @@
 package org.jlato.internal.bu.stmt;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDLabeledStmt;
 import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.tree.Kind;
-import org.jlato.tree.Tree;
-import org.jlato.tree.name.Name;
-import org.jlato.tree.stmt.Stmt;
+import org.jlato.tree.*;
+import org.jlato.tree.name.*;
+import org.jlato.tree.stmt.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
-import static org.jlato.printer.IndentationConstraint.*;
-import static org.jlato.printer.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.LabeledStmt_AfterLabel;
+import static org.jlato.printer.IndentationConstraint.indent;
+import static org.jlato.printer.IndentationConstraint.unIndent;
+import static org.jlato.printer.SpacingConstraint.spacing;
 
 public class SLabeledStmt extends SNodeState<SLabeledStmt> implements SStmt {
 

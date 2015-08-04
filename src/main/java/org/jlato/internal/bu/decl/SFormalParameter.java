@@ -1,30 +1,19 @@
 package org.jlato.internal.bu.decl;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.SProperty;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.bu.STypeSafeProperty;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.type.SType;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDFormalParameter;
-import org.jlato.tree.Kind;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
-import org.jlato.tree.decl.ExtendedModifier;
-import org.jlato.tree.decl.VariableDeclaratorId;
-import org.jlato.tree.type.Type;
+import org.jlato.tree.*;
+import org.jlato.tree.decl.*;
+import org.jlato.tree.type.*;
 
 import java.util.Collections;
 
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.SpacingConstraint.*;
+import static org.jlato.printer.SpacingConstraint.space;
 
 public class SFormalParameter extends SNodeState<SFormalParameter> implements STreeState {
 

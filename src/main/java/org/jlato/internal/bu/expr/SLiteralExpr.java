@@ -1,20 +1,15 @@
 package org.jlato.internal.bu.expr;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.SProperty;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STypeSafeProperty;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.shapes.LSToken;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.expr.TDLiteralExpr;
-import org.jlato.tree.Kind;
-import org.jlato.tree.Tree;
+import org.jlato.tree.*;
 
 import java.util.Arrays;
 
-import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class SLiteralExpr extends SNodeState<SLiteralExpr> implements SExpr {
 

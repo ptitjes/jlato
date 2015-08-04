@@ -1,22 +1,16 @@
 package org.jlato.internal.bu.decl;
 
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.stmt.SBlockStmt;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDInitializerDecl;
-import org.jlato.tree.Kind;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
-import org.jlato.tree.decl.ExtendedModifier;
-import org.jlato.tree.stmt.BlockStmt;
+import org.jlato.tree.*;
+import org.jlato.tree.decl.*;
+import org.jlato.tree.stmt.*;
 
-import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.internal.shapes.LexicalShape.child;
+import static org.jlato.internal.shapes.LexicalShape.composite;
 
 public class SInitializerDecl extends SNodeState<SInitializerDecl> implements SMemberDecl {
 

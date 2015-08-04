@@ -1,22 +1,14 @@
 package org.jlato.internal.bu.expr;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.expr.TDMethodReferenceExpr;
-import org.jlato.tree.Kind;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
-import org.jlato.tree.expr.Expr;
-import org.jlato.tree.name.Name;
-import org.jlato.tree.type.Type;
+import org.jlato.tree.*;
+import org.jlato.tree.expr.*;
+import org.jlato.tree.name.*;
+import org.jlato.tree.type.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 

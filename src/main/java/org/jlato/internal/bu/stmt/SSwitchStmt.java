@@ -1,27 +1,20 @@
 package org.jlato.internal.bu.stmt;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.expr.SExpr;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDSwitchStmt;
-import org.jlato.tree.Kind;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
-import org.jlato.tree.expr.Expr;
-import org.jlato.tree.stmt.SwitchCase;
+import org.jlato.tree.*;
+import org.jlato.tree.expr.*;
+import org.jlato.tree.stmt.*;
 
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
-import static org.jlato.printer.IndentationConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.SwitchStmt_AfterSwitchKeyword;
+import static org.jlato.printer.IndentationConstraint.indent;
+import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 
 public class SSwitchStmt extends SNodeState<SSwitchStmt> implements SStmt {

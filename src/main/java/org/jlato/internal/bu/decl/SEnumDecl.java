@@ -1,34 +1,24 @@
 package org.jlato.internal.bu.decl;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.SProperty;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.bu.STypeSafeProperty;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDEnumDecl;
-import org.jlato.tree.Kind;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
-import org.jlato.tree.decl.EnumConstantDecl;
-import org.jlato.tree.decl.ExtendedModifier;
-import org.jlato.tree.decl.MemberDecl;
-import org.jlato.tree.name.Name;
-import org.jlato.tree.type.QualifiedType;
+import org.jlato.tree.*;
+import org.jlato.tree.decl.*;
+import org.jlato.tree.name.*;
+import org.jlato.tree.type.*;
 
 import java.util.Collections;
 
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
-import static org.jlato.printer.IndentationConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_AfterConstants;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_BetweenConstants;
+import static org.jlato.printer.IndentationConstraint.indent;
+import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 
 public class SEnumDecl extends SNodeState<SEnumDecl> implements STypeDecl {

@@ -4,13 +4,12 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDEmptyStmt;
-import org.jlato.tree.Kind;
-import org.jlato.tree.Tree;
+import org.jlato.tree.*;
 
-import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class SEmptyStmt extends SNodeState<SEmptyStmt> implements SStmt {
 

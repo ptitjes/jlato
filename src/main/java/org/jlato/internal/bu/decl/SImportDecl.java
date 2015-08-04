@@ -1,27 +1,20 @@
 package org.jlato.internal.bu.decl;
 
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
-import org.jlato.internal.bu.SProperty;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STreeState;
-import org.jlato.internal.bu.STypeSafeProperty;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.name.SQualifiedName;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDImportDecl;
-import org.jlato.tree.Kind;
-import org.jlato.tree.Tree;
-import org.jlato.tree.name.QualifiedName;
+import org.jlato.tree.*;
+import org.jlato.tree.name.*;
 
 import java.util.Arrays;
 
-import static org.jlato.internal.shapes.LSCondition.*;
+import static org.jlato.internal.shapes.LSCondition.data;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
-import static org.jlato.printer.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterImports;
+import static org.jlato.printer.SpacingConstraint.newLine;
+import static org.jlato.printer.SpacingConstraint.spacing;
 
 public class SImportDecl extends SNodeState<SImportDecl> implements STreeState {
 
