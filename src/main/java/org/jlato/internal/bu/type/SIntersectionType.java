@@ -10,15 +10,15 @@ import org.jlato.tree.type.*;
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 
-public class SIntersectionType extends SNodeState<SIntersectionType> implements SType {
+public class SIntersectionType extends SNode<SIntersectionType> implements SType {
 
-	public static BUTree<SIntersectionType> make(BUTree<SNodeListState> types) {
+	public static BUTree<SIntersectionType> make(BUTree<SNodeList> types) {
 		return new BUTree<SIntersectionType>(new SIntersectionType(types));
 	}
 
-	public final BUTree<SNodeListState> types;
+	public final BUTree<SNodeList> types;
 
-	public SIntersectionType(BUTree<SNodeListState> types) {
+	public SIntersectionType(BUTree<SNodeList> types) {
 		this.types = types;
 	}
 
@@ -27,11 +27,11 @@ public class SIntersectionType extends SNodeState<SIntersectionType> implements 
 		return Kind.IntersectionType;
 	}
 
-	public BUTree<SNodeListState> types() {
+	public BUTree<SNodeList> types() {
 		return types;
 	}
 
-	public SIntersectionType withTypes(BUTree<SNodeListState> types) {
+	public SIntersectionType withTypes(BUTree<SNodeList> types) {
 		return new SIntersectionType(types);
 	}
 
@@ -74,7 +74,7 @@ public class SIntersectionType extends SNodeState<SIntersectionType> implements 
 		return result;
 	}
 
-	public static STypeSafeTraversal<SIntersectionType, SNodeListState, NodeList<Type>> TYPES = new STypeSafeTraversal<SIntersectionType, SNodeListState, NodeList<Type>>() {
+	public static STypeSafeTraversal<SIntersectionType, SNodeList, NodeList<Type>> TYPES = new STypeSafeTraversal<SIntersectionType, SNodeList, NodeList<Type>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SIntersectionType state) {
@@ -82,17 +82,17 @@ public class SIntersectionType extends SNodeState<SIntersectionType> implements 
 		}
 
 		@Override
-		public SIntersectionType doRebuildParentState(SIntersectionType state, BUTree<SNodeListState> child) {
+		public SIntersectionType doRebuildParentState(SIntersectionType state, BUTree<SNodeList> child) {
 			return state.withTypes(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

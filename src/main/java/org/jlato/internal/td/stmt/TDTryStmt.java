@@ -1,7 +1,7 @@
 package org.jlato.internal.td.stmt;
 
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.bu.stmt.STryStmt;
 import org.jlato.internal.td.TDLocation;
@@ -27,7 +27,7 @@ public class TDTryStmt extends TDTree<STryStmt, Stmt, TryStmt> implements TryStm
 	}
 
 	public TDTryStmt(NodeList<VariableDeclarationExpr> resources, boolean trailingSemiColon, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
-		super(new TDLocation<STryStmt>(STryStmt.make(TDTree.<SNodeListState>treeOf(resources), trailingSemiColon, TDTree.<SBlockStmt>treeOf(tryBlock), TDTree.<SNodeListState>treeOf(catchs), TDTree.<SNodeOptionState>treeOf(finallyBlock))));
+		super(new TDLocation<STryStmt>(STryStmt.make(TDTree.<SNodeList>treeOf(resources), trailingSemiColon, TDTree.<SBlockStmt>treeOf(tryBlock), TDTree.<SNodeList>treeOf(catchs), TDTree.<SNodeOption>treeOf(finallyBlock))));
 	}
 
 	public NodeList<VariableDeclarationExpr> resources() {

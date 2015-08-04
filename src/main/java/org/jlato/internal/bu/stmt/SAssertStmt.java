@@ -12,17 +12,17 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SAssertStmt extends SNodeState<SAssertStmt> implements SStmt {
+public class SAssertStmt extends SNode<SAssertStmt> implements SStmt {
 
-	public static BUTree<SAssertStmt> make(BUTree<? extends SExpr> check, BUTree<SNodeOptionState> msg) {
+	public static BUTree<SAssertStmt> make(BUTree<? extends SExpr> check, BUTree<SNodeOption> msg) {
 		return new BUTree<SAssertStmt>(new SAssertStmt(check, msg));
 	}
 
 	public final BUTree<? extends SExpr> check;
 
-	public final BUTree<SNodeOptionState> msg;
+	public final BUTree<SNodeOption> msg;
 
-	public SAssertStmt(BUTree<? extends SExpr> check, BUTree<SNodeOptionState> msg) {
+	public SAssertStmt(BUTree<? extends SExpr> check, BUTree<SNodeOption> msg) {
 		this.check = check;
 		this.msg = msg;
 	}
@@ -40,11 +40,11 @@ public class SAssertStmt extends SNodeState<SAssertStmt> implements SStmt {
 		return new SAssertStmt(check, msg);
 	}
 
-	public BUTree<SNodeOptionState> msg() {
+	public BUTree<SNodeOption> msg() {
 		return msg;
 	}
 
-	public SAssertStmt withMsg(BUTree<SNodeOptionState> msg) {
+	public SAssertStmt withMsg(BUTree<SNodeOption> msg) {
 		return new SAssertStmt(check, msg);
 	}
 
@@ -103,17 +103,17 @@ public class SAssertStmt extends SNodeState<SAssertStmt> implements SStmt {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return MSG;
 		}
 	};
 
-	public static STypeSafeTraversal<SAssertStmt, SNodeOptionState, NodeOption<Expr>> MSG = new STypeSafeTraversal<SAssertStmt, SNodeOptionState, NodeOption<Expr>>() {
+	public static STypeSafeTraversal<SAssertStmt, SNodeOption, NodeOption<Expr>> MSG = new STypeSafeTraversal<SAssertStmt, SNodeOption, NodeOption<Expr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SAssertStmt state) {
@@ -121,17 +121,17 @@ public class SAssertStmt extends SNodeState<SAssertStmt> implements SStmt {
 		}
 
 		@Override
-		public SAssertStmt doRebuildParentState(SAssertStmt state, BUTree<SNodeOptionState> child) {
+		public SAssertStmt doRebuildParentState(SAssertStmt state, BUTree<SNodeOption> child) {
 			return state.withMsg(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return CHECK;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

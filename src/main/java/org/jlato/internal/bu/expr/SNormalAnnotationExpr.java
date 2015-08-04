@@ -12,17 +12,17 @@ import org.jlato.tree.name.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SNormalAnnotationExpr extends SNodeState<SNormalAnnotationExpr> implements SAnnotationExpr {
+public class SNormalAnnotationExpr extends SNode<SNormalAnnotationExpr> implements SAnnotationExpr {
 
-	public static BUTree<SNormalAnnotationExpr> make(BUTree<SQualifiedName> name, BUTree<SNodeListState> pairs) {
+	public static BUTree<SNormalAnnotationExpr> make(BUTree<SQualifiedName> name, BUTree<SNodeList> pairs) {
 		return new BUTree<SNormalAnnotationExpr>(new SNormalAnnotationExpr(name, pairs));
 	}
 
 	public final BUTree<SQualifiedName> name;
 
-	public final BUTree<SNodeListState> pairs;
+	public final BUTree<SNodeList> pairs;
 
-	public SNormalAnnotationExpr(BUTree<SQualifiedName> name, BUTree<SNodeListState> pairs) {
+	public SNormalAnnotationExpr(BUTree<SQualifiedName> name, BUTree<SNodeList> pairs) {
 		this.name = name;
 		this.pairs = pairs;
 	}
@@ -40,11 +40,11 @@ public class SNormalAnnotationExpr extends SNodeState<SNormalAnnotationExpr> imp
 		return new SNormalAnnotationExpr(name, pairs);
 	}
 
-	public BUTree<SNodeListState> pairs() {
+	public BUTree<SNodeList> pairs() {
 		return pairs;
 	}
 
-	public SNormalAnnotationExpr withPairs(BUTree<SNodeListState> pairs) {
+	public SNormalAnnotationExpr withPairs(BUTree<SNodeList> pairs) {
 		return new SNormalAnnotationExpr(name, pairs);
 	}
 
@@ -103,17 +103,17 @@ public class SNormalAnnotationExpr extends SNodeState<SNormalAnnotationExpr> imp
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return PAIRS;
 		}
 	};
 
-	public static STypeSafeTraversal<SNormalAnnotationExpr, SNodeListState, NodeList<MemberValuePair>> PAIRS = new STypeSafeTraversal<SNormalAnnotationExpr, SNodeListState, NodeList<MemberValuePair>>() {
+	public static STypeSafeTraversal<SNormalAnnotationExpr, SNodeList, NodeList<MemberValuePair>> PAIRS = new STypeSafeTraversal<SNormalAnnotationExpr, SNodeList, NodeList<MemberValuePair>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SNormalAnnotationExpr state) {
@@ -121,17 +121,17 @@ public class SNormalAnnotationExpr extends SNodeState<SNormalAnnotationExpr> imp
 		}
 
 		@Override
-		public SNormalAnnotationExpr doRebuildParentState(SNormalAnnotationExpr state, BUTree<SNodeListState> child) {
+		public SNormalAnnotationExpr doRebuildParentState(SNormalAnnotationExpr state, BUTree<SNodeList> child) {
 			return state.withPairs(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return NAME;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

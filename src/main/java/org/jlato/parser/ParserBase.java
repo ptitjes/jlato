@@ -125,7 +125,7 @@ abstract class ParserBase {
 		return runStack.pop();
 	}
 
-	protected <S extends STreeState> BUTree<S> dress(BUTree<S> tree) {
+	protected <S extends STree> BUTree<S> dress(BUTree<S> tree) {
 		if (!configuration.preserveWhitespaces) return tree;
 
 		try {
@@ -145,7 +145,7 @@ abstract class ParserBase {
 		}
 	}
 
-	private <S extends STreeState> BUTree<S> doDress(BUTree<S> tree, LexicalShape shape,
+	private <S extends STree> BUTree<S> doDress(BUTree<S> tree, LexicalShape shape,
 	                                                IndexedList<WTokenRun> tokens) {
 		try {
 			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
@@ -175,7 +175,7 @@ abstract class ParserBase {
 		}
 	}
 
-	protected <S extends STreeState> BUTree<S> dressWithPrologAndEpilog(BUTree<S> tree) {
+	protected <S extends STree> BUTree<S> dressWithPrologAndEpilog(BUTree<S> tree) {
 		if (!configuration.preserveWhitespaces) return tree;
 
 		assert runStack.size() == 1;
@@ -194,14 +194,14 @@ abstract class ParserBase {
 	}
 
 	// TODO This is really dirty and temporary until the parser parses STrees directly
-	protected <S extends STreeState> BUTree<S> makeVar() {
+	protected <S extends STree> BUTree<S> makeVar() {
 		Token token = getToken(0);
 		pushWhitespace(token);
 
 		String image = token.image;
 		boolean nodeListVar = image.startsWith("..$");
 		String name = nodeListVar ? image.substring(3) : image.substring(1);
-		return (BUTree<S>) new BUTree<SVarState>(new SVarState(name));
+		return (BUTree<S>) new BUTree<SVar>(new SVar(name));
 	}
 
 	// Interface with ParserImpl
@@ -231,13 +231,13 @@ abstract class ParserBase {
 
 	abstract BUTree<? extends SMemberDecl> AnnotationTypeBodyDecl() throws ParseException;
 
-	abstract BUTree<SNodeListState> Modifiers() throws ParseException;
+	abstract BUTree<SNodeList> Modifiers() throws ParseException;
 
-	abstract BUTree<SMethodDecl> MethodDecl(BUTree<SNodeListState> modifiers) throws ParseException;
+	abstract BUTree<SMethodDecl> MethodDecl(BUTree<SNodeList> modifiers) throws ParseException;
 
-	abstract BUTree<SFieldDecl> FieldDecl(BUTree<SNodeListState> modifiers) throws ParseException;
+	abstract BUTree<SFieldDecl> FieldDecl(BUTree<SNodeList> modifiers) throws ParseException;
 
-	abstract BUTree<SAnnotationMemberDecl> AnnotationTypeMemberDecl(BUTree<SNodeListState> modifiers) throws ParseException;
+	abstract BUTree<SAnnotationMemberDecl> AnnotationTypeMemberDecl(BUTree<SNodeList> modifiers) throws ParseException;
 
 	abstract BUTree<SEnumConstantDecl> EnumConstantDecl() throws ParseException;
 
@@ -249,9 +249,9 @@ abstract class ParserBase {
 
 	abstract BUTree<? extends SExpr> Expression() throws ParseException;
 
-	abstract BUTree<SNodeListState> Annotations() throws ParseException;
+	abstract BUTree<SNodeList> Annotations() throws ParseException;
 
-	abstract BUTree<? extends SType> Type(BUTree<SNodeListState> annotations) throws ParseException;
+	abstract BUTree<? extends SType> Type(BUTree<SNodeList> annotations) throws ParseException;
 
 	public enum TypeKind {
 		Empty,
@@ -270,41 +270,41 @@ abstract class ParserBase {
 
 	// Convenience methods for lists
 
-	protected BUTree<SNodeListState> emptyList() {
-		return new BUTree<SNodeListState>(new SNodeListState());
+	protected BUTree<SNodeList> emptyList() {
+		return new BUTree<SNodeList>(new SNodeList());
 	}
 
-	protected BUTree<SNodeListState> singletonList(BUTree<?> element) {
-		return new BUTree<SNodeListState>(new SNodeListState(element));
+	protected BUTree<SNodeList> singletonList(BUTree<?> element) {
+		return new BUTree<SNodeList>(new SNodeList(element));
 	}
 
-	protected BUTree<SNodeListState> append(BUTree<SNodeListState> list, BUTree<?> element) {
+	protected BUTree<SNodeList> append(BUTree<SNodeList> list, BUTree<?> element) {
 		return list == null ? singletonList(element) :
 				list.withState(list.state.withChildren(list.state.children.append(element)));
 	}
 
-	protected boolean contains(BUTree<SNodeListState> list, BUTree<?> element) {
+	protected boolean contains(BUTree<SNodeList> list, BUTree<?> element) {
 		return list.state.children.indexOf(element) != -1;
 	}
 
-	protected BUTree<SNodeListState> ensureNotNull(BUTree<SNodeListState> list) {
+	protected BUTree<SNodeList> ensureNotNull(BUTree<SNodeList> list) {
 		return list == null ? emptyList() : list;
 	}
 
-	protected BUTree<SNodeOptionState> optionOf(BUTree<?> element) {
-		return new BUTree<SNodeOptionState>(new SNodeOptionState(element));
+	protected BUTree<SNodeOption> optionOf(BUTree<?> element) {
+		return new BUTree<SNodeOption>(new SNodeOption(element));
 	}
 
-	protected BUTree<SNodeOptionState> none() {
-		return new BUTree<SNodeOptionState>(new SNodeOptionState(null));
+	protected BUTree<SNodeOption> none() {
+		return new BUTree<SNodeOption>(new SNodeOption(null));
 	}
 
-	protected BUTree<SNodeEitherState> left(BUTree<?> element) {
-		return new BUTree<SNodeEitherState>(new SNodeEitherState(element, SNodeEitherState.EitherSide.Left));
+	protected BUTree<SNodeEither> left(BUTree<?> element) {
+		return new BUTree<SNodeEither>(new SNodeEither(element, SNodeEither.EitherSide.Left));
 	}
 
-	protected BUTree<SNodeEitherState> right(BUTree<?> element) {
-		return new BUTree<SNodeEitherState>(new SNodeEitherState(element, SNodeEitherState.EitherSide.Right));
+	protected BUTree<SNodeEither> right(BUTree<?> element) {
+		return new BUTree<SNodeEither>(new SNodeEither(element, SNodeEither.EitherSide.Right));
 	}
 
 	// Convenience class to get more data from a called production
@@ -361,9 +361,9 @@ abstract class ParserBase {
 		System.out.print("Failed to enRun tokens: ");
 		System.out.println(tokens);
 
-		System.out.println("For tree of kind: " + ((SNodeState) tree.state).kind());
+		System.out.println("For tree of kind: " + ((SNode) tree.state).kind());
 
-		final STreeState state = tree.state;
+		final STree state = tree.state;
 
 /*
 		Iterable<? extends STree> children =

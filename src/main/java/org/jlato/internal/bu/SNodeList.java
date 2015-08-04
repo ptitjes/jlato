@@ -29,26 +29,26 @@ import java.util.Collections;
 /**
  * @author Didier Villevalois
  */
-public class SNodeListState implements STreeState {
+public class SNodeList implements STree {
 
 	public final Vector<BUTree<?>> children;
 
-	public SNodeListState() {
-		this(Vector.<BUTree<? extends STreeState>>empty());
+	public SNodeList() {
+		this(Vector.<BUTree<? extends STree>>empty());
 	}
 
-	public SNodeListState(BUTree<?> element) {
-		this(Vector.<BUTree<? extends STreeState>>empty().append(element));
+	public SNodeList(BUTree<?> element) {
+		this(Vector.<BUTree<? extends STree>>empty().append(element));
 	}
 
-	public SNodeListState(Vector<BUTree<? extends STreeState>> children) {
+	public SNodeList(Vector<BUTree<? extends STree>> children) {
 		this.children = children;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public Tree instantiate(TDLocation<?> location) {
-		return new NodeList<Tree>((TDLocation<SNodeListState>) location);
+		return new NodeList<Tree>((TDLocation<SNodeList>) location);
 	}
 
 	@Override
@@ -98,12 +98,12 @@ public class SNodeListState implements STreeState {
 		return children.get(index);
 	}
 
-	public SNodeListState withChild(int index, BUTree<?> value) {
-		return new SNodeListState(children.set(index, value));
+	public SNodeList withChild(int index, BUTree<?> value) {
+		return new SNodeList(children.set(index, value));
 	}
 
-	public SNodeListState withChildren(Vector<BUTree<?>> children) {
-		return new SNodeListState(children);
+	public SNodeList withChildren(Vector<BUTree<?>> children) {
+		return new SNodeList(children);
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class SNodeListState implements STreeState {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		SNodeListState that = (SNodeListState) o;
+		SNodeList that = (SNodeList) o;
 
 		return children.equals(that.children);
 
@@ -122,7 +122,7 @@ public class SNodeListState implements STreeState {
 		return children.hashCode();
 	}
 
-	public static class ElementTraversal extends STypeSafeTraversal<SNodeListState, STreeState, Tree> {
+	public static class ElementTraversal extends STypeSafeTraversal<SNodeList, STree, Tree> {
 
 		private final int index;
 
@@ -131,30 +131,30 @@ public class SNodeListState implements STreeState {
 		}
 
 		@Override
-		public BUTree<?> doTraverse(SNodeListState state) {
+		public BUTree<?> doTraverse(SNodeList state) {
 			return state.child(index(state));
 		}
 
-		private int index(SNodeListState state) {
+		private int index(SNodeList state) {
 			return index >= 0 ? index : state.children.size() + index;
 		}
 
 		@Override
-		public SNodeListState doRebuildParentState(SNodeListState state, BUTree<STreeState> child) {
+		public SNodeList doRebuildParentState(SNodeList state, BUTree<STree> child) {
 			return state.withChild(index(state), child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
-			final SNodeListState nodeListState = (SNodeListState) state;
+		public STraversal leftSibling(STree state) {
+			final SNodeList nodeListState = (SNodeList) state;
 			int previousIndex = index(nodeListState) - 1;
 			if (previousIndex >= 0) return new ElementTraversal(previousIndex);
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
-			final SNodeListState nodeListState = (SNodeListState) state;
+		public STraversal rightSibling(STree state) {
+			final SNodeList nodeListState = (SNodeList) state;
 			int nextIndex = index(nodeListState) + 1;
 			if (nextIndex < nodeListState.children.size()) return new ElementTraversal(nextIndex);
 			return null;

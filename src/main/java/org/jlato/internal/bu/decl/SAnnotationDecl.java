@@ -12,19 +12,19 @@ import org.jlato.tree.name.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SAnnotationDecl extends SNodeState<SAnnotationDecl> implements STypeDecl {
+public class SAnnotationDecl extends SNode<SAnnotationDecl> implements STypeDecl {
 
-	public static BUTree<SAnnotationDecl> make(BUTree<SNodeListState> modifiers, BUTree<SName> name, BUTree<SNodeListState> members) {
+	public static BUTree<SAnnotationDecl> make(BUTree<SNodeList> modifiers, BUTree<SName> name, BUTree<SNodeList> members) {
 		return new BUTree<SAnnotationDecl>(new SAnnotationDecl(modifiers, name, members));
 	}
 
-	public final BUTree<SNodeListState> modifiers;
+	public final BUTree<SNodeList> modifiers;
 
 	public final BUTree<SName> name;
 
-	public final BUTree<SNodeListState> members;
+	public final BUTree<SNodeList> members;
 
-	public SAnnotationDecl(BUTree<SNodeListState> modifiers, BUTree<SName> name, BUTree<SNodeListState> members) {
+	public SAnnotationDecl(BUTree<SNodeList> modifiers, BUTree<SName> name, BUTree<SNodeList> members) {
 		this.modifiers = modifiers;
 		this.name = name;
 		this.members = members;
@@ -35,11 +35,11 @@ public class SAnnotationDecl extends SNodeState<SAnnotationDecl> implements STyp
 		return Kind.AnnotationDecl;
 	}
 
-	public BUTree<SNodeListState> modifiers() {
+	public BUTree<SNodeList> modifiers() {
 		return modifiers;
 	}
 
-	public SAnnotationDecl withModifiers(BUTree<SNodeListState> modifiers) {
+	public SAnnotationDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SAnnotationDecl(modifiers, name, members);
 	}
 
@@ -51,11 +51,11 @@ public class SAnnotationDecl extends SNodeState<SAnnotationDecl> implements STyp
 		return new SAnnotationDecl(modifiers, name, members);
 	}
 
-	public BUTree<SNodeListState> members() {
+	public BUTree<SNodeList> members() {
 		return members;
 	}
 
-	public SAnnotationDecl withMembers(BUTree<SNodeListState> members) {
+	public SAnnotationDecl withMembers(BUTree<SNodeList> members) {
 		return new SAnnotationDecl(modifiers, name, members);
 	}
 
@@ -104,7 +104,7 @@ public class SAnnotationDecl extends SNodeState<SAnnotationDecl> implements STyp
 		return result;
 	}
 
-	public static STypeSafeTraversal<SAnnotationDecl, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SAnnotationDecl, SNodeListState, NodeList<ExtendedModifier>>() {
+	public static STypeSafeTraversal<SAnnotationDecl, SNodeList, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SAnnotationDecl, SNodeList, NodeList<ExtendedModifier>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SAnnotationDecl state) {
@@ -112,17 +112,17 @@ public class SAnnotationDecl extends SNodeState<SAnnotationDecl> implements STyp
 		}
 
 		@Override
-		public SAnnotationDecl doRebuildParentState(SAnnotationDecl state, BUTree<SNodeListState> child) {
+		public SAnnotationDecl doRebuildParentState(SAnnotationDecl state, BUTree<SNodeList> child) {
 			return state.withModifiers(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return NAME;
 		}
 	};
@@ -140,17 +140,17 @@ public class SAnnotationDecl extends SNodeState<SAnnotationDecl> implements STyp
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return MODIFIERS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return MEMBERS;
 		}
 	};
 
-	public static STypeSafeTraversal<SAnnotationDecl, SNodeListState, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<SAnnotationDecl, SNodeListState, NodeList<MemberDecl>>() {
+	public static STypeSafeTraversal<SAnnotationDecl, SNodeList, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<SAnnotationDecl, SNodeList, NodeList<MemberDecl>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SAnnotationDecl state) {
@@ -158,17 +158,17 @@ public class SAnnotationDecl extends SNodeState<SAnnotationDecl> implements STyp
 		}
 
 		@Override
-		public SAnnotationDecl doRebuildParentState(SAnnotationDecl state, BUTree<SNodeListState> child) {
+		public SAnnotationDecl doRebuildParentState(SAnnotationDecl state, BUTree<SNodeList> child) {
 			return state.withMembers(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return NAME;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

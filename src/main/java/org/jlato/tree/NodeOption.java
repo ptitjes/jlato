@@ -20,7 +20,7 @@
 package org.jlato.tree;
 
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.util.Mutation;
@@ -30,7 +30,7 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public class NodeOption<T extends Tree> extends TDTree<SNodeOptionState, NodeOption<T>, NodeOption<T>> implements Tree, Iterable<T> {
+public class NodeOption<T extends Tree> extends TDTree<SNodeOption, NodeOption<T>, NodeOption<T>> implements Tree, Iterable<T> {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends Tree> NodeOption<T> of(T tree) {
@@ -47,16 +47,16 @@ public class NodeOption<T extends Tree> extends TDTree<SNodeOptionState, NodeOpt
 		return new NodeOption<T>(tree);
 	}
 
-	public NodeOption(TDLocation<SNodeOptionState> location) {
+	public NodeOption(TDLocation<SNodeOption> location) {
 		super(location);
 	}
 
 	public NodeOption() {
-		super(new TDLocation<SNodeOptionState>(new BUTree<SNodeOptionState>(new SNodeOptionState(treeOf(null)))));
+		super(new TDLocation<SNodeOption>(new BUTree<SNodeOption>(new SNodeOption(treeOf(null)))));
 	}
 
 	public NodeOption(T element) {
-		super(new TDLocation<SNodeOptionState>(new BUTree<SNodeOptionState>(new SNodeOptionState(treeOf(element)))));
+		super(new TDLocation<SNodeOption>(new BUTree<SNodeOption>(new SNodeOption(treeOf(element)))));
 	}
 
 	public boolean isDefined() {
@@ -78,16 +78,16 @@ public class NodeOption<T extends Tree> extends TDTree<SNodeOptionState, NodeOpt
 
 	@SuppressWarnings("unchecked")
 	public T get() {
-		return (T) location.safeTraversal(SNodeOptionState.elementTraversal());
+		return (T) location.safeTraversal(SNodeOption.elementTraversal());
 	}
 
 	public NodeOption<T> set(T element) {
-		return location.safeTraversalReplace(SNodeOptionState.elementTraversal(), element);
+		return location.safeTraversalReplace(SNodeOption.elementTraversal(), element);
 	}
 
 	@SuppressWarnings("unchecked")
 	public NodeOption<T> set(Mutation<T> mutation) {
-		return location.safeTraversalMutate(SNodeOptionState.elementTraversal(), (Mutation<Tree>) mutation);
+		return location.safeTraversalMutate(SNodeOption.elementTraversal(), (Mutation<Tree>) mutation);
 	}
 
 	public NodeOption<T> setNone() {
@@ -102,7 +102,7 @@ public class NodeOption<T extends Tree> extends TDTree<SNodeOptionState, NodeOpt
 		StringBuilder builder = new StringBuilder();
 		builder.append(start);
 
-		Tree tree = location.safeTraversal(SNodeOptionState.elementTraversal());
+		Tree tree = location.safeTraversal(SNodeOption.elementTraversal());
 		builder.append(tree);
 
 		builder.append(end);

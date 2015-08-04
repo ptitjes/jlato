@@ -38,7 +38,7 @@ public abstract class LSCondition {
 		};
 	}
 
-	public static <S extends STreeState> LSCondition data(final SProperty property) {
+	public static <S extends STree> LSCondition data(final SProperty property) {
 		return new LSCondition() {
 			@Override
 			public boolean test(BUTree tree) {
@@ -62,7 +62,7 @@ public abstract class LSCondition {
 	public static LSCondition withKind(final Kind kind) {
 		return new LSCondition() {
 			public boolean test(BUTree tree) {
-				return ((SNodeState) tree.state).kind() == kind;
+				return ((SNode) tree.state).kind() == kind;
 			}
 		};
 	}
@@ -71,9 +71,9 @@ public abstract class LSCondition {
 		return new LSCondition() {
 			@Override
 			public boolean test(BUTree tree) {
-				if (tree.state instanceof SVarState) return false;
+				if (tree.state instanceof SVar) return false;
 
-				final SNodeListState state = (SNodeListState) tree.state;
+				final SNodeList state = (SNodeList) tree.state;
 				final Vector<BUTree<?>> children = state.children;
 				return children == null || children.isEmpty();
 			}
@@ -84,7 +84,7 @@ public abstract class LSCondition {
 		return new LSCondition() {
 			@Override
 			public boolean test(BUTree tree) {
-				final SNodeOptionState state = (SNodeOptionState) tree.state;
+				final SNodeOption state = (SNodeOption) tree.state;
 				final BUTree element = state.element;
 				return element != null;
 			}

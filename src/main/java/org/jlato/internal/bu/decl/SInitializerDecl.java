@@ -12,17 +12,17 @@ import org.jlato.tree.stmt.*;
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 
-public class SInitializerDecl extends SNodeState<SInitializerDecl> implements SMemberDecl {
+public class SInitializerDecl extends SNode<SInitializerDecl> implements SMemberDecl {
 
-	public static BUTree<SInitializerDecl> make(BUTree<SNodeListState> modifiers, BUTree<SBlockStmt> body) {
+	public static BUTree<SInitializerDecl> make(BUTree<SNodeList> modifiers, BUTree<SBlockStmt> body) {
 		return new BUTree<SInitializerDecl>(new SInitializerDecl(modifiers, body));
 	}
 
-	public final BUTree<SNodeListState> modifiers;
+	public final BUTree<SNodeList> modifiers;
 
 	public final BUTree<SBlockStmt> body;
 
-	public SInitializerDecl(BUTree<SNodeListState> modifiers, BUTree<SBlockStmt> body) {
+	public SInitializerDecl(BUTree<SNodeList> modifiers, BUTree<SBlockStmt> body) {
 		this.modifiers = modifiers;
 		this.body = body;
 	}
@@ -32,11 +32,11 @@ public class SInitializerDecl extends SNodeState<SInitializerDecl> implements SM
 		return Kind.InitializerDecl;
 	}
 
-	public BUTree<SNodeListState> modifiers() {
+	public BUTree<SNodeList> modifiers() {
 		return modifiers;
 	}
 
-	public SInitializerDecl withModifiers(BUTree<SNodeListState> modifiers) {
+	public SInitializerDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SInitializerDecl(modifiers, body);
 	}
 
@@ -90,7 +90,7 @@ public class SInitializerDecl extends SNodeState<SInitializerDecl> implements SM
 		return result;
 	}
 
-	public static STypeSafeTraversal<SInitializerDecl, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SInitializerDecl, SNodeListState, NodeList<ExtendedModifier>>() {
+	public static STypeSafeTraversal<SInitializerDecl, SNodeList, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SInitializerDecl, SNodeList, NodeList<ExtendedModifier>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SInitializerDecl state) {
@@ -98,17 +98,17 @@ public class SInitializerDecl extends SNodeState<SInitializerDecl> implements SM
 		}
 
 		@Override
-		public SInitializerDecl doRebuildParentState(SInitializerDecl state, BUTree<SNodeListState> child) {
+		public SInitializerDecl doRebuildParentState(SInitializerDecl state, BUTree<SNodeList> child) {
 			return state.withModifiers(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return BODY;
 		}
 	};
@@ -126,12 +126,12 @@ public class SInitializerDecl extends SNodeState<SInitializerDecl> implements SM
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return MODIFIERS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

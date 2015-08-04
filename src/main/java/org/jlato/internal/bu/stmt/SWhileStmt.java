@@ -12,7 +12,7 @@ import org.jlato.tree.stmt.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SWhileStmt extends SNodeState<SWhileStmt> implements SStmt {
+public class SWhileStmt extends SNode<SWhileStmt> implements SStmt {
 
 	public static BUTree<SWhileStmt> make(BUTree<? extends SExpr> condition, BUTree<? extends SStmt> body) {
 		return new BUTree<SWhileStmt>(new SWhileStmt(condition, body));
@@ -103,12 +103,12 @@ public class SWhileStmt extends SNodeState<SWhileStmt> implements SStmt {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return BODY;
 		}
 	};
@@ -126,12 +126,12 @@ public class SWhileStmt extends SNodeState<SWhileStmt> implements SStmt {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return CONDITION;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

@@ -37,7 +37,7 @@ import static org.jlato.internal.bu.WToken.whitespace;
 /**
  * @author Didier Villevalois
  */
-public abstract class TDTree<S extends STreeState, ST extends Tree, T extends ST> implements Tree, TreeCombinators<T> {
+public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> implements Tree, TreeCombinators<T> {
 
 	protected final TDLocation<S> location;
 
@@ -209,16 +209,16 @@ public abstract class TDTree<S extends STreeState, ST extends Tree, T extends ST
 	// TODO Move that elsewhere
 
 	@SuppressWarnings("unchecked")
-	public static <S extends STreeState> TDLocation<S> locationOf(Tree facade) {
+	public static <S extends STree> TDLocation<S> locationOf(Tree facade) {
 		return facade == null ? null : ((TDTree<S, ?, ?>) facade).location;
 	}
 
-	public static <S extends STreeState> BUTree<S> treeOf(Tree facade) {
+	public static <S extends STree> BUTree<S> treeOf(Tree facade) {
 		final TDLocation<S> location = TDTree.locationOf(facade);
 		return location == null ? null : location.tree;
 	}
 
-	public static Vector<BUTree<? extends STreeState>> treeListOf(Tree... facades) {
+	public static Vector<BUTree<? extends STree>> treeListOf(Tree... facades) {
 		final Builder<BUTree<?>, Vector<BUTree<?>>> builder = Vector.<BUTree<?>>factory().newBuilder();
 		for (Tree facade : facades) {
 			builder.add(treeOf(facade));

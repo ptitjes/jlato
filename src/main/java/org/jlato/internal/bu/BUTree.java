@@ -26,7 +26,7 @@ import org.jlato.tree.*;
 /**
  * @author Didier Villevalois
  */
-public class BUTree<S extends STreeState> {
+public class BUTree<S extends STree> {
 
 	public final S state;
 	public final WDressing dressing;

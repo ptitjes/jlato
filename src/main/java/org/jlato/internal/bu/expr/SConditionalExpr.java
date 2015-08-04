@@ -10,7 +10,7 @@ import org.jlato.tree.expr.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SConditionalExpr extends SNodeState<SConditionalExpr> implements SExpr {
+public class SConditionalExpr extends SNode<SConditionalExpr> implements SExpr {
 
 	public static BUTree<SConditionalExpr> make(BUTree<? extends SExpr> condition, BUTree<? extends SExpr> thenExpr, BUTree<? extends SExpr> elseExpr) {
 		return new BUTree<SConditionalExpr>(new SConditionalExpr(condition, thenExpr, elseExpr));
@@ -115,12 +115,12 @@ public class SConditionalExpr extends SNodeState<SConditionalExpr> implements SE
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return THEN_EXPR;
 		}
 	};
@@ -138,12 +138,12 @@ public class SConditionalExpr extends SNodeState<SConditionalExpr> implements SE
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return CONDITION;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return ELSE_EXPR;
 		}
 	};
@@ -161,12 +161,12 @@ public class SConditionalExpr extends SNodeState<SConditionalExpr> implements SE
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return THEN_EXPR;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

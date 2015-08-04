@@ -10,7 +10,7 @@ import org.jlato.tree.expr.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SThrowStmt extends SNodeState<SThrowStmt> implements SStmt {
+public class SThrowStmt extends SNode<SThrowStmt> implements SStmt {
 
 	public static BUTree<SThrowStmt> make(BUTree<? extends SExpr> expr) {
 		return new BUTree<SThrowStmt>(new SThrowStmt(expr));
@@ -87,12 +87,12 @@ public class SThrowStmt extends SNodeState<SThrowStmt> implements SStmt {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

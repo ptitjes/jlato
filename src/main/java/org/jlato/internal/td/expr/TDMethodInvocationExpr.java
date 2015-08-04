@@ -1,7 +1,7 @@
 package org.jlato.internal.td.expr;
 
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.expr.SMethodInvocationExpr;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.TDLocation;
@@ -26,7 +26,7 @@ public class TDMethodInvocationExpr extends TDTree<SMethodInvocationExpr, Expr, 
 	}
 
 	public TDMethodInvocationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
-		super(new TDLocation<SMethodInvocationExpr>(SMethodInvocationExpr.make(TDTree.<SNodeOptionState>treeOf(scope), TDTree.<SNodeListState>treeOf(typeArgs), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(args))));
+		super(new TDLocation<SMethodInvocationExpr>(SMethodInvocationExpr.make(TDTree.<SNodeOption>treeOf(scope), TDTree.<SNodeList>treeOf(typeArgs), TDTree.<SName>treeOf(name), TDTree.<SNodeList>treeOf(args))));
 	}
 
 	public NodeOption<Expr> scope() {

@@ -11,7 +11,7 @@ import org.jlato.tree.name.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SSingleMemberAnnotationExpr extends SNodeState<SSingleMemberAnnotationExpr> implements SAnnotationExpr {
+public class SSingleMemberAnnotationExpr extends SNode<SSingleMemberAnnotationExpr> implements SAnnotationExpr {
 
 	public static BUTree<SSingleMemberAnnotationExpr> make(BUTree<SQualifiedName> name, BUTree<? extends SExpr> memberValue) {
 		return new BUTree<SSingleMemberAnnotationExpr>(new SSingleMemberAnnotationExpr(name, memberValue));
@@ -102,12 +102,12 @@ public class SSingleMemberAnnotationExpr extends SNodeState<SSingleMemberAnnotat
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return MEMBER_VALUE;
 		}
 	};
@@ -125,12 +125,12 @@ public class SSingleMemberAnnotationExpr extends SNodeState<SSingleMemberAnnotat
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return NAME;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

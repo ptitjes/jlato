@@ -26,7 +26,7 @@ import org.jlato.tree.Tree;
 /**
  * @author Didier Villevalois
  */
-public class TDLocation<S extends STreeState> {
+public class TDLocation<S extends STree> {
 
 	private final TDContext<?> context;
 	public final BUTree<S> tree;

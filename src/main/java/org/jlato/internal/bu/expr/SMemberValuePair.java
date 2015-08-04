@@ -12,7 +12,7 @@ import org.jlato.tree.name.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SMemberValuePair extends SNodeState<SMemberValuePair> implements STreeState {
+public class SMemberValuePair extends SNode<SMemberValuePair> implements STree {
 
 	public static BUTree<SMemberValuePair> make(BUTree<SName> name, BUTree<? extends SExpr> value) {
 		return new BUTree<SMemberValuePair>(new SMemberValuePair(name, value));
@@ -103,12 +103,12 @@ public class SMemberValuePair extends SNodeState<SMemberValuePair> implements ST
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return VALUE;
 		}
 	};
@@ -126,12 +126,12 @@ public class SMemberValuePair extends SNodeState<SMemberValuePair> implements ST
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return NAME;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

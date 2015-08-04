@@ -1,6 +1,6 @@
 package org.jlato.internal.td.expr;
 
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.expr.SThisExpr;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
@@ -21,7 +21,7 @@ public class TDThisExpr extends TDTree<SThisExpr, Expr, ThisExpr> implements Thi
 	}
 
 	public TDThisExpr(NodeOption<Expr> classExpr) {
-		super(new TDLocation<SThisExpr>(SThisExpr.make(TDTree.<SNodeOptionState>treeOf(classExpr))));
+		super(new TDLocation<SThisExpr>(SThisExpr.make(TDTree.<SNodeOption>treeOf(classExpr))));
 	}
 
 	public NodeOption<Expr> classExpr() {

@@ -14,23 +14,23 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SObjectCreationExpr extends SNodeState<SObjectCreationExpr> implements SExpr {
+public class SObjectCreationExpr extends SNode<SObjectCreationExpr> implements SExpr {
 
-	public static BUTree<SObjectCreationExpr> make(BUTree<SNodeOptionState> scope, BUTree<SNodeListState> typeArgs, BUTree<SQualifiedType> type, BUTree<SNodeListState> args, BUTree<SNodeOptionState> body) {
+	public static BUTree<SObjectCreationExpr> make(BUTree<SNodeOption> scope, BUTree<SNodeList> typeArgs, BUTree<SQualifiedType> type, BUTree<SNodeList> args, BUTree<SNodeOption> body) {
 		return new BUTree<SObjectCreationExpr>(new SObjectCreationExpr(scope, typeArgs, type, args, body));
 	}
 
-	public final BUTree<SNodeOptionState> scope;
+	public final BUTree<SNodeOption> scope;
 
-	public final BUTree<SNodeListState> typeArgs;
+	public final BUTree<SNodeList> typeArgs;
 
 	public final BUTree<SQualifiedType> type;
 
-	public final BUTree<SNodeListState> args;
+	public final BUTree<SNodeList> args;
 
-	public final BUTree<SNodeOptionState> body;
+	public final BUTree<SNodeOption> body;
 
-	public SObjectCreationExpr(BUTree<SNodeOptionState> scope, BUTree<SNodeListState> typeArgs, BUTree<SQualifiedType> type, BUTree<SNodeListState> args, BUTree<SNodeOptionState> body) {
+	public SObjectCreationExpr(BUTree<SNodeOption> scope, BUTree<SNodeList> typeArgs, BUTree<SQualifiedType> type, BUTree<SNodeList> args, BUTree<SNodeOption> body) {
 		this.scope = scope;
 		this.typeArgs = typeArgs;
 		this.type = type;
@@ -43,19 +43,19 @@ public class SObjectCreationExpr extends SNodeState<SObjectCreationExpr> impleme
 		return Kind.ObjectCreationExpr;
 	}
 
-	public BUTree<SNodeOptionState> scope() {
+	public BUTree<SNodeOption> scope() {
 		return scope;
 	}
 
-	public SObjectCreationExpr withScope(BUTree<SNodeOptionState> scope) {
+	public SObjectCreationExpr withScope(BUTree<SNodeOption> scope) {
 		return new SObjectCreationExpr(scope, typeArgs, type, args, body);
 	}
 
-	public BUTree<SNodeListState> typeArgs() {
+	public BUTree<SNodeList> typeArgs() {
 		return typeArgs;
 	}
 
-	public SObjectCreationExpr withTypeArgs(BUTree<SNodeListState> typeArgs) {
+	public SObjectCreationExpr withTypeArgs(BUTree<SNodeList> typeArgs) {
 		return new SObjectCreationExpr(scope, typeArgs, type, args, body);
 	}
 
@@ -67,19 +67,19 @@ public class SObjectCreationExpr extends SNodeState<SObjectCreationExpr> impleme
 		return new SObjectCreationExpr(scope, typeArgs, type, args, body);
 	}
 
-	public BUTree<SNodeListState> args() {
+	public BUTree<SNodeList> args() {
 		return args;
 	}
 
-	public SObjectCreationExpr withArgs(BUTree<SNodeListState> args) {
+	public SObjectCreationExpr withArgs(BUTree<SNodeList> args) {
 		return new SObjectCreationExpr(scope, typeArgs, type, args, body);
 	}
 
-	public BUTree<SNodeOptionState> body() {
+	public BUTree<SNodeOption> body() {
 		return body;
 	}
 
-	public SObjectCreationExpr withBody(BUTree<SNodeOptionState> body) {
+	public SObjectCreationExpr withBody(BUTree<SNodeOption> body) {
 		return new SObjectCreationExpr(scope, typeArgs, type, args, body);
 	}
 
@@ -134,7 +134,7 @@ public class SObjectCreationExpr extends SNodeState<SObjectCreationExpr> impleme
 		return result;
 	}
 
-	public static STypeSafeTraversal<SObjectCreationExpr, SNodeOptionState, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<SObjectCreationExpr, SNodeOptionState, NodeOption<Expr>>() {
+	public static STypeSafeTraversal<SObjectCreationExpr, SNodeOption, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<SObjectCreationExpr, SNodeOption, NodeOption<Expr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SObjectCreationExpr state) {
@@ -142,22 +142,22 @@ public class SObjectCreationExpr extends SNodeState<SObjectCreationExpr> impleme
 		}
 
 		@Override
-		public SObjectCreationExpr doRebuildParentState(SObjectCreationExpr state, BUTree<SNodeOptionState> child) {
+		public SObjectCreationExpr doRebuildParentState(SObjectCreationExpr state, BUTree<SNodeOption> child) {
 			return state.withScope(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return TYPE_ARGS;
 		}
 	};
 
-	public static STypeSafeTraversal<SObjectCreationExpr, SNodeListState, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<SObjectCreationExpr, SNodeListState, NodeList<Type>>() {
+	public static STypeSafeTraversal<SObjectCreationExpr, SNodeList, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<SObjectCreationExpr, SNodeList, NodeList<Type>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SObjectCreationExpr state) {
@@ -165,17 +165,17 @@ public class SObjectCreationExpr extends SNodeState<SObjectCreationExpr> impleme
 		}
 
 		@Override
-		public SObjectCreationExpr doRebuildParentState(SObjectCreationExpr state, BUTree<SNodeListState> child) {
+		public SObjectCreationExpr doRebuildParentState(SObjectCreationExpr state, BUTree<SNodeList> child) {
 			return state.withTypeArgs(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return SCOPE;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return TYPE;
 		}
 	};
@@ -193,17 +193,17 @@ public class SObjectCreationExpr extends SNodeState<SObjectCreationExpr> impleme
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return TYPE_ARGS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return ARGS;
 		}
 	};
 
-	public static STypeSafeTraversal<SObjectCreationExpr, SNodeListState, NodeList<Expr>> ARGS = new STypeSafeTraversal<SObjectCreationExpr, SNodeListState, NodeList<Expr>>() {
+	public static STypeSafeTraversal<SObjectCreationExpr, SNodeList, NodeList<Expr>> ARGS = new STypeSafeTraversal<SObjectCreationExpr, SNodeList, NodeList<Expr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SObjectCreationExpr state) {
@@ -211,22 +211,22 @@ public class SObjectCreationExpr extends SNodeState<SObjectCreationExpr> impleme
 		}
 
 		@Override
-		public SObjectCreationExpr doRebuildParentState(SObjectCreationExpr state, BUTree<SNodeListState> child) {
+		public SObjectCreationExpr doRebuildParentState(SObjectCreationExpr state, BUTree<SNodeList> child) {
 			return state.withArgs(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return TYPE;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return BODY;
 		}
 	};
 
-	public static STypeSafeTraversal<SObjectCreationExpr, SNodeOptionState, NodeOption<NodeList<MemberDecl>>> BODY = new STypeSafeTraversal<SObjectCreationExpr, SNodeOptionState, NodeOption<NodeList<MemberDecl>>>() {
+	public static STypeSafeTraversal<SObjectCreationExpr, SNodeOption, NodeOption<NodeList<MemberDecl>>> BODY = new STypeSafeTraversal<SObjectCreationExpr, SNodeOption, NodeOption<NodeList<MemberDecl>>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SObjectCreationExpr state) {
@@ -234,17 +234,17 @@ public class SObjectCreationExpr extends SNodeState<SObjectCreationExpr> impleme
 		}
 
 		@Override
-		public SObjectCreationExpr doRebuildParentState(SObjectCreationExpr state, BUTree<SNodeOptionState> child) {
+		public SObjectCreationExpr doRebuildParentState(SObjectCreationExpr state, BUTree<SNodeOption> child) {
 			return state.withBody(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return ARGS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

@@ -12,19 +12,19 @@ import org.jlato.tree.type.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SMethodReferenceExpr extends SNodeState<SMethodReferenceExpr> implements SExpr {
+public class SMethodReferenceExpr extends SNode<SMethodReferenceExpr> implements SExpr {
 
-	public static BUTree<SMethodReferenceExpr> make(BUTree<? extends SExpr> scope, BUTree<SNodeListState> typeArgs, BUTree<SName> name) {
+	public static BUTree<SMethodReferenceExpr> make(BUTree<? extends SExpr> scope, BUTree<SNodeList> typeArgs, BUTree<SName> name) {
 		return new BUTree<SMethodReferenceExpr>(new SMethodReferenceExpr(scope, typeArgs, name));
 	}
 
 	public final BUTree<? extends SExpr> scope;
 
-	public final BUTree<SNodeListState> typeArgs;
+	public final BUTree<SNodeList> typeArgs;
 
 	public final BUTree<SName> name;
 
-	public SMethodReferenceExpr(BUTree<? extends SExpr> scope, BUTree<SNodeListState> typeArgs, BUTree<SName> name) {
+	public SMethodReferenceExpr(BUTree<? extends SExpr> scope, BUTree<SNodeList> typeArgs, BUTree<SName> name) {
 		this.scope = scope;
 		this.typeArgs = typeArgs;
 		this.name = name;
@@ -43,11 +43,11 @@ public class SMethodReferenceExpr extends SNodeState<SMethodReferenceExpr> imple
 		return new SMethodReferenceExpr(scope, typeArgs, name);
 	}
 
-	public BUTree<SNodeListState> typeArgs() {
+	public BUTree<SNodeList> typeArgs() {
 		return typeArgs;
 	}
 
-	public SMethodReferenceExpr withTypeArgs(BUTree<SNodeListState> typeArgs) {
+	public SMethodReferenceExpr withTypeArgs(BUTree<SNodeList> typeArgs) {
 		return new SMethodReferenceExpr(scope, typeArgs, name);
 	}
 
@@ -117,17 +117,17 @@ public class SMethodReferenceExpr extends SNodeState<SMethodReferenceExpr> imple
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return TYPE_ARGS;
 		}
 	};
 
-	public static STypeSafeTraversal<SMethodReferenceExpr, SNodeListState, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<SMethodReferenceExpr, SNodeListState, NodeList<Type>>() {
+	public static STypeSafeTraversal<SMethodReferenceExpr, SNodeList, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<SMethodReferenceExpr, SNodeList, NodeList<Type>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SMethodReferenceExpr state) {
@@ -135,17 +135,17 @@ public class SMethodReferenceExpr extends SNodeState<SMethodReferenceExpr> imple
 		}
 
 		@Override
-		public SMethodReferenceExpr doRebuildParentState(SMethodReferenceExpr state, BUTree<SNodeListState> child) {
+		public SMethodReferenceExpr doRebuildParentState(SMethodReferenceExpr state, BUTree<SNodeList> child) {
 			return state.withTypeArgs(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return SCOPE;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return NAME;
 		}
 	};
@@ -163,12 +163,12 @@ public class SMethodReferenceExpr extends SNodeState<SMethodReferenceExpr> imple
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return TYPE_ARGS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

@@ -23,7 +23,7 @@ import com.github.andrewoma.dexx.collection.Iterable;
 import com.github.andrewoma.dexx.collection.Pair;
 import com.github.andrewoma.dexx.collection.TreeMap;
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.STreeSetState;
+import org.jlato.internal.bu.STreeSet;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.printer.FormattingSettings;
@@ -37,27 +37,27 @@ import java.io.PrintWriter;
 /**
  * @author Didier Villevalois
  */
-public class TreeSet<T extends Tree> extends TDTree<STreeSetState, TreeSet<T>, TreeSet<T>> implements Tree {
+public class TreeSet<T extends Tree> extends TDTree<STreeSet, TreeSet<T>, TreeSet<T>> implements Tree {
 
-	public TreeSet(TDLocation<STreeSetState> location) {
+	public TreeSet(TDLocation<STreeSet> location) {
 		super(location);
 	}
 
 	public TreeSet(String rootPath) {
-		this(new TDLocation<STreeSetState>(new BUTree<STreeSetState>(new STreeSetState(rootPath))));
+		this(new TDLocation<STreeSet>(new BUTree<STreeSet>(new STreeSet(rootPath))));
 	}
 
 	public TreeSet(String rootPath, TreeMap<String, BUTree<?>> trees) {
-		this(new TDLocation<STreeSetState>(new BUTree<STreeSetState>(new STreeSetState(rootPath, trees))));
+		this(new TDLocation<STreeSet>(new BUTree<STreeSet>(new STreeSet(rootPath, trees))));
 	}
 
 	@SuppressWarnings("unchecked")
 	public T get(String path) {
-		return (T) location.safeTraversal(STreeSetState.treeTraversal(path));
+		return (T) location.safeTraversal(STreeSet.treeTraversal(path));
 	}
 
 	public TreeSet<T> put(String path, T tree) {
-		return location.safeTraversalReplace(STreeSetState.treeTraversal(path), tree);
+		return location.safeTraversalReplace(STreeSet.treeTraversal(path), tree);
 	}
 
 	public Iterable<String> paths() {

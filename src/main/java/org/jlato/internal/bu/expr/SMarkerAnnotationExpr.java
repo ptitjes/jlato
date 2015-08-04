@@ -10,7 +10,7 @@ import org.jlato.tree.name.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SMarkerAnnotationExpr extends SNodeState<SMarkerAnnotationExpr> implements SAnnotationExpr {
+public class SMarkerAnnotationExpr extends SNode<SMarkerAnnotationExpr> implements SAnnotationExpr {
 
 	public static BUTree<SMarkerAnnotationExpr> make(BUTree<SQualifiedName> name) {
 		return new BUTree<SMarkerAnnotationExpr>(new SMarkerAnnotationExpr(name));
@@ -87,12 +87,12 @@ public class SMarkerAnnotationExpr extends SNodeState<SMarkerAnnotationExpr> imp
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

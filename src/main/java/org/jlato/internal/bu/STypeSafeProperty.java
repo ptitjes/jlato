@@ -22,11 +22,11 @@ package org.jlato.internal.bu;
 /**
  * @author Didier Villevalois
  */
-public abstract class STypeSafeProperty<P extends STreeState, T> extends SProperty {
+public abstract class STypeSafeProperty<P extends STree, T> extends SProperty {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public final Object retrieve(STreeState state) {
+	public final Object retrieve(STree state) {
 		return doRetrieve((P) state);
 	}
 
@@ -34,7 +34,7 @@ public abstract class STypeSafeProperty<P extends STreeState, T> extends SProper
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public final STreeState rebuildParentState(STreeState state, Object value) {
+	public final STree rebuildParentState(STree state, Object value) {
 		return doRebuildParentState((P) state, (T) value);
 	}
 

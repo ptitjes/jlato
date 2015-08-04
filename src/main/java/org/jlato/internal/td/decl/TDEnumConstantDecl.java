@@ -1,7 +1,7 @@
 package org.jlato.internal.td.decl;
 
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.decl.SEnumConstantDecl;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.TDLocation;
@@ -27,7 +27,7 @@ public class TDEnumConstantDecl extends TDTree<SEnumConstantDecl, MemberDecl, En
 	}
 
 	public TDEnumConstantDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeOption<NodeList<Expr>> args, NodeOption<NodeList<MemberDecl>> classBody) {
-		super(new TDLocation<SEnumConstantDecl>(SEnumConstantDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SName>treeOf(name), TDTree.<SNodeOptionState>treeOf(args), TDTree.<SNodeOptionState>treeOf(classBody))));
+		super(new TDLocation<SEnumConstantDecl>(SEnumConstantDecl.make(TDTree.<SNodeList>treeOf(modifiers), TDTree.<SName>treeOf(name), TDTree.<SNodeOption>treeOf(args), TDTree.<SNodeOption>treeOf(classBody))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

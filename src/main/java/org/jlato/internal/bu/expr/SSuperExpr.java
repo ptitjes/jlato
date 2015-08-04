@@ -10,15 +10,15 @@ import org.jlato.tree.expr.*;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SSuperExpr extends SNodeState<SSuperExpr> implements SExpr {
+public class SSuperExpr extends SNode<SSuperExpr> implements SExpr {
 
-	public static BUTree<SSuperExpr> make(BUTree<SNodeOptionState> classExpr) {
+	public static BUTree<SSuperExpr> make(BUTree<SNodeOption> classExpr) {
 		return new BUTree<SSuperExpr>(new SSuperExpr(classExpr));
 	}
 
-	public final BUTree<SNodeOptionState> classExpr;
+	public final BUTree<SNodeOption> classExpr;
 
-	public SSuperExpr(BUTree<SNodeOptionState> classExpr) {
+	public SSuperExpr(BUTree<SNodeOption> classExpr) {
 		this.classExpr = classExpr;
 	}
 
@@ -27,11 +27,11 @@ public class SSuperExpr extends SNodeState<SSuperExpr> implements SExpr {
 		return Kind.SuperExpr;
 	}
 
-	public BUTree<SNodeOptionState> classExpr() {
+	public BUTree<SNodeOption> classExpr() {
 		return classExpr;
 	}
 
-	public SSuperExpr withClassExpr(BUTree<SNodeOptionState> classExpr) {
+	public SSuperExpr withClassExpr(BUTree<SNodeOption> classExpr) {
 		return new SSuperExpr(classExpr);
 	}
 
@@ -74,7 +74,7 @@ public class SSuperExpr extends SNodeState<SSuperExpr> implements SExpr {
 		return result;
 	}
 
-	public static STypeSafeTraversal<SSuperExpr, SNodeOptionState, NodeOption<Expr>> CLASS_EXPR = new STypeSafeTraversal<SSuperExpr, SNodeOptionState, NodeOption<Expr>>() {
+	public static STypeSafeTraversal<SSuperExpr, SNodeOption, NodeOption<Expr>> CLASS_EXPR = new STypeSafeTraversal<SSuperExpr, SNodeOption, NodeOption<Expr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SSuperExpr state) {
@@ -82,17 +82,17 @@ public class SSuperExpr extends SNodeState<SSuperExpr> implements SExpr {
 		}
 
 		@Override
-		public SSuperExpr doRebuildParentState(SSuperExpr state, BUTree<SNodeOptionState> child) {
+		public SSuperExpr doRebuildParentState(SSuperExpr state, BUTree<SNodeOption> child) {
 			return state.withClassExpr(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

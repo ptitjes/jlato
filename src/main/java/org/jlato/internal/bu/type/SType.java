@@ -1,14 +1,14 @@
 package org.jlato.internal.bu.type;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.STreeState;
+import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 
 import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.token;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public interface SType extends STreeState {
+public interface SType extends STree {
 
 	LexicalShape typeArgumentsShape = list(
 			token(LToken.Less),

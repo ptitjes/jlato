@@ -12,19 +12,19 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUn
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
 
-public class SCompilationUnit extends SNodeState<SCompilationUnit> implements STreeState {
+public class SCompilationUnit extends SNode<SCompilationUnit> implements STree {
 
-	public static BUTree<SCompilationUnit> make(BUTree<SPackageDecl> packageDecl, BUTree<SNodeListState> imports, BUTree<SNodeListState> types) {
+	public static BUTree<SCompilationUnit> make(BUTree<SPackageDecl> packageDecl, BUTree<SNodeList> imports, BUTree<SNodeList> types) {
 		return new BUTree<SCompilationUnit>(new SCompilationUnit(packageDecl, imports, types));
 	}
 
 	public final BUTree<SPackageDecl> packageDecl;
 
-	public final BUTree<SNodeListState> imports;
+	public final BUTree<SNodeList> imports;
 
-	public final BUTree<SNodeListState> types;
+	public final BUTree<SNodeList> types;
 
-	public SCompilationUnit(BUTree<SPackageDecl> packageDecl, BUTree<SNodeListState> imports, BUTree<SNodeListState> types) {
+	public SCompilationUnit(BUTree<SPackageDecl> packageDecl, BUTree<SNodeList> imports, BUTree<SNodeList> types) {
 		this.packageDecl = packageDecl;
 		this.imports = imports;
 		this.types = types;
@@ -43,19 +43,19 @@ public class SCompilationUnit extends SNodeState<SCompilationUnit> implements ST
 		return new SCompilationUnit(packageDecl, imports, types);
 	}
 
-	public BUTree<SNodeListState> imports() {
+	public BUTree<SNodeList> imports() {
 		return imports;
 	}
 
-	public SCompilationUnit withImports(BUTree<SNodeListState> imports) {
+	public SCompilationUnit withImports(BUTree<SNodeList> imports) {
 		return new SCompilationUnit(packageDecl, imports, types);
 	}
 
-	public BUTree<SNodeListState> types() {
+	public BUTree<SNodeList> types() {
 		return types;
 	}
 
-	public SCompilationUnit withTypes(BUTree<SNodeListState> types) {
+	public SCompilationUnit withTypes(BUTree<SNodeList> types) {
 		return new SCompilationUnit(packageDecl, imports, types);
 	}
 
@@ -117,17 +117,17 @@ public class SCompilationUnit extends SNodeState<SCompilationUnit> implements ST
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return IMPORTS;
 		}
 	};
 
-	public static STypeSafeTraversal<SCompilationUnit, SNodeListState, NodeList<ImportDecl>> IMPORTS = new STypeSafeTraversal<SCompilationUnit, SNodeListState, NodeList<ImportDecl>>() {
+	public static STypeSafeTraversal<SCompilationUnit, SNodeList, NodeList<ImportDecl>> IMPORTS = new STypeSafeTraversal<SCompilationUnit, SNodeList, NodeList<ImportDecl>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SCompilationUnit state) {
@@ -135,22 +135,22 @@ public class SCompilationUnit extends SNodeState<SCompilationUnit> implements ST
 		}
 
 		@Override
-		public SCompilationUnit doRebuildParentState(SCompilationUnit state, BUTree<SNodeListState> child) {
+		public SCompilationUnit doRebuildParentState(SCompilationUnit state, BUTree<SNodeList> child) {
 			return state.withImports(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return PACKAGE_DECL;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return TYPES;
 		}
 	};
 
-	public static STypeSafeTraversal<SCompilationUnit, SNodeListState, NodeList<TypeDecl>> TYPES = new STypeSafeTraversal<SCompilationUnit, SNodeListState, NodeList<TypeDecl>>() {
+	public static STypeSafeTraversal<SCompilationUnit, SNodeList, NodeList<TypeDecl>> TYPES = new STypeSafeTraversal<SCompilationUnit, SNodeList, NodeList<TypeDecl>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SCompilationUnit state) {
@@ -158,17 +158,17 @@ public class SCompilationUnit extends SNodeState<SCompilationUnit> implements ST
 		}
 
 		@Override
-		public SCompilationUnit doRebuildParentState(SCompilationUnit state, BUTree<SNodeListState> child) {
+		public SCompilationUnit doRebuildParentState(SCompilationUnit state, BUTree<SNodeList> child) {
 			return state.withTypes(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return IMPORTS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

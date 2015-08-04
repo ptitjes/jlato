@@ -1,6 +1,6 @@
 package org.jlato.internal.td.decl;
 
-import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.decl.SAnnotationDecl;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.TDLocation;
@@ -25,7 +25,7 @@ public class TDAnnotationDecl extends TDTree<SAnnotationDecl, TypeDecl, Annotati
 	}
 
 	public TDAnnotationDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<MemberDecl> members) {
-		super(new TDLocation<SAnnotationDecl>(SAnnotationDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(members))));
+		super(new TDLocation<SAnnotationDecl>(SAnnotationDecl.make(TDTree.<SNodeList>treeOf(modifiers), TDTree.<SName>treeOf(name), TDTree.<SNodeList>treeOf(members))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

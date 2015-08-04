@@ -12,21 +12,21 @@ import org.jlato.tree.stmt.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SForStmt extends SNodeState<SForStmt> implements SStmt {
+public class SForStmt extends SNode<SForStmt> implements SStmt {
 
-	public static BUTree<SForStmt> make(BUTree<SNodeListState> init, BUTree<? extends SExpr> compare, BUTree<SNodeListState> update, BUTree<? extends SStmt> body) {
+	public static BUTree<SForStmt> make(BUTree<SNodeList> init, BUTree<? extends SExpr> compare, BUTree<SNodeList> update, BUTree<? extends SStmt> body) {
 		return new BUTree<SForStmt>(new SForStmt(init, compare, update, body));
 	}
 
-	public final BUTree<SNodeListState> init;
+	public final BUTree<SNodeList> init;
 
 	public final BUTree<? extends SExpr> compare;
 
-	public final BUTree<SNodeListState> update;
+	public final BUTree<SNodeList> update;
 
 	public final BUTree<? extends SStmt> body;
 
-	public SForStmt(BUTree<SNodeListState> init, BUTree<? extends SExpr> compare, BUTree<SNodeListState> update, BUTree<? extends SStmt> body) {
+	public SForStmt(BUTree<SNodeList> init, BUTree<? extends SExpr> compare, BUTree<SNodeList> update, BUTree<? extends SStmt> body) {
 		this.init = init;
 		this.compare = compare;
 		this.update = update;
@@ -38,11 +38,11 @@ public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 		return Kind.ForStmt;
 	}
 
-	public BUTree<SNodeListState> init() {
+	public BUTree<SNodeList> init() {
 		return init;
 	}
 
-	public SForStmt withInit(BUTree<SNodeListState> init) {
+	public SForStmt withInit(BUTree<SNodeList> init) {
 		return new SForStmt(init, compare, update, body);
 	}
 
@@ -54,11 +54,11 @@ public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 		return new SForStmt(init, compare, update, body);
 	}
 
-	public BUTree<SNodeListState> update() {
+	public BUTree<SNodeList> update() {
 		return update;
 	}
 
-	public SForStmt withUpdate(BUTree<SNodeListState> update) {
+	public SForStmt withUpdate(BUTree<SNodeList> update) {
 		return new SForStmt(init, compare, update, body);
 	}
 
@@ -118,7 +118,7 @@ public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 		return result;
 	}
 
-	public static STypeSafeTraversal<SForStmt, SNodeListState, NodeList<Expr>> INIT = new STypeSafeTraversal<SForStmt, SNodeListState, NodeList<Expr>>() {
+	public static STypeSafeTraversal<SForStmt, SNodeList, NodeList<Expr>> INIT = new STypeSafeTraversal<SForStmt, SNodeList, NodeList<Expr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SForStmt state) {
@@ -126,17 +126,17 @@ public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 		}
 
 		@Override
-		public SForStmt doRebuildParentState(SForStmt state, BUTree<SNodeListState> child) {
+		public SForStmt doRebuildParentState(SForStmt state, BUTree<SNodeList> child) {
 			return state.withInit(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return COMPARE;
 		}
 	};
@@ -154,17 +154,17 @@ public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return INIT;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return UPDATE;
 		}
 	};
 
-	public static STypeSafeTraversal<SForStmt, SNodeListState, NodeList<Expr>> UPDATE = new STypeSafeTraversal<SForStmt, SNodeListState, NodeList<Expr>>() {
+	public static STypeSafeTraversal<SForStmt, SNodeList, NodeList<Expr>> UPDATE = new STypeSafeTraversal<SForStmt, SNodeList, NodeList<Expr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SForStmt state) {
@@ -172,17 +172,17 @@ public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 		}
 
 		@Override
-		public SForStmt doRebuildParentState(SForStmt state, BUTree<SNodeListState> child) {
+		public SForStmt doRebuildParentState(SForStmt state, BUTree<SNodeList> child) {
 			return state.withUpdate(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return COMPARE;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return BODY;
 		}
 	};
@@ -200,12 +200,12 @@ public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return UPDATE;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

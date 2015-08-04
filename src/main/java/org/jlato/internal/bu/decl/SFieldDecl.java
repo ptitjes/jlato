@@ -12,19 +12,19 @@ import org.jlato.tree.type.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
+public class SFieldDecl extends SNode<SFieldDecl> implements SMemberDecl {
 
-	public static BUTree<SFieldDecl> make(BUTree<SNodeListState> modifiers, BUTree<? extends SType> type, BUTree<SNodeListState> variables) {
+	public static BUTree<SFieldDecl> make(BUTree<SNodeList> modifiers, BUTree<? extends SType> type, BUTree<SNodeList> variables) {
 		return new BUTree<SFieldDecl>(new SFieldDecl(modifiers, type, variables));
 	}
 
-	public final BUTree<SNodeListState> modifiers;
+	public final BUTree<SNodeList> modifiers;
 
 	public final BUTree<? extends SType> type;
 
-	public final BUTree<SNodeListState> variables;
+	public final BUTree<SNodeList> variables;
 
-	public SFieldDecl(BUTree<SNodeListState> modifiers, BUTree<? extends SType> type, BUTree<SNodeListState> variables) {
+	public SFieldDecl(BUTree<SNodeList> modifiers, BUTree<? extends SType> type, BUTree<SNodeList> variables) {
 		this.modifiers = modifiers;
 		this.type = type;
 		this.variables = variables;
@@ -35,11 +35,11 @@ public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
 		return Kind.FieldDecl;
 	}
 
-	public BUTree<SNodeListState> modifiers() {
+	public BUTree<SNodeList> modifiers() {
 		return modifiers;
 	}
 
-	public SFieldDecl withModifiers(BUTree<SNodeListState> modifiers) {
+	public SFieldDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SFieldDecl(modifiers, type, variables);
 	}
 
@@ -51,11 +51,11 @@ public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
 		return new SFieldDecl(modifiers, type, variables);
 	}
 
-	public BUTree<SNodeListState> variables() {
+	public BUTree<SNodeList> variables() {
 		return variables;
 	}
 
-	public SFieldDecl withVariables(BUTree<SNodeListState> variables) {
+	public SFieldDecl withVariables(BUTree<SNodeList> variables) {
 		return new SFieldDecl(modifiers, type, variables);
 	}
 
@@ -104,7 +104,7 @@ public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
 		return result;
 	}
 
-	public static STypeSafeTraversal<SFieldDecl, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SFieldDecl, SNodeListState, NodeList<ExtendedModifier>>() {
+	public static STypeSafeTraversal<SFieldDecl, SNodeList, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SFieldDecl, SNodeList, NodeList<ExtendedModifier>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SFieldDecl state) {
@@ -112,17 +112,17 @@ public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
 		}
 
 		@Override
-		public SFieldDecl doRebuildParentState(SFieldDecl state, BUTree<SNodeListState> child) {
+		public SFieldDecl doRebuildParentState(SFieldDecl state, BUTree<SNodeList> child) {
 			return state.withModifiers(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return TYPE;
 		}
 	};
@@ -140,17 +140,17 @@ public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return MODIFIERS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return VARIABLES;
 		}
 	};
 
-	public static STypeSafeTraversal<SFieldDecl, SNodeListState, NodeList<VariableDeclarator>> VARIABLES = new STypeSafeTraversal<SFieldDecl, SNodeListState, NodeList<VariableDeclarator>>() {
+	public static STypeSafeTraversal<SFieldDecl, SNodeList, NodeList<VariableDeclarator>> VARIABLES = new STypeSafeTraversal<SFieldDecl, SNodeList, NodeList<VariableDeclarator>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SFieldDecl state) {
@@ -158,17 +158,17 @@ public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
 		}
 
 		@Override
-		public SFieldDecl doRebuildParentState(SFieldDecl state, BUTree<SNodeListState> child) {
+		public SFieldDecl doRebuildParentState(SFieldDecl state, BUTree<SNodeList> child) {
 			return state.withVariables(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return TYPE;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

@@ -1,7 +1,7 @@
 package org.jlato.internal.td.type;
 
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.type.SWildcardType;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
@@ -25,7 +25,7 @@ public class TDWildcardType extends TDTree<SWildcardType, Type, WildcardType> im
 	}
 
 	public TDWildcardType(NodeList<AnnotationExpr> annotations, NodeOption<ReferenceType> ext, NodeOption<ReferenceType> sup) {
-		super(new TDLocation<SWildcardType>(SWildcardType.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SNodeOptionState>treeOf(ext), TDTree.<SNodeOptionState>treeOf(sup))));
+		super(new TDLocation<SWildcardType>(SWildcardType.make(TDTree.<SNodeList>treeOf(annotations), TDTree.<SNodeOption>treeOf(ext), TDTree.<SNodeOption>treeOf(sup))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

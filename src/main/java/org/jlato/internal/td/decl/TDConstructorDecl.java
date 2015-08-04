@@ -1,6 +1,6 @@
 package org.jlato.internal.td.decl;
 
-import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.decl.SConstructorDecl;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.stmt.SBlockStmt;
@@ -29,7 +29,7 @@ public class TDConstructorDecl extends TDTree<SConstructorDecl, MemberDecl, Cons
 	}
 
 	public TDConstructorDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<FormalParameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
-		super(new TDLocation<SConstructorDecl>(SConstructorDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SNodeListState>treeOf(typeParams), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(params), TDTree.<SNodeListState>treeOf(throwsClause), TDTree.<SBlockStmt>treeOf(body))));
+		super(new TDLocation<SConstructorDecl>(SConstructorDecl.make(TDTree.<SNodeList>treeOf(modifiers), TDTree.<SNodeList>treeOf(typeParams), TDTree.<SName>treeOf(name), TDTree.<SNodeList>treeOf(params), TDTree.<SNodeList>treeOf(throwsClause), TDTree.<SBlockStmt>treeOf(body))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

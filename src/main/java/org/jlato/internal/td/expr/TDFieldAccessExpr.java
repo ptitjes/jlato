@@ -1,6 +1,6 @@
 package org.jlato.internal.td.expr;
 
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.expr.SFieldAccessExpr;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.TDLocation;
@@ -23,7 +23,7 @@ public class TDFieldAccessExpr extends TDTree<SFieldAccessExpr, Expr, FieldAcces
 	}
 
 	public TDFieldAccessExpr(NodeOption<Expr> scope, Name name) {
-		super(new TDLocation<SFieldAccessExpr>(SFieldAccessExpr.make(TDTree.<SNodeOptionState>treeOf(scope), TDTree.<SName>treeOf(name))));
+		super(new TDLocation<SFieldAccessExpr>(SFieldAccessExpr.make(TDTree.<SNodeOption>treeOf(scope), TDTree.<SName>treeOf(name))));
 	}
 
 	public NodeOption<Expr> scope() {

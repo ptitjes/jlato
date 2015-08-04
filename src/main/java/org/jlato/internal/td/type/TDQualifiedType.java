@@ -1,7 +1,7 @@
 package org.jlato.internal.td.type;
 
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.type.SQualifiedType;
 import org.jlato.internal.td.TDLocation;
@@ -27,7 +27,7 @@ public class TDQualifiedType extends TDTree<SQualifiedType, ReferenceType, Quali
 	}
 
 	public TDQualifiedType(NodeList<AnnotationExpr> annotations, NodeOption<QualifiedType> scope, Name name, NodeOption<NodeList<Type>> typeArgs) {
-		super(new TDLocation<SQualifiedType>(SQualifiedType.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SNodeOptionState>treeOf(scope), TDTree.<SName>treeOf(name), TDTree.<SNodeOptionState>treeOf(typeArgs))));
+		super(new TDLocation<SQualifiedType>(SQualifiedType.make(TDTree.<SNodeList>treeOf(annotations), TDTree.<SNodeOption>treeOf(scope), TDTree.<SName>treeOf(name), TDTree.<SNodeOption>treeOf(typeArgs))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

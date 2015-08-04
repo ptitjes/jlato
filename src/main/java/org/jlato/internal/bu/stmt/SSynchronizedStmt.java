@@ -12,7 +12,7 @@ import org.jlato.tree.stmt.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SSynchronizedStmt extends SNodeState<SSynchronizedStmt> implements SStmt {
+public class SSynchronizedStmt extends SNode<SSynchronizedStmt> implements SStmt {
 
 	public static BUTree<SSynchronizedStmt> make(BUTree<? extends SExpr> expr, BUTree<SBlockStmt> block) {
 		return new BUTree<SSynchronizedStmt>(new SSynchronizedStmt(expr, block));
@@ -103,12 +103,12 @@ public class SSynchronizedStmt extends SNodeState<SSynchronizedStmt> implements 
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return BLOCK;
 		}
 	};
@@ -126,12 +126,12 @@ public class SSynchronizedStmt extends SNodeState<SSynchronizedStmt> implements 
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return EXPR;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

@@ -30,16 +30,16 @@ import java.util.Comparator;
 /**
  * @author Didier Villevalois
  */
-public class STreeSetState implements STreeState {
+public class STreeSet implements STree {
 
 	public final String rootPath;
 	public final TreeMap<String, BUTree<?>> trees;
 
-	public STreeSetState(String rootPath) {
+	public STreeSet(String rootPath) {
 		this(rootPath, new TreeMap<String, BUTree<?>>(STRING_COMPARATOR, null));
 	}
 
-	public STreeSetState(String rootPath, TreeMap<String, BUTree<?>> trees) {
+	public STreeSet(String rootPath, TreeMap<String, BUTree<?>> trees) {
 		this.rootPath = rootPath;
 		this.trees = trees;
 	}
@@ -47,7 +47,7 @@ public class STreeSetState implements STreeState {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Tree instantiate(TDLocation<?> location) {
-		return new TreeSet<Tree>((TDLocation<STreeSetState>) location);
+		return new TreeSet<Tree>((TDLocation<STreeSet>) location);
 	}
 
 	@Override
@@ -80,12 +80,12 @@ public class STreeSetState implements STreeState {
 		return trees.get(path);
 	}
 
-	public STreeSetState withTree(String path, BUTree<?> value) {
-		return new STreeSetState(rootPath, trees.put(path, value));
+	public STreeSet withTree(String path, BUTree<?> value) {
+		return new STreeSet(rootPath, trees.put(path, value));
 	}
 
-	public STreeState withTrees(TreeMap<String, BUTree<?>> trees) {
-		return new STreeSetState(rootPath, trees);
+	public STree withTrees(TreeMap<String, BUTree<?>> trees) {
+		return new STreeSet(rootPath, trees);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class STreeSetState implements STreeState {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		STreeSetState that = (STreeSetState) o;
+		STreeSet that = (STreeSet) o;
 
 		if (!rootPath.equals(that.rootPath)) return false;
 		return trees.equals(that.trees);
@@ -119,7 +119,7 @@ public class STreeSetState implements STreeState {
 		}
 	};
 
-	public static class TreeTraversal extends STypeSafeTraversal<STreeSetState, STreeState, Tree> {
+	public static class TreeTraversal extends STypeSafeTraversal<STreeSet, STree, Tree> {
 
 		private final String path;
 
@@ -128,23 +128,23 @@ public class STreeSetState implements STreeState {
 		}
 
 		@Override
-		public BUTree<?> doTraverse(STreeSetState state) {
+		public BUTree<?> doTraverse(STreeSet state) {
 			return state.tree(path);
 		}
 
 		@Override
-		public STreeSetState doRebuildParentState(STreeSetState state, BUTree<STreeState> child) {
+		public STreeSet doRebuildParentState(STreeSet state, BUTree<STree> child) {
 			return state.withTree(path, child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			// TODO
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			// TODO
 			return null;
 		}

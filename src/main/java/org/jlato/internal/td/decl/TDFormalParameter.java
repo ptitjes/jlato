@@ -1,6 +1,6 @@
 package org.jlato.internal.td.decl;
 
-import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.decl.SFormalParameter;
 import org.jlato.internal.bu.decl.SVariableDeclaratorId;
 import org.jlato.internal.bu.type.SType;
@@ -26,7 +26,7 @@ public class TDFormalParameter extends TDTree<SFormalParameter, Node, FormalPara
 	}
 
 	public TDFormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		super(new TDLocation<SFormalParameter>(SFormalParameter.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SType>treeOf(type), isVarArgs, TDTree.<SVariableDeclaratorId>treeOf(id))));
+		super(new TDLocation<SFormalParameter>(SFormalParameter.make(TDTree.<SNodeList>treeOf(modifiers), TDTree.<SType>treeOf(type), isVarArgs, TDTree.<SVariableDeclaratorId>treeOf(id))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

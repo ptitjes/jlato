@@ -23,20 +23,45 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.tree.*;
 
+import java.util.Collections;
+
 /**
  * @author Didier Villevalois
  */
-public interface STreeState {
+public class SVar implements STree {
 
-	Iterable<SProperty> allProperties();
+	public final String name;
 
-	STraversal firstChild();
+	public SVar(String name) {
+		this.name = name;
+	}
 
-	STraversal lastChild();
+	@Override
+	public Tree instantiate(TDLocation<?> location) {
+		throw new UnsupportedOperationException();
+	}
 
-	void validate(BUTree<?> tree);
+	@Override
+	public LexicalShape shape() {
+		return null;
+	}
 
-	Tree instantiate(TDLocation<?> location);
+	@Override
+	public Iterable<SProperty> allProperties() {
+		return Collections.emptyList();
+	}
 
-	LexicalShape shape();
+	@Override
+	public STraversal firstChild() {
+		return null;
+	}
+
+	@Override
+	public STraversal lastChild() {
+		return null;
+	}
+
+	@Override
+	public void validate(BUTree<?> tree) {
+	}
 }

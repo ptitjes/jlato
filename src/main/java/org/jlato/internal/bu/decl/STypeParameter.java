@@ -13,19 +13,19 @@ import org.jlato.tree.type.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class STypeParameter extends SNodeState<STypeParameter> implements STreeState {
+public class STypeParameter extends SNode<STypeParameter> implements STree {
 
-	public static BUTree<STypeParameter> make(BUTree<SNodeListState> annotations, BUTree<SName> name, BUTree<SNodeListState> bounds) {
+	public static BUTree<STypeParameter> make(BUTree<SNodeList> annotations, BUTree<SName> name, BUTree<SNodeList> bounds) {
 		return new BUTree<STypeParameter>(new STypeParameter(annotations, name, bounds));
 	}
 
-	public final BUTree<SNodeListState> annotations;
+	public final BUTree<SNodeList> annotations;
 
 	public final BUTree<SName> name;
 
-	public final BUTree<SNodeListState> bounds;
+	public final BUTree<SNodeList> bounds;
 
-	public STypeParameter(BUTree<SNodeListState> annotations, BUTree<SName> name, BUTree<SNodeListState> bounds) {
+	public STypeParameter(BUTree<SNodeList> annotations, BUTree<SName> name, BUTree<SNodeList> bounds) {
 		this.annotations = annotations;
 		this.name = name;
 		this.bounds = bounds;
@@ -36,11 +36,11 @@ public class STypeParameter extends SNodeState<STypeParameter> implements STreeS
 		return Kind.TypeParameter;
 	}
 
-	public BUTree<SNodeListState> annotations() {
+	public BUTree<SNodeList> annotations() {
 		return annotations;
 	}
 
-	public STypeParameter withAnnotations(BUTree<SNodeListState> annotations) {
+	public STypeParameter withAnnotations(BUTree<SNodeList> annotations) {
 		return new STypeParameter(annotations, name, bounds);
 	}
 
@@ -52,11 +52,11 @@ public class STypeParameter extends SNodeState<STypeParameter> implements STreeS
 		return new STypeParameter(annotations, name, bounds);
 	}
 
-	public BUTree<SNodeListState> bounds() {
+	public BUTree<SNodeList> bounds() {
 		return bounds;
 	}
 
-	public STypeParameter withBounds(BUTree<SNodeListState> bounds) {
+	public STypeParameter withBounds(BUTree<SNodeList> bounds) {
 		return new STypeParameter(annotations, name, bounds);
 	}
 
@@ -105,7 +105,7 @@ public class STypeParameter extends SNodeState<STypeParameter> implements STreeS
 		return result;
 	}
 
-	public static STypeSafeTraversal<STypeParameter, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<STypeParameter, SNodeListState, NodeList<AnnotationExpr>>() {
+	public static STypeSafeTraversal<STypeParameter, SNodeList, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<STypeParameter, SNodeList, NodeList<AnnotationExpr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(STypeParameter state) {
@@ -113,17 +113,17 @@ public class STypeParameter extends SNodeState<STypeParameter> implements STreeS
 		}
 
 		@Override
-		public STypeParameter doRebuildParentState(STypeParameter state, BUTree<SNodeListState> child) {
+		public STypeParameter doRebuildParentState(STypeParameter state, BUTree<SNodeList> child) {
 			return state.withAnnotations(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return NAME;
 		}
 	};
@@ -141,17 +141,17 @@ public class STypeParameter extends SNodeState<STypeParameter> implements STreeS
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return ANNOTATIONS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return BOUNDS;
 		}
 	};
 
-	public static STypeSafeTraversal<STypeParameter, SNodeListState, NodeList<Type>> BOUNDS = new STypeSafeTraversal<STypeParameter, SNodeListState, NodeList<Type>>() {
+	public static STypeSafeTraversal<STypeParameter, SNodeList, NodeList<Type>> BOUNDS = new STypeSafeTraversal<STypeParameter, SNodeList, NodeList<Type>>() {
 
 		@Override
 		public BUTree<?> doTraverse(STypeParameter state) {
@@ -159,17 +159,17 @@ public class STypeParameter extends SNodeState<STypeParameter> implements STreeS
 		}
 
 		@Override
-		public STypeParameter doRebuildParentState(STypeParameter state, BUTree<SNodeListState> child) {
+		public STypeParameter doRebuildParentState(STypeParameter state, BUTree<SNodeList> child) {
 			return state.withBounds(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return NAME;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

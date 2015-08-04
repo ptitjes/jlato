@@ -11,19 +11,19 @@ import org.jlato.tree.type.*;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SWildcardType extends SNodeState<SWildcardType> implements SType {
+public class SWildcardType extends SNode<SWildcardType> implements SType {
 
-	public static BUTree<SWildcardType> make(BUTree<SNodeListState> annotations, BUTree<SNodeOptionState> ext, BUTree<SNodeOptionState> sup) {
+	public static BUTree<SWildcardType> make(BUTree<SNodeList> annotations, BUTree<SNodeOption> ext, BUTree<SNodeOption> sup) {
 		return new BUTree<SWildcardType>(new SWildcardType(annotations, ext, sup));
 	}
 
-	public final BUTree<SNodeListState> annotations;
+	public final BUTree<SNodeList> annotations;
 
-	public final BUTree<SNodeOptionState> ext;
+	public final BUTree<SNodeOption> ext;
 
-	public final BUTree<SNodeOptionState> sup;
+	public final BUTree<SNodeOption> sup;
 
-	public SWildcardType(BUTree<SNodeListState> annotations, BUTree<SNodeOptionState> ext, BUTree<SNodeOptionState> sup) {
+	public SWildcardType(BUTree<SNodeList> annotations, BUTree<SNodeOption> ext, BUTree<SNodeOption> sup) {
 		this.annotations = annotations;
 		this.ext = ext;
 		this.sup = sup;
@@ -34,27 +34,27 @@ public class SWildcardType extends SNodeState<SWildcardType> implements SType {
 		return Kind.WildcardType;
 	}
 
-	public BUTree<SNodeListState> annotations() {
+	public BUTree<SNodeList> annotations() {
 		return annotations;
 	}
 
-	public SWildcardType withAnnotations(BUTree<SNodeListState> annotations) {
+	public SWildcardType withAnnotations(BUTree<SNodeList> annotations) {
 		return new SWildcardType(annotations, ext, sup);
 	}
 
-	public BUTree<SNodeOptionState> ext() {
+	public BUTree<SNodeOption> ext() {
 		return ext;
 	}
 
-	public SWildcardType withExt(BUTree<SNodeOptionState> ext) {
+	public SWildcardType withExt(BUTree<SNodeOption> ext) {
 		return new SWildcardType(annotations, ext, sup);
 	}
 
-	public BUTree<SNodeOptionState> sup() {
+	public BUTree<SNodeOption> sup() {
 		return sup;
 	}
 
-	public SWildcardType withSup(BUTree<SNodeOptionState> sup) {
+	public SWildcardType withSup(BUTree<SNodeOption> sup) {
 		return new SWildcardType(annotations, ext, sup);
 	}
 
@@ -103,7 +103,7 @@ public class SWildcardType extends SNodeState<SWildcardType> implements SType {
 		return result;
 	}
 
-	public static STypeSafeTraversal<SWildcardType, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<SWildcardType, SNodeListState, NodeList<AnnotationExpr>>() {
+	public static STypeSafeTraversal<SWildcardType, SNodeList, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<SWildcardType, SNodeList, NodeList<AnnotationExpr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SWildcardType state) {
@@ -111,22 +111,22 @@ public class SWildcardType extends SNodeState<SWildcardType> implements SType {
 		}
 
 		@Override
-		public SWildcardType doRebuildParentState(SWildcardType state, BUTree<SNodeListState> child) {
+		public SWildcardType doRebuildParentState(SWildcardType state, BUTree<SNodeList> child) {
 			return state.withAnnotations(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return EXT;
 		}
 	};
 
-	public static STypeSafeTraversal<SWildcardType, SNodeOptionState, NodeOption<ReferenceType>> EXT = new STypeSafeTraversal<SWildcardType, SNodeOptionState, NodeOption<ReferenceType>>() {
+	public static STypeSafeTraversal<SWildcardType, SNodeOption, NodeOption<ReferenceType>> EXT = new STypeSafeTraversal<SWildcardType, SNodeOption, NodeOption<ReferenceType>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SWildcardType state) {
@@ -134,22 +134,22 @@ public class SWildcardType extends SNodeState<SWildcardType> implements SType {
 		}
 
 		@Override
-		public SWildcardType doRebuildParentState(SWildcardType state, BUTree<SNodeOptionState> child) {
+		public SWildcardType doRebuildParentState(SWildcardType state, BUTree<SNodeOption> child) {
 			return state.withExt(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return ANNOTATIONS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return SUP;
 		}
 	};
 
-	public static STypeSafeTraversal<SWildcardType, SNodeOptionState, NodeOption<ReferenceType>> SUP = new STypeSafeTraversal<SWildcardType, SNodeOptionState, NodeOption<ReferenceType>>() {
+	public static STypeSafeTraversal<SWildcardType, SNodeOption, NodeOption<ReferenceType>> SUP = new STypeSafeTraversal<SWildcardType, SNodeOption, NodeOption<ReferenceType>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SWildcardType state) {
@@ -157,17 +157,17 @@ public class SWildcardType extends SNodeState<SWildcardType> implements SType {
 		}
 
 		@Override
-		public SWildcardType doRebuildParentState(SWildcardType state, BUTree<SNodeOptionState> child) {
+		public SWildcardType doRebuildParentState(SWildcardType state, BUTree<SNodeOption> child) {
 			return state.withSup(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return EXT;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

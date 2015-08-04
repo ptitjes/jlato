@@ -21,25 +21,25 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.*;
 
-public class SEnumDecl extends SNodeState<SEnumDecl> implements STypeDecl {
+public class SEnumDecl extends SNode<SEnumDecl> implements STypeDecl {
 
-	public static BUTree<SEnumDecl> make(BUTree<SNodeListState> modifiers, BUTree<SName> name, BUTree<SNodeListState> implementsClause, BUTree<SNodeListState> enumConstants, boolean trailingComma, BUTree<SNodeListState> members) {
+	public static BUTree<SEnumDecl> make(BUTree<SNodeList> modifiers, BUTree<SName> name, BUTree<SNodeList> implementsClause, BUTree<SNodeList> enumConstants, boolean trailingComma, BUTree<SNodeList> members) {
 		return new BUTree<SEnumDecl>(new SEnumDecl(modifiers, name, implementsClause, enumConstants, trailingComma, members));
 	}
 
-	public final BUTree<SNodeListState> modifiers;
+	public final BUTree<SNodeList> modifiers;
 
 	public final BUTree<SName> name;
 
-	public final BUTree<SNodeListState> implementsClause;
+	public final BUTree<SNodeList> implementsClause;
 
-	public final BUTree<SNodeListState> enumConstants;
+	public final BUTree<SNodeList> enumConstants;
 
 	public final boolean trailingComma;
 
-	public final BUTree<SNodeListState> members;
+	public final BUTree<SNodeList> members;
 
-	public SEnumDecl(BUTree<SNodeListState> modifiers, BUTree<SName> name, BUTree<SNodeListState> implementsClause, BUTree<SNodeListState> enumConstants, boolean trailingComma, BUTree<SNodeListState> members) {
+	public SEnumDecl(BUTree<SNodeList> modifiers, BUTree<SName> name, BUTree<SNodeList> implementsClause, BUTree<SNodeList> enumConstants, boolean trailingComma, BUTree<SNodeList> members) {
 		this.modifiers = modifiers;
 		this.name = name;
 		this.implementsClause = implementsClause;
@@ -53,11 +53,11 @@ public class SEnumDecl extends SNodeState<SEnumDecl> implements STypeDecl {
 		return Kind.EnumDecl;
 	}
 
-	public BUTree<SNodeListState> modifiers() {
+	public BUTree<SNodeList> modifiers() {
 		return modifiers;
 	}
 
-	public SEnumDecl withModifiers(BUTree<SNodeListState> modifiers) {
+	public SEnumDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SEnumDecl(modifiers, name, implementsClause, enumConstants, trailingComma, members);
 	}
 
@@ -69,19 +69,19 @@ public class SEnumDecl extends SNodeState<SEnumDecl> implements STypeDecl {
 		return new SEnumDecl(modifiers, name, implementsClause, enumConstants, trailingComma, members);
 	}
 
-	public BUTree<SNodeListState> implementsClause() {
+	public BUTree<SNodeList> implementsClause() {
 		return implementsClause;
 	}
 
-	public SEnumDecl withImplementsClause(BUTree<SNodeListState> implementsClause) {
+	public SEnumDecl withImplementsClause(BUTree<SNodeList> implementsClause) {
 		return new SEnumDecl(modifiers, name, implementsClause, enumConstants, trailingComma, members);
 	}
 
-	public BUTree<SNodeListState> enumConstants() {
+	public BUTree<SNodeList> enumConstants() {
 		return enumConstants;
 	}
 
-	public SEnumDecl withEnumConstants(BUTree<SNodeListState> enumConstants) {
+	public SEnumDecl withEnumConstants(BUTree<SNodeList> enumConstants) {
 		return new SEnumDecl(modifiers, name, implementsClause, enumConstants, trailingComma, members);
 	}
 
@@ -93,11 +93,11 @@ public class SEnumDecl extends SNodeState<SEnumDecl> implements STypeDecl {
 		return new SEnumDecl(modifiers, name, implementsClause, enumConstants, trailingComma, members);
 	}
 
-	public BUTree<SNodeListState> members() {
+	public BUTree<SNodeList> members() {
 		return members;
 	}
 
-	public SEnumDecl withMembers(BUTree<SNodeListState> members) {
+	public SEnumDecl withMembers(BUTree<SNodeList> members) {
 		return new SEnumDecl(modifiers, name, implementsClause, enumConstants, trailingComma, members);
 	}
 
@@ -160,7 +160,7 @@ public class SEnumDecl extends SNodeState<SEnumDecl> implements STypeDecl {
 		return result;
 	}
 
-	public static STypeSafeTraversal<SEnumDecl, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SEnumDecl, SNodeListState, NodeList<ExtendedModifier>>() {
+	public static STypeSafeTraversal<SEnumDecl, SNodeList, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SEnumDecl, SNodeList, NodeList<ExtendedModifier>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SEnumDecl state) {
@@ -168,17 +168,17 @@ public class SEnumDecl extends SNodeState<SEnumDecl> implements STypeDecl {
 		}
 
 		@Override
-		public SEnumDecl doRebuildParentState(SEnumDecl state, BUTree<SNodeListState> child) {
+		public SEnumDecl doRebuildParentState(SEnumDecl state, BUTree<SNodeList> child) {
 			return state.withModifiers(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return NAME;
 		}
 	};
@@ -196,17 +196,17 @@ public class SEnumDecl extends SNodeState<SEnumDecl> implements STypeDecl {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return MODIFIERS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return IMPLEMENTS_CLAUSE;
 		}
 	};
 
-	public static STypeSafeTraversal<SEnumDecl, SNodeListState, NodeList<QualifiedType>> IMPLEMENTS_CLAUSE = new STypeSafeTraversal<SEnumDecl, SNodeListState, NodeList<QualifiedType>>() {
+	public static STypeSafeTraversal<SEnumDecl, SNodeList, NodeList<QualifiedType>> IMPLEMENTS_CLAUSE = new STypeSafeTraversal<SEnumDecl, SNodeList, NodeList<QualifiedType>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SEnumDecl state) {
@@ -214,22 +214,22 @@ public class SEnumDecl extends SNodeState<SEnumDecl> implements STypeDecl {
 		}
 
 		@Override
-		public SEnumDecl doRebuildParentState(SEnumDecl state, BUTree<SNodeListState> child) {
+		public SEnumDecl doRebuildParentState(SEnumDecl state, BUTree<SNodeList> child) {
 			return state.withImplementsClause(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return NAME;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return ENUM_CONSTANTS;
 		}
 	};
 
-	public static STypeSafeTraversal<SEnumDecl, SNodeListState, NodeList<EnumConstantDecl>> ENUM_CONSTANTS = new STypeSafeTraversal<SEnumDecl, SNodeListState, NodeList<EnumConstantDecl>>() {
+	public static STypeSafeTraversal<SEnumDecl, SNodeList, NodeList<EnumConstantDecl>> ENUM_CONSTANTS = new STypeSafeTraversal<SEnumDecl, SNodeList, NodeList<EnumConstantDecl>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SEnumDecl state) {
@@ -237,22 +237,22 @@ public class SEnumDecl extends SNodeState<SEnumDecl> implements STypeDecl {
 		}
 
 		@Override
-		public SEnumDecl doRebuildParentState(SEnumDecl state, BUTree<SNodeListState> child) {
+		public SEnumDecl doRebuildParentState(SEnumDecl state, BUTree<SNodeList> child) {
 			return state.withEnumConstants(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return IMPLEMENTS_CLAUSE;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return MEMBERS;
 		}
 	};
 
-	public static STypeSafeTraversal<SEnumDecl, SNodeListState, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<SEnumDecl, SNodeListState, NodeList<MemberDecl>>() {
+	public static STypeSafeTraversal<SEnumDecl, SNodeList, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<SEnumDecl, SNodeList, NodeList<MemberDecl>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SEnumDecl state) {
@@ -260,17 +260,17 @@ public class SEnumDecl extends SNodeState<SEnumDecl> implements STypeDecl {
 		}
 
 		@Override
-		public SEnumDecl doRebuildParentState(SEnumDecl state, BUTree<SNodeListState> child) {
+		public SEnumDecl doRebuildParentState(SEnumDecl state, BUTree<SNodeList> child) {
 			return state.withMembers(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return ENUM_CONSTANTS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

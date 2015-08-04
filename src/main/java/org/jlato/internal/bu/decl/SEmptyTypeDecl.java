@@ -2,7 +2,7 @@ package org.jlato.internal.bu.decl;
 
 import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.SNode;
 import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
@@ -11,7 +11,7 @@ import org.jlato.tree.*;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class SEmptyTypeDecl extends SNodeState<SEmptyTypeDecl> implements STypeDecl {
+public class SEmptyTypeDecl extends SNode<SEmptyTypeDecl> implements STypeDecl {
 
 	public static BUTree<SEmptyTypeDecl> make() {
 		return new BUTree<SEmptyTypeDecl>(new SEmptyTypeDecl());

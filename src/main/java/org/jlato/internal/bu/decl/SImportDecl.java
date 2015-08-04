@@ -16,7 +16,7 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUn
 import static org.jlato.printer.SpacingConstraint.newLine;
 import static org.jlato.printer.SpacingConstraint.spacing;
 
-public class SImportDecl extends SNodeState<SImportDecl> implements STreeState {
+public class SImportDecl extends SNode<SImportDecl> implements STree {
 
 	public static BUTree<SImportDecl> make(BUTree<SQualifiedName> name, boolean isStatic, boolean isOnDemand) {
 		return new BUTree<SImportDecl>(new SImportDecl(name, isStatic, isOnDemand));
@@ -126,12 +126,12 @@ public class SImportDecl extends SNodeState<SImportDecl> implements STreeState {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

@@ -9,7 +9,7 @@ import org.jlato.tree.expr.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SArrayAccessExpr extends SNodeState<SArrayAccessExpr> implements SExpr {
+public class SArrayAccessExpr extends SNode<SArrayAccessExpr> implements SExpr {
 
 	public static BUTree<SArrayAccessExpr> make(BUTree<? extends SExpr> name, BUTree<? extends SExpr> index) {
 		return new BUTree<SArrayAccessExpr>(new SArrayAccessExpr(name, index));
@@ -100,12 +100,12 @@ public class SArrayAccessExpr extends SNodeState<SArrayAccessExpr> implements SE
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return INDEX;
 		}
 	};
@@ -123,12 +123,12 @@ public class SArrayAccessExpr extends SNodeState<SArrayAccessExpr> implements SE
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return NAME;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

@@ -12,17 +12,17 @@ import org.jlato.tree.name.*;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SFieldAccessExpr extends SNodeState<SFieldAccessExpr> implements SExpr {
+public class SFieldAccessExpr extends SNode<SFieldAccessExpr> implements SExpr {
 
-	public static BUTree<SFieldAccessExpr> make(BUTree<SNodeOptionState> scope, BUTree<SName> name) {
+	public static BUTree<SFieldAccessExpr> make(BUTree<SNodeOption> scope, BUTree<SName> name) {
 		return new BUTree<SFieldAccessExpr>(new SFieldAccessExpr(scope, name));
 	}
 
-	public final BUTree<SNodeOptionState> scope;
+	public final BUTree<SNodeOption> scope;
 
 	public final BUTree<SName> name;
 
-	public SFieldAccessExpr(BUTree<SNodeOptionState> scope, BUTree<SName> name) {
+	public SFieldAccessExpr(BUTree<SNodeOption> scope, BUTree<SName> name) {
 		this.scope = scope;
 		this.name = name;
 	}
@@ -32,11 +32,11 @@ public class SFieldAccessExpr extends SNodeState<SFieldAccessExpr> implements SE
 		return Kind.FieldAccessExpr;
 	}
 
-	public BUTree<SNodeOptionState> scope() {
+	public BUTree<SNodeOption> scope() {
 		return scope;
 	}
 
-	public SFieldAccessExpr withScope(BUTree<SNodeOptionState> scope) {
+	public SFieldAccessExpr withScope(BUTree<SNodeOption> scope) {
 		return new SFieldAccessExpr(scope, name);
 	}
 
@@ -90,7 +90,7 @@ public class SFieldAccessExpr extends SNodeState<SFieldAccessExpr> implements SE
 		return result;
 	}
 
-	public static STypeSafeTraversal<SFieldAccessExpr, SNodeOptionState, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<SFieldAccessExpr, SNodeOptionState, NodeOption<Expr>>() {
+	public static STypeSafeTraversal<SFieldAccessExpr, SNodeOption, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<SFieldAccessExpr, SNodeOption, NodeOption<Expr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SFieldAccessExpr state) {
@@ -98,17 +98,17 @@ public class SFieldAccessExpr extends SNodeState<SFieldAccessExpr> implements SE
 		}
 
 		@Override
-		public SFieldAccessExpr doRebuildParentState(SFieldAccessExpr state, BUTree<SNodeOptionState> child) {
+		public SFieldAccessExpr doRebuildParentState(SFieldAccessExpr state, BUTree<SNodeOption> child) {
 			return state.withScope(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return NAME;
 		}
 	};
@@ -126,12 +126,12 @@ public class SFieldAccessExpr extends SNodeState<SFieldAccessExpr> implements SE
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return SCOPE;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

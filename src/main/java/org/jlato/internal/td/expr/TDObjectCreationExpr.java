@@ -1,7 +1,7 @@
 package org.jlato.internal.td.expr;
 
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.expr.SObjectCreationExpr;
 import org.jlato.internal.bu.type.SQualifiedType;
 import org.jlato.internal.td.TDLocation;
@@ -27,7 +27,7 @@ public class TDObjectCreationExpr extends TDTree<SObjectCreationExpr, Expr, Obje
 	}
 
 	public TDObjectCreationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeOption<NodeList<MemberDecl>> body) {
-		super(new TDLocation<SObjectCreationExpr>(SObjectCreationExpr.make(TDTree.<SNodeOptionState>treeOf(scope), TDTree.<SNodeListState>treeOf(typeArgs), TDTree.<SQualifiedType>treeOf(type), TDTree.<SNodeListState>treeOf(args), TDTree.<SNodeOptionState>treeOf(body))));
+		super(new TDLocation<SObjectCreationExpr>(SObjectCreationExpr.make(TDTree.<SNodeOption>treeOf(scope), TDTree.<SNodeList>treeOf(typeArgs), TDTree.<SQualifiedType>treeOf(type), TDTree.<SNodeList>treeOf(args), TDTree.<SNodeOption>treeOf(body))));
 	}
 
 	public NodeOption<Expr> scope() {

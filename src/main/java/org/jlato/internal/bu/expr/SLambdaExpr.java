@@ -15,19 +15,19 @@ import static org.jlato.internal.shapes.LSCondition.data;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SLambdaExpr extends SNodeState<SLambdaExpr> implements SExpr {
+public class SLambdaExpr extends SNode<SLambdaExpr> implements SExpr {
 
-	public static BUTree<SLambdaExpr> make(BUTree<SNodeListState> params, boolean hasParens, BUTree<SNodeEitherState> body) {
+	public static BUTree<SLambdaExpr> make(BUTree<SNodeList> params, boolean hasParens, BUTree<SNodeEither> body) {
 		return new BUTree<SLambdaExpr>(new SLambdaExpr(params, hasParens, body));
 	}
 
-	public final BUTree<SNodeListState> params;
+	public final BUTree<SNodeList> params;
 
 	public final boolean hasParens;
 
-	public final BUTree<SNodeEitherState> body;
+	public final BUTree<SNodeEither> body;
 
-	public SLambdaExpr(BUTree<SNodeListState> params, boolean hasParens, BUTree<SNodeEitherState> body) {
+	public SLambdaExpr(BUTree<SNodeList> params, boolean hasParens, BUTree<SNodeEither> body) {
 		this.params = params;
 		this.hasParens = hasParens;
 		this.body = body;
@@ -38,11 +38,11 @@ public class SLambdaExpr extends SNodeState<SLambdaExpr> implements SExpr {
 		return Kind.LambdaExpr;
 	}
 
-	public BUTree<SNodeListState> params() {
+	public BUTree<SNodeList> params() {
 		return params;
 	}
 
-	public SLambdaExpr withParams(BUTree<SNodeListState> params) {
+	public SLambdaExpr withParams(BUTree<SNodeList> params) {
 		return new SLambdaExpr(params, hasParens, body);
 	}
 
@@ -54,11 +54,11 @@ public class SLambdaExpr extends SNodeState<SLambdaExpr> implements SExpr {
 		return new SLambdaExpr(params, hasParens, body);
 	}
 
-	public BUTree<SNodeEitherState> body() {
+	public BUTree<SNodeEither> body() {
 		return body;
 	}
 
-	public SLambdaExpr withBody(BUTree<SNodeEitherState> body) {
+	public SLambdaExpr withBody(BUTree<SNodeEither> body) {
 		return new SLambdaExpr(params, hasParens, body);
 	}
 
@@ -112,7 +112,7 @@ public class SLambdaExpr extends SNodeState<SLambdaExpr> implements SExpr {
 		return result;
 	}
 
-	public static STypeSafeTraversal<SLambdaExpr, SNodeListState, NodeList<FormalParameter>> PARAMS = new STypeSafeTraversal<SLambdaExpr, SNodeListState, NodeList<FormalParameter>>() {
+	public static STypeSafeTraversal<SLambdaExpr, SNodeList, NodeList<FormalParameter>> PARAMS = new STypeSafeTraversal<SLambdaExpr, SNodeList, NodeList<FormalParameter>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SLambdaExpr state) {
@@ -120,22 +120,22 @@ public class SLambdaExpr extends SNodeState<SLambdaExpr> implements SExpr {
 		}
 
 		@Override
-		public SLambdaExpr doRebuildParentState(SLambdaExpr state, BUTree<SNodeListState> child) {
+		public SLambdaExpr doRebuildParentState(SLambdaExpr state, BUTree<SNodeList> child) {
 			return state.withParams(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return BODY;
 		}
 	};
 
-	public static STypeSafeTraversal<SLambdaExpr, SNodeEitherState, NodeEither<Expr, BlockStmt>> BODY = new STypeSafeTraversal<SLambdaExpr, SNodeEitherState, NodeEither<Expr, BlockStmt>>() {
+	public static STypeSafeTraversal<SLambdaExpr, SNodeEither, NodeEither<Expr, BlockStmt>> BODY = new STypeSafeTraversal<SLambdaExpr, SNodeEither, NodeEither<Expr, BlockStmt>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SLambdaExpr state) {
@@ -143,17 +143,17 @@ public class SLambdaExpr extends SNodeState<SLambdaExpr> implements SExpr {
 		}
 
 		@Override
-		public SLambdaExpr doRebuildParentState(SLambdaExpr state, BUTree<SNodeEitherState> child) {
+		public SLambdaExpr doRebuildParentState(SLambdaExpr state, BUTree<SNodeEither> child) {
 			return state.withBody(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return PARAMS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

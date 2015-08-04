@@ -1,6 +1,6 @@
 package org.jlato.internal.td.stmt;
 
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.stmt.SBreakStmt;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
@@ -22,7 +22,7 @@ public class TDBreakStmt extends TDTree<SBreakStmt, Stmt, BreakStmt> implements 
 	}
 
 	public TDBreakStmt(NodeOption<Name> id) {
-		super(new TDLocation<SBreakStmt>(SBreakStmt.make(TDTree.<SNodeOptionState>treeOf(id))));
+		super(new TDLocation<SBreakStmt>(SBreakStmt.make(TDTree.<SNodeOption>treeOf(id))));
 	}
 
 	public NodeOption<Name> id() {

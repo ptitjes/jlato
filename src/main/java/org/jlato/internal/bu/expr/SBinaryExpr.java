@@ -13,7 +13,7 @@ import java.util.Collections;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SBinaryExpr extends SNodeState<SBinaryExpr> implements SExpr {
+public class SBinaryExpr extends SNode<SBinaryExpr> implements SExpr {
 
 	public static BUTree<SBinaryExpr> make(BUTree<? extends SExpr> left, BinaryOp op, BUTree<? extends SExpr> right) {
 		return new BUTree<SBinaryExpr>(new SBinaryExpr(left, op, right));
@@ -123,12 +123,12 @@ public class SBinaryExpr extends SNodeState<SBinaryExpr> implements SExpr {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return RIGHT;
 		}
 	};
@@ -146,12 +146,12 @@ public class SBinaryExpr extends SNodeState<SBinaryExpr> implements SExpr {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return LEFT;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

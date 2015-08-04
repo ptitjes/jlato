@@ -13,7 +13,7 @@ import java.util.Collections;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SUnaryExpr extends SNodeState<SUnaryExpr> implements SExpr {
+public class SUnaryExpr extends SNode<SUnaryExpr> implements SExpr {
 
 	public static BUTree<SUnaryExpr> make(UnaryOp op, BUTree<? extends SExpr> expr) {
 		return new BUTree<SUnaryExpr>(new SUnaryExpr(op, expr));
@@ -109,12 +109,12 @@ public class SUnaryExpr extends SNodeState<SUnaryExpr> implements SExpr {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

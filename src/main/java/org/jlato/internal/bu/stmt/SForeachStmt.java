@@ -13,7 +13,7 @@ import org.jlato.tree.stmt.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SForeachStmt extends SNodeState<SForeachStmt> implements SStmt {
+public class SForeachStmt extends SNode<SForeachStmt> implements SStmt {
 
 	public static BUTree<SForeachStmt> make(BUTree<SVariableDeclarationExpr> var, BUTree<? extends SExpr> iterable, BUTree<? extends SStmt> body) {
 		return new BUTree<SForeachStmt>(new SForeachStmt(var, iterable, body));
@@ -118,12 +118,12 @@ public class SForeachStmt extends SNodeState<SForeachStmt> implements SStmt {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return ITERABLE;
 		}
 	};
@@ -141,12 +141,12 @@ public class SForeachStmt extends SNodeState<SForeachStmt> implements SStmt {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return VAR;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return BODY;
 		}
 	};
@@ -164,12 +164,12 @@ public class SForeachStmt extends SNodeState<SForeachStmt> implements SStmt {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return ITERABLE;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

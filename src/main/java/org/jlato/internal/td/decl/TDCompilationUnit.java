@@ -1,6 +1,6 @@
 package org.jlato.internal.td.decl;
 
-import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.decl.SCompilationUnit;
 import org.jlato.internal.bu.decl.SPackageDecl;
 import org.jlato.internal.td.TDLocation;
@@ -25,7 +25,7 @@ public class TDCompilationUnit extends TDTree<SCompilationUnit, Node, Compilatio
 	}
 
 	public TDCompilationUnit(PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
-		super(new TDLocation<SCompilationUnit>(SCompilationUnit.make(TDTree.<SPackageDecl>treeOf(packageDecl), TDTree.<SNodeListState>treeOf(imports), TDTree.<SNodeListState>treeOf(types))));
+		super(new TDLocation<SCompilationUnit>(SCompilationUnit.make(TDTree.<SPackageDecl>treeOf(packageDecl), TDTree.<SNodeList>treeOf(imports), TDTree.<SNodeList>treeOf(types))));
 	}
 
 	public PackageDecl packageDecl() {

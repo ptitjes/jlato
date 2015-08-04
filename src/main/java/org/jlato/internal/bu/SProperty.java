@@ -24,7 +24,7 @@ package org.jlato.internal.bu;
  */
 public abstract class SProperty {
 
-	public abstract Object retrieve(STreeState state);
+	public abstract Object retrieve(STree state);
 
-	public abstract STreeState rebuildParentState(STreeState state, Object value);
+	public abstract STree rebuildParentState(STree state, Object value);
 }

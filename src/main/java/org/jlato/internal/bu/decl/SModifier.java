@@ -12,7 +12,7 @@ import java.util.Collections;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class SModifier extends SNodeState<SModifier> implements SExtendedModifier {
+public class SModifier extends SNode<SModifier> implements SExtendedModifier {
 
 	public static BUTree<SModifier> make(ModifierKeyword keyword) {
 		return new BUTree<SModifier>(new SModifier(keyword));

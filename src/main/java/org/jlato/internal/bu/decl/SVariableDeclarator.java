@@ -12,17 +12,17 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SVariableDeclarator extends SNodeState<SVariableDeclarator> implements STreeState {
+public class SVariableDeclarator extends SNode<SVariableDeclarator> implements STree {
 
-	public static BUTree<SVariableDeclarator> make(BUTree<SVariableDeclaratorId> id, BUTree<SNodeOptionState> init) {
+	public static BUTree<SVariableDeclarator> make(BUTree<SVariableDeclaratorId> id, BUTree<SNodeOption> init) {
 		return new BUTree<SVariableDeclarator>(new SVariableDeclarator(id, init));
 	}
 
 	public final BUTree<SVariableDeclaratorId> id;
 
-	public final BUTree<SNodeOptionState> init;
+	public final BUTree<SNodeOption> init;
 
-	public SVariableDeclarator(BUTree<SVariableDeclaratorId> id, BUTree<SNodeOptionState> init) {
+	public SVariableDeclarator(BUTree<SVariableDeclaratorId> id, BUTree<SNodeOption> init) {
 		this.id = id;
 		this.init = init;
 	}
@@ -40,11 +40,11 @@ public class SVariableDeclarator extends SNodeState<SVariableDeclarator> impleme
 		return new SVariableDeclarator(id, init);
 	}
 
-	public BUTree<SNodeOptionState> init() {
+	public BUTree<SNodeOption> init() {
 		return init;
 	}
 
-	public SVariableDeclarator withInit(BUTree<SNodeOptionState> init) {
+	public SVariableDeclarator withInit(BUTree<SNodeOption> init) {
 		return new SVariableDeclarator(id, init);
 	}
 
@@ -103,17 +103,17 @@ public class SVariableDeclarator extends SNodeState<SVariableDeclarator> impleme
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return INIT;
 		}
 	};
 
-	public static STypeSafeTraversal<SVariableDeclarator, SNodeOptionState, NodeOption<Expr>> INIT = new STypeSafeTraversal<SVariableDeclarator, SNodeOptionState, NodeOption<Expr>>() {
+	public static STypeSafeTraversal<SVariableDeclarator, SNodeOption, NodeOption<Expr>> INIT = new STypeSafeTraversal<SVariableDeclarator, SNodeOption, NodeOption<Expr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SVariableDeclarator state) {
@@ -121,17 +121,17 @@ public class SVariableDeclarator extends SNodeState<SVariableDeclarator> impleme
 		}
 
 		@Override
-		public SVariableDeclarator doRebuildParentState(SVariableDeclarator state, BUTree<SNodeOptionState> child) {
+		public SVariableDeclarator doRebuildParentState(SVariableDeclarator state, BUTree<SNodeOption> child) {
 			return state.withInit(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return ID;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

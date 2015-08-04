@@ -11,7 +11,7 @@ import org.jlato.tree.decl.*;
 import static org.jlato.internal.shapes.LexicalShape.child;
 import static org.jlato.internal.shapes.LexicalShape.composite;
 
-public class STypeDeclarationStmt extends SNodeState<STypeDeclarationStmt> implements SStmt {
+public class STypeDeclarationStmt extends SNode<STypeDeclarationStmt> implements SStmt {
 
 	public static BUTree<STypeDeclarationStmt> make(BUTree<? extends STypeDecl> typeDecl) {
 		return new BUTree<STypeDeclarationStmt>(new STypeDeclarationStmt(typeDecl));
@@ -88,12 +88,12 @@ public class STypeDeclarationStmt extends SNodeState<STypeDeclarationStmt> imple
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

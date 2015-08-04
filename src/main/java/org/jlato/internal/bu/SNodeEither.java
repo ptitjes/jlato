@@ -28,18 +28,20 @@ import java.util.Collections;
 /**
  * @author Didier Villevalois
  */
-public class SNodeOptionState implements STreeState {
+public class SNodeEither implements STree {
 
 	public final BUTree<?> element;
+	public final EitherSide side;
 
-	public SNodeOptionState(BUTree<?> element) {
+	public SNodeEither(BUTree<?> element, EitherSide side) {
 		this.element = element;
+		this.side = side;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public Tree instantiate(TDLocation<?> location) {
-		return new NodeOption<Tree>((TDLocation<SNodeOptionState>) location);
+		return new NodeEither<Tree, Tree>((TDLocation<SNodeEither>) location);
 	}
 
 	@Override
@@ -49,6 +51,14 @@ public class SNodeOptionState implements STreeState {
 
 	public static ElementTraversal elementTraversal() {
 		return new ElementTraversal();
+	}
+
+	public static ElementTraversal leftTraversal() {
+		return new ElementTraversal(EitherSide.Left);
+	}
+
+	public static ElementTraversal rightTraversal() {
+		return new ElementTraversal(EitherSide.Right);
 	}
 
 	@Override
@@ -70,8 +80,20 @@ public class SNodeOptionState implements STreeState {
 		return element;
 	}
 
-	public SNodeOptionState withElement(BUTree<?> element) {
-		return new SNodeOptionState(element);
+	public SNodeEither withSide(EitherSide side) {
+		return new SNodeEither(element, side);
+	}
+
+	public SNodeEither withElement(BUTree<?> element) {
+		return new SNodeEither(element, side);
+	}
+
+	public SNodeEither withLeft(BUTree<?> element) {
+		return new SNodeEither(element, EitherSide.Left);
+	}
+
+	public SNodeEither withRight(BUTree<?> element) {
+		return new SNodeEither(element, EitherSide.Right);
 	}
 
 	@Override
@@ -79,15 +101,18 @@ public class SNodeOptionState implements STreeState {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		SNodeOptionState that = (SNodeOptionState) o;
+		SNodeEither that = (SNodeEither) o;
 
-		return !(element != null ? !element.equals(that.element) : that.element != null);
+		if (!element.equals(that.element)) return false;
+		return side == that.side;
 
 	}
 
 	@Override
 	public int hashCode() {
-		return element != null ? element.hashCode() : 0;
+		int result = element.hashCode();
+		result = 31 * result + side.hashCode();
+		return result;
 	}
 
 	@Override
@@ -95,30 +120,40 @@ public class SNodeOptionState implements STreeState {
 		if (element != null) element.validate();
 	}
 
+	public static class ElementTraversal extends STypeSafeTraversal<SNodeEither, STree, Tree> {
 
-	public static class ElementTraversal extends STypeSafeTraversal<SNodeOptionState, STreeState, Tree> {
+		private final EitherSide side;
 
 		public ElementTraversal() {
+			this(null);
+		}
+
+		public ElementTraversal(EitherSide side) {
+			this.side = side;
 		}
 
 		@Override
-		public BUTree<?> doTraverse(SNodeOptionState state) {
-			return state.element;
+		public BUTree<?> doTraverse(SNodeEither state) {
+			return side == null || side == state.side ? state.element : null;
 		}
 
 		@Override
-		public SNodeOptionState doRebuildParentState(SNodeOptionState state, BUTree<STreeState> child) {
-			return state.withElement(child);
+		public SNodeEither doRebuildParentState(SNodeEither state, BUTree<STree> child) {
+			return state.withElement(child).withSide(side != null ? side : state.side);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
+	}
+
+	public enum EitherSide {
+		Left, Right
 	}
 }

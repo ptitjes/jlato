@@ -15,21 +15,21 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.SpacingConstraint.spacing;
 
-public class SEnumConstantDecl extends SNodeState<SEnumConstantDecl> implements SMemberDecl {
+public class SEnumConstantDecl extends SNode<SEnumConstantDecl> implements SMemberDecl {
 
-	public static BUTree<SEnumConstantDecl> make(BUTree<SNodeListState> modifiers, BUTree<SName> name, BUTree<SNodeOptionState> args, BUTree<SNodeOptionState> classBody) {
+	public static BUTree<SEnumConstantDecl> make(BUTree<SNodeList> modifiers, BUTree<SName> name, BUTree<SNodeOption> args, BUTree<SNodeOption> classBody) {
 		return new BUTree<SEnumConstantDecl>(new SEnumConstantDecl(modifiers, name, args, classBody));
 	}
 
-	public final BUTree<SNodeListState> modifiers;
+	public final BUTree<SNodeList> modifiers;
 
 	public final BUTree<SName> name;
 
-	public final BUTree<SNodeOptionState> args;
+	public final BUTree<SNodeOption> args;
 
-	public final BUTree<SNodeOptionState> classBody;
+	public final BUTree<SNodeOption> classBody;
 
-	public SEnumConstantDecl(BUTree<SNodeListState> modifiers, BUTree<SName> name, BUTree<SNodeOptionState> args, BUTree<SNodeOptionState> classBody) {
+	public SEnumConstantDecl(BUTree<SNodeList> modifiers, BUTree<SName> name, BUTree<SNodeOption> args, BUTree<SNodeOption> classBody) {
 		this.modifiers = modifiers;
 		this.name = name;
 		this.args = args;
@@ -41,11 +41,11 @@ public class SEnumConstantDecl extends SNodeState<SEnumConstantDecl> implements 
 		return Kind.EnumConstantDecl;
 	}
 
-	public BUTree<SNodeListState> modifiers() {
+	public BUTree<SNodeList> modifiers() {
 		return modifiers;
 	}
 
-	public SEnumConstantDecl withModifiers(BUTree<SNodeListState> modifiers) {
+	public SEnumConstantDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SEnumConstantDecl(modifiers, name, args, classBody);
 	}
 
@@ -57,19 +57,19 @@ public class SEnumConstantDecl extends SNodeState<SEnumConstantDecl> implements 
 		return new SEnumConstantDecl(modifiers, name, args, classBody);
 	}
 
-	public BUTree<SNodeOptionState> args() {
+	public BUTree<SNodeOption> args() {
 		return args;
 	}
 
-	public SEnumConstantDecl withArgs(BUTree<SNodeOptionState> args) {
+	public SEnumConstantDecl withArgs(BUTree<SNodeOption> args) {
 		return new SEnumConstantDecl(modifiers, name, args, classBody);
 	}
 
-	public BUTree<SNodeOptionState> classBody() {
+	public BUTree<SNodeOption> classBody() {
 		return classBody;
 	}
 
-	public SEnumConstantDecl withClassBody(BUTree<SNodeOptionState> classBody) {
+	public SEnumConstantDecl withClassBody(BUTree<SNodeOption> classBody) {
 		return new SEnumConstantDecl(modifiers, name, args, classBody);
 	}
 
@@ -121,7 +121,7 @@ public class SEnumConstantDecl extends SNodeState<SEnumConstantDecl> implements 
 		return result;
 	}
 
-	public static STypeSafeTraversal<SEnumConstantDecl, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SEnumConstantDecl, SNodeListState, NodeList<ExtendedModifier>>() {
+	public static STypeSafeTraversal<SEnumConstantDecl, SNodeList, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SEnumConstantDecl, SNodeList, NodeList<ExtendedModifier>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SEnumConstantDecl state) {
@@ -129,17 +129,17 @@ public class SEnumConstantDecl extends SNodeState<SEnumConstantDecl> implements 
 		}
 
 		@Override
-		public SEnumConstantDecl doRebuildParentState(SEnumConstantDecl state, BUTree<SNodeListState> child) {
+		public SEnumConstantDecl doRebuildParentState(SEnumConstantDecl state, BUTree<SNodeList> child) {
 			return state.withModifiers(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return NAME;
 		}
 	};
@@ -157,17 +157,17 @@ public class SEnumConstantDecl extends SNodeState<SEnumConstantDecl> implements 
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return MODIFIERS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return ARGS;
 		}
 	};
 
-	public static STypeSafeTraversal<SEnumConstantDecl, SNodeOptionState, NodeOption<NodeList<Expr>>> ARGS = new STypeSafeTraversal<SEnumConstantDecl, SNodeOptionState, NodeOption<NodeList<Expr>>>() {
+	public static STypeSafeTraversal<SEnumConstantDecl, SNodeOption, NodeOption<NodeList<Expr>>> ARGS = new STypeSafeTraversal<SEnumConstantDecl, SNodeOption, NodeOption<NodeList<Expr>>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SEnumConstantDecl state) {
@@ -175,22 +175,22 @@ public class SEnumConstantDecl extends SNodeState<SEnumConstantDecl> implements 
 		}
 
 		@Override
-		public SEnumConstantDecl doRebuildParentState(SEnumConstantDecl state, BUTree<SNodeOptionState> child) {
+		public SEnumConstantDecl doRebuildParentState(SEnumConstantDecl state, BUTree<SNodeOption> child) {
 			return state.withArgs(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return NAME;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return CLASS_BODY;
 		}
 	};
 
-	public static STypeSafeTraversal<SEnumConstantDecl, SNodeOptionState, NodeOption<NodeList<MemberDecl>>> CLASS_BODY = new STypeSafeTraversal<SEnumConstantDecl, SNodeOptionState, NodeOption<NodeList<MemberDecl>>>() {
+	public static STypeSafeTraversal<SEnumConstantDecl, SNodeOption, NodeOption<NodeList<MemberDecl>>> CLASS_BODY = new STypeSafeTraversal<SEnumConstantDecl, SNodeOption, NodeOption<NodeList<MemberDecl>>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SEnumConstantDecl state) {
@@ -198,17 +198,17 @@ public class SEnumConstantDecl extends SNodeState<SEnumConstantDecl> implements 
 		}
 
 		@Override
-		public SEnumConstantDecl doRebuildParentState(SEnumConstantDecl state, BUTree<SNodeOptionState> child) {
+		public SEnumConstantDecl doRebuildParentState(SEnumConstantDecl state, BUTree<SNodeOption> child) {
 			return state.withClassBody(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return ARGS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

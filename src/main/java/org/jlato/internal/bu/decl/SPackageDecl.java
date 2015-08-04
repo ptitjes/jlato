@@ -11,17 +11,17 @@ import org.jlato.tree.name.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SPackageDecl extends SNodeState<SPackageDecl> implements STreeState {
+public class SPackageDecl extends SNode<SPackageDecl> implements STree {
 
-	public static BUTree<SPackageDecl> make(BUTree<SNodeListState> annotations, BUTree<SQualifiedName> name) {
+	public static BUTree<SPackageDecl> make(BUTree<SNodeList> annotations, BUTree<SQualifiedName> name) {
 		return new BUTree<SPackageDecl>(new SPackageDecl(annotations, name));
 	}
 
-	public final BUTree<SNodeListState> annotations;
+	public final BUTree<SNodeList> annotations;
 
 	public final BUTree<SQualifiedName> name;
 
-	public SPackageDecl(BUTree<SNodeListState> annotations, BUTree<SQualifiedName> name) {
+	public SPackageDecl(BUTree<SNodeList> annotations, BUTree<SQualifiedName> name) {
 		this.annotations = annotations;
 		this.name = name;
 	}
@@ -31,11 +31,11 @@ public class SPackageDecl extends SNodeState<SPackageDecl> implements STreeState
 		return Kind.PackageDecl;
 	}
 
-	public BUTree<SNodeListState> annotations() {
+	public BUTree<SNodeList> annotations() {
 		return annotations;
 	}
 
-	public SPackageDecl withAnnotations(BUTree<SNodeListState> annotations) {
+	public SPackageDecl withAnnotations(BUTree<SNodeList> annotations) {
 		return new SPackageDecl(annotations, name);
 	}
 
@@ -89,7 +89,7 @@ public class SPackageDecl extends SNodeState<SPackageDecl> implements STreeState
 		return result;
 	}
 
-	public static STypeSafeTraversal<SPackageDecl, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<SPackageDecl, SNodeListState, NodeList<AnnotationExpr>>() {
+	public static STypeSafeTraversal<SPackageDecl, SNodeList, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<SPackageDecl, SNodeList, NodeList<AnnotationExpr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SPackageDecl state) {
@@ -97,17 +97,17 @@ public class SPackageDecl extends SNodeState<SPackageDecl> implements STreeState
 		}
 
 		@Override
-		public SPackageDecl doRebuildParentState(SPackageDecl state, BUTree<SNodeListState> child) {
+		public SPackageDecl doRebuildParentState(SPackageDecl state, BUTree<SNodeList> child) {
 			return state.withAnnotations(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return NAME;
 		}
 	};
@@ -125,12 +125,12 @@ public class SPackageDecl extends SNodeState<SPackageDecl> implements STreeState
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return ANNOTATIONS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

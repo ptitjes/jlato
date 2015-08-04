@@ -1122,7 +1122,7 @@ TOKEN :
  * Quote variables
  **********************************************************************************************************************/
 
-BUTree<SNodeListState> NodeListVar():{}
+BUTree<SNodeList> NodeListVar():{}
 {
   <NODE_LIST_VARIABLE>
   { return makeVar(); }
@@ -1141,8 +1141,8 @@ BUTree<SName> NodeVar():{}
 BUTree<SCompilationUnit> CompilationUnit():
 {
 	BUTree<SPackageDecl> packageDecl = null;
-	BUTree<SNodeListState> imports;
-	BUTree<SNodeListState> types;
+	BUTree<SNodeList> imports;
+	BUTree<SNodeList> types;
 	BUTree<SCompilationUnit> compilationUnit;
 }
 {
@@ -1170,7 +1170,7 @@ void Epilog(): {}
 
 BUTree<SPackageDecl> PackageDecl():
 {
-	BUTree<SNodeListState> annotations = null;
+	BUTree<SNodeList> annotations = null;
 	BUTree<SQualifiedName> name;
 }
 {
@@ -1181,9 +1181,9 @@ BUTree<SPackageDecl> PackageDecl():
   { return dress(SPackageDecl.make(annotations, name)); }
 }
 
-BUTree<SNodeListState> ImportDecls():
+BUTree<SNodeList> ImportDecls():
 {
-	BUTree<SNodeListState> imports = emptyList();
+	BUTree<SNodeList> imports = emptyList();
 	BUTree<SImportDecl> importDecl = null;
 }
 {
@@ -1203,9 +1203,9 @@ BUTree<SImportDecl> ImportDecl():
   { return dress(SImportDecl.make(name, isStatic, isAsterisk)); }
 }
 
-BUTree<SNodeListState> TypeDecls():
+BUTree<SNodeList> TypeDecls():
 {
-	BUTree<SNodeListState> types = emptyList();
+	BUTree<SNodeList> types = emptyList();
 	BUTree<? extends STypeDecl> typeDecl = null;
 }
 {
@@ -1219,9 +1219,9 @@ BUTree<SNodeListState> TypeDecls():
  * better error messages.
  */
 
-BUTree<SNodeListState> Modifiers():
+BUTree<SNodeList> Modifiers():
 {
-	BUTree<SNodeListState> modifiers = emptyList();
+	BUTree<SNodeList> modifiers = emptyList();
 	BUTree<? extends SAnnotationExpr> ann;
 }
 {
@@ -1264,7 +1264,7 @@ BUTree<SNodeListState> Modifiers():
  */
 BUTree<? extends STypeDecl> TypeDecl():
 {
-	BUTree<SNodeListState> modifiers;
+	BUTree<SNodeList> modifiers;
 	BUTree<? extends STypeDecl> ret;
 }
 {
@@ -1287,15 +1287,15 @@ BUTree<? extends STypeDecl> TypeDecl():
 }
 
 
-BUTree<? extends STypeDecl> ClassOrInterfaceDecl(BUTree<SNodeListState> modifiers):
+BUTree<? extends STypeDecl> ClassOrInterfaceDecl(BUTree<SNodeList> modifiers):
 {
 	TypeKind typeKind;
 	BUTree<SName> name;
-	BUTree<SNodeListState> typeParams = null;
+	BUTree<SNodeList> typeParams = null;
 	BUTree<SQualifiedType> superClassType = null;
-	BUTree<SNodeListState> extendsClause = null;
-	BUTree<SNodeListState> implementsClause = null;
-	BUTree<SNodeListState> members;
+	BUTree<SNodeList> extendsClause = null;
+	BUTree<SNodeList> implementsClause = null;
+	BUTree<SNodeList> members;
 }
 {
   // Run is started before modifiers
@@ -1324,11 +1324,11 @@ BUTree<? extends STypeDecl> ClassOrInterfaceDecl(BUTree<SNodeListState> modifier
   }
 }
 
-BUTree<SNodeListState> ExtendsList():
+BUTree<SNodeList> ExtendsList():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<SQualifiedType> cit;
-	BUTree<SNodeListState> annotations = null;
+	BUTree<SNodeList> annotations = null;
 }
 {
   "extends"
@@ -1341,11 +1341,11 @@ BUTree<SNodeListState> ExtendsList():
   { return ret; }
 }
 
-BUTree<SNodeListState> ImplementsList(TypeKind typeKind):
+BUTree<SNodeList> ImplementsList(TypeKind typeKind):
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<SQualifiedType> cit;
-	BUTree<SNodeListState> annotations = null;
+	BUTree<SNodeList> annotations = null;
 }
 {
   "implements"
@@ -1362,14 +1362,14 @@ BUTree<SNodeListState> ImplementsList(TypeKind typeKind):
   { return ret; }
 }
 
-BUTree<? extends STypeDecl> EnumDecl(BUTree<SNodeListState> modifiers):
+BUTree<? extends STypeDecl> EnumDecl(BUTree<SNodeList> modifiers):
 {
 	BUTree<SName> name;
-	BUTree<SNodeListState> implementsClause = emptyList();
+	BUTree<SNodeList> implementsClause = emptyList();
 	BUTree<SEnumConstantDecl> entry;
-	BUTree<SNodeListState> constants = emptyList();
+	BUTree<SNodeList> constants = emptyList();
 	boolean trailingComma = false;
-	BUTree<SNodeListState> members = null;
+	BUTree<SNodeList> members = null;
 }
 {
   // Run is started before modifiers
@@ -1391,10 +1391,10 @@ BUTree<? extends STypeDecl> EnumDecl(BUTree<SNodeListState> modifiers):
 
 BUTree<SEnumConstantDecl> EnumConstantDecl():
 {
-	BUTree<SNodeListState> modifiers = null;
+	BUTree<SNodeList> modifiers = null;
 	BUTree<SName> name;
-	BUTree<SNodeListState> args = null;
-	BUTree<SNodeListState> classBody = null;
+	BUTree<SNodeList> args = null;
+	BUTree<SNodeList> classBody = null;
 }
 {
   { run(); }
@@ -1405,10 +1405,10 @@ BUTree<SEnumConstantDecl> EnumConstantDecl():
   { return dress(SEnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody))); }
 }
 
-BUTree<SAnnotationDecl> AnnotationTypeDecl(BUTree<SNodeListState> modifiers):
+BUTree<SAnnotationDecl> AnnotationTypeDecl(BUTree<SNodeList> modifiers):
 {
 	BUTree<SName> name;
-	BUTree<SNodeListState> members;
+	BUTree<SNodeList> members;
 }
 {
   // Run is started before modifiers
@@ -1420,9 +1420,9 @@ BUTree<SAnnotationDecl> AnnotationTypeDecl(BUTree<SNodeListState> modifiers):
 }
 
 // TODO Merge with ClassOrInterfaceBody production and do later checks programmaticaly
-BUTree<SNodeListState> AnnotationTypeBody():
+BUTree<SNodeList> AnnotationTypeBody():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<? extends SMemberDecl> member;
 }
 {
@@ -1439,7 +1439,7 @@ BUTree<SNodeListState> AnnotationTypeBody():
 // TODO Merge with ClassOrInterfaceDecl production and do later checks programmaticaly
 BUTree<? extends SMemberDecl> AnnotationTypeBodyDecl():
 {
-	BUTree<SNodeListState> modifiers;
+	BUTree<SNodeList> modifiers;
 	BUTree<? extends SMemberDecl> ret;
 }
 {
@@ -1467,12 +1467,12 @@ BUTree<? extends SMemberDecl> AnnotationTypeBodyDecl():
 }
 
 // TODO Merge with MethodDecl production and do later checks programmaticaly
-BUTree<SAnnotationMemberDecl> AnnotationTypeMemberDecl(BUTree<SNodeListState> modifiers):
+BUTree<SAnnotationMemberDecl> AnnotationTypeMemberDecl(BUTree<SNodeList> modifiers):
 {
 	BUTree<? extends SType> type;
 	BUTree<SName> name;
-	BUTree<SNodeListState> dims;
-	BUTree<SNodeOptionState> defaultVal = none();
+	BUTree<SNodeList> dims;
+	BUTree<SNodeOption> defaultVal = none();
 	BUTree<? extends SExpr> val = null;
 }
 {
@@ -1488,9 +1488,9 @@ BUTree<SAnnotationMemberDecl> AnnotationTypeMemberDecl(BUTree<SNodeListState> mo
   { return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal)); }
 }
 
-BUTree<SNodeListState> TypeParameters():
+BUTree<SNodeList> TypeParameters():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<STypeParameter> tp;
 }
 {
@@ -1508,9 +1508,9 @@ BUTree<SNodeListState> TypeParameters():
 
 BUTree<STypeParameter> TypeParameter():
 {
-	BUTree<SNodeListState> annotations = null;
+	BUTree<SNodeList> annotations = null;
 	BUTree<SName> name;
-	BUTree<SNodeListState> typeBounds = null;
+	BUTree<SNodeList> typeBounds = null;
 }
 {
   { run(); }
@@ -1518,11 +1518,11 @@ BUTree<STypeParameter> TypeParameter():
   { return dress(STypeParameter.make(annotations, name, ensureNotNull(typeBounds))); }
 }
 
-BUTree<SNodeListState> TypeBounds():
+BUTree<SNodeList> TypeBounds():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<SQualifiedType> cit;
-	BUTree<SNodeListState> annotations = null;
+	BUTree<SNodeList> annotations = null;
 }
 {
   "extends"
@@ -1535,9 +1535,9 @@ BUTree<SNodeListState> TypeBounds():
   { return ret; }
 }
 
-BUTree<SNodeListState> ClassOrInterfaceBody(TypeKind typeKind):
+BUTree<SNodeList> ClassOrInterfaceBody(TypeKind typeKind):
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<? extends SMemberDecl> member;
 }
 {
@@ -1547,10 +1547,10 @@ BUTree<SNodeListState> ClassOrInterfaceBody(TypeKind typeKind):
   { return ret; }
 }
 
-BUTree<SNodeListState> ClassOrInterfaceBodyDecls(TypeKind typeKind):
+BUTree<SNodeList> ClassOrInterfaceBodyDecls(TypeKind typeKind):
 {
 	BUTree<? extends SMemberDecl> member;
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 }
 {
   [
@@ -1563,7 +1563,7 @@ BUTree<SNodeListState> ClassOrInterfaceBodyDecls(TypeKind typeKind):
 
 BUTree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind typeKind):
 {
-	BUTree<SNodeListState> modifiers;
+	BUTree<SNodeList> modifiers;
 	BUTree<? extends SMemberDecl> ret;
 }
 {
@@ -1608,10 +1608,10 @@ BUTree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind typeKind):
   { return ret; }
 }
 
-BUTree<SFieldDecl> FieldDecl(BUTree<SNodeListState> modifiers):
+BUTree<SFieldDecl> FieldDecl(BUTree<SNodeList> modifiers):
 {
 	BUTree<? extends SType> type;
-	BUTree<SNodeListState> variables = emptyList();
+	BUTree<SNodeList> variables = emptyList();
 	BUTree<SVariableDeclarator> val;
 }
 {
@@ -1622,10 +1622,10 @@ BUTree<SFieldDecl> FieldDecl(BUTree<SNodeListState> modifiers):
   { return dress(SFieldDecl.make(modifiers, type, variables)); }
 }
 
-BUTree<SLocalVariableDecl> VariableDecl(BUTree<SNodeListState> modifiers):
+BUTree<SLocalVariableDecl> VariableDecl(BUTree<SNodeList> modifiers):
 {
 	BUTree<? extends SType> type;
-	BUTree<SNodeListState> variables = emptyList();
+	BUTree<SNodeList> variables = emptyList();
 }
 {
   // Run is started before modifiers
@@ -1635,9 +1635,9 @@ BUTree<SLocalVariableDecl> VariableDecl(BUTree<SNodeListState> modifiers):
   { return dress(SLocalVariableDecl.make(modifiers, type, variables)); }
 }
 
-BUTree<SNodeListState> VariableDeclarators():
+BUTree<SNodeList> VariableDeclarators():
 {
-	BUTree<SNodeListState> variables = emptyList();
+	BUTree<SNodeList> variables = emptyList();
 	BUTree<SVariableDeclarator> val;
 }
 {
@@ -1650,7 +1650,7 @@ BUTree<SNodeListState> VariableDeclarators():
 BUTree<SVariableDeclarator> VariableDeclarator():
 {
 	BUTree<SVariableDeclaratorId> id;
-	BUTree<SNodeOptionState> init = none();
+	BUTree<SNodeOption> init = none();
 	BUTree<? extends SExpr> initExpr = null;
 }
 {
@@ -1668,7 +1668,7 @@ BUTree<SVariableDeclarator> VariableDeclarator():
 BUTree<SVariableDeclaratorId> VariableDeclaratorId():
 {
 	BUTree<SName> name;
-	BUTree<SNodeListState> arrayDims;
+	BUTree<SNodeList> arrayDims;
 }
 {
   { run(); }
@@ -1678,10 +1678,10 @@ BUTree<SVariableDeclaratorId> VariableDeclaratorId():
   { return dress(SVariableDeclaratorId.make(name, arrayDims)); }
 }
 
-BUTree<SNodeListState> ArrayDims():
+BUTree<SNodeList> ArrayDims():
 {
-	BUTree<SNodeListState> arrayDims = emptyList();
-	BUTree<SNodeListState> annotations;
+	BUTree<SNodeList> arrayDims = emptyList();
+	BUTree<SNodeList> annotations;
 }
 {
   (
@@ -1704,7 +1704,7 @@ BUTree<? extends SExpr> VariableInitializer():
 
 BUTree<SArrayInitializerExpr> ArrayInitializer():
 {
-	BUTree<SNodeListState> values = emptyList();
+	BUTree<SNodeList> values = emptyList();
 	BUTree<? extends SExpr> val;
 	boolean trailingComma = false;
 }
@@ -1721,14 +1721,14 @@ BUTree<SArrayInitializerExpr> ArrayInitializer():
   { return dress(SArrayInitializerExpr.make(values, trailingComma)); }
 }
 
-BUTree<SMethodDecl> MethodDecl(BUTree<SNodeListState> modifiers):
+BUTree<SMethodDecl> MethodDecl(BUTree<SNodeList> modifiers):
 {
-	BUTree<SNodeListState> typeParameters = null;
+	BUTree<SNodeList> typeParameters = null;
 	BUTree<? extends SType> type;
 	BUTree<SName> name;
-	BUTree<SNodeListState> parameters;
-	BUTree<SNodeListState> arrayDims;
-	BUTree<SNodeListState> throwsClause = null;
+	BUTree<SNodeList> parameters;
+	BUTree<SNodeList> arrayDims;
+	BUTree<SNodeList> throwsClause = null;
 	BUTree<SBlockStmt> block = null;
 }
 {
@@ -1751,9 +1751,9 @@ BUTree<SMethodDecl> MethodDecl(BUTree<SNodeListState> modifiers):
   { return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))); }
 }
 
-BUTree<SNodeListState> FormalParameters():
+BUTree<SNodeList> FormalParameters():
 {
-	BUTree<SNodeListState> ret = null;
+	BUTree<SNodeList> ret = null;
 	BUTree<SFormalParameter> par;
 }
 {
@@ -1765,9 +1765,9 @@ BUTree<SNodeListState> FormalParameters():
   { return ensureNotNull(ret); }
 }
 
-BUTree<SNodeListState> FormalParameterList():
+BUTree<SNodeList> FormalParameterList():
 {
-	BUTree<SNodeListState> ret = null;
+	BUTree<SNodeList> ret = null;
 	BUTree<SFormalParameter> par;
 }
 {
@@ -1782,7 +1782,7 @@ BUTree<SNodeListState> FormalParameterList():
 
 BUTree<SFormalParameter> FormalParameter():
 {
-	BUTree<SNodeListState> modifiers;
+	BUTree<SNodeList> modifiers;
 	BUTree<? extends SType> type;
 	boolean isVarArg = false;
 	BUTree<SVariableDeclaratorId> id;
@@ -1796,9 +1796,9 @@ BUTree<SFormalParameter> FormalParameter():
 }
 
 
-BUTree<SNodeListState> ThrowsClause():
+BUTree<SNodeList> ThrowsClause():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<SQualifiedType> cit;
 }
 {
@@ -1808,15 +1808,15 @@ BUTree<SNodeListState> ThrowsClause():
   { return ret; }
 }
 
-BUTree<SConstructorDecl> ConstructorDecl(BUTree<SNodeListState> modifiers):
+BUTree<SConstructorDecl> ConstructorDecl(BUTree<SNodeList> modifiers):
 {
-	BUTree<SNodeListState> typeParameters = null;
+	BUTree<SNodeList> typeParameters = null;
 	BUTree<SName> name;
-	BUTree<SNodeListState> parameters;
-	BUTree<SNodeListState> throwsClause = null;
+	BUTree<SNodeList> parameters;
+	BUTree<SNodeList> throwsClause = null;
 	BUTree<SExplicitConstructorInvocationStmt> exConsInv = null;
 	BUTree<SBlockStmt> block;
-	BUTree<SNodeListState> stmts = emptyList();
+	BUTree<SNodeList> stmts = emptyList();
 	BUTree<? extends SStmt> stmt;
 }
 {
@@ -1848,9 +1848,9 @@ BUTree<SConstructorDecl> ConstructorDecl(BUTree<SNodeListState> modifiers):
 BUTree<SExplicitConstructorInvocationStmt> ExplicitConstructorInvocation():
 {
 	boolean isThis = false;
-	BUTree<SNodeListState> args;
+	BUTree<SNodeList> args;
 	BUTree<? extends SExpr> expr = null;
-	BUTree<SNodeListState> typeArgs = null;
+	BUTree<SNodeList> typeArgs = null;
 }
 {
   { run(); }
@@ -1873,9 +1873,9 @@ BUTree<SExplicitConstructorInvocationStmt> ExplicitConstructorInvocation():
   { return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args)); }
 }
 
-BUTree<SNodeListState> Statements():
+BUTree<SNodeList> Statements():
 {
-	BUTree<SNodeListState> ret = null;
+	BUTree<SNodeList> ret = null;
 	BUTree<? extends SStmt> stmt;
 }
 {
@@ -1890,7 +1890,7 @@ BUTree<SNodeListState> Statements():
   { return ret; }
 }
 
-BUTree<SInitializerDecl> InitializerDecl(BUTree<SNodeListState> modifiers):
+BUTree<SInitializerDecl> InitializerDecl(BUTree<SNodeList> modifiers):
 {
 	BUTree<SBlockStmt> block;
 }
@@ -1907,7 +1907,7 @@ BUTree<SInitializerDecl> InitializerDecl(BUTree<SNodeListState> modifiers):
  * Types
  **********************************************************************************************************************/
 
-BUTree<? extends SType> Type(BUTree<SNodeListState> annotations):
+BUTree<? extends SType> Type(BUTree<SNodeList> annotations):
 {
 	BUTree<? extends SType> ret;
 }
@@ -1922,11 +1922,11 @@ BUTree<? extends SType> Type(BUTree<SNodeListState> annotations):
   { return ret; }
 }
 
-BUTree<? extends SReferenceType> ReferenceType(BUTree<SNodeListState> annotations):
+BUTree<? extends SReferenceType> ReferenceType(BUTree<SNodeList> annotations):
 {
 	BUTree<? extends SType> primitiveType;
 	BUTree<? extends SReferenceType> type;
-	BUTree<SNodeListState> arrayDims;
+	BUTree<SNodeList> arrayDims;
 }
 {
   // Run may be started before annotations
@@ -1950,12 +1950,12 @@ BUTree<? extends SReferenceType> ReferenceType(BUTree<SNodeListState> annotation
   { return type; }
 }
 
-BUTree<SQualifiedType> QualifiedType(BUTree<SNodeListState> annotations):
+BUTree<SQualifiedType> QualifiedType(BUTree<SNodeList> annotations):
 {
-    BUTree<SNodeOptionState> scope = none();
+    BUTree<SNodeOption> scope = none();
 	BUTree<SQualifiedType> ret;
 	BUTree<SName> name;
-	BUTree<SNodeListState> typeArgs = null;
+	BUTree<SNodeList> typeArgs = null;
 }
 {
   // Run may be started before annotations
@@ -1982,9 +1982,9 @@ BUTree<SQualifiedType> QualifiedType(BUTree<SNodeListState> annotations):
   { return ret; }
 }
 
-BUTree<SNodeListState> TypeArguments():
+BUTree<SNodeList> TypeArguments():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<? extends SType> type;
 }
 {
@@ -1995,9 +1995,9 @@ BUTree<SNodeListState> TypeArguments():
 }
 
 
-BUTree<SNodeListState> TypeArgumentsOrDiamond():
+BUTree<SNodeList> TypeArgumentsOrDiamond():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<? extends SType> type;
 }
 {
@@ -2007,9 +2007,9 @@ BUTree<SNodeListState> TypeArgumentsOrDiamond():
   { return ret; }
 }
 
-BUTree<SNodeListState> TypeArgumentList():
+BUTree<SNodeList> TypeArgumentList():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<? extends SType> type;
 }
 {
@@ -2024,7 +2024,7 @@ BUTree<SNodeListState> TypeArgumentList():
 BUTree<? extends SType> TypeArgument():
 {
 	BUTree<? extends SType> ret;
-	BUTree<SNodeListState> annotations = null;
+	BUTree<SNodeList> annotations = null;
 }
 {
   { run(); }
@@ -2037,11 +2037,11 @@ BUTree<? extends SType> TypeArgument():
   { return ret; }
 }
 
-BUTree<SWildcardType> Wildcard(BUTree<SNodeListState> annotations):
+BUTree<SWildcardType> Wildcard(BUTree<SNodeList> annotations):
 {
 	BUTree<? extends SReferenceType> ext = null;
 	BUTree<? extends SReferenceType> sup = null;
-	BUTree<SNodeListState> boundAnnotations = null;
+	BUTree<SNodeList> boundAnnotations = null;
 }
 {
   // Run may be started before annotations
@@ -2058,7 +2058,7 @@ BUTree<SWildcardType> Wildcard(BUTree<SNodeListState> annotations):
   { return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup))); }
 }
 
-BUTree<SPrimitiveType> PrimitiveType(BUTree<SNodeListState> annotations):
+BUTree<SPrimitiveType> PrimitiveType(BUTree<SNodeList> annotations):
 {
 	Primitive primitive;
 }
@@ -2095,9 +2095,9 @@ BUTree<? extends SType> ResultType():
   { return ret; }
 }
 
-BUTree<SNodeListState> QualifiedTypeList():
+BUTree<SNodeList> QualifiedTypeList():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<SQualifiedType> type;
 }
 {
@@ -2111,7 +2111,7 @@ BUTree<SNodeListState> QualifiedTypeList():
 
 BUTree<SQualifiedType> AnnotatedQualifiedType():
 {
-    BUTree<SNodeListState> annotations;
+    BUTree<SNodeList> annotations;
 	BUTree<SQualifiedType> ret;
 }
 {
@@ -2126,7 +2126,7 @@ BUTree<SQualifiedType> AnnotatedQualifiedType():
 
 BUTree<SQualifiedName> QualifiedName():
 {
-    BUTree<SNodeOptionState> qualifier = none();
+    BUTree<SNodeOption> qualifier = none();
 	BUTree<SQualifiedName> ret = null;
 	BUTree<SName> name;
 }
@@ -2173,7 +2173,7 @@ BUTree<? extends SExpr> Expression():
 	BUTree<? extends SExpr> ret;
 	AssignOp op;
 	BUTree<? extends SExpr> value;
-	BUTree<SNodeListState> params;
+	BUTree<SNodeList> params;
 }
 {
   (
@@ -2199,7 +2199,7 @@ BUTree<? extends SExpr> Expression():
   { return ret; }
 }
 
-BUTree<SLambdaExpr> LambdaBody(BUTree<SNodeListState> parameters, boolean parenthesis):
+BUTree<SLambdaExpr> LambdaBody(BUTree<SNodeList> parameters, boolean parenthesis):
 {
 	BUTree<SBlockStmt> block;
 	BUTree<? extends SExpr> expr;
@@ -2215,9 +2215,9 @@ BUTree<SLambdaExpr> LambdaBody(BUTree<SNodeListState> parameters, boolean parent
   { return ret; }
 }
 
-BUTree<SNodeListState> LambdaParameters(ByRef<Boolean> parenthesis):
+BUTree<SNodeList> LambdaParameters(ByRef<Boolean> parenthesis):
 {
-	BUTree<SNodeListState> ret;
+	BUTree<SNodeList> ret;
 	BUTree<SFormalParameter> param;
 }
 {
@@ -2241,9 +2241,9 @@ BUTree<SNodeListState> LambdaParameters(ByRef<Boolean> parenthesis):
   { return ret; }
 }
 
-BUTree<SNodeListState> InferredFormalParameterList():
+BUTree<SNodeList> InferredFormalParameterList():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<SFormalParameter> param;
 }
 {
@@ -2401,7 +2401,7 @@ BUTree<? extends SExpr> EqualityExpression():
 BUTree<? extends SExpr> InstanceOfExpression():
 {
 	BUTree<? extends SExpr> ret;
-	BUTree<SNodeListState> annotations;
+	BUTree<SNodeList> annotations;
 	BUTree<? extends SType> type;
 }
 {
@@ -2570,8 +2570,8 @@ BUTree<? extends SExpr> CastExpression():
 {
 	BUTree<? extends SExpr> ret;
 	BUTree<? extends SType> type;
-	BUTree<SNodeListState> types = emptyList();
-	BUTree<SNodeListState> annotations = null;
+	BUTree<SNodeList> types = emptyList();
+	BUTree<SNodeList> annotations = null;
 }
 {
   (
@@ -2591,8 +2591,8 @@ BUTree<? extends SExpr> CastExpression():
 BUTree<? extends SType> PrimitiveCastType():
 {
 	BUTree<? extends SType> type;
-	BUTree<SNodeListState> types = emptyList();
-	BUTree<SNodeListState> annotations = null;
+	BUTree<SNodeList> types = emptyList();
+	BUTree<SNodeList> annotations = null;
 }
 {
   { run(); } annotations = Annotations() type = PrimitiveType(annotations)
@@ -2602,8 +2602,8 @@ BUTree<? extends SType> PrimitiveCastType():
 BUTree<? extends SType> ReferenceCastType():
 {
 	BUTree<? extends SType> type;
-	BUTree<SNodeListState> types = emptyList();
-	BUTree<SNodeListState> annotations = null;
+	BUTree<SNodeList> types = emptyList();
+	BUTree<SNodeList> annotations = null;
 }
 {
   { run(); } annotations = Annotations() type = ReferenceType(annotations)
@@ -2678,8 +2678,8 @@ BUTree<? extends SExpr> PrimaryExpressionWithoutSuperSuffix():
 BUTree<? extends SExpr> PrimaryPrefix():
 {
 	BUTree<? extends SExpr> ret = null;
-	BUTree<SNodeListState> typeArgs = null;
-	BUTree<SNodeListState> params;
+	BUTree<SNodeList> typeArgs = null;
+	BUTree<SNodeList> params;
 	BUTree<? extends SType> type;
 }
 {
@@ -2802,9 +2802,9 @@ BUTree<? extends SExpr> FieldAccess(BUTree<? extends SExpr> scope):
 
 BUTree<? extends SExpr> MethodInvocation(BUTree<? extends SExpr> scope):
 {
-    BUTree<SNodeListState> typeArgs = null;
+    BUTree<SNodeList> typeArgs = null;
 	BUTree<SName> name;
-    BUTree<SNodeListState> args = null;
+    BUTree<SNodeList> args = null;
 	BUTree<? extends SExpr> ret;
 }
 {
@@ -2815,9 +2815,9 @@ BUTree<? extends SExpr> MethodInvocation(BUTree<? extends SExpr> scope):
   { return dress(SMethodInvocationExpr.make(optionOf(scope), ensureNotNull(typeArgs), name, args)); }
 }
 
-BUTree<SNodeListState> Arguments():
+BUTree<SNodeList> Arguments():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<? extends SExpr> expr;
 }
 {
@@ -2835,7 +2835,7 @@ BUTree<SNodeListState> Arguments():
 
 BUTree<? extends SExpr> MethodReferenceSuffix(BUTree<? extends SExpr> scope):
 {
-    BUTree<SNodeListState> typeArgs = null;
+    BUTree<SNodeList> typeArgs = null;
 	BUTree<SName> name;
 	BUTree<? extends SExpr> ret;
 }
@@ -2852,10 +2852,10 @@ BUTree<? extends SExpr> AllocationExpression(BUTree<? extends SExpr> scope):
 {
 	BUTree<? extends SExpr> ret;
 	BUTree<? extends SType> type;
-	BUTree<SNodeListState> typeArgs = null;
-	BUTree<SNodeListState> anonymousBody = null;
-	BUTree<SNodeListState> args;
-	BUTree<SNodeListState> annotations = null;
+	BUTree<SNodeList> typeArgs = null;
+	BUTree<SNodeList> anonymousBody = null;
+	BUTree<SNodeList> args;
+	BUTree<SNodeList> annotations = null;
 }
 {
   // Run may be started before scope
@@ -2884,9 +2884,9 @@ BUTree<? extends SExpr> AllocationExpression(BUTree<? extends SExpr> scope):
 BUTree<? extends SExpr> ArrayCreationExpr(BUTree<? extends SType> componentType):
 {
 	BUTree<? extends SExpr> expr;
-	BUTree<SNodeListState> arrayDimExprs = emptyList();
-	BUTree<SNodeListState> arrayDims = emptyList();
-	BUTree<SNodeListState> annotations = null;
+	BUTree<SNodeList> arrayDimExprs = emptyList();
+	BUTree<SNodeList> arrayDims = emptyList();
+	BUTree<SNodeList> annotations = null;
 	BUTree<SArrayInitializerExpr> initializer;
 }
 {
@@ -2902,10 +2902,10 @@ BUTree<? extends SExpr> ArrayCreationExpr(BUTree<? extends SType> componentType)
   )
 }
 
-BUTree<SNodeListState> ArrayDimExprsMandatory():
+BUTree<SNodeList> ArrayDimExprsMandatory():
 {
-	BUTree<SNodeListState> arrayDimExprs = emptyList();
-	BUTree<SNodeListState> annotations;
+	BUTree<SNodeList> arrayDimExprs = emptyList();
+	BUTree<SNodeList> annotations;
 	BUTree<? extends SExpr> expr;
 }
 {
@@ -2918,10 +2918,10 @@ BUTree<SNodeListState> ArrayDimExprsMandatory():
   { return arrayDimExprs; }
 }
 
-BUTree<SNodeListState> ArrayDimsMandatory():
+BUTree<SNodeList> ArrayDimsMandatory():
 {
-	BUTree<SNodeListState> arrayDims = emptyList();
-	BUTree<SNodeListState> annotations;
+	BUTree<SNodeList> arrayDims = emptyList();
+	BUTree<SNodeList> annotations;
 }
 {
   (
@@ -3003,7 +3003,7 @@ BUTree<SLabeledStmt> LabeledStatement():
 
 BUTree<SBlockStmt> Block():
 {
-	BUTree<SNodeListState> stmts;
+	BUTree<SNodeList> stmts;
 }
 {
   { run(); }
@@ -3019,7 +3019,7 @@ BUTree<? extends SStmt> BlockStatement():
 	BUTree<? extends SStmt> ret;
 	BUTree<? extends SExpr> expr;
 	BUTree<? extends STypeDecl> typeDecl;
-	BUTree<SNodeListState> modifiers;
+	BUTree<SNodeList> modifiers;
 }
 {
   (
@@ -3040,7 +3040,7 @@ BUTree<? extends SStmt> BlockStatement():
 
 BUTree<SVariableDeclarationExpr> VariableDeclExpression():
 {
-	BUTree<SNodeListState> modifiers;
+	BUTree<SNodeList> modifiers;
 	BUTree<SLocalVariableDecl> variableDecl;
 }
 {
@@ -3088,7 +3088,7 @@ BUTree<SSwitchStmt> SwitchStatement():
 {
 	BUTree<? extends SExpr> selector;
 	BUTree<SSwitchCase> entry;
-	BUTree<SNodeListState> entries = emptyList();
+	BUTree<SNodeList> entries = emptyList();
 }
 {
   { run(); }
@@ -3101,7 +3101,7 @@ BUTree<SSwitchStmt> SwitchStatement():
 BUTree<SSwitchCase> SwitchEntry():
 {
 	BUTree<? extends SExpr> label = null;
-	BUTree<SNodeListState> stmts;
+	BUTree<SNodeList> stmts;
 }
 {
   { run(); }
@@ -3157,8 +3157,8 @@ BUTree<? extends SStmt> ForStatement():
 {
 	BUTree<SVariableDeclarationExpr> varExpr = null;
 	BUTree<? extends SExpr> expr = null;
-	BUTree<SNodeListState> init = null;
-	BUTree<SNodeListState> update = null;
+	BUTree<SNodeList> init = null;
+	BUTree<SNodeList> update = null;
 	BUTree<? extends SStmt> body;
 }
 {
@@ -3177,9 +3177,9 @@ BUTree<? extends SStmt> ForStatement():
   }
 }
 
-BUTree<SNodeListState> ForInit():
+BUTree<SNodeList> ForInit():
 {
-	BUTree<SNodeListState> ret;
+	BUTree<SNodeList> ret;
 	BUTree<? extends SExpr> expr;
 }
 {
@@ -3192,9 +3192,9 @@ BUTree<SNodeListState> ForInit():
   { return ret; }
 }
 
-BUTree<SNodeListState> ExpressionList():
+BUTree<SNodeList> ExpressionList():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<? extends SExpr> expr;
 }
 {
@@ -3202,9 +3202,9 @@ BUTree<SNodeListState> ExpressionList():
   { return ret; }
 }
 
-BUTree<SNodeListState> ForUpdate():
+BUTree<SNodeList> ForUpdate():
 {
-	BUTree<SNodeListState> ret;
+	BUTree<SNodeList> ret;
 }
 {
   ret = ExpressionList()
@@ -3265,11 +3265,11 @@ BUTree<SSynchronizedStmt> SynchronizedStatement():
 BUTree<STryStmt> TryStatement():
 // TODO Make catchClauses/finallyClause counts less fatal
 {
-	BUTree<SNodeListState> resources = null;
+	BUTree<SNodeList> resources = null;
 	ByRef<Boolean> trailingSemiColon = new ByRef<Boolean>(false);
 	BUTree<SBlockStmt> tryBlock;
 	BUTree<SBlockStmt> finallyBlock = null;
-	BUTree<SNodeListState> catchClauses = null;
+	BUTree<SNodeList> catchClauses = null;
 }
 {
   { run(); }
@@ -3291,9 +3291,9 @@ BUTree<STryStmt> TryStatement():
   { return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock))); }
 }
 
-BUTree<SNodeListState> CatchClauses():
+BUTree<SNodeList> CatchClauses():
 {
-	BUTree<SNodeListState> catchClauses = emptyList();
+	BUTree<SNodeList> catchClauses = emptyList();
 	BUTree<SCatchClause> catchClause;
 }
 {
@@ -3316,9 +3316,9 @@ BUTree<SCatchClause> CatchClause():
 
 BUTree<SFormalParameter> CatchFormalParameter():
 {
-	BUTree<SNodeListState> modifiers;
+	BUTree<SNodeList> modifiers;
 	BUTree<? extends SType> exceptType;
-	BUTree<SNodeListState> exceptTypes = emptyList();
+	BUTree<SNodeList> exceptTypes = emptyList();
 	BUTree<SVariableDeclaratorId> exceptId;
 }
 {
@@ -3337,9 +3337,9 @@ BUTree<SFormalParameter> CatchFormalParameter():
   { return dress(SFormalParameter.make(modifiers, exceptType, false, exceptId)); }
 }
 
-BUTree<SNodeListState> ResourceSpecification(ByRef<Boolean> trailingSemiColon) :
+BUTree<SNodeList> ResourceSpecification(ByRef<Boolean> trailingSemiColon) :
 {
-	BUTree<SNodeListState> vars = emptyList();
+	BUTree<SNodeList> vars = emptyList();
 	BUTree<SVariableDeclarationExpr> var;
 }
 {
@@ -3380,9 +3380,9 @@ void RSIGNEDSHIFT():
  * Annotations
  **********************************************************************************************************************/
 
-BUTree<SNodeListState> Annotations():
+BUTree<SNodeList> Annotations():
 {
-	BUTree<SNodeListState> annotations = emptyList();
+	BUTree<SNodeList> annotations = emptyList();
 	BUTree<? extends SAnnotationExpr> annotation;
 }
 {
@@ -3411,7 +3411,7 @@ BUTree<? extends SAnnotationExpr> Annotation():
 BUTree<SNormalAnnotationExpr> NormalAnnotation():
 {
 	BUTree<SQualifiedName> name;
-	BUTree<SNodeListState> pairs = null;
+	BUTree<SNodeList> pairs = null;
 }
 {
   { run(); }
@@ -3440,9 +3440,9 @@ BUTree<SSingleMemberAnnotationExpr> SingleMemberAnnotation():
   { return dress(SSingleMemberAnnotationExpr.make(name, memberVal)); }
 }
 
-BUTree<SNodeListState> MemberValuePairs():
+BUTree<SNodeList> MemberValuePairs():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<SMemberValuePair> pair;
 }
 {
@@ -3479,7 +3479,7 @@ BUTree<? extends SExpr> MemberValue():
 
 BUTree<? extends SExpr> MemberValueArrayInitializer():
 {
-	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SNodeList> ret = emptyList();
 	BUTree<? extends SExpr> member;
 	boolean trailingComma = false;
 }

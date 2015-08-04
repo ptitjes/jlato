@@ -1,6 +1,6 @@
 package org.jlato.internal.td.stmt;
 
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SAssertStmt;
 import org.jlato.internal.td.TDLocation;
@@ -23,7 +23,7 @@ public class TDAssertStmt extends TDTree<SAssertStmt, Stmt, AssertStmt> implemen
 	}
 
 	public TDAssertStmt(Expr check, NodeOption<Expr> msg) {
-		super(new TDLocation<SAssertStmt>(SAssertStmt.make(TDTree.<SExpr>treeOf(check), TDTree.<SNodeOptionState>treeOf(msg))));
+		super(new TDLocation<SAssertStmt>(SAssertStmt.make(TDTree.<SExpr>treeOf(check), TDTree.<SNodeOption>treeOf(msg))));
 	}
 
 	public Expr check() {

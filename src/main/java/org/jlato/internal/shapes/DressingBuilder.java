@@ -29,7 +29,7 @@ import java.util.Stack;
 /**
  * @author Didier Villevalois
  */
-public class DressingBuilder<S extends STreeState> {
+public class DressingBuilder<S extends STree> {
 
 	private final Iterator<WTokenRun> tokenIterator;
 	private Stack<RunStack> descendantStack = new Stack<RunStack>();
@@ -149,7 +149,7 @@ public class DressingBuilder<S extends STreeState> {
 				} else {
 					WTokenRun tokens = tokenIterator.next();
 
-					if (!(discriminator.state instanceof SVarState)) {
+					if (!(discriminator.state instanceof SVar)) {
 						final boolean acceptsTrailing = lastDefinedShape.acceptsTrailingWhitespace();
 						final boolean acceptsLeading = shape.acceptsLeadingWhitespace();
 						if (acceptsTrailing && acceptsLeading) {

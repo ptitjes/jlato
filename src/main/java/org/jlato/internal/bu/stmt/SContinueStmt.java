@@ -11,15 +11,15 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SContinueStmt extends SNodeState<SContinueStmt> implements SStmt {
+public class SContinueStmt extends SNode<SContinueStmt> implements SStmt {
 
-	public static BUTree<SContinueStmt> make(BUTree<SNodeOptionState> id) {
+	public static BUTree<SContinueStmt> make(BUTree<SNodeOption> id) {
 		return new BUTree<SContinueStmt>(new SContinueStmt(id));
 	}
 
-	public final BUTree<SNodeOptionState> id;
+	public final BUTree<SNodeOption> id;
 
-	public SContinueStmt(BUTree<SNodeOptionState> id) {
+	public SContinueStmt(BUTree<SNodeOption> id) {
 		this.id = id;
 	}
 
@@ -28,11 +28,11 @@ public class SContinueStmt extends SNodeState<SContinueStmt> implements SStmt {
 		return Kind.ContinueStmt;
 	}
 
-	public BUTree<SNodeOptionState> id() {
+	public BUTree<SNodeOption> id() {
 		return id;
 	}
 
-	public SContinueStmt withId(BUTree<SNodeOptionState> id) {
+	public SContinueStmt withId(BUTree<SNodeOption> id) {
 		return new SContinueStmt(id);
 	}
 
@@ -75,7 +75,7 @@ public class SContinueStmt extends SNodeState<SContinueStmt> implements SStmt {
 		return result;
 	}
 
-	public static STypeSafeTraversal<SContinueStmt, SNodeOptionState, NodeOption<Name>> ID = new STypeSafeTraversal<SContinueStmt, SNodeOptionState, NodeOption<Name>>() {
+	public static STypeSafeTraversal<SContinueStmt, SNodeOption, NodeOption<Name>> ID = new STypeSafeTraversal<SContinueStmt, SNodeOption, NodeOption<Name>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SContinueStmt state) {
@@ -83,17 +83,17 @@ public class SContinueStmt extends SNodeState<SContinueStmt> implements SStmt {
 		}
 
 		@Override
-		public SContinueStmt doRebuildParentState(SContinueStmt state, BUTree<SNodeOptionState> child) {
+		public SContinueStmt doRebuildParentState(SContinueStmt state, BUTree<SNodeOption> child) {
 			return state.withId(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

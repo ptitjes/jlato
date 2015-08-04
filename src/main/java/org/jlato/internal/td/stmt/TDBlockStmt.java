@@ -1,6 +1,6 @@
 package org.jlato.internal.td.stmt;
 
-import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
@@ -21,7 +21,7 @@ public class TDBlockStmt extends TDTree<SBlockStmt, Stmt, BlockStmt> implements 
 	}
 
 	public TDBlockStmt(NodeList<Stmt> stmts) {
-		super(new TDLocation<SBlockStmt>(SBlockStmt.make(TDTree.<SNodeListState>treeOf(stmts))));
+		super(new TDLocation<SBlockStmt>(SBlockStmt.make(TDTree.<SNodeList>treeOf(stmts))));
 	}
 
 	public NodeList<Stmt> stmts() {

@@ -10,7 +10,7 @@ import org.jlato.tree.decl.*;
 
 import static org.jlato.internal.shapes.LexicalShape.child;
 
-public class SVariableDeclarationExpr extends SNodeState<SVariableDeclarationExpr> implements SExpr {
+public class SVariableDeclarationExpr extends SNode<SVariableDeclarationExpr> implements SExpr {
 
 	public static BUTree<SVariableDeclarationExpr> make(BUTree<SLocalVariableDecl> declaration) {
 		return new BUTree<SVariableDeclarationExpr>(new SVariableDeclarationExpr(declaration));
@@ -87,12 +87,12 @@ public class SVariableDeclarationExpr extends SNodeState<SVariableDeclarationExp
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

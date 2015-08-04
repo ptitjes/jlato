@@ -13,17 +13,17 @@ import java.util.Collections;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SPrimitiveType extends SNodeState<SPrimitiveType> implements SType {
+public class SPrimitiveType extends SNode<SPrimitiveType> implements SType {
 
-	public static BUTree<SPrimitiveType> make(BUTree<SNodeListState> annotations, Primitive primitive) {
+	public static BUTree<SPrimitiveType> make(BUTree<SNodeList> annotations, Primitive primitive) {
 		return new BUTree<SPrimitiveType>(new SPrimitiveType(annotations, primitive));
 	}
 
-	public final BUTree<SNodeListState> annotations;
+	public final BUTree<SNodeList> annotations;
 
 	public final Primitive primitive;
 
-	public SPrimitiveType(BUTree<SNodeListState> annotations, Primitive primitive) {
+	public SPrimitiveType(BUTree<SNodeList> annotations, Primitive primitive) {
 		this.annotations = annotations;
 		this.primitive = primitive;
 	}
@@ -33,11 +33,11 @@ public class SPrimitiveType extends SNodeState<SPrimitiveType> implements SType 
 		return Kind.PrimitiveType;
 	}
 
-	public BUTree<SNodeListState> annotations() {
+	public BUTree<SNodeList> annotations() {
 		return annotations;
 	}
 
-	public SPrimitiveType withAnnotations(BUTree<SNodeListState> annotations) {
+	public SPrimitiveType withAnnotations(BUTree<SNodeList> annotations) {
 		return new SPrimitiveType(annotations, primitive);
 	}
 
@@ -96,7 +96,7 @@ public class SPrimitiveType extends SNodeState<SPrimitiveType> implements SType 
 		return result;
 	}
 
-	public static STypeSafeTraversal<SPrimitiveType, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<SPrimitiveType, SNodeListState, NodeList<AnnotationExpr>>() {
+	public static STypeSafeTraversal<SPrimitiveType, SNodeList, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<SPrimitiveType, SNodeList, NodeList<AnnotationExpr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SPrimitiveType state) {
@@ -104,17 +104,17 @@ public class SPrimitiveType extends SNodeState<SPrimitiveType> implements SType 
 		}
 
 		@Override
-		public SPrimitiveType doRebuildParentState(SPrimitiveType state, BUTree<SNodeListState> child) {
+		public SPrimitiveType doRebuildParentState(SPrimitiveType state, BUTree<SNodeList> child) {
 			return state.withAnnotations(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

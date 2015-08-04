@@ -16,7 +16,7 @@ import static org.jlato.printer.IndentationConstraint.indent;
 import static org.jlato.printer.IndentationConstraint.unIndent;
 import static org.jlato.printer.SpacingConstraint.spacing;
 
-public class SLabeledStmt extends SNodeState<SLabeledStmt> implements SStmt {
+public class SLabeledStmt extends SNode<SLabeledStmt> implements SStmt {
 
 	public static BUTree<SLabeledStmt> make(BUTree<SName> label, BUTree<? extends SStmt> stmt) {
 		return new BUTree<SLabeledStmt>(new SLabeledStmt(label, stmt));
@@ -107,12 +107,12 @@ public class SLabeledStmt extends SNodeState<SLabeledStmt> implements SStmt {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return STMT;
 		}
 	};
@@ -130,12 +130,12 @@ public class SLabeledStmt extends SNodeState<SLabeledStmt> implements SStmt {
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return LABEL;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

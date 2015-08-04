@@ -1,6 +1,6 @@
 package org.jlato.internal.td.type;
 
-import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.type.SPrimitiveType;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
@@ -23,7 +23,7 @@ public class TDPrimitiveType extends TDTree<SPrimitiveType, Type, PrimitiveType>
 	}
 
 	public TDPrimitiveType(NodeList<AnnotationExpr> annotations, Primitive primitive) {
-		super(new TDLocation<SPrimitiveType>(SPrimitiveType.make(TDTree.<SNodeListState>treeOf(annotations), primitive)));
+		super(new TDLocation<SPrimitiveType>(SPrimitiveType.make(TDTree.<SNodeList>treeOf(annotations), primitive)));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

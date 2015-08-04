@@ -1,7 +1,7 @@
 package org.jlato.internal.td.expr;
 
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.expr.SArrayCreationExpr;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.TDLocation;
@@ -28,7 +28,7 @@ public class TDArrayCreationExpr extends TDTree<SArrayCreationExpr, Expr, ArrayC
 	}
 
 	public TDArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> init) {
-		super(new TDLocation<SArrayCreationExpr>(SArrayCreationExpr.make(TDTree.<SType>treeOf(type), TDTree.<SNodeListState>treeOf(dimExprs), TDTree.<SNodeListState>treeOf(dims), TDTree.<SNodeOptionState>treeOf(init))));
+		super(new TDLocation<SArrayCreationExpr>(SArrayCreationExpr.make(TDTree.<SType>treeOf(type), TDTree.<SNodeList>treeOf(dimExprs), TDTree.<SNodeList>treeOf(dims), TDTree.<SNodeOption>treeOf(init))));
 	}
 
 	public Type type() {

@@ -21,12 +21,12 @@ package org.jlato.internal.td;
 
 import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STreeState;
+import org.jlato.internal.bu.STree;
 
 /**
  * @author Didier Villevalois
  */
-public final class TDContext<P extends STreeState> {
+public final class TDContext<P extends STree> {
 
 	public final TDLocation<P> parent;
 	public final STraversal traversal;

@@ -9,7 +9,7 @@ import org.jlato.tree.expr.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SParenthesizedExpr extends SNodeState<SParenthesizedExpr> implements SExpr {
+public class SParenthesizedExpr extends SNode<SParenthesizedExpr> implements SExpr {
 
 	public static BUTree<SParenthesizedExpr> make(BUTree<? extends SExpr> inner) {
 		return new BUTree<SParenthesizedExpr>(new SParenthesizedExpr(inner));
@@ -86,12 +86,12 @@ public class SParenthesizedExpr extends SNodeState<SParenthesizedExpr> implement
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

@@ -11,7 +11,7 @@ import org.jlato.tree.type.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SInstanceOfExpr extends SNodeState<SInstanceOfExpr> implements SExpr {
+public class SInstanceOfExpr extends SNode<SInstanceOfExpr> implements SExpr {
 
 	public static BUTree<SInstanceOfExpr> make(BUTree<? extends SExpr> expr, BUTree<? extends SType> type) {
 		return new BUTree<SInstanceOfExpr>(new SInstanceOfExpr(expr, type));
@@ -102,12 +102,12 @@ public class SInstanceOfExpr extends SNodeState<SInstanceOfExpr> implements SExp
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return TYPE;
 		}
 	};
@@ -125,12 +125,12 @@ public class SInstanceOfExpr extends SNodeState<SInstanceOfExpr> implements SExp
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return EXPR;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

@@ -14,21 +14,21 @@ import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SQualifiedType extends SNodeState<SQualifiedType> implements SReferenceType {
+public class SQualifiedType extends SNode<SQualifiedType> implements SReferenceType {
 
-	public static BUTree<SQualifiedType> make(BUTree<SNodeListState> annotations, BUTree<SNodeOptionState> scope, BUTree<SName> name, BUTree<SNodeOptionState> typeArgs) {
+	public static BUTree<SQualifiedType> make(BUTree<SNodeList> annotations, BUTree<SNodeOption> scope, BUTree<SName> name, BUTree<SNodeOption> typeArgs) {
 		return new BUTree<SQualifiedType>(new SQualifiedType(annotations, scope, name, typeArgs));
 	}
 
-	public final BUTree<SNodeListState> annotations;
+	public final BUTree<SNodeList> annotations;
 
-	public final BUTree<SNodeOptionState> scope;
+	public final BUTree<SNodeOption> scope;
 
 	public final BUTree<SName> name;
 
-	public final BUTree<SNodeOptionState> typeArgs;
+	public final BUTree<SNodeOption> typeArgs;
 
-	public SQualifiedType(BUTree<SNodeListState> annotations, BUTree<SNodeOptionState> scope, BUTree<SName> name, BUTree<SNodeOptionState> typeArgs) {
+	public SQualifiedType(BUTree<SNodeList> annotations, BUTree<SNodeOption> scope, BUTree<SName> name, BUTree<SNodeOption> typeArgs) {
 		this.annotations = annotations;
 		this.scope = scope;
 		this.name = name;
@@ -40,19 +40,19 @@ public class SQualifiedType extends SNodeState<SQualifiedType> implements SRefer
 		return Kind.QualifiedType;
 	}
 
-	public BUTree<SNodeListState> annotations() {
+	public BUTree<SNodeList> annotations() {
 		return annotations;
 	}
 
-	public SQualifiedType withAnnotations(BUTree<SNodeListState> annotations) {
+	public SQualifiedType withAnnotations(BUTree<SNodeList> annotations) {
 		return new SQualifiedType(annotations, scope, name, typeArgs);
 	}
 
-	public BUTree<SNodeOptionState> scope() {
+	public BUTree<SNodeOption> scope() {
 		return scope;
 	}
 
-	public SQualifiedType withScope(BUTree<SNodeOptionState> scope) {
+	public SQualifiedType withScope(BUTree<SNodeOption> scope) {
 		return new SQualifiedType(annotations, scope, name, typeArgs);
 	}
 
@@ -64,11 +64,11 @@ public class SQualifiedType extends SNodeState<SQualifiedType> implements SRefer
 		return new SQualifiedType(annotations, scope, name, typeArgs);
 	}
 
-	public BUTree<SNodeOptionState> typeArgs() {
+	public BUTree<SNodeOption> typeArgs() {
 		return typeArgs;
 	}
 
-	public SQualifiedType withTypeArgs(BUTree<SNodeOptionState> typeArgs) {
+	public SQualifiedType withTypeArgs(BUTree<SNodeOption> typeArgs) {
 		return new SQualifiedType(annotations, scope, name, typeArgs);
 	}
 
@@ -120,7 +120,7 @@ public class SQualifiedType extends SNodeState<SQualifiedType> implements SRefer
 		return result;
 	}
 
-	public static STypeSafeTraversal<SQualifiedType, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<SQualifiedType, SNodeListState, NodeList<AnnotationExpr>>() {
+	public static STypeSafeTraversal<SQualifiedType, SNodeList, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<SQualifiedType, SNodeList, NodeList<AnnotationExpr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SQualifiedType state) {
@@ -128,22 +128,22 @@ public class SQualifiedType extends SNodeState<SQualifiedType> implements SRefer
 		}
 
 		@Override
-		public SQualifiedType doRebuildParentState(SQualifiedType state, BUTree<SNodeListState> child) {
+		public SQualifiedType doRebuildParentState(SQualifiedType state, BUTree<SNodeList> child) {
 			return state.withAnnotations(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return SCOPE;
 		}
 	};
 
-	public static STypeSafeTraversal<SQualifiedType, SNodeOptionState, NodeOption<QualifiedType>> SCOPE = new STypeSafeTraversal<SQualifiedType, SNodeOptionState, NodeOption<QualifiedType>>() {
+	public static STypeSafeTraversal<SQualifiedType, SNodeOption, NodeOption<QualifiedType>> SCOPE = new STypeSafeTraversal<SQualifiedType, SNodeOption, NodeOption<QualifiedType>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SQualifiedType state) {
@@ -151,17 +151,17 @@ public class SQualifiedType extends SNodeState<SQualifiedType> implements SRefer
 		}
 
 		@Override
-		public SQualifiedType doRebuildParentState(SQualifiedType state, BUTree<SNodeOptionState> child) {
+		public SQualifiedType doRebuildParentState(SQualifiedType state, BUTree<SNodeOption> child) {
 			return state.withScope(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return ANNOTATIONS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return NAME;
 		}
 	};
@@ -179,17 +179,17 @@ public class SQualifiedType extends SNodeState<SQualifiedType> implements SRefer
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return SCOPE;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return TYPE_ARGS;
 		}
 	};
 
-	public static STypeSafeTraversal<SQualifiedType, SNodeOptionState, NodeOption<NodeList<Type>>> TYPE_ARGS = new STypeSafeTraversal<SQualifiedType, SNodeOptionState, NodeOption<NodeList<Type>>>() {
+	public static STypeSafeTraversal<SQualifiedType, SNodeOption, NodeOption<NodeList<Type>>> TYPE_ARGS = new STypeSafeTraversal<SQualifiedType, SNodeOption, NodeOption<NodeList<Type>>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SQualifiedType state) {
@@ -197,17 +197,17 @@ public class SQualifiedType extends SNodeState<SQualifiedType> implements SRefer
 		}
 
 		@Override
-		public SQualifiedType doRebuildParentState(SQualifiedType state, BUTree<SNodeOptionState> child) {
+		public SQualifiedType doRebuildParentState(SQualifiedType state, BUTree<SNodeOption> child) {
 			return state.withTypeArgs(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return NAME;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

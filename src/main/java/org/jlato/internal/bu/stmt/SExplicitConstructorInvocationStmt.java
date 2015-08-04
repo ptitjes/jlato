@@ -14,21 +14,21 @@ import java.util.Collections;
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SExplicitConstructorInvocationStmt extends SNodeState<SExplicitConstructorInvocationStmt> implements SStmt {
+public class SExplicitConstructorInvocationStmt extends SNode<SExplicitConstructorInvocationStmt> implements SStmt {
 
-	public static BUTree<SExplicitConstructorInvocationStmt> make(BUTree<SNodeListState> typeArgs, boolean isThis, BUTree<SNodeOptionState> expr, BUTree<SNodeListState> args) {
+	public static BUTree<SExplicitConstructorInvocationStmt> make(BUTree<SNodeList> typeArgs, boolean isThis, BUTree<SNodeOption> expr, BUTree<SNodeList> args) {
 		return new BUTree<SExplicitConstructorInvocationStmt>(new SExplicitConstructorInvocationStmt(typeArgs, isThis, expr, args));
 	}
 
-	public final BUTree<SNodeListState> typeArgs;
+	public final BUTree<SNodeList> typeArgs;
 
 	public final boolean isThis;
 
-	public final BUTree<SNodeOptionState> expr;
+	public final BUTree<SNodeOption> expr;
 
-	public final BUTree<SNodeListState> args;
+	public final BUTree<SNodeList> args;
 
-	public SExplicitConstructorInvocationStmt(BUTree<SNodeListState> typeArgs, boolean isThis, BUTree<SNodeOptionState> expr, BUTree<SNodeListState> args) {
+	public SExplicitConstructorInvocationStmt(BUTree<SNodeList> typeArgs, boolean isThis, BUTree<SNodeOption> expr, BUTree<SNodeList> args) {
 		this.typeArgs = typeArgs;
 		this.isThis = isThis;
 		this.expr = expr;
@@ -40,11 +40,11 @@ public class SExplicitConstructorInvocationStmt extends SNodeState<SExplicitCons
 		return Kind.ExplicitConstructorInvocationStmt;
 	}
 
-	public BUTree<SNodeListState> typeArgs() {
+	public BUTree<SNodeList> typeArgs() {
 		return typeArgs;
 	}
 
-	public SExplicitConstructorInvocationStmt withTypeArgs(BUTree<SNodeListState> typeArgs) {
+	public SExplicitConstructorInvocationStmt withTypeArgs(BUTree<SNodeList> typeArgs) {
 		return new SExplicitConstructorInvocationStmt(typeArgs, isThis, expr, args);
 	}
 
@@ -56,19 +56,19 @@ public class SExplicitConstructorInvocationStmt extends SNodeState<SExplicitCons
 		return new SExplicitConstructorInvocationStmt(typeArgs, isThis, expr, args);
 	}
 
-	public BUTree<SNodeOptionState> expr() {
+	public BUTree<SNodeOption> expr() {
 		return expr;
 	}
 
-	public SExplicitConstructorInvocationStmt withExpr(BUTree<SNodeOptionState> expr) {
+	public SExplicitConstructorInvocationStmt withExpr(BUTree<SNodeOption> expr) {
 		return new SExplicitConstructorInvocationStmt(typeArgs, isThis, expr, args);
 	}
 
-	public BUTree<SNodeListState> args() {
+	public BUTree<SNodeList> args() {
 		return args;
 	}
 
-	public SExplicitConstructorInvocationStmt withArgs(BUTree<SNodeListState> args) {
+	public SExplicitConstructorInvocationStmt withArgs(BUTree<SNodeList> args) {
 		return new SExplicitConstructorInvocationStmt(typeArgs, isThis, expr, args);
 	}
 
@@ -125,7 +125,7 @@ public class SExplicitConstructorInvocationStmt extends SNodeState<SExplicitCons
 		return result;
 	}
 
-	public static STypeSafeTraversal<SExplicitConstructorInvocationStmt, SNodeListState, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<SExplicitConstructorInvocationStmt, SNodeListState, NodeList<Type>>() {
+	public static STypeSafeTraversal<SExplicitConstructorInvocationStmt, SNodeList, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<SExplicitConstructorInvocationStmt, SNodeList, NodeList<Type>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SExplicitConstructorInvocationStmt state) {
@@ -133,22 +133,22 @@ public class SExplicitConstructorInvocationStmt extends SNodeState<SExplicitCons
 		}
 
 		@Override
-		public SExplicitConstructorInvocationStmt doRebuildParentState(SExplicitConstructorInvocationStmt state, BUTree<SNodeListState> child) {
+		public SExplicitConstructorInvocationStmt doRebuildParentState(SExplicitConstructorInvocationStmt state, BUTree<SNodeList> child) {
 			return state.withTypeArgs(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return EXPR;
 		}
 	};
 
-	public static STypeSafeTraversal<SExplicitConstructorInvocationStmt, SNodeOptionState, NodeOption<Expr>> EXPR = new STypeSafeTraversal<SExplicitConstructorInvocationStmt, SNodeOptionState, NodeOption<Expr>>() {
+	public static STypeSafeTraversal<SExplicitConstructorInvocationStmt, SNodeOption, NodeOption<Expr>> EXPR = new STypeSafeTraversal<SExplicitConstructorInvocationStmt, SNodeOption, NodeOption<Expr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SExplicitConstructorInvocationStmt state) {
@@ -156,22 +156,22 @@ public class SExplicitConstructorInvocationStmt extends SNodeState<SExplicitCons
 		}
 
 		@Override
-		public SExplicitConstructorInvocationStmt doRebuildParentState(SExplicitConstructorInvocationStmt state, BUTree<SNodeOptionState> child) {
+		public SExplicitConstructorInvocationStmt doRebuildParentState(SExplicitConstructorInvocationStmt state, BUTree<SNodeOption> child) {
 			return state.withExpr(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return TYPE_ARGS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return ARGS;
 		}
 	};
 
-	public static STypeSafeTraversal<SExplicitConstructorInvocationStmt, SNodeListState, NodeList<Expr>> ARGS = new STypeSafeTraversal<SExplicitConstructorInvocationStmt, SNodeListState, NodeList<Expr>>() {
+	public static STypeSafeTraversal<SExplicitConstructorInvocationStmt, SNodeList, NodeList<Expr>> ARGS = new STypeSafeTraversal<SExplicitConstructorInvocationStmt, SNodeList, NodeList<Expr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SExplicitConstructorInvocationStmt state) {
@@ -179,17 +179,17 @@ public class SExplicitConstructorInvocationStmt extends SNodeState<SExplicitCons
 		}
 
 		@Override
-		public SExplicitConstructorInvocationStmt doRebuildParentState(SExplicitConstructorInvocationStmt state, BUTree<SNodeListState> child) {
+		public SExplicitConstructorInvocationStmt doRebuildParentState(SExplicitConstructorInvocationStmt state, BUTree<SNodeList> child) {
 			return state.withArgs(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return EXPR;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

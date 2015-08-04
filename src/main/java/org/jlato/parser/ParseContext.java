@@ -20,8 +20,8 @@
 package org.jlato.parser;
 
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.STreeState;
+import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.STree;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.Expr;
@@ -86,7 +86,7 @@ public abstract class ParseContext<T extends Tree> {
 	public final static ParseContext<MethodDecl> MethodDecl = new ParseContext<org.jlato.tree.decl.MethodDecl>() {
 		@Override
 		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
-			BUTree<SNodeListState> modifiers = parser.Modifiers();
+			BUTree<SNodeList> modifiers = parser.Modifiers();
 			return wrapWithPrologAndEpilog(parser, parser.MethodDecl(modifiers));
 		}
 	};
@@ -94,7 +94,7 @@ public abstract class ParseContext<T extends Tree> {
 	public final static ParseContext<FieldDecl> FieldDecl = new ParseContext<org.jlato.tree.decl.FieldDecl>() {
 		@Override
 		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
-			BUTree<SNodeListState> modifiers = parser.Modifiers();
+			BUTree<SNodeList> modifiers = parser.Modifiers();
 			return wrapWithPrologAndEpilog(parser, parser.FieldDecl(modifiers));
 		}
 	};
@@ -102,7 +102,7 @@ public abstract class ParseContext<T extends Tree> {
 	public final static ParseContext<AnnotationMemberDecl> AnnotationMemberDecl = new ParseContext<org.jlato.tree.decl.AnnotationMemberDecl>() {
 		@Override
 		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
-			BUTree<SNodeListState> modifiers = parser.Modifiers();
+			BUTree<SNodeList> modifiers = parser.Modifiers();
 			return wrapWithPrologAndEpilog(parser, parser.AnnotationTypeMemberDecl(modifiers));
 		}
 	};
@@ -146,14 +146,14 @@ public abstract class ParseContext<T extends Tree> {
 		@Override
 		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
 			parser.run();
-			final BUTree<SNodeListState> annotations = parser.Annotations();
+			final BUTree<SNodeList> annotations = parser.Annotations();
 			return wrapWithPrologAndEpilog(parser, parser.Type(annotations));
 		}
 	};
 
 	protected abstract BUTree<?> callProduction(ParserBase parser) throws ParseException;
 
-	protected <S extends STreeState> BUTree<S> wrapWithPrologAndEpilog(ParserBase parser, BUTree<S> tree) throws ParseException {
+	protected <S extends STree> BUTree<S> wrapWithPrologAndEpilog(ParserBase parser, BUTree<S> tree) throws ParseException {
 		parser.Epilog();
 		return parser.dressWithPrologAndEpilog(tree);
 	}

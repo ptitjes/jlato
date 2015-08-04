@@ -13,17 +13,17 @@ import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SArrayInitializerExpr extends SNodeState<SArrayInitializerExpr> implements SExpr {
+public class SArrayInitializerExpr extends SNode<SArrayInitializerExpr> implements SExpr {
 
-	public static BUTree<SArrayInitializerExpr> make(BUTree<SNodeListState> values, boolean trailingComma) {
+	public static BUTree<SArrayInitializerExpr> make(BUTree<SNodeList> values, boolean trailingComma) {
 		return new BUTree<SArrayInitializerExpr>(new SArrayInitializerExpr(values, trailingComma));
 	}
 
-	public final BUTree<SNodeListState> values;
+	public final BUTree<SNodeList> values;
 
 	public final boolean trailingComma;
 
-	public SArrayInitializerExpr(BUTree<SNodeListState> values, boolean trailingComma) {
+	public SArrayInitializerExpr(BUTree<SNodeList> values, boolean trailingComma) {
 		this.values = values;
 		this.trailingComma = trailingComma;
 	}
@@ -33,11 +33,11 @@ public class SArrayInitializerExpr extends SNodeState<SArrayInitializerExpr> imp
 		return Kind.ArrayInitializerExpr;
 	}
 
-	public BUTree<SNodeListState> values() {
+	public BUTree<SNodeList> values() {
 		return values;
 	}
 
-	public SArrayInitializerExpr withValues(BUTree<SNodeListState> values) {
+	public SArrayInitializerExpr withValues(BUTree<SNodeList> values) {
 		return new SArrayInitializerExpr(values, trailingComma);
 	}
 
@@ -96,7 +96,7 @@ public class SArrayInitializerExpr extends SNodeState<SArrayInitializerExpr> imp
 		return result;
 	}
 
-	public static STypeSafeTraversal<SArrayInitializerExpr, SNodeListState, NodeList<Expr>> VALUES = new STypeSafeTraversal<SArrayInitializerExpr, SNodeListState, NodeList<Expr>>() {
+	public static STypeSafeTraversal<SArrayInitializerExpr, SNodeList, NodeList<Expr>> VALUES = new STypeSafeTraversal<SArrayInitializerExpr, SNodeList, NodeList<Expr>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SArrayInitializerExpr state) {
@@ -104,17 +104,17 @@ public class SArrayInitializerExpr extends SNodeState<SArrayInitializerExpr> imp
 		}
 
 		@Override
-		public SArrayInitializerExpr doRebuildParentState(SArrayInitializerExpr state, BUTree<SNodeListState> child) {
+		public SArrayInitializerExpr doRebuildParentState(SArrayInitializerExpr state, BUTree<SNodeList> child) {
 			return state.withValues(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

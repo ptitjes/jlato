@@ -12,7 +12,7 @@ import org.jlato.tree.stmt.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SCatchClause extends SNodeState<SCatchClause> implements STreeState {
+public class SCatchClause extends SNode<SCatchClause> implements STree {
 
 	public static BUTree<SCatchClause> make(BUTree<SFormalParameter> except, BUTree<SBlockStmt> catchBlock) {
 		return new BUTree<SCatchClause>(new SCatchClause(except, catchBlock));
@@ -103,12 +103,12 @@ public class SCatchClause extends SNodeState<SCatchClause> implements STreeState
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return CATCH_BLOCK;
 		}
 	};
@@ -126,12 +126,12 @@ public class SCatchClause extends SNodeState<SCatchClause> implements STreeState
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return EXCEPT;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

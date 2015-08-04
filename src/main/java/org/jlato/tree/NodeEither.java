@@ -20,15 +20,15 @@
 package org.jlato.tree;
 
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.SNodeEitherState;
-import org.jlato.internal.bu.SNodeEitherState.EitherSide;
+import org.jlato.internal.bu.SNodeEither;
+import org.jlato.internal.bu.SNodeEither.EitherSide;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 
 /**
  * @author Didier Villevalois
  */
-public class NodeEither<TL extends Tree, TR extends Tree> extends TDTree<SNodeEitherState, NodeEither<TL, TR>, NodeEither<TL, TR>> implements Tree {
+public class NodeEither<TL extends Tree, TR extends Tree> extends TDTree<SNodeEither, NodeEither<TL, TR>, NodeEither<TL, TR>> implements Tree {
 
 	public static <TL extends Tree, TR extends Tree> NodeEither<TL, TR> left(TL tree) {
 		if (tree == null) throw new NullPointerException();
@@ -40,12 +40,12 @@ public class NodeEither<TL extends Tree, TR extends Tree> extends TDTree<SNodeEi
 		return new NodeEither<TL, TR>(tree, EitherSide.Right);
 	}
 
-	public NodeEither(TDLocation<SNodeEitherState> location) {
+	public NodeEither(TDLocation<SNodeEither> location) {
 		super(location);
 	}
 
 	private NodeEither(Tree element, EitherSide side) {
-		super(new TDLocation<SNodeEitherState>(new BUTree<SNodeEitherState>(new SNodeEitherState(treeOf(element), side))));
+		super(new TDLocation<SNodeEither>(new BUTree<SNodeEither>(new SNodeEither(treeOf(element), side))));
 	}
 
 	public boolean isLeft() {
@@ -58,27 +58,27 @@ public class NodeEither<TL extends Tree, TR extends Tree> extends TDTree<SNodeEi
 
 	@SuppressWarnings("unchecked")
 	public TL left() {
-		return (TL) location.safeTraversal(SNodeEitherState.leftTraversal());
+		return (TL) location.safeTraversal(SNodeEither.leftTraversal());
 	}
 
 	@SuppressWarnings("unchecked")
 	public TR right() {
-		return (TR) location.safeTraversal(SNodeEitherState.rightTraversal());
+		return (TR) location.safeTraversal(SNodeEither.rightTraversal());
 	}
 
 	public NodeEither<TL, TR> setLeft(TL element) {
-		return location.safeTraversalReplace(SNodeEitherState.leftTraversal(), element);
+		return location.safeTraversalReplace(SNodeEither.leftTraversal(), element);
 	}
 
 	public NodeEither<TL, TR> setRight(TR element) {
-		return location.safeTraversalReplace(SNodeEitherState.rightTraversal(), element);
+		return location.safeTraversalReplace(SNodeEither.rightTraversal(), element);
 	}
 
 	public String mkString(String start, String sep, String end) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(start);
 
-		Tree tree = location.safeTraversal(SNodeEitherState.elementTraversal());
+		Tree tree = location.safeTraversal(SNodeEither.elementTraversal());
 		builder.append(tree);
 
 		builder.append(end);

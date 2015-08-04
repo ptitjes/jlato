@@ -27,9 +27,9 @@ import java.util.Collections;
 /**
  * @author Didier Villevalois
  */
-public abstract class SNodeState<S extends SNodeState<S>> implements STreeState {
+public abstract class SNode<S extends SNode<S>> implements STree {
 
-	public SNodeState() {
+	public SNode() {
 	}
 
 	public abstract Kind kind();

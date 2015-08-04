@@ -11,17 +11,17 @@ import org.jlato.tree.name.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 
-public class SVariableDeclaratorId extends SNodeState<SVariableDeclaratorId> implements STreeState {
+public class SVariableDeclaratorId extends SNode<SVariableDeclaratorId> implements STree {
 
-	public static BUTree<SVariableDeclaratorId> make(BUTree<SName> name, BUTree<SNodeListState> dims) {
+	public static BUTree<SVariableDeclaratorId> make(BUTree<SName> name, BUTree<SNodeList> dims) {
 		return new BUTree<SVariableDeclaratorId>(new SVariableDeclaratorId(name, dims));
 	}
 
 	public final BUTree<SName> name;
 
-	public final BUTree<SNodeListState> dims;
+	public final BUTree<SNodeList> dims;
 
-	public SVariableDeclaratorId(BUTree<SName> name, BUTree<SNodeListState> dims) {
+	public SVariableDeclaratorId(BUTree<SName> name, BUTree<SNodeList> dims) {
 		this.name = name;
 		this.dims = dims;
 	}
@@ -39,11 +39,11 @@ public class SVariableDeclaratorId extends SNodeState<SVariableDeclaratorId> imp
 		return new SVariableDeclaratorId(name, dims);
 	}
 
-	public BUTree<SNodeListState> dims() {
+	public BUTree<SNodeList> dims() {
 		return dims;
 	}
 
-	public SVariableDeclaratorId withDims(BUTree<SNodeListState> dims) {
+	public SVariableDeclaratorId withDims(BUTree<SNodeList> dims) {
 		return new SVariableDeclaratorId(name, dims);
 	}
 
@@ -102,17 +102,17 @@ public class SVariableDeclaratorId extends SNodeState<SVariableDeclaratorId> imp
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return DIMS;
 		}
 	};
 
-	public static STypeSafeTraversal<SVariableDeclaratorId, SNodeListState, NodeList<ArrayDim>> DIMS = new STypeSafeTraversal<SVariableDeclaratorId, SNodeListState, NodeList<ArrayDim>>() {
+	public static STypeSafeTraversal<SVariableDeclaratorId, SNodeList, NodeList<ArrayDim>> DIMS = new STypeSafeTraversal<SVariableDeclaratorId, SNodeList, NodeList<ArrayDim>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SVariableDeclaratorId state) {
@@ -120,17 +120,17 @@ public class SVariableDeclaratorId extends SNodeState<SVariableDeclaratorId> imp
 		}
 
 		@Override
-		public SVariableDeclaratorId doRebuildParentState(SVariableDeclaratorId state, BUTree<SNodeListState> child) {
+		public SVariableDeclaratorId doRebuildParentState(SVariableDeclaratorId state, BUTree<SNodeList> child) {
 			return state.withDims(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return NAME;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

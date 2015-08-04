@@ -1,6 +1,6 @@
 package org.jlato.internal.td.decl;
 
-import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.decl.SPackageDecl;
 import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.TDLocation;
@@ -24,7 +24,7 @@ public class TDPackageDecl extends TDTree<SPackageDecl, Node, PackageDecl> imple
 	}
 
 	public TDPackageDecl(NodeList<AnnotationExpr> annotations, QualifiedName name) {
-		super(new TDLocation<SPackageDecl>(SPackageDecl.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SQualifiedName>treeOf(name))));
+		super(new TDLocation<SPackageDecl>(SPackageDecl.make(TDTree.<SNodeList>treeOf(annotations), TDTree.<SQualifiedName>treeOf(name))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

@@ -1,6 +1,6 @@
 package org.jlato.internal.td.decl;
 
-import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.decl.SVariableDeclaratorId;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.TDLocation;
@@ -24,7 +24,7 @@ public class TDVariableDeclaratorId extends TDTree<SVariableDeclaratorId, Node, 
 	}
 
 	public TDVariableDeclaratorId(Name name, NodeList<ArrayDim> dims) {
-		super(new TDLocation<SVariableDeclaratorId>(SVariableDeclaratorId.make(TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(dims))));
+		super(new TDLocation<SVariableDeclaratorId>(SVariableDeclaratorId.make(TDTree.<SName>treeOf(name), TDTree.<SNodeList>treeOf(dims))));
 	}
 
 	public Name name() {

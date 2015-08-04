@@ -1,6 +1,6 @@
 package org.jlato.internal.td.name;
 
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.TDLocation;
@@ -23,7 +23,7 @@ public class TDQualifiedName extends TDTree<SQualifiedName, Node, QualifiedName>
 	}
 
 	public TDQualifiedName(NodeOption<QualifiedName> qualifier, Name name) {
-		super(new TDLocation<SQualifiedName>(SQualifiedName.make(TDTree.<SNodeOptionState>treeOf(qualifier), TDTree.<SName>treeOf(name))));
+		super(new TDLocation<SQualifiedName>(SQualifiedName.make(TDTree.<SNodeOption>treeOf(qualifier), TDTree.<SName>treeOf(name))));
 	}
 
 	public NodeOption<QualifiedName> qualifier() {

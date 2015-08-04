@@ -1,6 +1,6 @@
 package org.jlato.internal.td.stmt;
 
-import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.SNodeOption;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SIfStmt;
 import org.jlato.internal.bu.stmt.SStmt;
@@ -24,7 +24,7 @@ public class TDIfStmt extends TDTree<SIfStmt, Stmt, IfStmt> implements IfStmt {
 	}
 
 	public TDIfStmt(Expr condition, Stmt thenStmt, NodeOption<Stmt> elseStmt) {
-		super(new TDLocation<SIfStmt>(SIfStmt.make(TDTree.<SExpr>treeOf(condition), TDTree.<SStmt>treeOf(thenStmt), TDTree.<SNodeOptionState>treeOf(elseStmt))));
+		super(new TDLocation<SIfStmt>(SIfStmt.make(TDTree.<SExpr>treeOf(condition), TDTree.<SStmt>treeOf(thenStmt), TDTree.<SNodeOption>treeOf(elseStmt))));
 	}
 
 	public Expr condition() {

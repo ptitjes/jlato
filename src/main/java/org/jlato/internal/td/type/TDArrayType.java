@@ -1,6 +1,6 @@
 package org.jlato.internal.td.type;
 
-import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.type.SArrayType;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.TDLocation;
@@ -24,7 +24,7 @@ public class TDArrayType extends TDTree<SArrayType, ReferenceType, ArrayType> im
 	}
 
 	public TDArrayType(Type componentType, NodeList<ArrayDim> dims) {
-		super(new TDLocation<SArrayType>(SArrayType.make(TDTree.<SType>treeOf(componentType), TDTree.<SNodeListState>treeOf(dims))));
+		super(new TDLocation<SArrayType>(SArrayType.make(TDTree.<SType>treeOf(componentType), TDTree.<SNodeList>treeOf(dims))));
 	}
 
 	public Type componentType() {

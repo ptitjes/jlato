@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class SLiteralExpr extends SNodeState<SLiteralExpr> implements SExpr {
+public class SLiteralExpr extends SNode<SLiteralExpr> implements SExpr {
 
 	public static BUTree<SLiteralExpr> make(Class<?> literalClass, String literalString) {
 		return new BUTree<SLiteralExpr>(new SLiteralExpr(literalClass, literalString));

@@ -1,6 +1,6 @@
 package org.jlato.internal.td.type;
 
-import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.type.SUnionType;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
@@ -21,7 +21,7 @@ public class TDUnionType extends TDTree<SUnionType, Type, UnionType> implements 
 	}
 
 	public TDUnionType(NodeList<Type> types) {
-		super(new TDLocation<SUnionType>(SUnionType.make(TDTree.<SNodeListState>treeOf(types))));
+		super(new TDLocation<SUnionType>(SUnionType.make(TDTree.<SNodeList>treeOf(types))));
 	}
 
 	public NodeList<Type> types() {

@@ -15,13 +15,13 @@ import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.SpacingConstraint.space;
 
-public class SFormalParameter extends SNodeState<SFormalParameter> implements STreeState {
+public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 
-	public static BUTree<SFormalParameter> make(BUTree<SNodeListState> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SVariableDeclaratorId> id) {
+	public static BUTree<SFormalParameter> make(BUTree<SNodeList> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SVariableDeclaratorId> id) {
 		return new BUTree<SFormalParameter>(new SFormalParameter(modifiers, type, isVarArgs, id));
 	}
 
-	public final BUTree<SNodeListState> modifiers;
+	public final BUTree<SNodeList> modifiers;
 
 	public final BUTree<? extends SType> type;
 
@@ -29,7 +29,7 @@ public class SFormalParameter extends SNodeState<SFormalParameter> implements ST
 
 	public final BUTree<SVariableDeclaratorId> id;
 
-	public SFormalParameter(BUTree<SNodeListState> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SVariableDeclaratorId> id) {
+	public SFormalParameter(BUTree<SNodeList> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SVariableDeclaratorId> id) {
 		this.modifiers = modifiers;
 		this.type = type;
 		this.isVarArgs = isVarArgs;
@@ -41,11 +41,11 @@ public class SFormalParameter extends SNodeState<SFormalParameter> implements ST
 		return Kind.FormalParameter;
 	}
 
-	public BUTree<SNodeListState> modifiers() {
+	public BUTree<SNodeList> modifiers() {
 		return modifiers;
 	}
 
-	public SFormalParameter withModifiers(BUTree<SNodeListState> modifiers) {
+	public SFormalParameter withModifiers(BUTree<SNodeList> modifiers) {
 		return new SFormalParameter(modifiers, type, isVarArgs, id);
 	}
 
@@ -126,7 +126,7 @@ public class SFormalParameter extends SNodeState<SFormalParameter> implements ST
 		return result;
 	}
 
-	public static STypeSafeTraversal<SFormalParameter, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SFormalParameter, SNodeListState, NodeList<ExtendedModifier>>() {
+	public static STypeSafeTraversal<SFormalParameter, SNodeList, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SFormalParameter, SNodeList, NodeList<ExtendedModifier>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SFormalParameter state) {
@@ -134,17 +134,17 @@ public class SFormalParameter extends SNodeState<SFormalParameter> implements ST
 		}
 
 		@Override
-		public SFormalParameter doRebuildParentState(SFormalParameter state, BUTree<SNodeListState> child) {
+		public SFormalParameter doRebuildParentState(SFormalParameter state, BUTree<SNodeList> child) {
 			return state.withModifiers(child);
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return null;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return TYPE;
 		}
 	};
@@ -162,12 +162,12 @@ public class SFormalParameter extends SNodeState<SFormalParameter> implements ST
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return MODIFIERS;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return ID;
 		}
 	};
@@ -185,12 +185,12 @@ public class SFormalParameter extends SNodeState<SFormalParameter> implements ST
 		}
 
 		@Override
-		public STraversal leftSibling(STreeState state) {
+		public STraversal leftSibling(STree state) {
 			return TYPE;
 		}
 
 		@Override
-		public STraversal rightSibling(STreeState state) {
+		public STraversal rightSibling(STree state) {
 			return null;
 		}
 	};

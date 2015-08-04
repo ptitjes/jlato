@@ -13,7 +13,7 @@ import java.util.Collections;
 
 import static org.jlato.internal.shapes.LexicalShape.token;
 
-public class SName extends SNodeState<SName> implements SExpr {
+public class SName extends SNode<SName> implements SExpr {
 
 	public static BUTree<SName> make(String id) {
 		return new BUTree<SName>(new SName(id));

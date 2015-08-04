@@ -1,6 +1,6 @@
 package org.jlato.internal.td.decl;
 
-import org.jlato.internal.bu.SNodeListState;
+import org.jlato.internal.bu.SNodeList;
 import org.jlato.internal.bu.decl.SInitializerDecl;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.td.TDLocation;
@@ -24,7 +24,7 @@ public class TDInitializerDecl extends TDTree<SInitializerDecl, MemberDecl, Init
 	}
 
 	public TDInitializerDecl(NodeList<ExtendedModifier> modifiers, BlockStmt body) {
-		super(new TDLocation<SInitializerDecl>(SInitializerDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SBlockStmt>treeOf(body))));
+		super(new TDLocation<SInitializerDecl>(SInitializerDecl.make(TDTree.<SNodeList>treeOf(modifiers), TDTree.<SBlockStmt>treeOf(body))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

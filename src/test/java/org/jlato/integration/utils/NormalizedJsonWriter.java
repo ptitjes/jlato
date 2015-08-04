@@ -24,7 +24,7 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.internal.td.TDTree;
-import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.SNode;
 import org.jlato.tree.expr.LiteralExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.name.QualifiedName;
@@ -71,7 +71,7 @@ public class NormalizedJsonWriter {
 
 		builder.append("{\n");
 
-		final SNodeState state = (SNodeState) TDTree.treeOf(tree).state;
+		final SNode state = (SNode) TDTree.treeOf(tree).state;
 		writeField("kind", String.class, state.kind(), indent + 1);
 
 		writeProperties(tree, treeClass, indent + 1);
