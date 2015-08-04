@@ -6,14 +6,14 @@ import org.jlato.internal.bu.decl.SVariableDeclaratorId;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
 import org.jlato.tree.decl.VariableDeclarator;
 import org.jlato.tree.decl.VariableDeclaratorId;
 import org.jlato.tree.expr.Expr;
 import org.jlato.util.Mutation;
 
-public class TDVariableDeclarator extends TreeBase<SVariableDeclarator, Tree, VariableDeclarator> implements VariableDeclarator {
+public class TDVariableDeclarator extends TreeBase<SVariableDeclarator, Node, VariableDeclarator> implements VariableDeclarator {
 
 	public Kind kind() {
 		return Kind.VariableDeclarator;

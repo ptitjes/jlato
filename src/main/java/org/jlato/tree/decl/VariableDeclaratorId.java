@@ -1,12 +1,12 @@
 package org.jlato.tree.decl;
 
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
 import org.jlato.tree.TreeCombinators;
 import org.jlato.tree.name.Name;
 import org.jlato.util.Mutation;
 
-public interface VariableDeclaratorId extends Tree, TreeCombinators<VariableDeclaratorId> {
+public interface VariableDeclaratorId extends Node, TreeCombinators<VariableDeclaratorId> {
 
 	Name name();
 

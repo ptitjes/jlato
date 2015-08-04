@@ -1,6 +1,6 @@
 package org.jlato.tree.decl;
 
-import org.jlato.tree.Tree;
+import org.jlato.tree.Node;
 
-public interface ExtendedModifier extends Tree {
+public interface ExtendedModifier extends Node {
 }

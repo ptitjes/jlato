@@ -1,11 +1,11 @@
 package org.jlato.tree.name;
 
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
 import org.jlato.tree.TreeCombinators;
 import org.jlato.util.Mutation;
 
-public interface QualifiedName extends Tree, TreeCombinators<QualifiedName> {
+public interface QualifiedName extends Node, TreeCombinators<QualifiedName> {
 
 	NodeOption<QualifiedName> qualifier();
 

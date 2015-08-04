@@ -6,15 +6,15 @@ import org.jlato.internal.bu.stmt.SSwitchCase;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.stmt.SwitchCase;
 import org.jlato.util.Mutation;
 
-public class TDSwitchCase extends TreeBase<SSwitchCase, Tree, SwitchCase> implements SwitchCase {
+public class TDSwitchCase extends TreeBase<SSwitchCase, Node, SwitchCase> implements SwitchCase {
 
 	public Kind kind() {
 		return Kind.SwitchCase;

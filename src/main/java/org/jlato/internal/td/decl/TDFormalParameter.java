@@ -7,15 +7,15 @@ import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.decl.VariableDeclaratorId;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDFormalParameter extends TreeBase<SFormalParameter, Tree, FormalParameter> implements FormalParameter {
+public class TDFormalParameter extends TreeBase<SFormalParameter, Node, FormalParameter> implements FormalParameter {
 
 	public Kind kind() {
 		return Kind.FormalParameter;

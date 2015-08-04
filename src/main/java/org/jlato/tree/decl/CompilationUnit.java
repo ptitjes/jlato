@@ -1,11 +1,11 @@
 package org.jlato.tree.decl;
 
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
 import org.jlato.tree.TreeCombinators;
 import org.jlato.util.Mutation;
 
-public interface CompilationUnit extends Tree, TreeCombinators<CompilationUnit> {
+public interface CompilationUnit extends Node, TreeCombinators<CompilationUnit> {
 
 	PackageDecl packageDecl();
 

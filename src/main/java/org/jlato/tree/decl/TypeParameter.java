@@ -1,14 +1,14 @@
 package org.jlato.tree.decl;
 
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
 import org.jlato.tree.TreeCombinators;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public interface TypeParameter extends Tree, TreeCombinators<TypeParameter> {
+public interface TypeParameter extends Node, TreeCombinators<TypeParameter> {
 
 	NodeList<AnnotationExpr> annotations();
 

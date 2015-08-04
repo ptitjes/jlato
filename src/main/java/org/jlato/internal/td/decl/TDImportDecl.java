@@ -5,12 +5,12 @@ import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Node;
 import org.jlato.tree.decl.ImportDecl;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
 
-public class TDImportDecl extends TreeBase<SImportDecl, Tree, ImportDecl> implements ImportDecl {
+public class TDImportDecl extends TreeBase<SImportDecl, Node, ImportDecl> implements ImportDecl {
 
 	public Kind kind() {
 		return Kind.ImportDecl;

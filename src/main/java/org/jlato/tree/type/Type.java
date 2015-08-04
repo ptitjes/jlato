@@ -1,6 +1,6 @@
 package org.jlato.tree.type;
 
-import org.jlato.tree.Tree;
+import org.jlato.tree.Node;
 
-public interface Type extends Tree {
+public interface Type extends Node {
 }

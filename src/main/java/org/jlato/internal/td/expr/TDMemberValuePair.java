@@ -6,13 +6,13 @@ import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Node;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.MemberValuePair;
 import org.jlato.tree.name.Name;
 import org.jlato.util.Mutation;
 
-public class TDMemberValuePair extends TreeBase<SMemberValuePair, Tree, MemberValuePair> implements MemberValuePair {
+public class TDMemberValuePair extends TreeBase<SMemberValuePair, Node, MemberValuePair> implements MemberValuePair {
 
 	public Kind kind() {
 		return Kind.MemberValuePair;

@@ -1,6 +1,6 @@
 package org.jlato.tree.stmt;
 
-import org.jlato.tree.Tree;
+import org.jlato.tree.Node;
 
-public interface Stmt extends Tree {
+public interface Stmt extends Node {
 }

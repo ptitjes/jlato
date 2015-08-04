@@ -6,14 +6,14 @@ import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.expr.ArrayDimExpr;
 import org.jlato.tree.expr.Expr;
 import org.jlato.util.Mutation;
 
-public class TDArrayDimExpr extends TreeBase<SArrayDimExpr, Tree, ArrayDimExpr> implements ArrayDimExpr {
+public class TDArrayDimExpr extends TreeBase<SArrayDimExpr, Node, ArrayDimExpr> implements ArrayDimExpr {
 
 	public Kind kind() {
 		return Kind.ArrayDimExpr;

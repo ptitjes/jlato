@@ -6,13 +6,13 @@ import org.jlato.internal.bu.stmt.SCatchClause;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
-import org.jlato.tree.Tree;
+import org.jlato.tree.Node;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.stmt.CatchClause;
 import org.jlato.util.Mutation;
 
-public class TDCatchClause extends TreeBase<SCatchClause, Tree, CatchClause> implements CatchClause {
+public class TDCatchClause extends TreeBase<SCatchClause, Node, CatchClause> implements CatchClause {
 
 	public Kind kind() {
 		return Kind.CatchClause;

@@ -1,11 +1,11 @@
 package org.jlato.tree.expr;
 
-import org.jlato.tree.Tree;
+import org.jlato.tree.Node;
 import org.jlato.tree.TreeCombinators;
 import org.jlato.tree.name.Name;
 import org.jlato.util.Mutation;
 
-public interface MemberValuePair extends Tree, TreeCombinators<MemberValuePair> {
+public interface MemberValuePair extends Node, TreeCombinators<MemberValuePair> {
 
 	Name name();
 

@@ -1,11 +1,11 @@
 package org.jlato.tree.decl;
 
-import org.jlato.tree.Tree;
+import org.jlato.tree.Node;
 import org.jlato.tree.TreeCombinators;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
 
-public interface ImportDecl extends Tree, TreeCombinators<ImportDecl> {
+public interface ImportDecl extends Node, TreeCombinators<ImportDecl> {
 
 	QualifiedName name();
 

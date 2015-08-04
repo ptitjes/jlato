@@ -6,15 +6,15 @@ import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
 import org.jlato.tree.decl.TypeParameter;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDTypeParameter extends TreeBase<STypeParameter, Tree, TypeParameter> implements TypeParameter {
+public class TDTypeParameter extends TreeBase<STypeParameter, Node, TypeParameter> implements TypeParameter {
 
 	public Kind kind() {
 		return Kind.TypeParameter;

@@ -6,13 +6,13 @@ import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
 
-public class TDQualifiedName extends TreeBase<SQualifiedName, Tree, QualifiedName> implements QualifiedName {
+public class TDQualifiedName extends TreeBase<SQualifiedName, Node, QualifiedName> implements QualifiedName {
 
 	public Kind kind() {
 		return Kind.QualifiedName;

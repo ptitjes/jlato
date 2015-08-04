@@ -6,15 +6,15 @@ import org.jlato.internal.bu.decl.SPackageDecl;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
 import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.ImportDecl;
 import org.jlato.tree.decl.PackageDecl;
 import org.jlato.tree.decl.TypeDecl;
 import org.jlato.util.Mutation;
 
-public class TDCompilationUnit extends TreeBase<SCompilationUnit, Tree, CompilationUnit> implements CompilationUnit {
+public class TDCompilationUnit extends TreeBase<SCompilationUnit, Node, CompilationUnit> implements CompilationUnit {
 
 	public Kind kind() {
 		return Kind.CompilationUnit;

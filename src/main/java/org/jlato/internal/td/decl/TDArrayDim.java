@@ -5,13 +5,13 @@ import org.jlato.internal.bu.decl.SArrayDim;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.util.Mutation;
 
-public class TDArrayDim extends TreeBase<SArrayDim, Tree, ArrayDim> implements ArrayDim {
+public class TDArrayDim extends TreeBase<SArrayDim, Node, ArrayDim> implements ArrayDim {
 
 	public Kind kind() {
 		return Kind.ArrayDim;

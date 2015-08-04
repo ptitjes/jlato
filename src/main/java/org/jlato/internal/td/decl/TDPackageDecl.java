@@ -6,14 +6,14 @@ import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.SLocation;
 import org.jlato.internal.td.TreeBase;
 import org.jlato.tree.Kind;
+import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
-import org.jlato.tree.Tree;
 import org.jlato.tree.decl.PackageDecl;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
 
-public class TDPackageDecl extends TreeBase<SPackageDecl, Tree, PackageDecl> implements PackageDecl {
+public class TDPackageDecl extends TreeBase<SPackageDecl, Node, PackageDecl> implements PackageDecl {
 
 	public Kind kind() {
 		return Kind.PackageDecl;
