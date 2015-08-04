@@ -1,34 +1,35 @@
 package org.jlato.tree.decl;
 
-import org.jlato.internal.td.decl.TDModifier;
 import org.jlato.tree.TreeCombinators;
 import org.jlato.util.Mutation;
 
+import static org.jlato.tree.TreeFactory.modifier;
+
 public interface Modifier extends ExtendedModifier, TreeCombinators<Modifier> {
 
-	Modifier Public = new TDModifier(ModifierKeyword.Public);
+	Modifier Public = modifier(ModifierKeyword.Public);
 
-	Modifier Protected = new TDModifier(ModifierKeyword.Protected);
+	Modifier Protected = modifier(ModifierKeyword.Protected);
 
-	Modifier Private = new TDModifier(ModifierKeyword.Private);
+	Modifier Private = modifier(ModifierKeyword.Private);
 
-	Modifier Abstract = new TDModifier(ModifierKeyword.Abstract);
+	Modifier Abstract = modifier(ModifierKeyword.Abstract);
 
-	Modifier Default = new TDModifier(ModifierKeyword.Default);
+	Modifier Default = modifier(ModifierKeyword.Default);
 
-	Modifier Static = new TDModifier(ModifierKeyword.Static);
+	Modifier Static = modifier(ModifierKeyword.Static);
 
-	Modifier Final = new TDModifier(ModifierKeyword.Final);
+	Modifier Final = modifier(ModifierKeyword.Final);
 
-	Modifier Transient = new TDModifier(ModifierKeyword.Transient);
+	Modifier Transient = modifier(ModifierKeyword.Transient);
 
-	Modifier Volatile = new TDModifier(ModifierKeyword.Volatile);
+	Modifier Volatile = modifier(ModifierKeyword.Volatile);
 
-	Modifier Synchronized = new TDModifier(ModifierKeyword.Synchronized);
+	Modifier Synchronized = modifier(ModifierKeyword.Synchronized);
 
-	Modifier Native = new TDModifier(ModifierKeyword.Native);
+	Modifier Native = modifier(ModifierKeyword.Native);
 
-	Modifier StrictFP = new TDModifier(ModifierKeyword.StrictFP);
+	Modifier StrictFP = modifier(ModifierKeyword.StrictFP);
 
 	ModifierKeyword keyword();
 
