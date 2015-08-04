@@ -1,21 +1,21 @@
 {
-  class: org.jlato.tree.expr.CastExpr,
+  kind: CastExpr,
   expr: {
-    class: org.jlato.tree.name.Name,
+    kind: Name,
     id: v,
   },
   type: {
-    class: org.jlato.tree.type.IntersectionType,
+    kind: IntersectionType,
     types: [
       {
-        class: org.jlato.tree.type.QualifiedType,
+        kind: QualifiedType,
         annotations: [
           {
-            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            kind: MarkerAnnotationExpr,
             name: Ann1,
           },
           {
-            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            kind: MarkerAnnotationExpr,
             name: Ann2,
           },
         ],
@@ -24,14 +24,14 @@
         typeArgs: null,
       },
       {
-        class: org.jlato.tree.type.QualifiedType,
+        kind: QualifiedType,
         annotations: [
           {
-            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            kind: MarkerAnnotationExpr,
             name: Ann3,
           },
           {
-            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            kind: MarkerAnnotationExpr,
             name: Ann4,
           },
         ],

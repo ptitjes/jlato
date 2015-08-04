@@ -1,10 +1,10 @@
 {
-  class: org.jlato.tree.expr.MethodInvocationExpr,
+  kind: MethodInvocationExpr,
   args: [
     {
-      class: org.jlato.tree.expr.LambdaExpr,
+      kind: LambdaExpr,
       body: {
-        class: org.jlato.tree.expr.MethodInvocationExpr,
+        kind: MethodInvocationExpr,
         args: [
           x,
         ],
@@ -16,9 +16,9 @@
       hasParens: true,
       params: [
         {
-          class: org.jlato.tree.decl.FormalParameter,
+          kind: FormalParameter,
           id: {
-            class: org.jlato.tree.decl.VariableDeclaratorId,
+            kind: VariableDeclaratorId,
             dims: [
             ],
             name: l,
@@ -27,7 +27,7 @@
           modifiers: [
           ],
           type: {
-            class: org.jlato.tree.type.UnknownType,
+            kind: UnknownType,
           },
         },
       ],

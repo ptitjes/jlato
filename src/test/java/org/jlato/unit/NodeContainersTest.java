@@ -24,12 +24,9 @@ import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.Printer;
-import org.jlato.rewrite.Quotes;
 import org.jlato.tree.NodeEither;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
-import org.jlato.tree.decl.ImportDecl;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.MethodInvocationExpr;
 import org.jlato.tree.name.Name;
@@ -41,7 +38,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
+
+import static org.jlato.tree.TreeFactory.blockStmt;
+import static org.jlato.tree.TreeFactory.name;
 
 /**
  * @author Didier Villevalois
@@ -237,35 +236,35 @@ public class NodeContainersTest {
 	@Test
 	public void nodeListStaticCreationHelpers() {
 		assertNodeListContent(NodeList.<Name>empty(), 0);
-		assertNodeListContent(NodeList.of(name(0)), 1);
-		assertNodeListContent(NodeList.of(name(0), name(1)), 2);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2)), 3);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3)), 4);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4)), 5);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5)), 6);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6)), 7);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7)), 8);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8)), 9);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9)), 10);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10)), 11);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10), name(11)), 12);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10), name(11), name(12)), 13);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10), name(11), name(12), name(13)), 14);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10), name(11), name(12), name(13), name(14)), 15);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10), name(11), name(12), name(13), name(14), name(15)), 16);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10), name(11), name(12), name(13), name(14), name(15), name(16)), 17);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10), name(11), name(12), name(13), name(14), name(15), name(16), name(17)), 18);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10), name(11), name(12), name(13), name(14), name(15), name(16), name(17), name(18)), 19);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10), name(11), name(12), name(13), name(14), name(15), name(16), name(17), name(18), name(19)), 20);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10), name(11), name(12), name(13), name(14), name(15), name(16), name(17), name(18), name(19), name(20)), 21);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10), name(11), name(12), name(13), name(14), name(15), name(16), name(17), name(18), name(19), name(20), name(21)), 22);
-		assertNodeListContent(NodeList.of(name(0), name(1), name(2), name(3), name(4), name(5), name(6), name(7), name(8), name(9), name(10), name(11), name(12), name(13), name(14), name(15), name(16), name(17), name(18), name(19), name(20), name(21), name(22)), 23);
+		assertNodeListContent(NodeList.of(indexedName(0)), 1);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1)), 2);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2)), 3);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3)), 4);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4)), 5);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5)), 6);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6)), 7);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7)), 8);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8)), 9);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9)), 10);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10)), 11);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10), indexedName(11)), 12);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10), indexedName(11), indexedName(12)), 13);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10), indexedName(11), indexedName(12), indexedName(13)), 14);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10), indexedName(11), indexedName(12), indexedName(13), indexedName(14)), 15);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10), indexedName(11), indexedName(12), indexedName(13), indexedName(14), indexedName(15)), 16);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10), indexedName(11), indexedName(12), indexedName(13), indexedName(14), indexedName(15), indexedName(16)), 17);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10), indexedName(11), indexedName(12), indexedName(13), indexedName(14), indexedName(15), indexedName(16), indexedName(17)), 18);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10), indexedName(11), indexedName(12), indexedName(13), indexedName(14), indexedName(15), indexedName(16), indexedName(17), indexedName(18)), 19);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10), indexedName(11), indexedName(12), indexedName(13), indexedName(14), indexedName(15), indexedName(16), indexedName(17), indexedName(18), indexedName(19)), 20);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10), indexedName(11), indexedName(12), indexedName(13), indexedName(14), indexedName(15), indexedName(16), indexedName(17), indexedName(18), indexedName(19), indexedName(20)), 21);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10), indexedName(11), indexedName(12), indexedName(13), indexedName(14), indexedName(15), indexedName(16), indexedName(17), indexedName(18), indexedName(19), indexedName(20), indexedName(21)), 22);
+		assertNodeListContent(NodeList.of(indexedName(0), indexedName(1), indexedName(2), indexedName(3), indexedName(4), indexedName(5), indexedName(6), indexedName(7), indexedName(8), indexedName(9), indexedName(10), indexedName(11), indexedName(12), indexedName(13), indexedName(14), indexedName(15), indexedName(16), indexedName(17), indexedName(18), indexedName(19), indexedName(20), indexedName(21), indexedName(22)), 23);
 	}
 
 	private void assertNodeListContent(NodeList<? extends Expr> list, int expectedSize) {
 		Assert.assertEquals(expectedSize, list.size());
 		for (int i = 0; i < expectedSize; i++) {
-			Assert.assertEquals(name(i), list.get(i));
+			Assert.assertEquals(indexedName(i), list.get(i));
 		}
 	}
 
@@ -314,15 +313,11 @@ public class NodeContainersTest {
 		Assert.assertEquals(null, either3.right());
 	}
 
-	public Name name(String string) {
-		return new Name(string);
-	}
-
-	public Name name(int index) {
-		return new Name("name" + index);
+	public Name indexedName(int index) {
+		return name("name" + index);
 	}
 
 	public BlockStmt emptyBlock() {
-		return new BlockStmt(NodeList.<Stmt>empty());
+		return blockStmt();
 	}
 }

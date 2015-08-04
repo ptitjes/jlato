@@ -1,0 +1,23 @@
+package org.jlato.internal.td.decl;
+
+import org.jlato.internal.bu.decl.SEmptyMemberDecl;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
+import org.jlato.tree.Kind;
+import org.jlato.tree.decl.EmptyMemberDecl;
+import org.jlato.tree.decl.MemberDecl;
+
+public class TDEmptyMemberDecl extends TreeBase<SEmptyMemberDecl, MemberDecl, EmptyMemberDecl> implements EmptyMemberDecl {
+
+	public Kind kind() {
+		return Kind.EmptyMemberDecl;
+	}
+
+	public TDEmptyMemberDecl(SLocation<SEmptyMemberDecl> location) {
+		super(location);
+	}
+
+	public TDEmptyMemberDecl() {
+		super(new SLocation<SEmptyMemberDecl>(SEmptyMemberDecl.make()));
+	}
+}

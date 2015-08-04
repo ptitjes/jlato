@@ -1,5 +1,5 @@
 {
-  class: org.jlato.tree.type.PrimitiveType,
+  kind: PrimitiveType,
   annotations: [
   ],
   primitive: Int,

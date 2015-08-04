@@ -1,8 +1,8 @@
 {
-  class: org.jlato.tree.type.QualifiedType,
+  kind: QualifiedType,
   annotations: [
     {
-      class: org.jlato.tree.expr.MarkerAnnotationExpr,
+      kind: MarkerAnnotationExpr,
       name: Ann1,
     },
   ],
@@ -10,10 +10,10 @@
   scope: null,
   typeArgs: [
     {
-      class: org.jlato.tree.type.QualifiedType,
+      kind: QualifiedType,
       annotations: [
         {
-          class: org.jlato.tree.expr.MarkerAnnotationExpr,
+          kind: MarkerAnnotationExpr,
           name: Ann2,
         },
       ],
@@ -22,10 +22,10 @@
       typeArgs: null,
     },
     {
-      class: org.jlato.tree.type.QualifiedType,
+      kind: QualifiedType,
       annotations: [
         {
-          class: org.jlato.tree.expr.MarkerAnnotationExpr,
+          kind: MarkerAnnotationExpr,
           name: Ann3,
         },
       ],

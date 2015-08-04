@@ -27,7 +27,7 @@ import org.jlato.rewrite.MatchVisitor;
 import org.jlato.rewrite.Matcher;
 import org.jlato.rewrite.Substitution;
 import org.jlato.rewrite.TypeSafeMatcher;
-import org.jlato.tree.Tree;
+import org.jlato.tree.*;
 
 import java.util.LinkedList;
 
@@ -37,7 +37,7 @@ import static org.jlato.internal.bu.WToken.whitespace;
 /**
  * @author Didier Villevalois
  */
-public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends ST> implements Tree {
+public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends ST> implements Tree, TreeCombinators<T> {
 
 	protected final SLocation<S> location;
 

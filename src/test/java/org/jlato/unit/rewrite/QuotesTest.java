@@ -56,10 +56,10 @@ public class QuotesTest extends BaseTestFromFiles {
 	@Test
 	public void enclosedExpr() throws FileNotFoundException, ParseException {
 		Assert.assertEquals("(var ? true : false)", Printer.printToString(
-				expr("($e ? true : false)").build(Substitution.empty().bind("e", new Name("var")))
+				expr("($e ? true : false)").build(Substitution.empty().bind("e", name("var")))
 		));
 		Assert.assertEquals("( ( var ) ? true : false)", Printer.printToString(
-				expr("( ( $e ) ? true : false)").build(Substitution.empty().bind("e", new Name("var")))
+				expr("( ( $e ) ? true : false)").build(Substitution.empty().bind("e", name("var")))
 		));
 	}
 

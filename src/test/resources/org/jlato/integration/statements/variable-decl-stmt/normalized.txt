@@ -1,28 +1,28 @@
 {
-  class: org.jlato.tree.stmt.ExpressionStmt,
+  kind: ExpressionStmt,
   expr: {
-    class: org.jlato.tree.expr.VariableDeclarationExpr,
+    kind: VariableDeclarationExpr,
     declaration: {
-      class: org.jlato.tree.decl.LocalVariableDecl,
+      kind: LocalVariableDecl,
       modifiers: [
       ],
       type: {
-        class: org.jlato.tree.type.PrimitiveType,
+        kind: PrimitiveType,
         annotations: [
         ],
         primitive: Int,
       },
       variables: [
         {
-          class: org.jlato.tree.decl.VariableDeclarator,
+          kind: VariableDeclarator,
           id: {
-            class: org.jlato.tree.decl.VariableDeclaratorId,
+            kind: VariableDeclaratorId,
             dims: [
             ],
             name: var,
           },
           init: {
-            class: org.jlato.tree.expr.LiteralExpr,
+            kind: LiteralExpr,
             literalClass: java.lang.Integer,
             literalString: 42,
           },

@@ -1,0 +1,52 @@
+package org.jlato.internal.td.name;
+
+import org.jlato.internal.bu.SNodeOptionState;
+import org.jlato.internal.bu.name.SName;
+import org.jlato.internal.bu.name.SQualifiedName;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TreeBase;
+import org.jlato.tree.Kind;
+import org.jlato.tree.NodeOption;
+import org.jlato.tree.Tree;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.name.QualifiedName;
+import org.jlato.util.Mutation;
+
+public class TDQualifiedName extends TreeBase<SQualifiedName, Tree, QualifiedName> implements QualifiedName {
+
+	public Kind kind() {
+		return Kind.QualifiedName;
+	}
+
+	public TDQualifiedName(SLocation<SQualifiedName> location) {
+		super(location);
+	}
+
+	public TDQualifiedName(NodeOption<QualifiedName> qualifier, Name name) {
+		super(new SLocation<SQualifiedName>(SQualifiedName.make(TreeBase.<SNodeOptionState>treeOf(qualifier), TreeBase.<SName>treeOf(name))));
+	}
+
+	public NodeOption<QualifiedName> qualifier() {
+		return location.safeTraversal(SQualifiedName.QUALIFIER);
+	}
+
+	public QualifiedName withQualifier(NodeOption<QualifiedName> qualifier) {
+		return location.safeTraversalReplace(SQualifiedName.QUALIFIER, qualifier);
+	}
+
+	public QualifiedName withQualifier(Mutation<NodeOption<QualifiedName>> mutation) {
+		return location.safeTraversalMutate(SQualifiedName.QUALIFIER, mutation);
+	}
+
+	public Name name() {
+		return location.safeTraversal(SQualifiedName.NAME);
+	}
+
+	public QualifiedName withName(Name name) {
+		return location.safeTraversalReplace(SQualifiedName.NAME, name);
+	}
+
+	public QualifiedName withName(Mutation<Name> mutation) {
+		return location.safeTraversalMutate(SQualifiedName.NAME, mutation);
+	}
+}

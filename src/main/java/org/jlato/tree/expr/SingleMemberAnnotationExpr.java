@@ -1,194 +1,20 @@
-/*
- * Copyright (C) 2015 Didier Villevalois.
- *
- * This file is part of JLaTo.
- *
- * JLaTo is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * JLaTo is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.jlato.tree.expr;
 
-import org.jlato.internal.bu.*;
-import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
-import org.jlato.tree.Kind;
-import org.jlato.tree.Tree;
+import org.jlato.tree.TreeCombinators;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
 
-import static org.jlato.internal.shapes.LexicalShape.*;
+public interface SingleMemberAnnotationExpr extends AnnotationExpr, TreeCombinators<SingleMemberAnnotationExpr> {
 
-public class SingleMemberAnnotationExpr extends TreeBase<SingleMemberAnnotationExpr.State, AnnotationExpr, SingleMemberAnnotationExpr> implements AnnotationExpr {
+	QualifiedName name();
 
-	public Kind kind() {
-		return Kind.SingleMemberAnnotationExpr;
-	}
+	SingleMemberAnnotationExpr withName(QualifiedName name);
 
-	private SingleMemberAnnotationExpr(SLocation<SingleMemberAnnotationExpr.State> location) {
-		super(location);
-	}
+	SingleMemberAnnotationExpr withName(Mutation<QualifiedName> mutation);
 
-	public static STree<SingleMemberAnnotationExpr.State> make(STree<QualifiedName.State> name, STree<? extends Expr.State> memberValue) {
-		return new STree<SingleMemberAnnotationExpr.State>(new SingleMemberAnnotationExpr.State(name, memberValue));
-	}
+	Expr memberValue();
 
-	public SingleMemberAnnotationExpr(QualifiedName name, Expr memberValue) {
-		super(new SLocation<SingleMemberAnnotationExpr.State>(make(TreeBase.<QualifiedName.State>treeOf(name), TreeBase.<Expr.State>treeOf(memberValue))));
-	}
+	SingleMemberAnnotationExpr withMemberValue(Expr memberValue);
 
-	public QualifiedName name() {
-		return location.safeTraversal(NAME);
-	}
-
-	public SingleMemberAnnotationExpr withName(QualifiedName name) {
-		return location.safeTraversalReplace(NAME, name);
-	}
-
-	public SingleMemberAnnotationExpr withName(Mutation<QualifiedName> mutation) {
-		return location.safeTraversalMutate(NAME, mutation);
-	}
-
-	public Expr memberValue() {
-		return location.safeTraversal(MEMBER_VALUE);
-	}
-
-	public SingleMemberAnnotationExpr withMemberValue(Expr memberValue) {
-		return location.safeTraversalReplace(MEMBER_VALUE, memberValue);
-	}
-
-	public SingleMemberAnnotationExpr withMemberValue(Mutation<Expr> mutation) {
-		return location.safeTraversalMutate(MEMBER_VALUE, mutation);
-	}
-
-	public static class State extends SNodeState<State> implements AnnotationExpr.State {
-
-		public final STree<QualifiedName.State> name;
-
-		public final STree<? extends Expr.State> memberValue;
-
-		State(STree<QualifiedName.State> name, STree<? extends Expr.State> memberValue) {
-			this.name = name;
-			this.memberValue = memberValue;
-		}
-
-		public SingleMemberAnnotationExpr.State withName(STree<QualifiedName.State> name) {
-			return new SingleMemberAnnotationExpr.State(name, memberValue);
-		}
-
-		public SingleMemberAnnotationExpr.State withMemberValue(STree<? extends Expr.State> memberValue) {
-			return new SingleMemberAnnotationExpr.State(name, memberValue);
-		}
-
-		@Override
-		public Kind kind() {
-			return Kind.SingleMemberAnnotationExpr;
-		}
-
-		@Override
-		protected Tree doInstantiate(SLocation<SingleMemberAnnotationExpr.State> location) {
-			return new SingleMemberAnnotationExpr(location);
-		}
-
-		@Override
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		@Override
-		public STraversal firstChild() {
-			return NAME;
-		}
-
-		@Override
-		public STraversal lastChild() {
-			return MEMBER_VALUE;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o)
-				return true;
-			if (o == null || getClass() != o.getClass())
-				return false;
-			State state = (State) o;
-			if (name == null ? state.name != null : !name.equals(state.name))
-				return false;
-			if (memberValue == null ? state.memberValue != null : !memberValue.equals(state.memberValue))
-				return false;
-			return true;
-		}
-
-		@Override
-		public int hashCode() {
-			int result = 17;
-			if (name != null) result = 37 * result + name.hashCode();
-			if (memberValue != null) result = 37 * result + memberValue.hashCode();
-			return result;
-		}
-	}
-
-	private static STypeSafeTraversal<SingleMemberAnnotationExpr.State, QualifiedName.State, QualifiedName> NAME = new STypeSafeTraversal<SingleMemberAnnotationExpr.State, QualifiedName.State, QualifiedName>() {
-
-		@Override
-		public STree<?> doTraverse(SingleMemberAnnotationExpr.State state) {
-			return state.name;
-		}
-
-		@Override
-		public SingleMemberAnnotationExpr.State doRebuildParentState(SingleMemberAnnotationExpr.State state, STree<QualifiedName.State> child) {
-			return state.withName(child);
-		}
-
-		@Override
-		public STraversal leftSibling(STreeState state) {
-			return null;
-		}
-
-		@Override
-		public STraversal rightSibling(STreeState state) {
-			return MEMBER_VALUE;
-		}
-	};
-
-	private static STypeSafeTraversal<SingleMemberAnnotationExpr.State, Expr.State, Expr> MEMBER_VALUE = new STypeSafeTraversal<SingleMemberAnnotationExpr.State, Expr.State, Expr>() {
-
-		@Override
-		public STree<?> doTraverse(SingleMemberAnnotationExpr.State state) {
-			return state.memberValue;
-		}
-
-		@Override
-		public SingleMemberAnnotationExpr.State doRebuildParentState(SingleMemberAnnotationExpr.State state, STree<Expr.State> child) {
-			return state.withMemberValue(child);
-		}
-
-		@Override
-		public STraversal leftSibling(STreeState state) {
-			return NAME;
-		}
-
-		@Override
-		public STraversal rightSibling(STreeState state) {
-			return null;
-		}
-	};
-
-	public static final LexicalShape shape = composite(
-			token(LToken.At), child(NAME),
-			token(LToken.ParenthesisLeft),
-			child(MEMBER_VALUE),
-			token(LToken.ParenthesisRight)
-	);
+	SingleMemberAnnotationExpr withMemberValue(Mutation<Expr> mutation);
 }

@@ -68,11 +68,11 @@ public class NormalizedJsonWriter {
 
 	private void writeTree(Tree tree, int indent) {
 		Class<? extends Tree> treeClass = tree.getClass();
-		String className = treeClass.getName();
 
 		builder.append("{\n");
 
-		writeField("class", String.class, className, indent + 1);
+		final SNodeState state = (SNodeState) TreeBase.treeOf(tree).state;
+		writeField("kind", String.class, state.kind(), indent + 1);
 
 		writeProperties(tree, treeClass, indent + 1);
 

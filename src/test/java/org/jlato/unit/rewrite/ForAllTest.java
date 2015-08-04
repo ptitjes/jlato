@@ -40,6 +40,7 @@ import java.io.IOException;
 
 import static org.jlato.rewrite.Quotes.param;
 import static org.jlato.rewrite.Quotes.type;
+import static org.jlato.tree.TreeFactory.name;
 
 /**
  * @author Didier Villevalois
@@ -57,7 +58,7 @@ public class ForAllTest extends BaseTestFromFiles {
 		final CompilationUnit rewrote = cu.forAll(paramPattern, new MatchVisitor<FormalParameter>() {
 			@Override
 			public FormalParameter visit(FormalParameter p, Substitution s) {
-				return p.withId(p.id().withName(new Name(p.id().name().id() + "42")));
+				return p.withId(p.id().withName(name(p.id().name().id() + "42")));
 			}
 		});
 

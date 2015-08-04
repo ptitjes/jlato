@@ -1,0 +1,144 @@
+package org.jlato.internal.bu.decl;
+
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNodeState;
+import org.jlato.internal.bu.SProperty;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STypeSafeProperty;
+import org.jlato.internal.shapes.*;
+import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.decl.TDModifier;
+import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings.IndentationContext;
+import org.jlato.printer.FormattingSettings.SpacingLocation;
+import org.jlato.tree.Kind;
+import org.jlato.tree.Tree;
+import org.jlato.tree.decl.ModifierKeyword;
+
+import java.util.Collections;
+
+import static org.jlato.internal.shapes.LSCondition.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
+import static org.jlato.printer.IndentationConstraint.*;
+import static org.jlato.printer.SpacingConstraint.*;
+
+public class SModifier extends SNodeState<SModifier> implements SExtendedModifier {
+
+	public static STree<SModifier> make(ModifierKeyword keyword) {
+		return new STree<SModifier>(new SModifier(keyword));
+	}
+
+	public final ModifierKeyword keyword;
+
+	public SModifier(ModifierKeyword keyword) {
+		this.keyword = keyword;
+	}
+
+	@Override
+	public Kind kind() {
+		return Kind.Modifier;
+	}
+
+	public ModifierKeyword keyword() {
+		return keyword;
+	}
+
+	public SModifier withKeyword(ModifierKeyword keyword) {
+		return new SModifier(keyword);
+	}
+
+	@Override
+	protected Tree doInstantiate(SLocation<SModifier> location) {
+		return new TDModifier(location);
+	}
+
+	@Override
+	public LexicalShape shape() {
+		return shape;
+	}
+
+	@Override
+	public Iterable<SProperty> allProperties() {
+		return Collections.<SProperty>singleton(KEYWORD);
+	}
+
+	@Override
+	public STraversal firstChild() {
+		return null;
+	}
+
+	@Override
+	public STraversal lastChild() {
+		return null;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		SModifier state = (SModifier) o;
+		if (keyword == null ? state.keyword != null : !keyword.equals(state.keyword))
+			return false;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 17;
+		if (keyword != null) result = 37 * result + keyword.hashCode();
+		return result;
+	}
+
+	public static STypeSafeProperty<SModifier, ModifierKeyword> KEYWORD = new STypeSafeProperty<SModifier, ModifierKeyword>() {
+
+		@Override
+		public ModifierKeyword doRetrieve(SModifier state) {
+			return state.keyword;
+		}
+
+		@Override
+		public SModifier doRebuildParentState(SModifier state, ModifierKeyword value) {
+			return state.withKeyword(value);
+		}
+	};
+
+	public static final LexicalShape shape = token(new LSToken.Provider() {
+		public LToken tokenFor(STree tree) {
+			final ModifierKeyword keyword = ((SModifier) tree.state).keyword;
+			switch (keyword) {
+				case Public:
+					return LToken.Public;
+				case Protected:
+					return LToken.Protected;
+				case Private:
+					return LToken.Private;
+				case Abstract:
+					return LToken.Abstract;
+				case Default:
+					return LToken.Default;
+				case Static:
+					return LToken.Static;
+				case Final:
+					return LToken.Final;
+				case Transient:
+					return LToken.Transient;
+				case Volatile:
+					return LToken.Volatile;
+				case Synchronized:
+					return LToken.Synchronized;
+				case Native:
+					return LToken.Native;
+				case StrictFP:
+					return LToken.StrictFP;
+				default:
+					// Can't happen by definition of enum
+					throw new IllegalStateException();
+			}
+		}
+	});
+}

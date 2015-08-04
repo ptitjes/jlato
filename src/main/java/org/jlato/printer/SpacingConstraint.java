@@ -30,7 +30,7 @@ public abstract class SpacingConstraint {
 
 	// TODO add context argument (Expression, Statement, Block, Declaration, ...) ??
 
-	public static SpacingConstraint empty() {
+	public static SpacingConstraint noSpace() {
 		return new FixedConstraint(Spacing.noSpace);
 	}
 

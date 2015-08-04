@@ -1,27 +1,27 @@
 {
-  class: org.jlato.tree.stmt.ReturnStmt,
+  kind: ReturnStmt,
   expr: {
-    class: org.jlato.tree.expr.ConditionalExpr,
+    kind: ConditionalExpr,
     condition: {
-      class: org.jlato.tree.expr.ParenthesizedExpr,
+      kind: ParenthesizedExpr,
       inner: {
-        class: org.jlato.tree.expr.BinaryExpr,
+        kind: BinaryExpr,
         left: {
-          class: org.jlato.tree.expr.LiteralExpr,
+          kind: LiteralExpr,
           literalClass: java.lang.Void,
           literalString: null,
         },
         op: Equal,
         right: {
-          class: org.jlato.tree.name.Name,
+          kind: Name,
           id: targetRef,
         },
       },
     },
     elseExpr: {
-      class: org.jlato.tree.expr.LambdaExpr,
+      kind: LambdaExpr,
       body: {
-        class: org.jlato.tree.expr.MethodInvocationExpr,
+        kind: MethodInvocationExpr,
         args: [
           object,
         ],
@@ -33,9 +33,9 @@
       hasParens: false,
       params: [
         {
-          class: org.jlato.tree.decl.FormalParameter,
+          kind: FormalParameter,
           id: {
-            class: org.jlato.tree.decl.VariableDeclaratorId,
+            kind: VariableDeclaratorId,
             dims: [
             ],
             name: object,
@@ -44,18 +44,18 @@
           modifiers: [
           ],
           type: {
-            class: org.jlato.tree.type.UnknownType,
+            kind: UnknownType,
           },
         },
       ],
     },
     thenExpr: {
-      class: org.jlato.tree.expr.MethodReferenceExpr,
+      kind: MethodReferenceExpr,
       name: isNull,
       scope: {
-        class: org.jlato.tree.expr.TypeExpr,
+        kind: TypeExpr,
         type: {
-          class: org.jlato.tree.type.QualifiedType,
+          kind: QualifiedType,
           annotations: [
           ],
           name: Objects,

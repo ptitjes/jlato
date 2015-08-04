@@ -6,6 +6,11 @@ import org.jlato.tree.expr.*;
 import org.jlato.tree.name.*;
 import org.jlato.tree.stmt.*;
 import org.jlato.tree.type.*;
+import org.jlato.internal.td.decl.*;
+import org.jlato.internal.td.expr.*;
+import org.jlato.internal.td.name.*;
+import org.jlato.internal.td.stmt.*;
+import org.jlato.internal.td.type.*;
 
 import static org.jlato.tree.TreeFactory.*;
 
@@ -80,7 +85,7 @@ public class Arbitrary {
 	}
 
 	public Name arbitraryName() {
-		return new Name(arbitraryString());
+		return new TDName(arbitraryString());
 	}
 
 	public UnaryOp arbitraryUnaryOp() {
@@ -108,62 +113,62 @@ public class Arbitrary {
 		return list.foldLeft(null, new Function2<QualifiedName, Name, QualifiedName>() {
 			@Override
 			public QualifiedName apply(QualifiedName qualifiedName, Name name) {
-				return new QualifiedName(NodeOption.of(qualifiedName), name);
+				return new TDQualifiedName(NodeOption.of(qualifiedName), name);
 			}
 		});
 	}
 
 	public FormalParameter arbitraryFormalParameter() {
-		return new FormalParameter(arbitraryListExtendedModifier(), arbitraryType(), arbitraryBoolean(), arbitraryVariableDeclaratorId());
+		return new TDFormalParameter(arbitraryListExtendedModifier(), arbitraryType(), arbitraryBoolean(), arbitraryVariableDeclaratorId());
 	}
 
 	private TypeParameter arbitraryTypeParameter() {
-		return new TypeParameter(arbitraryListAnnotationExpr(), arbitraryName(), arbitraryListType());
+		return new TDTypeParameter(arbitraryListAnnotationExpr(), arbitraryName(), arbitraryListType());
 	}
 
 	private AnnotationExpr arbitraryAnnotationExpr() {
-		return new MarkerAnnotationExpr(arbitraryQualifiedName());
+		return new TDMarkerAnnotationExpr(arbitraryQualifiedName());
 	}
 
 	public LocalVariableDecl arbitraryLocalVariableDecl() {
-		return new LocalVariableDecl(arbitraryListExtendedModifier(), arbitraryType(), arbitraryListVariableDeclarator());
+		return new TDLocalVariableDecl(arbitraryListExtendedModifier(), arbitraryType(), arbitraryListVariableDeclarator());
 	}
 
 	public VariableDeclarationExpr arbitraryVariableDeclarationExpr() {
-		return new VariableDeclarationExpr(arbitraryLocalVariableDecl());
+		return new TDVariableDeclarationExpr(arbitraryLocalVariableDecl());
 	}
 
 	public VariableDeclaratorId arbitraryVariableDeclaratorId() {
-		return new VariableDeclaratorId(arbitraryName(), arbitraryListArrayDim());
+		return new TDVariableDeclaratorId(arbitraryName(), arbitraryListArrayDim());
 	}
 
 	public QualifiedType arbitraryQualifiedType() {
-		return new QualifiedType(arbitraryListAnnotationExpr(), NodeOption.<QualifiedType>none(), arbitraryName(), arbitraryOptionListType());
+		return new TDQualifiedType(arbitraryListAnnotationExpr(), NodeOption.<QualifiedType>none(), arbitraryName(), arbitraryOptionListType());
 	}
 
 	public BlockStmt arbitraryBlockStmt() {
-		return new BlockStmt(arbitraryListStmt());
+		return new TDBlockStmt(arbitraryListStmt());
 	}
 
 	public PackageDecl arbitraryPackageDecl() {
-		return new PackageDecl(arbitraryListAnnotationExpr(), arbitraryQualifiedName());
+		return new TDPackageDecl(arbitraryListAnnotationExpr(), arbitraryQualifiedName());
 	}
 
 	public TypeDecl arbitraryTypeDecl() {
 		return anyArbitraryIn(new Function0<TypeDecl>() {
 			@Override
 			public TypeDecl apply() {
-				return new EmptyTypeDecl();
+				return new TDEmptyTypeDecl();
 			}
 		}, new Function0<TypeDecl>() {
 			@Override
 			public TypeDecl apply() {
-				return new ClassDecl(arbitraryListExtendedModifier(), arbitraryName(), arbitraryListTypeParameter(), arbitraryOptionQualifiedType(), arbitraryListQualifiedType(), arbitraryListMemberDecl());
+				return new TDClassDecl(arbitraryListExtendedModifier(), arbitraryName(), arbitraryListTypeParameter(), arbitraryOptionQualifiedType(), arbitraryListQualifiedType(), arbitraryListMemberDecl());
 			}
 		}, new Function0<TypeDecl>() {
 			@Override
 			public TypeDecl apply() {
-				return new InterfaceDecl(arbitraryListExtendedModifier(), arbitraryName(), arbitraryListTypeParameter(), arbitraryListQualifiedType(), arbitraryListMemberDecl());
+				return new TDInterfaceDecl(arbitraryListExtendedModifier(), arbitraryName(), arbitraryListTypeParameter(), arbitraryListQualifiedType(), arbitraryListMemberDecl());
 			}
 		});
 	}
@@ -172,17 +177,17 @@ public class Arbitrary {
 		return anyArbitraryIn(new Function0<MemberDecl>() {
 			@Override
 			public MemberDecl apply() {
-				return new EmptyMemberDecl();
+				return new TDEmptyMemberDecl();
 			}
 		}, new Function0<MemberDecl>() {
 			@Override
 			public MemberDecl apply() {
-				return new FieldDecl(arbitraryListExtendedModifier(), arbitraryType(), arbitraryListVariableDeclarator());
+				return new TDFieldDecl(arbitraryListExtendedModifier(), arbitraryType(), arbitraryListVariableDeclarator());
 			}
 		}, new Function0<MemberDecl>() {
 			@Override
 			public MemberDecl apply() {
-				return new MethodDecl(arbitraryListExtendedModifier(), arbitraryListTypeParameter(), arbitraryType(), arbitraryName(), arbitraryListFormalParameter(), arbitraryListArrayDim(), arbitraryListQualifiedType(), arbitraryOptionBlockStmt());
+				return new TDMethodDecl(arbitraryListExtendedModifier(), arbitraryListTypeParameter(), arbitraryType(), arbitraryName(), arbitraryListFormalParameter(), arbitraryListArrayDim(), arbitraryListQualifiedType(), arbitraryOptionBlockStmt());
 			}
 		});
 	}
@@ -191,17 +196,17 @@ public class Arbitrary {
 		return anyArbitraryIn(new Function0<Stmt>() {
 			@Override
 			public Stmt apply() {
-				return new EmptyStmt();
+				return new TDEmptyStmt();
 			}
 		}, new Function0<Stmt>() {
 			@Override
 			public Stmt apply() {
-				return new ExpressionStmt(arbitraryExpr());
+				return new TDExpressionStmt(arbitraryExpr());
 			}
 		}, new Function0<Stmt>() {
 			@Override
 			public Stmt apply() {
-				return new ReturnStmt(arbitraryOptionExpr());
+				return new TDReturnStmt(arbitraryOptionExpr());
 			}
 		});
 	}
@@ -210,12 +215,12 @@ public class Arbitrary {
 		return anyArbitraryIn(new Function0<Expr>() {
 			@Override
 			public Expr apply() {
-				return new AssignExpr(arbitraryName(), arbitraryAssignOp(), arbitraryExpr());
+				return new TDAssignExpr(arbitraryName(), arbitraryAssignOp(), arbitraryExpr());
 			}
 		}, new Function0<Expr>() {
 			@Override
 			public Expr apply() {
-				return new BinaryExpr(arbitraryExpr(), arbitraryBinaryOp(), arbitraryExpr());
+				return new TDBinaryExpr(arbitraryExpr(), arbitraryBinaryOp(), arbitraryExpr());
 			}
 		}, new Function0<Expr>() {
 			@Override
@@ -239,23 +244,23 @@ public class Arbitrary {
 		return anyArbitraryIn(new Function0<Type>() {
 			@Override
 			public Type apply() {
-				return new PrimitiveType(arbitraryListAnnotationExpr(), arbitraryPrimitive());
+				return new TDPrimitiveType(arbitraryListAnnotationExpr(), arbitraryPrimitive());
 			}
 		}, new Function0<Type>() {
 			@Override
 			public Type apply() {
-				return new VoidType();
+				return new TDVoidType();
 			}
 		}, new Function0<Type>() {
 			@Override
 			public Type apply() {
-				return new UnknownType();
+				return new TDUnknownType();
 			}
 		});
 	}
 
 	public ArrayInitializerExpr arbitraryArrayInitializerExpr() {
-		return new ArrayInitializerExpr(arbitraryListExpr(), arbitraryBoolean());
+		return new TDArrayInitializerExpr(arbitraryListExpr(), arbitraryBoolean());
 	}
 
 	public NodeList<MemberDecl> arbitraryListMemberDecl() {
@@ -316,7 +321,7 @@ public class Arbitrary {
 		return arbitraryListOf(new Function0<ArrayDimExpr>() {
 			@Override
 			public ArrayDimExpr apply() {
-				return new ArrayDimExpr(arbitraryListAnnotationExpr(), arbitraryExpr());
+				return new TDArrayDimExpr(arbitraryListAnnotationExpr(), arbitraryExpr());
 			}
 		});
 	}
@@ -325,7 +330,7 @@ public class Arbitrary {
 		return arbitraryListOf(new Function0<VariableDeclarator>() {
 			@Override
 			public VariableDeclarator apply() {
-				return new VariableDeclarator(arbitraryVariableDeclaratorId(), arbitraryOptionExpr());
+				return new TDVariableDeclarator(arbitraryVariableDeclaratorId(), arbitraryOptionExpr());
 			}
 		});
 	}
@@ -334,7 +339,7 @@ public class Arbitrary {
 		return arbitraryListOf(new Function0<SwitchCase>() {
 			@Override
 			public SwitchCase apply() {
-				return new SwitchCase(arbitraryOptionExpr(), arbitraryListStmt());
+				return new TDSwitchCase(arbitraryOptionExpr(), arbitraryListStmt());
 			}
 		});
 	}
@@ -343,7 +348,7 @@ public class Arbitrary {
 		return arbitraryListOf(new Function0<CatchClause>() {
 			@Override
 			public CatchClause apply() {
-				return new CatchClause(arbitraryFormalParameter(), arbitraryBlockStmt());
+				return new TDCatchClause(arbitraryFormalParameter(), arbitraryBlockStmt());
 			}
 		});
 	}
@@ -380,7 +385,7 @@ public class Arbitrary {
 		return arbitraryListOf(new Function0<ImportDecl>() {
 			@Override
 			public ImportDecl apply() {
-				return new ImportDecl(arbitraryQualifiedName(), arbitraryBoolean(), arbitraryBoolean());
+				return new TDImportDecl(arbitraryQualifiedName(), arbitraryBoolean(), arbitraryBoolean());
 			}
 		});
 	}
@@ -398,7 +403,7 @@ public class Arbitrary {
 		return arbitraryListOf(new Function0<EnumConstantDecl>() {
 			@Override
 			public EnumConstantDecl apply() {
-				return new EnumConstantDecl(arbitraryListExtendedModifier(), arbitraryName(), arbitraryOptionListExpr(), arbitraryOptionListMemberDecl());
+				return new TDEnumConstantDecl(arbitraryListExtendedModifier(), arbitraryName(), arbitraryOptionListExpr(), arbitraryOptionListMemberDecl());
 			}
 		});
 	}
@@ -416,7 +421,7 @@ public class Arbitrary {
 		return arbitraryListOf(new Function0<MemberValuePair>() {
 			@Override
 			public MemberValuePair apply() {
-				return new MemberValuePair(arbitraryName(), arbitraryAnnotationExpr());
+				return new TDMemberValuePair(arbitraryName(), arbitraryAnnotationExpr());
 			}
 		});
 	}

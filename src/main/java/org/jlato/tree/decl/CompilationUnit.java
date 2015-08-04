@@ -1,242 +1,27 @@
-/*
- * Copyright (C) 2015 Didier Villevalois.
- *
- * This file is part of JLaTo.
- *
- * JLaTo is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * JLaTo is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.jlato.tree.decl;
 
-import org.jlato.internal.bu.*;
-import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
-import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
+import org.jlato.tree.TreeCombinators;
 import org.jlato.util.Mutation;
 
-import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterPackageDecl;
-import static org.jlato.printer.SpacingConstraint.newLine;
-import static org.jlato.printer.SpacingConstraint.spacing;
+public interface CompilationUnit extends Tree, TreeCombinators<CompilationUnit> {
 
-public class CompilationUnit extends TreeBase<CompilationUnit.State, Tree, CompilationUnit> implements Tree {
+	PackageDecl packageDecl();
 
-	public Kind kind() {
-		return Kind.CompilationUnit;
-	}
+	CompilationUnit withPackageDecl(PackageDecl packageDecl);
 
-	private CompilationUnit(SLocation<CompilationUnit.State> location) {
-		super(location);
-	}
+	CompilationUnit withPackageDecl(Mutation<PackageDecl> mutation);
 
-	public static STree<CompilationUnit.State> make(STree<PackageDecl.State> packageDecl, STree<SNodeListState> imports, STree<SNodeListState> types) {
-		return new STree<CompilationUnit.State>(new CompilationUnit.State(packageDecl, imports, types));
-	}
+	NodeList<ImportDecl> imports();
 
-	public CompilationUnit(PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
-		super(new SLocation<CompilationUnit.State>(make(TreeBase.<PackageDecl.State>treeOf(packageDecl), TreeBase.<SNodeListState>treeOf(imports), TreeBase.<SNodeListState>treeOf(types))));
-	}
+	CompilationUnit withImports(NodeList<ImportDecl> imports);
 
-	public PackageDecl packageDecl() {
-		return location.safeTraversal(PACKAGE_DECL);
-	}
+	CompilationUnit withImports(Mutation<NodeList<ImportDecl>> mutation);
 
-	public CompilationUnit withPackageDecl(PackageDecl packageDecl) {
-		return location.safeTraversalReplace(PACKAGE_DECL, packageDecl);
-	}
+	NodeList<TypeDecl> types();
 
-	public CompilationUnit withPackageDecl(Mutation<PackageDecl> mutation) {
-		return location.safeTraversalMutate(PACKAGE_DECL, mutation);
-	}
+	CompilationUnit withTypes(NodeList<TypeDecl> types);
 
-	public NodeList<ImportDecl> imports() {
-		return location.safeTraversal(IMPORTS);
-	}
-
-	public CompilationUnit withImports(NodeList<ImportDecl> imports) {
-		return location.safeTraversalReplace(IMPORTS, imports);
-	}
-
-	public CompilationUnit withImports(Mutation<NodeList<ImportDecl>> mutation) {
-		return location.safeTraversalMutate(IMPORTS, mutation);
-	}
-
-	public NodeList<TypeDecl> types() {
-		return location.safeTraversal(TYPES);
-	}
-
-	public CompilationUnit withTypes(NodeList<TypeDecl> types) {
-		return location.safeTraversalReplace(TYPES, types);
-	}
-
-	public CompilationUnit withTypes(Mutation<NodeList<TypeDecl>> mutation) {
-		return location.safeTraversalMutate(TYPES, mutation);
-	}
-
-	public static class State extends SNodeState<State> implements STreeState {
-
-		public final STree<PackageDecl.State> packageDecl;
-
-		public final STree<SNodeListState> imports;
-
-		public final STree<SNodeListState> types;
-
-		State(STree<PackageDecl.State> packageDecl, STree<SNodeListState> imports, STree<SNodeListState> types) {
-			this.packageDecl = packageDecl;
-			this.imports = imports;
-			this.types = types;
-		}
-
-		public CompilationUnit.State withPackageDecl(STree<PackageDecl.State> packageDecl) {
-			return new CompilationUnit.State(packageDecl, imports, types);
-		}
-
-		public CompilationUnit.State withImports(STree<SNodeListState> imports) {
-			return new CompilationUnit.State(packageDecl, imports, types);
-		}
-
-		public CompilationUnit.State withTypes(STree<SNodeListState> types) {
-			return new CompilationUnit.State(packageDecl, imports, types);
-		}
-
-		@Override
-		public Kind kind() {
-			return Kind.CompilationUnit;
-		}
-
-		@Override
-		protected Tree doInstantiate(SLocation<CompilationUnit.State> location) {
-			return new CompilationUnit(location);
-		}
-
-		@Override
-		public LexicalShape shape() {
-			return shape;
-		}
-
-		@Override
-		public STraversal firstChild() {
-			return PACKAGE_DECL;
-		}
-
-		@Override
-		public STraversal lastChild() {
-			return TYPES;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o)
-				return true;
-			if (o == null || getClass() != o.getClass())
-				return false;
-			State state = (State) o;
-			if (packageDecl == null ? state.packageDecl != null : !packageDecl.equals(state.packageDecl))
-				return false;
-			if (!imports.equals(state.imports))
-				return false;
-			if (!types.equals(state.types))
-				return false;
-			return true;
-		}
-
-		@Override
-		public int hashCode() {
-			int result = 17;
-			if (packageDecl != null) result = 37 * result + packageDecl.hashCode();
-			result = 37 * result + imports.hashCode();
-			result = 37 * result + types.hashCode();
-			return result;
-		}
-	}
-
-	private static STypeSafeTraversal<CompilationUnit.State, PackageDecl.State, PackageDecl> PACKAGE_DECL = new STypeSafeTraversal<CompilationUnit.State, PackageDecl.State, PackageDecl>() {
-
-		@Override
-		public STree<?> doTraverse(CompilationUnit.State state) {
-			return state.packageDecl;
-		}
-
-		@Override
-		public CompilationUnit.State doRebuildParentState(CompilationUnit.State state, STree<PackageDecl.State> child) {
-			return state.withPackageDecl(child);
-		}
-
-		@Override
-		public STraversal leftSibling(STreeState state) {
-			return null;
-		}
-
-		@Override
-		public STraversal rightSibling(STreeState state) {
-			return IMPORTS;
-		}
-	};
-
-	private static STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<ImportDecl>> IMPORTS = new STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<ImportDecl>>() {
-
-		@Override
-		public STree<?> doTraverse(CompilationUnit.State state) {
-			return state.imports;
-		}
-
-		@Override
-		public CompilationUnit.State doRebuildParentState(CompilationUnit.State state, STree<SNodeListState> child) {
-			return state.withImports(child);
-		}
-
-		@Override
-		public STraversal leftSibling(STreeState state) {
-			return PACKAGE_DECL;
-		}
-
-		@Override
-		public STraversal rightSibling(STreeState state) {
-			return TYPES;
-		}
-	};
-
-	private static STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<TypeDecl>> TYPES = new STypeSafeTraversal<CompilationUnit.State, SNodeListState, NodeList<TypeDecl>>() {
-
-		@Override
-		public STree<?> doTraverse(CompilationUnit.State state) {
-			return state.types;
-		}
-
-		@Override
-		public CompilationUnit.State doRebuildParentState(CompilationUnit.State state, STree<SNodeListState> child) {
-			return state.withTypes(child);
-		}
-
-		@Override
-		public STraversal leftSibling(STreeState state) {
-			return IMPORTS;
-		}
-
-		@Override
-		public STraversal rightSibling(STreeState state) {
-			return null;
-		}
-	};
-
-	public static final LexicalShape shape = composite(
-			child(PACKAGE_DECL).withSpacingAfter(spacing(CompilationUnit_AfterPackageDecl)),
-			child(IMPORTS, ImportDecl.listShape),
-			child(TYPES, TypeDecl.listShape),
-			none().withSpacingAfter(newLine())
-	);
+	CompilationUnit withTypes(Mutation<NodeList<TypeDecl>> mutation);
 }

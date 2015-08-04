@@ -1,16 +1,16 @@
 {
-  class: org.jlato.tree.expr.MethodInvocationExpr,
+  kind: MethodInvocationExpr,
   args: [
     {
-      class: org.jlato.tree.expr.CastExpr,
+      kind: CastExpr,
       expr: {
-        class: org.jlato.tree.expr.CastExpr,
+        kind: CastExpr,
         expr: {
-          class: org.jlato.tree.expr.CastExpr,
+          kind: CastExpr,
           expr: {
-            class: org.jlato.tree.expr.LambdaExpr,
+            kind: LambdaExpr,
             body: {
-              class: org.jlato.tree.expr.MethodInvocationExpr,
+              kind: MethodInvocationExpr,
               args: [
                 x,
               ],
@@ -22,9 +22,9 @@
             hasParens: false,
             params: [
               {
-                class: org.jlato.tree.decl.FormalParameter,
+                kind: FormalParameter,
                 id: {
-                  class: org.jlato.tree.decl.VariableDeclaratorId,
+                  kind: VariableDeclaratorId,
                   dims: [
                   ],
                   name: l,
@@ -33,27 +33,27 @@
                 modifiers: [
                 ],
                 type: {
-                  class: org.jlato.tree.type.UnknownType,
+                  kind: UnknownType,
                 },
               },
             ],
           },
           type: {
-            class: org.jlato.tree.type.QualifiedType,
+            kind: QualifiedType,
             annotations: [
             ],
             name: Function,
             scope: null,
             typeArgs: [
               {
-                class: org.jlato.tree.type.QualifiedType,
+                kind: QualifiedType,
                 annotations: [
                 ],
                 name: List,
                 scope: null,
                 typeArgs: [
                   {
-                    class: org.jlato.tree.type.QualifiedType,
+                    kind: QualifiedType,
                     annotations: [
                     ],
                     name: T,
@@ -63,14 +63,14 @@
                 ],
               },
               {
-                class: org.jlato.tree.type.QualifiedType,
+                kind: QualifiedType,
                 annotations: [
                 ],
                 name: List,
                 scope: null,
                 typeArgs: [
                   {
-                    class: org.jlato.tree.type.QualifiedType,
+                    kind: QualifiedType,
                     annotations: [
                     ],
                     name: T,
@@ -83,21 +83,21 @@
           },
         },
         type: {
-          class: org.jlato.tree.type.QualifiedType,
+          kind: QualifiedType,
           annotations: [
           ],
           name: Function,
           scope: null,
           typeArgs: [
             {
-              class: org.jlato.tree.type.QualifiedType,
+              kind: QualifiedType,
               annotations: [
               ],
               name: List,
               scope: null,
               typeArgs: [
                 {
-                  class: org.jlato.tree.type.QualifiedType,
+                  kind: QualifiedType,
                   annotations: [
                   ],
                   name: T,
@@ -107,14 +107,14 @@
               ],
             },
             {
-              class: org.jlato.tree.type.QualifiedType,
+              kind: QualifiedType,
               annotations: [
               ],
               name: List,
               scope: null,
               typeArgs: [
                 {
-                  class: org.jlato.tree.type.QualifiedType,
+                  kind: QualifiedType,
                   annotations: [
                   ],
                   name: T,
@@ -127,21 +127,21 @@
         },
       },
       type: {
-        class: org.jlato.tree.type.QualifiedType,
+        kind: QualifiedType,
         annotations: [
         ],
         name: Function,
         scope: null,
         typeArgs: [
           {
-            class: org.jlato.tree.type.QualifiedType,
+            kind: QualifiedType,
             annotations: [
             ],
             name: List,
             scope: null,
             typeArgs: [
               {
-                class: org.jlato.tree.type.QualifiedType,
+                kind: QualifiedType,
                 annotations: [
                 ],
                 name: T,
@@ -151,14 +151,14 @@
             ],
           },
           {
-            class: org.jlato.tree.type.QualifiedType,
+            kind: QualifiedType,
             annotations: [
             ],
             name: List,
             scope: null,
             typeArgs: [
               {
-                class: org.jlato.tree.type.QualifiedType,
+                kind: QualifiedType,
                 annotations: [
                 ],
                 name: T,

@@ -1,8 +1,8 @@
 {
-  class: org.jlato.tree.expr.MethodInvocationExpr,
+  kind: MethodInvocationExpr,
   args: [
     {
-      class: org.jlato.tree.expr.LiteralExpr,
+      kind: LiteralExpr,
       literalClass: java.lang.String,
       literalString: "oh yeah",
     },

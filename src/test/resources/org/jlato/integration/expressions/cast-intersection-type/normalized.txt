@@ -1,14 +1,14 @@
 {
-  class: org.jlato.tree.expr.CastExpr,
+  kind: CastExpr,
   expr: {
-    class: org.jlato.tree.name.Name,
+    kind: Name,
     id: v,
   },
   type: {
-    class: org.jlato.tree.type.IntersectionType,
+    kind: IntersectionType,
     types: [
       {
-        class: org.jlato.tree.type.QualifiedType,
+        kind: QualifiedType,
         annotations: [
         ],
         name: A,
@@ -16,7 +16,7 @@
         typeArgs: null,
       },
       {
-        class: org.jlato.tree.type.QualifiedType,
+        kind: QualifiedType,
         annotations: [
         ],
         name: B,
@@ -24,7 +24,7 @@
         typeArgs: null,
       },
       {
-        class: org.jlato.tree.type.QualifiedType,
+        kind: QualifiedType,
         annotations: [
         ],
         name: C,

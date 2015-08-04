@@ -1,23 +1,23 @@
 {
-  class: org.jlato.tree.type.QualifiedType,
+  kind: QualifiedType,
   annotations: [
   ],
   name: T1,
   scope: null,
   typeArgs: [
     {
-      class: org.jlato.tree.type.WildcardType,
+      kind: WildcardType,
       annotations: [
         {
-          class: org.jlato.tree.expr.MarkerAnnotationExpr,
+          kind: MarkerAnnotationExpr,
           name: Ann1,
         },
       ],
       ext: {
-        class: org.jlato.tree.type.QualifiedType,
+        kind: QualifiedType,
         annotations: [
           {
-            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            kind: MarkerAnnotationExpr,
             name: Ann2,
           },
         ],
@@ -28,15 +28,15 @@
       sup: null,
     },
     {
-      class: org.jlato.tree.type.WildcardType,
+      kind: WildcardType,
       annotations: [
       ],
       ext: null,
       sup: {
-        class: org.jlato.tree.type.QualifiedType,
+        kind: QualifiedType,
         annotations: [
           {
-            class: org.jlato.tree.expr.MarkerAnnotationExpr,
+            kind: MarkerAnnotationExpr,
             name: Ann3,
           },
         ],

@@ -22,6 +22,10 @@ package org.jlato.parser;
 import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.decl.*;
+import org.jlato.internal.bu.expr.SExpr;
+import org.jlato.internal.bu.stmt.SStmt;
+import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.shapes.DressingBuilder;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.tree.decl.*;
@@ -219,39 +223,39 @@ abstract class ParserBase {
 
 	abstract void Epilog() throws ParseException;
 
-	abstract STree<CompilationUnit.State> CompilationUnit() throws ParseException;
+	abstract STree<SCompilationUnit> CompilationUnit() throws ParseException;
 
-	abstract STree<PackageDecl.State> PackageDecl() throws ParseException;
+	abstract STree<SPackageDecl> PackageDecl() throws ParseException;
 
-	abstract STree<ImportDecl.State> ImportDecl() throws ParseException;
+	abstract STree<SImportDecl> ImportDecl() throws ParseException;
 
-	abstract STree<? extends TypeDecl.State> TypeDecl() throws ParseException;
+	abstract STree<? extends STypeDecl> TypeDecl() throws ParseException;
 
-	abstract STree<? extends MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
+	abstract STree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
 
-	abstract STree<? extends MemberDecl.State> AnnotationTypeBodyDecl() throws ParseException;
+	abstract STree<? extends SMemberDecl> AnnotationTypeBodyDecl() throws ParseException;
 
 	abstract STree<SNodeListState> Modifiers() throws ParseException;
 
-	abstract STree<MethodDecl.State> MethodDecl(STree<SNodeListState> modifiers) throws ParseException;
+	abstract STree<SMethodDecl> MethodDecl(STree<SNodeListState> modifiers) throws ParseException;
 
-	abstract STree<FieldDecl.State> FieldDecl(STree<SNodeListState> modifiers) throws ParseException;
+	abstract STree<SFieldDecl> FieldDecl(STree<SNodeListState> modifiers) throws ParseException;
 
-	abstract STree<AnnotationMemberDecl.State> AnnotationTypeMemberDecl(STree<SNodeListState> modifiers) throws ParseException;
+	abstract STree<SAnnotationMemberDecl> AnnotationTypeMemberDecl(STree<SNodeListState> modifiers) throws ParseException;
 
-	abstract STree<EnumConstantDecl.State> EnumConstantDecl() throws ParseException;
+	abstract STree<SEnumConstantDecl> EnumConstantDecl() throws ParseException;
 
-	abstract STree<FormalParameter.State> FormalParameter() throws ParseException;
+	abstract STree<SFormalParameter> FormalParameter() throws ParseException;
 
-	abstract STree<TypeParameter.State> TypeParameter() throws ParseException;
+	abstract STree<STypeParameter> TypeParameter() throws ParseException;
 
-	abstract STree<? extends Stmt.State> BlockStatement() throws ParseException;
+	abstract STree<? extends SStmt> BlockStatement() throws ParseException;
 
-	abstract STree<? extends Expr.State> Expression() throws ParseException;
+	abstract STree<? extends SExpr> Expression() throws ParseException;
 
 	abstract STree<SNodeListState> Annotations() throws ParseException;
 
-	abstract STree<? extends Type.State> Type(STree<SNodeListState> annotations) throws ParseException;
+	abstract STree<? extends SType> Type(STree<SNodeListState> annotations) throws ParseException;
 
 	public enum TypeKind {
 		Empty,

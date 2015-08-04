@@ -1,8 +1,8 @@
 {
-  class: org.jlato.tree.type.PrimitiveType,
+  kind: PrimitiveType,
   annotations: [
     {
-      class: org.jlato.tree.expr.MarkerAnnotationExpr,
+      kind: MarkerAnnotationExpr,
       name: Meter,
     },
   ],

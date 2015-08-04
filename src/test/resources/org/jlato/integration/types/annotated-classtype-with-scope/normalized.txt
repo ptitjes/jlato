@@ -1,17 +1,17 @@
 {
-  class: org.jlato.tree.type.QualifiedType,
+  kind: QualifiedType,
   annotations: [
     {
-      class: org.jlato.tree.expr.MarkerAnnotationExpr,
+      kind: MarkerAnnotationExpr,
       name: Ann2,
     },
   ],
   name: T2,
   scope: {
-    class: org.jlato.tree.type.QualifiedType,
+    kind: QualifiedType,
     annotations: [
       {
-        class: org.jlato.tree.expr.MarkerAnnotationExpr,
+        kind: MarkerAnnotationExpr,
         name: Ann1,
       },
     ],

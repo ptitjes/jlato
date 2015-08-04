@@ -59,13 +59,16 @@ package org.jlato.parser;
 import java.io.*;
 import java.util.*;
 import org.jlato.internal.bu.*;
-import org.jlato.tree.*;
-import org.jlato.tree.decl.*;
-import org.jlato.tree.expr.*;
-import org.jlato.tree.name.*;
-import org.jlato.tree.stmt.*;
-import org.jlato.tree.type.*;
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.decl.*;
+import org.jlato.internal.bu.expr.*;
+import org.jlato.internal.bu.name.*;
+import org.jlato.internal.bu.stmt.*;
+import org.jlato.internal.bu.type.*;
+import org.jlato.tree.decl.ModifierKeyword;
+import org.jlato.tree.expr.AssignOp;
+import org.jlato.tree.expr.BinaryOp;
+import org.jlato.tree.expr.UnaryOp;
+import org.jlato.tree.type.Primitive;
 
 /**
  * <p>This class was generated automatically by javacc, do not edit.</p>
@@ -1125,7 +1128,7 @@ STree<SNodeListState> NodeListVar():{}
   { return makeVar(); }
 }
 
-STree<Name.State> NodeVar():{}
+STree<SName> NodeVar():{}
 {
   <NODE_VARIABLE>
   { return makeVar(); }
@@ -1135,12 +1138,12 @@ STree<Name.State> NodeVar():{}
  * THE JAVA LANGUAGE GRAMMAR STARTS HERE *
  *****************************************/
 
-STree<CompilationUnit.State> CompilationUnit():
+STree<SCompilationUnit> CompilationUnit():
 {
-	STree<PackageDecl.State> packageDecl = null;
+	STree<SPackageDecl> packageDecl = null;
 	STree<SNodeListState> imports;
 	STree<SNodeListState> types;
-	STree<CompilationUnit.State> compilationUnit;
+	STree<SCompilationUnit> compilationUnit;
 }
 {
   { run(); }
@@ -1149,7 +1152,7 @@ STree<CompilationUnit.State> CompilationUnit():
   imports = ImportDecls()
   types = TypeDecls()
 
-  { compilationUnit = dress(CompilationUnit.make(packageDecl, imports, types)); }
+  { compilationUnit = dress(SCompilationUnit.make(packageDecl, imports, types)); }
 
   Epilog()
   { return dressWithPrologAndEpilog(compilationUnit); }
@@ -1165,45 +1168,45 @@ void Epilog(): {}
  * Declarations
  **********************************************************************************************************************/
 
-STree<PackageDecl.State> PackageDecl():
+STree<SPackageDecl> PackageDecl():
 {
 	STree<SNodeListState> annotations = null;
-	STree<QualifiedName.State> name;
+	STree<SQualifiedName> name;
 }
 {
   { run(); }
 
   annotations = Annotations() "package" name = QualifiedName() ";"
 
-  { return dress(PackageDecl.make(annotations, name)); }
+  { return dress(SPackageDecl.make(annotations, name)); }
 }
 
 STree<SNodeListState> ImportDecls():
 {
 	STree<SNodeListState> imports = emptyList();
-	STree<ImportDecl.State> importDecl = null;
+	STree<SImportDecl> importDecl = null;
 }
 {
   ( importDecl = ImportDecl() { imports = append(imports, importDecl); } )*
   { return imports; }
 }
 
-STree<ImportDecl.State> ImportDecl():
+STree<SImportDecl> ImportDecl():
 {
-	STree<QualifiedName.State> name;
+	STree<SQualifiedName> name;
 	boolean isStatic = false;
 	boolean isAsterisk = false;
 }
 {
   { run(); }
   "import" [ "static" { isStatic = true; } ] name = QualifiedName() [ "." "*" { isAsterisk = true; } ] ";"
-  { return dress(ImportDecl.make(name, isStatic, isAsterisk)); }
+  { return dress(SImportDecl.make(name, isStatic, isAsterisk)); }
 }
 
 STree<SNodeListState> TypeDecls():
 {
 	STree<SNodeListState> types = emptyList();
-	STree<? extends TypeDecl.State> typeDecl = null;
+	STree<? extends STypeDecl> typeDecl = null;
 }
 {
   ( typeDecl = TypeDecl() { types = append(types, typeDecl); } )*
@@ -1219,35 +1222,35 @@ STree<SNodeListState> TypeDecls():
 STree<SNodeListState> Modifiers():
 {
 	STree<SNodeListState> modifiers = emptyList();
-	STree<? extends AnnotationExpr.State> ann;
+	STree<? extends SAnnotationExpr> ann;
 }
 {
   (
     LOOKAHEAD(2)
     (
-      "public" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Public)); }
+      "public" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public)); }
     |
-      "protected" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Protected)); }
+      "protected" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected)); }
     |
-      "private" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Private)); }
+      "private" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private)); }
     |
-      "abstract" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Abstract)); }
+      "abstract" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract)); }
     |
-      "default" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Default)); }
+      "default" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default)); }
     |
-      "static" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Static)); }
+      "static" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static)); }
     |
-      "final" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Final)); }
+      "final" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final)); }
     |
-      "transient" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Transient)); }
+      "transient" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient)); }
     |
-      "volatile" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Volatile)); }
+      "volatile" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile)); }
     |
-      "synchronized" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Synchronized)); }
+      "synchronized" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized)); }
     |
-      "native" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.Native)); }
+      "native" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native)); }
     |
-      "strictfp" { modifiers = append(modifiers, Modifier.make(ModifierKeyword.StrictFP)); }
+      "strictfp" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP)); }
     |
       ann = Annotation() { modifiers = append(modifiers, ann); }
     )
@@ -1259,16 +1262,16 @@ STree<SNodeListState> Modifiers():
 /*
  * Decl syntax follows.
  */
-STree<? extends TypeDecl.State> TypeDecl():
+STree<? extends STypeDecl> TypeDecl():
 {
 	STree<SNodeListState> modifiers;
-	STree<? extends TypeDecl.State> ret;
+	STree<? extends STypeDecl> ret;
 }
 {
   { run(); }
 
   (
-    ";" { ret = dress(EmptyTypeDecl.make()); }
+    ";" { ret = dress(SEmptyTypeDecl.make()); }
   |
     modifiers = Modifiers()
     (
@@ -1284,12 +1287,12 @@ STree<? extends TypeDecl.State> TypeDecl():
 }
 
 
-STree<? extends TypeDecl.State> ClassOrInterfaceDecl(STree<SNodeListState> modifiers):
+STree<? extends STypeDecl> ClassOrInterfaceDecl(STree<SNodeListState> modifiers):
 {
 	TypeKind typeKind;
-	STree<Name.State> name;
+	STree<SName> name;
 	STree<SNodeListState> typeParams = null;
-	STree<QualifiedType.State> superClassType = null;
+	STree<SQualifiedType> superClassType = null;
 	STree<SNodeListState> extendsClause = null;
 	STree<SNodeListState> implementsClause = null;
 	STree<SNodeListState> members;
@@ -1314,9 +1317,9 @@ STree<? extends TypeDecl.State> ClassOrInterfaceDecl(STree<SNodeListState> modif
 
   {
     if (typeKind == TypeKind.Interface)
-      return dress(InterfaceDecl.make(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members));
+      return dress(SInterfaceDecl.make(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members));
     else {
-      return dress(ClassDecl.make(modifiers, name, ensureNotNull(typeParams), optionOf(superClassType), ensureNotNull(implementsClause), members));
+      return dress(SClassDecl.make(modifiers, name, ensureNotNull(typeParams), optionOf(superClassType), ensureNotNull(implementsClause), members));
     }
   }
 }
@@ -1324,7 +1327,7 @@ STree<? extends TypeDecl.State> ClassOrInterfaceDecl(STree<SNodeListState> modif
 STree<SNodeListState> ExtendsList():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<QualifiedType.State> cit;
+	STree<SQualifiedType> cit;
 	STree<SNodeListState> annotations = null;
 }
 {
@@ -1341,7 +1344,7 @@ STree<SNodeListState> ExtendsList():
 STree<SNodeListState> ImplementsList(TypeKind typeKind):
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<QualifiedType.State> cit;
+	STree<SQualifiedType> cit;
 	STree<SNodeListState> annotations = null;
 }
 {
@@ -1359,11 +1362,11 @@ STree<SNodeListState> ImplementsList(TypeKind typeKind):
   { return ret; }
 }
 
-STree<? extends TypeDecl.State> EnumDecl(STree<SNodeListState> modifiers):
+STree<? extends STypeDecl> EnumDecl(STree<SNodeListState> modifiers):
 {
-	STree<Name.State> name;
+	STree<SName> name;
 	STree<SNodeListState> implementsClause = emptyList();
-	STree<EnumConstantDecl.State> entry;
+	STree<SEnumConstantDecl> entry;
 	STree<SNodeListState> constants = emptyList();
 	boolean trailingComma = false;
 	STree<SNodeListState> members = null;
@@ -1383,13 +1386,13 @@ STree<? extends TypeDecl.State> EnumDecl(STree<SNodeListState> modifiers):
   [ ";" members = ClassOrInterfaceBodyDecls(TypeKind.Enum) ]
   "}"
 
-  { return dress(EnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))); }
+  { return dress(SEnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))); }
 }
 
-STree<EnumConstantDecl.State> EnumConstantDecl():
+STree<SEnumConstantDecl> EnumConstantDecl():
 {
 	STree<SNodeListState> modifiers = null;
-	STree<Name.State> name;
+	STree<SName> name;
 	STree<SNodeListState> args = null;
 	STree<SNodeListState> classBody = null;
 }
@@ -1399,12 +1402,12 @@ STree<EnumConstantDecl.State> EnumConstantDecl():
   modifiers = Modifiers() name = Name()
   [ args = Arguments() ] [ classBody = ClassOrInterfaceBody(TypeKind.Class) ]
 
-  { return dress(EnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody))); }
+  { return dress(SEnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody))); }
 }
 
-STree<AnnotationDecl.State> AnnotationTypeDecl(STree<SNodeListState> modifiers):
+STree<SAnnotationDecl> AnnotationTypeDecl(STree<SNodeListState> modifiers):
 {
-	STree<Name.State> name;
+	STree<SName> name;
 	STree<SNodeListState> members;
 }
 {
@@ -1413,14 +1416,14 @@ STree<AnnotationDecl.State> AnnotationTypeDecl(STree<SNodeListState> modifiers):
   "@" "interface" name = Name()
   members = AnnotationTypeBody()
 
-  { return dress(AnnotationDecl.make(modifiers, name, members)); }
+  { return dress(SAnnotationDecl.make(modifiers, name, members)); }
 }
 
 // TODO Merge with ClassOrInterfaceBody production and do later checks programmaticaly
 STree<SNodeListState> AnnotationTypeBody():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<? extends MemberDecl.State> member;
+	STree<? extends SMemberDecl> member;
 }
 {
   "{"
@@ -1434,16 +1437,16 @@ STree<SNodeListState> AnnotationTypeBody():
 }
 
 // TODO Merge with ClassOrInterfaceDecl production and do later checks programmaticaly
-STree<? extends MemberDecl.State> AnnotationTypeBodyDecl():
+STree<? extends SMemberDecl> AnnotationTypeBodyDecl():
 {
 	STree<SNodeListState> modifiers;
-	STree<? extends MemberDecl.State> ret;
+	STree<? extends SMemberDecl> ret;
 }
 {
   { run(); }
 
   (
-	";" { ret = dress(EmptyTypeDecl.make()); }
+	";" { ret = dress(SEmptyTypeDecl.make()); }
   |
     modifiers = Modifiers()
     (
@@ -1464,13 +1467,13 @@ STree<? extends MemberDecl.State> AnnotationTypeBodyDecl():
 }
 
 // TODO Merge with MethodDecl production and do later checks programmaticaly
-STree<AnnotationMemberDecl.State> AnnotationTypeMemberDecl(STree<SNodeListState> modifiers):
+STree<SAnnotationMemberDecl> AnnotationTypeMemberDecl(STree<SNodeListState> modifiers):
 {
-	STree<? extends Type.State> type;
-	STree<Name.State> name;
+	STree<? extends SType> type;
+	STree<SName> name;
 	STree<SNodeListState> dims;
 	STree<SNodeOptionState> defaultVal = none();
-	STree<? extends Expr.State> val = null;
+	STree<? extends SExpr> val = null;
 }
 {
   // Run is started before modifiers
@@ -1482,13 +1485,13 @@ STree<AnnotationMemberDecl.State> AnnotationTypeMemberDecl(STree<SNodeListState>
   ]
   ";"
 
-  { return dress(AnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal)); }
+  { return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal)); }
 }
 
 STree<SNodeListState> TypeParameters():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<TypeParameter.State> tp;
+	STree<STypeParameter> tp;
 }
 {
   "<"
@@ -1503,22 +1506,22 @@ STree<SNodeListState> TypeParameters():
   { return ret; }
 }
 
-STree<TypeParameter.State> TypeParameter():
+STree<STypeParameter> TypeParameter():
 {
 	STree<SNodeListState> annotations = null;
-	STree<Name.State> name;
+	STree<SName> name;
 	STree<SNodeListState> typeBounds = null;
 }
 {
   { run(); }
   annotations = Annotations() name = Name() [ typeBounds = TypeBounds() ]
-  { return dress(TypeParameter.make(annotations, name, ensureNotNull(typeBounds))); }
+  { return dress(STypeParameter.make(annotations, name, ensureNotNull(typeBounds))); }
 }
 
 STree<SNodeListState> TypeBounds():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<QualifiedType.State> cit;
+	STree<SQualifiedType> cit;
 	STree<SNodeListState> annotations = null;
 }
 {
@@ -1535,7 +1538,7 @@ STree<SNodeListState> TypeBounds():
 STree<SNodeListState> ClassOrInterfaceBody(TypeKind typeKind):
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<? extends MemberDecl.State> member;
+	STree<? extends SMemberDecl> member;
 }
 {
   "{"
@@ -1546,7 +1549,7 @@ STree<SNodeListState> ClassOrInterfaceBody(TypeKind typeKind):
 
 STree<SNodeListState> ClassOrInterfaceBodyDecls(TypeKind typeKind):
 {
-	STree<? extends MemberDecl.State> member;
+	STree<? extends SMemberDecl> member;
 	STree<SNodeListState> ret = emptyList();
 }
 {
@@ -1558,20 +1561,20 @@ STree<SNodeListState> ClassOrInterfaceBodyDecls(TypeKind typeKind):
   { return ret; }
 }
 
-STree<? extends MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind typeKind):
+STree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind typeKind):
 {
 	STree<SNodeListState> modifiers;
-	STree<? extends MemberDecl.State> ret;
+	STree<? extends SMemberDecl> ret;
 }
 {
   { run(); }
 
   (
-    ";" { ret = dress(EmptyMemberDecl.make()); }
+    ";" { ret = dress(SEmptyMemberDecl.make()); }
   |
     modifiers = Modifiers()
     {
-      if (modifiers != null && contains(modifiers, Modifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface)
+      if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface)
         throwParseException(token, "Only interfaces can have default members");
     }
     (
@@ -1605,23 +1608,23 @@ STree<? extends MemberDecl.State> ClassOrInterfaceBodyDecl(TypeKind typeKind):
   { return ret; }
 }
 
-STree<FieldDecl.State> FieldDecl(STree<SNodeListState> modifiers):
+STree<SFieldDecl> FieldDecl(STree<SNodeListState> modifiers):
 {
-	STree<? extends Type.State> type;
+	STree<? extends SType> type;
 	STree<SNodeListState> variables = emptyList();
-	STree<VariableDeclarator.State> val;
+	STree<SVariableDeclarator> val;
 }
 {
   // Run is started before modifiers
 
   type = Type(null) variables = VariableDeclarators() ";"
 
-  { return dress(FieldDecl.make(modifiers, type, variables)); }
+  { return dress(SFieldDecl.make(modifiers, type, variables)); }
 }
 
-STree<LocalVariableDecl.State> VariableDecl(STree<SNodeListState> modifiers):
+STree<SLocalVariableDecl> VariableDecl(STree<SNodeListState> modifiers):
 {
-	STree<? extends Type.State> type;
+	STree<? extends SType> type;
 	STree<SNodeListState> variables = emptyList();
 }
 {
@@ -1629,13 +1632,13 @@ STree<LocalVariableDecl.State> VariableDecl(STree<SNodeListState> modifiers):
 
   type = Type(null) variables = VariableDeclarators()
 
-  { return dress(LocalVariableDecl.make(modifiers, type, variables)); }
+  { return dress(SLocalVariableDecl.make(modifiers, type, variables)); }
 }
 
 STree<SNodeListState> VariableDeclarators():
 {
 	STree<SNodeListState> variables = emptyList();
-	STree<VariableDeclarator.State> val;
+	STree<SVariableDeclarator> val;
 }
 {
         val = VariableDeclarator() { variables = append(variables, val); }
@@ -1644,11 +1647,11 @@ STree<SNodeListState> VariableDeclarators():
   { return variables; }
 }
 
-STree<VariableDeclarator.State> VariableDeclarator():
+STree<SVariableDeclarator> VariableDeclarator():
 {
-	STree<VariableDeclaratorId.State> id;
+	STree<SVariableDeclaratorId> id;
 	STree<SNodeOptionState> init = none();
-	STree<? extends Expr.State> initExpr = null;
+	STree<? extends SExpr> initExpr = null;
 }
 {
   { run(); }
@@ -1659,12 +1662,12 @@ STree<VariableDeclarator.State> VariableDeclarator():
     { init = optionOf(initExpr); }
   ]
 
-  { return dress(VariableDeclarator.make(id, init)); }
+  { return dress(SVariableDeclarator.make(id, init)); }
 }
 
-STree<VariableDeclaratorId.State> VariableDeclaratorId():
+STree<SVariableDeclaratorId> VariableDeclaratorId():
 {
-	STree<Name.State> name;
+	STree<SName> name;
 	STree<SNodeListState> arrayDims;
 }
 {
@@ -1672,7 +1675,7 @@ STree<VariableDeclaratorId.State> VariableDeclaratorId():
 
   name = Name() arrayDims = ArrayDims()
 
-  { return dress(VariableDeclaratorId.make(name, arrayDims)); }
+  { return dress(SVariableDeclaratorId.make(name, arrayDims)); }
 }
 
 STree<SNodeListState> ArrayDims():
@@ -1685,24 +1688,24 @@ STree<SNodeListState> ArrayDims():
     LOOKAHEAD( Annotations() "[" "]" )
     { run(); }
     annotations = Annotations() "[" "]"
-    { arrayDims = append(arrayDims, dress(ArrayDim.make(annotations))); }
+    { arrayDims = append(arrayDims, dress(SArrayDim.make(annotations))); }
   )*
   { return arrayDims; }
 }
 
-STree<? extends Expr.State> VariableInitializer():
+STree<? extends SExpr> VariableInitializer():
 {
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 }
 {
   ( ret = ArrayInitializer() | ret = Expression() )
   { return ret; }
 }
 
-STree<ArrayInitializerExpr.State> ArrayInitializer():
+STree<SArrayInitializerExpr> ArrayInitializer():
 {
 	STree<SNodeListState> values = emptyList();
-	STree<? extends Expr.State> val;
+	STree<? extends SExpr> val;
 	boolean trailingComma = false;
 }
 {
@@ -1715,18 +1718,18 @@ STree<ArrayInitializerExpr.State> ArrayInitializer():
   [ "," { trailingComma = true; } ]
   "}"
 
-  { return dress(ArrayInitializerExpr.make(values, trailingComma)); }
+  { return dress(SArrayInitializerExpr.make(values, trailingComma)); }
 }
 
-STree<MethodDecl.State> MethodDecl(STree<SNodeListState> modifiers):
+STree<SMethodDecl> MethodDecl(STree<SNodeListState> modifiers):
 {
 	STree<SNodeListState> typeParameters = null;
-	STree<? extends Type.State> type;
-	STree<Name.State> name;
+	STree<? extends SType> type;
+	STree<SName> name;
 	STree<SNodeListState> parameters;
 	STree<SNodeListState> arrayDims;
 	STree<SNodeListState> throwsClause = null;
-	STree<BlockStmt.State> block = null;
+	STree<SBlockStmt> block = null;
 }
 {
   // Run is started before modifiers
@@ -1740,18 +1743,18 @@ STree<MethodDecl.State> MethodDecl(STree<SNodeListState> modifiers):
   |
     ";"
     {
-      if(modifiers != null && contains(modifiers, Modifier.make(ModifierKeyword.Default)))
+      if(modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)))
 	    throwParseException(token, "default methods must have a body");
 	}
   )
 
-  { return dress(MethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))); }
+  { return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))); }
 }
 
 STree<SNodeListState> FormalParameters():
 {
 	STree<SNodeListState> ret = null;
-	STree<FormalParameter.State> par;
+	STree<SFormalParameter> par;
 }
 {
   "("
@@ -1765,7 +1768,7 @@ STree<SNodeListState> FormalParameters():
 STree<SNodeListState> FormalParameterList():
 {
 	STree<SNodeListState> ret = null;
-	STree<FormalParameter.State> par;
+	STree<SFormalParameter> par;
 }
 {
   (
@@ -1777,26 +1780,26 @@ STree<SNodeListState> FormalParameterList():
   { return ret; }
 }
 
-STree<FormalParameter.State> FormalParameter():
+STree<SFormalParameter> FormalParameter():
 {
 	STree<SNodeListState> modifiers;
-	STree<? extends Type.State> type;
+	STree<? extends SType> type;
 	boolean isVarArg = false;
-	STree<VariableDeclaratorId.State> id;
+	STree<SVariableDeclaratorId> id;
 }
 {
   { run(); }
 
   modifiers = Modifiers() type = Type(null) [ "..." { isVarArg = true; } ] id = VariableDeclaratorId()
 
-  { return dress(FormalParameter.make(modifiers, type, isVarArg, id)); }
+  { return dress(SFormalParameter.make(modifiers, type, isVarArg, id)); }
 }
 
 
 STree<SNodeListState> ThrowsClause():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<QualifiedType.State> cit;
+	STree<SQualifiedType> cit;
 }
 {
   "throws" cit = AnnotatedQualifiedType() { ret = append(ret, cit); }
@@ -1805,16 +1808,16 @@ STree<SNodeListState> ThrowsClause():
   { return ret; }
 }
 
-STree<ConstructorDecl.State> ConstructorDecl(STree<SNodeListState> modifiers):
+STree<SConstructorDecl> ConstructorDecl(STree<SNodeListState> modifiers):
 {
 	STree<SNodeListState> typeParameters = null;
-	STree<Name.State> name;
+	STree<SName> name;
 	STree<SNodeListState> parameters;
 	STree<SNodeListState> throwsClause = null;
-	STree<ExplicitConstructorInvocationStmt.State> exConsInv = null;
-	STree<BlockStmt.State> block;
+	STree<SExplicitConstructorInvocationStmt> exConsInv = null;
+	STree<SBlockStmt> block;
 	STree<SNodeListState> stmts = emptyList();
-	STree<? extends Stmt.State> stmt;
+	STree<? extends SStmt> stmt;
 }
 {
   // Run is started before modifiers
@@ -1837,16 +1840,16 @@ STree<ConstructorDecl.State> ConstructorDecl(STree<SNodeListState> modifiers):
     LOOKAHEAD({quotesMode}) stmts = NodeListVar()
   ]
   "}"
-  { block = dress(BlockStmt.make(stmts)); }
+  { block = dress(SBlockStmt.make(stmts)); }
 
-  { return dress(ConstructorDecl.make(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block)); }
+  { return dress(SConstructorDecl.make(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block)); }
 }
 
-STree<ExplicitConstructorInvocationStmt.State> ExplicitConstructorInvocation():
+STree<SExplicitConstructorInvocationStmt> ExplicitConstructorInvocation():
 {
 	boolean isThis = false;
 	STree<SNodeListState> args;
-	STree<? extends Expr.State> expr = null;
+	STree<? extends SExpr> expr = null;
 	STree<SNodeListState> typeArgs = null;
 }
 {
@@ -1867,13 +1870,13 @@ STree<ExplicitConstructorInvocationStmt.State> ExplicitConstructorInvocation():
     args = Arguments() ";"
   )
 
-  { return dress(ExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args)); }
+  { return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args)); }
 }
 
 STree<SNodeListState> Statements():
 {
 	STree<SNodeListState> ret = null;
-	STree<? extends Stmt.State> stmt;
+	STree<? extends SStmt> stmt;
 }
 {
   [
@@ -1887,16 +1890,16 @@ STree<SNodeListState> Statements():
   { return ret; }
 }
 
-STree<InitializerDecl.State> InitializerDecl(STree<SNodeListState> modifiers):
+STree<SInitializerDecl> InitializerDecl(STree<SNodeListState> modifiers):
 {
-	STree<BlockStmt.State> block;
+	STree<SBlockStmt> block;
 }
 {
   // Run is started before modifiers
 
   block = Block()
 
-  { return dress(InitializerDecl.make(modifiers, block)); }
+  { return dress(SInitializerDecl.make(modifiers, block)); }
 }
 
 
@@ -1904,9 +1907,9 @@ STree<InitializerDecl.State> InitializerDecl(STree<SNodeListState> modifiers):
  * Types
  **********************************************************************************************************************/
 
-STree<? extends Type.State> Type(STree<SNodeListState> annotations):
+STree<? extends SType> Type(STree<SNodeListState> annotations):
 {
-	STree<? extends Type.State> ret;
+	STree<? extends SType> ret;
 }
 {
   // Run may be started before annotations
@@ -1919,10 +1922,10 @@ STree<? extends Type.State> Type(STree<SNodeListState> annotations):
   { return ret; }
 }
 
-STree<? extends ReferenceType.State> ReferenceType(STree<SNodeListState> annotations):
+STree<? extends SReferenceType> ReferenceType(STree<SNodeListState> annotations):
 {
-	STree<? extends Type.State> primitiveType;
-	STree<? extends ReferenceType.State> type;
+	STree<? extends SType> primitiveType;
+	STree<? extends SReferenceType> type;
 	STree<SNodeListState> arrayDims;
 }
 {
@@ -1933,25 +1936,25 @@ STree<? extends ReferenceType.State> ReferenceType(STree<SNodeListState> annotat
     primitiveType = PrimitiveType(annotations)
     { lateRun(); }
     arrayDims = ArrayDimsMandatory()
-    { type = dress(ArrayType.make(primitiveType, arrayDims)); }
+    { type = dress(SArrayType.make(primitiveType, arrayDims)); }
   |
     type = QualifiedType(annotations)
     [
       LOOKAHEAD(2)
       { lateRun(); }
       arrayDims = ArrayDimsMandatory()
-      { type = dress(ArrayType.make(type, arrayDims)); }
+      { type = dress(SArrayType.make(type, arrayDims)); }
     ]
   )
 
   { return type; }
 }
 
-STree<QualifiedType.State> QualifiedType(STree<SNodeListState> annotations):
+STree<SQualifiedType> QualifiedType(STree<SNodeListState> annotations):
 {
     STree<SNodeOptionState> scope = none();
-	STree<QualifiedType.State> ret;
-	STree<Name.State> name;
+	STree<SQualifiedType> ret;
+	STree<SName> name;
 	STree<SNodeListState> typeArgs = null;
 }
 {
@@ -1965,7 +1968,7 @@ STree<QualifiedType.State> QualifiedType(STree<SNodeListState> annotations):
 
   name = Name()
   [ LOOKAHEAD(2) typeArgs = TypeArgumentsOrDiamond() ]
-  { ret = dress(QualifiedType.make(annotations, scope, name, optionOf(typeArgs))); }
+  { ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); }
   (
     LOOKAHEAD(2)
     "." { scope = optionOf(ret); }
@@ -1973,7 +1976,7 @@ STree<QualifiedType.State> QualifiedType(STree<SNodeListState> annotations):
     { lateRun(); }
     annotations = Annotations() name = Name()
     [ LOOKAHEAD(2) typeArgs = TypeArgumentsOrDiamond() ]
-    { ret = dress(QualifiedType.make(annotations, scope, name, optionOf(typeArgs))); }
+    { ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); }
   )*
 
   { return ret; }
@@ -1982,7 +1985,7 @@ STree<QualifiedType.State> QualifiedType(STree<SNodeListState> annotations):
 STree<SNodeListState> TypeArguments():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<? extends Type.State> type;
+	STree<? extends SType> type;
 }
 {
   "<"
@@ -1995,7 +1998,7 @@ STree<SNodeListState> TypeArguments():
 STree<SNodeListState> TypeArgumentsOrDiamond():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<? extends Type.State> type;
+	STree<? extends SType> type;
 }
 {
   "<"
@@ -2007,7 +2010,7 @@ STree<SNodeListState> TypeArgumentsOrDiamond():
 STree<SNodeListState> TypeArgumentList():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<? extends Type.State> type;
+	STree<? extends SType> type;
 }
 {
   type = TypeArgument() { ret = append(ret, type); }
@@ -2018,9 +2021,9 @@ STree<SNodeListState> TypeArgumentList():
   <NODE_LIST_VARIABLE> { return makeVar(); }
 }
 
-STree<? extends Type.State> TypeArgument():
+STree<? extends SType> TypeArgument():
 {
-	STree<? extends Type.State> ret;
+	STree<? extends SType> ret;
 	STree<SNodeListState> annotations = null;
 }
 {
@@ -2034,10 +2037,10 @@ STree<? extends Type.State> TypeArgument():
   { return ret; }
 }
 
-STree<WildcardType.State> Wildcard(STree<SNodeListState> annotations):
+STree<SWildcardType> Wildcard(STree<SNodeListState> annotations):
 {
-	STree<? extends ReferenceType.State> ext = null;
-	STree<? extends ReferenceType.State> sup = null;
+	STree<? extends SReferenceType> ext = null;
+	STree<? extends SReferenceType> sup = null;
 	STree<SNodeListState> boundAnnotations = null;
 }
 {
@@ -2052,10 +2055,10 @@ STree<WildcardType.State> Wildcard(STree<SNodeListState> annotations):
   "?"
   [ "extends" { run(); } boundAnnotations = Annotations() ext = ReferenceType(boundAnnotations)
   | "super" { run(); } boundAnnotations = Annotations() sup = ReferenceType(boundAnnotations) ]
-  { return dress(WildcardType.make(annotations, optionOf(ext), optionOf(sup))); }
+  { return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup))); }
 }
 
-STree<PrimitiveType.State> PrimitiveType(STree<SNodeListState> annotations):
+STree<SPrimitiveType> PrimitiveType(STree<SNodeListState> annotations):
 {
 	Primitive primitive;
 }
@@ -2076,16 +2079,16 @@ STree<PrimitiveType.State> PrimitiveType(STree<SNodeListState> annotations):
   | "long"    { primitive = Primitive.Long; }
   | "float"   { primitive = Primitive.Float; }
   | "double"  { primitive = Primitive.Double; } )
-  { return dress(PrimitiveType.make(annotations, primitive)); }
+  { return dress(SPrimitiveType.make(annotations, primitive)); }
 }
 
-STree<? extends Type.State> ResultType():
+STree<? extends SType> ResultType():
 {
-	STree<? extends Type.State> ret;
+	STree<? extends SType> ret;
 }
 {
   (
-    { run(); } "void" { ret = dress(VoidType.make()); }
+    { run(); } "void" { ret = dress(SVoidType.make()); }
   |
     ret = Type(null)
   )
@@ -2095,7 +2098,7 @@ STree<? extends Type.State> ResultType():
 STree<SNodeListState> QualifiedTypeList():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<QualifiedType.State> type;
+	STree<SQualifiedType> type;
 }
 {
   { run(); }
@@ -2106,10 +2109,10 @@ STree<SNodeListState> QualifiedTypeList():
   { return dress(ret); }
 }
 
-STree<QualifiedType.State> AnnotatedQualifiedType():
+STree<SQualifiedType> AnnotatedQualifiedType():
 {
     STree<SNodeListState> annotations;
-	STree<QualifiedType.State> ret;
+	STree<SQualifiedType> ret;
 }
 {
   { run(); }
@@ -2121,32 +2124,32 @@ STree<QualifiedType.State> AnnotatedQualifiedType():
  * Names
  **********************************************************************************************************************/
 
-STree<QualifiedName.State> QualifiedName():
+STree<SQualifiedName> QualifiedName():
 {
     STree<SNodeOptionState> qualifier = none();
-	STree<QualifiedName.State> ret = null;
-	STree<Name.State> name;
+	STree<SQualifiedName> ret = null;
+	STree<SName> name;
 }
 {
-  { run(); } name = Name() { ret = dress(QualifiedName.make(qualifier, name)); }
+  { run(); } name = Name() { ret = dress(SQualifiedName.make(qualifier, name)); }
   (
     LOOKAHEAD(2)
     { lateRun(); }
     "." { qualifier = optionOf(ret); }
-    name = Name() { ret = dress(QualifiedName.make(qualifier, name)); }
+    name = Name() { ret = dress(SQualifiedName.make(qualifier, name)); }
   )*
   { return ret; }
 }
 
-STree<Name.State> Name():
+STree<SName> Name():
 {
-    STree<Name.State> name;
+    STree<SName> name;
 }
 {
   (
     { run(); }
     <IDENTIFIER>
-    { name = dress(Name.make(token.image)); }
+    { name = dress(SName.make(token.image)); }
   |
     LOOKAHEAD({quotesMode}) name = NodeVar()
   )
@@ -2157,7 +2160,7 @@ STree<Name.State> Name():
  * Expressions
  **********************************************************************************************************************/
 
-STree<? extends Expr.State> Expression():
+STree<? extends SExpr> Expression():
 // FIXME
 // This expansion has been written this way instead of :
 //   Assignment() | ConditionalExpression()
@@ -2167,21 +2170,21 @@ STree<? extends Expr.State> Expression():
 // a primary Expr.  Consider adding a semantic predicate to work
 // around this.
 {
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 	AssignOp op;
-	STree<? extends Expr.State> value;
+	STree<? extends SExpr> value;
 	STree<SNodeListState> params;
 }
 {
   (
     LOOKAHEAD( Name() "->" )
-    { run(); } ret = Name() "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<Name.State>) ret)), false)
+    { run(); } ret = Name() "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<SName>) ret)), false)
   |
     LOOKAHEAD( "(" ")" "->" )
     { run(); } "(" ")" "->" ret = LambdaBody(emptyList(), true)
   |
     LOOKAHEAD( "(" Name() ")" "->" )
-    { run(); } "(" ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<Name.State>) ret)), true)
+    { run(); } "(" ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<SName>) ret)), true)
   |
     LOOKAHEAD( "(" Name() "," )
     { run(); } "(" params = InferredFormalParameterList() ")" "->" ret = LambdaBody(params, true)
@@ -2190,24 +2193,24 @@ STree<? extends Expr.State> Expression():
     [
       LOOKAHEAD(2)
       { lateRun(); } op = AssignmentOperator() value = Expression()
-      { ret = dress(AssignExpr.make(ret, op, value)); }
+      { ret = dress(SAssignExpr.make(ret, op, value)); }
     ]
   )
   { return ret; }
 }
 
-STree<LambdaExpr.State> LambdaBody(STree<SNodeListState> parameters, boolean parenthesis):
+STree<SLambdaExpr> LambdaBody(STree<SNodeListState> parameters, boolean parenthesis):
 {
-	STree<BlockStmt.State> block;
-	STree<? extends Expr.State> expr;
-	STree<LambdaExpr.State> ret;
+	STree<SBlockStmt> block;
+	STree<? extends SExpr> expr;
+	STree<SLambdaExpr> ret;
 }
 {
   // Run was started before parameters
   (
-    expr = Expression() { ret = dress(LambdaExpr.make(parameters, parenthesis, left(expr))); }
+    expr = Expression() { ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr))); }
   |
-    block = Block() { ret = dress(LambdaExpr.make(parameters, parenthesis, right(block))); }
+    block = Block() { ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block))); }
   )
   { return ret; }
 }
@@ -2215,7 +2218,7 @@ STree<LambdaExpr.State> LambdaBody(STree<SNodeListState> parameters, boolean par
 STree<SNodeListState> LambdaParameters(ByRef<Boolean> parenthesis):
 {
 	STree<SNodeListState> ret;
-	STree<FormalParameter.State> param;
+	STree<SFormalParameter> param;
 }
 {
   (
@@ -2241,7 +2244,7 @@ STree<SNodeListState> LambdaParameters(ByRef<Boolean> parenthesis):
 STree<SNodeListState> InferredFormalParameterList():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<FormalParameter.State> param;
+	STree<SFormalParameter> param;
 }
 {
   param = InferredFormalParameter() { ret = append(ret, param); }
@@ -2249,9 +2252,9 @@ STree<SNodeListState> InferredFormalParameterList():
   { return ret; }
 }
 
-STree<FormalParameter.State> InferredFormalParameter():
+STree<SFormalParameter> InferredFormalParameter():
 {
-	STree<Name.State> name;
+	STree<SName> name;
 }
 {
   name = Name()
@@ -2259,9 +2262,9 @@ STree<FormalParameter.State> InferredFormalParameter():
 }
 
 JAVACODE
-STree<FormalParameter.State> makeFormalParameter(STree<Name.State> name) {
-  return FormalParameter.make(emptyList(), UnknownType.make(), false,
-    VariableDeclaratorId.make(name, emptyList())
+STree<SFormalParameter> makeFormalParameter(STree<SName> name) {
+  return SFormalParameter.make(emptyList(), SUnknownType.make(), false,
+    SVariableDeclaratorId.make(name, emptyList())
   );
 }
 
@@ -2285,101 +2288,101 @@ AssignOp AssignmentOperator():
   { return ret; }
 }
 
-STree<? extends Expr.State> ConditionalExpression():
+STree<? extends SExpr> ConditionalExpression():
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Expr.State> left;
-	STree<? extends Expr.State> right;
+	STree<? extends SExpr> ret;
+	STree<? extends SExpr> left;
+	STree<? extends SExpr> right;
 }
 {
   ret = ConditionalOrExpression()
   [
     LOOKAHEAD(2)
     { lateRun(); } "?" left = Expression() ":" right = ConditionalExpression()
-    { ret = dress(ConditionalExpr.make(ret, left, right)); }
+    { ret = dress(SConditionalExpr.make(ret, left, right)); }
   ]
   { return ret; }
 }
 
-STree<? extends Expr.State> ConditionalOrExpression():
+STree<? extends SExpr> ConditionalOrExpression():
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Expr.State> right;
+	STree<? extends SExpr> ret;
+	STree<? extends SExpr> right;
 }
 {
   ret = ConditionalAndExpression()
   (
     LOOKAHEAD(2)
     { lateRun(); } "||" right = ConditionalAndExpression()
-    { ret = dress(BinaryExpr.make(ret, BinaryOp.Or, right)); }
+    { ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right)); }
   )*
   { return ret; }
 }
 
-STree<? extends Expr.State> ConditionalAndExpression():
+STree<? extends SExpr> ConditionalAndExpression():
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Expr.State> right;
+	STree<? extends SExpr> ret;
+	STree<? extends SExpr> right;
 }
 {
   ret = InclusiveOrExpression()
   (
     LOOKAHEAD(2)
     { lateRun(); } "&&" right = InclusiveOrExpression()
-    { ret = dress(BinaryExpr.make(ret, BinaryOp.And, right)); }
+    { ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right)); }
   )*
   { return ret; }
 }
 
-STree<? extends Expr.State> InclusiveOrExpression():
+STree<? extends SExpr> InclusiveOrExpression():
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Expr.State> right;
+	STree<? extends SExpr> ret;
+	STree<? extends SExpr> right;
 }
 {
   ret = ExclusiveOrExpression()
   (
     LOOKAHEAD(2)
     { lateRun(); } "|" right = ExclusiveOrExpression()
-    { ret = dress(BinaryExpr.make(ret, BinaryOp.BinOr, right)); }
+    { ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right)); }
   )*
   { return ret; }
 }
 
-STree<? extends Expr.State> ExclusiveOrExpression():
+STree<? extends SExpr> ExclusiveOrExpression():
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Expr.State> right;
+	STree<? extends SExpr> ret;
+	STree<? extends SExpr> right;
 }
 {
   ret = AndExpression()
   (
     LOOKAHEAD(2)
     { lateRun(); } "^" right = AndExpression()
-    { ret = dress(BinaryExpr.make(ret, BinaryOp.XOr, right)); }
+    { ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right)); }
   )*
   { return ret; }
 }
 
-STree<? extends Expr.State> AndExpression():
+STree<? extends SExpr> AndExpression():
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Expr.State> right;
+	STree<? extends SExpr> ret;
+	STree<? extends SExpr> right;
 }
 {
   ret = EqualityExpression()
   (
     LOOKAHEAD(2)
     { lateRun(); } "&" right = EqualityExpression()
-    { ret = dress(BinaryExpr.make(ret, BinaryOp.BinAnd, right)); }
+    { ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right)); }
   )*
   { return ret; }
 }
 
-STree<? extends Expr.State> EqualityExpression():
+STree<? extends SExpr> EqualityExpression():
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Expr.State> right;
+	STree<? extends SExpr> ret;
+	STree<? extends SExpr> right;
 	BinaryOp op;
 }
 {
@@ -2390,16 +2393,16 @@ STree<? extends Expr.State> EqualityExpression():
     ( "==" { op = BinaryOp.Equal; } |
       "!=" { op = BinaryOp.NotEqual; } )
     right = InstanceOfExpression()
-    { ret = dress(BinaryExpr.make(ret, op, right)); }
+    { ret = dress(SBinaryExpr.make(ret, op, right)); }
   )*
   { return ret; }
 }
 
-STree<? extends Expr.State> InstanceOfExpression():
+STree<? extends SExpr> InstanceOfExpression():
 {
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 	STree<SNodeListState> annotations;
-	STree<? extends Type.State> type;
+	STree<? extends SType> type;
 }
 {
   ret = RelationalExpression()
@@ -2407,15 +2410,15 @@ STree<? extends Expr.State> InstanceOfExpression():
     LOOKAHEAD(2)
     { lateRun(); } "instanceof"
     { run(); } annotations = Annotations() type = Type(annotations)
-    { ret = dress(InstanceOfExpr.make(ret, type)); }
+    { ret = dress(SInstanceOfExpr.make(ret, type)); }
   ]
   { return ret; }
 }
 
-STree<? extends Expr.State> RelationalExpression():
+STree<? extends SExpr> RelationalExpression():
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Expr.State> right;
+	STree<? extends SExpr> ret;
+	STree<? extends SExpr> right;
 	BinaryOp op;
 }
 {
@@ -2428,15 +2431,15 @@ STree<? extends Expr.State> RelationalExpression():
   	  "<=" { op = BinaryOp.LessOrEqual; } |
   	  ">=" { op = BinaryOp.GreaterOrEqual; } )
   	right = ShiftExpression()
-  	{ ret = dress(BinaryExpr.make(ret, op, right)); }
+  	{ ret = dress(SBinaryExpr.make(ret, op, right)); }
   )*
   { return ret; }
 }
 
-STree<? extends Expr.State> ShiftExpression():
+STree<? extends SExpr> ShiftExpression():
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Expr.State> right;
+	STree<? extends SExpr> ret;
+	STree<? extends SExpr> right;
 	BinaryOp op;
 }
 {
@@ -2448,15 +2451,15 @@ STree<? extends Expr.State> ShiftExpression():
   	  RSIGNEDSHIFT()   { op = BinaryOp.RightSignedShift; } |
   	  RUNSIGNEDSHIFT() { op = BinaryOp.RightUnsignedShift; } )
   	right = AdditiveExpression()
-  	{ ret = dress(BinaryExpr.make(ret, op, right)); }
+  	{ ret = dress(SBinaryExpr.make(ret, op, right)); }
   )*
   { return ret; }
 }
 
-STree<? extends Expr.State> AdditiveExpression():
+STree<? extends SExpr> AdditiveExpression():
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Expr.State> right;
+	STree<? extends SExpr> ret;
+	STree<? extends SExpr> right;
 	BinaryOp op;
 }
 {
@@ -2467,15 +2470,15 @@ STree<? extends Expr.State> AdditiveExpression():
   	( "+" { op = BinaryOp.Plus; } |
   	  "-" { op = BinaryOp.Minus; } )
   	right = MultiplicativeExpression()
-  	{ ret = dress(BinaryExpr.make(ret, op, right)); }
+  	{ ret = dress(SBinaryExpr.make(ret, op, right)); }
   )*
   { return ret; }
 }
 
-STree<? extends Expr.State> MultiplicativeExpression():
+STree<? extends SExpr> MultiplicativeExpression():
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Expr.State> right;
+	STree<? extends SExpr> ret;
+	STree<? extends SExpr> right;
 	BinaryOp op;
 }
 {
@@ -2487,14 +2490,14 @@ STree<? extends Expr.State> MultiplicativeExpression():
   	  "/" { op = BinaryOp.Divide; } |
   	  "%" { op = BinaryOp.Remainder; } )
   	right = UnaryExpression()
-  	{ ret = dress(BinaryExpr.make(ret, op, right)); }
+  	{ ret = dress(SBinaryExpr.make(ret, op, right)); }
   )*
   { return ret; }
 }
 
-STree<? extends Expr.State> UnaryExpression():
+STree<? extends SExpr> UnaryExpression():
 {
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 	UnaryOp op;
 }
 {
@@ -2505,29 +2508,29 @@ STree<? extends Expr.State> UnaryExpression():
     ( "+" { op = UnaryOp.Positive; } |
       "-" { op = UnaryOp.Negative; } )
     ret = UnaryExpression()
-    { ret = dress(UnaryExpr.make(op, ret)); }
+    { ret = dress(SUnaryExpr.make(op, ret)); }
   |
     ret = UnaryExpressionNotPlusMinus()
   )
   { return ret; }
 }
 
-STree<? extends Expr.State> PrefixExpression():
+STree<? extends SExpr> PrefixExpression():
 {
 	UnaryOp op;
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 }
 {
   { run(); }
   ( "++" { op = UnaryOp.PreIncrement; } |
     "--" { op = UnaryOp.PreDecrement; } )
   ret = UnaryExpression()
-  { return dress(UnaryExpr.make(op, ret)); }
+  { return dress(SUnaryExpr.make(op, ret)); }
 }
 
-STree<? extends Expr.State> UnaryExpressionNotPlusMinus():
+STree<? extends SExpr> UnaryExpressionNotPlusMinus():
 {
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 	UnaryOp op;
 }
 {
@@ -2536,7 +2539,7 @@ STree<? extends Expr.State> UnaryExpressionNotPlusMinus():
 	( "~" { op = UnaryOp.Inverse; } |
 	  "!" { op = UnaryOp.Not; } )
 	ret = UnaryExpression()
-	{ ret = dress(UnaryExpr.make(op, ret)); }
+	{ ret = dress(SUnaryExpr.make(op, ret)); }
   |
     LOOKAHEAD(CastExpression())
     ret = CastExpression()
@@ -2546,9 +2549,9 @@ STree<? extends Expr.State> UnaryExpressionNotPlusMinus():
   { return ret; }
 }
 
-STree<? extends Expr.State> PostfixExpression():
+STree<? extends SExpr> PostfixExpression():
 {
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 	UnaryOp op;
 }
 {
@@ -2558,15 +2561,15 @@ STree<? extends Expr.State> PostfixExpression():
     { lateRun(); }
     ( "++" { op = UnaryOp.PostIncrement; } |
       "--" { op = UnaryOp.PostDecrement; } )
-    { ret = dress(UnaryExpr.make(op, ret)); }
+    { ret = dress(SUnaryExpr.make(op, ret)); }
   ]
   { return ret; }
 }
 
-STree<? extends Expr.State> CastExpression():
+STree<? extends SExpr> CastExpression():
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Type.State> type;
+	STree<? extends SExpr> ret;
+	STree<? extends SType> type;
 	STree<SNodeListState> types = emptyList();
 	STree<SNodeListState> annotations = null;
 }
@@ -2575,19 +2578,19 @@ STree<? extends Expr.State> CastExpression():
     LOOKAHEAD( "(" PrimitiveCastType() ")" )
     { run(); }
     "(" type = PrimitiveCastType() ")" ret = UnaryExpression()
-    { ret = dress(CastExpr.make(type, ret)); }
+    { ret = dress(SCastExpr.make(type, ret)); }
   |
     { run(); }
     "(" type = ReferenceCastType() ")"
     ret = UnaryExpressionNotPlusMinus()
-    { ret = dress(CastExpr.make(type, ret)); }
+    { ret = dress(SCastExpr.make(type, ret)); }
   )
   { return ret; }
 }
 
-STree<? extends Type.State> PrimitiveCastType():
+STree<? extends SType> PrimitiveCastType():
 {
-	STree<? extends Type.State> type;
+	STree<? extends SType> type;
 	STree<SNodeListState> types = emptyList();
 	STree<SNodeListState> annotations = null;
 }
@@ -2596,9 +2599,9 @@ STree<? extends Type.State> PrimitiveCastType():
   { return type; }
 }
 
-STree<? extends Type.State> ReferenceCastType():
+STree<? extends SType> ReferenceCastType():
 {
-	STree<? extends Type.State> type;
+	STree<? extends SType> type;
 	STree<SNodeListState> types = emptyList();
 	STree<SNodeListState> annotations = null;
 }
@@ -2613,42 +2616,42 @@ STree<? extends Type.State> ReferenceCastType():
       { run(); } annotations = Annotations() type = ReferenceType(annotations)
       { types = append(types, type); }
     )+
-    { type = dress(IntersectionType.make(types)); }
+    { type = dress(SIntersectionType.make(types)); }
   ]
   { return type; }
 }
 
-STree<? extends Expr.State> Literal():
+STree<? extends SExpr> Literal():
 {
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 }
 {
   { run(); }
   (
-    <INTEGER_LITERAL>   { ret = LiteralExpr.make(Integer.class, token.image); }
+    <INTEGER_LITERAL>   { ret = SLiteralExpr.make(Integer.class, token.image); }
   |
-    <LONG_LITERAL>      { ret = LiteralExpr.make(Long.class, token.image); }
+    <LONG_LITERAL>      { ret = SLiteralExpr.make(Long.class, token.image); }
   |
-    <FLOAT_LITERAL>     { ret = LiteralExpr.make(Float.class, token.image); }
+    <FLOAT_LITERAL>     { ret = SLiteralExpr.make(Float.class, token.image); }
   |
-    <DOUBLE_LITERAL>    { ret = LiteralExpr.make(Double.class, token.image); }
+    <DOUBLE_LITERAL>    { ret = SLiteralExpr.make(Double.class, token.image); }
   |
-    <CHARACTER_LITERAL> { ret = LiteralExpr.make(Character.class, token.image); }
+    <CHARACTER_LITERAL> { ret = SLiteralExpr.make(Character.class, token.image); }
   |
-    <STRING_LITERAL>    { ret = LiteralExpr.make(String.class, token.image); }
+    <STRING_LITERAL>    { ret = SLiteralExpr.make(String.class, token.image); }
   |
-    "true"  { ret = LiteralExpr.make(Boolean.class, token.image); }
+    "true"  { ret = SLiteralExpr.make(Boolean.class, token.image); }
   |
-    "false" { ret = LiteralExpr.make(Boolean.class, token.image); }
+    "false" { ret = SLiteralExpr.make(Boolean.class, token.image); }
   |
-    "null"  { ret = LiteralExpr.make(Void.class, token.image); }
+    "null"  { ret = SLiteralExpr.make(Void.class, token.image); }
   )
   { return dress(ret); }
 }
 
-STree<? extends Expr.State> PrimaryExpression():
+STree<? extends SExpr> PrimaryExpression():
 {
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 }
 {
   ret = PrimaryPrefix()
@@ -2659,9 +2662,9 @@ STree<? extends Expr.State> PrimaryExpression():
   { return ret; }
 }
 
-STree<? extends Expr.State> PrimaryExpressionWithoutSuperSuffix():
+STree<? extends SExpr> PrimaryExpressionWithoutSuperSuffix():
 {
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 }
 {
   ret = PrimaryPrefix()
@@ -2672,20 +2675,20 @@ STree<? extends Expr.State> PrimaryExpressionWithoutSuperSuffix():
   { return ret; }
 }
 
-STree<? extends Expr.State> PrimaryPrefix():
+STree<? extends SExpr> PrimaryPrefix():
 {
-	STree<? extends Expr.State> ret = null;
+	STree<? extends SExpr> ret = null;
 	STree<SNodeListState> typeArgs = null;
 	STree<SNodeListState> params;
-	STree<? extends Type.State> type;
+	STree<? extends SType> type;
 }
 {
   (
     ret = Literal()
   |
-    { run(); } "this" { ret = dress(ThisExpr.make(none())); }
+    { run(); } "this" { ret = dress(SThisExpr.make(none())); }
   |
-    { run(); } "super" { ret = dress(SuperExpr.make(none())); }
+    { run(); } "super" { ret = dress(SSuperExpr.make(none())); }
 	(
 	  { lateRun(); }
 	  "."
@@ -2703,11 +2706,11 @@ STree<? extends Expr.State> PrimaryPrefix():
     ret = AllocationExpression(null)
   |
     LOOKAHEAD( ResultType() "." "class" )
-    { run(); } type = ResultType() "." "class" { ret = dress(ClassExpr.make(type)); }
+    { run(); } type = ResultType() "." "class" { ret = dress(SClassExpr.make(type)); }
   |
     LOOKAHEAD (ResultType() "::" )
     { run(); }
-    type = ResultType() { ret = TypeExpr.make(type); }
+    type = ResultType() { ret = STypeExpr.make(type); }
     ret = MethodReferenceSuffix(ret)
   |
     LOOKAHEAD( [ TypeArguments() ] Name() "(" )
@@ -2717,7 +2720,7 @@ STree<? extends Expr.State> PrimaryPrefix():
     ret = Name()
     [
       { lateRun(); }
-      "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<Name.State>) ret)), false)
+      "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<SName>) ret)), false)
     ]
   |
     { run(); }
@@ -2726,7 +2729,7 @@ STree<? extends Expr.State> PrimaryPrefix():
       ")" "->" ret = LambdaBody(emptyList(), true)
     |
       LOOKAHEAD( Name() ")" "->" )
-      ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<Name.State>) ret)), true)
+      ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<SName>) ret)), true)
     |
       LOOKAHEAD( Name() "," )
       params = InferredFormalParameterList() ")" "->" ret = LambdaBody(params, true)
@@ -2735,15 +2738,15 @@ STree<? extends Expr.State> PrimaryPrefix():
       params = FormalParameterList() ")" "->" ret = LambdaBody(params, true)
     |
       ret = Expression() ")"
-      { ret = dress(ParenthesizedExpr.make(ret)); }
+      { ret = dress(SParenthesizedExpr.make(ret)); }
     )
   )
   { return ret; }
 }
 
-STree<? extends Expr.State> PrimarySuffix(STree<? extends Expr.State> scope):
+STree<? extends SExpr> PrimarySuffix(STree<? extends SExpr> scope):
 {
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 }
 {
   // Run is started before scope
@@ -2752,17 +2755,17 @@ STree<? extends Expr.State> PrimarySuffix(STree<? extends Expr.State> scope):
     LOOKAHEAD(2)
     ret = PrimarySuffixWithoutSuper(scope)
   |
-    "." "super" { ret = dress(SuperExpr.make(optionOf(scope))); }
+    "." "super" { ret = dress(SSuperExpr.make(optionOf(scope))); }
   |
     ret = MethodReferenceSuffix(scope)
   )
   { return ret; }
 }
 
-STree<? extends Expr.State> PrimarySuffixWithoutSuper(STree<? extends Expr.State> scope):
+STree<? extends SExpr> PrimarySuffixWithoutSuper(STree<? extends SExpr> scope):
 {
-	STree<? extends Expr.State> ret;
-	STree<Name.State> name;
+	STree<? extends SExpr> ret;
+	STree<SName> name;
 }
 {
   // Run is started before scope
@@ -2770,7 +2773,7 @@ STree<? extends Expr.State> PrimarySuffixWithoutSuper(STree<? extends Expr.State
   (
     "."
     (
-      "this" { ret = dress(ThisExpr.make(optionOf(scope))); }
+      "this" { ret = dress(SThisExpr.make(optionOf(scope))); }
     |
       ret = AllocationExpression(scope)
     |
@@ -2780,42 +2783,42 @@ STree<? extends Expr.State> PrimarySuffixWithoutSuper(STree<? extends Expr.State
       ret = FieldAccess(scope)
     )
   |
-    "[" ret = Expression() "]" { ret = dress(ArrayAccessExpr.make(scope, ret)); }
+    "[" ret = Expression() "]" { ret = dress(SArrayAccessExpr.make(scope, ret)); }
   )
 
   { return ret; }
 }
 
-STree<? extends Expr.State> FieldAccess(STree<? extends Expr.State> scope):
+STree<? extends SExpr> FieldAccess(STree<? extends SExpr> scope):
 {
-	STree<Name.State> name;
+	STree<SName> name;
 }
 {
   // Run is started before scope
 
   name = Name()
-  { return dress(FieldAccessExpr.make(optionOf(scope), name)); }
+  { return dress(SFieldAccessExpr.make(optionOf(scope), name)); }
 }
 
-STree<? extends Expr.State> MethodInvocation(STree<? extends Expr.State> scope):
+STree<? extends SExpr> MethodInvocation(STree<? extends SExpr> scope):
 {
     STree<SNodeListState> typeArgs = null;
-	STree<Name.State> name;
+	STree<SName> name;
     STree<SNodeListState> args = null;
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 }
 {
   // Run is started before scope
 
   [ typeArgs = TypeArguments() ] name = Name()
   args = Arguments()
-  { return dress(MethodInvocationExpr.make(optionOf(scope), ensureNotNull(typeArgs), name, args)); }
+  { return dress(SMethodInvocationExpr.make(optionOf(scope), ensureNotNull(typeArgs), name, args)); }
 }
 
 STree<SNodeListState> Arguments():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<? extends Expr.State> expr;
+	STree<? extends SExpr> expr;
 }
 {
   "("
@@ -2830,25 +2833,25 @@ STree<SNodeListState> Arguments():
   { return ret; }
 }
 
-STree<? extends Expr.State> MethodReferenceSuffix(STree<? extends Expr.State> scope):
+STree<? extends SExpr> MethodReferenceSuffix(STree<? extends SExpr> scope):
 {
     STree<SNodeListState> typeArgs = null;
-	STree<Name.State> name;
-	STree<? extends Expr.State> ret;
+	STree<SName> name;
+	STree<? extends SExpr> ret;
 }
 {
   // Run is started before scope
 
   "::" [typeArgs = TypeArguments() ]
-  ( name = Name() | "new" { name = Name.make("new"); } )
-  { ret = dress(MethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name)); }
+  ( name = Name() | "new" { name = SName.make("new"); } )
+  { ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name)); }
   { return ret; }
 }
 
-STree<? extends Expr.State> AllocationExpression(STree<? extends Expr.State> scope):
+STree<? extends SExpr> AllocationExpression(STree<? extends SExpr> scope):
 {
-	STree<? extends Expr.State> ret;
-	STree<? extends Type.State> type;
+	STree<? extends SExpr> ret;
+	STree<? extends SType> type;
 	STree<SNodeListState> typeArgs = null;
 	STree<SNodeListState> anonymousBody = null;
 	STree<SNodeListState> args;
@@ -2872,30 +2875,30 @@ STree<? extends Expr.State> AllocationExpression(STree<? extends Expr.State> sco
 	  ret = ArrayCreationExpr(type)
 	|
 	  args = Arguments() [ LOOKAHEAD( "{" ) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
-      { ret = dress(ObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (STree<QualifiedType.State>) type, args, optionOf(anonymousBody))); }
+      { ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (STree<SQualifiedType>) type, args, optionOf(anonymousBody))); }
     )
   )
   { return ret; }
 }
 
-STree<? extends Expr.State> ArrayCreationExpr(STree<? extends Type.State> componentType):
+STree<? extends SExpr> ArrayCreationExpr(STree<? extends SType> componentType):
 {
-	STree<? extends Expr.State> expr;
+	STree<? extends SExpr> expr;
 	STree<SNodeListState> arrayDimExprs = emptyList();
 	STree<SNodeListState> arrayDims = emptyList();
 	STree<SNodeListState> annotations = null;
-	STree<ArrayInitializerExpr.State> initializer;
+	STree<SArrayInitializerExpr> initializer;
 }
 {
   (
     LOOKAHEAD( Annotations() "[" Expression() "]" )
     arrayDimExprs = ArrayDimExprsMandatory()
     arrayDims = ArrayDims()
-    { return dress(ArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none())); }
+    { return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none())); }
   |
     arrayDims = ArrayDimsMandatory()
     initializer = ArrayInitializer()
-    { return dress(ArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer))); }
+    { return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer))); }
   )
 }
 
@@ -2903,14 +2906,14 @@ STree<SNodeListState> ArrayDimExprsMandatory():
 {
 	STree<SNodeListState> arrayDimExprs = emptyList();
 	STree<SNodeListState> annotations;
-	STree<? extends Expr.State> expr;
+	STree<? extends SExpr> expr;
 }
 {
   (
     LOOKAHEAD( Annotations() "[" Expression() "]" )
     { run(); }
     annotations = Annotations() "[" expr = Expression() "]"
-    { arrayDimExprs = append(arrayDimExprs, dress(ArrayDimExpr.make(annotations, expr))); }
+    { arrayDimExprs = append(arrayDimExprs, dress(SArrayDimExpr.make(annotations, expr))); }
   )+
   { return arrayDimExprs; }
 }
@@ -2925,7 +2928,7 @@ STree<SNodeListState> ArrayDimsMandatory():
     LOOKAHEAD( Annotations() "[" "]" )
     { run(); }
     annotations = Annotations() "[" "]"
-    { arrayDims = append(arrayDims, dress(ArrayDim.make(annotations))); }
+    { arrayDims = append(arrayDims, dress(SArrayDim.make(annotations))); }
   )+
   { return arrayDims; }
 }
@@ -2934,9 +2937,9 @@ STree<SNodeListState> ArrayDimsMandatory():
  * Statements
  **********************************************************************************************************************/
 
-STree<? extends Stmt.State> Statement():
+STree<? extends SStmt> Statement():
 {
-	STree<? extends Stmt.State> ret;
+	STree<? extends SStmt> ret;
 }
 {
   (
@@ -2976,46 +2979,46 @@ STree<? extends Stmt.State> Statement():
   { return ret; }
 }
 
-STree<AssertStmt.State> AssertStatement():
+STree<SAssertStmt> AssertStatement():
 {
-	STree<? extends Expr.State> check;
-	STree<? extends Expr.State> msg = null;
+	STree<? extends SExpr> check;
+	STree<? extends SExpr> msg = null;
 }
 {
   { run(); }
   "assert" check = Expression() [ ":" msg = Expression() ] ";"
-  { return dress(AssertStmt.make(check, optionOf(msg)));  }
+  { return dress(SAssertStmt.make(check, optionOf(msg)));  }
 }
 
-STree<LabeledStmt.State> LabeledStatement():
+STree<SLabeledStmt> LabeledStatement():
 {
-	STree<Name.State> label;
-	STree<? extends Stmt.State> stmt;
+	STree<SName> label;
+	STree<? extends SStmt> stmt;
 }
 {
   { run(); }
   label = Name() ":" stmt = Statement()
-  { return dress(LabeledStmt.make(label, stmt)); }
+  { return dress(SLabeledStmt.make(label, stmt)); }
 }
 
-STree<BlockStmt.State> Block():
+STree<SBlockStmt> Block():
 {
 	STree<SNodeListState> stmts;
 }
 {
   { run(); }
   "{" stmts = Statements() "}"
-  { return dress(BlockStmt.make(ensureNotNull(stmts))); }
+  { return dress(SBlockStmt.make(ensureNotNull(stmts))); }
 }
 
 /*
  * Classes inside block stametents can only be abstract or final. The semantic must check it.
  */
-STree<? extends Stmt.State> BlockStatement():
+STree<? extends SStmt> BlockStatement():
 {
-	STree<? extends Stmt.State> ret;
-	STree<? extends Expr.State> expr;
-	STree<? extends TypeDecl.State> typeDecl;
+	STree<? extends SStmt> ret;
+	STree<? extends SExpr> expr;
+	STree<? extends STypeDecl> typeDecl;
 	STree<SNodeListState> modifiers;
 }
 {
@@ -3023,42 +3026,42 @@ STree<? extends Stmt.State> BlockStatement():
     LOOKAHEAD( Modifiers() ("class" | "interface") )
     { run(); }
     { run(); } modifiers = Modifiers() typeDecl = ClassOrInterfaceDecl(modifiers)
-    { ret = dress(TypeDeclarationStmt.make(typeDecl)); }
+    { ret = dress(STypeDeclarationStmt.make(typeDecl)); }
   |
     LOOKAHEAD( VariableDeclExpression() )
     { run(); }
     expr = VariableDeclExpression() ";"
-    { ret = dress(ExpressionStmt.make(expr)); }
+    { ret = dress(SExpressionStmt.make(expr)); }
   |
     ret = Statement()
   )
   { return ret; }
 }
 
-STree<VariableDeclarationExpr.State> VariableDeclExpression():
+STree<SVariableDeclarationExpr> VariableDeclExpression():
 {
 	STree<SNodeListState> modifiers;
-	STree<LocalVariableDecl.State> variableDecl;
+	STree<SLocalVariableDecl> variableDecl;
 }
 {
   { run(); }
   { run(); } modifiers = Modifiers() variableDecl = VariableDecl(modifiers)
-  { return dress(VariableDeclarationExpr.make(variableDecl)); }
+  { return dress(SVariableDeclarationExpr.make(variableDecl)); }
 }
 
-STree<EmptyStmt.State> EmptyStatement():
+STree<SEmptyStmt> EmptyStatement():
 {}
 {
   { run(); }
   ";"
-  { return dress(EmptyStmt.make()); }
+  { return dress(SEmptyStmt.make()); }
 }
 
-STree<ExpressionStmt.State> StatementExpression():
+STree<SExpressionStmt> StatementExpression():
 {
-	STree<? extends Expr.State> expr;
+	STree<? extends SExpr> expr;
 	AssignOp op;
-	STree<? extends Expr.State> value;
+	STree<? extends SExpr> value;
 }
 {
   { run(); }
@@ -3068,23 +3071,23 @@ STree<ExpressionStmt.State> StatementExpression():
     expr = PrimaryExpression()
     [
       { lateRun(); } "++"
-      { expr = dress(UnaryExpr.make(UnaryOp.PostIncrement, expr));  }
+      { expr = dress(SUnaryExpr.make(UnaryOp.PostIncrement, expr));  }
     |
       { lateRun(); } "--"
-      { expr = dress(UnaryExpr.make(UnaryOp.PostDecrement, expr));  }
+      { expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr));  }
     |
       { lateRun(); } op = AssignmentOperator() value = Expression()
-      { expr = dress(AssignExpr.make(expr, op, value)); }
+      { expr = dress(SAssignExpr.make(expr, op, value)); }
     ]
   )
   ";"
-  { return dress(ExpressionStmt.make(expr)); }
+  { return dress(SExpressionStmt.make(expr)); }
 }
 
-STree<SwitchStmt.State> SwitchStatement():
+STree<SSwitchStmt> SwitchStatement():
 {
-	STree<? extends Expr.State> selector;
-	STree<SwitchCase.State> entry;
+	STree<? extends SExpr> selector;
+	STree<SSwitchCase> entry;
 	STree<SNodeListState> entries = emptyList();
 }
 {
@@ -3092,12 +3095,12 @@ STree<SwitchStmt.State> SwitchStatement():
   "switch" "(" selector = Expression() ")" "{"
   ( entry = SwitchEntry() { entries = append(entries, entry); } )*
   "}"
-  { return dress(SwitchStmt.make(selector, entries)); }
+  { return dress(SSwitchStmt.make(selector, entries)); }
 }
 
-STree<SwitchCase.State> SwitchEntry():
+STree<SSwitchCase> SwitchEntry():
 {
-	STree<? extends Expr.State> label = null;
+	STree<? extends SExpr> label = null;
 	STree<SNodeListState> stmts;
 }
 {
@@ -3108,55 +3111,55 @@ STree<SwitchCase.State> SwitchEntry():
     "default"
   )
   ":" stmts = Statements()
-  { return dress(SwitchCase.make(optionOf(label), ensureNotNull(stmts))); }
+  { return dress(SSwitchCase.make(optionOf(label), ensureNotNull(stmts))); }
 }
 
-STree<IfStmt.State> IfStatement():
+STree<SIfStmt> IfStatement():
 /*
  * The disambiguating algorithm of JavaCC automatically binds dangling
  * else's to the innermost if Stmt.  The LOOKAHEAD specification
  * is to tell JavaCC that we know what we are doing.
  */
 {
-	STree<? extends Expr.State> condition;
-	STree<? extends Stmt.State> thenStmt;
-	STree<? extends Stmt.State> elseStmt = null;
+	STree<? extends SExpr> condition;
+	STree<? extends SStmt> thenStmt;
+	STree<? extends SStmt> elseStmt = null;
 }
 {
   { run(); }
   "if" "(" condition = Expression() ")" thenStmt = Statement() [ LOOKAHEAD(1) "else" elseStmt = Statement() ]
-  { return dress(IfStmt.make(condition, thenStmt, optionOf(elseStmt))); }
+  { return dress(SIfStmt.make(condition, thenStmt, optionOf(elseStmt))); }
 }
 
-STree<WhileStmt.State> WhileStatement():
+STree<SWhileStmt> WhileStatement():
 {
-	STree<? extends Expr.State> condition;
-	STree<? extends Stmt.State> body;
+	STree<? extends SExpr> condition;
+	STree<? extends SStmt> body;
 }
 {
   { run(); }
   "while" "(" condition = Expression() ")" body = Statement()
-  { return dress(WhileStmt.make(condition, body)); }
+  { return dress(SWhileStmt.make(condition, body)); }
 }
 
-STree<DoStmt.State> DoStatement():
+STree<SDoStmt> DoStatement():
 {
-	STree<? extends Expr.State> condition;
-	STree<? extends Stmt.State> body;
+	STree<? extends SExpr> condition;
+	STree<? extends SStmt> body;
 }
 {
   { run(); }
   "do" body = Statement() "while" "(" condition = Expression() ")" ";"
-  { return dress(DoStmt.make(body, condition)); }
+  { return dress(SDoStmt.make(body, condition)); }
 }
 
-STree<? extends Stmt.State> ForStatement():
+STree<? extends SStmt> ForStatement():
 {
-	STree<VariableDeclarationExpr.State> varExpr = null;
-	STree<? extends Expr.State> expr = null;
+	STree<SVariableDeclarationExpr> varExpr = null;
+	STree<? extends SExpr> expr = null;
 	STree<SNodeListState> init = null;
 	STree<SNodeListState> update = null;
-	STree<? extends Stmt.State> body;
+	STree<? extends SStmt> body;
 }
 {
   { run(); }
@@ -3169,15 +3172,15 @@ STree<? extends Stmt.State> ForStatement():
   )
   ")" body = Statement()
   {
-  	if (varExpr != null) return dress(ForeachStmt.make(varExpr, expr, body));
-    else return dress(ForStmt.make(init, expr, update, body));
+  	if (varExpr != null) return dress(SForeachStmt.make(varExpr, expr, body));
+    else return dress(SForStmt.make(init, expr, update, body));
   }
 }
 
 STree<SNodeListState> ForInit():
 {
 	STree<SNodeListState> ret;
-	STree<? extends Expr.State> expr;
+	STree<? extends SExpr> expr;
 }
 {
   (
@@ -3192,7 +3195,7 @@ STree<SNodeListState> ForInit():
 STree<SNodeListState> ExpressionList():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<? extends Expr.State> expr;
+	STree<? extends SExpr> expr;
 }
 {
   expr = Expression() { ret = append(ret, expr); } ( "," expr = Expression()  { ret = append(ret, expr); } )*
@@ -3208,64 +3211,64 @@ STree<SNodeListState> ForUpdate():
   { return ret; }
 }
 
-STree<BreakStmt.State> BreakStatement():
+STree<SBreakStmt> BreakStatement():
 {
-	STree<Name.State> id = null;
+	STree<SName> id = null;
 }
 {
   { run(); }
   "break" [ id = Name() ] ";"
-  { return dress(BreakStmt.make(optionOf(id))); }
+  { return dress(SBreakStmt.make(optionOf(id))); }
 }
 
-STree<ContinueStmt.State> ContinueStatement():
+STree<SContinueStmt> ContinueStatement():
 {
-	STree<Name.State> id = null;
+	STree<SName> id = null;
 }
 {
   { run(); }
   "continue" [ id = Name() ] ";"
-  { return dress(ContinueStmt.make(optionOf(id))); }
+  { return dress(SContinueStmt.make(optionOf(id))); }
 }
 
-STree<ReturnStmt.State> ReturnStatement():
+STree<SReturnStmt> ReturnStatement():
 {
-	STree<? extends Expr.State> expr = null;
+	STree<? extends SExpr> expr = null;
 }
 {
   { run(); }
   "return" [ expr = Expression() ] ";"
-  { return dress(ReturnStmt.make(optionOf(expr))); }
+  { return dress(SReturnStmt.make(optionOf(expr))); }
 }
 
-STree<ThrowStmt.State> ThrowStatement():
+STree<SThrowStmt> ThrowStatement():
 {
-	STree<? extends Expr.State> expr;
+	STree<? extends SExpr> expr;
 }
 {
   { run(); }
   "throw" expr = Expression() ";"
-  { return dress(ThrowStmt.make(expr)); }
+  { return dress(SThrowStmt.make(expr)); }
 }
 
-STree<SynchronizedStmt.State> SynchronizedStatement():
+STree<SSynchronizedStmt> SynchronizedStatement():
 {
-	STree<? extends Expr.State> expr;
-	STree<BlockStmt.State> block;
+	STree<? extends SExpr> expr;
+	STree<SBlockStmt> block;
 }
 {
   { run(); }
   "synchronized" "(" expr = Expression() ")" block = Block()
-  { return dress(SynchronizedStmt.make(expr, block)); }
+  { return dress(SSynchronizedStmt.make(expr, block)); }
 }
 
-STree<TryStmt.State> TryStatement():
+STree<STryStmt> TryStatement():
 // TODO Make catchClauses/finallyClause counts less fatal
 {
 	STree<SNodeListState> resources = null;
 	ByRef<Boolean> trailingSemiColon = new ByRef<Boolean>(false);
-	STree<BlockStmt.State> tryBlock;
-	STree<BlockStmt.State> finallyBlock = null;
+	STree<SBlockStmt> tryBlock;
+	STree<SBlockStmt> finallyBlock = null;
 	STree<SNodeListState> catchClauses = null;
 }
 {
@@ -3285,13 +3288,13 @@ STree<TryStmt.State> TryStatement():
       "finally" finallyBlock = Block()
     )
   )
-  { return dress(TryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock))); }
+  { return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock))); }
 }
 
 STree<SNodeListState> CatchClauses():
 {
 	STree<SNodeListState> catchClauses = emptyList();
-	STree<CatchClause.State> catchClause;
+	STree<SCatchClause> catchClause;
 }
 {
   (
@@ -3300,23 +3303,23 @@ STree<SNodeListState> CatchClauses():
   { return catchClauses; }
 }
 
-STree<CatchClause.State> CatchClause():
+STree<SCatchClause> CatchClause():
 {
-	STree<FormalParameter.State> param;
-	STree<BlockStmt.State> catchBlock;
+	STree<SFormalParameter> param;
+	STree<SBlockStmt> catchBlock;
 }
 {
   { run(); }
   "catch" "(" param = CatchFormalParameter() ")" catchBlock = Block()
-  { return dress(CatchClause.make(param, catchBlock)); }
+  { return dress(SCatchClause.make(param, catchBlock)); }
 }
 
-STree<FormalParameter.State> CatchFormalParameter():
+STree<SFormalParameter> CatchFormalParameter():
 {
 	STree<SNodeListState> modifiers;
-	STree<? extends Type.State> exceptType;
+	STree<? extends SType> exceptType;
 	STree<SNodeListState> exceptTypes = emptyList();
-	STree<VariableDeclaratorId.State> exceptId;
+	STree<SVariableDeclaratorId> exceptId;
 }
 {
   { run(); }
@@ -3327,17 +3330,17 @@ STree<FormalParameter.State> CatchFormalParameter():
     LOOKAHEAD("|")
     { lateRun(); }
     ( "|" exceptType = AnnotatedQualifiedType() { exceptTypes = append(exceptTypes, exceptType); } )+
-    { exceptType = dress(UnionType.make(exceptTypes)); }
+    { exceptType = dress(SUnionType.make(exceptTypes)); }
   ]
 
   exceptId = VariableDeclaratorId()
-  { return dress(FormalParameter.make(modifiers, exceptType, false, exceptId)); }
+  { return dress(SFormalParameter.make(modifiers, exceptType, false, exceptId)); }
 }
 
 STree<SNodeListState> ResourceSpecification(ByRef<Boolean> trailingSemiColon) :
 {
 	STree<SNodeListState> vars = emptyList();
-	STree<VariableDeclarationExpr.State> var;
+	STree<SVariableDeclarationExpr> var;
 }
 {
   "("
@@ -3380,16 +3383,16 @@ void RSIGNEDSHIFT():
 STree<SNodeListState> Annotations():
 {
 	STree<SNodeListState> annotations = emptyList();
-	STree<? extends AnnotationExpr.State> annotation;
+	STree<? extends SAnnotationExpr> annotation;
 }
 {
   ( annotation = Annotation() { annotations = append(annotations, annotation); } )*
   { return annotations; }
 }
 
-STree<? extends AnnotationExpr.State> Annotation():
+STree<? extends SAnnotationExpr> Annotation():
 {
-	STree<? extends AnnotationExpr.State> ret;
+	STree<? extends SAnnotationExpr> ret;
 }
 {
   (
@@ -3405,42 +3408,42 @@ STree<? extends AnnotationExpr.State> Annotation():
   { return ret; }
 }
 
-STree<NormalAnnotationExpr.State> NormalAnnotation():
+STree<SNormalAnnotationExpr> NormalAnnotation():
 {
-	STree<QualifiedName.State> name;
+	STree<SQualifiedName> name;
 	STree<SNodeListState> pairs = null;
 }
 {
   { run(); }
   "@" name = QualifiedName() "(" [ pairs = MemberValuePairs() ] ")"
-  { return dress(NormalAnnotationExpr.make(name, ensureNotNull(pairs))); }
+  { return dress(SNormalAnnotationExpr.make(name, ensureNotNull(pairs))); }
 }
 
-STree<MarkerAnnotationExpr.State> MarkerAnnotation():
+STree<SMarkerAnnotationExpr> MarkerAnnotation():
 {
-	STree<QualifiedName.State> name;
+	STree<SQualifiedName> name;
 }
 {
   { run(); }
   "@" name = QualifiedName()
-  { return dress(MarkerAnnotationExpr.make(name)); }
+  { return dress(SMarkerAnnotationExpr.make(name)); }
 }
 
-STree<SingleMemberAnnotationExpr.State> SingleMemberAnnotation():
+STree<SSingleMemberAnnotationExpr> SingleMemberAnnotation():
 {
-	STree<QualifiedName.State> name;
-	STree<? extends Expr.State> memberVal;
+	STree<SQualifiedName> name;
+	STree<? extends SExpr> memberVal;
 }
 {
   { run(); }
   "@" name = QualifiedName() "(" memberVal = MemberValue() ")"
-  { return dress(SingleMemberAnnotationExpr.make(name, memberVal)); }
+  { return dress(SSingleMemberAnnotationExpr.make(name, memberVal)); }
 }
 
 STree<SNodeListState> MemberValuePairs():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<MemberValuePair.State> pair;
+	STree<SMemberValuePair> pair;
 }
 {
   pair = MemberValuePair() { ret = append(ret, pair); }
@@ -3448,20 +3451,20 @@ STree<SNodeListState> MemberValuePairs():
   { return ret; }
 }
 
-STree<MemberValuePair.State> MemberValuePair():
+STree<SMemberValuePair> MemberValuePair():
 {
-	STree<Name.State> name;
-	STree<? extends Expr.State> value;
+	STree<SName> name;
+	STree<? extends SExpr> value;
 }
 {
   { run(); }
   name = Name() "=" value = MemberValue()
-  { return dress(MemberValuePair.make(name, value)); }
+  { return dress(SMemberValuePair.make(name, value)); }
 }
 
-STree<? extends Expr.State> MemberValue():
+STree<? extends SExpr> MemberValue():
 {
-	STree<? extends Expr.State> ret;
+	STree<? extends SExpr> ret;
 }
 {
   (
@@ -3474,10 +3477,10 @@ STree<? extends Expr.State> MemberValue():
   { return ret; }
 }
 
-STree<? extends Expr.State> MemberValueArrayInitializer():
+STree<? extends SExpr> MemberValueArrayInitializer():
 {
 	STree<SNodeListState> ret = emptyList();
-	STree<? extends Expr.State> member;
+	STree<? extends SExpr> member;
 	boolean trailingComma = false;
 }
 {
@@ -3489,5 +3492,5 @@ STree<? extends Expr.State> MemberValueArrayInitializer():
   ]
   [ "," { trailingComma = true; } ]
   "}"
-  { return dress(ArrayInitializerExpr.make(ret, trailingComma)); }
+  { return dress(SArrayInitializerExpr.make(ret, trailingComma)); }
 }

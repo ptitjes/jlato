@@ -1,17 +1,17 @@
 {
-  class: org.jlato.tree.stmt.TryStmt,
+  kind: TryStmt,
   catchs: [
     {
-      class: org.jlato.tree.stmt.CatchClause,
+      kind: CatchClause,
       catchBlock: {
-        class: org.jlato.tree.stmt.BlockStmt,
+        kind: BlockStmt,
         stmts: [
         ],
       },
       except: {
-        class: org.jlato.tree.decl.FormalParameter,
+        kind: FormalParameter,
         id: {
-          class: org.jlato.tree.decl.VariableDeclaratorId,
+          kind: VariableDeclaratorId,
           dims: [
           ],
           name: ex,
@@ -20,10 +20,10 @@
         modifiers: [
         ],
         type: {
-          class: org.jlato.tree.type.UnionType,
+          kind: UnionType,
           types: [
             {
-              class: org.jlato.tree.type.QualifiedType,
+              kind: QualifiedType,
               annotations: [
               ],
               name: Exception1,
@@ -31,7 +31,7 @@
               typeArgs: null,
             },
             {
-              class: org.jlato.tree.type.QualifiedType,
+              kind: QualifiedType,
               annotations: [
               ],
               name: Exception2,
@@ -48,7 +48,7 @@
   ],
   trailingSemiColon: false,
   tryBlock: {
-    class: org.jlato.tree.stmt.BlockStmt,
+    kind: BlockStmt,
     stmts: [
     ],
   },
