@@ -22,6 +22,7 @@ package org.jlato.internal.bu.coll;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
+import org.jlato.internal.td.coll.TDNodeOption;
 import org.jlato.tree.*;
 
 import java.util.Collections;
@@ -40,7 +41,7 @@ public class SNodeOption implements STree {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Tree instantiate(TDLocation<?> location) {
-		return new NodeOption<Tree>((TDLocation<SNodeOption>) location);
+		return new TDNodeOption<Tree>((TDLocation<SNodeOption>) location);
 	}
 
 	@Override

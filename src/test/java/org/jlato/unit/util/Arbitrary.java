@@ -63,7 +63,7 @@ public class Arbitrary {
 	}
 
 	public <T extends Tree> NodeList<T> arbitraryListOf(Function0<T> gen) {
-		NodeList<T> list = NodeList.empty();
+		NodeList<T> list = emptyList();
 		final int size = enableFalseNoneOrEmpty ? choice(MAX_LIST_SIZE) : nonNullChoice(MAX_LIST_SIZE);
 		for (int i = 0; i < size; i++) {
 			list = list.append(gen.apply());
@@ -74,9 +74,9 @@ public class Arbitrary {
 	public <T extends Tree> NodeOption<T> arbitraryOptionOf(Function0<T> gen) {
 		if (enableFalseNoneOrEmpty) {
 			final boolean none = arbitraryBoolean();
-			return none ? NodeOption.<T>none() : NodeOption.of(gen.apply());
+			return none ? TreeFactory.<T>none() : some(gen.apply());
 		} else {
-			return NodeOption.of(gen.apply());
+			return some(gen.apply());
 		}
 	}
 
@@ -106,14 +106,14 @@ public class Arbitrary {
 
 	public QualifiedName arbitraryQualifiedName() {
 		final int size = nonNullChoice(MAX_QUALIFIER_SIZE);
-		NodeList<Name> list = NodeList.empty();
+		NodeList<Name> list = emptyList();
 		for (int i = 0; i < size; i++) {
 			list = list.append(arbitraryName());
 		}
 		return list.foldLeft(null, new Function2<QualifiedName, Name, QualifiedName>() {
 			@Override
 			public QualifiedName apply(QualifiedName qualifiedName, Name name) {
-				return new TDQualifiedName(NodeOption.of(qualifiedName), name);
+				return new TDQualifiedName(optionOf(qualifiedName), name);
 			}
 		});
 	}
@@ -143,7 +143,7 @@ public class Arbitrary {
 	}
 
 	public QualifiedType arbitraryQualifiedType() {
-		return new TDQualifiedType(arbitraryListAnnotationExpr(), NodeOption.<QualifiedType>none(), arbitraryName(), arbitraryOptionListType());
+		return new TDQualifiedType(arbitraryListAnnotationExpr(), TreeFactory.<QualifiedType>none(), arbitraryName(), arbitraryOptionListType());
 	}
 
 	public BlockStmt arbitraryBlockStmt() {
@@ -536,6 +536,6 @@ public class Arbitrary {
 
 	public NodeEither<Expr, BlockStmt> arbitraryEitherExprBlockStmt() {
 		boolean expr = arbitraryBoolean();
-		return expr ? NodeEither.<Expr, BlockStmt>left(arbitraryExpr()) : NodeEither.<Expr, BlockStmt>right(arbitraryBlockStmt());
+		return expr ? TreeFactory.<Expr, BlockStmt>left(arbitraryExpr()) : TreeFactory.<Expr, BlockStmt>right(arbitraryBlockStmt());
 	}
 }

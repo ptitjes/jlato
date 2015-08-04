@@ -19,69 +19,22 @@
 
 package org.jlato.tree;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.coll.SNodeEither;
-import org.jlato.internal.bu.coll.SNodeEither.EitherSide;
-import org.jlato.internal.td.TDLocation;
-import org.jlato.internal.td.TDTree;
-
 /**
  * @author Didier Villevalois
  */
-public class NodeEither<TL extends Tree, TR extends Tree> extends TDTree<SNodeEither, NodeEither<TL, TR>, NodeEither<TL, TR>> implements Tree {
+public interface NodeEither<TL extends Tree, TR extends Tree> extends Tree {
 
-	public static <TL extends Tree, TR extends Tree> NodeEither<TL, TR> left(TL tree) {
-		if (tree == null) throw new NullPointerException();
-		return new NodeEither<TL, TR>(tree, EitherSide.Left);
-	}
+	boolean isLeft();
 
-	public static <TL extends Tree, TR extends Tree> NodeEither<TL, TR> right(TR tree) {
-		if (tree == null) throw new NullPointerException();
-		return new NodeEither<TL, TR>(tree, EitherSide.Right);
-	}
+	boolean isRight();
 
-	public NodeEither(TDLocation<SNodeEither> location) {
-		super(location);
-	}
+	TL left();
 
-	private NodeEither(Tree element, EitherSide side) {
-		super(new TDLocation<SNodeEither>(new BUTree<SNodeEither>(new SNodeEither(treeOf(element), side))));
-	}
+	TR right();
 
-	public boolean isLeft() {
-		return location.tree.state.side == EitherSide.Left;
-	}
+	NodeEither<TL, TR> setLeft(TL element);
 
-	public boolean isRight() {
-		return location.tree.state.side == EitherSide.Right;
-	}
+	NodeEither<TL, TR> setRight(TR element);
 
-	@SuppressWarnings("unchecked")
-	public TL left() {
-		return (TL) location.safeTraversal(SNodeEither.leftTraversal());
-	}
-
-	@SuppressWarnings("unchecked")
-	public TR right() {
-		return (TR) location.safeTraversal(SNodeEither.rightTraversal());
-	}
-
-	public NodeEither<TL, TR> setLeft(TL element) {
-		return location.safeTraversalReplace(SNodeEither.leftTraversal(), element);
-	}
-
-	public NodeEither<TL, TR> setRight(TR element) {
-		return location.safeTraversalReplace(SNodeEither.rightTraversal(), element);
-	}
-
-	public String mkString(String start, String sep, String end) {
-		StringBuilder builder = new StringBuilder();
-		builder.append(start);
-
-		Tree tree = location.safeTraversal(SNodeEither.elementTraversal());
-		builder.append(tree);
-
-		builder.append(end);
-		return builder.toString();
-	}
+	String mkString(String start, String sep, String end);
 }

@@ -20,6 +20,7 @@
 package org.jlato.parser;
 
 import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.td.coll.TDTreeSet;
 import org.jlato.tree.Tree;
 import org.jlato.tree.TreeSet;
 import org.jlato.tree.decl.CompilationUnit;
@@ -78,7 +79,7 @@ public class Parser {
 		String rootPath = directory.getAbsolutePath();
 		if (!rootPath.endsWith("/")) rootPath = rootPath + "/";
 
-		TreeSet<CompilationUnit> set = new TreeSet<CompilationUnit>(rootPath);
+		TreeSet<CompilationUnit> set = new TDTreeSet<CompilationUnit>(rootPath);
 		for (File file : files) {
 			final CompilationUnit cu = parse(file, encoding);
 			final String path = file.getAbsolutePath().substring(rootPath.length());

@@ -22,6 +22,7 @@ package org.jlato.internal.bu.coll;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
+import org.jlato.internal.td.coll.TDNodeEither;
 import org.jlato.tree.*;
 
 import java.util.Collections;
@@ -42,7 +43,7 @@ public class SNodeEither implements STree {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Tree instantiate(TDLocation<?> location) {
-		return new NodeEither<Tree, Tree>((TDLocation<SNodeEither>) location);
+		return new TDNodeEither<Tree, Tree>((TDLocation<SNodeEither>) location);
 	}
 
 	@Override

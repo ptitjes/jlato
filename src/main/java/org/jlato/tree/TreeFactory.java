@@ -1,6 +1,7 @@
 package org.jlato.tree;
 
 import org.jlato.internal.bu.Literals;
+import org.jlato.internal.td.coll.*;
 import org.jlato.internal.td.decl.*;
 import org.jlato.internal.td.expr.*;
 import org.jlato.internal.td.name.*;
@@ -14,53 +15,173 @@ import org.jlato.tree.type.*;
 
 public abstract class TreeFactory {
 
+	public static <T extends Tree> NodeOption<T> none() {
+		return TDNodeOption.none();
+	}
+
+	public static <T extends Tree> NodeOption<T> some(T t) {
+		return TDNodeOption.some(t);
+	}
+
+	public static <T extends Tree> NodeOption<T> optionOf(T t) {
+		return TDNodeOption.of(t);
+	}
+
+	public static <TL extends Tree, TR extends Tree> NodeEither<TL, TR> left(TL t) {
+		return TDNodeEither.<TL, TR>left(t);
+	}
+
+	public static <TL extends Tree, TR extends Tree> NodeEither<TL, TR> right(TR t) {
+		return TDNodeEither.<TL, TR>right(t);
+	}
+
+	public static <T extends Tree> NodeList<T> emptyList() {
+		return TDNodeList.empty();
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(Iterable<T> ts) {
+		return TDNodeList.of(ts);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1) {
+		return TDNodeList.of(t1);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2) {
+		return TDNodeList.of(t1, t2);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3) {
+		return TDNodeList.of(t1, t2, t3);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4) {
+		return TDNodeList.of(t1, t2, t3, t4);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5) {
+		return TDNodeList.of(t1, t2, t3, t4, t5);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17, T t18) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17, T t18, T t19) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17, T t18, T t19, T t20) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17, T t18, T t19, T t20, T t21) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17, T t18, T t19, T t20, T t21, T t22) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22);
+	}
+
+	public static <T extends Tree> NodeList<T> listOf(T t1, T t2, T t3, T t4, T t5, T t6, T t7, T t8, T t9, T t10, T t11, T t12, T t13, T t14, T t15, T t16, T t17, T t18, T t19, T t20, T t21, T t22, T t23) {
+		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23);
+	}
+
 	@Deprecated
 	public static AnnotationDecl annotationDecl() {
-		return new TDAnnotationDecl(NodeList.<ExtendedModifier>empty(), (Name) null, NodeList.<MemberDecl>empty());
+		return new TDAnnotationDecl(TreeFactory.<ExtendedModifier>emptyList(), (Name) null, TreeFactory.<MemberDecl>emptyList());
 	}
 
 	public static AnnotationDecl annotationDecl(Name name) {
-		return new TDAnnotationDecl(NodeList.<ExtendedModifier>empty(), name, NodeList.<MemberDecl>empty());
+		return new TDAnnotationDecl(TreeFactory.<ExtendedModifier>emptyList(), name, TreeFactory.<MemberDecl>emptyList());
 	}
 
 	@Deprecated
 	public static AnnotationMemberDecl annotationMemberDecl() {
-		return new TDAnnotationMemberDecl(NodeList.<ExtendedModifier>empty(), (Type) null, (Name) null, NodeList.<ArrayDim>empty(), NodeOption.<Expr>none());
+		return new TDAnnotationMemberDecl(TreeFactory.<ExtendedModifier>emptyList(), (Type) null, (Name) null, TreeFactory.<ArrayDim>emptyList(), TreeFactory.<Expr>none());
 	}
 
 	public static AnnotationMemberDecl annotationMemberDecl(Type type, Name name) {
-		return new TDAnnotationMemberDecl(NodeList.<ExtendedModifier>empty(), type, name, NodeList.<ArrayDim>empty(), NodeOption.<Expr>none());
+		return new TDAnnotationMemberDecl(TreeFactory.<ExtendedModifier>emptyList(), type, name, TreeFactory.<ArrayDim>emptyList(), TreeFactory.<Expr>none());
 	}
 
 	public static ArrayDim arrayDim() {
-		return new TDArrayDim(NodeList.<AnnotationExpr>empty());
+		return new TDArrayDim(TreeFactory.<AnnotationExpr>emptyList());
 	}
 
 	@Deprecated
 	public static ClassDecl classDecl() {
-		return new TDClassDecl(NodeList.<ExtendedModifier>empty(), (Name) null, NodeList.<TypeParameter>empty(), NodeOption.<QualifiedType>none(), NodeList.<QualifiedType>empty(), NodeList.<MemberDecl>empty());
+		return new TDClassDecl(TreeFactory.<ExtendedModifier>emptyList(), (Name) null, TreeFactory.<TypeParameter>emptyList(), TreeFactory.<QualifiedType>none(), TreeFactory.<QualifiedType>emptyList(), TreeFactory.<MemberDecl>emptyList());
 	}
 
 	public static ClassDecl classDecl(Name name) {
-		return new TDClassDecl(NodeList.<ExtendedModifier>empty(), name, NodeList.<TypeParameter>empty(), NodeOption.<QualifiedType>none(), NodeList.<QualifiedType>empty(), NodeList.<MemberDecl>empty());
+		return new TDClassDecl(TreeFactory.<ExtendedModifier>emptyList(), name, TreeFactory.<TypeParameter>emptyList(), TreeFactory.<QualifiedType>none(), TreeFactory.<QualifiedType>emptyList(), TreeFactory.<MemberDecl>emptyList());
 	}
 
 	@Deprecated
 	public static CompilationUnit compilationUnit() {
-		return new TDCompilationUnit((PackageDecl) null, NodeList.<ImportDecl>empty(), NodeList.<TypeDecl>empty());
+		return new TDCompilationUnit((PackageDecl) null, TreeFactory.<ImportDecl>emptyList(), TreeFactory.<TypeDecl>emptyList());
 	}
 
 	public static CompilationUnit compilationUnit(PackageDecl packageDecl) {
-		return new TDCompilationUnit(packageDecl, NodeList.<ImportDecl>empty(), NodeList.<TypeDecl>empty());
+		return new TDCompilationUnit(packageDecl, TreeFactory.<ImportDecl>emptyList(), TreeFactory.<TypeDecl>emptyList());
 	}
 
 	@Deprecated
 	public static ConstructorDecl constructorDecl() {
-		return new TDConstructorDecl(NodeList.<ExtendedModifier>empty(), NodeList.<TypeParameter>empty(), (Name) null, NodeList.<FormalParameter>empty(), NodeList.<QualifiedType>empty(), (BlockStmt) null);
+		return new TDConstructorDecl(TreeFactory.<ExtendedModifier>emptyList(), TreeFactory.<TypeParameter>emptyList(), (Name) null, TreeFactory.<FormalParameter>emptyList(), TreeFactory.<QualifiedType>emptyList(), (BlockStmt) null);
 	}
 
 	public static ConstructorDecl constructorDecl(Name name, BlockStmt body) {
-		return new TDConstructorDecl(NodeList.<ExtendedModifier>empty(), NodeList.<TypeParameter>empty(), name, NodeList.<FormalParameter>empty(), NodeList.<QualifiedType>empty(), body);
+		return new TDConstructorDecl(TreeFactory.<ExtendedModifier>emptyList(), TreeFactory.<TypeParameter>emptyList(), name, TreeFactory.<FormalParameter>emptyList(), TreeFactory.<QualifiedType>emptyList(), body);
 	}
 
 	public static EmptyMemberDecl emptyMemberDecl() {
@@ -73,38 +194,38 @@ public abstract class TreeFactory {
 
 	@Deprecated
 	public static EnumConstantDecl enumConstantDecl() {
-		return new TDEnumConstantDecl(NodeList.<ExtendedModifier>empty(), (Name) null, NodeOption.<NodeList<Expr>>none(), NodeOption.<NodeList<MemberDecl>>none());
+		return new TDEnumConstantDecl(TreeFactory.<ExtendedModifier>emptyList(), (Name) null, TreeFactory.<NodeList<Expr>>none(), TreeFactory.<NodeList<MemberDecl>>none());
 	}
 
 	public static EnumConstantDecl enumConstantDecl(Name name) {
-		return new TDEnumConstantDecl(NodeList.<ExtendedModifier>empty(), name, NodeOption.<NodeList<Expr>>none(), NodeOption.<NodeList<MemberDecl>>none());
+		return new TDEnumConstantDecl(TreeFactory.<ExtendedModifier>emptyList(), name, TreeFactory.<NodeList<Expr>>none(), TreeFactory.<NodeList<MemberDecl>>none());
 	}
 
 	@Deprecated
 	public static EnumDecl enumDecl() {
-		return new TDEnumDecl(NodeList.<ExtendedModifier>empty(), (Name) null, NodeList.<QualifiedType>empty(), NodeList.<EnumConstantDecl>empty(), false, NodeList.<MemberDecl>empty());
+		return new TDEnumDecl(TreeFactory.<ExtendedModifier>emptyList(), (Name) null, TreeFactory.<QualifiedType>emptyList(), TreeFactory.<EnumConstantDecl>emptyList(), false, TreeFactory.<MemberDecl>emptyList());
 	}
 
 	public static EnumDecl enumDecl(Name name) {
-		return new TDEnumDecl(NodeList.<ExtendedModifier>empty(), name, NodeList.<QualifiedType>empty(), NodeList.<EnumConstantDecl>empty(), false, NodeList.<MemberDecl>empty());
+		return new TDEnumDecl(TreeFactory.<ExtendedModifier>emptyList(), name, TreeFactory.<QualifiedType>emptyList(), TreeFactory.<EnumConstantDecl>emptyList(), false, TreeFactory.<MemberDecl>emptyList());
 	}
 
 	@Deprecated
 	public static FieldDecl fieldDecl() {
-		return new TDFieldDecl(NodeList.<ExtendedModifier>empty(), (Type) null, NodeList.<VariableDeclarator>empty());
+		return new TDFieldDecl(TreeFactory.<ExtendedModifier>emptyList(), (Type) null, TreeFactory.<VariableDeclarator>emptyList());
 	}
 
 	public static FieldDecl fieldDecl(Type type) {
-		return new TDFieldDecl(NodeList.<ExtendedModifier>empty(), type, NodeList.<VariableDeclarator>empty());
+		return new TDFieldDecl(TreeFactory.<ExtendedModifier>emptyList(), type, TreeFactory.<VariableDeclarator>emptyList());
 	}
 
 	@Deprecated
 	public static FormalParameter formalParameter() {
-		return new TDFormalParameter(NodeList.<ExtendedModifier>empty(), (Type) null, false, (VariableDeclaratorId) null);
+		return new TDFormalParameter(TreeFactory.<ExtendedModifier>emptyList(), (Type) null, false, (VariableDeclaratorId) null);
 	}
 
 	public static FormalParameter formalParameter(Type type, VariableDeclaratorId id) {
-		return new TDFormalParameter(NodeList.<ExtendedModifier>empty(), type, false, id);
+		return new TDFormalParameter(TreeFactory.<ExtendedModifier>emptyList(), type, false, id);
 	}
 
 	@Deprecated
@@ -118,38 +239,38 @@ public abstract class TreeFactory {
 
 	@Deprecated
 	public static InitializerDecl initializerDecl() {
-		return new TDInitializerDecl(NodeList.<ExtendedModifier>empty(), (BlockStmt) null);
+		return new TDInitializerDecl(TreeFactory.<ExtendedModifier>emptyList(), (BlockStmt) null);
 	}
 
 	public static InitializerDecl initializerDecl(BlockStmt body) {
-		return new TDInitializerDecl(NodeList.<ExtendedModifier>empty(), body);
+		return new TDInitializerDecl(TreeFactory.<ExtendedModifier>emptyList(), body);
 	}
 
 	@Deprecated
 	public static InterfaceDecl interfaceDecl() {
-		return new TDInterfaceDecl(NodeList.<ExtendedModifier>empty(), (Name) null, NodeList.<TypeParameter>empty(), NodeList.<QualifiedType>empty(), NodeList.<MemberDecl>empty());
+		return new TDInterfaceDecl(TreeFactory.<ExtendedModifier>emptyList(), (Name) null, TreeFactory.<TypeParameter>emptyList(), TreeFactory.<QualifiedType>emptyList(), TreeFactory.<MemberDecl>emptyList());
 	}
 
 	public static InterfaceDecl interfaceDecl(Name name) {
-		return new TDInterfaceDecl(NodeList.<ExtendedModifier>empty(), name, NodeList.<TypeParameter>empty(), NodeList.<QualifiedType>empty(), NodeList.<MemberDecl>empty());
+		return new TDInterfaceDecl(TreeFactory.<ExtendedModifier>emptyList(), name, TreeFactory.<TypeParameter>emptyList(), TreeFactory.<QualifiedType>emptyList(), TreeFactory.<MemberDecl>emptyList());
 	}
 
 	@Deprecated
 	public static LocalVariableDecl localVariableDecl() {
-		return new TDLocalVariableDecl(NodeList.<ExtendedModifier>empty(), (Type) null, NodeList.<VariableDeclarator>empty());
+		return new TDLocalVariableDecl(TreeFactory.<ExtendedModifier>emptyList(), (Type) null, TreeFactory.<VariableDeclarator>emptyList());
 	}
 
 	public static LocalVariableDecl localVariableDecl(Type type) {
-		return new TDLocalVariableDecl(NodeList.<ExtendedModifier>empty(), type, NodeList.<VariableDeclarator>empty());
+		return new TDLocalVariableDecl(TreeFactory.<ExtendedModifier>emptyList(), type, TreeFactory.<VariableDeclarator>emptyList());
 	}
 
 	@Deprecated
 	public static MethodDecl methodDecl() {
-		return new TDMethodDecl(NodeList.<ExtendedModifier>empty(), NodeList.<TypeParameter>empty(), (Type) null, (Name) null, NodeList.<FormalParameter>empty(), NodeList.<ArrayDim>empty(), NodeList.<QualifiedType>empty(), NodeOption.<BlockStmt>none());
+		return new TDMethodDecl(TreeFactory.<ExtendedModifier>emptyList(), TreeFactory.<TypeParameter>emptyList(), (Type) null, (Name) null, TreeFactory.<FormalParameter>emptyList(), TreeFactory.<ArrayDim>emptyList(), TreeFactory.<QualifiedType>emptyList(), TreeFactory.<BlockStmt>none());
 	}
 
 	public static MethodDecl methodDecl(Type type, Name name) {
-		return new TDMethodDecl(NodeList.<ExtendedModifier>empty(), NodeList.<TypeParameter>empty(), type, name, NodeList.<FormalParameter>empty(), NodeList.<ArrayDim>empty(), NodeList.<QualifiedType>empty(), NodeOption.<BlockStmt>none());
+		return new TDMethodDecl(TreeFactory.<ExtendedModifier>emptyList(), TreeFactory.<TypeParameter>emptyList(), type, name, TreeFactory.<FormalParameter>emptyList(), TreeFactory.<ArrayDim>emptyList(), TreeFactory.<QualifiedType>emptyList(), TreeFactory.<BlockStmt>none());
 	}
 
 	@Deprecated
@@ -163,38 +284,38 @@ public abstract class TreeFactory {
 
 	@Deprecated
 	public static PackageDecl packageDecl() {
-		return new TDPackageDecl(NodeList.<AnnotationExpr>empty(), (QualifiedName) null);
+		return new TDPackageDecl(TreeFactory.<AnnotationExpr>emptyList(), (QualifiedName) null);
 	}
 
 	public static PackageDecl packageDecl(QualifiedName name) {
-		return new TDPackageDecl(NodeList.<AnnotationExpr>empty(), name);
+		return new TDPackageDecl(TreeFactory.<AnnotationExpr>emptyList(), name);
 	}
 
 	@Deprecated
 	public static TypeParameter typeParameter() {
-		return new TDTypeParameter(NodeList.<AnnotationExpr>empty(), (Name) null, NodeList.<Type>empty());
+		return new TDTypeParameter(TreeFactory.<AnnotationExpr>emptyList(), (Name) null, TreeFactory.<Type>emptyList());
 	}
 
 	public static TypeParameter typeParameter(Name name) {
-		return new TDTypeParameter(NodeList.<AnnotationExpr>empty(), name, NodeList.<Type>empty());
+		return new TDTypeParameter(TreeFactory.<AnnotationExpr>emptyList(), name, TreeFactory.<Type>emptyList());
 	}
 
 	@Deprecated
 	public static VariableDeclarator variableDeclarator() {
-		return new TDVariableDeclarator((VariableDeclaratorId) null, NodeOption.<Expr>none());
+		return new TDVariableDeclarator((VariableDeclaratorId) null, TreeFactory.<Expr>none());
 	}
 
 	public static VariableDeclarator variableDeclarator(VariableDeclaratorId id) {
-		return new TDVariableDeclarator(id, NodeOption.<Expr>none());
+		return new TDVariableDeclarator(id, TreeFactory.<Expr>none());
 	}
 
 	@Deprecated
 	public static VariableDeclaratorId variableDeclaratorId() {
-		return new TDVariableDeclaratorId((Name) null, NodeList.<ArrayDim>empty());
+		return new TDVariableDeclaratorId((Name) null, TreeFactory.<ArrayDim>emptyList());
 	}
 
 	public static VariableDeclaratorId variableDeclaratorId(Name name) {
-		return new TDVariableDeclaratorId(name, NodeList.<ArrayDim>empty());
+		return new TDVariableDeclaratorId(name, TreeFactory.<ArrayDim>emptyList());
 	}
 
 	@Deprecated
@@ -208,24 +329,24 @@ public abstract class TreeFactory {
 
 	@Deprecated
 	public static ArrayCreationExpr arrayCreationExpr() {
-		return new TDArrayCreationExpr((Type) null, NodeList.<ArrayDimExpr>empty(), NodeList.<ArrayDim>empty(), NodeOption.<ArrayInitializerExpr>none());
+		return new TDArrayCreationExpr((Type) null, TreeFactory.<ArrayDimExpr>emptyList(), TreeFactory.<ArrayDim>emptyList(), TreeFactory.<ArrayInitializerExpr>none());
 	}
 
 	public static ArrayCreationExpr arrayCreationExpr(Type type) {
-		return new TDArrayCreationExpr(type, NodeList.<ArrayDimExpr>empty(), NodeList.<ArrayDim>empty(), NodeOption.<ArrayInitializerExpr>none());
+		return new TDArrayCreationExpr(type, TreeFactory.<ArrayDimExpr>emptyList(), TreeFactory.<ArrayDim>emptyList(), TreeFactory.<ArrayInitializerExpr>none());
 	}
 
 	@Deprecated
 	public static ArrayDimExpr arrayDimExpr() {
-		return new TDArrayDimExpr(NodeList.<AnnotationExpr>empty(), (Expr) null);
+		return new TDArrayDimExpr(TreeFactory.<AnnotationExpr>emptyList(), (Expr) null);
 	}
 
 	public static ArrayDimExpr arrayDimExpr(Expr expr) {
-		return new TDArrayDimExpr(NodeList.<AnnotationExpr>empty(), expr);
+		return new TDArrayDimExpr(TreeFactory.<AnnotationExpr>emptyList(), expr);
 	}
 
 	public static ArrayInitializerExpr arrayInitializerExpr() {
-		return new TDArrayInitializerExpr(NodeList.<Expr>empty(), false);
+		return new TDArrayInitializerExpr(TreeFactory.<Expr>emptyList(), false);
 	}
 
 	@Deprecated
@@ -275,11 +396,11 @@ public abstract class TreeFactory {
 
 	@Deprecated
 	public static FieldAccessExpr fieldAccessExpr() {
-		return new TDFieldAccessExpr(NodeOption.<Expr>none(), (Name) null);
+		return new TDFieldAccessExpr(TreeFactory.<Expr>none(), (Name) null);
 	}
 
 	public static FieldAccessExpr fieldAccessExpr(Name name) {
-		return new TDFieldAccessExpr(NodeOption.<Expr>none(), name);
+		return new TDFieldAccessExpr(TreeFactory.<Expr>none(), name);
 	}
 
 	@Deprecated
@@ -292,7 +413,7 @@ public abstract class TreeFactory {
 	}
 
 	public static LambdaExpr lambdaExpr() {
-		return new TDLambdaExpr(NodeList.<FormalParameter>empty(), true, NodeEither.<Expr, BlockStmt>right(blockStmt()));
+		return new TDLambdaExpr(TreeFactory.<FormalParameter>emptyList(), true, TreeFactory.<Expr, BlockStmt>right(blockStmt()));
 	}
 
 	public static LiteralExpr<Void> nullLiteralExpr() {
@@ -347,38 +468,38 @@ public abstract class TreeFactory {
 
 	@Deprecated
 	public static MethodInvocationExpr methodInvocationExpr() {
-		return new TDMethodInvocationExpr(NodeOption.<Expr>none(), NodeList.<Type>empty(), (Name) null, NodeList.<Expr>empty());
+		return new TDMethodInvocationExpr(TreeFactory.<Expr>none(), TreeFactory.<Type>emptyList(), (Name) null, TreeFactory.<Expr>emptyList());
 	}
 
 	public static MethodInvocationExpr methodInvocationExpr(Name name) {
-		return new TDMethodInvocationExpr(NodeOption.<Expr>none(), NodeList.<Type>empty(), name, NodeList.<Expr>empty());
+		return new TDMethodInvocationExpr(TreeFactory.<Expr>none(), TreeFactory.<Type>emptyList(), name, TreeFactory.<Expr>emptyList());
 	}
 
 	@Deprecated
 	public static MethodReferenceExpr methodReferenceExpr() {
-		return new TDMethodReferenceExpr((Expr) null, NodeList.<Type>empty(), (Name) null);
+		return new TDMethodReferenceExpr((Expr) null, TreeFactory.<Type>emptyList(), (Name) null);
 	}
 
 	public static MethodReferenceExpr methodReferenceExpr(Expr scope, Name name) {
-		return new TDMethodReferenceExpr(scope, NodeList.<Type>empty(), name);
+		return new TDMethodReferenceExpr(scope, TreeFactory.<Type>emptyList(), name);
 	}
 
 	@Deprecated
 	public static NormalAnnotationExpr normalAnnotationExpr() {
-		return new TDNormalAnnotationExpr((QualifiedName) null, NodeList.<MemberValuePair>empty());
+		return new TDNormalAnnotationExpr((QualifiedName) null, TreeFactory.<MemberValuePair>emptyList());
 	}
 
 	public static NormalAnnotationExpr normalAnnotationExpr(QualifiedName name) {
-		return new TDNormalAnnotationExpr(name, NodeList.<MemberValuePair>empty());
+		return new TDNormalAnnotationExpr(name, TreeFactory.<MemberValuePair>emptyList());
 	}
 
 	@Deprecated
 	public static ObjectCreationExpr objectCreationExpr() {
-		return new TDObjectCreationExpr(NodeOption.<Expr>none(), NodeList.<Type>empty(), (QualifiedType) null, NodeList.<Expr>empty(), NodeOption.<NodeList<MemberDecl>>none());
+		return new TDObjectCreationExpr(TreeFactory.<Expr>none(), TreeFactory.<Type>emptyList(), (QualifiedType) null, TreeFactory.<Expr>emptyList(), TreeFactory.<NodeList<MemberDecl>>none());
 	}
 
 	public static ObjectCreationExpr objectCreationExpr(QualifiedType type) {
-		return new TDObjectCreationExpr(NodeOption.<Expr>none(), NodeList.<Type>empty(), type, NodeList.<Expr>empty(), NodeOption.<NodeList<MemberDecl>>none());
+		return new TDObjectCreationExpr(TreeFactory.<Expr>none(), TreeFactory.<Type>emptyList(), type, TreeFactory.<Expr>emptyList(), TreeFactory.<NodeList<MemberDecl>>none());
 	}
 
 	@Deprecated
@@ -400,11 +521,11 @@ public abstract class TreeFactory {
 	}
 
 	public static SuperExpr superExpr() {
-		return new TDSuperExpr(NodeOption.<Expr>none());
+		return new TDSuperExpr(TreeFactory.<Expr>none());
 	}
 
 	public static ThisExpr thisExpr() {
-		return new TDThisExpr(NodeOption.<Expr>none());
+		return new TDThisExpr(TreeFactory.<Expr>none());
 	}
 
 	@Deprecated
@@ -445,37 +566,37 @@ public abstract class TreeFactory {
 
 	@Deprecated
 	public static QualifiedName qualifiedName() {
-		return new TDQualifiedName(NodeOption.<QualifiedName>none(), (Name) null);
+		return new TDQualifiedName(TreeFactory.<QualifiedName>none(), (Name) null);
 	}
 
 	public static QualifiedName qualifiedName(Name name) {
-		return new TDQualifiedName(NodeOption.<QualifiedName>none(), name);
+		return new TDQualifiedName(TreeFactory.<QualifiedName>none(), name);
 	}
 
 	public static QualifiedName qualifiedName(String nameString) {
 		final String[] split = nameString.split("\\.");
 		QualifiedName name = null;
 		for (String part : split) {
-			name = new TDQualifiedName(NodeOption.of(name), new TDName(part));
+			name = new TDQualifiedName(optionOf(name), new TDName(part));
 		}
 		return name;
 	}
 
 	@Deprecated
 	public static AssertStmt assertStmt() {
-		return new TDAssertStmt((Expr) null, NodeOption.<Expr>none());
+		return new TDAssertStmt((Expr) null, TreeFactory.<Expr>none());
 	}
 
 	public static AssertStmt assertStmt(Expr check) {
-		return new TDAssertStmt(check, NodeOption.<Expr>none());
+		return new TDAssertStmt(check, TreeFactory.<Expr>none());
 	}
 
 	public static BlockStmt blockStmt() {
-		return new TDBlockStmt(NodeList.<Stmt>empty());
+		return new TDBlockStmt(TreeFactory.<Stmt>emptyList());
 	}
 
 	public static BreakStmt breakStmt() {
-		return new TDBreakStmt(NodeOption.<Name>none());
+		return new TDBreakStmt(TreeFactory.<Name>none());
 	}
 
 	@Deprecated
@@ -488,7 +609,7 @@ public abstract class TreeFactory {
 	}
 
 	public static ContinueStmt continueStmt() {
-		return new TDContinueStmt(NodeOption.<Name>none());
+		return new TDContinueStmt(TreeFactory.<Name>none());
 	}
 
 	@Deprecated
@@ -505,7 +626,7 @@ public abstract class TreeFactory {
 	}
 
 	public static ExplicitConstructorInvocationStmt explicitConstructorInvocationStmt() {
-		return new TDExplicitConstructorInvocationStmt(NodeList.<Type>empty(), false, NodeOption.<Expr>none(), NodeList.<Expr>empty());
+		return new TDExplicitConstructorInvocationStmt(TreeFactory.<Type>emptyList(), false, TreeFactory.<Expr>none(), TreeFactory.<Expr>emptyList());
 	}
 
 	@Deprecated
@@ -519,11 +640,11 @@ public abstract class TreeFactory {
 
 	@Deprecated
 	public static ForStmt forStmt() {
-		return new TDForStmt(NodeList.<Expr>empty(), (Expr) null, NodeList.<Expr>empty(), (Stmt) null);
+		return new TDForStmt(TreeFactory.<Expr>emptyList(), (Expr) null, TreeFactory.<Expr>emptyList(), (Stmt) null);
 	}
 
 	public static ForStmt forStmt(Expr compare, Stmt body) {
-		return new TDForStmt(NodeList.<Expr>empty(), compare, NodeList.<Expr>empty(), body);
+		return new TDForStmt(TreeFactory.<Expr>emptyList(), compare, TreeFactory.<Expr>emptyList(), body);
 	}
 
 	@Deprecated
@@ -537,11 +658,11 @@ public abstract class TreeFactory {
 
 	@Deprecated
 	public static IfStmt ifStmt() {
-		return new TDIfStmt((Expr) null, (Stmt) null, NodeOption.<Stmt>none());
+		return new TDIfStmt((Expr) null, (Stmt) null, TreeFactory.<Stmt>none());
 	}
 
 	public static IfStmt ifStmt(Expr condition, Stmt thenStmt) {
-		return new TDIfStmt(condition, thenStmt, NodeOption.<Stmt>none());
+		return new TDIfStmt(condition, thenStmt, TreeFactory.<Stmt>none());
 	}
 
 	@Deprecated
@@ -554,20 +675,20 @@ public abstract class TreeFactory {
 	}
 
 	public static ReturnStmt returnStmt() {
-		return new TDReturnStmt(NodeOption.<Expr>none());
+		return new TDReturnStmt(TreeFactory.<Expr>none());
 	}
 
 	public static SwitchCase switchCase() {
-		return new TDSwitchCase(NodeOption.<Expr>none(), NodeList.<Stmt>empty());
+		return new TDSwitchCase(TreeFactory.<Expr>none(), TreeFactory.<Stmt>emptyList());
 	}
 
 	@Deprecated
 	public static SwitchStmt switchStmt() {
-		return new TDSwitchStmt((Expr) null, NodeList.<SwitchCase>empty());
+		return new TDSwitchStmt((Expr) null, TreeFactory.<SwitchCase>emptyList());
 	}
 
 	public static SwitchStmt switchStmt(Expr selector) {
-		return new TDSwitchStmt(selector, NodeList.<SwitchCase>empty());
+		return new TDSwitchStmt(selector, TreeFactory.<SwitchCase>emptyList());
 	}
 
 	@Deprecated
@@ -590,11 +711,11 @@ public abstract class TreeFactory {
 
 	@Deprecated
 	public static TryStmt tryStmt() {
-		return new TDTryStmt(NodeList.<VariableDeclarationExpr>empty(), false, (BlockStmt) null, NodeList.<CatchClause>empty(), NodeOption.<BlockStmt>none());
+		return new TDTryStmt(TreeFactory.<VariableDeclarationExpr>emptyList(), false, (BlockStmt) null, TreeFactory.<CatchClause>emptyList(), TreeFactory.<BlockStmt>none());
 	}
 
 	public static TryStmt tryStmt(BlockStmt tryBlock) {
-		return new TDTryStmt(NodeList.<VariableDeclarationExpr>empty(), false, tryBlock, NodeList.<CatchClause>empty(), NodeOption.<BlockStmt>none());
+		return new TDTryStmt(TreeFactory.<VariableDeclarationExpr>emptyList(), false, tryBlock, TreeFactory.<CatchClause>emptyList(), TreeFactory.<BlockStmt>none());
 	}
 
 	@Deprecated
@@ -617,37 +738,37 @@ public abstract class TreeFactory {
 
 	@Deprecated
 	public static ArrayType arrayType() {
-		return new TDArrayType((Type) null, NodeList.<ArrayDim>empty());
+		return new TDArrayType((Type) null, TreeFactory.<ArrayDim>emptyList());
 	}
 
 	public static ArrayType arrayType(Type componentType) {
-		return new TDArrayType(componentType, NodeList.<ArrayDim>empty());
+		return new TDArrayType(componentType, TreeFactory.<ArrayDim>emptyList());
 	}
 
 	public static IntersectionType intersectionType() {
-		return new TDIntersectionType(NodeList.<Type>empty());
+		return new TDIntersectionType(TreeFactory.<Type>emptyList());
 	}
 
 	@Deprecated
 	public static PrimitiveType primitiveType() {
-		return new TDPrimitiveType(NodeList.<AnnotationExpr>empty(), (Primitive) null);
+		return new TDPrimitiveType(TreeFactory.<AnnotationExpr>emptyList(), (Primitive) null);
 	}
 
 	public static PrimitiveType primitiveType(Primitive primitive) {
-		return new TDPrimitiveType(NodeList.<AnnotationExpr>empty(), primitive);
+		return new TDPrimitiveType(TreeFactory.<AnnotationExpr>emptyList(), primitive);
 	}
 
 	@Deprecated
 	public static QualifiedType qualifiedType() {
-		return new TDQualifiedType(NodeList.<AnnotationExpr>empty(), NodeOption.<QualifiedType>none(), (Name) null, NodeOption.<NodeList<Type>>none());
+		return new TDQualifiedType(TreeFactory.<AnnotationExpr>emptyList(), TreeFactory.<QualifiedType>none(), (Name) null, TreeFactory.<NodeList<Type>>none());
 	}
 
 	public static QualifiedType qualifiedType(Name name) {
-		return new TDQualifiedType(NodeList.<AnnotationExpr>empty(), NodeOption.<QualifiedType>none(), name, NodeOption.<NodeList<Type>>none());
+		return new TDQualifiedType(TreeFactory.<AnnotationExpr>emptyList(), TreeFactory.<QualifiedType>none(), name, TreeFactory.<NodeList<Type>>none());
 	}
 
 	public static UnionType unionType() {
-		return new TDUnionType(NodeList.<Type>empty());
+		return new TDUnionType(TreeFactory.<Type>emptyList());
 	}
 
 	public static UnknownType unknownType() {
@@ -659,6 +780,6 @@ public abstract class TreeFactory {
 	}
 
 	public static WildcardType wildcardType() {
-		return new TDWildcardType(NodeList.<AnnotationExpr>empty(), NodeOption.<ReferenceType>none(), NodeOption.<ReferenceType>none());
+		return new TDWildcardType(TreeFactory.<AnnotationExpr>emptyList(), TreeFactory.<ReferenceType>none(), TreeFactory.<ReferenceType>none());
 	}
 }

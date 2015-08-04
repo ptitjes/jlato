@@ -23,6 +23,7 @@ import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
+import org.jlato.internal.td.coll.TDNodeList;
 import org.jlato.tree.*;
 
 import java.util.Collections;
@@ -49,7 +50,7 @@ public class SNodeList implements STree {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Tree instantiate(TDLocation<?> location) {
-		return new NodeList<Tree>((TDLocation<SNodeList>) location);
+		return new TDNodeList<Tree>((TDLocation<SNodeList>) location);
 	}
 
 	@Override

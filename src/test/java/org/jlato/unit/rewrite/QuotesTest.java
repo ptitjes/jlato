@@ -23,11 +23,10 @@ import org.jlato.parser.ParseException;
 import org.jlato.printer.Printer;
 import org.jlato.rewrite.Pattern;
 import org.jlato.rewrite.Substitution;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.decl.MethodDecl;
-import org.jlato.tree.expr.Expr;
-import org.jlato.tree.name.Name;
-import org.jlato.tree.stmt.Stmt;
+import org.jlato.tree.*;
+import org.jlato.tree.decl.*;
+import org.jlato.tree.expr.*;
+import org.jlato.tree.stmt.*;
 import org.jlato.unit.util.BaseTestFromFiles;
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,10 +35,7 @@ import org.junit.runners.JUnit4;
 
 import java.io.FileNotFoundException;
 
-import static org.jlato.rewrite.Quotes.expr;
-import static org.jlato.rewrite.Quotes.memberDecl;
-import static org.jlato.rewrite.Quotes.stmt;
-import static org.jlato.tree.NodeOption.some;
+import static org.jlato.rewrite.Quotes.*;
 import static org.jlato.tree.TreeFactory.*;
 
 /**
@@ -65,7 +61,7 @@ public class QuotesTest extends BaseTestFromFiles {
 
 	@Test
 	public void genMethod() {
-		NodeList<Stmt> stmts = NodeList.empty();
+		NodeList<Stmt> stmts = emptyList();
 		stmts = stmts.append(stmt("int result = 17;").build());
 		stmts = stmts.append(stmt("if (val1 != null) result = 37 * result + val1.hashCode();").build());
 		stmts = stmts.append(stmt("if (val2 != null) result = 37 * result + val2.hashCode();").build());

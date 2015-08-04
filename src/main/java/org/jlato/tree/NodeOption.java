@@ -19,10 +19,6 @@
 
 package org.jlato.tree;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.coll.SNodeOption;
-import org.jlato.internal.td.TDLocation;
-import org.jlato.internal.td.TDTree;
 import org.jlato.util.Mutation;
 
 import java.util.Iterator;
@@ -30,100 +26,25 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public class NodeOption<T extends Tree> extends TDTree<SNodeOption, NodeOption<T>, NodeOption<T>> implements Tree, Iterable<T> {
+public interface NodeOption<T extends Tree> extends Tree, Iterable<T> {
 
-	@SuppressWarnings("unchecked")
-	public static <T extends Tree> NodeOption<T> of(T tree) {
-		return tree == null ? NodeOption.<T>none() : some(tree);
-	}
+	boolean isDefined();
 
-	@SuppressWarnings("unchecked")
-	public static <T extends Tree> NodeOption<T> none() {
-		return new NodeOption<T>();
-	}
+	boolean isNone();
 
-	@SuppressWarnings("unchecked")
-	public static <T extends Tree> NodeOption<T> some(T tree) {
-		return new NodeOption<T>(tree);
-	}
+	boolean isSome();
 
-	public NodeOption(TDLocation<SNodeOption> location) {
-		super(location);
-	}
+	boolean contains(T element);
 
-	public NodeOption() {
-		super(new TDLocation<SNodeOption>(new BUTree<SNodeOption>(new SNodeOption(treeOf(null)))));
-	}
+	T get();
 
-	public NodeOption(T element) {
-		super(new TDLocation<SNodeOption>(new BUTree<SNodeOption>(new SNodeOption(treeOf(element)))));
-	}
+	NodeOption<T> set(T element);
 
-	public boolean isDefined() {
-		return isSome();
-	}
+	NodeOption<T> set(Mutation<T> mutation);
 
-	public boolean isNone() {
-		return location.tree.state.element == null;
-	}
+	NodeOption<T> setNone();
 
-	public boolean isSome() {
-		return location.tree.state.element != null;
-	}
+	Iterator<T> iterator();
 
-	public boolean contains(T element) {
-		final BUTree<?> actual = location.tree.state.element;
-		return actual != null ? actual.equals(treeOf(element)) : element == null;
-	}
-
-	@SuppressWarnings("unchecked")
-	public T get() {
-		return (T) location.safeTraversal(SNodeOption.elementTraversal());
-	}
-
-	public NodeOption<T> set(T element) {
-		return location.safeTraversalReplace(SNodeOption.elementTraversal(), element);
-	}
-
-	@SuppressWarnings("unchecked")
-	public NodeOption<T> set(Mutation<T> mutation) {
-		return location.safeTraversalMutate(SNodeOption.elementTraversal(), (Mutation<Tree>) mutation);
-	}
-
-	public NodeOption<T> setNone() {
-		return set((T) null);
-	}
-
-	public Iterator<T> iterator() {
-		return new ElementIterator();
-	}
-
-	public String mkString(String start, String sep, String end) {
-		StringBuilder builder = new StringBuilder();
-		builder.append(start);
-
-		Tree tree = location.safeTraversal(SNodeOption.elementTraversal());
-		builder.append(tree);
-
-		builder.append(end);
-		return builder.toString();
-	}
-
-	private class ElementIterator implements Iterator<T> {
-
-		private boolean done = false;
-
-		public boolean hasNext() {
-			return !done;
-		}
-
-		public T next() {
-			done = true;
-			return get();
-		}
-
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
-	}
+	String mkString(String start, String sep, String end);
 }
