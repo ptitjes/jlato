@@ -20,17 +20,17 @@ import static org.jlato.printer.SpacingConstraint.*;
 
 public class SIfStmt extends SNodeState<SIfStmt> implements SStmt {
 
-	public static STree<SIfStmt> make(STree<? extends SExpr> condition, STree<? extends SStmt> thenStmt, STree<SNodeOptionState> elseStmt) {
-		return new STree<SIfStmt>(new SIfStmt(condition, thenStmt, elseStmt));
+	public static BUTree<SIfStmt> make(BUTree<? extends SExpr> condition, BUTree<? extends SStmt> thenStmt, BUTree<SNodeOptionState> elseStmt) {
+		return new BUTree<SIfStmt>(new SIfStmt(condition, thenStmt, elseStmt));
 	}
 
-	public final STree<? extends SExpr> condition;
+	public final BUTree<? extends SExpr> condition;
 
-	public final STree<? extends SStmt> thenStmt;
+	public final BUTree<? extends SStmt> thenStmt;
 
-	public final STree<SNodeOptionState> elseStmt;
+	public final BUTree<SNodeOptionState> elseStmt;
 
-	public SIfStmt(STree<? extends SExpr> condition, STree<? extends SStmt> thenStmt, STree<SNodeOptionState> elseStmt) {
+	public SIfStmt(BUTree<? extends SExpr> condition, BUTree<? extends SStmt> thenStmt, BUTree<SNodeOptionState> elseStmt) {
 		this.condition = condition;
 		this.thenStmt = thenStmt;
 		this.elseStmt = elseStmt;
@@ -41,27 +41,27 @@ public class SIfStmt extends SNodeState<SIfStmt> implements SStmt {
 		return Kind.IfStmt;
 	}
 
-	public STree<? extends SExpr> condition() {
+	public BUTree<? extends SExpr> condition() {
 		return condition;
 	}
 
-	public SIfStmt withCondition(STree<? extends SExpr> condition) {
+	public SIfStmt withCondition(BUTree<? extends SExpr> condition) {
 		return new SIfStmt(condition, thenStmt, elseStmt);
 	}
 
-	public STree<? extends SStmt> thenStmt() {
+	public BUTree<? extends SStmt> thenStmt() {
 		return thenStmt;
 	}
 
-	public SIfStmt withThenStmt(STree<? extends SStmt> thenStmt) {
+	public SIfStmt withThenStmt(BUTree<? extends SStmt> thenStmt) {
 		return new SIfStmt(condition, thenStmt, elseStmt);
 	}
 
-	public STree<SNodeOptionState> elseStmt() {
+	public BUTree<SNodeOptionState> elseStmt() {
 		return elseStmt;
 	}
 
-	public SIfStmt withElseStmt(STree<SNodeOptionState> elseStmt) {
+	public SIfStmt withElseStmt(BUTree<SNodeOptionState> elseStmt) {
 		return new SIfStmt(condition, thenStmt, elseStmt);
 	}
 
@@ -113,12 +113,12 @@ public class SIfStmt extends SNodeState<SIfStmt> implements SStmt {
 	public static STypeSafeTraversal<SIfStmt, SExpr, Expr> CONDITION = new STypeSafeTraversal<SIfStmt, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SIfStmt state) {
+		public BUTree<?> doTraverse(SIfStmt state) {
 			return state.condition;
 		}
 
 		@Override
-		public SIfStmt doRebuildParentState(SIfStmt state, STree<SExpr> child) {
+		public SIfStmt doRebuildParentState(SIfStmt state, BUTree<SExpr> child) {
 			return state.withCondition(child);
 		}
 
@@ -136,12 +136,12 @@ public class SIfStmt extends SNodeState<SIfStmt> implements SStmt {
 	public static STypeSafeTraversal<SIfStmt, SStmt, Stmt> THEN_STMT = new STypeSafeTraversal<SIfStmt, SStmt, Stmt>() {
 
 		@Override
-		public STree<?> doTraverse(SIfStmt state) {
+		public BUTree<?> doTraverse(SIfStmt state) {
 			return state.thenStmt;
 		}
 
 		@Override
-		public SIfStmt doRebuildParentState(SIfStmt state, STree<SStmt> child) {
+		public SIfStmt doRebuildParentState(SIfStmt state, BUTree<SStmt> child) {
 			return state.withThenStmt(child);
 		}
 
@@ -159,12 +159,12 @@ public class SIfStmt extends SNodeState<SIfStmt> implements SStmt {
 	public static STypeSafeTraversal<SIfStmt, SNodeOptionState, NodeOption<Stmt>> ELSE_STMT = new STypeSafeTraversal<SIfStmt, SNodeOptionState, NodeOption<Stmt>>() {
 
 		@Override
-		public STree<?> doTraverse(SIfStmt state) {
+		public BUTree<?> doTraverse(SIfStmt state) {
 			return state.elseStmt;
 		}
 
 		@Override
-		public SIfStmt doRebuildParentState(SIfStmt state, STree<SNodeOptionState> child) {
+		public SIfStmt doRebuildParentState(SIfStmt state, BUTree<SNodeOptionState> child) {
 			return state.withElseStmt(child);
 		}
 

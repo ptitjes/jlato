@@ -14,15 +14,15 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SAssertStmt extends SNodeState<SAssertStmt> implements SStmt {
 
-	public static STree<SAssertStmt> make(STree<? extends SExpr> check, STree<SNodeOptionState> msg) {
-		return new STree<SAssertStmt>(new SAssertStmt(check, msg));
+	public static BUTree<SAssertStmt> make(BUTree<? extends SExpr> check, BUTree<SNodeOptionState> msg) {
+		return new BUTree<SAssertStmt>(new SAssertStmt(check, msg));
 	}
 
-	public final STree<? extends SExpr> check;
+	public final BUTree<? extends SExpr> check;
 
-	public final STree<SNodeOptionState> msg;
+	public final BUTree<SNodeOptionState> msg;
 
-	public SAssertStmt(STree<? extends SExpr> check, STree<SNodeOptionState> msg) {
+	public SAssertStmt(BUTree<? extends SExpr> check, BUTree<SNodeOptionState> msg) {
 		this.check = check;
 		this.msg = msg;
 	}
@@ -32,19 +32,19 @@ public class SAssertStmt extends SNodeState<SAssertStmt> implements SStmt {
 		return Kind.AssertStmt;
 	}
 
-	public STree<? extends SExpr> check() {
+	public BUTree<? extends SExpr> check() {
 		return check;
 	}
 
-	public SAssertStmt withCheck(STree<? extends SExpr> check) {
+	public SAssertStmt withCheck(BUTree<? extends SExpr> check) {
 		return new SAssertStmt(check, msg);
 	}
 
-	public STree<SNodeOptionState> msg() {
+	public BUTree<SNodeOptionState> msg() {
 		return msg;
 	}
 
-	public SAssertStmt withMsg(STree<SNodeOptionState> msg) {
+	public SAssertStmt withMsg(BUTree<SNodeOptionState> msg) {
 		return new SAssertStmt(check, msg);
 	}
 
@@ -93,12 +93,12 @@ public class SAssertStmt extends SNodeState<SAssertStmt> implements SStmt {
 	public static STypeSafeTraversal<SAssertStmt, SExpr, Expr> CHECK = new STypeSafeTraversal<SAssertStmt, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SAssertStmt state) {
+		public BUTree<?> doTraverse(SAssertStmt state) {
 			return state.check;
 		}
 
 		@Override
-		public SAssertStmt doRebuildParentState(SAssertStmt state, STree<SExpr> child) {
+		public SAssertStmt doRebuildParentState(SAssertStmt state, BUTree<SExpr> child) {
 			return state.withCheck(child);
 		}
 
@@ -116,12 +116,12 @@ public class SAssertStmt extends SNodeState<SAssertStmt> implements SStmt {
 	public static STypeSafeTraversal<SAssertStmt, SNodeOptionState, NodeOption<Expr>> MSG = new STypeSafeTraversal<SAssertStmt, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(SAssertStmt state) {
+		public BUTree<?> doTraverse(SAssertStmt state) {
 			return state.msg;
 		}
 
 		@Override
-		public SAssertStmt doRebuildParentState(SAssertStmt state, STree<SNodeOptionState> child) {
+		public SAssertStmt doRebuildParentState(SAssertStmt state, BUTree<SNodeOptionState> child) {
 			return state.withMsg(child);
 		}
 

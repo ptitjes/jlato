@@ -19,7 +19,7 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.SVarState;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
@@ -33,7 +33,7 @@ public final class LSDefault extends LexicalShape {
 	public LSDefault() {
 	}
 
-	private LexicalShape shapeFor(STree tree) {
+	private LexicalShape shapeFor(BUTree tree) {
 		return tree.state.shape();
 	}
 
@@ -43,7 +43,7 @@ public final class LSDefault extends LexicalShape {
 	}
 
 	@Override
-	public boolean isDefined(STree tree) {
+	public boolean isDefined(BUTree tree) {
 		if (tree.state instanceof SVarState) return true;
 
 		final LexicalShape shape = shapeFor(tree);
@@ -51,7 +51,7 @@ public final class LSDefault extends LexicalShape {
 	}
 
 	@Override
-	public void dress(DressingBuilder<?> builder, STree<?> discriminator) {
+	public void dress(DressingBuilder<?> builder, BUTree<?> discriminator) {
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public final class LSDefault extends LexicalShape {
 	}
 
 	@Override
-	public void render(STree tree, WRunRun run, Printer printer) {
+	public void render(BUTree tree, WRunRun run, Printer printer) {
 		final LexicalShape shape = shapeFor(tree);
 
 		if (tree.dressing != null) printer.encounteredLeading(tree.dressing.leading);

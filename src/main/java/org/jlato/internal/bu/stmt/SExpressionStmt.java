@@ -12,13 +12,13 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SExpressionStmt extends SNodeState<SExpressionStmt> implements SStmt {
 
-	public static STree<SExpressionStmt> make(STree<? extends SExpr> expr) {
-		return new STree<SExpressionStmt>(new SExpressionStmt(expr));
+	public static BUTree<SExpressionStmt> make(BUTree<? extends SExpr> expr) {
+		return new BUTree<SExpressionStmt>(new SExpressionStmt(expr));
 	}
 
-	public final STree<? extends SExpr> expr;
+	public final BUTree<? extends SExpr> expr;
 
-	public SExpressionStmt(STree<? extends SExpr> expr) {
+	public SExpressionStmt(BUTree<? extends SExpr> expr) {
 		this.expr = expr;
 	}
 
@@ -27,11 +27,11 @@ public class SExpressionStmt extends SNodeState<SExpressionStmt> implements SStm
 		return Kind.ExpressionStmt;
 	}
 
-	public STree<? extends SExpr> expr() {
+	public BUTree<? extends SExpr> expr() {
 		return expr;
 	}
 
-	public SExpressionStmt withExpr(STree<? extends SExpr> expr) {
+	public SExpressionStmt withExpr(BUTree<? extends SExpr> expr) {
 		return new SExpressionStmt(expr);
 	}
 
@@ -77,12 +77,12 @@ public class SExpressionStmt extends SNodeState<SExpressionStmt> implements SStm
 	public static STypeSafeTraversal<SExpressionStmt, SExpr, Expr> EXPR = new STypeSafeTraversal<SExpressionStmt, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SExpressionStmt state) {
+		public BUTree<?> doTraverse(SExpressionStmt state) {
 			return state.expr;
 		}
 
 		@Override
-		public SExpressionStmt doRebuildParentState(SExpressionStmt state, STree<SExpr> child) {
+		public SExpressionStmt doRebuildParentState(SExpressionStmt state, BUTree<SExpr> child) {
 			return state.withExpr(child);
 		}
 

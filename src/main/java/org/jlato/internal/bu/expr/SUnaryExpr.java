@@ -15,15 +15,15 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SUnaryExpr extends SNodeState<SUnaryExpr> implements SExpr {
 
-	public static STree<SUnaryExpr> make(UnaryOp op, STree<? extends SExpr> expr) {
-		return new STree<SUnaryExpr>(new SUnaryExpr(op, expr));
+	public static BUTree<SUnaryExpr> make(UnaryOp op, BUTree<? extends SExpr> expr) {
+		return new BUTree<SUnaryExpr>(new SUnaryExpr(op, expr));
 	}
 
 	public final UnaryOp op;
 
-	public final STree<? extends SExpr> expr;
+	public final BUTree<? extends SExpr> expr;
 
-	public SUnaryExpr(UnaryOp op, STree<? extends SExpr> expr) {
+	public SUnaryExpr(UnaryOp op, BUTree<? extends SExpr> expr) {
 		this.op = op;
 		this.expr = expr;
 	}
@@ -41,11 +41,11 @@ public class SUnaryExpr extends SNodeState<SUnaryExpr> implements SExpr {
 		return new SUnaryExpr(op, expr);
 	}
 
-	public STree<? extends SExpr> expr() {
+	public BUTree<? extends SExpr> expr() {
 		return expr;
 	}
 
-	public SUnaryExpr withExpr(STree<? extends SExpr> expr) {
+	public SUnaryExpr withExpr(BUTree<? extends SExpr> expr) {
 		return new SUnaryExpr(op, expr);
 	}
 
@@ -99,12 +99,12 @@ public class SUnaryExpr extends SNodeState<SUnaryExpr> implements SExpr {
 	public static STypeSafeTraversal<SUnaryExpr, SExpr, Expr> EXPR = new STypeSafeTraversal<SUnaryExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SUnaryExpr state) {
+		public BUTree<?> doTraverse(SUnaryExpr state) {
 			return state.expr;
 		}
 
 		@Override
-		public SUnaryExpr doRebuildParentState(SUnaryExpr state, STree<SExpr> child) {
+		public SUnaryExpr doRebuildParentState(SUnaryExpr state, BUTree<SExpr> child) {
 			return state.withExpr(child);
 		}
 
@@ -133,7 +133,7 @@ public class SUnaryExpr extends SNodeState<SUnaryExpr> implements SExpr {
 	};
 
 	public static final LexicalShape opShape = token(new LSToken.Provider() {
-		public LToken tokenFor(STree tree) {
+		public LToken tokenFor(BUTree tree) {
 			final UnaryOp op = ((SUnaryExpr) tree.state).op;
 			switch (op) {
 				case Positive:
@@ -160,7 +160,7 @@ public class SUnaryExpr extends SNodeState<SUnaryExpr> implements SExpr {
 	});
 
 	public static final LexicalShape shape = alternative(new LSCondition() {
-		public boolean test(STree tree) {
+		public boolean test(BUTree tree) {
 			final UnaryOp op = ((SUnaryExpr) tree.state).op;
 			return op.isPrefix();
 		}

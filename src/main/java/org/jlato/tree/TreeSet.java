@@ -22,7 +22,7 @@ package org.jlato.tree;
 import com.github.andrewoma.dexx.collection.Iterable;
 import com.github.andrewoma.dexx.collection.Pair;
 import com.github.andrewoma.dexx.collection.TreeMap;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.STreeSetState;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
@@ -44,11 +44,11 @@ public class TreeSet<T extends Tree> extends TDTree<STreeSetState, TreeSet<T>, T
 	}
 
 	public TreeSet(String rootPath) {
-		this(new TDLocation<STreeSetState>(new STree<STreeSetState>(new STreeSetState(rootPath))));
+		this(new TDLocation<STreeSetState>(new BUTree<STreeSetState>(new STreeSetState(rootPath))));
 	}
 
-	public TreeSet(String rootPath, TreeMap<String, STree<?>> trees) {
-		this(new TDLocation<STreeSetState>(new STree<STreeSetState>(new STreeSetState(rootPath, trees))));
+	public TreeSet(String rootPath, TreeMap<String, BUTree<?>> trees) {
+		this(new TDLocation<STreeSetState>(new BUTree<STreeSetState>(new STreeSetState(rootPath, trees))));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -70,9 +70,9 @@ public class TreeSet<T extends Tree> extends TDTree<STreeSetState, TreeSet<T>, T
 
 	public void updateOnDisk(boolean format, FormattingSettings formattingSettings) throws IOException {
 		final String rootPath = location.tree.state.rootPath;
-		for (Pair<String, STree<?>> pair : location.tree.state.trees) {
+		for (Pair<String, BUTree<?>> pair : location.tree.state.trees) {
 			final String path = pair.component1();
-			final STree tree = pair.component2();
+			final BUTree tree = pair.component2();
 
 			final File file = new File(rootPath + path);
 			if (!file.exists()) {

@@ -15,8 +15,8 @@ import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class SName extends SNodeState<SName> implements SExpr {
 
-	public static STree<SName> make(String id) {
-		return new STree<SName>(new SName(id));
+	public static BUTree<SName> make(String id) {
+		return new BUTree<SName>(new SName(id));
 	}
 
 	public final String id;
@@ -96,7 +96,7 @@ public class SName extends SNodeState<SName> implements SExpr {
 	};
 
 	public static final LexicalShape shape = token(new LSToken.Provider() {
-		public LToken tokenFor(STree tree) {
+		public LToken tokenFor(BUTree tree) {
 			return new LToken(ParserImplConstants.IDENTIFIER, ((SName) tree.state).id);
 		}
 	});

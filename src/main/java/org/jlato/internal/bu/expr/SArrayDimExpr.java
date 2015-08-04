@@ -11,15 +11,15 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SArrayDimExpr extends SNodeState<SArrayDimExpr> implements STreeState {
 
-	public static STree<SArrayDimExpr> make(STree<SNodeListState> annotations, STree<? extends SExpr> expr) {
-		return new STree<SArrayDimExpr>(new SArrayDimExpr(annotations, expr));
+	public static BUTree<SArrayDimExpr> make(BUTree<SNodeListState> annotations, BUTree<? extends SExpr> expr) {
+		return new BUTree<SArrayDimExpr>(new SArrayDimExpr(annotations, expr));
 	}
 
-	public final STree<SNodeListState> annotations;
+	public final BUTree<SNodeListState> annotations;
 
-	public final STree<? extends SExpr> expr;
+	public final BUTree<? extends SExpr> expr;
 
-	public SArrayDimExpr(STree<SNodeListState> annotations, STree<? extends SExpr> expr) {
+	public SArrayDimExpr(BUTree<SNodeListState> annotations, BUTree<? extends SExpr> expr) {
 		this.annotations = annotations;
 		this.expr = expr;
 	}
@@ -29,19 +29,19 @@ public class SArrayDimExpr extends SNodeState<SArrayDimExpr> implements STreeSta
 		return Kind.ArrayDimExpr;
 	}
 
-	public STree<SNodeListState> annotations() {
+	public BUTree<SNodeListState> annotations() {
 		return annotations;
 	}
 
-	public SArrayDimExpr withAnnotations(STree<SNodeListState> annotations) {
+	public SArrayDimExpr withAnnotations(BUTree<SNodeListState> annotations) {
 		return new SArrayDimExpr(annotations, expr);
 	}
 
-	public STree<? extends SExpr> expr() {
+	public BUTree<? extends SExpr> expr() {
 		return expr;
 	}
 
-	public SArrayDimExpr withExpr(STree<? extends SExpr> expr) {
+	public SArrayDimExpr withExpr(BUTree<? extends SExpr> expr) {
 		return new SArrayDimExpr(annotations, expr);
 	}
 
@@ -90,12 +90,12 @@ public class SArrayDimExpr extends SNodeState<SArrayDimExpr> implements STreeSta
 	public static STypeSafeTraversal<SArrayDimExpr, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<SArrayDimExpr, SNodeListState, NodeList<AnnotationExpr>>() {
 
 		@Override
-		public STree<?> doTraverse(SArrayDimExpr state) {
+		public BUTree<?> doTraverse(SArrayDimExpr state) {
 			return state.annotations;
 		}
 
 		@Override
-		public SArrayDimExpr doRebuildParentState(SArrayDimExpr state, STree<SNodeListState> child) {
+		public SArrayDimExpr doRebuildParentState(SArrayDimExpr state, BUTree<SNodeListState> child) {
 			return state.withAnnotations(child);
 		}
 
@@ -113,12 +113,12 @@ public class SArrayDimExpr extends SNodeState<SArrayDimExpr> implements STreeSta
 	public static STypeSafeTraversal<SArrayDimExpr, SExpr, Expr> EXPR = new STypeSafeTraversal<SArrayDimExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SArrayDimExpr state) {
+		public BUTree<?> doTraverse(SArrayDimExpr state) {
 			return state.expr;
 		}
 
 		@Override
-		public SArrayDimExpr doRebuildParentState(SArrayDimExpr state, STree<SExpr> child) {
+		public SArrayDimExpr doRebuildParentState(SArrayDimExpr state, BUTree<SExpr> child) {
 			return state.withExpr(child);
 		}
 

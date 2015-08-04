@@ -14,15 +14,15 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SDoStmt extends SNodeState<SDoStmt> implements SStmt {
 
-	public static STree<SDoStmt> make(STree<? extends SStmt> body, STree<? extends SExpr> condition) {
-		return new STree<SDoStmt>(new SDoStmt(body, condition));
+	public static BUTree<SDoStmt> make(BUTree<? extends SStmt> body, BUTree<? extends SExpr> condition) {
+		return new BUTree<SDoStmt>(new SDoStmt(body, condition));
 	}
 
-	public final STree<? extends SStmt> body;
+	public final BUTree<? extends SStmt> body;
 
-	public final STree<? extends SExpr> condition;
+	public final BUTree<? extends SExpr> condition;
 
-	public SDoStmt(STree<? extends SStmt> body, STree<? extends SExpr> condition) {
+	public SDoStmt(BUTree<? extends SStmt> body, BUTree<? extends SExpr> condition) {
 		this.body = body;
 		this.condition = condition;
 	}
@@ -32,19 +32,19 @@ public class SDoStmt extends SNodeState<SDoStmt> implements SStmt {
 		return Kind.DoStmt;
 	}
 
-	public STree<? extends SStmt> body() {
+	public BUTree<? extends SStmt> body() {
 		return body;
 	}
 
-	public SDoStmt withBody(STree<? extends SStmt> body) {
+	public SDoStmt withBody(BUTree<? extends SStmt> body) {
 		return new SDoStmt(body, condition);
 	}
 
-	public STree<? extends SExpr> condition() {
+	public BUTree<? extends SExpr> condition() {
 		return condition;
 	}
 
-	public SDoStmt withCondition(STree<? extends SExpr> condition) {
+	public SDoStmt withCondition(BUTree<? extends SExpr> condition) {
 		return new SDoStmt(body, condition);
 	}
 
@@ -93,12 +93,12 @@ public class SDoStmt extends SNodeState<SDoStmt> implements SStmt {
 	public static STypeSafeTraversal<SDoStmt, SStmt, Stmt> BODY = new STypeSafeTraversal<SDoStmt, SStmt, Stmt>() {
 
 		@Override
-		public STree<?> doTraverse(SDoStmt state) {
+		public BUTree<?> doTraverse(SDoStmt state) {
 			return state.body;
 		}
 
 		@Override
-		public SDoStmt doRebuildParentState(SDoStmt state, STree<SStmt> child) {
+		public SDoStmt doRebuildParentState(SDoStmt state, BUTree<SStmt> child) {
 			return state.withBody(child);
 		}
 
@@ -116,12 +116,12 @@ public class SDoStmt extends SNodeState<SDoStmt> implements SStmt {
 	public static STypeSafeTraversal<SDoStmt, SExpr, Expr> CONDITION = new STypeSafeTraversal<SDoStmt, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SDoStmt state) {
+		public BUTree<?> doTraverse(SDoStmt state) {
 			return state.condition;
 		}
 
 		@Override
-		public SDoStmt doRebuildParentState(SDoStmt state, STree<SExpr> child) {
+		public SDoStmt doRebuildParentState(SDoStmt state, BUTree<SExpr> child) {
 			return state.withCondition(child);
 		}
 

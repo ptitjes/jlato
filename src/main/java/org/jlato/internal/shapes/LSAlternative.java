@@ -19,7 +19,7 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
@@ -39,14 +39,14 @@ public final class LSAlternative extends LexicalShape {
 	}
 
 	@Override
-	public boolean isDefined(STree tree) {
+	public boolean isDefined(BUTree tree) {
 		return condition.test(tree) ?
 				shape != null && shape.isDefined(tree) :
 				alternative != null && alternative.isDefined(tree);
 	}
 
 	@Override
-	public void dress(DressingBuilder<?> builder, STree<?> discriminator) {
+	public void dress(DressingBuilder<?> builder, BUTree<?> discriminator) {
 		if (condition.test(discriminator)) {
 			if (shape != null) shape.dress(builder, discriminator);
 		} else {
@@ -73,7 +73,7 @@ public final class LSAlternative extends LexicalShape {
 	}
 
 	@Override
-	public void render(STree tree, WRunRun run, Printer printer) {
+	public void render(BUTree tree, WRunRun run, Printer printer) {
 		if (condition.test(tree)) {
 			if (shape != null) shape.render(tree, run, printer);
 		} else {

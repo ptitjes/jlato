@@ -14,15 +14,15 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SWhileStmt extends SNodeState<SWhileStmt> implements SStmt {
 
-	public static STree<SWhileStmt> make(STree<? extends SExpr> condition, STree<? extends SStmt> body) {
-		return new STree<SWhileStmt>(new SWhileStmt(condition, body));
+	public static BUTree<SWhileStmt> make(BUTree<? extends SExpr> condition, BUTree<? extends SStmt> body) {
+		return new BUTree<SWhileStmt>(new SWhileStmt(condition, body));
 	}
 
-	public final STree<? extends SExpr> condition;
+	public final BUTree<? extends SExpr> condition;
 
-	public final STree<? extends SStmt> body;
+	public final BUTree<? extends SStmt> body;
 
-	public SWhileStmt(STree<? extends SExpr> condition, STree<? extends SStmt> body) {
+	public SWhileStmt(BUTree<? extends SExpr> condition, BUTree<? extends SStmt> body) {
 		this.condition = condition;
 		this.body = body;
 	}
@@ -32,19 +32,19 @@ public class SWhileStmt extends SNodeState<SWhileStmt> implements SStmt {
 		return Kind.WhileStmt;
 	}
 
-	public STree<? extends SExpr> condition() {
+	public BUTree<? extends SExpr> condition() {
 		return condition;
 	}
 
-	public SWhileStmt withCondition(STree<? extends SExpr> condition) {
+	public SWhileStmt withCondition(BUTree<? extends SExpr> condition) {
 		return new SWhileStmt(condition, body);
 	}
 
-	public STree<? extends SStmt> body() {
+	public BUTree<? extends SStmt> body() {
 		return body;
 	}
 
-	public SWhileStmt withBody(STree<? extends SStmt> body) {
+	public SWhileStmt withBody(BUTree<? extends SStmt> body) {
 		return new SWhileStmt(condition, body);
 	}
 
@@ -93,12 +93,12 @@ public class SWhileStmt extends SNodeState<SWhileStmt> implements SStmt {
 	public static STypeSafeTraversal<SWhileStmt, SExpr, Expr> CONDITION = new STypeSafeTraversal<SWhileStmt, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SWhileStmt state) {
+		public BUTree<?> doTraverse(SWhileStmt state) {
 			return state.condition;
 		}
 
 		@Override
-		public SWhileStmt doRebuildParentState(SWhileStmt state, STree<SExpr> child) {
+		public SWhileStmt doRebuildParentState(SWhileStmt state, BUTree<SExpr> child) {
 			return state.withCondition(child);
 		}
 
@@ -116,12 +116,12 @@ public class SWhileStmt extends SNodeState<SWhileStmt> implements SStmt {
 	public static STypeSafeTraversal<SWhileStmt, SStmt, Stmt> BODY = new STypeSafeTraversal<SWhileStmt, SStmt, Stmt>() {
 
 		@Override
-		public STree<?> doTraverse(SWhileStmt state) {
+		public BUTree<?> doTraverse(SWhileStmt state) {
 			return state.body;
 		}
 
 		@Override
-		public SWhileStmt doRebuildParentState(SWhileStmt state, STree<SStmt> child) {
+		public SWhileStmt doRebuildParentState(SWhileStmt state, BUTree<SStmt> child) {
 			return state.withBody(child);
 		}
 

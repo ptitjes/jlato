@@ -28,10 +28,6 @@ import org.jlato.internal.bu.stmt.SStmt;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.shapes.DressingBuilder;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.tree.decl.*;
-import org.jlato.tree.expr.Expr;
-import org.jlato.tree.stmt.Stmt;
-import org.jlato.tree.type.Type;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -129,7 +125,7 @@ abstract class ParserBase {
 		return runStack.pop();
 	}
 
-	protected <S extends STreeState> STree<S> dress(STree<S> tree) {
+	protected <S extends STreeState> BUTree<S> dress(BUTree<S> tree) {
 		if (!configuration.preserveWhitespaces) return tree;
 
 		try {
@@ -149,11 +145,11 @@ abstract class ParserBase {
 		}
 	}
 
-	private <S extends STreeState> STree<S> doDress(STree<S> tree, LexicalShape shape,
+	private <S extends STreeState> BUTree<S> doDress(BUTree<S> tree, LexicalShape shape,
 	                                                IndexedList<WTokenRun> tokens) {
 		try {
 			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
-			final STree<S> newTree;
+			final BUTree<S> newTree;
 			if (shape != null) {
 				final DressingBuilder<S> builder = new DressingBuilder<S>(tree, tokenIterator);
 				shape.dress(builder, tree);
@@ -179,7 +175,7 @@ abstract class ParserBase {
 		}
 	}
 
-	protected <S extends STreeState> STree<S> dressWithPrologAndEpilog(STree<S> tree) {
+	protected <S extends STreeState> BUTree<S> dressWithPrologAndEpilog(BUTree<S> tree) {
 		if (!configuration.preserveWhitespaces) return tree;
 
 		assert runStack.size() == 1;
@@ -198,14 +194,14 @@ abstract class ParserBase {
 	}
 
 	// TODO This is really dirty and temporary until the parser parses STrees directly
-	protected <S extends STreeState> STree<S> makeVar() {
+	protected <S extends STreeState> BUTree<S> makeVar() {
 		Token token = getToken(0);
 		pushWhitespace(token);
 
 		String image = token.image;
 		boolean nodeListVar = image.startsWith("..$");
 		String name = nodeListVar ? image.substring(3) : image.substring(1);
-		return (STree<S>) new STree<SVarState>(new SVarState(name));
+		return (BUTree<S>) new BUTree<SVarState>(new SVarState(name));
 	}
 
 	// Interface with ParserImpl
@@ -223,39 +219,39 @@ abstract class ParserBase {
 
 	abstract void Epilog() throws ParseException;
 
-	abstract STree<SCompilationUnit> CompilationUnit() throws ParseException;
+	abstract BUTree<SCompilationUnit> CompilationUnit() throws ParseException;
 
-	abstract STree<SPackageDecl> PackageDecl() throws ParseException;
+	abstract BUTree<SPackageDecl> PackageDecl() throws ParseException;
 
-	abstract STree<SImportDecl> ImportDecl() throws ParseException;
+	abstract BUTree<SImportDecl> ImportDecl() throws ParseException;
 
-	abstract STree<? extends STypeDecl> TypeDecl() throws ParseException;
+	abstract BUTree<? extends STypeDecl> TypeDecl() throws ParseException;
 
-	abstract STree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
+	abstract BUTree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
 
-	abstract STree<? extends SMemberDecl> AnnotationTypeBodyDecl() throws ParseException;
+	abstract BUTree<? extends SMemberDecl> AnnotationTypeBodyDecl() throws ParseException;
 
-	abstract STree<SNodeListState> Modifiers() throws ParseException;
+	abstract BUTree<SNodeListState> Modifiers() throws ParseException;
 
-	abstract STree<SMethodDecl> MethodDecl(STree<SNodeListState> modifiers) throws ParseException;
+	abstract BUTree<SMethodDecl> MethodDecl(BUTree<SNodeListState> modifiers) throws ParseException;
 
-	abstract STree<SFieldDecl> FieldDecl(STree<SNodeListState> modifiers) throws ParseException;
+	abstract BUTree<SFieldDecl> FieldDecl(BUTree<SNodeListState> modifiers) throws ParseException;
 
-	abstract STree<SAnnotationMemberDecl> AnnotationTypeMemberDecl(STree<SNodeListState> modifiers) throws ParseException;
+	abstract BUTree<SAnnotationMemberDecl> AnnotationTypeMemberDecl(BUTree<SNodeListState> modifiers) throws ParseException;
 
-	abstract STree<SEnumConstantDecl> EnumConstantDecl() throws ParseException;
+	abstract BUTree<SEnumConstantDecl> EnumConstantDecl() throws ParseException;
 
-	abstract STree<SFormalParameter> FormalParameter() throws ParseException;
+	abstract BUTree<SFormalParameter> FormalParameter() throws ParseException;
 
-	abstract STree<STypeParameter> TypeParameter() throws ParseException;
+	abstract BUTree<STypeParameter> TypeParameter() throws ParseException;
 
-	abstract STree<? extends SStmt> BlockStatement() throws ParseException;
+	abstract BUTree<? extends SStmt> BlockStatement() throws ParseException;
 
-	abstract STree<? extends SExpr> Expression() throws ParseException;
+	abstract BUTree<? extends SExpr> Expression() throws ParseException;
 
-	abstract STree<SNodeListState> Annotations() throws ParseException;
+	abstract BUTree<SNodeListState> Annotations() throws ParseException;
 
-	abstract STree<? extends SType> Type(STree<SNodeListState> annotations) throws ParseException;
+	abstract BUTree<? extends SType> Type(BUTree<SNodeListState> annotations) throws ParseException;
 
 	public enum TypeKind {
 		Empty,
@@ -274,41 +270,41 @@ abstract class ParserBase {
 
 	// Convenience methods for lists
 
-	protected STree<SNodeListState> emptyList() {
-		return new STree<SNodeListState>(new SNodeListState());
+	protected BUTree<SNodeListState> emptyList() {
+		return new BUTree<SNodeListState>(new SNodeListState());
 	}
 
-	protected STree<SNodeListState> singletonList(STree<?> element) {
-		return new STree<SNodeListState>(new SNodeListState(element));
+	protected BUTree<SNodeListState> singletonList(BUTree<?> element) {
+		return new BUTree<SNodeListState>(new SNodeListState(element));
 	}
 
-	protected STree<SNodeListState> append(STree<SNodeListState> list, STree<?> element) {
+	protected BUTree<SNodeListState> append(BUTree<SNodeListState> list, BUTree<?> element) {
 		return list == null ? singletonList(element) :
 				list.withState(list.state.withChildren(list.state.children.append(element)));
 	}
 
-	protected boolean contains(STree<SNodeListState> list, STree<?> element) {
+	protected boolean contains(BUTree<SNodeListState> list, BUTree<?> element) {
 		return list.state.children.indexOf(element) != -1;
 	}
 
-	protected STree<SNodeListState> ensureNotNull(STree<SNodeListState> list) {
+	protected BUTree<SNodeListState> ensureNotNull(BUTree<SNodeListState> list) {
 		return list == null ? emptyList() : list;
 	}
 
-	protected STree<SNodeOptionState> optionOf(STree<?> element) {
-		return new STree<SNodeOptionState>(new SNodeOptionState(element));
+	protected BUTree<SNodeOptionState> optionOf(BUTree<?> element) {
+		return new BUTree<SNodeOptionState>(new SNodeOptionState(element));
 	}
 
-	protected STree<SNodeOptionState> none() {
-		return new STree<SNodeOptionState>(new SNodeOptionState(null));
+	protected BUTree<SNodeOptionState> none() {
+		return new BUTree<SNodeOptionState>(new SNodeOptionState(null));
 	}
 
-	protected STree<SNodeEitherState> left(STree<?> element) {
-		return new STree<SNodeEitherState>(new SNodeEitherState(element, SNodeEitherState.EitherSide.Left));
+	protected BUTree<SNodeEitherState> left(BUTree<?> element) {
+		return new BUTree<SNodeEitherState>(new SNodeEitherState(element, SNodeEitherState.EitherSide.Left));
 	}
 
-	protected STree<SNodeEitherState> right(STree<?> element) {
-		return new STree<SNodeEitherState>(new SNodeEitherState(element, SNodeEitherState.EitherSide.Right));
+	protected BUTree<SNodeEitherState> right(BUTree<?> element) {
+		return new BUTree<SNodeEitherState>(new SNodeEitherState(element, SNodeEitherState.EitherSide.Right));
 	}
 
 	// Convenience class to get more data from a called production
@@ -358,7 +354,7 @@ abstract class ParserBase {
 		System.out.println("Failed to pop tokens !");
 	}
 
-	private void debugFailedEnRun(STree tree, LexicalShape shape, IndexedList<WTokenRun> tokens) {
+	private void debugFailedEnRun(BUTree tree, LexicalShape shape, IndexedList<WTokenRun> tokens) {
 		final Token token = getToken(0);
 		System.out.println("Error at location: " + token.beginLine + ", " + token.beginColumn + "; Token: " + token.image);
 

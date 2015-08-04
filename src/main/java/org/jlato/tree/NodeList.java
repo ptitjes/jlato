@@ -21,8 +21,8 @@ package org.jlato.tree;
 
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.SNodeListState;
-import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WDressing;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.td.TDLocation;
@@ -171,7 +171,7 @@ public class NodeList<T extends Tree> extends TDTree<SNodeListState, NodeList<T>
 	}
 
 	public NodeList(T... elements) {
-		super(new TDLocation<SNodeListState>(new STree<SNodeListState>(new SNodeListState(treeListOf(elements)))));
+		super(new TDLocation<SNodeListState>(new BUTree<SNodeListState>(new SNodeListState(treeListOf(elements)))));
 	}
 
 	public boolean isEmpty() {
@@ -204,13 +204,13 @@ public class NodeList<T extends Tree> extends TDTree<SNodeListState, NodeList<T>
 
 	@SuppressWarnings("unchecked")
 	public NodeList<T> prepend(T element) {
-		final STree<SNodeListState> tree = location.tree;
+		final BUTree<SNodeListState> tree = location.tree;
 
 		final SNodeListState state = tree.state;
-		final Vector<STree<?>> trees = state.children;
+		final Vector<BUTree<?>> trees = state.children;
 
 		final SNodeListState newState = state.withChildren(trees.prepend(treeOf(element)));
-		STree newTree = tree.withState(newState);
+		BUTree newTree = tree.withState(newState);
 
 		newTree = insertInDressing(newTree, 0, false);
 
@@ -224,13 +224,13 @@ public class NodeList<T extends Tree> extends TDTree<SNodeListState, NodeList<T>
 
 	@SuppressWarnings("unchecked")
 	public NodeList<T> append(T element) {
-		final STree<SNodeListState> tree = location.tree;
+		final BUTree<SNodeListState> tree = location.tree;
 
 		final SNodeListState state = tree.state;
-		final Vector<STree<?>> trees = state.children;
+		final Vector<BUTree<?>> trees = state.children;
 
 		final SNodeListState newState = state.withChildren(trees.append(treeOf(element)));
-		STree newTree = tree.withState(newState);
+		BUTree newTree = tree.withState(newState);
 
 		newTree = insertInDressing(newTree, trees.size(), true);
 
@@ -248,16 +248,16 @@ public class NodeList<T extends Tree> extends TDTree<SNodeListState, NodeList<T>
 
 	@SuppressWarnings("unchecked")
 	public NodeList<T> insert(int index, T element) {
-		final STree<SNodeListState> tree = location.tree;
+		final BUTree<SNodeListState> tree = location.tree;
 
 		final SNodeListState state = tree.state;
-		final Vector<STree<?>> trees = state.children;
+		final Vector<BUTree<?>> trees = state.children;
 
 		if (index < 0 || index > trees.size())
 			throw new IllegalArgumentException();
 
 		final SNodeListState newState = state.withChildren(insertAt(trees, index, treeOf(element)));
-		STree newTree = tree.withState(newState);
+		BUTree newTree = tree.withState(newState);
 
 		newTree = insertInDressing(newTree, index, index == trees.size());
 
@@ -274,17 +274,17 @@ public class NodeList<T extends Tree> extends TDTree<SNodeListState, NodeList<T>
 		return newNodeList;
 	}
 
-	private Vector<STree<?>> insertAt(Vector<STree<?>> trees, int index, STree<?> element) {
-		Vector<STree<?>> leftTrees = trees.take(index);
-		Vector<STree<?>> rightTrees = trees.drop(index);
-		Vector<STree<?>> newTrees = leftTrees.append(element);
-		for (STree<?> rightTree : rightTrees) {
+	private Vector<BUTree<?>> insertAt(Vector<BUTree<?>> trees, int index, BUTree<?> element) {
+		Vector<BUTree<?>> leftTrees = trees.take(index);
+		Vector<BUTree<?>> rightTrees = trees.drop(index);
+		Vector<BUTree<?>> newTrees = leftTrees.append(element);
+		for (BUTree<?> rightTree : rightTrees) {
 			newTrees = newTrees.append(rightTree);
 		}
 		return newTrees;
 	}
 
-	private STree insertInDressing(STree tree, int index, boolean last) {
+	private BUTree insertInDressing(BUTree tree, int index, boolean last) {
 		WDressing dressing = tree.dressing == null ? null : tree.dressing;
 		if (dressing != null && dressing.run != null) {
 
@@ -300,13 +300,13 @@ public class NodeList<T extends Tree> extends TDTree<SNodeListState, NodeList<T>
 
 	@SuppressWarnings("unchecked")
 	public NodeList<T> rewriteAll(Mutation<T> mutator) {
-		final STree<SNodeListState> tree = location.tree;
+		final BUTree<SNodeListState> tree = location.tree;
 
 		final SNodeListState state = tree.state;
-		final Vector<STree<?>> trees = state.children;
+		final Vector<BUTree<?>> trees = state.children;
 		if (trees.isEmpty()) return this;
 
-		Builder<STree<?>, Vector<STree<?>>> newTrees = Vector.<STree<?>>factory().newBuilder();
+		Builder<BUTree<?>, Vector<BUTree<?>>> newTrees = Vector.<BUTree<?>>factory().newBuilder();
 		for (int i = 0; i < trees.size(); i++) {
 			T rewrote = mutator.mutate(get(i));
 			TDLocation location = TDTree.locationOf(rewrote);
@@ -316,7 +316,7 @@ public class NodeList<T extends Tree> extends TDTree<SNodeListState, NodeList<T>
 			newTrees.add(location.tree);
 		}
 
-		STree<SNodeListState> newTree = tree.withState(state.withChildren(newTrees.build()));
+		BUTree<SNodeListState> newTree = tree.withState(state.withChildren(newTrees.build()));
 		return (NodeList<T>) location.withTree(newTree).facade;
 	}
 
@@ -347,7 +347,7 @@ public class NodeList<T extends Tree> extends TDTree<SNodeListState, NodeList<T>
 		builder.append(start);
 
 		boolean first = true;
-		for (STree<?> tree : location.tree.state.children) {
+		for (BUTree<?> tree : location.tree.state.children) {
 			if (!first) builder.append(sep);
 			else first = false;
 

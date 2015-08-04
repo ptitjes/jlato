@@ -13,15 +13,15 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SInstanceOfExpr extends SNodeState<SInstanceOfExpr> implements SExpr {
 
-	public static STree<SInstanceOfExpr> make(STree<? extends SExpr> expr, STree<? extends SType> type) {
-		return new STree<SInstanceOfExpr>(new SInstanceOfExpr(expr, type));
+	public static BUTree<SInstanceOfExpr> make(BUTree<? extends SExpr> expr, BUTree<? extends SType> type) {
+		return new BUTree<SInstanceOfExpr>(new SInstanceOfExpr(expr, type));
 	}
 
-	public final STree<? extends SExpr> expr;
+	public final BUTree<? extends SExpr> expr;
 
-	public final STree<? extends SType> type;
+	public final BUTree<? extends SType> type;
 
-	public SInstanceOfExpr(STree<? extends SExpr> expr, STree<? extends SType> type) {
+	public SInstanceOfExpr(BUTree<? extends SExpr> expr, BUTree<? extends SType> type) {
 		this.expr = expr;
 		this.type = type;
 	}
@@ -31,19 +31,19 @@ public class SInstanceOfExpr extends SNodeState<SInstanceOfExpr> implements SExp
 		return Kind.InstanceOfExpr;
 	}
 
-	public STree<? extends SExpr> expr() {
+	public BUTree<? extends SExpr> expr() {
 		return expr;
 	}
 
-	public SInstanceOfExpr withExpr(STree<? extends SExpr> expr) {
+	public SInstanceOfExpr withExpr(BUTree<? extends SExpr> expr) {
 		return new SInstanceOfExpr(expr, type);
 	}
 
-	public STree<? extends SType> type() {
+	public BUTree<? extends SType> type() {
 		return type;
 	}
 
-	public SInstanceOfExpr withType(STree<? extends SType> type) {
+	public SInstanceOfExpr withType(BUTree<? extends SType> type) {
 		return new SInstanceOfExpr(expr, type);
 	}
 
@@ -92,12 +92,12 @@ public class SInstanceOfExpr extends SNodeState<SInstanceOfExpr> implements SExp
 	public static STypeSafeTraversal<SInstanceOfExpr, SExpr, Expr> EXPR = new STypeSafeTraversal<SInstanceOfExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SInstanceOfExpr state) {
+		public BUTree<?> doTraverse(SInstanceOfExpr state) {
 			return state.expr;
 		}
 
 		@Override
-		public SInstanceOfExpr doRebuildParentState(SInstanceOfExpr state, STree<SExpr> child) {
+		public SInstanceOfExpr doRebuildParentState(SInstanceOfExpr state, BUTree<SExpr> child) {
 			return state.withExpr(child);
 		}
 
@@ -115,12 +115,12 @@ public class SInstanceOfExpr extends SNodeState<SInstanceOfExpr> implements SExp
 	public static STypeSafeTraversal<SInstanceOfExpr, SType, Type> TYPE = new STypeSafeTraversal<SInstanceOfExpr, SType, Type>() {
 
 		@Override
-		public STree<?> doTraverse(SInstanceOfExpr state) {
+		public BUTree<?> doTraverse(SInstanceOfExpr state) {
 			return state.type;
 		}
 
 		@Override
-		public SInstanceOfExpr doRebuildParentState(SInstanceOfExpr state, STree<SType> child) {
+		public SInstanceOfExpr doRebuildParentState(SInstanceOfExpr state, BUTree<SType> child) {
 			return state.withType(child);
 		}
 

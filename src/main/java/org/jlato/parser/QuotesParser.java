@@ -19,7 +19,7 @@
 
 package org.jlato.parser;
 
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.BUTree;
 import org.jlato.tree.Tree;
 
 import java.io.Reader;
@@ -41,7 +41,7 @@ public class QuotesParser {
 		this.configuration = configuration;
 	}
 
-	private <T extends Tree> STree<?> parse(ParseContext<T> context, Reader reader) throws ParseException {
+	private <T extends Tree> BUTree<?> parse(ParseContext<T> context, Reader reader) throws ParseException {
 		if (parserInstance == null) {
 			parserInstance = ParserBase.newInstance(reader, configuration);
 			parserInstance.quotesMode = true;
@@ -49,7 +49,7 @@ public class QuotesParser {
 		return context.callProduction(parserInstance);
 	}
 
-	public <T extends Tree> STree<?> parse(ParseContext<T> context, String content) throws ParseException {
+	public <T extends Tree> BUTree<?> parse(ParseContext<T> context, String content) throws ParseException {
 		final StringReader reader = new StringReader(content);
 		return parse(context, reader);
 	}

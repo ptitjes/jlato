@@ -12,15 +12,15 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SArrayType extends SNodeState<SArrayType> implements SReferenceType {
 
-	public static STree<SArrayType> make(STree<? extends SType> componentType, STree<SNodeListState> dims) {
-		return new STree<SArrayType>(new SArrayType(componentType, dims));
+	public static BUTree<SArrayType> make(BUTree<? extends SType> componentType, BUTree<SNodeListState> dims) {
+		return new BUTree<SArrayType>(new SArrayType(componentType, dims));
 	}
 
-	public final STree<? extends SType> componentType;
+	public final BUTree<? extends SType> componentType;
 
-	public final STree<SNodeListState> dims;
+	public final BUTree<SNodeListState> dims;
 
-	public SArrayType(STree<? extends SType> componentType, STree<SNodeListState> dims) {
+	public SArrayType(BUTree<? extends SType> componentType, BUTree<SNodeListState> dims) {
 		this.componentType = componentType;
 		this.dims = dims;
 	}
@@ -30,19 +30,19 @@ public class SArrayType extends SNodeState<SArrayType> implements SReferenceType
 		return Kind.ArrayType;
 	}
 
-	public STree<? extends SType> componentType() {
+	public BUTree<? extends SType> componentType() {
 		return componentType;
 	}
 
-	public SArrayType withComponentType(STree<? extends SType> componentType) {
+	public SArrayType withComponentType(BUTree<? extends SType> componentType) {
 		return new SArrayType(componentType, dims);
 	}
 
-	public STree<SNodeListState> dims() {
+	public BUTree<SNodeListState> dims() {
 		return dims;
 	}
 
-	public SArrayType withDims(STree<SNodeListState> dims) {
+	public SArrayType withDims(BUTree<SNodeListState> dims) {
 		return new SArrayType(componentType, dims);
 	}
 
@@ -91,12 +91,12 @@ public class SArrayType extends SNodeState<SArrayType> implements SReferenceType
 	public static STypeSafeTraversal<SArrayType, SType, Type> COMPONENT_TYPE = new STypeSafeTraversal<SArrayType, SType, Type>() {
 
 		@Override
-		public STree<?> doTraverse(SArrayType state) {
+		public BUTree<?> doTraverse(SArrayType state) {
 			return state.componentType;
 		}
 
 		@Override
-		public SArrayType doRebuildParentState(SArrayType state, STree<SType> child) {
+		public SArrayType doRebuildParentState(SArrayType state, BUTree<SType> child) {
 			return state.withComponentType(child);
 		}
 
@@ -114,12 +114,12 @@ public class SArrayType extends SNodeState<SArrayType> implements SReferenceType
 	public static STypeSafeTraversal<SArrayType, SNodeListState, NodeList<ArrayDim>> DIMS = new STypeSafeTraversal<SArrayType, SNodeListState, NodeList<ArrayDim>>() {
 
 		@Override
-		public STree<?> doTraverse(SArrayType state) {
+		public BUTree<?> doTraverse(SArrayType state) {
 			return state.dims;
 		}
 
 		@Override
-		public SArrayType doRebuildParentState(SArrayType state, STree<SNodeListState> child) {
+		public SArrayType doRebuildParentState(SArrayType state, BUTree<SNodeListState> child) {
 			return state.withDims(child);
 		}
 

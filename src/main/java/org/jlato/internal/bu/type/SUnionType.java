@@ -12,13 +12,13 @@ import static org.jlato.internal.shapes.LexicalShape.composite;
 
 public class SUnionType extends SNodeState<SUnionType> implements SType {
 
-	public static STree<SUnionType> make(STree<SNodeListState> types) {
-		return new STree<SUnionType>(new SUnionType(types));
+	public static BUTree<SUnionType> make(BUTree<SNodeListState> types) {
+		return new BUTree<SUnionType>(new SUnionType(types));
 	}
 
-	public final STree<SNodeListState> types;
+	public final BUTree<SNodeListState> types;
 
-	public SUnionType(STree<SNodeListState> types) {
+	public SUnionType(BUTree<SNodeListState> types) {
 		this.types = types;
 	}
 
@@ -27,11 +27,11 @@ public class SUnionType extends SNodeState<SUnionType> implements SType {
 		return Kind.UnionType;
 	}
 
-	public STree<SNodeListState> types() {
+	public BUTree<SNodeListState> types() {
 		return types;
 	}
 
-	public SUnionType withTypes(STree<SNodeListState> types) {
+	public SUnionType withTypes(BUTree<SNodeListState> types) {
 		return new SUnionType(types);
 	}
 
@@ -77,12 +77,12 @@ public class SUnionType extends SNodeState<SUnionType> implements SType {
 	public static STypeSafeTraversal<SUnionType, SNodeListState, NodeList<Type>> TYPES = new STypeSafeTraversal<SUnionType, SNodeListState, NodeList<Type>>() {
 
 		@Override
-		public STree<?> doTraverse(SUnionType state) {
+		public BUTree<?> doTraverse(SUnionType state) {
 			return state.types;
 		}
 
 		@Override
-		public SUnionType doRebuildParentState(SUnionType state, STree<SNodeListState> child) {
+		public SUnionType doRebuildParentState(SUnionType state, BUTree<SNodeListState> child) {
 			return state.withTypes(child);
 		}
 

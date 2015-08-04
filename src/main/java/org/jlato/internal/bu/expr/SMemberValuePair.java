@@ -14,15 +14,15 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SMemberValuePair extends SNodeState<SMemberValuePair> implements STreeState {
 
-	public static STree<SMemberValuePair> make(STree<SName> name, STree<? extends SExpr> value) {
-		return new STree<SMemberValuePair>(new SMemberValuePair(name, value));
+	public static BUTree<SMemberValuePair> make(BUTree<SName> name, BUTree<? extends SExpr> value) {
+		return new BUTree<SMemberValuePair>(new SMemberValuePair(name, value));
 	}
 
-	public final STree<SName> name;
+	public final BUTree<SName> name;
 
-	public final STree<? extends SExpr> value;
+	public final BUTree<? extends SExpr> value;
 
-	public SMemberValuePair(STree<SName> name, STree<? extends SExpr> value) {
+	public SMemberValuePair(BUTree<SName> name, BUTree<? extends SExpr> value) {
 		this.name = name;
 		this.value = value;
 	}
@@ -32,19 +32,19 @@ public class SMemberValuePair extends SNodeState<SMemberValuePair> implements ST
 		return Kind.MemberValuePair;
 	}
 
-	public STree<SName> name() {
+	public BUTree<SName> name() {
 		return name;
 	}
 
-	public SMemberValuePair withName(STree<SName> name) {
+	public SMemberValuePair withName(BUTree<SName> name) {
 		return new SMemberValuePair(name, value);
 	}
 
-	public STree<? extends SExpr> value() {
+	public BUTree<? extends SExpr> value() {
 		return value;
 	}
 
-	public SMemberValuePair withValue(STree<? extends SExpr> value) {
+	public SMemberValuePair withValue(BUTree<? extends SExpr> value) {
 		return new SMemberValuePair(name, value);
 	}
 
@@ -93,12 +93,12 @@ public class SMemberValuePair extends SNodeState<SMemberValuePair> implements ST
 	public static STypeSafeTraversal<SMemberValuePair, SName, Name> NAME = new STypeSafeTraversal<SMemberValuePair, SName, Name>() {
 
 		@Override
-		public STree<?> doTraverse(SMemberValuePair state) {
+		public BUTree<?> doTraverse(SMemberValuePair state) {
 			return state.name;
 		}
 
 		@Override
-		public SMemberValuePair doRebuildParentState(SMemberValuePair state, STree<SName> child) {
+		public SMemberValuePair doRebuildParentState(SMemberValuePair state, BUTree<SName> child) {
 			return state.withName(child);
 		}
 
@@ -116,12 +116,12 @@ public class SMemberValuePair extends SNodeState<SMemberValuePair> implements ST
 	public static STypeSafeTraversal<SMemberValuePair, SExpr, Expr> VALUE = new STypeSafeTraversal<SMemberValuePair, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SMemberValuePair state) {
+		public BUTree<?> doTraverse(SMemberValuePair state) {
 			return state.value;
 		}
 
 		@Override
-		public SMemberValuePair doRebuildParentState(SMemberValuePair state, STree<SExpr> child) {
+		public SMemberValuePair doRebuildParentState(SMemberValuePair state, BUTree<SExpr> child) {
 			return state.withValue(child);
 		}
 

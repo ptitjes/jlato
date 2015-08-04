@@ -14,15 +14,15 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SCastExpr extends SNodeState<SCastExpr> implements SExpr {
 
-	public static STree<SCastExpr> make(STree<? extends SType> type, STree<? extends SExpr> expr) {
-		return new STree<SCastExpr>(new SCastExpr(type, expr));
+	public static BUTree<SCastExpr> make(BUTree<? extends SType> type, BUTree<? extends SExpr> expr) {
+		return new BUTree<SCastExpr>(new SCastExpr(type, expr));
 	}
 
-	public final STree<? extends SType> type;
+	public final BUTree<? extends SType> type;
 
-	public final STree<? extends SExpr> expr;
+	public final BUTree<? extends SExpr> expr;
 
-	public SCastExpr(STree<? extends SType> type, STree<? extends SExpr> expr) {
+	public SCastExpr(BUTree<? extends SType> type, BUTree<? extends SExpr> expr) {
 		this.type = type;
 		this.expr = expr;
 	}
@@ -32,19 +32,19 @@ public class SCastExpr extends SNodeState<SCastExpr> implements SExpr {
 		return Kind.CastExpr;
 	}
 
-	public STree<? extends SType> type() {
+	public BUTree<? extends SType> type() {
 		return type;
 	}
 
-	public SCastExpr withType(STree<? extends SType> type) {
+	public SCastExpr withType(BUTree<? extends SType> type) {
 		return new SCastExpr(type, expr);
 	}
 
-	public STree<? extends SExpr> expr() {
+	public BUTree<? extends SExpr> expr() {
 		return expr;
 	}
 
-	public SCastExpr withExpr(STree<? extends SExpr> expr) {
+	public SCastExpr withExpr(BUTree<? extends SExpr> expr) {
 		return new SCastExpr(type, expr);
 	}
 
@@ -93,12 +93,12 @@ public class SCastExpr extends SNodeState<SCastExpr> implements SExpr {
 	public static STypeSafeTraversal<SCastExpr, SType, Type> TYPE = new STypeSafeTraversal<SCastExpr, SType, Type>() {
 
 		@Override
-		public STree<?> doTraverse(SCastExpr state) {
+		public BUTree<?> doTraverse(SCastExpr state) {
 			return state.type;
 		}
 
 		@Override
-		public SCastExpr doRebuildParentState(SCastExpr state, STree<SType> child) {
+		public SCastExpr doRebuildParentState(SCastExpr state, BUTree<SType> child) {
 			return state.withType(child);
 		}
 
@@ -116,12 +116,12 @@ public class SCastExpr extends SNodeState<SCastExpr> implements SExpr {
 	public static STypeSafeTraversal<SCastExpr, SExpr, Expr> EXPR = new STypeSafeTraversal<SCastExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SCastExpr state) {
+		public BUTree<?> doTraverse(SCastExpr state) {
 			return state.expr;
 		}
 
 		@Override
-		public SCastExpr doRebuildParentState(SCastExpr state, STree<SExpr> child) {
+		public SCastExpr doRebuildParentState(SCastExpr state, BUTree<SExpr> child) {
 			return state.withExpr(child);
 		}
 

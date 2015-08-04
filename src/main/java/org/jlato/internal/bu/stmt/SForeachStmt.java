@@ -15,17 +15,17 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SForeachStmt extends SNodeState<SForeachStmt> implements SStmt {
 
-	public static STree<SForeachStmt> make(STree<SVariableDeclarationExpr> var, STree<? extends SExpr> iterable, STree<? extends SStmt> body) {
-		return new STree<SForeachStmt>(new SForeachStmt(var, iterable, body));
+	public static BUTree<SForeachStmt> make(BUTree<SVariableDeclarationExpr> var, BUTree<? extends SExpr> iterable, BUTree<? extends SStmt> body) {
+		return new BUTree<SForeachStmt>(new SForeachStmt(var, iterable, body));
 	}
 
-	public final STree<SVariableDeclarationExpr> var;
+	public final BUTree<SVariableDeclarationExpr> var;
 
-	public final STree<? extends SExpr> iterable;
+	public final BUTree<? extends SExpr> iterable;
 
-	public final STree<? extends SStmt> body;
+	public final BUTree<? extends SStmt> body;
 
-	public SForeachStmt(STree<SVariableDeclarationExpr> var, STree<? extends SExpr> iterable, STree<? extends SStmt> body) {
+	public SForeachStmt(BUTree<SVariableDeclarationExpr> var, BUTree<? extends SExpr> iterable, BUTree<? extends SStmt> body) {
 		this.var = var;
 		this.iterable = iterable;
 		this.body = body;
@@ -36,27 +36,27 @@ public class SForeachStmt extends SNodeState<SForeachStmt> implements SStmt {
 		return Kind.ForeachStmt;
 	}
 
-	public STree<SVariableDeclarationExpr> var() {
+	public BUTree<SVariableDeclarationExpr> var() {
 		return var;
 	}
 
-	public SForeachStmt withVar(STree<SVariableDeclarationExpr> var) {
+	public SForeachStmt withVar(BUTree<SVariableDeclarationExpr> var) {
 		return new SForeachStmt(var, iterable, body);
 	}
 
-	public STree<? extends SExpr> iterable() {
+	public BUTree<? extends SExpr> iterable() {
 		return iterable;
 	}
 
-	public SForeachStmt withIterable(STree<? extends SExpr> iterable) {
+	public SForeachStmt withIterable(BUTree<? extends SExpr> iterable) {
 		return new SForeachStmt(var, iterable, body);
 	}
 
-	public STree<? extends SStmt> body() {
+	public BUTree<? extends SStmt> body() {
 		return body;
 	}
 
-	public SForeachStmt withBody(STree<? extends SStmt> body) {
+	public SForeachStmt withBody(BUTree<? extends SStmt> body) {
 		return new SForeachStmt(var, iterable, body);
 	}
 
@@ -108,12 +108,12 @@ public class SForeachStmt extends SNodeState<SForeachStmt> implements SStmt {
 	public static STypeSafeTraversal<SForeachStmt, SVariableDeclarationExpr, VariableDeclarationExpr> VAR = new STypeSafeTraversal<SForeachStmt, SVariableDeclarationExpr, VariableDeclarationExpr>() {
 
 		@Override
-		public STree<?> doTraverse(SForeachStmt state) {
+		public BUTree<?> doTraverse(SForeachStmt state) {
 			return state.var;
 		}
 
 		@Override
-		public SForeachStmt doRebuildParentState(SForeachStmt state, STree<SVariableDeclarationExpr> child) {
+		public SForeachStmt doRebuildParentState(SForeachStmt state, BUTree<SVariableDeclarationExpr> child) {
 			return state.withVar(child);
 		}
 
@@ -131,12 +131,12 @@ public class SForeachStmt extends SNodeState<SForeachStmt> implements SStmt {
 	public static STypeSafeTraversal<SForeachStmt, SExpr, Expr> ITERABLE = new STypeSafeTraversal<SForeachStmt, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SForeachStmt state) {
+		public BUTree<?> doTraverse(SForeachStmt state) {
 			return state.iterable;
 		}
 
 		@Override
-		public SForeachStmt doRebuildParentState(SForeachStmt state, STree<SExpr> child) {
+		public SForeachStmt doRebuildParentState(SForeachStmt state, BUTree<SExpr> child) {
 			return state.withIterable(child);
 		}
 
@@ -154,12 +154,12 @@ public class SForeachStmt extends SNodeState<SForeachStmt> implements SStmt {
 	public static STypeSafeTraversal<SForeachStmt, SStmt, Stmt> BODY = new STypeSafeTraversal<SForeachStmt, SStmt, Stmt>() {
 
 		@Override
-		public STree<?> doTraverse(SForeachStmt state) {
+		public BUTree<?> doTraverse(SForeachStmt state) {
 			return state.body;
 		}
 
 		@Override
-		public SForeachStmt doRebuildParentState(SForeachStmt state, STree<SStmt> child) {
+		public SForeachStmt doRebuildParentState(SForeachStmt state, BUTree<SStmt> child) {
 			return state.withBody(child);
 		}
 

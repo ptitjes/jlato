@@ -17,19 +17,19 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SFormalParameter extends SNodeState<SFormalParameter> implements STreeState {
 
-	public static STree<SFormalParameter> make(STree<SNodeListState> modifiers, STree<? extends SType> type, boolean isVarArgs, STree<SVariableDeclaratorId> id) {
-		return new STree<SFormalParameter>(new SFormalParameter(modifiers, type, isVarArgs, id));
+	public static BUTree<SFormalParameter> make(BUTree<SNodeListState> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SVariableDeclaratorId> id) {
+		return new BUTree<SFormalParameter>(new SFormalParameter(modifiers, type, isVarArgs, id));
 	}
 
-	public final STree<SNodeListState> modifiers;
+	public final BUTree<SNodeListState> modifiers;
 
-	public final STree<? extends SType> type;
+	public final BUTree<? extends SType> type;
 
 	public final boolean isVarArgs;
 
-	public final STree<SVariableDeclaratorId> id;
+	public final BUTree<SVariableDeclaratorId> id;
 
-	public SFormalParameter(STree<SNodeListState> modifiers, STree<? extends SType> type, boolean isVarArgs, STree<SVariableDeclaratorId> id) {
+	public SFormalParameter(BUTree<SNodeListState> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SVariableDeclaratorId> id) {
 		this.modifiers = modifiers;
 		this.type = type;
 		this.isVarArgs = isVarArgs;
@@ -41,19 +41,19 @@ public class SFormalParameter extends SNodeState<SFormalParameter> implements ST
 		return Kind.FormalParameter;
 	}
 
-	public STree<SNodeListState> modifiers() {
+	public BUTree<SNodeListState> modifiers() {
 		return modifiers;
 	}
 
-	public SFormalParameter withModifiers(STree<SNodeListState> modifiers) {
+	public SFormalParameter withModifiers(BUTree<SNodeListState> modifiers) {
 		return new SFormalParameter(modifiers, type, isVarArgs, id);
 	}
 
-	public STree<? extends SType> type() {
+	public BUTree<? extends SType> type() {
 		return type;
 	}
 
-	public SFormalParameter withType(STree<? extends SType> type) {
+	public SFormalParameter withType(BUTree<? extends SType> type) {
 		return new SFormalParameter(modifiers, type, isVarArgs, id);
 	}
 
@@ -65,11 +65,11 @@ public class SFormalParameter extends SNodeState<SFormalParameter> implements ST
 		return new SFormalParameter(modifiers, type, isVarArgs, id);
 	}
 
-	public STree<SVariableDeclaratorId> id() {
+	public BUTree<SVariableDeclaratorId> id() {
 		return id;
 	}
 
-	public SFormalParameter withId(STree<SVariableDeclaratorId> id) {
+	public SFormalParameter withId(BUTree<SVariableDeclaratorId> id) {
 		return new SFormalParameter(modifiers, type, isVarArgs, id);
 	}
 
@@ -129,12 +129,12 @@ public class SFormalParameter extends SNodeState<SFormalParameter> implements ST
 	public static STypeSafeTraversal<SFormalParameter, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SFormalParameter, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(SFormalParameter state) {
+		public BUTree<?> doTraverse(SFormalParameter state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public SFormalParameter doRebuildParentState(SFormalParameter state, STree<SNodeListState> child) {
+		public SFormalParameter doRebuildParentState(SFormalParameter state, BUTree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -152,12 +152,12 @@ public class SFormalParameter extends SNodeState<SFormalParameter> implements ST
 	public static STypeSafeTraversal<SFormalParameter, SType, Type> TYPE = new STypeSafeTraversal<SFormalParameter, SType, Type>() {
 
 		@Override
-		public STree<?> doTraverse(SFormalParameter state) {
+		public BUTree<?> doTraverse(SFormalParameter state) {
 			return state.type;
 		}
 
 		@Override
-		public SFormalParameter doRebuildParentState(SFormalParameter state, STree<SType> child) {
+		public SFormalParameter doRebuildParentState(SFormalParameter state, BUTree<SType> child) {
 			return state.withType(child);
 		}
 
@@ -175,12 +175,12 @@ public class SFormalParameter extends SNodeState<SFormalParameter> implements ST
 	public static STypeSafeTraversal<SFormalParameter, SVariableDeclaratorId, VariableDeclaratorId> ID = new STypeSafeTraversal<SFormalParameter, SVariableDeclaratorId, VariableDeclaratorId>() {
 
 		@Override
-		public STree<?> doTraverse(SFormalParameter state) {
+		public BUTree<?> doTraverse(SFormalParameter state) {
 			return state.id;
 		}
 
 		@Override
-		public SFormalParameter doRebuildParentState(SFormalParameter state, STree<SVariableDeclaratorId> child) {
+		public SFormalParameter doRebuildParentState(SFormalParameter state, BUTree<SVariableDeclaratorId> child) {
 			return state.withId(child);
 		}
 

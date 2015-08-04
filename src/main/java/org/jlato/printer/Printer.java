@@ -19,8 +19,8 @@
 
 package org.jlato.printer;
 
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WToken;
 import org.jlato.internal.bu.WTokenRun;
 import org.jlato.internal.shapes.LexicalShape;
@@ -190,9 +190,9 @@ public class Printer {
 	 */
 	public void print(Tree tree) {
 		reset();
-		final STree sTree = TDTree.treeOf(tree);
+		final BUTree buTree = TDTree.treeOf(tree);
 		final LexicalShape shape = LexicalShape.defaultShape();
-		shape.render(sTree, this);
+		shape.render(buTree, this);
 		flush();
 	}
 
@@ -203,9 +203,9 @@ public class Printer {
 	 */
 	public void print(NodeList<? extends Tree> trees) {
 		reset();
-		final STree sTree = TDTree.treeOf(trees);
+		final BUTree buTree = TDTree.treeOf(trees);
 		final LexicalShape shape = LexicalShape.list();
-		shape.render(sTree, this);
+		shape.render(buTree, this);
 		flush();
 	}
 

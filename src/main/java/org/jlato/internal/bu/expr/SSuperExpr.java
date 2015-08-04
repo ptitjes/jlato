@@ -12,13 +12,13 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SSuperExpr extends SNodeState<SSuperExpr> implements SExpr {
 
-	public static STree<SSuperExpr> make(STree<SNodeOptionState> classExpr) {
-		return new STree<SSuperExpr>(new SSuperExpr(classExpr));
+	public static BUTree<SSuperExpr> make(BUTree<SNodeOptionState> classExpr) {
+		return new BUTree<SSuperExpr>(new SSuperExpr(classExpr));
 	}
 
-	public final STree<SNodeOptionState> classExpr;
+	public final BUTree<SNodeOptionState> classExpr;
 
-	public SSuperExpr(STree<SNodeOptionState> classExpr) {
+	public SSuperExpr(BUTree<SNodeOptionState> classExpr) {
 		this.classExpr = classExpr;
 	}
 
@@ -27,11 +27,11 @@ public class SSuperExpr extends SNodeState<SSuperExpr> implements SExpr {
 		return Kind.SuperExpr;
 	}
 
-	public STree<SNodeOptionState> classExpr() {
+	public BUTree<SNodeOptionState> classExpr() {
 		return classExpr;
 	}
 
-	public SSuperExpr withClassExpr(STree<SNodeOptionState> classExpr) {
+	public SSuperExpr withClassExpr(BUTree<SNodeOptionState> classExpr) {
 		return new SSuperExpr(classExpr);
 	}
 
@@ -77,12 +77,12 @@ public class SSuperExpr extends SNodeState<SSuperExpr> implements SExpr {
 	public static STypeSafeTraversal<SSuperExpr, SNodeOptionState, NodeOption<Expr>> CLASS_EXPR = new STypeSafeTraversal<SSuperExpr, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(SSuperExpr state) {
+		public BUTree<?> doTraverse(SSuperExpr state) {
 			return state.classExpr;
 		}
 
 		@Override
-		public SSuperExpr doRebuildParentState(SSuperExpr state, STree<SNodeOptionState> child) {
+		public SSuperExpr doRebuildParentState(SSuperExpr state, BUTree<SNodeOptionState> child) {
 			return state.withClassExpr(child);
 		}
 

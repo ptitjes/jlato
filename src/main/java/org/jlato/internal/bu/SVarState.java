@@ -62,6 +62,6 @@ public class SVarState implements STreeState {
 	}
 
 	@Override
-	public void validate(STree<?> tree) {
+	public void validate(BUTree<?> tree) {
 	}
 }

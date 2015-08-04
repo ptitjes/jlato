@@ -31,17 +31,17 @@ import java.util.Collections;
  */
 public class SNodeListState implements STreeState {
 
-	public final Vector<STree<?>> children;
+	public final Vector<BUTree<?>> children;
 
 	public SNodeListState() {
-		this(Vector.<STree<? extends STreeState>>empty());
+		this(Vector.<BUTree<? extends STreeState>>empty());
 	}
 
-	public SNodeListState(STree<?> element) {
-		this(Vector.<STree<? extends STreeState>>empty().append(element));
+	public SNodeListState(BUTree<?> element) {
+		this(Vector.<BUTree<? extends STreeState>>empty().append(element));
 	}
 
-	public SNodeListState(Vector<STree<? extends STreeState>> children) {
+	public SNodeListState(Vector<BUTree<? extends STreeState>> children) {
 		this.children = children;
 	}
 
@@ -52,8 +52,8 @@ public class SNodeListState implements STreeState {
 	}
 
 	@Override
-	public void validate(STree<?> tree) {
-		for (STree child : children) {
+	public void validate(BUTree<?> tree) {
+		for (BUTree child : children) {
 			if (child == null) // TODO Add better error message
 				throw new IllegalStateException();
 			child.validate();
@@ -94,15 +94,15 @@ public class SNodeListState implements STreeState {
 		return elementTraversal(children.size() - 1);
 	}
 
-	public STree<?> child(int index) {
+	public BUTree<?> child(int index) {
 		return children.get(index);
 	}
 
-	public SNodeListState withChild(int index, STree<?> value) {
+	public SNodeListState withChild(int index, BUTree<?> value) {
 		return new SNodeListState(children.set(index, value));
 	}
 
-	public SNodeListState withChildren(Vector<STree<?>> children) {
+	public SNodeListState withChildren(Vector<BUTree<?>> children) {
 		return new SNodeListState(children);
 	}
 
@@ -131,7 +131,7 @@ public class SNodeListState implements STreeState {
 		}
 
 		@Override
-		public STree<?> doTraverse(SNodeListState state) {
+		public BUTree<?> doTraverse(SNodeListState state) {
 			return state.child(index(state));
 		}
 
@@ -140,7 +140,7 @@ public class SNodeListState implements STreeState {
 		}
 
 		@Override
-		public SNodeListState doRebuildParentState(SNodeListState state, STree<STreeState> child) {
+		public SNodeListState doRebuildParentState(SNodeListState state, BUTree<STreeState> child) {
 			return state.withChild(index(state), child);
 		}
 

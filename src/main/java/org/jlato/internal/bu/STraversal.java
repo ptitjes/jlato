@@ -24,9 +24,9 @@ package org.jlato.internal.bu;
  */
 public abstract class STraversal {
 
-	public abstract STree<?> traverse(STreeState state);
+	public abstract BUTree<?> traverse(STreeState state);
 
-	public abstract STreeState rebuildParentState(STreeState state, STree<?> child);
+	public abstract STreeState rebuildParentState(STreeState state, BUTree<?> child);
 
 	public abstract STraversal leftSibling(STreeState state);
 

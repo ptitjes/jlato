@@ -19,8 +19,8 @@
 
 package org.jlato.tree;
 
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.SNodeOptionState;
-import org.jlato.internal.bu.STree;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.util.Mutation;
@@ -52,11 +52,11 @@ public class NodeOption<T extends Tree> extends TDTree<SNodeOptionState, NodeOpt
 	}
 
 	public NodeOption() {
-		super(new TDLocation<SNodeOptionState>(new STree<SNodeOptionState>(new SNodeOptionState(treeOf(null)))));
+		super(new TDLocation<SNodeOptionState>(new BUTree<SNodeOptionState>(new SNodeOptionState(treeOf(null)))));
 	}
 
 	public NodeOption(T element) {
-		super(new TDLocation<SNodeOptionState>(new STree<SNodeOptionState>(new SNodeOptionState(treeOf(element)))));
+		super(new TDLocation<SNodeOptionState>(new BUTree<SNodeOptionState>(new SNodeOptionState(treeOf(element)))));
 	}
 
 	public boolean isDefined() {
@@ -72,7 +72,7 @@ public class NodeOption<T extends Tree> extends TDTree<SNodeOptionState, NodeOpt
 	}
 
 	public boolean contains(T element) {
-		final STree<?> actual = location.tree.state.element;
+		final BUTree<?> actual = location.tree.state.element;
 		return actual != null ? actual.equals(treeOf(element)) : element == null;
 	}
 

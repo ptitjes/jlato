@@ -13,13 +13,13 @@ import static org.jlato.internal.shapes.LexicalShape.composite;
 
 public class STypeDeclarationStmt extends SNodeState<STypeDeclarationStmt> implements SStmt {
 
-	public static STree<STypeDeclarationStmt> make(STree<? extends STypeDecl> typeDecl) {
-		return new STree<STypeDeclarationStmt>(new STypeDeclarationStmt(typeDecl));
+	public static BUTree<STypeDeclarationStmt> make(BUTree<? extends STypeDecl> typeDecl) {
+		return new BUTree<STypeDeclarationStmt>(new STypeDeclarationStmt(typeDecl));
 	}
 
-	public final STree<? extends STypeDecl> typeDecl;
+	public final BUTree<? extends STypeDecl> typeDecl;
 
-	public STypeDeclarationStmt(STree<? extends STypeDecl> typeDecl) {
+	public STypeDeclarationStmt(BUTree<? extends STypeDecl> typeDecl) {
 		this.typeDecl = typeDecl;
 	}
 
@@ -28,11 +28,11 @@ public class STypeDeclarationStmt extends SNodeState<STypeDeclarationStmt> imple
 		return Kind.TypeDeclarationStmt;
 	}
 
-	public STree<? extends STypeDecl> typeDecl() {
+	public BUTree<? extends STypeDecl> typeDecl() {
 		return typeDecl;
 	}
 
-	public STypeDeclarationStmt withTypeDecl(STree<? extends STypeDecl> typeDecl) {
+	public STypeDeclarationStmt withTypeDecl(BUTree<? extends STypeDecl> typeDecl) {
 		return new STypeDeclarationStmt(typeDecl);
 	}
 
@@ -78,12 +78,12 @@ public class STypeDeclarationStmt extends SNodeState<STypeDeclarationStmt> imple
 	public static STypeSafeTraversal<STypeDeclarationStmt, STypeDecl, TypeDecl> TYPE_DECL = new STypeSafeTraversal<STypeDeclarationStmt, STypeDecl, TypeDecl>() {
 
 		@Override
-		public STree<?> doTraverse(STypeDeclarationStmt state) {
+		public BUTree<?> doTraverse(STypeDeclarationStmt state) {
 			return state.typeDecl;
 		}
 
 		@Override
-		public STypeDeclarationStmt doRebuildParentState(STypeDeclarationStmt state, STree<STypeDecl> child) {
+		public STypeDeclarationStmt doRebuildParentState(STypeDeclarationStmt state, BUTree<STypeDecl> child) {
 			return state.withTypeDecl(child);
 		}
 

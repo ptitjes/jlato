@@ -19,7 +19,7 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
@@ -36,12 +36,12 @@ public class LSDecorated extends LexicalShape {
 	}
 
 	@Override
-	public boolean isDefined(STree tree) {
+	public boolean isDefined(BUTree tree) {
 		return true;
 	}
 
 	@Override
-	public void dress(DressingBuilder<?> builder, STree<?> discriminator) {
+	public void dress(DressingBuilder<?> builder, BUTree<?> discriminator) {
 		shape.dress(builder, discriminator);
 	}
 
@@ -66,7 +66,7 @@ public class LSDecorated extends LexicalShape {
 	}
 
 	@Override
-	public void render(STree tree, WRunRun run, Printer printer) {
+	public void render(BUTree tree, WRunRun run, Printer printer) {
 		shape.render(tree, run, printer);
 	}
 }

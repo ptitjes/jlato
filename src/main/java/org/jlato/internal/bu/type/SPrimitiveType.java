@@ -15,15 +15,15 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SPrimitiveType extends SNodeState<SPrimitiveType> implements SType {
 
-	public static STree<SPrimitiveType> make(STree<SNodeListState> annotations, Primitive primitive) {
-		return new STree<SPrimitiveType>(new SPrimitiveType(annotations, primitive));
+	public static BUTree<SPrimitiveType> make(BUTree<SNodeListState> annotations, Primitive primitive) {
+		return new BUTree<SPrimitiveType>(new SPrimitiveType(annotations, primitive));
 	}
 
-	public final STree<SNodeListState> annotations;
+	public final BUTree<SNodeListState> annotations;
 
 	public final Primitive primitive;
 
-	public SPrimitiveType(STree<SNodeListState> annotations, Primitive primitive) {
+	public SPrimitiveType(BUTree<SNodeListState> annotations, Primitive primitive) {
 		this.annotations = annotations;
 		this.primitive = primitive;
 	}
@@ -33,11 +33,11 @@ public class SPrimitiveType extends SNodeState<SPrimitiveType> implements SType 
 		return Kind.PrimitiveType;
 	}
 
-	public STree<SNodeListState> annotations() {
+	public BUTree<SNodeListState> annotations() {
 		return annotations;
 	}
 
-	public SPrimitiveType withAnnotations(STree<SNodeListState> annotations) {
+	public SPrimitiveType withAnnotations(BUTree<SNodeListState> annotations) {
 		return new SPrimitiveType(annotations, primitive);
 	}
 
@@ -99,12 +99,12 @@ public class SPrimitiveType extends SNodeState<SPrimitiveType> implements SType 
 	public static STypeSafeTraversal<SPrimitiveType, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<SPrimitiveType, SNodeListState, NodeList<AnnotationExpr>>() {
 
 		@Override
-		public STree<?> doTraverse(SPrimitiveType state) {
+		public BUTree<?> doTraverse(SPrimitiveType state) {
 			return state.annotations;
 		}
 
 		@Override
-		public SPrimitiveType doRebuildParentState(SPrimitiveType state, STree<SNodeListState> child) {
+		public SPrimitiveType doRebuildParentState(SPrimitiveType state, BUTree<SNodeListState> child) {
 			return state.withAnnotations(child);
 		}
 
@@ -135,7 +135,7 @@ public class SPrimitiveType extends SNodeState<SPrimitiveType> implements SType 
 	public static final LexicalShape shape = composite(
 			child(ANNOTATIONS, list()),
 			token(new LSToken.Provider() {
-				public LToken tokenFor(STree tree) {
+				public LToken tokenFor(BUTree tree) {
 					final Primitive primitive = ((SPrimitiveType) tree.state).primitive;
 					switch (primitive) {
 						case Boolean:

@@ -14,19 +14,19 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 
-	public static STree<SForStmt> make(STree<SNodeListState> init, STree<? extends SExpr> compare, STree<SNodeListState> update, STree<? extends SStmt> body) {
-		return new STree<SForStmt>(new SForStmt(init, compare, update, body));
+	public static BUTree<SForStmt> make(BUTree<SNodeListState> init, BUTree<? extends SExpr> compare, BUTree<SNodeListState> update, BUTree<? extends SStmt> body) {
+		return new BUTree<SForStmt>(new SForStmt(init, compare, update, body));
 	}
 
-	public final STree<SNodeListState> init;
+	public final BUTree<SNodeListState> init;
 
-	public final STree<? extends SExpr> compare;
+	public final BUTree<? extends SExpr> compare;
 
-	public final STree<SNodeListState> update;
+	public final BUTree<SNodeListState> update;
 
-	public final STree<? extends SStmt> body;
+	public final BUTree<? extends SStmt> body;
 
-	public SForStmt(STree<SNodeListState> init, STree<? extends SExpr> compare, STree<SNodeListState> update, STree<? extends SStmt> body) {
+	public SForStmt(BUTree<SNodeListState> init, BUTree<? extends SExpr> compare, BUTree<SNodeListState> update, BUTree<? extends SStmt> body) {
 		this.init = init;
 		this.compare = compare;
 		this.update = update;
@@ -38,35 +38,35 @@ public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 		return Kind.ForStmt;
 	}
 
-	public STree<SNodeListState> init() {
+	public BUTree<SNodeListState> init() {
 		return init;
 	}
 
-	public SForStmt withInit(STree<SNodeListState> init) {
+	public SForStmt withInit(BUTree<SNodeListState> init) {
 		return new SForStmt(init, compare, update, body);
 	}
 
-	public STree<? extends SExpr> compare() {
+	public BUTree<? extends SExpr> compare() {
 		return compare;
 	}
 
-	public SForStmt withCompare(STree<? extends SExpr> compare) {
+	public SForStmt withCompare(BUTree<? extends SExpr> compare) {
 		return new SForStmt(init, compare, update, body);
 	}
 
-	public STree<SNodeListState> update() {
+	public BUTree<SNodeListState> update() {
 		return update;
 	}
 
-	public SForStmt withUpdate(STree<SNodeListState> update) {
+	public SForStmt withUpdate(BUTree<SNodeListState> update) {
 		return new SForStmt(init, compare, update, body);
 	}
 
-	public STree<? extends SStmt> body() {
+	public BUTree<? extends SStmt> body() {
 		return body;
 	}
 
-	public SForStmt withBody(STree<? extends SStmt> body) {
+	public SForStmt withBody(BUTree<? extends SStmt> body) {
 		return new SForStmt(init, compare, update, body);
 	}
 
@@ -121,12 +121,12 @@ public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 	public static STypeSafeTraversal<SForStmt, SNodeListState, NodeList<Expr>> INIT = new STypeSafeTraversal<SForStmt, SNodeListState, NodeList<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(SForStmt state) {
+		public BUTree<?> doTraverse(SForStmt state) {
 			return state.init;
 		}
 
 		@Override
-		public SForStmt doRebuildParentState(SForStmt state, STree<SNodeListState> child) {
+		public SForStmt doRebuildParentState(SForStmt state, BUTree<SNodeListState> child) {
 			return state.withInit(child);
 		}
 
@@ -144,12 +144,12 @@ public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 	public static STypeSafeTraversal<SForStmt, SExpr, Expr> COMPARE = new STypeSafeTraversal<SForStmt, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SForStmt state) {
+		public BUTree<?> doTraverse(SForStmt state) {
 			return state.compare;
 		}
 
 		@Override
-		public SForStmt doRebuildParentState(SForStmt state, STree<SExpr> child) {
+		public SForStmt doRebuildParentState(SForStmt state, BUTree<SExpr> child) {
 			return state.withCompare(child);
 		}
 
@@ -167,12 +167,12 @@ public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 	public static STypeSafeTraversal<SForStmt, SNodeListState, NodeList<Expr>> UPDATE = new STypeSafeTraversal<SForStmt, SNodeListState, NodeList<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(SForStmt state) {
+		public BUTree<?> doTraverse(SForStmt state) {
 			return state.update;
 		}
 
 		@Override
-		public SForStmt doRebuildParentState(SForStmt state, STree<SNodeListState> child) {
+		public SForStmt doRebuildParentState(SForStmt state, BUTree<SNodeListState> child) {
 			return state.withUpdate(child);
 		}
 
@@ -190,12 +190,12 @@ public class SForStmt extends SNodeState<SForStmt> implements SStmt {
 	public static STypeSafeTraversal<SForStmt, SStmt, Stmt> BODY = new STypeSafeTraversal<SForStmt, SStmt, Stmt>() {
 
 		@Override
-		public STree<?> doTraverse(SForStmt state) {
+		public BUTree<?> doTraverse(SForStmt state) {
 			return state.body;
 		}
 
 		@Override
-		public SForStmt doRebuildParentState(SForStmt state, STree<SStmt> child) {
+		public SForStmt doRebuildParentState(SForStmt state, BUTree<SStmt> child) {
 			return state.withBody(child);
 		}
 

@@ -12,15 +12,15 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SQualifiedName extends SNodeState<SQualifiedName> implements STreeState {
 
-	public static STree<SQualifiedName> make(STree<SNodeOptionState> qualifier, STree<SName> name) {
-		return new STree<SQualifiedName>(new SQualifiedName(qualifier, name));
+	public static BUTree<SQualifiedName> make(BUTree<SNodeOptionState> qualifier, BUTree<SName> name) {
+		return new BUTree<SQualifiedName>(new SQualifiedName(qualifier, name));
 	}
 
-	public final STree<SNodeOptionState> qualifier;
+	public final BUTree<SNodeOptionState> qualifier;
 
-	public final STree<SName> name;
+	public final BUTree<SName> name;
 
-	public SQualifiedName(STree<SNodeOptionState> qualifier, STree<SName> name) {
+	public SQualifiedName(BUTree<SNodeOptionState> qualifier, BUTree<SName> name) {
 		this.qualifier = qualifier;
 		this.name = name;
 	}
@@ -30,19 +30,19 @@ public class SQualifiedName extends SNodeState<SQualifiedName> implements STreeS
 		return Kind.QualifiedName;
 	}
 
-	public STree<SNodeOptionState> qualifier() {
+	public BUTree<SNodeOptionState> qualifier() {
 		return qualifier;
 	}
 
-	public SQualifiedName withQualifier(STree<SNodeOptionState> qualifier) {
+	public SQualifiedName withQualifier(BUTree<SNodeOptionState> qualifier) {
 		return new SQualifiedName(qualifier, name);
 	}
 
-	public STree<SName> name() {
+	public BUTree<SName> name() {
 		return name;
 	}
 
-	public SQualifiedName withName(STree<SName> name) {
+	public SQualifiedName withName(BUTree<SName> name) {
 		return new SQualifiedName(qualifier, name);
 	}
 
@@ -91,12 +91,12 @@ public class SQualifiedName extends SNodeState<SQualifiedName> implements STreeS
 	public static STypeSafeTraversal<SQualifiedName, SNodeOptionState, NodeOption<QualifiedName>> QUALIFIER = new STypeSafeTraversal<SQualifiedName, SNodeOptionState, NodeOption<QualifiedName>>() {
 
 		@Override
-		public STree<?> doTraverse(SQualifiedName state) {
+		public BUTree<?> doTraverse(SQualifiedName state) {
 			return state.qualifier;
 		}
 
 		@Override
-		public SQualifiedName doRebuildParentState(SQualifiedName state, STree<SNodeOptionState> child) {
+		public SQualifiedName doRebuildParentState(SQualifiedName state, BUTree<SNodeOptionState> child) {
 			return state.withQualifier(child);
 		}
 
@@ -114,12 +114,12 @@ public class SQualifiedName extends SNodeState<SQualifiedName> implements STreeS
 	public static STypeSafeTraversal<SQualifiedName, SName, Name> NAME = new STypeSafeTraversal<SQualifiedName, SName, Name>() {
 
 		@Override
-		public STree<?> doTraverse(SQualifiedName state) {
+		public BUTree<?> doTraverse(SQualifiedName state) {
 			return state.name;
 		}
 
 		@Override
-		public SQualifiedName doRebuildParentState(SQualifiedName state, STree<SName> child) {
+		public SQualifiedName doRebuildParentState(SQualifiedName state, BUTree<SName> child) {
 			return state.withName(child);
 		}
 

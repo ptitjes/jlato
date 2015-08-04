@@ -17,15 +17,15 @@ import static org.jlato.printer.SpacingConstraint.newLine;
 
 public class SSwitchCase extends SNodeState<SSwitchCase> implements STreeState {
 
-	public static STree<SSwitchCase> make(STree<SNodeOptionState> label, STree<SNodeListState> stmts) {
-		return new STree<SSwitchCase>(new SSwitchCase(label, stmts));
+	public static BUTree<SSwitchCase> make(BUTree<SNodeOptionState> label, BUTree<SNodeListState> stmts) {
+		return new BUTree<SSwitchCase>(new SSwitchCase(label, stmts));
 	}
 
-	public final STree<SNodeOptionState> label;
+	public final BUTree<SNodeOptionState> label;
 
-	public final STree<SNodeListState> stmts;
+	public final BUTree<SNodeListState> stmts;
 
-	public SSwitchCase(STree<SNodeOptionState> label, STree<SNodeListState> stmts) {
+	public SSwitchCase(BUTree<SNodeOptionState> label, BUTree<SNodeListState> stmts) {
 		this.label = label;
 		this.stmts = stmts;
 	}
@@ -35,19 +35,19 @@ public class SSwitchCase extends SNodeState<SSwitchCase> implements STreeState {
 		return Kind.SwitchCase;
 	}
 
-	public STree<SNodeOptionState> label() {
+	public BUTree<SNodeOptionState> label() {
 		return label;
 	}
 
-	public SSwitchCase withLabel(STree<SNodeOptionState> label) {
+	public SSwitchCase withLabel(BUTree<SNodeOptionState> label) {
 		return new SSwitchCase(label, stmts);
 	}
 
-	public STree<SNodeListState> stmts() {
+	public BUTree<SNodeListState> stmts() {
 		return stmts;
 	}
 
-	public SSwitchCase withStmts(STree<SNodeListState> stmts) {
+	public SSwitchCase withStmts(BUTree<SNodeListState> stmts) {
 		return new SSwitchCase(label, stmts);
 	}
 
@@ -96,12 +96,12 @@ public class SSwitchCase extends SNodeState<SSwitchCase> implements STreeState {
 	public static STypeSafeTraversal<SSwitchCase, SNodeOptionState, NodeOption<Expr>> LABEL = new STypeSafeTraversal<SSwitchCase, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(SSwitchCase state) {
+		public BUTree<?> doTraverse(SSwitchCase state) {
 			return state.label;
 		}
 
 		@Override
-		public SSwitchCase doRebuildParentState(SSwitchCase state, STree<SNodeOptionState> child) {
+		public SSwitchCase doRebuildParentState(SSwitchCase state, BUTree<SNodeOptionState> child) {
 			return state.withLabel(child);
 		}
 
@@ -119,12 +119,12 @@ public class SSwitchCase extends SNodeState<SSwitchCase> implements STreeState {
 	public static STypeSafeTraversal<SSwitchCase, SNodeListState, NodeList<Stmt>> STMTS = new STypeSafeTraversal<SSwitchCase, SNodeListState, NodeList<Stmt>>() {
 
 		@Override
-		public STree<?> doTraverse(SSwitchCase state) {
+		public BUTree<?> doTraverse(SSwitchCase state) {
 			return state.stmts;
 		}
 
 		@Override
-		public SSwitchCase doRebuildParentState(SSwitchCase state, STree<SNodeListState> child) {
+		public SSwitchCase doRebuildParentState(SSwitchCase state, BUTree<SNodeListState> child) {
 			return state.withStmts(child);
 		}
 

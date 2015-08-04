@@ -11,13 +11,13 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SArrayDim extends SNodeState<SArrayDim> implements STreeState {
 
-	public static STree<SArrayDim> make(STree<SNodeListState> annotations) {
-		return new STree<SArrayDim>(new SArrayDim(annotations));
+	public static BUTree<SArrayDim> make(BUTree<SNodeListState> annotations) {
+		return new BUTree<SArrayDim>(new SArrayDim(annotations));
 	}
 
-	public final STree<SNodeListState> annotations;
+	public final BUTree<SNodeListState> annotations;
 
-	public SArrayDim(STree<SNodeListState> annotations) {
+	public SArrayDim(BUTree<SNodeListState> annotations) {
 		this.annotations = annotations;
 	}
 
@@ -26,11 +26,11 @@ public class SArrayDim extends SNodeState<SArrayDim> implements STreeState {
 		return Kind.ArrayDim;
 	}
 
-	public STree<SNodeListState> annotations() {
+	public BUTree<SNodeListState> annotations() {
 		return annotations;
 	}
 
-	public SArrayDim withAnnotations(STree<SNodeListState> annotations) {
+	public SArrayDim withAnnotations(BUTree<SNodeListState> annotations) {
 		return new SArrayDim(annotations);
 	}
 
@@ -76,12 +76,12 @@ public class SArrayDim extends SNodeState<SArrayDim> implements STreeState {
 	public static STypeSafeTraversal<SArrayDim, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<SArrayDim, SNodeListState, NodeList<AnnotationExpr>>() {
 
 		@Override
-		public STree<?> doTraverse(SArrayDim state) {
+		public BUTree<?> doTraverse(SArrayDim state) {
 			return state.annotations;
 		}
 
 		@Override
-		public SArrayDim doRebuildParentState(SArrayDim state, STree<SNodeListState> child) {
+		public SArrayDim doRebuildParentState(SArrayDim state, BUTree<SNodeListState> child) {
 			return state.withAnnotations(child);
 		}
 

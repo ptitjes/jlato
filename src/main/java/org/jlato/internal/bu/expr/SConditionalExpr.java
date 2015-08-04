@@ -12,17 +12,17 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SConditionalExpr extends SNodeState<SConditionalExpr> implements SExpr {
 
-	public static STree<SConditionalExpr> make(STree<? extends SExpr> condition, STree<? extends SExpr> thenExpr, STree<? extends SExpr> elseExpr) {
-		return new STree<SConditionalExpr>(new SConditionalExpr(condition, thenExpr, elseExpr));
+	public static BUTree<SConditionalExpr> make(BUTree<? extends SExpr> condition, BUTree<? extends SExpr> thenExpr, BUTree<? extends SExpr> elseExpr) {
+		return new BUTree<SConditionalExpr>(new SConditionalExpr(condition, thenExpr, elseExpr));
 	}
 
-	public final STree<? extends SExpr> condition;
+	public final BUTree<? extends SExpr> condition;
 
-	public final STree<? extends SExpr> thenExpr;
+	public final BUTree<? extends SExpr> thenExpr;
 
-	public final STree<? extends SExpr> elseExpr;
+	public final BUTree<? extends SExpr> elseExpr;
 
-	public SConditionalExpr(STree<? extends SExpr> condition, STree<? extends SExpr> thenExpr, STree<? extends SExpr> elseExpr) {
+	public SConditionalExpr(BUTree<? extends SExpr> condition, BUTree<? extends SExpr> thenExpr, BUTree<? extends SExpr> elseExpr) {
 		this.condition = condition;
 		this.thenExpr = thenExpr;
 		this.elseExpr = elseExpr;
@@ -33,27 +33,27 @@ public class SConditionalExpr extends SNodeState<SConditionalExpr> implements SE
 		return Kind.ConditionalExpr;
 	}
 
-	public STree<? extends SExpr> condition() {
+	public BUTree<? extends SExpr> condition() {
 		return condition;
 	}
 
-	public SConditionalExpr withCondition(STree<? extends SExpr> condition) {
+	public SConditionalExpr withCondition(BUTree<? extends SExpr> condition) {
 		return new SConditionalExpr(condition, thenExpr, elseExpr);
 	}
 
-	public STree<? extends SExpr> thenExpr() {
+	public BUTree<? extends SExpr> thenExpr() {
 		return thenExpr;
 	}
 
-	public SConditionalExpr withThenExpr(STree<? extends SExpr> thenExpr) {
+	public SConditionalExpr withThenExpr(BUTree<? extends SExpr> thenExpr) {
 		return new SConditionalExpr(condition, thenExpr, elseExpr);
 	}
 
-	public STree<? extends SExpr> elseExpr() {
+	public BUTree<? extends SExpr> elseExpr() {
 		return elseExpr;
 	}
 
-	public SConditionalExpr withElseExpr(STree<? extends SExpr> elseExpr) {
+	public SConditionalExpr withElseExpr(BUTree<? extends SExpr> elseExpr) {
 		return new SConditionalExpr(condition, thenExpr, elseExpr);
 	}
 
@@ -105,12 +105,12 @@ public class SConditionalExpr extends SNodeState<SConditionalExpr> implements SE
 	public static STypeSafeTraversal<SConditionalExpr, SExpr, Expr> CONDITION = new STypeSafeTraversal<SConditionalExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SConditionalExpr state) {
+		public BUTree<?> doTraverse(SConditionalExpr state) {
 			return state.condition;
 		}
 
 		@Override
-		public SConditionalExpr doRebuildParentState(SConditionalExpr state, STree<SExpr> child) {
+		public SConditionalExpr doRebuildParentState(SConditionalExpr state, BUTree<SExpr> child) {
 			return state.withCondition(child);
 		}
 
@@ -128,12 +128,12 @@ public class SConditionalExpr extends SNodeState<SConditionalExpr> implements SE
 	public static STypeSafeTraversal<SConditionalExpr, SExpr, Expr> THEN_EXPR = new STypeSafeTraversal<SConditionalExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SConditionalExpr state) {
+		public BUTree<?> doTraverse(SConditionalExpr state) {
 			return state.thenExpr;
 		}
 
 		@Override
-		public SConditionalExpr doRebuildParentState(SConditionalExpr state, STree<SExpr> child) {
+		public SConditionalExpr doRebuildParentState(SConditionalExpr state, BUTree<SExpr> child) {
 			return state.withThenExpr(child);
 		}
 
@@ -151,12 +151,12 @@ public class SConditionalExpr extends SNodeState<SConditionalExpr> implements SE
 	public static STypeSafeTraversal<SConditionalExpr, SExpr, Expr> ELSE_EXPR = new STypeSafeTraversal<SConditionalExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SConditionalExpr state) {
+		public BUTree<?> doTraverse(SConditionalExpr state) {
 			return state.elseExpr;
 		}
 
 		@Override
-		public SConditionalExpr doRebuildParentState(SConditionalExpr state, STree<SExpr> child) {
+		public SConditionalExpr doRebuildParentState(SConditionalExpr state, BUTree<SExpr> child) {
 			return state.withElseExpr(child);
 		}
 

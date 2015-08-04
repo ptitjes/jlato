@@ -15,15 +15,15 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SArrayInitializerExpr extends SNodeState<SArrayInitializerExpr> implements SExpr {
 
-	public static STree<SArrayInitializerExpr> make(STree<SNodeListState> values, boolean trailingComma) {
-		return new STree<SArrayInitializerExpr>(new SArrayInitializerExpr(values, trailingComma));
+	public static BUTree<SArrayInitializerExpr> make(BUTree<SNodeListState> values, boolean trailingComma) {
+		return new BUTree<SArrayInitializerExpr>(new SArrayInitializerExpr(values, trailingComma));
 	}
 
-	public final STree<SNodeListState> values;
+	public final BUTree<SNodeListState> values;
 
 	public final boolean trailingComma;
 
-	public SArrayInitializerExpr(STree<SNodeListState> values, boolean trailingComma) {
+	public SArrayInitializerExpr(BUTree<SNodeListState> values, boolean trailingComma) {
 		this.values = values;
 		this.trailingComma = trailingComma;
 	}
@@ -33,11 +33,11 @@ public class SArrayInitializerExpr extends SNodeState<SArrayInitializerExpr> imp
 		return Kind.ArrayInitializerExpr;
 	}
 
-	public STree<SNodeListState> values() {
+	public BUTree<SNodeListState> values() {
 		return values;
 	}
 
-	public SArrayInitializerExpr withValues(STree<SNodeListState> values) {
+	public SArrayInitializerExpr withValues(BUTree<SNodeListState> values) {
 		return new SArrayInitializerExpr(values, trailingComma);
 	}
 
@@ -99,12 +99,12 @@ public class SArrayInitializerExpr extends SNodeState<SArrayInitializerExpr> imp
 	public static STypeSafeTraversal<SArrayInitializerExpr, SNodeListState, NodeList<Expr>> VALUES = new STypeSafeTraversal<SArrayInitializerExpr, SNodeListState, NodeList<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(SArrayInitializerExpr state) {
+		public BUTree<?> doTraverse(SArrayInitializerExpr state) {
 			return state.values;
 		}
 
 		@Override
-		public SArrayInitializerExpr doRebuildParentState(SArrayInitializerExpr state, STree<SNodeListState> child) {
+		public SArrayInitializerExpr doRebuildParentState(SArrayInitializerExpr state, BUTree<SNodeListState> child) {
 			return state.withValues(child);
 		}
 

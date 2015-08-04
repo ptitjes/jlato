@@ -37,9 +37,9 @@ public abstract class LexicalShape {
 		return false;
 	}
 
-	public abstract boolean isDefined(STree tree);
+	public abstract boolean isDefined(BUTree tree);
 
-	public abstract void dress(DressingBuilder<?> builder, STree<?> discriminator);
+	public abstract void dress(DressingBuilder<?> builder, BUTree<?> discriminator);
 
 	public abstract boolean acceptsTrailingWhitespace();
 
@@ -49,11 +49,11 @@ public abstract class LexicalShape {
 
 	public abstract void dressLeading(WTokenRun tokens, DressingBuilder<?> builder);
 
-	public void render(STree tree, Printer printer) {
+	public void render(BUTree tree, Printer printer) {
 		render(tree, tree.dressing == null ? null : tree.dressing.run, printer);
 	}
 
-	public abstract void render(STree tree, WRunRun run, Printer printer);
+	public abstract void render(BUTree tree, WRunRun run, Printer printer);
 
 	public LSDecorated withSpacing(SpacingConstraint before, SpacingConstraint after) {
 		return new LSConstraint(this, before, after, null, null);

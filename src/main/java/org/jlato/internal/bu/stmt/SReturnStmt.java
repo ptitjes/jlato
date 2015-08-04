@@ -13,13 +13,13 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SReturnStmt extends SNodeState<SReturnStmt> implements SStmt {
 
-	public static STree<SReturnStmt> make(STree<SNodeOptionState> expr) {
-		return new STree<SReturnStmt>(new SReturnStmt(expr));
+	public static BUTree<SReturnStmt> make(BUTree<SNodeOptionState> expr) {
+		return new BUTree<SReturnStmt>(new SReturnStmt(expr));
 	}
 
-	public final STree<SNodeOptionState> expr;
+	public final BUTree<SNodeOptionState> expr;
 
-	public SReturnStmt(STree<SNodeOptionState> expr) {
+	public SReturnStmt(BUTree<SNodeOptionState> expr) {
 		this.expr = expr;
 	}
 
@@ -28,11 +28,11 @@ public class SReturnStmt extends SNodeState<SReturnStmt> implements SStmt {
 		return Kind.ReturnStmt;
 	}
 
-	public STree<SNodeOptionState> expr() {
+	public BUTree<SNodeOptionState> expr() {
 		return expr;
 	}
 
-	public SReturnStmt withExpr(STree<SNodeOptionState> expr) {
+	public SReturnStmt withExpr(BUTree<SNodeOptionState> expr) {
 		return new SReturnStmt(expr);
 	}
 
@@ -78,12 +78,12 @@ public class SReturnStmt extends SNodeState<SReturnStmt> implements SStmt {
 	public static STypeSafeTraversal<SReturnStmt, SNodeOptionState, NodeOption<Expr>> EXPR = new STypeSafeTraversal<SReturnStmt, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(SReturnStmt state) {
+		public BUTree<?> doTraverse(SReturnStmt state) {
 			return state.expr;
 		}
 
 		@Override
-		public SReturnStmt doRebuildParentState(SReturnStmt state, STree<SNodeOptionState> child) {
+		public SReturnStmt doRebuildParentState(SReturnStmt state, BUTree<SNodeOptionState> child) {
 			return state.withExpr(child);
 		}
 

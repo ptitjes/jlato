@@ -20,21 +20,21 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class STryStmt extends SNodeState<STryStmt> implements SStmt {
 
-	public static STree<STryStmt> make(STree<SNodeListState> resources, boolean trailingSemiColon, STree<SBlockStmt> tryBlock, STree<SNodeListState> catchs, STree<SNodeOptionState> finallyBlock) {
-		return new STree<STryStmt>(new STryStmt(resources, trailingSemiColon, tryBlock, catchs, finallyBlock));
+	public static BUTree<STryStmt> make(BUTree<SNodeListState> resources, boolean trailingSemiColon, BUTree<SBlockStmt> tryBlock, BUTree<SNodeListState> catchs, BUTree<SNodeOptionState> finallyBlock) {
+		return new BUTree<STryStmt>(new STryStmt(resources, trailingSemiColon, tryBlock, catchs, finallyBlock));
 	}
 
-	public final STree<SNodeListState> resources;
+	public final BUTree<SNodeListState> resources;
 
 	public final boolean trailingSemiColon;
 
-	public final STree<SBlockStmt> tryBlock;
+	public final BUTree<SBlockStmt> tryBlock;
 
-	public final STree<SNodeListState> catchs;
+	public final BUTree<SNodeListState> catchs;
 
-	public final STree<SNodeOptionState> finallyBlock;
+	public final BUTree<SNodeOptionState> finallyBlock;
 
-	public STryStmt(STree<SNodeListState> resources, boolean trailingSemiColon, STree<SBlockStmt> tryBlock, STree<SNodeListState> catchs, STree<SNodeOptionState> finallyBlock) {
+	public STryStmt(BUTree<SNodeListState> resources, boolean trailingSemiColon, BUTree<SBlockStmt> tryBlock, BUTree<SNodeListState> catchs, BUTree<SNodeOptionState> finallyBlock) {
 		this.resources = resources;
 		this.trailingSemiColon = trailingSemiColon;
 		this.tryBlock = tryBlock;
@@ -47,11 +47,11 @@ public class STryStmt extends SNodeState<STryStmt> implements SStmt {
 		return Kind.TryStmt;
 	}
 
-	public STree<SNodeListState> resources() {
+	public BUTree<SNodeListState> resources() {
 		return resources;
 	}
 
-	public STryStmt withResources(STree<SNodeListState> resources) {
+	public STryStmt withResources(BUTree<SNodeListState> resources) {
 		return new STryStmt(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
 	}
 
@@ -63,27 +63,27 @@ public class STryStmt extends SNodeState<STryStmt> implements SStmt {
 		return new STryStmt(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
 	}
 
-	public STree<SBlockStmt> tryBlock() {
+	public BUTree<SBlockStmt> tryBlock() {
 		return tryBlock;
 	}
 
-	public STryStmt withTryBlock(STree<SBlockStmt> tryBlock) {
+	public STryStmt withTryBlock(BUTree<SBlockStmt> tryBlock) {
 		return new STryStmt(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
 	}
 
-	public STree<SNodeListState> catchs() {
+	public BUTree<SNodeListState> catchs() {
 		return catchs;
 	}
 
-	public STryStmt withCatchs(STree<SNodeListState> catchs) {
+	public STryStmt withCatchs(BUTree<SNodeListState> catchs) {
 		return new STryStmt(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
 	}
 
-	public STree<SNodeOptionState> finallyBlock() {
+	public BUTree<SNodeOptionState> finallyBlock() {
 		return finallyBlock;
 	}
 
-	public STryStmt withFinallyBlock(STree<SNodeOptionState> finallyBlock) {
+	public STryStmt withFinallyBlock(BUTree<SNodeOptionState> finallyBlock) {
 		return new STryStmt(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
 	}
 
@@ -146,12 +146,12 @@ public class STryStmt extends SNodeState<STryStmt> implements SStmt {
 	public static STypeSafeTraversal<STryStmt, SNodeListState, NodeList<VariableDeclarationExpr>> RESOURCES = new STypeSafeTraversal<STryStmt, SNodeListState, NodeList<VariableDeclarationExpr>>() {
 
 		@Override
-		public STree<?> doTraverse(STryStmt state) {
+		public BUTree<?> doTraverse(STryStmt state) {
 			return state.resources;
 		}
 
 		@Override
-		public STryStmt doRebuildParentState(STryStmt state, STree<SNodeListState> child) {
+		public STryStmt doRebuildParentState(STryStmt state, BUTree<SNodeListState> child) {
 			return state.withResources(child);
 		}
 
@@ -169,12 +169,12 @@ public class STryStmt extends SNodeState<STryStmt> implements SStmt {
 	public static STypeSafeTraversal<STryStmt, SBlockStmt, BlockStmt> TRY_BLOCK = new STypeSafeTraversal<STryStmt, SBlockStmt, BlockStmt>() {
 
 		@Override
-		public STree<?> doTraverse(STryStmt state) {
+		public BUTree<?> doTraverse(STryStmt state) {
 			return state.tryBlock;
 		}
 
 		@Override
-		public STryStmt doRebuildParentState(STryStmt state, STree<SBlockStmt> child) {
+		public STryStmt doRebuildParentState(STryStmt state, BUTree<SBlockStmt> child) {
 			return state.withTryBlock(child);
 		}
 
@@ -192,12 +192,12 @@ public class STryStmt extends SNodeState<STryStmt> implements SStmt {
 	public static STypeSafeTraversal<STryStmt, SNodeListState, NodeList<CatchClause>> CATCHS = new STypeSafeTraversal<STryStmt, SNodeListState, NodeList<CatchClause>>() {
 
 		@Override
-		public STree<?> doTraverse(STryStmt state) {
+		public BUTree<?> doTraverse(STryStmt state) {
 			return state.catchs;
 		}
 
 		@Override
-		public STryStmt doRebuildParentState(STryStmt state, STree<SNodeListState> child) {
+		public STryStmt doRebuildParentState(STryStmt state, BUTree<SNodeListState> child) {
 			return state.withCatchs(child);
 		}
 
@@ -215,12 +215,12 @@ public class STryStmt extends SNodeState<STryStmt> implements SStmt {
 	public static STypeSafeTraversal<STryStmt, SNodeOptionState, NodeOption<BlockStmt>> FINALLY_BLOCK = new STypeSafeTraversal<STryStmt, SNodeOptionState, NodeOption<BlockStmt>>() {
 
 		@Override
-		public STree<?> doTraverse(STryStmt state) {
+		public BUTree<?> doTraverse(STryStmt state) {
 			return state.finallyBlock;
 		}
 
 		@Override
-		public STryStmt doRebuildParentState(STryStmt state, STree<SNodeOptionState> child) {
+		public STryStmt doRebuildParentState(STryStmt state, BUTree<SNodeOptionState> child) {
 			return state.withFinallyBlock(child);
 		}
 

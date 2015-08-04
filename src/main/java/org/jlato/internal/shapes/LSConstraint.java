@@ -19,14 +19,11 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.WRunRun;
-import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.IndentationConstraint;
 import org.jlato.printer.Printer;
 import org.jlato.printer.SpacingConstraint;
-
-import java.util.Iterator;
 
 /**
  * @author Didier Villevalois
@@ -76,12 +73,12 @@ public final class LSConstraint extends LSDecorated {
 	}
 
 	@Override
-	public boolean isDefined(STree tree) {
+	public boolean isDefined(BUTree tree) {
 		return shape.isDefined(tree);
 	}
 
 	@Override
-	public void render(STree tree, WRunRun run, Printer printer) {
+	public void render(BUTree tree, WRunRun run, Printer printer) {
 		if (spacingBefore != null) printer.encounteredSpacing(spacingBefore);
 		if (indentationBefore != null) printer.encounteredIndentation(indentationBefore);
 

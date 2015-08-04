@@ -155,7 +155,7 @@ public abstract class TDTree<S extends STreeState, ST extends Tree, T extends ST
 			comment = WToken.singleLineComment(commentString);
 		} else throw new IllegalArgumentException();
 
-		final STree<S> tree = location.tree;
+		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
 		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
@@ -181,7 +181,7 @@ public abstract class TDTree<S extends STreeState, ST extends Tree, T extends ST
 			comment = WToken.singleLineComment(commentString);
 		} else throw new IllegalArgumentException();
 
-		final STree<S> tree = location.tree;
+		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
 		final WTokenRun trailing = dressing.trailing == null ? WTokenRun.EMPTY : dressing.trailing;
@@ -196,7 +196,7 @@ public abstract class TDTree<S extends STreeState, ST extends Tree, T extends ST
 	}
 
 	public T insertNewLineBefore() {
-		final STree<S> tree = location.tree;
+		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
 		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
@@ -213,13 +213,13 @@ public abstract class TDTree<S extends STreeState, ST extends Tree, T extends ST
 		return facade == null ? null : ((TDTree<S, ?, ?>) facade).location;
 	}
 
-	public static <S extends STreeState> STree<S> treeOf(Tree facade) {
+	public static <S extends STreeState> BUTree<S> treeOf(Tree facade) {
 		final TDLocation<S> location = TDTree.locationOf(facade);
 		return location == null ? null : location.tree;
 	}
 
-	public static Vector<STree<? extends STreeState>> treeListOf(Tree... facades) {
-		final Builder<STree<?>, Vector<STree<?>>> builder = Vector.<STree<?>>factory().newBuilder();
+	public static Vector<BUTree<? extends STreeState>> treeListOf(Tree... facades) {
+		final Builder<BUTree<?>, Vector<BUTree<?>>> builder = Vector.<BUTree<?>>factory().newBuilder();
 		for (Tree facade : facades) {
 			builder.add(treeOf(facade));
 		}

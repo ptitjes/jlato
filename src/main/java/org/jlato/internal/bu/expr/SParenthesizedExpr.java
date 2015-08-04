@@ -11,13 +11,13 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SParenthesizedExpr extends SNodeState<SParenthesizedExpr> implements SExpr {
 
-	public static STree<SParenthesizedExpr> make(STree<? extends SExpr> inner) {
-		return new STree<SParenthesizedExpr>(new SParenthesizedExpr(inner));
+	public static BUTree<SParenthesizedExpr> make(BUTree<? extends SExpr> inner) {
+		return new BUTree<SParenthesizedExpr>(new SParenthesizedExpr(inner));
 	}
 
-	public final STree<? extends SExpr> inner;
+	public final BUTree<? extends SExpr> inner;
 
-	public SParenthesizedExpr(STree<? extends SExpr> inner) {
+	public SParenthesizedExpr(BUTree<? extends SExpr> inner) {
 		this.inner = inner;
 	}
 
@@ -26,11 +26,11 @@ public class SParenthesizedExpr extends SNodeState<SParenthesizedExpr> implement
 		return Kind.ParenthesizedExpr;
 	}
 
-	public STree<? extends SExpr> inner() {
+	public BUTree<? extends SExpr> inner() {
 		return inner;
 	}
 
-	public SParenthesizedExpr withInner(STree<? extends SExpr> inner) {
+	public SParenthesizedExpr withInner(BUTree<? extends SExpr> inner) {
 		return new SParenthesizedExpr(inner);
 	}
 
@@ -76,12 +76,12 @@ public class SParenthesizedExpr extends SNodeState<SParenthesizedExpr> implement
 	public static STypeSafeTraversal<SParenthesizedExpr, SExpr, Expr> INNER = new STypeSafeTraversal<SParenthesizedExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SParenthesizedExpr state) {
+		public BUTree<?> doTraverse(SParenthesizedExpr state) {
 			return state.inner;
 		}
 
 		@Override
-		public SParenthesizedExpr doRebuildParentState(SParenthesizedExpr state, STree<SExpr> child) {
+		public SParenthesizedExpr doRebuildParentState(SParenthesizedExpr state, BUTree<SExpr> child) {
 			return state.withInner(child);
 		}
 

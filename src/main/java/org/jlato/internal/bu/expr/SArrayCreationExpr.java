@@ -16,19 +16,19 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SArrayCreationExpr extends SNodeState<SArrayCreationExpr> implements SExpr {
 
-	public static STree<SArrayCreationExpr> make(STree<? extends SType> type, STree<SNodeListState> dimExprs, STree<SNodeListState> dims, STree<SNodeOptionState> init) {
-		return new STree<SArrayCreationExpr>(new SArrayCreationExpr(type, dimExprs, dims, init));
+	public static BUTree<SArrayCreationExpr> make(BUTree<? extends SType> type, BUTree<SNodeListState> dimExprs, BUTree<SNodeListState> dims, BUTree<SNodeOptionState> init) {
+		return new BUTree<SArrayCreationExpr>(new SArrayCreationExpr(type, dimExprs, dims, init));
 	}
 
-	public final STree<? extends SType> type;
+	public final BUTree<? extends SType> type;
 
-	public final STree<SNodeListState> dimExprs;
+	public final BUTree<SNodeListState> dimExprs;
 
-	public final STree<SNodeListState> dims;
+	public final BUTree<SNodeListState> dims;
 
-	public final STree<SNodeOptionState> init;
+	public final BUTree<SNodeOptionState> init;
 
-	public SArrayCreationExpr(STree<? extends SType> type, STree<SNodeListState> dimExprs, STree<SNodeListState> dims, STree<SNodeOptionState> init) {
+	public SArrayCreationExpr(BUTree<? extends SType> type, BUTree<SNodeListState> dimExprs, BUTree<SNodeListState> dims, BUTree<SNodeOptionState> init) {
 		this.type = type;
 		this.dimExprs = dimExprs;
 		this.dims = dims;
@@ -40,35 +40,35 @@ public class SArrayCreationExpr extends SNodeState<SArrayCreationExpr> implement
 		return Kind.ArrayCreationExpr;
 	}
 
-	public STree<? extends SType> type() {
+	public BUTree<? extends SType> type() {
 		return type;
 	}
 
-	public SArrayCreationExpr withType(STree<? extends SType> type) {
+	public SArrayCreationExpr withType(BUTree<? extends SType> type) {
 		return new SArrayCreationExpr(type, dimExprs, dims, init);
 	}
 
-	public STree<SNodeListState> dimExprs() {
+	public BUTree<SNodeListState> dimExprs() {
 		return dimExprs;
 	}
 
-	public SArrayCreationExpr withDimExprs(STree<SNodeListState> dimExprs) {
+	public SArrayCreationExpr withDimExprs(BUTree<SNodeListState> dimExprs) {
 		return new SArrayCreationExpr(type, dimExprs, dims, init);
 	}
 
-	public STree<SNodeListState> dims() {
+	public BUTree<SNodeListState> dims() {
 		return dims;
 	}
 
-	public SArrayCreationExpr withDims(STree<SNodeListState> dims) {
+	public SArrayCreationExpr withDims(BUTree<SNodeListState> dims) {
 		return new SArrayCreationExpr(type, dimExprs, dims, init);
 	}
 
-	public STree<SNodeOptionState> init() {
+	public BUTree<SNodeOptionState> init() {
 		return init;
 	}
 
-	public SArrayCreationExpr withInit(STree<SNodeOptionState> init) {
+	public SArrayCreationExpr withInit(BUTree<SNodeOptionState> init) {
 		return new SArrayCreationExpr(type, dimExprs, dims, init);
 	}
 
@@ -123,12 +123,12 @@ public class SArrayCreationExpr extends SNodeState<SArrayCreationExpr> implement
 	public static STypeSafeTraversal<SArrayCreationExpr, SType, Type> TYPE = new STypeSafeTraversal<SArrayCreationExpr, SType, Type>() {
 
 		@Override
-		public STree<?> doTraverse(SArrayCreationExpr state) {
+		public BUTree<?> doTraverse(SArrayCreationExpr state) {
 			return state.type;
 		}
 
 		@Override
-		public SArrayCreationExpr doRebuildParentState(SArrayCreationExpr state, STree<SType> child) {
+		public SArrayCreationExpr doRebuildParentState(SArrayCreationExpr state, BUTree<SType> child) {
 			return state.withType(child);
 		}
 
@@ -146,12 +146,12 @@ public class SArrayCreationExpr extends SNodeState<SArrayCreationExpr> implement
 	public static STypeSafeTraversal<SArrayCreationExpr, SNodeListState, NodeList<ArrayDimExpr>> DIM_EXPRS = new STypeSafeTraversal<SArrayCreationExpr, SNodeListState, NodeList<ArrayDimExpr>>() {
 
 		@Override
-		public STree<?> doTraverse(SArrayCreationExpr state) {
+		public BUTree<?> doTraverse(SArrayCreationExpr state) {
 			return state.dimExprs;
 		}
 
 		@Override
-		public SArrayCreationExpr doRebuildParentState(SArrayCreationExpr state, STree<SNodeListState> child) {
+		public SArrayCreationExpr doRebuildParentState(SArrayCreationExpr state, BUTree<SNodeListState> child) {
 			return state.withDimExprs(child);
 		}
 
@@ -169,12 +169,12 @@ public class SArrayCreationExpr extends SNodeState<SArrayCreationExpr> implement
 	public static STypeSafeTraversal<SArrayCreationExpr, SNodeListState, NodeList<ArrayDim>> DIMS = new STypeSafeTraversal<SArrayCreationExpr, SNodeListState, NodeList<ArrayDim>>() {
 
 		@Override
-		public STree<?> doTraverse(SArrayCreationExpr state) {
+		public BUTree<?> doTraverse(SArrayCreationExpr state) {
 			return state.dims;
 		}
 
 		@Override
-		public SArrayCreationExpr doRebuildParentState(SArrayCreationExpr state, STree<SNodeListState> child) {
+		public SArrayCreationExpr doRebuildParentState(SArrayCreationExpr state, BUTree<SNodeListState> child) {
 			return state.withDims(child);
 		}
 
@@ -192,12 +192,12 @@ public class SArrayCreationExpr extends SNodeState<SArrayCreationExpr> implement
 	public static STypeSafeTraversal<SArrayCreationExpr, SNodeOptionState, NodeOption<ArrayInitializerExpr>> INIT = new STypeSafeTraversal<SArrayCreationExpr, SNodeOptionState, NodeOption<ArrayInitializerExpr>>() {
 
 		@Override
-		public STree<?> doTraverse(SArrayCreationExpr state) {
+		public BUTree<?> doTraverse(SArrayCreationExpr state) {
 			return state.init;
 		}
 
 		@Override
-		public SArrayCreationExpr doRebuildParentState(SArrayCreationExpr state, STree<SNodeOptionState> child) {
+		public SArrayCreationExpr doRebuildParentState(SArrayCreationExpr state, BUTree<SNodeOptionState> child) {
 			return state.withInit(child);
 		}
 

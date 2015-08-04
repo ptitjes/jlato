@@ -1,9 +1,9 @@
 package org.jlato.internal.bu.decl;
 
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDEmptyMemberDecl;
@@ -13,8 +13,8 @@ import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class SEmptyMemberDecl extends SNodeState<SEmptyMemberDecl> implements SMemberDecl {
 
-	public static STree<SEmptyMemberDecl> make() {
-		return new STree<SEmptyMemberDecl>(new SEmptyMemberDecl());
+	public static BUTree<SEmptyMemberDecl> make() {
+		return new BUTree<SEmptyMemberDecl>(new SEmptyMemberDecl());
 	}
 
 	public SEmptyMemberDecl() {

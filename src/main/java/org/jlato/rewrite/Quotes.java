@@ -19,7 +19,7 @@
 
 package org.jlato.rewrite;
 
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.patterns.TreePattern;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
@@ -70,7 +70,7 @@ public abstract class Quotes {
 	public static <T extends Tree> Pattern<T> quote(ParseContext<T> context, String string) {
 		QuotesParser parser = new QuotesParser();
 		try {
-			STree<?> tree = tree = parser.parse(context, string);
+			BUTree<?> tree = tree = parser.parse(context, string);
 			return new TreePattern<T>(tree);
 		} catch (ParseException e) {
 			throw new IllegalArgumentException("Can't parse quote: " + string, e);

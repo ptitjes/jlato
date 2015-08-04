@@ -15,17 +15,17 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SAssignExpr extends SNodeState<SAssignExpr> implements SExpr {
 
-	public static STree<SAssignExpr> make(STree<? extends SExpr> target, AssignOp op, STree<? extends SExpr> value) {
-		return new STree<SAssignExpr>(new SAssignExpr(target, op, value));
+	public static BUTree<SAssignExpr> make(BUTree<? extends SExpr> target, AssignOp op, BUTree<? extends SExpr> value) {
+		return new BUTree<SAssignExpr>(new SAssignExpr(target, op, value));
 	}
 
-	public final STree<? extends SExpr> target;
+	public final BUTree<? extends SExpr> target;
 
 	public final AssignOp op;
 
-	public final STree<? extends SExpr> value;
+	public final BUTree<? extends SExpr> value;
 
-	public SAssignExpr(STree<? extends SExpr> target, AssignOp op, STree<? extends SExpr> value) {
+	public SAssignExpr(BUTree<? extends SExpr> target, AssignOp op, BUTree<? extends SExpr> value) {
 		this.target = target;
 		this.op = op;
 		this.value = value;
@@ -36,11 +36,11 @@ public class SAssignExpr extends SNodeState<SAssignExpr> implements SExpr {
 		return Kind.AssignExpr;
 	}
 
-	public STree<? extends SExpr> target() {
+	public BUTree<? extends SExpr> target() {
 		return target;
 	}
 
-	public SAssignExpr withTarget(STree<? extends SExpr> target) {
+	public SAssignExpr withTarget(BUTree<? extends SExpr> target) {
 		return new SAssignExpr(target, op, value);
 	}
 
@@ -52,11 +52,11 @@ public class SAssignExpr extends SNodeState<SAssignExpr> implements SExpr {
 		return new SAssignExpr(target, op, value);
 	}
 
-	public STree<? extends SExpr> value() {
+	public BUTree<? extends SExpr> value() {
 		return value;
 	}
 
-	public SAssignExpr withValue(STree<? extends SExpr> value) {
+	public SAssignExpr withValue(BUTree<? extends SExpr> value) {
 		return new SAssignExpr(target, op, value);
 	}
 
@@ -113,12 +113,12 @@ public class SAssignExpr extends SNodeState<SAssignExpr> implements SExpr {
 	public static STypeSafeTraversal<SAssignExpr, SExpr, Expr> TARGET = new STypeSafeTraversal<SAssignExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SAssignExpr state) {
+		public BUTree<?> doTraverse(SAssignExpr state) {
 			return state.target;
 		}
 
 		@Override
-		public SAssignExpr doRebuildParentState(SAssignExpr state, STree<SExpr> child) {
+		public SAssignExpr doRebuildParentState(SAssignExpr state, BUTree<SExpr> child) {
 			return state.withTarget(child);
 		}
 
@@ -136,12 +136,12 @@ public class SAssignExpr extends SNodeState<SAssignExpr> implements SExpr {
 	public static STypeSafeTraversal<SAssignExpr, SExpr, Expr> VALUE = new STypeSafeTraversal<SAssignExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SAssignExpr state) {
+		public BUTree<?> doTraverse(SAssignExpr state) {
 			return state.value;
 		}
 
 		@Override
-		public SAssignExpr doRebuildParentState(SAssignExpr state, STree<SExpr> child) {
+		public SAssignExpr doRebuildParentState(SAssignExpr state, BUTree<SExpr> child) {
 			return state.withValue(child);
 		}
 
@@ -172,7 +172,7 @@ public class SAssignExpr extends SNodeState<SAssignExpr> implements SExpr {
 	public static final LexicalShape shape = composite(
 			child(TARGET),
 			token(new LSToken.Provider() {
-				public LToken tokenFor(STree tree) {
+				public LToken tokenFor(BUTree tree) {
 					final AssignOp op = ((SAssignExpr) tree.state).op;
 					switch (op) {
 						case Normal:

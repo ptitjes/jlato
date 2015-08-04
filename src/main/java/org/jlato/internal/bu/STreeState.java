@@ -34,7 +34,7 @@ public interface STreeState {
 
 	STraversal lastChild();
 
-	void validate(STree<?> tree);
+	void validate(BUTree<?> tree);
 
 	Tree instantiate(TDLocation<?> location);
 

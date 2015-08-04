@@ -33,13 +33,13 @@ import java.util.Comparator;
 public class STreeSetState implements STreeState {
 
 	public final String rootPath;
-	public final TreeMap<String, STree<?>> trees;
+	public final TreeMap<String, BUTree<?>> trees;
 
 	public STreeSetState(String rootPath) {
-		this(rootPath, new TreeMap<String, STree<?>>(STRING_COMPARATOR, null));
+		this(rootPath, new TreeMap<String, BUTree<?>>(STRING_COMPARATOR, null));
 	}
 
-	public STreeSetState(String rootPath, TreeMap<String, STree<?>> trees) {
+	public STreeSetState(String rootPath, TreeMap<String, BUTree<?>> trees) {
 		this.rootPath = rootPath;
 		this.trees = trees;
 	}
@@ -76,15 +76,15 @@ public class STreeSetState implements STreeState {
 		return null;
 	}
 
-	public STree tree(String path) {
+	public BUTree tree(String path) {
 		return trees.get(path);
 	}
 
-	public STreeSetState withTree(String path, STree<?> value) {
+	public STreeSetState withTree(String path, BUTree<?> value) {
 		return new STreeSetState(rootPath, trees.put(path, value));
 	}
 
-	public STreeState withTrees(TreeMap<String, STree<?>> trees) {
+	public STreeState withTrees(TreeMap<String, BUTree<?>> trees) {
 		return new STreeSetState(rootPath, trees);
 	}
 
@@ -108,7 +108,7 @@ public class STreeSetState implements STreeState {
 	}
 
 	@Override
-	public void validate(STree<?> tree) {
+	public void validate(BUTree<?> tree) {
 		// TODO
 	}
 
@@ -128,12 +128,12 @@ public class STreeSetState implements STreeState {
 		}
 
 		@Override
-		public STree<?> doTraverse(STreeSetState state) {
+		public BUTree<?> doTraverse(STreeSetState state) {
 			return state.tree(path);
 		}
 
 		@Override
-		public STreeSetState doRebuildParentState(STreeSetState state, STree<STreeState> child) {
+		public STreeSetState doRebuildParentState(STreeSetState state, BUTree<STreeState> child) {
 			return state.withTree(path, child);
 		}
 

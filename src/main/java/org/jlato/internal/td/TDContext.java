@@ -19,8 +19,8 @@
 
 package org.jlato.internal.td;
 
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeState;
 
 /**
@@ -36,20 +36,20 @@ public final class TDContext<P extends STreeState> {
 		this.traversal = traversal;
 	}
 
-	public TDContext<P> rebuilt(STree<?> child) {
+	public TDContext<P> rebuilt(BUTree<?> child) {
 		return new TDContext<P>(rebuiltParent(child), traversal);
 	}
 
-	private TDLocation<P> rebuiltParent(STree<?> child) {
+	private TDLocation<P> rebuiltParent(BUTree<?> child) {
 		return parent.withTree(parent.tree.traverseReplace(traversal, child));
 	}
 
-	public STree<?> peruse() {
+	public BUTree<?> peruse() {
 		return traversal.traverse(parent.tree.state);
 	}
 
 	public TDLocation<?> newLocation() {
-		STree<?> tree = peruse();
+		BUTree<?> tree = peruse();
 		return tree == null ? null : tree.locationIn(this);
 	}
 

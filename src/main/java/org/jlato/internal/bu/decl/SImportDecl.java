@@ -18,17 +18,17 @@ import static org.jlato.printer.SpacingConstraint.spacing;
 
 public class SImportDecl extends SNodeState<SImportDecl> implements STreeState {
 
-	public static STree<SImportDecl> make(STree<SQualifiedName> name, boolean isStatic, boolean isOnDemand) {
-		return new STree<SImportDecl>(new SImportDecl(name, isStatic, isOnDemand));
+	public static BUTree<SImportDecl> make(BUTree<SQualifiedName> name, boolean isStatic, boolean isOnDemand) {
+		return new BUTree<SImportDecl>(new SImportDecl(name, isStatic, isOnDemand));
 	}
 
-	public final STree<SQualifiedName> name;
+	public final BUTree<SQualifiedName> name;
 
 	public final boolean isStatic;
 
 	public final boolean isOnDemand;
 
-	public SImportDecl(STree<SQualifiedName> name, boolean isStatic, boolean isOnDemand) {
+	public SImportDecl(BUTree<SQualifiedName> name, boolean isStatic, boolean isOnDemand) {
 		this.name = name;
 		this.isStatic = isStatic;
 		this.isOnDemand = isOnDemand;
@@ -39,11 +39,11 @@ public class SImportDecl extends SNodeState<SImportDecl> implements STreeState {
 		return Kind.ImportDecl;
 	}
 
-	public STree<SQualifiedName> name() {
+	public BUTree<SQualifiedName> name() {
 		return name;
 	}
 
-	public SImportDecl withName(STree<SQualifiedName> name) {
+	public SImportDecl withName(BUTree<SQualifiedName> name) {
 		return new SImportDecl(name, isStatic, isOnDemand);
 	}
 
@@ -116,12 +116,12 @@ public class SImportDecl extends SNodeState<SImportDecl> implements STreeState {
 	public static STypeSafeTraversal<SImportDecl, SQualifiedName, QualifiedName> NAME = new STypeSafeTraversal<SImportDecl, SQualifiedName, QualifiedName>() {
 
 		@Override
-		public STree<?> doTraverse(SImportDecl state) {
+		public BUTree<?> doTraverse(SImportDecl state) {
 			return state.name;
 		}
 
 		@Override
-		public SImportDecl doRebuildParentState(SImportDecl state, STree<SQualifiedName> child) {
+		public SImportDecl doRebuildParentState(SImportDecl state, BUTree<SQualifiedName> child) {
 			return state.withName(child);
 		}
 

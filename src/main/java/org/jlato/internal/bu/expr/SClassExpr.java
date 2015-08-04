@@ -12,13 +12,13 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SClassExpr extends SNodeState<SClassExpr> implements SExpr {
 
-	public static STree<SClassExpr> make(STree<? extends SType> type) {
-		return new STree<SClassExpr>(new SClassExpr(type));
+	public static BUTree<SClassExpr> make(BUTree<? extends SType> type) {
+		return new BUTree<SClassExpr>(new SClassExpr(type));
 	}
 
-	public final STree<? extends SType> type;
+	public final BUTree<? extends SType> type;
 
-	public SClassExpr(STree<? extends SType> type) {
+	public SClassExpr(BUTree<? extends SType> type) {
 		this.type = type;
 	}
 
@@ -27,11 +27,11 @@ public class SClassExpr extends SNodeState<SClassExpr> implements SExpr {
 		return Kind.ClassExpr;
 	}
 
-	public STree<? extends SType> type() {
+	public BUTree<? extends SType> type() {
 		return type;
 	}
 
-	public SClassExpr withType(STree<? extends SType> type) {
+	public SClassExpr withType(BUTree<? extends SType> type) {
 		return new SClassExpr(type);
 	}
 
@@ -77,12 +77,12 @@ public class SClassExpr extends SNodeState<SClassExpr> implements SExpr {
 	public static STypeSafeTraversal<SClassExpr, SType, Type> TYPE = new STypeSafeTraversal<SClassExpr, SType, Type>() {
 
 		@Override
-		public STree<?> doTraverse(SClassExpr state) {
+		public BUTree<?> doTraverse(SClassExpr state) {
 			return state.type;
 		}
 
 		@Override
-		public SClassExpr doRebuildParentState(SClassExpr state, STree<SType> child) {
+		public SClassExpr doRebuildParentState(SClassExpr state, BUTree<SType> child) {
 			return state.withType(child);
 		}
 

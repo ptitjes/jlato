@@ -1122,13 +1122,13 @@ TOKEN :
  * Quote variables
  **********************************************************************************************************************/
 
-STree<SNodeListState> NodeListVar():{}
+BUTree<SNodeListState> NodeListVar():{}
 {
   <NODE_LIST_VARIABLE>
   { return makeVar(); }
 }
 
-STree<SName> NodeVar():{}
+BUTree<SName> NodeVar():{}
 {
   <NODE_VARIABLE>
   { return makeVar(); }
@@ -1138,12 +1138,12 @@ STree<SName> NodeVar():{}
  * THE JAVA LANGUAGE GRAMMAR STARTS HERE *
  *****************************************/
 
-STree<SCompilationUnit> CompilationUnit():
+BUTree<SCompilationUnit> CompilationUnit():
 {
-	STree<SPackageDecl> packageDecl = null;
-	STree<SNodeListState> imports;
-	STree<SNodeListState> types;
-	STree<SCompilationUnit> compilationUnit;
+	BUTree<SPackageDecl> packageDecl = null;
+	BUTree<SNodeListState> imports;
+	BUTree<SNodeListState> types;
+	BUTree<SCompilationUnit> compilationUnit;
 }
 {
   { run(); }
@@ -1168,10 +1168,10 @@ void Epilog(): {}
  * Declarations
  **********************************************************************************************************************/
 
-STree<SPackageDecl> PackageDecl():
+BUTree<SPackageDecl> PackageDecl():
 {
-	STree<SNodeListState> annotations = null;
-	STree<SQualifiedName> name;
+	BUTree<SNodeListState> annotations = null;
+	BUTree<SQualifiedName> name;
 }
 {
   { run(); }
@@ -1181,19 +1181,19 @@ STree<SPackageDecl> PackageDecl():
   { return dress(SPackageDecl.make(annotations, name)); }
 }
 
-STree<SNodeListState> ImportDecls():
+BUTree<SNodeListState> ImportDecls():
 {
-	STree<SNodeListState> imports = emptyList();
-	STree<SImportDecl> importDecl = null;
+	BUTree<SNodeListState> imports = emptyList();
+	BUTree<SImportDecl> importDecl = null;
 }
 {
   ( importDecl = ImportDecl() { imports = append(imports, importDecl); } )*
   { return imports; }
 }
 
-STree<SImportDecl> ImportDecl():
+BUTree<SImportDecl> ImportDecl():
 {
-	STree<SQualifiedName> name;
+	BUTree<SQualifiedName> name;
 	boolean isStatic = false;
 	boolean isAsterisk = false;
 }
@@ -1203,10 +1203,10 @@ STree<SImportDecl> ImportDecl():
   { return dress(SImportDecl.make(name, isStatic, isAsterisk)); }
 }
 
-STree<SNodeListState> TypeDecls():
+BUTree<SNodeListState> TypeDecls():
 {
-	STree<SNodeListState> types = emptyList();
-	STree<? extends STypeDecl> typeDecl = null;
+	BUTree<SNodeListState> types = emptyList();
+	BUTree<? extends STypeDecl> typeDecl = null;
 }
 {
   ( typeDecl = TypeDecl() { types = append(types, typeDecl); } )*
@@ -1219,10 +1219,10 @@ STree<SNodeListState> TypeDecls():
  * better error messages.
  */
 
-STree<SNodeListState> Modifiers():
+BUTree<SNodeListState> Modifiers():
 {
-	STree<SNodeListState> modifiers = emptyList();
-	STree<? extends SAnnotationExpr> ann;
+	BUTree<SNodeListState> modifiers = emptyList();
+	BUTree<? extends SAnnotationExpr> ann;
 }
 {
   (
@@ -1262,10 +1262,10 @@ STree<SNodeListState> Modifiers():
 /*
  * Decl syntax follows.
  */
-STree<? extends STypeDecl> TypeDecl():
+BUTree<? extends STypeDecl> TypeDecl():
 {
-	STree<SNodeListState> modifiers;
-	STree<? extends STypeDecl> ret;
+	BUTree<SNodeListState> modifiers;
+	BUTree<? extends STypeDecl> ret;
 }
 {
   { run(); }
@@ -1287,15 +1287,15 @@ STree<? extends STypeDecl> TypeDecl():
 }
 
 
-STree<? extends STypeDecl> ClassOrInterfaceDecl(STree<SNodeListState> modifiers):
+BUTree<? extends STypeDecl> ClassOrInterfaceDecl(BUTree<SNodeListState> modifiers):
 {
 	TypeKind typeKind;
-	STree<SName> name;
-	STree<SNodeListState> typeParams = null;
-	STree<SQualifiedType> superClassType = null;
-	STree<SNodeListState> extendsClause = null;
-	STree<SNodeListState> implementsClause = null;
-	STree<SNodeListState> members;
+	BUTree<SName> name;
+	BUTree<SNodeListState> typeParams = null;
+	BUTree<SQualifiedType> superClassType = null;
+	BUTree<SNodeListState> extendsClause = null;
+	BUTree<SNodeListState> implementsClause = null;
+	BUTree<SNodeListState> members;
 }
 {
   // Run is started before modifiers
@@ -1324,11 +1324,11 @@ STree<? extends STypeDecl> ClassOrInterfaceDecl(STree<SNodeListState> modifiers)
   }
 }
 
-STree<SNodeListState> ExtendsList():
+BUTree<SNodeListState> ExtendsList():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<SQualifiedType> cit;
-	STree<SNodeListState> annotations = null;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SQualifiedType> cit;
+	BUTree<SNodeListState> annotations = null;
 }
 {
   "extends"
@@ -1341,11 +1341,11 @@ STree<SNodeListState> ExtendsList():
   { return ret; }
 }
 
-STree<SNodeListState> ImplementsList(TypeKind typeKind):
+BUTree<SNodeListState> ImplementsList(TypeKind typeKind):
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<SQualifiedType> cit;
-	STree<SNodeListState> annotations = null;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SQualifiedType> cit;
+	BUTree<SNodeListState> annotations = null;
 }
 {
   "implements"
@@ -1362,14 +1362,14 @@ STree<SNodeListState> ImplementsList(TypeKind typeKind):
   { return ret; }
 }
 
-STree<? extends STypeDecl> EnumDecl(STree<SNodeListState> modifiers):
+BUTree<? extends STypeDecl> EnumDecl(BUTree<SNodeListState> modifiers):
 {
-	STree<SName> name;
-	STree<SNodeListState> implementsClause = emptyList();
-	STree<SEnumConstantDecl> entry;
-	STree<SNodeListState> constants = emptyList();
+	BUTree<SName> name;
+	BUTree<SNodeListState> implementsClause = emptyList();
+	BUTree<SEnumConstantDecl> entry;
+	BUTree<SNodeListState> constants = emptyList();
 	boolean trailingComma = false;
-	STree<SNodeListState> members = null;
+	BUTree<SNodeListState> members = null;
 }
 {
   // Run is started before modifiers
@@ -1389,12 +1389,12 @@ STree<? extends STypeDecl> EnumDecl(STree<SNodeListState> modifiers):
   { return dress(SEnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))); }
 }
 
-STree<SEnumConstantDecl> EnumConstantDecl():
+BUTree<SEnumConstantDecl> EnumConstantDecl():
 {
-	STree<SNodeListState> modifiers = null;
-	STree<SName> name;
-	STree<SNodeListState> args = null;
-	STree<SNodeListState> classBody = null;
+	BUTree<SNodeListState> modifiers = null;
+	BUTree<SName> name;
+	BUTree<SNodeListState> args = null;
+	BUTree<SNodeListState> classBody = null;
 }
 {
   { run(); }
@@ -1405,10 +1405,10 @@ STree<SEnumConstantDecl> EnumConstantDecl():
   { return dress(SEnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody))); }
 }
 
-STree<SAnnotationDecl> AnnotationTypeDecl(STree<SNodeListState> modifiers):
+BUTree<SAnnotationDecl> AnnotationTypeDecl(BUTree<SNodeListState> modifiers):
 {
-	STree<SName> name;
-	STree<SNodeListState> members;
+	BUTree<SName> name;
+	BUTree<SNodeListState> members;
 }
 {
   // Run is started before modifiers
@@ -1420,10 +1420,10 @@ STree<SAnnotationDecl> AnnotationTypeDecl(STree<SNodeListState> modifiers):
 }
 
 // TODO Merge with ClassOrInterfaceBody production and do later checks programmaticaly
-STree<SNodeListState> AnnotationTypeBody():
+BUTree<SNodeListState> AnnotationTypeBody():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<? extends SMemberDecl> member;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<? extends SMemberDecl> member;
 }
 {
   "{"
@@ -1437,10 +1437,10 @@ STree<SNodeListState> AnnotationTypeBody():
 }
 
 // TODO Merge with ClassOrInterfaceDecl production and do later checks programmaticaly
-STree<? extends SMemberDecl> AnnotationTypeBodyDecl():
+BUTree<? extends SMemberDecl> AnnotationTypeBodyDecl():
 {
-	STree<SNodeListState> modifiers;
-	STree<? extends SMemberDecl> ret;
+	BUTree<SNodeListState> modifiers;
+	BUTree<? extends SMemberDecl> ret;
 }
 {
   { run(); }
@@ -1467,13 +1467,13 @@ STree<? extends SMemberDecl> AnnotationTypeBodyDecl():
 }
 
 // TODO Merge with MethodDecl production and do later checks programmaticaly
-STree<SAnnotationMemberDecl> AnnotationTypeMemberDecl(STree<SNodeListState> modifiers):
+BUTree<SAnnotationMemberDecl> AnnotationTypeMemberDecl(BUTree<SNodeListState> modifiers):
 {
-	STree<? extends SType> type;
-	STree<SName> name;
-	STree<SNodeListState> dims;
-	STree<SNodeOptionState> defaultVal = none();
-	STree<? extends SExpr> val = null;
+	BUTree<? extends SType> type;
+	BUTree<SName> name;
+	BUTree<SNodeListState> dims;
+	BUTree<SNodeOptionState> defaultVal = none();
+	BUTree<? extends SExpr> val = null;
 }
 {
   // Run is started before modifiers
@@ -1488,10 +1488,10 @@ STree<SAnnotationMemberDecl> AnnotationTypeMemberDecl(STree<SNodeListState> modi
   { return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal)); }
 }
 
-STree<SNodeListState> TypeParameters():
+BUTree<SNodeListState> TypeParameters():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<STypeParameter> tp;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<STypeParameter> tp;
 }
 {
   "<"
@@ -1506,11 +1506,11 @@ STree<SNodeListState> TypeParameters():
   { return ret; }
 }
 
-STree<STypeParameter> TypeParameter():
+BUTree<STypeParameter> TypeParameter():
 {
-	STree<SNodeListState> annotations = null;
-	STree<SName> name;
-	STree<SNodeListState> typeBounds = null;
+	BUTree<SNodeListState> annotations = null;
+	BUTree<SName> name;
+	BUTree<SNodeListState> typeBounds = null;
 }
 {
   { run(); }
@@ -1518,11 +1518,11 @@ STree<STypeParameter> TypeParameter():
   { return dress(STypeParameter.make(annotations, name, ensureNotNull(typeBounds))); }
 }
 
-STree<SNodeListState> TypeBounds():
+BUTree<SNodeListState> TypeBounds():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<SQualifiedType> cit;
-	STree<SNodeListState> annotations = null;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SQualifiedType> cit;
+	BUTree<SNodeListState> annotations = null;
 }
 {
   "extends"
@@ -1535,10 +1535,10 @@ STree<SNodeListState> TypeBounds():
   { return ret; }
 }
 
-STree<SNodeListState> ClassOrInterfaceBody(TypeKind typeKind):
+BUTree<SNodeListState> ClassOrInterfaceBody(TypeKind typeKind):
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<? extends SMemberDecl> member;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<? extends SMemberDecl> member;
 }
 {
   "{"
@@ -1547,10 +1547,10 @@ STree<SNodeListState> ClassOrInterfaceBody(TypeKind typeKind):
   { return ret; }
 }
 
-STree<SNodeListState> ClassOrInterfaceBodyDecls(TypeKind typeKind):
+BUTree<SNodeListState> ClassOrInterfaceBodyDecls(TypeKind typeKind):
 {
-	STree<? extends SMemberDecl> member;
-	STree<SNodeListState> ret = emptyList();
+	BUTree<? extends SMemberDecl> member;
+	BUTree<SNodeListState> ret = emptyList();
 }
 {
   [
@@ -1561,10 +1561,10 @@ STree<SNodeListState> ClassOrInterfaceBodyDecls(TypeKind typeKind):
   { return ret; }
 }
 
-STree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind typeKind):
+BUTree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind typeKind):
 {
-	STree<SNodeListState> modifiers;
-	STree<? extends SMemberDecl> ret;
+	BUTree<SNodeListState> modifiers;
+	BUTree<? extends SMemberDecl> ret;
 }
 {
   { run(); }
@@ -1608,11 +1608,11 @@ STree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind typeKind):
   { return ret; }
 }
 
-STree<SFieldDecl> FieldDecl(STree<SNodeListState> modifiers):
+BUTree<SFieldDecl> FieldDecl(BUTree<SNodeListState> modifiers):
 {
-	STree<? extends SType> type;
-	STree<SNodeListState> variables = emptyList();
-	STree<SVariableDeclarator> val;
+	BUTree<? extends SType> type;
+	BUTree<SNodeListState> variables = emptyList();
+	BUTree<SVariableDeclarator> val;
 }
 {
   // Run is started before modifiers
@@ -1622,10 +1622,10 @@ STree<SFieldDecl> FieldDecl(STree<SNodeListState> modifiers):
   { return dress(SFieldDecl.make(modifiers, type, variables)); }
 }
 
-STree<SLocalVariableDecl> VariableDecl(STree<SNodeListState> modifiers):
+BUTree<SLocalVariableDecl> VariableDecl(BUTree<SNodeListState> modifiers):
 {
-	STree<? extends SType> type;
-	STree<SNodeListState> variables = emptyList();
+	BUTree<? extends SType> type;
+	BUTree<SNodeListState> variables = emptyList();
 }
 {
   // Run is started before modifiers
@@ -1635,10 +1635,10 @@ STree<SLocalVariableDecl> VariableDecl(STree<SNodeListState> modifiers):
   { return dress(SLocalVariableDecl.make(modifiers, type, variables)); }
 }
 
-STree<SNodeListState> VariableDeclarators():
+BUTree<SNodeListState> VariableDeclarators():
 {
-	STree<SNodeListState> variables = emptyList();
-	STree<SVariableDeclarator> val;
+	BUTree<SNodeListState> variables = emptyList();
+	BUTree<SVariableDeclarator> val;
 }
 {
         val = VariableDeclarator() { variables = append(variables, val); }
@@ -1647,11 +1647,11 @@ STree<SNodeListState> VariableDeclarators():
   { return variables; }
 }
 
-STree<SVariableDeclarator> VariableDeclarator():
+BUTree<SVariableDeclarator> VariableDeclarator():
 {
-	STree<SVariableDeclaratorId> id;
-	STree<SNodeOptionState> init = none();
-	STree<? extends SExpr> initExpr = null;
+	BUTree<SVariableDeclaratorId> id;
+	BUTree<SNodeOptionState> init = none();
+	BUTree<? extends SExpr> initExpr = null;
 }
 {
   { run(); }
@@ -1665,10 +1665,10 @@ STree<SVariableDeclarator> VariableDeclarator():
   { return dress(SVariableDeclarator.make(id, init)); }
 }
 
-STree<SVariableDeclaratorId> VariableDeclaratorId():
+BUTree<SVariableDeclaratorId> VariableDeclaratorId():
 {
-	STree<SName> name;
-	STree<SNodeListState> arrayDims;
+	BUTree<SName> name;
+	BUTree<SNodeListState> arrayDims;
 }
 {
   { run(); }
@@ -1678,10 +1678,10 @@ STree<SVariableDeclaratorId> VariableDeclaratorId():
   { return dress(SVariableDeclaratorId.make(name, arrayDims)); }
 }
 
-STree<SNodeListState> ArrayDims():
+BUTree<SNodeListState> ArrayDims():
 {
-	STree<SNodeListState> arrayDims = emptyList();
-	STree<SNodeListState> annotations;
+	BUTree<SNodeListState> arrayDims = emptyList();
+	BUTree<SNodeListState> annotations;
 }
 {
   (
@@ -1693,19 +1693,19 @@ STree<SNodeListState> ArrayDims():
   { return arrayDims; }
 }
 
-STree<? extends SExpr> VariableInitializer():
+BUTree<? extends SExpr> VariableInitializer():
 {
-	STree<? extends SExpr> ret;
+	BUTree<? extends SExpr> ret;
 }
 {
   ( ret = ArrayInitializer() | ret = Expression() )
   { return ret; }
 }
 
-STree<SArrayInitializerExpr> ArrayInitializer():
+BUTree<SArrayInitializerExpr> ArrayInitializer():
 {
-	STree<SNodeListState> values = emptyList();
-	STree<? extends SExpr> val;
+	BUTree<SNodeListState> values = emptyList();
+	BUTree<? extends SExpr> val;
 	boolean trailingComma = false;
 }
 {
@@ -1721,15 +1721,15 @@ STree<SArrayInitializerExpr> ArrayInitializer():
   { return dress(SArrayInitializerExpr.make(values, trailingComma)); }
 }
 
-STree<SMethodDecl> MethodDecl(STree<SNodeListState> modifiers):
+BUTree<SMethodDecl> MethodDecl(BUTree<SNodeListState> modifiers):
 {
-	STree<SNodeListState> typeParameters = null;
-	STree<? extends SType> type;
-	STree<SName> name;
-	STree<SNodeListState> parameters;
-	STree<SNodeListState> arrayDims;
-	STree<SNodeListState> throwsClause = null;
-	STree<SBlockStmt> block = null;
+	BUTree<SNodeListState> typeParameters = null;
+	BUTree<? extends SType> type;
+	BUTree<SName> name;
+	BUTree<SNodeListState> parameters;
+	BUTree<SNodeListState> arrayDims;
+	BUTree<SNodeListState> throwsClause = null;
+	BUTree<SBlockStmt> block = null;
 }
 {
   // Run is started before modifiers
@@ -1751,10 +1751,10 @@ STree<SMethodDecl> MethodDecl(STree<SNodeListState> modifiers):
   { return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))); }
 }
 
-STree<SNodeListState> FormalParameters():
+BUTree<SNodeListState> FormalParameters():
 {
-	STree<SNodeListState> ret = null;
-	STree<SFormalParameter> par;
+	BUTree<SNodeListState> ret = null;
+	BUTree<SFormalParameter> par;
 }
 {
   "("
@@ -1765,10 +1765,10 @@ STree<SNodeListState> FormalParameters():
   { return ensureNotNull(ret); }
 }
 
-STree<SNodeListState> FormalParameterList():
+BUTree<SNodeListState> FormalParameterList():
 {
-	STree<SNodeListState> ret = null;
-	STree<SFormalParameter> par;
+	BUTree<SNodeListState> ret = null;
+	BUTree<SFormalParameter> par;
 }
 {
   (
@@ -1780,12 +1780,12 @@ STree<SNodeListState> FormalParameterList():
   { return ret; }
 }
 
-STree<SFormalParameter> FormalParameter():
+BUTree<SFormalParameter> FormalParameter():
 {
-	STree<SNodeListState> modifiers;
-	STree<? extends SType> type;
+	BUTree<SNodeListState> modifiers;
+	BUTree<? extends SType> type;
 	boolean isVarArg = false;
-	STree<SVariableDeclaratorId> id;
+	BUTree<SVariableDeclaratorId> id;
 }
 {
   { run(); }
@@ -1796,10 +1796,10 @@ STree<SFormalParameter> FormalParameter():
 }
 
 
-STree<SNodeListState> ThrowsClause():
+BUTree<SNodeListState> ThrowsClause():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<SQualifiedType> cit;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SQualifiedType> cit;
 }
 {
   "throws" cit = AnnotatedQualifiedType() { ret = append(ret, cit); }
@@ -1808,16 +1808,16 @@ STree<SNodeListState> ThrowsClause():
   { return ret; }
 }
 
-STree<SConstructorDecl> ConstructorDecl(STree<SNodeListState> modifiers):
+BUTree<SConstructorDecl> ConstructorDecl(BUTree<SNodeListState> modifiers):
 {
-	STree<SNodeListState> typeParameters = null;
-	STree<SName> name;
-	STree<SNodeListState> parameters;
-	STree<SNodeListState> throwsClause = null;
-	STree<SExplicitConstructorInvocationStmt> exConsInv = null;
-	STree<SBlockStmt> block;
-	STree<SNodeListState> stmts = emptyList();
-	STree<? extends SStmt> stmt;
+	BUTree<SNodeListState> typeParameters = null;
+	BUTree<SName> name;
+	BUTree<SNodeListState> parameters;
+	BUTree<SNodeListState> throwsClause = null;
+	BUTree<SExplicitConstructorInvocationStmt> exConsInv = null;
+	BUTree<SBlockStmt> block;
+	BUTree<SNodeListState> stmts = emptyList();
+	BUTree<? extends SStmt> stmt;
 }
 {
   // Run is started before modifiers
@@ -1845,12 +1845,12 @@ STree<SConstructorDecl> ConstructorDecl(STree<SNodeListState> modifiers):
   { return dress(SConstructorDecl.make(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block)); }
 }
 
-STree<SExplicitConstructorInvocationStmt> ExplicitConstructorInvocation():
+BUTree<SExplicitConstructorInvocationStmt> ExplicitConstructorInvocation():
 {
 	boolean isThis = false;
-	STree<SNodeListState> args;
-	STree<? extends SExpr> expr = null;
-	STree<SNodeListState> typeArgs = null;
+	BUTree<SNodeListState> args;
+	BUTree<? extends SExpr> expr = null;
+	BUTree<SNodeListState> typeArgs = null;
 }
 {
   { run(); }
@@ -1873,10 +1873,10 @@ STree<SExplicitConstructorInvocationStmt> ExplicitConstructorInvocation():
   { return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args)); }
 }
 
-STree<SNodeListState> Statements():
+BUTree<SNodeListState> Statements():
 {
-	STree<SNodeListState> ret = null;
-	STree<? extends SStmt> stmt;
+	BUTree<SNodeListState> ret = null;
+	BUTree<? extends SStmt> stmt;
 }
 {
   [
@@ -1890,9 +1890,9 @@ STree<SNodeListState> Statements():
   { return ret; }
 }
 
-STree<SInitializerDecl> InitializerDecl(STree<SNodeListState> modifiers):
+BUTree<SInitializerDecl> InitializerDecl(BUTree<SNodeListState> modifiers):
 {
-	STree<SBlockStmt> block;
+	BUTree<SBlockStmt> block;
 }
 {
   // Run is started before modifiers
@@ -1907,9 +1907,9 @@ STree<SInitializerDecl> InitializerDecl(STree<SNodeListState> modifiers):
  * Types
  **********************************************************************************************************************/
 
-STree<? extends SType> Type(STree<SNodeListState> annotations):
+BUTree<? extends SType> Type(BUTree<SNodeListState> annotations):
 {
-	STree<? extends SType> ret;
+	BUTree<? extends SType> ret;
 }
 {
   // Run may be started before annotations
@@ -1922,11 +1922,11 @@ STree<? extends SType> Type(STree<SNodeListState> annotations):
   { return ret; }
 }
 
-STree<? extends SReferenceType> ReferenceType(STree<SNodeListState> annotations):
+BUTree<? extends SReferenceType> ReferenceType(BUTree<SNodeListState> annotations):
 {
-	STree<? extends SType> primitiveType;
-	STree<? extends SReferenceType> type;
-	STree<SNodeListState> arrayDims;
+	BUTree<? extends SType> primitiveType;
+	BUTree<? extends SReferenceType> type;
+	BUTree<SNodeListState> arrayDims;
 }
 {
   // Run may be started before annotations
@@ -1950,12 +1950,12 @@ STree<? extends SReferenceType> ReferenceType(STree<SNodeListState> annotations)
   { return type; }
 }
 
-STree<SQualifiedType> QualifiedType(STree<SNodeListState> annotations):
+BUTree<SQualifiedType> QualifiedType(BUTree<SNodeListState> annotations):
 {
-    STree<SNodeOptionState> scope = none();
-	STree<SQualifiedType> ret;
-	STree<SName> name;
-	STree<SNodeListState> typeArgs = null;
+    BUTree<SNodeOptionState> scope = none();
+	BUTree<SQualifiedType> ret;
+	BUTree<SName> name;
+	BUTree<SNodeListState> typeArgs = null;
 }
 {
   // Run may be started before annotations
@@ -1982,10 +1982,10 @@ STree<SQualifiedType> QualifiedType(STree<SNodeListState> annotations):
   { return ret; }
 }
 
-STree<SNodeListState> TypeArguments():
+BUTree<SNodeListState> TypeArguments():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<? extends SType> type;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<? extends SType> type;
 }
 {
   "<"
@@ -1995,10 +1995,10 @@ STree<SNodeListState> TypeArguments():
 }
 
 
-STree<SNodeListState> TypeArgumentsOrDiamond():
+BUTree<SNodeListState> TypeArgumentsOrDiamond():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<? extends SType> type;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<? extends SType> type;
 }
 {
   "<"
@@ -2007,10 +2007,10 @@ STree<SNodeListState> TypeArgumentsOrDiamond():
   { return ret; }
 }
 
-STree<SNodeListState> TypeArgumentList():
+BUTree<SNodeListState> TypeArgumentList():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<? extends SType> type;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<? extends SType> type;
 }
 {
   type = TypeArgument() { ret = append(ret, type); }
@@ -2021,10 +2021,10 @@ STree<SNodeListState> TypeArgumentList():
   <NODE_LIST_VARIABLE> { return makeVar(); }
 }
 
-STree<? extends SType> TypeArgument():
+BUTree<? extends SType> TypeArgument():
 {
-	STree<? extends SType> ret;
-	STree<SNodeListState> annotations = null;
+	BUTree<? extends SType> ret;
+	BUTree<SNodeListState> annotations = null;
 }
 {
   { run(); }
@@ -2037,11 +2037,11 @@ STree<? extends SType> TypeArgument():
   { return ret; }
 }
 
-STree<SWildcardType> Wildcard(STree<SNodeListState> annotations):
+BUTree<SWildcardType> Wildcard(BUTree<SNodeListState> annotations):
 {
-	STree<? extends SReferenceType> ext = null;
-	STree<? extends SReferenceType> sup = null;
-	STree<SNodeListState> boundAnnotations = null;
+	BUTree<? extends SReferenceType> ext = null;
+	BUTree<? extends SReferenceType> sup = null;
+	BUTree<SNodeListState> boundAnnotations = null;
 }
 {
   // Run may be started before annotations
@@ -2058,7 +2058,7 @@ STree<SWildcardType> Wildcard(STree<SNodeListState> annotations):
   { return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup))); }
 }
 
-STree<SPrimitiveType> PrimitiveType(STree<SNodeListState> annotations):
+BUTree<SPrimitiveType> PrimitiveType(BUTree<SNodeListState> annotations):
 {
 	Primitive primitive;
 }
@@ -2082,9 +2082,9 @@ STree<SPrimitiveType> PrimitiveType(STree<SNodeListState> annotations):
   { return dress(SPrimitiveType.make(annotations, primitive)); }
 }
 
-STree<? extends SType> ResultType():
+BUTree<? extends SType> ResultType():
 {
-	STree<? extends SType> ret;
+	BUTree<? extends SType> ret;
 }
 {
   (
@@ -2095,10 +2095,10 @@ STree<? extends SType> ResultType():
   { return ret; }
 }
 
-STree<SNodeListState> QualifiedTypeList():
+BUTree<SNodeListState> QualifiedTypeList():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<SQualifiedType> type;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SQualifiedType> type;
 }
 {
   { run(); }
@@ -2109,10 +2109,10 @@ STree<SNodeListState> QualifiedTypeList():
   { return dress(ret); }
 }
 
-STree<SQualifiedType> AnnotatedQualifiedType():
+BUTree<SQualifiedType> AnnotatedQualifiedType():
 {
-    STree<SNodeListState> annotations;
-	STree<SQualifiedType> ret;
+    BUTree<SNodeListState> annotations;
+	BUTree<SQualifiedType> ret;
 }
 {
   { run(); }
@@ -2124,11 +2124,11 @@ STree<SQualifiedType> AnnotatedQualifiedType():
  * Names
  **********************************************************************************************************************/
 
-STree<SQualifiedName> QualifiedName():
+BUTree<SQualifiedName> QualifiedName():
 {
-    STree<SNodeOptionState> qualifier = none();
-	STree<SQualifiedName> ret = null;
-	STree<SName> name;
+    BUTree<SNodeOptionState> qualifier = none();
+	BUTree<SQualifiedName> ret = null;
+	BUTree<SName> name;
 }
 {
   { run(); } name = Name() { ret = dress(SQualifiedName.make(qualifier, name)); }
@@ -2141,9 +2141,9 @@ STree<SQualifiedName> QualifiedName():
   { return ret; }
 }
 
-STree<SName> Name():
+BUTree<SName> Name():
 {
-    STree<SName> name;
+    BUTree<SName> name;
 }
 {
   (
@@ -2160,7 +2160,7 @@ STree<SName> Name():
  * Expressions
  **********************************************************************************************************************/
 
-STree<? extends SExpr> Expression():
+BUTree<? extends SExpr> Expression():
 // FIXME
 // This expansion has been written this way instead of :
 //   Assignment() | ConditionalExpression()
@@ -2170,21 +2170,21 @@ STree<? extends SExpr> Expression():
 // a primary Expr.  Consider adding a semantic predicate to work
 // around this.
 {
-	STree<? extends SExpr> ret;
+	BUTree<? extends SExpr> ret;
 	AssignOp op;
-	STree<? extends SExpr> value;
-	STree<SNodeListState> params;
+	BUTree<? extends SExpr> value;
+	BUTree<SNodeListState> params;
 }
 {
   (
     LOOKAHEAD( Name() "->" )
-    { run(); } ret = Name() "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<SName>) ret)), false)
+    { run(); } ret = Name() "->" ret = LambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), false)
   |
     LOOKAHEAD( "(" ")" "->" )
     { run(); } "(" ")" "->" ret = LambdaBody(emptyList(), true)
   |
     LOOKAHEAD( "(" Name() ")" "->" )
-    { run(); } "(" ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<SName>) ret)), true)
+    { run(); } "(" ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), true)
   |
     LOOKAHEAD( "(" Name() "," )
     { run(); } "(" params = InferredFormalParameterList() ")" "->" ret = LambdaBody(params, true)
@@ -2199,11 +2199,11 @@ STree<? extends SExpr> Expression():
   { return ret; }
 }
 
-STree<SLambdaExpr> LambdaBody(STree<SNodeListState> parameters, boolean parenthesis):
+BUTree<SLambdaExpr> LambdaBody(BUTree<SNodeListState> parameters, boolean parenthesis):
 {
-	STree<SBlockStmt> block;
-	STree<? extends SExpr> expr;
-	STree<SLambdaExpr> ret;
+	BUTree<SBlockStmt> block;
+	BUTree<? extends SExpr> expr;
+	BUTree<SLambdaExpr> ret;
 }
 {
   // Run was started before parameters
@@ -2215,10 +2215,10 @@ STree<SLambdaExpr> LambdaBody(STree<SNodeListState> parameters, boolean parenthe
   { return ret; }
 }
 
-STree<SNodeListState> LambdaParameters(ByRef<Boolean> parenthesis):
+BUTree<SNodeListState> LambdaParameters(ByRef<Boolean> parenthesis):
 {
-	STree<SNodeListState> ret;
-	STree<SFormalParameter> param;
+	BUTree<SNodeListState> ret;
+	BUTree<SFormalParameter> param;
 }
 {
   (
@@ -2241,10 +2241,10 @@ STree<SNodeListState> LambdaParameters(ByRef<Boolean> parenthesis):
   { return ret; }
 }
 
-STree<SNodeListState> InferredFormalParameterList():
+BUTree<SNodeListState> InferredFormalParameterList():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<SFormalParameter> param;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SFormalParameter> param;
 }
 {
   param = InferredFormalParameter() { ret = append(ret, param); }
@@ -2252,9 +2252,9 @@ STree<SNodeListState> InferredFormalParameterList():
   { return ret; }
 }
 
-STree<SFormalParameter> InferredFormalParameter():
+BUTree<SFormalParameter> InferredFormalParameter():
 {
-	STree<SName> name;
+	BUTree<SName> name;
 }
 {
   name = Name()
@@ -2262,7 +2262,7 @@ STree<SFormalParameter> InferredFormalParameter():
 }
 
 JAVACODE
-STree<SFormalParameter> makeFormalParameter(STree<SName> name) {
+BUTree<SFormalParameter> makeFormalParameter(BUTree<SName> name) {
   return SFormalParameter.make(emptyList(), SUnknownType.make(), false,
     SVariableDeclaratorId.make(name, emptyList())
   );
@@ -2288,11 +2288,11 @@ AssignOp AssignmentOperator():
   { return ret; }
 }
 
-STree<? extends SExpr> ConditionalExpression():
+BUTree<? extends SExpr> ConditionalExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SExpr> left;
-	STree<? extends SExpr> right;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SExpr> left;
+	BUTree<? extends SExpr> right;
 }
 {
   ret = ConditionalOrExpression()
@@ -2304,10 +2304,10 @@ STree<? extends SExpr> ConditionalExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> ConditionalOrExpression():
+BUTree<? extends SExpr> ConditionalOrExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SExpr> right;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SExpr> right;
 }
 {
   ret = ConditionalAndExpression()
@@ -2319,10 +2319,10 @@ STree<? extends SExpr> ConditionalOrExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> ConditionalAndExpression():
+BUTree<? extends SExpr> ConditionalAndExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SExpr> right;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SExpr> right;
 }
 {
   ret = InclusiveOrExpression()
@@ -2334,10 +2334,10 @@ STree<? extends SExpr> ConditionalAndExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> InclusiveOrExpression():
+BUTree<? extends SExpr> InclusiveOrExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SExpr> right;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SExpr> right;
 }
 {
   ret = ExclusiveOrExpression()
@@ -2349,10 +2349,10 @@ STree<? extends SExpr> InclusiveOrExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> ExclusiveOrExpression():
+BUTree<? extends SExpr> ExclusiveOrExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SExpr> right;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SExpr> right;
 }
 {
   ret = AndExpression()
@@ -2364,10 +2364,10 @@ STree<? extends SExpr> ExclusiveOrExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> AndExpression():
+BUTree<? extends SExpr> AndExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SExpr> right;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SExpr> right;
 }
 {
   ret = EqualityExpression()
@@ -2379,10 +2379,10 @@ STree<? extends SExpr> AndExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> EqualityExpression():
+BUTree<? extends SExpr> EqualityExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SExpr> right;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SExpr> right;
 	BinaryOp op;
 }
 {
@@ -2398,11 +2398,11 @@ STree<? extends SExpr> EqualityExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> InstanceOfExpression():
+BUTree<? extends SExpr> InstanceOfExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<SNodeListState> annotations;
-	STree<? extends SType> type;
+	BUTree<? extends SExpr> ret;
+	BUTree<SNodeListState> annotations;
+	BUTree<? extends SType> type;
 }
 {
   ret = RelationalExpression()
@@ -2415,10 +2415,10 @@ STree<? extends SExpr> InstanceOfExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> RelationalExpression():
+BUTree<? extends SExpr> RelationalExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SExpr> right;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SExpr> right;
 	BinaryOp op;
 }
 {
@@ -2436,10 +2436,10 @@ STree<? extends SExpr> RelationalExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> ShiftExpression():
+BUTree<? extends SExpr> ShiftExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SExpr> right;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SExpr> right;
 	BinaryOp op;
 }
 {
@@ -2456,10 +2456,10 @@ STree<? extends SExpr> ShiftExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> AdditiveExpression():
+BUTree<? extends SExpr> AdditiveExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SExpr> right;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SExpr> right;
 	BinaryOp op;
 }
 {
@@ -2475,10 +2475,10 @@ STree<? extends SExpr> AdditiveExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> MultiplicativeExpression():
+BUTree<? extends SExpr> MultiplicativeExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SExpr> right;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SExpr> right;
 	BinaryOp op;
 }
 {
@@ -2495,9 +2495,9 @@ STree<? extends SExpr> MultiplicativeExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> UnaryExpression():
+BUTree<? extends SExpr> UnaryExpression():
 {
-	STree<? extends SExpr> ret;
+	BUTree<? extends SExpr> ret;
 	UnaryOp op;
 }
 {
@@ -2515,10 +2515,10 @@ STree<? extends SExpr> UnaryExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> PrefixExpression():
+BUTree<? extends SExpr> PrefixExpression():
 {
 	UnaryOp op;
-	STree<? extends SExpr> ret;
+	BUTree<? extends SExpr> ret;
 }
 {
   { run(); }
@@ -2528,9 +2528,9 @@ STree<? extends SExpr> PrefixExpression():
   { return dress(SUnaryExpr.make(op, ret)); }
 }
 
-STree<? extends SExpr> UnaryExpressionNotPlusMinus():
+BUTree<? extends SExpr> UnaryExpressionNotPlusMinus():
 {
-	STree<? extends SExpr> ret;
+	BUTree<? extends SExpr> ret;
 	UnaryOp op;
 }
 {
@@ -2549,9 +2549,9 @@ STree<? extends SExpr> UnaryExpressionNotPlusMinus():
   { return ret; }
 }
 
-STree<? extends SExpr> PostfixExpression():
+BUTree<? extends SExpr> PostfixExpression():
 {
-	STree<? extends SExpr> ret;
+	BUTree<? extends SExpr> ret;
 	UnaryOp op;
 }
 {
@@ -2566,12 +2566,12 @@ STree<? extends SExpr> PostfixExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> CastExpression():
+BUTree<? extends SExpr> CastExpression():
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SType> type;
-	STree<SNodeListState> types = emptyList();
-	STree<SNodeListState> annotations = null;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SType> type;
+	BUTree<SNodeListState> types = emptyList();
+	BUTree<SNodeListState> annotations = null;
 }
 {
   (
@@ -2588,22 +2588,22 @@ STree<? extends SExpr> CastExpression():
   { return ret; }
 }
 
-STree<? extends SType> PrimitiveCastType():
+BUTree<? extends SType> PrimitiveCastType():
 {
-	STree<? extends SType> type;
-	STree<SNodeListState> types = emptyList();
-	STree<SNodeListState> annotations = null;
+	BUTree<? extends SType> type;
+	BUTree<SNodeListState> types = emptyList();
+	BUTree<SNodeListState> annotations = null;
 }
 {
   { run(); } annotations = Annotations() type = PrimitiveType(annotations)
   { return type; }
 }
 
-STree<? extends SType> ReferenceCastType():
+BUTree<? extends SType> ReferenceCastType():
 {
-	STree<? extends SType> type;
-	STree<SNodeListState> types = emptyList();
-	STree<SNodeListState> annotations = null;
+	BUTree<? extends SType> type;
+	BUTree<SNodeListState> types = emptyList();
+	BUTree<SNodeListState> annotations = null;
 }
 {
   { run(); } annotations = Annotations() type = ReferenceType(annotations)
@@ -2621,9 +2621,9 @@ STree<? extends SType> ReferenceCastType():
   { return type; }
 }
 
-STree<? extends SExpr> Literal():
+BUTree<? extends SExpr> Literal():
 {
-	STree<? extends SExpr> ret;
+	BUTree<? extends SExpr> ret;
 }
 {
   { run(); }
@@ -2649,9 +2649,9 @@ STree<? extends SExpr> Literal():
   { return dress(ret); }
 }
 
-STree<? extends SExpr> PrimaryExpression():
+BUTree<? extends SExpr> PrimaryExpression():
 {
-	STree<? extends SExpr> ret;
+	BUTree<? extends SExpr> ret;
 }
 {
   ret = PrimaryPrefix()
@@ -2662,9 +2662,9 @@ STree<? extends SExpr> PrimaryExpression():
   { return ret; }
 }
 
-STree<? extends SExpr> PrimaryExpressionWithoutSuperSuffix():
+BUTree<? extends SExpr> PrimaryExpressionWithoutSuperSuffix():
 {
-	STree<? extends SExpr> ret;
+	BUTree<? extends SExpr> ret;
 }
 {
   ret = PrimaryPrefix()
@@ -2675,12 +2675,12 @@ STree<? extends SExpr> PrimaryExpressionWithoutSuperSuffix():
   { return ret; }
 }
 
-STree<? extends SExpr> PrimaryPrefix():
+BUTree<? extends SExpr> PrimaryPrefix():
 {
-	STree<? extends SExpr> ret = null;
-	STree<SNodeListState> typeArgs = null;
-	STree<SNodeListState> params;
-	STree<? extends SType> type;
+	BUTree<? extends SExpr> ret = null;
+	BUTree<SNodeListState> typeArgs = null;
+	BUTree<SNodeListState> params;
+	BUTree<? extends SType> type;
 }
 {
   (
@@ -2720,7 +2720,7 @@ STree<? extends SExpr> PrimaryPrefix():
     ret = Name()
     [
       { lateRun(); }
-      "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<SName>) ret)), false)
+      "->" ret = LambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), false)
     ]
   |
     { run(); }
@@ -2729,7 +2729,7 @@ STree<? extends SExpr> PrimaryPrefix():
       ")" "->" ret = LambdaBody(emptyList(), true)
     |
       LOOKAHEAD( Name() ")" "->" )
-      ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((STree<SName>) ret)), true)
+      ret = Name() ")" "->" ret = LambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), true)
     |
       LOOKAHEAD( Name() "," )
       params = InferredFormalParameterList() ")" "->" ret = LambdaBody(params, true)
@@ -2744,9 +2744,9 @@ STree<? extends SExpr> PrimaryPrefix():
   { return ret; }
 }
 
-STree<? extends SExpr> PrimarySuffix(STree<? extends SExpr> scope):
+BUTree<? extends SExpr> PrimarySuffix(BUTree<? extends SExpr> scope):
 {
-	STree<? extends SExpr> ret;
+	BUTree<? extends SExpr> ret;
 }
 {
   // Run is started before scope
@@ -2762,10 +2762,10 @@ STree<? extends SExpr> PrimarySuffix(STree<? extends SExpr> scope):
   { return ret; }
 }
 
-STree<? extends SExpr> PrimarySuffixWithoutSuper(STree<? extends SExpr> scope):
+BUTree<? extends SExpr> PrimarySuffixWithoutSuper(BUTree<? extends SExpr> scope):
 {
-	STree<? extends SExpr> ret;
-	STree<SName> name;
+	BUTree<? extends SExpr> ret;
+	BUTree<SName> name;
 }
 {
   // Run is started before scope
@@ -2789,9 +2789,9 @@ STree<? extends SExpr> PrimarySuffixWithoutSuper(STree<? extends SExpr> scope):
   { return ret; }
 }
 
-STree<? extends SExpr> FieldAccess(STree<? extends SExpr> scope):
+BUTree<? extends SExpr> FieldAccess(BUTree<? extends SExpr> scope):
 {
-	STree<SName> name;
+	BUTree<SName> name;
 }
 {
   // Run is started before scope
@@ -2800,12 +2800,12 @@ STree<? extends SExpr> FieldAccess(STree<? extends SExpr> scope):
   { return dress(SFieldAccessExpr.make(optionOf(scope), name)); }
 }
 
-STree<? extends SExpr> MethodInvocation(STree<? extends SExpr> scope):
+BUTree<? extends SExpr> MethodInvocation(BUTree<? extends SExpr> scope):
 {
-    STree<SNodeListState> typeArgs = null;
-	STree<SName> name;
-    STree<SNodeListState> args = null;
-	STree<? extends SExpr> ret;
+    BUTree<SNodeListState> typeArgs = null;
+	BUTree<SName> name;
+    BUTree<SNodeListState> args = null;
+	BUTree<? extends SExpr> ret;
 }
 {
   // Run is started before scope
@@ -2815,10 +2815,10 @@ STree<? extends SExpr> MethodInvocation(STree<? extends SExpr> scope):
   { return dress(SMethodInvocationExpr.make(optionOf(scope), ensureNotNull(typeArgs), name, args)); }
 }
 
-STree<SNodeListState> Arguments():
+BUTree<SNodeListState> Arguments():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<? extends SExpr> expr;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<? extends SExpr> expr;
 }
 {
   "("
@@ -2833,11 +2833,11 @@ STree<SNodeListState> Arguments():
   { return ret; }
 }
 
-STree<? extends SExpr> MethodReferenceSuffix(STree<? extends SExpr> scope):
+BUTree<? extends SExpr> MethodReferenceSuffix(BUTree<? extends SExpr> scope):
 {
-    STree<SNodeListState> typeArgs = null;
-	STree<SName> name;
-	STree<? extends SExpr> ret;
+    BUTree<SNodeListState> typeArgs = null;
+	BUTree<SName> name;
+	BUTree<? extends SExpr> ret;
 }
 {
   // Run is started before scope
@@ -2848,14 +2848,14 @@ STree<? extends SExpr> MethodReferenceSuffix(STree<? extends SExpr> scope):
   { return ret; }
 }
 
-STree<? extends SExpr> AllocationExpression(STree<? extends SExpr> scope):
+BUTree<? extends SExpr> AllocationExpression(BUTree<? extends SExpr> scope):
 {
-	STree<? extends SExpr> ret;
-	STree<? extends SType> type;
-	STree<SNodeListState> typeArgs = null;
-	STree<SNodeListState> anonymousBody = null;
-	STree<SNodeListState> args;
-	STree<SNodeListState> annotations = null;
+	BUTree<? extends SExpr> ret;
+	BUTree<? extends SType> type;
+	BUTree<SNodeListState> typeArgs = null;
+	BUTree<SNodeListState> anonymousBody = null;
+	BUTree<SNodeListState> args;
+	BUTree<SNodeListState> annotations = null;
 }
 {
   // Run may be started before scope
@@ -2875,19 +2875,19 @@ STree<? extends SExpr> AllocationExpression(STree<? extends SExpr> scope):
 	  ret = ArrayCreationExpr(type)
 	|
 	  args = Arguments() [ LOOKAHEAD( "{" ) anonymousBody = ClassOrInterfaceBody(TypeKind.Class) ]
-      { ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (STree<SQualifiedType>) type, args, optionOf(anonymousBody))); }
+      { ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody))); }
     )
   )
   { return ret; }
 }
 
-STree<? extends SExpr> ArrayCreationExpr(STree<? extends SType> componentType):
+BUTree<? extends SExpr> ArrayCreationExpr(BUTree<? extends SType> componentType):
 {
-	STree<? extends SExpr> expr;
-	STree<SNodeListState> arrayDimExprs = emptyList();
-	STree<SNodeListState> arrayDims = emptyList();
-	STree<SNodeListState> annotations = null;
-	STree<SArrayInitializerExpr> initializer;
+	BUTree<? extends SExpr> expr;
+	BUTree<SNodeListState> arrayDimExprs = emptyList();
+	BUTree<SNodeListState> arrayDims = emptyList();
+	BUTree<SNodeListState> annotations = null;
+	BUTree<SArrayInitializerExpr> initializer;
 }
 {
   (
@@ -2902,11 +2902,11 @@ STree<? extends SExpr> ArrayCreationExpr(STree<? extends SType> componentType):
   )
 }
 
-STree<SNodeListState> ArrayDimExprsMandatory():
+BUTree<SNodeListState> ArrayDimExprsMandatory():
 {
-	STree<SNodeListState> arrayDimExprs = emptyList();
-	STree<SNodeListState> annotations;
-	STree<? extends SExpr> expr;
+	BUTree<SNodeListState> arrayDimExprs = emptyList();
+	BUTree<SNodeListState> annotations;
+	BUTree<? extends SExpr> expr;
 }
 {
   (
@@ -2918,10 +2918,10 @@ STree<SNodeListState> ArrayDimExprsMandatory():
   { return arrayDimExprs; }
 }
 
-STree<SNodeListState> ArrayDimsMandatory():
+BUTree<SNodeListState> ArrayDimsMandatory():
 {
-	STree<SNodeListState> arrayDims = emptyList();
-	STree<SNodeListState> annotations;
+	BUTree<SNodeListState> arrayDims = emptyList();
+	BUTree<SNodeListState> annotations;
 }
 {
   (
@@ -2937,9 +2937,9 @@ STree<SNodeListState> ArrayDimsMandatory():
  * Statements
  **********************************************************************************************************************/
 
-STree<? extends SStmt> Statement():
+BUTree<? extends SStmt> Statement():
 {
-	STree<? extends SStmt> ret;
+	BUTree<? extends SStmt> ret;
 }
 {
   (
@@ -2979,10 +2979,10 @@ STree<? extends SStmt> Statement():
   { return ret; }
 }
 
-STree<SAssertStmt> AssertStatement():
+BUTree<SAssertStmt> AssertStatement():
 {
-	STree<? extends SExpr> check;
-	STree<? extends SExpr> msg = null;
+	BUTree<? extends SExpr> check;
+	BUTree<? extends SExpr> msg = null;
 }
 {
   { run(); }
@@ -2990,10 +2990,10 @@ STree<SAssertStmt> AssertStatement():
   { return dress(SAssertStmt.make(check, optionOf(msg)));  }
 }
 
-STree<SLabeledStmt> LabeledStatement():
+BUTree<SLabeledStmt> LabeledStatement():
 {
-	STree<SName> label;
-	STree<? extends SStmt> stmt;
+	BUTree<SName> label;
+	BUTree<? extends SStmt> stmt;
 }
 {
   { run(); }
@@ -3001,9 +3001,9 @@ STree<SLabeledStmt> LabeledStatement():
   { return dress(SLabeledStmt.make(label, stmt)); }
 }
 
-STree<SBlockStmt> Block():
+BUTree<SBlockStmt> Block():
 {
-	STree<SNodeListState> stmts;
+	BUTree<SNodeListState> stmts;
 }
 {
   { run(); }
@@ -3014,12 +3014,12 @@ STree<SBlockStmt> Block():
 /*
  * Classes inside block stametents can only be abstract or final. The semantic must check it.
  */
-STree<? extends SStmt> BlockStatement():
+BUTree<? extends SStmt> BlockStatement():
 {
-	STree<? extends SStmt> ret;
-	STree<? extends SExpr> expr;
-	STree<? extends STypeDecl> typeDecl;
-	STree<SNodeListState> modifiers;
+	BUTree<? extends SStmt> ret;
+	BUTree<? extends SExpr> expr;
+	BUTree<? extends STypeDecl> typeDecl;
+	BUTree<SNodeListState> modifiers;
 }
 {
   (
@@ -3038,10 +3038,10 @@ STree<? extends SStmt> BlockStatement():
   { return ret; }
 }
 
-STree<SVariableDeclarationExpr> VariableDeclExpression():
+BUTree<SVariableDeclarationExpr> VariableDeclExpression():
 {
-	STree<SNodeListState> modifiers;
-	STree<SLocalVariableDecl> variableDecl;
+	BUTree<SNodeListState> modifiers;
+	BUTree<SLocalVariableDecl> variableDecl;
 }
 {
   { run(); }
@@ -3049,7 +3049,7 @@ STree<SVariableDeclarationExpr> VariableDeclExpression():
   { return dress(SVariableDeclarationExpr.make(variableDecl)); }
 }
 
-STree<SEmptyStmt> EmptyStatement():
+BUTree<SEmptyStmt> EmptyStatement():
 {}
 {
   { run(); }
@@ -3057,11 +3057,11 @@ STree<SEmptyStmt> EmptyStatement():
   { return dress(SEmptyStmt.make()); }
 }
 
-STree<SExpressionStmt> StatementExpression():
+BUTree<SExpressionStmt> StatementExpression():
 {
-	STree<? extends SExpr> expr;
+	BUTree<? extends SExpr> expr;
 	AssignOp op;
-	STree<? extends SExpr> value;
+	BUTree<? extends SExpr> value;
 }
 {
   { run(); }
@@ -3084,11 +3084,11 @@ STree<SExpressionStmt> StatementExpression():
   { return dress(SExpressionStmt.make(expr)); }
 }
 
-STree<SSwitchStmt> SwitchStatement():
+BUTree<SSwitchStmt> SwitchStatement():
 {
-	STree<? extends SExpr> selector;
-	STree<SSwitchCase> entry;
-	STree<SNodeListState> entries = emptyList();
+	BUTree<? extends SExpr> selector;
+	BUTree<SSwitchCase> entry;
+	BUTree<SNodeListState> entries = emptyList();
 }
 {
   { run(); }
@@ -3098,10 +3098,10 @@ STree<SSwitchStmt> SwitchStatement():
   { return dress(SSwitchStmt.make(selector, entries)); }
 }
 
-STree<SSwitchCase> SwitchEntry():
+BUTree<SSwitchCase> SwitchEntry():
 {
-	STree<? extends SExpr> label = null;
-	STree<SNodeListState> stmts;
+	BUTree<? extends SExpr> label = null;
+	BUTree<SNodeListState> stmts;
 }
 {
   { run(); }
@@ -3114,16 +3114,16 @@ STree<SSwitchCase> SwitchEntry():
   { return dress(SSwitchCase.make(optionOf(label), ensureNotNull(stmts))); }
 }
 
-STree<SIfStmt> IfStatement():
+BUTree<SIfStmt> IfStatement():
 /*
  * The disambiguating algorithm of JavaCC automatically binds dangling
  * else's to the innermost if Stmt.  The LOOKAHEAD specification
  * is to tell JavaCC that we know what we are doing.
  */
 {
-	STree<? extends SExpr> condition;
-	STree<? extends SStmt> thenStmt;
-	STree<? extends SStmt> elseStmt = null;
+	BUTree<? extends SExpr> condition;
+	BUTree<? extends SStmt> thenStmt;
+	BUTree<? extends SStmt> elseStmt = null;
 }
 {
   { run(); }
@@ -3131,10 +3131,10 @@ STree<SIfStmt> IfStatement():
   { return dress(SIfStmt.make(condition, thenStmt, optionOf(elseStmt))); }
 }
 
-STree<SWhileStmt> WhileStatement():
+BUTree<SWhileStmt> WhileStatement():
 {
-	STree<? extends SExpr> condition;
-	STree<? extends SStmt> body;
+	BUTree<? extends SExpr> condition;
+	BUTree<? extends SStmt> body;
 }
 {
   { run(); }
@@ -3142,10 +3142,10 @@ STree<SWhileStmt> WhileStatement():
   { return dress(SWhileStmt.make(condition, body)); }
 }
 
-STree<SDoStmt> DoStatement():
+BUTree<SDoStmt> DoStatement():
 {
-	STree<? extends SExpr> condition;
-	STree<? extends SStmt> body;
+	BUTree<? extends SExpr> condition;
+	BUTree<? extends SStmt> body;
 }
 {
   { run(); }
@@ -3153,13 +3153,13 @@ STree<SDoStmt> DoStatement():
   { return dress(SDoStmt.make(body, condition)); }
 }
 
-STree<? extends SStmt> ForStatement():
+BUTree<? extends SStmt> ForStatement():
 {
-	STree<SVariableDeclarationExpr> varExpr = null;
-	STree<? extends SExpr> expr = null;
-	STree<SNodeListState> init = null;
-	STree<SNodeListState> update = null;
-	STree<? extends SStmt> body;
+	BUTree<SVariableDeclarationExpr> varExpr = null;
+	BUTree<? extends SExpr> expr = null;
+	BUTree<SNodeListState> init = null;
+	BUTree<SNodeListState> update = null;
+	BUTree<? extends SStmt> body;
 }
 {
   { run(); }
@@ -3177,10 +3177,10 @@ STree<? extends SStmt> ForStatement():
   }
 }
 
-STree<SNodeListState> ForInit():
+BUTree<SNodeListState> ForInit():
 {
-	STree<SNodeListState> ret;
-	STree<? extends SExpr> expr;
+	BUTree<SNodeListState> ret;
+	BUTree<? extends SExpr> expr;
 }
 {
   (
@@ -3192,28 +3192,28 @@ STree<SNodeListState> ForInit():
   { return ret; }
 }
 
-STree<SNodeListState> ExpressionList():
+BUTree<SNodeListState> ExpressionList():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<? extends SExpr> expr;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<? extends SExpr> expr;
 }
 {
   expr = Expression() { ret = append(ret, expr); } ( "," expr = Expression()  { ret = append(ret, expr); } )*
   { return ret; }
 }
 
-STree<SNodeListState> ForUpdate():
+BUTree<SNodeListState> ForUpdate():
 {
-	STree<SNodeListState> ret;
+	BUTree<SNodeListState> ret;
 }
 {
   ret = ExpressionList()
   { return ret; }
 }
 
-STree<SBreakStmt> BreakStatement():
+BUTree<SBreakStmt> BreakStatement():
 {
-	STree<SName> id = null;
+	BUTree<SName> id = null;
 }
 {
   { run(); }
@@ -3221,9 +3221,9 @@ STree<SBreakStmt> BreakStatement():
   { return dress(SBreakStmt.make(optionOf(id))); }
 }
 
-STree<SContinueStmt> ContinueStatement():
+BUTree<SContinueStmt> ContinueStatement():
 {
-	STree<SName> id = null;
+	BUTree<SName> id = null;
 }
 {
   { run(); }
@@ -3231,9 +3231,9 @@ STree<SContinueStmt> ContinueStatement():
   { return dress(SContinueStmt.make(optionOf(id))); }
 }
 
-STree<SReturnStmt> ReturnStatement():
+BUTree<SReturnStmt> ReturnStatement():
 {
-	STree<? extends SExpr> expr = null;
+	BUTree<? extends SExpr> expr = null;
 }
 {
   { run(); }
@@ -3241,9 +3241,9 @@ STree<SReturnStmt> ReturnStatement():
   { return dress(SReturnStmt.make(optionOf(expr))); }
 }
 
-STree<SThrowStmt> ThrowStatement():
+BUTree<SThrowStmt> ThrowStatement():
 {
-	STree<? extends SExpr> expr;
+	BUTree<? extends SExpr> expr;
 }
 {
   { run(); }
@@ -3251,10 +3251,10 @@ STree<SThrowStmt> ThrowStatement():
   { return dress(SThrowStmt.make(expr)); }
 }
 
-STree<SSynchronizedStmt> SynchronizedStatement():
+BUTree<SSynchronizedStmt> SynchronizedStatement():
 {
-	STree<? extends SExpr> expr;
-	STree<SBlockStmt> block;
+	BUTree<? extends SExpr> expr;
+	BUTree<SBlockStmt> block;
 }
 {
   { run(); }
@@ -3262,14 +3262,14 @@ STree<SSynchronizedStmt> SynchronizedStatement():
   { return dress(SSynchronizedStmt.make(expr, block)); }
 }
 
-STree<STryStmt> TryStatement():
+BUTree<STryStmt> TryStatement():
 // TODO Make catchClauses/finallyClause counts less fatal
 {
-	STree<SNodeListState> resources = null;
+	BUTree<SNodeListState> resources = null;
 	ByRef<Boolean> trailingSemiColon = new ByRef<Boolean>(false);
-	STree<SBlockStmt> tryBlock;
-	STree<SBlockStmt> finallyBlock = null;
-	STree<SNodeListState> catchClauses = null;
+	BUTree<SBlockStmt> tryBlock;
+	BUTree<SBlockStmt> finallyBlock = null;
+	BUTree<SNodeListState> catchClauses = null;
 }
 {
   { run(); }
@@ -3291,10 +3291,10 @@ STree<STryStmt> TryStatement():
   { return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock))); }
 }
 
-STree<SNodeListState> CatchClauses():
+BUTree<SNodeListState> CatchClauses():
 {
-	STree<SNodeListState> catchClauses = emptyList();
-	STree<SCatchClause> catchClause;
+	BUTree<SNodeListState> catchClauses = emptyList();
+	BUTree<SCatchClause> catchClause;
 }
 {
   (
@@ -3303,10 +3303,10 @@ STree<SNodeListState> CatchClauses():
   { return catchClauses; }
 }
 
-STree<SCatchClause> CatchClause():
+BUTree<SCatchClause> CatchClause():
 {
-	STree<SFormalParameter> param;
-	STree<SBlockStmt> catchBlock;
+	BUTree<SFormalParameter> param;
+	BUTree<SBlockStmt> catchBlock;
 }
 {
   { run(); }
@@ -3314,12 +3314,12 @@ STree<SCatchClause> CatchClause():
   { return dress(SCatchClause.make(param, catchBlock)); }
 }
 
-STree<SFormalParameter> CatchFormalParameter():
+BUTree<SFormalParameter> CatchFormalParameter():
 {
-	STree<SNodeListState> modifiers;
-	STree<? extends SType> exceptType;
-	STree<SNodeListState> exceptTypes = emptyList();
-	STree<SVariableDeclaratorId> exceptId;
+	BUTree<SNodeListState> modifiers;
+	BUTree<? extends SType> exceptType;
+	BUTree<SNodeListState> exceptTypes = emptyList();
+	BUTree<SVariableDeclaratorId> exceptId;
 }
 {
   { run(); }
@@ -3337,10 +3337,10 @@ STree<SFormalParameter> CatchFormalParameter():
   { return dress(SFormalParameter.make(modifiers, exceptType, false, exceptId)); }
 }
 
-STree<SNodeListState> ResourceSpecification(ByRef<Boolean> trailingSemiColon) :
+BUTree<SNodeListState> ResourceSpecification(ByRef<Boolean> trailingSemiColon) :
 {
-	STree<SNodeListState> vars = emptyList();
-	STree<SVariableDeclarationExpr> var;
+	BUTree<SNodeListState> vars = emptyList();
+	BUTree<SVariableDeclarationExpr> var;
 }
 {
   "("
@@ -3380,19 +3380,19 @@ void RSIGNEDSHIFT():
  * Annotations
  **********************************************************************************************************************/
 
-STree<SNodeListState> Annotations():
+BUTree<SNodeListState> Annotations():
 {
-	STree<SNodeListState> annotations = emptyList();
-	STree<? extends SAnnotationExpr> annotation;
+	BUTree<SNodeListState> annotations = emptyList();
+	BUTree<? extends SAnnotationExpr> annotation;
 }
 {
   ( annotation = Annotation() { annotations = append(annotations, annotation); } )*
   { return annotations; }
 }
 
-STree<? extends SAnnotationExpr> Annotation():
+BUTree<? extends SAnnotationExpr> Annotation():
 {
-	STree<? extends SAnnotationExpr> ret;
+	BUTree<? extends SAnnotationExpr> ret;
 }
 {
   (
@@ -3408,10 +3408,10 @@ STree<? extends SAnnotationExpr> Annotation():
   { return ret; }
 }
 
-STree<SNormalAnnotationExpr> NormalAnnotation():
+BUTree<SNormalAnnotationExpr> NormalAnnotation():
 {
-	STree<SQualifiedName> name;
-	STree<SNodeListState> pairs = null;
+	BUTree<SQualifiedName> name;
+	BUTree<SNodeListState> pairs = null;
 }
 {
   { run(); }
@@ -3419,9 +3419,9 @@ STree<SNormalAnnotationExpr> NormalAnnotation():
   { return dress(SNormalAnnotationExpr.make(name, ensureNotNull(pairs))); }
 }
 
-STree<SMarkerAnnotationExpr> MarkerAnnotation():
+BUTree<SMarkerAnnotationExpr> MarkerAnnotation():
 {
-	STree<SQualifiedName> name;
+	BUTree<SQualifiedName> name;
 }
 {
   { run(); }
@@ -3429,10 +3429,10 @@ STree<SMarkerAnnotationExpr> MarkerAnnotation():
   { return dress(SMarkerAnnotationExpr.make(name)); }
 }
 
-STree<SSingleMemberAnnotationExpr> SingleMemberAnnotation():
+BUTree<SSingleMemberAnnotationExpr> SingleMemberAnnotation():
 {
-	STree<SQualifiedName> name;
-	STree<? extends SExpr> memberVal;
+	BUTree<SQualifiedName> name;
+	BUTree<? extends SExpr> memberVal;
 }
 {
   { run(); }
@@ -3440,10 +3440,10 @@ STree<SSingleMemberAnnotationExpr> SingleMemberAnnotation():
   { return dress(SSingleMemberAnnotationExpr.make(name, memberVal)); }
 }
 
-STree<SNodeListState> MemberValuePairs():
+BUTree<SNodeListState> MemberValuePairs():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<SMemberValuePair> pair;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<SMemberValuePair> pair;
 }
 {
   pair = MemberValuePair() { ret = append(ret, pair); }
@@ -3451,10 +3451,10 @@ STree<SNodeListState> MemberValuePairs():
   { return ret; }
 }
 
-STree<SMemberValuePair> MemberValuePair():
+BUTree<SMemberValuePair> MemberValuePair():
 {
-	STree<SName> name;
-	STree<? extends SExpr> value;
+	BUTree<SName> name;
+	BUTree<? extends SExpr> value;
 }
 {
   { run(); }
@@ -3462,9 +3462,9 @@ STree<SMemberValuePair> MemberValuePair():
   { return dress(SMemberValuePair.make(name, value)); }
 }
 
-STree<? extends SExpr> MemberValue():
+BUTree<? extends SExpr> MemberValue():
 {
-	STree<? extends SExpr> ret;
+	BUTree<? extends SExpr> ret;
 }
 {
   (
@@ -3477,10 +3477,10 @@ STree<? extends SExpr> MemberValue():
   { return ret; }
 }
 
-STree<? extends SExpr> MemberValueArrayInitializer():
+BUTree<? extends SExpr> MemberValueArrayInitializer():
 {
-	STree<SNodeListState> ret = emptyList();
-	STree<? extends SExpr> member;
+	BUTree<SNodeListState> ret = emptyList();
+	BUTree<? extends SExpr> member;
 	boolean trailingComma = false;
 }
 {

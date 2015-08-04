@@ -15,23 +15,23 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SClassDecl extends SNodeState<SClassDecl> implements STypeDecl {
 
-	public static STree<SClassDecl> make(STree<SNodeListState> modifiers, STree<SName> name, STree<SNodeListState> typeParams, STree<SNodeOptionState> extendsClause, STree<SNodeListState> implementsClause, STree<SNodeListState> members) {
-		return new STree<SClassDecl>(new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members));
+	public static BUTree<SClassDecl> make(BUTree<SNodeListState> modifiers, BUTree<SName> name, BUTree<SNodeListState> typeParams, BUTree<SNodeOptionState> extendsClause, BUTree<SNodeListState> implementsClause, BUTree<SNodeListState> members) {
+		return new BUTree<SClassDecl>(new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members));
 	}
 
-	public final STree<SNodeListState> modifiers;
+	public final BUTree<SNodeListState> modifiers;
 
-	public final STree<SName> name;
+	public final BUTree<SName> name;
 
-	public final STree<SNodeListState> typeParams;
+	public final BUTree<SNodeListState> typeParams;
 
-	public final STree<SNodeOptionState> extendsClause;
+	public final BUTree<SNodeOptionState> extendsClause;
 
-	public final STree<SNodeListState> implementsClause;
+	public final BUTree<SNodeListState> implementsClause;
 
-	public final STree<SNodeListState> members;
+	public final BUTree<SNodeListState> members;
 
-	public SClassDecl(STree<SNodeListState> modifiers, STree<SName> name, STree<SNodeListState> typeParams, STree<SNodeOptionState> extendsClause, STree<SNodeListState> implementsClause, STree<SNodeListState> members) {
+	public SClassDecl(BUTree<SNodeListState> modifiers, BUTree<SName> name, BUTree<SNodeListState> typeParams, BUTree<SNodeOptionState> extendsClause, BUTree<SNodeListState> implementsClause, BUTree<SNodeListState> members) {
 		this.modifiers = modifiers;
 		this.name = name;
 		this.typeParams = typeParams;
@@ -45,51 +45,51 @@ public class SClassDecl extends SNodeState<SClassDecl> implements STypeDecl {
 		return Kind.ClassDecl;
 	}
 
-	public STree<SNodeListState> modifiers() {
+	public BUTree<SNodeListState> modifiers() {
 		return modifiers;
 	}
 
-	public SClassDecl withModifiers(STree<SNodeListState> modifiers) {
+	public SClassDecl withModifiers(BUTree<SNodeListState> modifiers) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
-	public STree<SName> name() {
+	public BUTree<SName> name() {
 		return name;
 	}
 
-	public SClassDecl withName(STree<SName> name) {
+	public SClassDecl withName(BUTree<SName> name) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
-	public STree<SNodeListState> typeParams() {
+	public BUTree<SNodeListState> typeParams() {
 		return typeParams;
 	}
 
-	public SClassDecl withTypeParams(STree<SNodeListState> typeParams) {
+	public SClassDecl withTypeParams(BUTree<SNodeListState> typeParams) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
-	public STree<SNodeOptionState> extendsClause() {
+	public BUTree<SNodeOptionState> extendsClause() {
 		return extendsClause;
 	}
 
-	public SClassDecl withExtendsClause(STree<SNodeOptionState> extendsClause) {
+	public SClassDecl withExtendsClause(BUTree<SNodeOptionState> extendsClause) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
-	public STree<SNodeListState> implementsClause() {
+	public BUTree<SNodeListState> implementsClause() {
 		return implementsClause;
 	}
 
-	public SClassDecl withImplementsClause(STree<SNodeListState> implementsClause) {
+	public SClassDecl withImplementsClause(BUTree<SNodeListState> implementsClause) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
-	public STree<SNodeListState> members() {
+	public BUTree<SNodeListState> members() {
 		return members;
 	}
 
-	public SClassDecl withMembers(STree<SNodeListState> members) {
+	public SClassDecl withMembers(BUTree<SNodeListState> members) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
@@ -150,12 +150,12 @@ public class SClassDecl extends SNodeState<SClassDecl> implements STypeDecl {
 	public static STypeSafeTraversal<SClassDecl, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SClassDecl, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(SClassDecl state) {
+		public BUTree<?> doTraverse(SClassDecl state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public SClassDecl doRebuildParentState(SClassDecl state, STree<SNodeListState> child) {
+		public SClassDecl doRebuildParentState(SClassDecl state, BUTree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -173,12 +173,12 @@ public class SClassDecl extends SNodeState<SClassDecl> implements STypeDecl {
 	public static STypeSafeTraversal<SClassDecl, SName, Name> NAME = new STypeSafeTraversal<SClassDecl, SName, Name>() {
 
 		@Override
-		public STree<?> doTraverse(SClassDecl state) {
+		public BUTree<?> doTraverse(SClassDecl state) {
 			return state.name;
 		}
 
 		@Override
-		public SClassDecl doRebuildParentState(SClassDecl state, STree<SName> child) {
+		public SClassDecl doRebuildParentState(SClassDecl state, BUTree<SName> child) {
 			return state.withName(child);
 		}
 
@@ -196,12 +196,12 @@ public class SClassDecl extends SNodeState<SClassDecl> implements STypeDecl {
 	public static STypeSafeTraversal<SClassDecl, SNodeListState, NodeList<TypeParameter>> TYPE_PARAMS = new STypeSafeTraversal<SClassDecl, SNodeListState, NodeList<TypeParameter>>() {
 
 		@Override
-		public STree<?> doTraverse(SClassDecl state) {
+		public BUTree<?> doTraverse(SClassDecl state) {
 			return state.typeParams;
 		}
 
 		@Override
-		public SClassDecl doRebuildParentState(SClassDecl state, STree<SNodeListState> child) {
+		public SClassDecl doRebuildParentState(SClassDecl state, BUTree<SNodeListState> child) {
 			return state.withTypeParams(child);
 		}
 
@@ -219,12 +219,12 @@ public class SClassDecl extends SNodeState<SClassDecl> implements STypeDecl {
 	public static STypeSafeTraversal<SClassDecl, SNodeOptionState, NodeOption<QualifiedType>> EXTENDS_CLAUSE = new STypeSafeTraversal<SClassDecl, SNodeOptionState, NodeOption<QualifiedType>>() {
 
 		@Override
-		public STree<?> doTraverse(SClassDecl state) {
+		public BUTree<?> doTraverse(SClassDecl state) {
 			return state.extendsClause;
 		}
 
 		@Override
-		public SClassDecl doRebuildParentState(SClassDecl state, STree<SNodeOptionState> child) {
+		public SClassDecl doRebuildParentState(SClassDecl state, BUTree<SNodeOptionState> child) {
 			return state.withExtendsClause(child);
 		}
 
@@ -242,12 +242,12 @@ public class SClassDecl extends SNodeState<SClassDecl> implements STypeDecl {
 	public static STypeSafeTraversal<SClassDecl, SNodeListState, NodeList<QualifiedType>> IMPLEMENTS_CLAUSE = new STypeSafeTraversal<SClassDecl, SNodeListState, NodeList<QualifiedType>>() {
 
 		@Override
-		public STree<?> doTraverse(SClassDecl state) {
+		public BUTree<?> doTraverse(SClassDecl state) {
 			return state.implementsClause;
 		}
 
 		@Override
-		public SClassDecl doRebuildParentState(SClassDecl state, STree<SNodeListState> child) {
+		public SClassDecl doRebuildParentState(SClassDecl state, BUTree<SNodeListState> child) {
 			return state.withImplementsClause(child);
 		}
 
@@ -265,12 +265,12 @@ public class SClassDecl extends SNodeState<SClassDecl> implements STypeDecl {
 	public static STypeSafeTraversal<SClassDecl, SNodeListState, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<SClassDecl, SNodeListState, NodeList<MemberDecl>>() {
 
 		@Override
-		public STree<?> doTraverse(SClassDecl state) {
+		public BUTree<?> doTraverse(SClassDecl state) {
 			return state.members;
 		}
 
 		@Override
-		public SClassDecl doRebuildParentState(SClassDecl state, STree<SNodeListState> child) {
+		public SClassDecl doRebuildParentState(SClassDecl state, BUTree<SNodeListState> child) {
 			return state.withMembers(child);
 		}
 

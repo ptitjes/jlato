@@ -13,15 +13,15 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SSingleMemberAnnotationExpr extends SNodeState<SSingleMemberAnnotationExpr> implements SAnnotationExpr {
 
-	public static STree<SSingleMemberAnnotationExpr> make(STree<SQualifiedName> name, STree<? extends SExpr> memberValue) {
-		return new STree<SSingleMemberAnnotationExpr>(new SSingleMemberAnnotationExpr(name, memberValue));
+	public static BUTree<SSingleMemberAnnotationExpr> make(BUTree<SQualifiedName> name, BUTree<? extends SExpr> memberValue) {
+		return new BUTree<SSingleMemberAnnotationExpr>(new SSingleMemberAnnotationExpr(name, memberValue));
 	}
 
-	public final STree<SQualifiedName> name;
+	public final BUTree<SQualifiedName> name;
 
-	public final STree<? extends SExpr> memberValue;
+	public final BUTree<? extends SExpr> memberValue;
 
-	public SSingleMemberAnnotationExpr(STree<SQualifiedName> name, STree<? extends SExpr> memberValue) {
+	public SSingleMemberAnnotationExpr(BUTree<SQualifiedName> name, BUTree<? extends SExpr> memberValue) {
 		this.name = name;
 		this.memberValue = memberValue;
 	}
@@ -31,19 +31,19 @@ public class SSingleMemberAnnotationExpr extends SNodeState<SSingleMemberAnnotat
 		return Kind.SingleMemberAnnotationExpr;
 	}
 
-	public STree<SQualifiedName> name() {
+	public BUTree<SQualifiedName> name() {
 		return name;
 	}
 
-	public SSingleMemberAnnotationExpr withName(STree<SQualifiedName> name) {
+	public SSingleMemberAnnotationExpr withName(BUTree<SQualifiedName> name) {
 		return new SSingleMemberAnnotationExpr(name, memberValue);
 	}
 
-	public STree<? extends SExpr> memberValue() {
+	public BUTree<? extends SExpr> memberValue() {
 		return memberValue;
 	}
 
-	public SSingleMemberAnnotationExpr withMemberValue(STree<? extends SExpr> memberValue) {
+	public SSingleMemberAnnotationExpr withMemberValue(BUTree<? extends SExpr> memberValue) {
 		return new SSingleMemberAnnotationExpr(name, memberValue);
 	}
 
@@ -92,12 +92,12 @@ public class SSingleMemberAnnotationExpr extends SNodeState<SSingleMemberAnnotat
 	public static STypeSafeTraversal<SSingleMemberAnnotationExpr, SQualifiedName, QualifiedName> NAME = new STypeSafeTraversal<SSingleMemberAnnotationExpr, SQualifiedName, QualifiedName>() {
 
 		@Override
-		public STree<?> doTraverse(SSingleMemberAnnotationExpr state) {
+		public BUTree<?> doTraverse(SSingleMemberAnnotationExpr state) {
 			return state.name;
 		}
 
 		@Override
-		public SSingleMemberAnnotationExpr doRebuildParentState(SSingleMemberAnnotationExpr state, STree<SQualifiedName> child) {
+		public SSingleMemberAnnotationExpr doRebuildParentState(SSingleMemberAnnotationExpr state, BUTree<SQualifiedName> child) {
 			return state.withName(child);
 		}
 
@@ -115,12 +115,12 @@ public class SSingleMemberAnnotationExpr extends SNodeState<SSingleMemberAnnotat
 	public static STypeSafeTraversal<SSingleMemberAnnotationExpr, SExpr, Expr> MEMBER_VALUE = new STypeSafeTraversal<SSingleMemberAnnotationExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SSingleMemberAnnotationExpr state) {
+		public BUTree<?> doTraverse(SSingleMemberAnnotationExpr state) {
 			return state.memberValue;
 		}
 
 		@Override
-		public SSingleMemberAnnotationExpr doRebuildParentState(SSingleMemberAnnotationExpr state, STree<SExpr> child) {
+		public SSingleMemberAnnotationExpr doRebuildParentState(SSingleMemberAnnotationExpr state, BUTree<SExpr> child) {
 			return state.withMemberValue(child);
 		}
 

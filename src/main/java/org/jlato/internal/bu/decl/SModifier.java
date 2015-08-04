@@ -14,8 +14,8 @@ import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class SModifier extends SNodeState<SModifier> implements SExtendedModifier {
 
-	public static STree<SModifier> make(ModifierKeyword keyword) {
-		return new STree<SModifier>(new SModifier(keyword));
+	public static BUTree<SModifier> make(ModifierKeyword keyword) {
+		return new BUTree<SModifier>(new SModifier(keyword));
 	}
 
 	public final ModifierKeyword keyword;
@@ -95,7 +95,7 @@ public class SModifier extends SNodeState<SModifier> implements SExtendedModifie
 	};
 
 	public static final LexicalShape shape = token(new LSToken.Provider() {
-		public LToken tokenFor(STree tree) {
+		public LToken tokenFor(BUTree tree) {
 			final ModifierKeyword keyword = ((SModifier) tree.state).keyword;
 			switch (keyword) {
 				case Public:

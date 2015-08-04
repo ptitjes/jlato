@@ -15,17 +15,17 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SLocalVariableDecl extends SNodeState<SLocalVariableDecl> implements SDecl {
 
-	public static STree<SLocalVariableDecl> make(STree<SNodeListState> modifiers, STree<? extends SType> type, STree<SNodeListState> variables) {
-		return new STree<SLocalVariableDecl>(new SLocalVariableDecl(modifiers, type, variables));
+	public static BUTree<SLocalVariableDecl> make(BUTree<SNodeListState> modifiers, BUTree<? extends SType> type, BUTree<SNodeListState> variables) {
+		return new BUTree<SLocalVariableDecl>(new SLocalVariableDecl(modifiers, type, variables));
 	}
 
-	public final STree<SNodeListState> modifiers;
+	public final BUTree<SNodeListState> modifiers;
 
-	public final STree<? extends SType> type;
+	public final BUTree<? extends SType> type;
 
-	public final STree<SNodeListState> variables;
+	public final BUTree<SNodeListState> variables;
 
-	public SLocalVariableDecl(STree<SNodeListState> modifiers, STree<? extends SType> type, STree<SNodeListState> variables) {
+	public SLocalVariableDecl(BUTree<SNodeListState> modifiers, BUTree<? extends SType> type, BUTree<SNodeListState> variables) {
 		this.modifiers = modifiers;
 		this.type = type;
 		this.variables = variables;
@@ -36,27 +36,27 @@ public class SLocalVariableDecl extends SNodeState<SLocalVariableDecl> implement
 		return Kind.LocalVariableDecl;
 	}
 
-	public STree<SNodeListState> modifiers() {
+	public BUTree<SNodeListState> modifiers() {
 		return modifiers;
 	}
 
-	public SLocalVariableDecl withModifiers(STree<SNodeListState> modifiers) {
+	public SLocalVariableDecl withModifiers(BUTree<SNodeListState> modifiers) {
 		return new SLocalVariableDecl(modifiers, type, variables);
 	}
 
-	public STree<? extends SType> type() {
+	public BUTree<? extends SType> type() {
 		return type;
 	}
 
-	public SLocalVariableDecl withType(STree<? extends SType> type) {
+	public SLocalVariableDecl withType(BUTree<? extends SType> type) {
 		return new SLocalVariableDecl(modifiers, type, variables);
 	}
 
-	public STree<SNodeListState> variables() {
+	public BUTree<SNodeListState> variables() {
 		return variables;
 	}
 
-	public SLocalVariableDecl withVariables(STree<SNodeListState> variables) {
+	public SLocalVariableDecl withVariables(BUTree<SNodeListState> variables) {
 		return new SLocalVariableDecl(modifiers, type, variables);
 	}
 
@@ -108,12 +108,12 @@ public class SLocalVariableDecl extends SNodeState<SLocalVariableDecl> implement
 	public static STypeSafeTraversal<SLocalVariableDecl, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SLocalVariableDecl, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(SLocalVariableDecl state) {
+		public BUTree<?> doTraverse(SLocalVariableDecl state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public SLocalVariableDecl doRebuildParentState(SLocalVariableDecl state, STree<SNodeListState> child) {
+		public SLocalVariableDecl doRebuildParentState(SLocalVariableDecl state, BUTree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -131,12 +131,12 @@ public class SLocalVariableDecl extends SNodeState<SLocalVariableDecl> implement
 	public static STypeSafeTraversal<SLocalVariableDecl, SType, Type> TYPE = new STypeSafeTraversal<SLocalVariableDecl, SType, Type>() {
 
 		@Override
-		public STree<?> doTraverse(SLocalVariableDecl state) {
+		public BUTree<?> doTraverse(SLocalVariableDecl state) {
 			return state.type;
 		}
 
 		@Override
-		public SLocalVariableDecl doRebuildParentState(SLocalVariableDecl state, STree<SType> child) {
+		public SLocalVariableDecl doRebuildParentState(SLocalVariableDecl state, BUTree<SType> child) {
 			return state.withType(child);
 		}
 
@@ -154,12 +154,12 @@ public class SLocalVariableDecl extends SNodeState<SLocalVariableDecl> implement
 	public static STypeSafeTraversal<SLocalVariableDecl, SNodeListState, NodeList<VariableDeclarator>> VARIABLES = new STypeSafeTraversal<SLocalVariableDecl, SNodeListState, NodeList<VariableDeclarator>>() {
 
 		@Override
-		public STree<?> doTraverse(SLocalVariableDecl state) {
+		public BUTree<?> doTraverse(SLocalVariableDecl state) {
 			return state.variables;
 		}
 
 		@Override
-		public SLocalVariableDecl doRebuildParentState(SLocalVariableDecl state, STree<SNodeListState> child) {
+		public SLocalVariableDecl doRebuildParentState(SLocalVariableDecl state, BUTree<SNodeListState> child) {
 			return state.withVariables(child);
 		}
 

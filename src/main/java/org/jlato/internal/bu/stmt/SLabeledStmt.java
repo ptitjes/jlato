@@ -18,15 +18,15 @@ import static org.jlato.printer.SpacingConstraint.spacing;
 
 public class SLabeledStmt extends SNodeState<SLabeledStmt> implements SStmt {
 
-	public static STree<SLabeledStmt> make(STree<SName> label, STree<? extends SStmt> stmt) {
-		return new STree<SLabeledStmt>(new SLabeledStmt(label, stmt));
+	public static BUTree<SLabeledStmt> make(BUTree<SName> label, BUTree<? extends SStmt> stmt) {
+		return new BUTree<SLabeledStmt>(new SLabeledStmt(label, stmt));
 	}
 
-	public final STree<SName> label;
+	public final BUTree<SName> label;
 
-	public final STree<? extends SStmt> stmt;
+	public final BUTree<? extends SStmt> stmt;
 
-	public SLabeledStmt(STree<SName> label, STree<? extends SStmt> stmt) {
+	public SLabeledStmt(BUTree<SName> label, BUTree<? extends SStmt> stmt) {
 		this.label = label;
 		this.stmt = stmt;
 	}
@@ -36,19 +36,19 @@ public class SLabeledStmt extends SNodeState<SLabeledStmt> implements SStmt {
 		return Kind.LabeledStmt;
 	}
 
-	public STree<SName> label() {
+	public BUTree<SName> label() {
 		return label;
 	}
 
-	public SLabeledStmt withLabel(STree<SName> label) {
+	public SLabeledStmt withLabel(BUTree<SName> label) {
 		return new SLabeledStmt(label, stmt);
 	}
 
-	public STree<? extends SStmt> stmt() {
+	public BUTree<? extends SStmt> stmt() {
 		return stmt;
 	}
 
-	public SLabeledStmt withStmt(STree<? extends SStmt> stmt) {
+	public SLabeledStmt withStmt(BUTree<? extends SStmt> stmt) {
 		return new SLabeledStmt(label, stmt);
 	}
 
@@ -97,12 +97,12 @@ public class SLabeledStmt extends SNodeState<SLabeledStmt> implements SStmt {
 	public static STypeSafeTraversal<SLabeledStmt, SName, Name> LABEL = new STypeSafeTraversal<SLabeledStmt, SName, Name>() {
 
 		@Override
-		public STree<?> doTraverse(SLabeledStmt state) {
+		public BUTree<?> doTraverse(SLabeledStmt state) {
 			return state.label;
 		}
 
 		@Override
-		public SLabeledStmt doRebuildParentState(SLabeledStmt state, STree<SName> child) {
+		public SLabeledStmt doRebuildParentState(SLabeledStmt state, BUTree<SName> child) {
 			return state.withLabel(child);
 		}
 
@@ -120,12 +120,12 @@ public class SLabeledStmt extends SNodeState<SLabeledStmt> implements SStmt {
 	public static STypeSafeTraversal<SLabeledStmt, SStmt, Stmt> STMT = new STypeSafeTraversal<SLabeledStmt, SStmt, Stmt>() {
 
 		@Override
-		public STree<?> doTraverse(SLabeledStmt state) {
+		public BUTree<?> doTraverse(SLabeledStmt state) {
 			return state.stmt;
 		}
 
 		@Override
-		public SLabeledStmt doRebuildParentState(SLabeledStmt state, STree<SStmt> child) {
+		public SLabeledStmt doRebuildParentState(SLabeledStmt state, BUTree<SStmt> child) {
 			return state.withStmt(child);
 		}
 

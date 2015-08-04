@@ -13,8 +13,8 @@ import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class SLiteralExpr extends SNodeState<SLiteralExpr> implements SExpr {
 
-	public static STree<SLiteralExpr> make(Class<?> literalClass, String literalString) {
-		return new STree<SLiteralExpr>(new SLiteralExpr(literalClass, literalString));
+	public static BUTree<SLiteralExpr> make(Class<?> literalClass, String literalString) {
+		return new BUTree<SLiteralExpr>(new SLiteralExpr(literalClass, literalString));
 	}
 
 	public final Class<?> literalClass;
@@ -121,7 +121,7 @@ public class SLiteralExpr extends SNodeState<SLiteralExpr> implements SExpr {
 	};
 
 	public static final LexicalShape shape = token(new LSToken.Provider() {
-		public LToken tokenFor(STree tree) {
+		public LToken tokenFor(BUTree tree) {
 			final String literalString = ((SLiteralExpr) tree.state).literalString;
 			return new LToken(0, literalString); // TODO Fix
 		}

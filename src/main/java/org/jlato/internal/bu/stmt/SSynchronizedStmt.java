@@ -14,15 +14,15 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SSynchronizedStmt extends SNodeState<SSynchronizedStmt> implements SStmt {
 
-	public static STree<SSynchronizedStmt> make(STree<? extends SExpr> expr, STree<SBlockStmt> block) {
-		return new STree<SSynchronizedStmt>(new SSynchronizedStmt(expr, block));
+	public static BUTree<SSynchronizedStmt> make(BUTree<? extends SExpr> expr, BUTree<SBlockStmt> block) {
+		return new BUTree<SSynchronizedStmt>(new SSynchronizedStmt(expr, block));
 	}
 
-	public final STree<? extends SExpr> expr;
+	public final BUTree<? extends SExpr> expr;
 
-	public final STree<SBlockStmt> block;
+	public final BUTree<SBlockStmt> block;
 
-	public SSynchronizedStmt(STree<? extends SExpr> expr, STree<SBlockStmt> block) {
+	public SSynchronizedStmt(BUTree<? extends SExpr> expr, BUTree<SBlockStmt> block) {
 		this.expr = expr;
 		this.block = block;
 	}
@@ -32,19 +32,19 @@ public class SSynchronizedStmt extends SNodeState<SSynchronizedStmt> implements 
 		return Kind.SynchronizedStmt;
 	}
 
-	public STree<? extends SExpr> expr() {
+	public BUTree<? extends SExpr> expr() {
 		return expr;
 	}
 
-	public SSynchronizedStmt withExpr(STree<? extends SExpr> expr) {
+	public SSynchronizedStmt withExpr(BUTree<? extends SExpr> expr) {
 		return new SSynchronizedStmt(expr, block);
 	}
 
-	public STree<SBlockStmt> block() {
+	public BUTree<SBlockStmt> block() {
 		return block;
 	}
 
-	public SSynchronizedStmt withBlock(STree<SBlockStmt> block) {
+	public SSynchronizedStmt withBlock(BUTree<SBlockStmt> block) {
 		return new SSynchronizedStmt(expr, block);
 	}
 
@@ -93,12 +93,12 @@ public class SSynchronizedStmt extends SNodeState<SSynchronizedStmt> implements 
 	public static STypeSafeTraversal<SSynchronizedStmt, SExpr, Expr> EXPR = new STypeSafeTraversal<SSynchronizedStmt, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SSynchronizedStmt state) {
+		public BUTree<?> doTraverse(SSynchronizedStmt state) {
 			return state.expr;
 		}
 
 		@Override
-		public SSynchronizedStmt doRebuildParentState(SSynchronizedStmt state, STree<SExpr> child) {
+		public SSynchronizedStmt doRebuildParentState(SSynchronizedStmt state, BUTree<SExpr> child) {
 			return state.withExpr(child);
 		}
 
@@ -116,12 +116,12 @@ public class SSynchronizedStmt extends SNodeState<SSynchronizedStmt> implements 
 	public static STypeSafeTraversal<SSynchronizedStmt, SBlockStmt, BlockStmt> BLOCK = new STypeSafeTraversal<SSynchronizedStmt, SBlockStmt, BlockStmt>() {
 
 		@Override
-		public STree<?> doTraverse(SSynchronizedStmt state) {
+		public BUTree<?> doTraverse(SSynchronizedStmt state) {
 			return state.block;
 		}
 
 		@Override
-		public SSynchronizedStmt doRebuildParentState(SSynchronizedStmt state, STree<SBlockStmt> child) {
+		public SSynchronizedStmt doRebuildParentState(SSynchronizedStmt state, BUTree<SBlockStmt> child) {
 			return state.withBlock(child);
 		}
 

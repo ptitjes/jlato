@@ -14,15 +14,15 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SVariableDeclarator extends SNodeState<SVariableDeclarator> implements STreeState {
 
-	public static STree<SVariableDeclarator> make(STree<SVariableDeclaratorId> id, STree<SNodeOptionState> init) {
-		return new STree<SVariableDeclarator>(new SVariableDeclarator(id, init));
+	public static BUTree<SVariableDeclarator> make(BUTree<SVariableDeclaratorId> id, BUTree<SNodeOptionState> init) {
+		return new BUTree<SVariableDeclarator>(new SVariableDeclarator(id, init));
 	}
 
-	public final STree<SVariableDeclaratorId> id;
+	public final BUTree<SVariableDeclaratorId> id;
 
-	public final STree<SNodeOptionState> init;
+	public final BUTree<SNodeOptionState> init;
 
-	public SVariableDeclarator(STree<SVariableDeclaratorId> id, STree<SNodeOptionState> init) {
+	public SVariableDeclarator(BUTree<SVariableDeclaratorId> id, BUTree<SNodeOptionState> init) {
 		this.id = id;
 		this.init = init;
 	}
@@ -32,19 +32,19 @@ public class SVariableDeclarator extends SNodeState<SVariableDeclarator> impleme
 		return Kind.VariableDeclarator;
 	}
 
-	public STree<SVariableDeclaratorId> id() {
+	public BUTree<SVariableDeclaratorId> id() {
 		return id;
 	}
 
-	public SVariableDeclarator withId(STree<SVariableDeclaratorId> id) {
+	public SVariableDeclarator withId(BUTree<SVariableDeclaratorId> id) {
 		return new SVariableDeclarator(id, init);
 	}
 
-	public STree<SNodeOptionState> init() {
+	public BUTree<SNodeOptionState> init() {
 		return init;
 	}
 
-	public SVariableDeclarator withInit(STree<SNodeOptionState> init) {
+	public SVariableDeclarator withInit(BUTree<SNodeOptionState> init) {
 		return new SVariableDeclarator(id, init);
 	}
 
@@ -93,12 +93,12 @@ public class SVariableDeclarator extends SNodeState<SVariableDeclarator> impleme
 	public static STypeSafeTraversal<SVariableDeclarator, SVariableDeclaratorId, VariableDeclaratorId> ID = new STypeSafeTraversal<SVariableDeclarator, SVariableDeclaratorId, VariableDeclaratorId>() {
 
 		@Override
-		public STree<?> doTraverse(SVariableDeclarator state) {
+		public BUTree<?> doTraverse(SVariableDeclarator state) {
 			return state.id;
 		}
 
 		@Override
-		public SVariableDeclarator doRebuildParentState(SVariableDeclarator state, STree<SVariableDeclaratorId> child) {
+		public SVariableDeclarator doRebuildParentState(SVariableDeclarator state, BUTree<SVariableDeclaratorId> child) {
 			return state.withId(child);
 		}
 
@@ -116,12 +116,12 @@ public class SVariableDeclarator extends SNodeState<SVariableDeclarator> impleme
 	public static STypeSafeTraversal<SVariableDeclarator, SNodeOptionState, NodeOption<Expr>> INIT = new STypeSafeTraversal<SVariableDeclarator, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(SVariableDeclarator state) {
+		public BUTree<?> doTraverse(SVariableDeclarator state) {
 			return state.init;
 		}
 
 		@Override
-		public SVariableDeclarator doRebuildParentState(SVariableDeclarator state, STree<SNodeOptionState> child) {
+		public SVariableDeclarator doRebuildParentState(SVariableDeclarator state, BUTree<SNodeOptionState> child) {
 			return state.withInit(child);
 		}
 

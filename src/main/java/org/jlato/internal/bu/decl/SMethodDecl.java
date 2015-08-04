@@ -18,27 +18,27 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SMethodDecl extends SNodeState<SMethodDecl> implements SMemberDecl {
 
-	public static STree<SMethodDecl> make(STree<SNodeListState> modifiers, STree<SNodeListState> typeParams, STree<? extends SType> type, STree<SName> name, STree<SNodeListState> params, STree<SNodeListState> dims, STree<SNodeListState> throwsClause, STree<SNodeOptionState> body) {
-		return new STree<SMethodDecl>(new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body));
+	public static BUTree<SMethodDecl> make(BUTree<SNodeListState> modifiers, BUTree<SNodeListState> typeParams, BUTree<? extends SType> type, BUTree<SName> name, BUTree<SNodeListState> params, BUTree<SNodeListState> dims, BUTree<SNodeListState> throwsClause, BUTree<SNodeOptionState> body) {
+		return new BUTree<SMethodDecl>(new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body));
 	}
 
-	public final STree<SNodeListState> modifiers;
+	public final BUTree<SNodeListState> modifiers;
 
-	public final STree<SNodeListState> typeParams;
+	public final BUTree<SNodeListState> typeParams;
 
-	public final STree<? extends SType> type;
+	public final BUTree<? extends SType> type;
 
-	public final STree<SName> name;
+	public final BUTree<SName> name;
 
-	public final STree<SNodeListState> params;
+	public final BUTree<SNodeListState> params;
 
-	public final STree<SNodeListState> dims;
+	public final BUTree<SNodeListState> dims;
 
-	public final STree<SNodeListState> throwsClause;
+	public final BUTree<SNodeListState> throwsClause;
 
-	public final STree<SNodeOptionState> body;
+	public final BUTree<SNodeOptionState> body;
 
-	public SMethodDecl(STree<SNodeListState> modifiers, STree<SNodeListState> typeParams, STree<? extends SType> type, STree<SName> name, STree<SNodeListState> params, STree<SNodeListState> dims, STree<SNodeListState> throwsClause, STree<SNodeOptionState> body) {
+	public SMethodDecl(BUTree<SNodeListState> modifiers, BUTree<SNodeListState> typeParams, BUTree<? extends SType> type, BUTree<SName> name, BUTree<SNodeListState> params, BUTree<SNodeListState> dims, BUTree<SNodeListState> throwsClause, BUTree<SNodeOptionState> body) {
 		this.modifiers = modifiers;
 		this.typeParams = typeParams;
 		this.type = type;
@@ -54,67 +54,67 @@ public class SMethodDecl extends SNodeState<SMethodDecl> implements SMemberDecl 
 		return Kind.MethodDecl;
 	}
 
-	public STree<SNodeListState> modifiers() {
+	public BUTree<SNodeListState> modifiers() {
 		return modifiers;
 	}
 
-	public SMethodDecl withModifiers(STree<SNodeListState> modifiers) {
+	public SMethodDecl withModifiers(BUTree<SNodeListState> modifiers) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 	}
 
-	public STree<SNodeListState> typeParams() {
+	public BUTree<SNodeListState> typeParams() {
 		return typeParams;
 	}
 
-	public SMethodDecl withTypeParams(STree<SNodeListState> typeParams) {
+	public SMethodDecl withTypeParams(BUTree<SNodeListState> typeParams) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 	}
 
-	public STree<? extends SType> type() {
+	public BUTree<? extends SType> type() {
 		return type;
 	}
 
-	public SMethodDecl withType(STree<? extends SType> type) {
+	public SMethodDecl withType(BUTree<? extends SType> type) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 	}
 
-	public STree<SName> name() {
+	public BUTree<SName> name() {
 		return name;
 	}
 
-	public SMethodDecl withName(STree<SName> name) {
+	public SMethodDecl withName(BUTree<SName> name) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 	}
 
-	public STree<SNodeListState> params() {
+	public BUTree<SNodeListState> params() {
 		return params;
 	}
 
-	public SMethodDecl withParams(STree<SNodeListState> params) {
+	public SMethodDecl withParams(BUTree<SNodeListState> params) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 	}
 
-	public STree<SNodeListState> dims() {
+	public BUTree<SNodeListState> dims() {
 		return dims;
 	}
 
-	public SMethodDecl withDims(STree<SNodeListState> dims) {
+	public SMethodDecl withDims(BUTree<SNodeListState> dims) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 	}
 
-	public STree<SNodeListState> throwsClause() {
+	public BUTree<SNodeListState> throwsClause() {
 		return throwsClause;
 	}
 
-	public SMethodDecl withThrowsClause(STree<SNodeListState> throwsClause) {
+	public SMethodDecl withThrowsClause(BUTree<SNodeListState> throwsClause) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 	}
 
-	public STree<SNodeOptionState> body() {
+	public BUTree<SNodeOptionState> body() {
 		return body;
 	}
 
-	public SMethodDecl withBody(STree<SNodeOptionState> body) {
+	public SMethodDecl withBody(BUTree<SNodeOptionState> body) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 	}
 
@@ -181,12 +181,12 @@ public class SMethodDecl extends SNodeState<SMethodDecl> implements SMemberDecl 
 	public static STypeSafeTraversal<SMethodDecl, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SMethodDecl, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodDecl state) {
+		public BUTree<?> doTraverse(SMethodDecl state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public SMethodDecl doRebuildParentState(SMethodDecl state, STree<SNodeListState> child) {
+		public SMethodDecl doRebuildParentState(SMethodDecl state, BUTree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -204,12 +204,12 @@ public class SMethodDecl extends SNodeState<SMethodDecl> implements SMemberDecl 
 	public static STypeSafeTraversal<SMethodDecl, SNodeListState, NodeList<TypeParameter>> TYPE_PARAMS = new STypeSafeTraversal<SMethodDecl, SNodeListState, NodeList<TypeParameter>>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodDecl state) {
+		public BUTree<?> doTraverse(SMethodDecl state) {
 			return state.typeParams;
 		}
 
 		@Override
-		public SMethodDecl doRebuildParentState(SMethodDecl state, STree<SNodeListState> child) {
+		public SMethodDecl doRebuildParentState(SMethodDecl state, BUTree<SNodeListState> child) {
 			return state.withTypeParams(child);
 		}
 
@@ -227,12 +227,12 @@ public class SMethodDecl extends SNodeState<SMethodDecl> implements SMemberDecl 
 	public static STypeSafeTraversal<SMethodDecl, SType, Type> TYPE = new STypeSafeTraversal<SMethodDecl, SType, Type>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodDecl state) {
+		public BUTree<?> doTraverse(SMethodDecl state) {
 			return state.type;
 		}
 
 		@Override
-		public SMethodDecl doRebuildParentState(SMethodDecl state, STree<SType> child) {
+		public SMethodDecl doRebuildParentState(SMethodDecl state, BUTree<SType> child) {
 			return state.withType(child);
 		}
 
@@ -250,12 +250,12 @@ public class SMethodDecl extends SNodeState<SMethodDecl> implements SMemberDecl 
 	public static STypeSafeTraversal<SMethodDecl, SName, Name> NAME = new STypeSafeTraversal<SMethodDecl, SName, Name>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodDecl state) {
+		public BUTree<?> doTraverse(SMethodDecl state) {
 			return state.name;
 		}
 
 		@Override
-		public SMethodDecl doRebuildParentState(SMethodDecl state, STree<SName> child) {
+		public SMethodDecl doRebuildParentState(SMethodDecl state, BUTree<SName> child) {
 			return state.withName(child);
 		}
 
@@ -273,12 +273,12 @@ public class SMethodDecl extends SNodeState<SMethodDecl> implements SMemberDecl 
 	public static STypeSafeTraversal<SMethodDecl, SNodeListState, NodeList<FormalParameter>> PARAMS = new STypeSafeTraversal<SMethodDecl, SNodeListState, NodeList<FormalParameter>>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodDecl state) {
+		public BUTree<?> doTraverse(SMethodDecl state) {
 			return state.params;
 		}
 
 		@Override
-		public SMethodDecl doRebuildParentState(SMethodDecl state, STree<SNodeListState> child) {
+		public SMethodDecl doRebuildParentState(SMethodDecl state, BUTree<SNodeListState> child) {
 			return state.withParams(child);
 		}
 
@@ -296,12 +296,12 @@ public class SMethodDecl extends SNodeState<SMethodDecl> implements SMemberDecl 
 	public static STypeSafeTraversal<SMethodDecl, SNodeListState, NodeList<ArrayDim>> DIMS = new STypeSafeTraversal<SMethodDecl, SNodeListState, NodeList<ArrayDim>>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodDecl state) {
+		public BUTree<?> doTraverse(SMethodDecl state) {
 			return state.dims;
 		}
 
 		@Override
-		public SMethodDecl doRebuildParentState(SMethodDecl state, STree<SNodeListState> child) {
+		public SMethodDecl doRebuildParentState(SMethodDecl state, BUTree<SNodeListState> child) {
 			return state.withDims(child);
 		}
 
@@ -319,12 +319,12 @@ public class SMethodDecl extends SNodeState<SMethodDecl> implements SMemberDecl 
 	public static STypeSafeTraversal<SMethodDecl, SNodeListState, NodeList<QualifiedType>> THROWS_CLAUSE = new STypeSafeTraversal<SMethodDecl, SNodeListState, NodeList<QualifiedType>>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodDecl state) {
+		public BUTree<?> doTraverse(SMethodDecl state) {
 			return state.throwsClause;
 		}
 
 		@Override
-		public SMethodDecl doRebuildParentState(SMethodDecl state, STree<SNodeListState> child) {
+		public SMethodDecl doRebuildParentState(SMethodDecl state, BUTree<SNodeListState> child) {
 			return state.withThrowsClause(child);
 		}
 
@@ -342,12 +342,12 @@ public class SMethodDecl extends SNodeState<SMethodDecl> implements SMemberDecl 
 	public static STypeSafeTraversal<SMethodDecl, SNodeOptionState, NodeOption<BlockStmt>> BODY = new STypeSafeTraversal<SMethodDecl, SNodeOptionState, NodeOption<BlockStmt>>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodDecl state) {
+		public BUTree<?> doTraverse(SMethodDecl state) {
 			return state.body;
 		}
 
 		@Override
-		public SMethodDecl doRebuildParentState(SMethodDecl state, STree<SNodeOptionState> child) {
+		public SMethodDecl doRebuildParentState(SMethodDecl state, BUTree<SNodeOptionState> child) {
 			return state.withBody(child);
 		}
 

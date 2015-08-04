@@ -13,17 +13,17 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SWildcardType extends SNodeState<SWildcardType> implements SType {
 
-	public static STree<SWildcardType> make(STree<SNodeListState> annotations, STree<SNodeOptionState> ext, STree<SNodeOptionState> sup) {
-		return new STree<SWildcardType>(new SWildcardType(annotations, ext, sup));
+	public static BUTree<SWildcardType> make(BUTree<SNodeListState> annotations, BUTree<SNodeOptionState> ext, BUTree<SNodeOptionState> sup) {
+		return new BUTree<SWildcardType>(new SWildcardType(annotations, ext, sup));
 	}
 
-	public final STree<SNodeListState> annotations;
+	public final BUTree<SNodeListState> annotations;
 
-	public final STree<SNodeOptionState> ext;
+	public final BUTree<SNodeOptionState> ext;
 
-	public final STree<SNodeOptionState> sup;
+	public final BUTree<SNodeOptionState> sup;
 
-	public SWildcardType(STree<SNodeListState> annotations, STree<SNodeOptionState> ext, STree<SNodeOptionState> sup) {
+	public SWildcardType(BUTree<SNodeListState> annotations, BUTree<SNodeOptionState> ext, BUTree<SNodeOptionState> sup) {
 		this.annotations = annotations;
 		this.ext = ext;
 		this.sup = sup;
@@ -34,27 +34,27 @@ public class SWildcardType extends SNodeState<SWildcardType> implements SType {
 		return Kind.WildcardType;
 	}
 
-	public STree<SNodeListState> annotations() {
+	public BUTree<SNodeListState> annotations() {
 		return annotations;
 	}
 
-	public SWildcardType withAnnotations(STree<SNodeListState> annotations) {
+	public SWildcardType withAnnotations(BUTree<SNodeListState> annotations) {
 		return new SWildcardType(annotations, ext, sup);
 	}
 
-	public STree<SNodeOptionState> ext() {
+	public BUTree<SNodeOptionState> ext() {
 		return ext;
 	}
 
-	public SWildcardType withExt(STree<SNodeOptionState> ext) {
+	public SWildcardType withExt(BUTree<SNodeOptionState> ext) {
 		return new SWildcardType(annotations, ext, sup);
 	}
 
-	public STree<SNodeOptionState> sup() {
+	public BUTree<SNodeOptionState> sup() {
 		return sup;
 	}
 
-	public SWildcardType withSup(STree<SNodeOptionState> sup) {
+	public SWildcardType withSup(BUTree<SNodeOptionState> sup) {
 		return new SWildcardType(annotations, ext, sup);
 	}
 
@@ -106,12 +106,12 @@ public class SWildcardType extends SNodeState<SWildcardType> implements SType {
 	public static STypeSafeTraversal<SWildcardType, SNodeListState, NodeList<AnnotationExpr>> ANNOTATIONS = new STypeSafeTraversal<SWildcardType, SNodeListState, NodeList<AnnotationExpr>>() {
 
 		@Override
-		public STree<?> doTraverse(SWildcardType state) {
+		public BUTree<?> doTraverse(SWildcardType state) {
 			return state.annotations;
 		}
 
 		@Override
-		public SWildcardType doRebuildParentState(SWildcardType state, STree<SNodeListState> child) {
+		public SWildcardType doRebuildParentState(SWildcardType state, BUTree<SNodeListState> child) {
 			return state.withAnnotations(child);
 		}
 
@@ -129,12 +129,12 @@ public class SWildcardType extends SNodeState<SWildcardType> implements SType {
 	public static STypeSafeTraversal<SWildcardType, SNodeOptionState, NodeOption<ReferenceType>> EXT = new STypeSafeTraversal<SWildcardType, SNodeOptionState, NodeOption<ReferenceType>>() {
 
 		@Override
-		public STree<?> doTraverse(SWildcardType state) {
+		public BUTree<?> doTraverse(SWildcardType state) {
 			return state.ext;
 		}
 
 		@Override
-		public SWildcardType doRebuildParentState(SWildcardType state, STree<SNodeOptionState> child) {
+		public SWildcardType doRebuildParentState(SWildcardType state, BUTree<SNodeOptionState> child) {
 			return state.withExt(child);
 		}
 
@@ -152,12 +152,12 @@ public class SWildcardType extends SNodeState<SWildcardType> implements SType {
 	public static STypeSafeTraversal<SWildcardType, SNodeOptionState, NodeOption<ReferenceType>> SUP = new STypeSafeTraversal<SWildcardType, SNodeOptionState, NodeOption<ReferenceType>>() {
 
 		@Override
-		public STree<?> doTraverse(SWildcardType state) {
+		public BUTree<?> doTraverse(SWildcardType state) {
 			return state.sup;
 		}
 
 		@Override
-		public SWildcardType doRebuildParentState(SWildcardType state, STree<SNodeOptionState> child) {
+		public SWildcardType doRebuildParentState(SWildcardType state, BUTree<SNodeOptionState> child) {
 			return state.withSup(child);
 		}
 

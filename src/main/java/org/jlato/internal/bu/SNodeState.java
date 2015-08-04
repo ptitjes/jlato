@@ -39,7 +39,7 @@ public abstract class SNodeState<S extends SNodeState<S>> implements STreeState 
 		return Collections.emptyList();
 	}
 
-	public void validate(STree<?> tree) {
+	public void validate(BUTree<?> tree) {
 //		for (STree<?> child : children) {
 //			if (child == null) // TODO Add better error message
 //				throw new IllegalStateException();

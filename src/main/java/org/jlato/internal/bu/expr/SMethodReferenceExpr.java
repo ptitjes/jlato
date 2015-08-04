@@ -14,17 +14,17 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SMethodReferenceExpr extends SNodeState<SMethodReferenceExpr> implements SExpr {
 
-	public static STree<SMethodReferenceExpr> make(STree<? extends SExpr> scope, STree<SNodeListState> typeArgs, STree<SName> name) {
-		return new STree<SMethodReferenceExpr>(new SMethodReferenceExpr(scope, typeArgs, name));
+	public static BUTree<SMethodReferenceExpr> make(BUTree<? extends SExpr> scope, BUTree<SNodeListState> typeArgs, BUTree<SName> name) {
+		return new BUTree<SMethodReferenceExpr>(new SMethodReferenceExpr(scope, typeArgs, name));
 	}
 
-	public final STree<? extends SExpr> scope;
+	public final BUTree<? extends SExpr> scope;
 
-	public final STree<SNodeListState> typeArgs;
+	public final BUTree<SNodeListState> typeArgs;
 
-	public final STree<SName> name;
+	public final BUTree<SName> name;
 
-	public SMethodReferenceExpr(STree<? extends SExpr> scope, STree<SNodeListState> typeArgs, STree<SName> name) {
+	public SMethodReferenceExpr(BUTree<? extends SExpr> scope, BUTree<SNodeListState> typeArgs, BUTree<SName> name) {
 		this.scope = scope;
 		this.typeArgs = typeArgs;
 		this.name = name;
@@ -35,27 +35,27 @@ public class SMethodReferenceExpr extends SNodeState<SMethodReferenceExpr> imple
 		return Kind.MethodReferenceExpr;
 	}
 
-	public STree<? extends SExpr> scope() {
+	public BUTree<? extends SExpr> scope() {
 		return scope;
 	}
 
-	public SMethodReferenceExpr withScope(STree<? extends SExpr> scope) {
+	public SMethodReferenceExpr withScope(BUTree<? extends SExpr> scope) {
 		return new SMethodReferenceExpr(scope, typeArgs, name);
 	}
 
-	public STree<SNodeListState> typeArgs() {
+	public BUTree<SNodeListState> typeArgs() {
 		return typeArgs;
 	}
 
-	public SMethodReferenceExpr withTypeArgs(STree<SNodeListState> typeArgs) {
+	public SMethodReferenceExpr withTypeArgs(BUTree<SNodeListState> typeArgs) {
 		return new SMethodReferenceExpr(scope, typeArgs, name);
 	}
 
-	public STree<SName> name() {
+	public BUTree<SName> name() {
 		return name;
 	}
 
-	public SMethodReferenceExpr withName(STree<SName> name) {
+	public SMethodReferenceExpr withName(BUTree<SName> name) {
 		return new SMethodReferenceExpr(scope, typeArgs, name);
 	}
 
@@ -107,12 +107,12 @@ public class SMethodReferenceExpr extends SNodeState<SMethodReferenceExpr> imple
 	public static STypeSafeTraversal<SMethodReferenceExpr, SExpr, Expr> SCOPE = new STypeSafeTraversal<SMethodReferenceExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodReferenceExpr state) {
+		public BUTree<?> doTraverse(SMethodReferenceExpr state) {
 			return state.scope;
 		}
 
 		@Override
-		public SMethodReferenceExpr doRebuildParentState(SMethodReferenceExpr state, STree<SExpr> child) {
+		public SMethodReferenceExpr doRebuildParentState(SMethodReferenceExpr state, BUTree<SExpr> child) {
 			return state.withScope(child);
 		}
 
@@ -130,12 +130,12 @@ public class SMethodReferenceExpr extends SNodeState<SMethodReferenceExpr> imple
 	public static STypeSafeTraversal<SMethodReferenceExpr, SNodeListState, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<SMethodReferenceExpr, SNodeListState, NodeList<Type>>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodReferenceExpr state) {
+		public BUTree<?> doTraverse(SMethodReferenceExpr state) {
 			return state.typeArgs;
 		}
 
 		@Override
-		public SMethodReferenceExpr doRebuildParentState(SMethodReferenceExpr state, STree<SNodeListState> child) {
+		public SMethodReferenceExpr doRebuildParentState(SMethodReferenceExpr state, BUTree<SNodeListState> child) {
 			return state.withTypeArgs(child);
 		}
 
@@ -153,12 +153,12 @@ public class SMethodReferenceExpr extends SNodeState<SMethodReferenceExpr> imple
 	public static STypeSafeTraversal<SMethodReferenceExpr, SName, Name> NAME = new STypeSafeTraversal<SMethodReferenceExpr, SName, Name>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodReferenceExpr state) {
+		public BUTree<?> doTraverse(SMethodReferenceExpr state) {
 			return state.name;
 		}
 
 		@Override
-		public SMethodReferenceExpr doRebuildParentState(SMethodReferenceExpr state, STree<SName> child) {
+		public SMethodReferenceExpr doRebuildParentState(SMethodReferenceExpr state, BUTree<SName> child) {
 			return state.withName(child);
 		}
 

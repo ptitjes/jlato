@@ -12,13 +12,13 @@ import static org.jlato.internal.shapes.LexicalShape.composite;
 
 public class SIntersectionType extends SNodeState<SIntersectionType> implements SType {
 
-	public static STree<SIntersectionType> make(STree<SNodeListState> types) {
-		return new STree<SIntersectionType>(new SIntersectionType(types));
+	public static BUTree<SIntersectionType> make(BUTree<SNodeListState> types) {
+		return new BUTree<SIntersectionType>(new SIntersectionType(types));
 	}
 
-	public final STree<SNodeListState> types;
+	public final BUTree<SNodeListState> types;
 
-	public SIntersectionType(STree<SNodeListState> types) {
+	public SIntersectionType(BUTree<SNodeListState> types) {
 		this.types = types;
 	}
 
@@ -27,11 +27,11 @@ public class SIntersectionType extends SNodeState<SIntersectionType> implements 
 		return Kind.IntersectionType;
 	}
 
-	public STree<SNodeListState> types() {
+	public BUTree<SNodeListState> types() {
 		return types;
 	}
 
-	public SIntersectionType withTypes(STree<SNodeListState> types) {
+	public SIntersectionType withTypes(BUTree<SNodeListState> types) {
 		return new SIntersectionType(types);
 	}
 
@@ -77,12 +77,12 @@ public class SIntersectionType extends SNodeState<SIntersectionType> implements 
 	public static STypeSafeTraversal<SIntersectionType, SNodeListState, NodeList<Type>> TYPES = new STypeSafeTraversal<SIntersectionType, SNodeListState, NodeList<Type>>() {
 
 		@Override
-		public STree<?> doTraverse(SIntersectionType state) {
+		public BUTree<?> doTraverse(SIntersectionType state) {
 			return state.types;
 		}
 
 		@Override
-		public SIntersectionType doRebuildParentState(SIntersectionType state, STree<SNodeListState> child) {
+		public SIntersectionType doRebuildParentState(SIntersectionType state, BUTree<SNodeListState> child) {
 			return state.withTypes(child);
 		}
 

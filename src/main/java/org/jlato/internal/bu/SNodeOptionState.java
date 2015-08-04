@@ -30,9 +30,9 @@ import java.util.Collections;
  */
 public class SNodeOptionState implements STreeState {
 
-	public final STree<?> element;
+	public final BUTree<?> element;
 
-	public SNodeOptionState(STree<?> element) {
+	public SNodeOptionState(BUTree<?> element) {
 		this.element = element;
 	}
 
@@ -66,11 +66,11 @@ public class SNodeOptionState implements STreeState {
 		return elementTraversal();
 	}
 
-	public STree<?> element() {
+	public BUTree<?> element() {
 		return element;
 	}
 
-	public SNodeOptionState withElement(STree<?> element) {
+	public SNodeOptionState withElement(BUTree<?> element) {
 		return new SNodeOptionState(element);
 	}
 
@@ -91,7 +91,7 @@ public class SNodeOptionState implements STreeState {
 	}
 
 	@Override
-	public void validate(STree<?> tree) {
+	public void validate(BUTree<?> tree) {
 		if (element != null) element.validate();
 	}
 
@@ -102,12 +102,12 @@ public class SNodeOptionState implements STreeState {
 		}
 
 		@Override
-		public STree<?> doTraverse(SNodeOptionState state) {
+		public BUTree<?> doTraverse(SNodeOptionState state) {
 			return state.element;
 		}
 
 		@Override
-		public SNodeOptionState doRebuildParentState(SNodeOptionState state, STree<STreeState> child) {
+		public SNodeOptionState doRebuildParentState(SNodeOptionState state, BUTree<STreeState> child) {
 			return state.withElement(child);
 		}
 

@@ -28,17 +28,17 @@ public abstract class STypeSafeTraversal<P extends STreeState, S extends STreeSt
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public final STree<?> traverse(STreeState state) {
+	public final BUTree<?> traverse(STreeState state) {
 		return doTraverse((P) state);
 	}
 
-	public abstract STree<?> doTraverse(P state);
+	public abstract BUTree<?> doTraverse(P state);
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public final STreeState rebuildParentState(STreeState state, STree<?> child) {
-		return doRebuildParentState((P) state, (STree<S>) child);
+	public final STreeState rebuildParentState(STreeState state, BUTree<?> child) {
+		return doRebuildParentState((P) state, (BUTree<S>) child);
 	}
 
-	public abstract P doRebuildParentState(P state, STree<S> child);
+	public abstract P doRebuildParentState(P state, BUTree<S> child);
 }

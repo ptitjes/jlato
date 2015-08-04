@@ -17,17 +17,17 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SLambdaExpr extends SNodeState<SLambdaExpr> implements SExpr {
 
-	public static STree<SLambdaExpr> make(STree<SNodeListState> params, boolean hasParens, STree<SNodeEitherState> body) {
-		return new STree<SLambdaExpr>(new SLambdaExpr(params, hasParens, body));
+	public static BUTree<SLambdaExpr> make(BUTree<SNodeListState> params, boolean hasParens, BUTree<SNodeEitherState> body) {
+		return new BUTree<SLambdaExpr>(new SLambdaExpr(params, hasParens, body));
 	}
 
-	public final STree<SNodeListState> params;
+	public final BUTree<SNodeListState> params;
 
 	public final boolean hasParens;
 
-	public final STree<SNodeEitherState> body;
+	public final BUTree<SNodeEitherState> body;
 
-	public SLambdaExpr(STree<SNodeListState> params, boolean hasParens, STree<SNodeEitherState> body) {
+	public SLambdaExpr(BUTree<SNodeListState> params, boolean hasParens, BUTree<SNodeEitherState> body) {
 		this.params = params;
 		this.hasParens = hasParens;
 		this.body = body;
@@ -38,11 +38,11 @@ public class SLambdaExpr extends SNodeState<SLambdaExpr> implements SExpr {
 		return Kind.LambdaExpr;
 	}
 
-	public STree<SNodeListState> params() {
+	public BUTree<SNodeListState> params() {
 		return params;
 	}
 
-	public SLambdaExpr withParams(STree<SNodeListState> params) {
+	public SLambdaExpr withParams(BUTree<SNodeListState> params) {
 		return new SLambdaExpr(params, hasParens, body);
 	}
 
@@ -54,11 +54,11 @@ public class SLambdaExpr extends SNodeState<SLambdaExpr> implements SExpr {
 		return new SLambdaExpr(params, hasParens, body);
 	}
 
-	public STree<SNodeEitherState> body() {
+	public BUTree<SNodeEitherState> body() {
 		return body;
 	}
 
-	public SLambdaExpr withBody(STree<SNodeEitherState> body) {
+	public SLambdaExpr withBody(BUTree<SNodeEitherState> body) {
 		return new SLambdaExpr(params, hasParens, body);
 	}
 
@@ -115,12 +115,12 @@ public class SLambdaExpr extends SNodeState<SLambdaExpr> implements SExpr {
 	public static STypeSafeTraversal<SLambdaExpr, SNodeListState, NodeList<FormalParameter>> PARAMS = new STypeSafeTraversal<SLambdaExpr, SNodeListState, NodeList<FormalParameter>>() {
 
 		@Override
-		public STree<?> doTraverse(SLambdaExpr state) {
+		public BUTree<?> doTraverse(SLambdaExpr state) {
 			return state.params;
 		}
 
 		@Override
-		public SLambdaExpr doRebuildParentState(SLambdaExpr state, STree<SNodeListState> child) {
+		public SLambdaExpr doRebuildParentState(SLambdaExpr state, BUTree<SNodeListState> child) {
 			return state.withParams(child);
 		}
 
@@ -138,12 +138,12 @@ public class SLambdaExpr extends SNodeState<SLambdaExpr> implements SExpr {
 	public static STypeSafeTraversal<SLambdaExpr, SNodeEitherState, NodeEither<Expr, BlockStmt>> BODY = new STypeSafeTraversal<SLambdaExpr, SNodeEitherState, NodeEither<Expr, BlockStmt>>() {
 
 		@Override
-		public STree<?> doTraverse(SLambdaExpr state) {
+		public BUTree<?> doTraverse(SLambdaExpr state) {
 			return state.body;
 		}
 
 		@Override
-		public SLambdaExpr doRebuildParentState(SLambdaExpr state, STree<SNodeEitherState> child) {
+		public SLambdaExpr doRebuildParentState(SLambdaExpr state, BUTree<SNodeEitherState> child) {
 			return state.withBody(child);
 		}
 

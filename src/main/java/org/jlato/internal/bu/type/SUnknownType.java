@@ -1,8 +1,8 @@
 package org.jlato.internal.bu.type;
 
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.type.TDUnknownType;
@@ -12,8 +12,8 @@ import static org.jlato.internal.shapes.LexicalShape.none;
 
 public class SUnknownType extends SNodeState<SUnknownType> implements SType {
 
-	public static STree<SUnknownType> make() {
-		return new STree<SUnknownType>(new SUnknownType());
+	public static BUTree<SUnknownType> make() {
+		return new BUTree<SUnknownType>(new SUnknownType());
 	}
 
 	public SUnknownType() {

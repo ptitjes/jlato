@@ -14,15 +14,15 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SCatchClause extends SNodeState<SCatchClause> implements STreeState {
 
-	public static STree<SCatchClause> make(STree<SFormalParameter> except, STree<SBlockStmt> catchBlock) {
-		return new STree<SCatchClause>(new SCatchClause(except, catchBlock));
+	public static BUTree<SCatchClause> make(BUTree<SFormalParameter> except, BUTree<SBlockStmt> catchBlock) {
+		return new BUTree<SCatchClause>(new SCatchClause(except, catchBlock));
 	}
 
-	public final STree<SFormalParameter> except;
+	public final BUTree<SFormalParameter> except;
 
-	public final STree<SBlockStmt> catchBlock;
+	public final BUTree<SBlockStmt> catchBlock;
 
-	public SCatchClause(STree<SFormalParameter> except, STree<SBlockStmt> catchBlock) {
+	public SCatchClause(BUTree<SFormalParameter> except, BUTree<SBlockStmt> catchBlock) {
 		this.except = except;
 		this.catchBlock = catchBlock;
 	}
@@ -32,19 +32,19 @@ public class SCatchClause extends SNodeState<SCatchClause> implements STreeState
 		return Kind.CatchClause;
 	}
 
-	public STree<SFormalParameter> except() {
+	public BUTree<SFormalParameter> except() {
 		return except;
 	}
 
-	public SCatchClause withExcept(STree<SFormalParameter> except) {
+	public SCatchClause withExcept(BUTree<SFormalParameter> except) {
 		return new SCatchClause(except, catchBlock);
 	}
 
-	public STree<SBlockStmt> catchBlock() {
+	public BUTree<SBlockStmt> catchBlock() {
 		return catchBlock;
 	}
 
-	public SCatchClause withCatchBlock(STree<SBlockStmt> catchBlock) {
+	public SCatchClause withCatchBlock(BUTree<SBlockStmt> catchBlock) {
 		return new SCatchClause(except, catchBlock);
 	}
 
@@ -93,12 +93,12 @@ public class SCatchClause extends SNodeState<SCatchClause> implements STreeState
 	public static STypeSafeTraversal<SCatchClause, SFormalParameter, FormalParameter> EXCEPT = new STypeSafeTraversal<SCatchClause, SFormalParameter, FormalParameter>() {
 
 		@Override
-		public STree<?> doTraverse(SCatchClause state) {
+		public BUTree<?> doTraverse(SCatchClause state) {
 			return state.except;
 		}
 
 		@Override
-		public SCatchClause doRebuildParentState(SCatchClause state, STree<SFormalParameter> child) {
+		public SCatchClause doRebuildParentState(SCatchClause state, BUTree<SFormalParameter> child) {
 			return state.withExcept(child);
 		}
 
@@ -116,12 +116,12 @@ public class SCatchClause extends SNodeState<SCatchClause> implements STreeState
 	public static STypeSafeTraversal<SCatchClause, SBlockStmt, BlockStmt> CATCH_BLOCK = new STypeSafeTraversal<SCatchClause, SBlockStmt, BlockStmt>() {
 
 		@Override
-		public STree<?> doTraverse(SCatchClause state) {
+		public BUTree<?> doTraverse(SCatchClause state) {
 			return state.catchBlock;
 		}
 
 		@Override
-		public SCatchClause doRebuildParentState(SCatchClause state, STree<SBlockStmt> child) {
+		public SCatchClause doRebuildParentState(SCatchClause state, BUTree<SBlockStmt> child) {
 			return state.withCatchBlock(child);
 		}
 

@@ -15,19 +15,19 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SMethodInvocationExpr extends SNodeState<SMethodInvocationExpr> implements SExpr {
 
-	public static STree<SMethodInvocationExpr> make(STree<SNodeOptionState> scope, STree<SNodeListState> typeArgs, STree<SName> name, STree<SNodeListState> args) {
-		return new STree<SMethodInvocationExpr>(new SMethodInvocationExpr(scope, typeArgs, name, args));
+	public static BUTree<SMethodInvocationExpr> make(BUTree<SNodeOptionState> scope, BUTree<SNodeListState> typeArgs, BUTree<SName> name, BUTree<SNodeListState> args) {
+		return new BUTree<SMethodInvocationExpr>(new SMethodInvocationExpr(scope, typeArgs, name, args));
 	}
 
-	public final STree<SNodeOptionState> scope;
+	public final BUTree<SNodeOptionState> scope;
 
-	public final STree<SNodeListState> typeArgs;
+	public final BUTree<SNodeListState> typeArgs;
 
-	public final STree<SName> name;
+	public final BUTree<SName> name;
 
-	public final STree<SNodeListState> args;
+	public final BUTree<SNodeListState> args;
 
-	public SMethodInvocationExpr(STree<SNodeOptionState> scope, STree<SNodeListState> typeArgs, STree<SName> name, STree<SNodeListState> args) {
+	public SMethodInvocationExpr(BUTree<SNodeOptionState> scope, BUTree<SNodeListState> typeArgs, BUTree<SName> name, BUTree<SNodeListState> args) {
 		this.scope = scope;
 		this.typeArgs = typeArgs;
 		this.name = name;
@@ -39,35 +39,35 @@ public class SMethodInvocationExpr extends SNodeState<SMethodInvocationExpr> imp
 		return Kind.MethodInvocationExpr;
 	}
 
-	public STree<SNodeOptionState> scope() {
+	public BUTree<SNodeOptionState> scope() {
 		return scope;
 	}
 
-	public SMethodInvocationExpr withScope(STree<SNodeOptionState> scope) {
+	public SMethodInvocationExpr withScope(BUTree<SNodeOptionState> scope) {
 		return new SMethodInvocationExpr(scope, typeArgs, name, args);
 	}
 
-	public STree<SNodeListState> typeArgs() {
+	public BUTree<SNodeListState> typeArgs() {
 		return typeArgs;
 	}
 
-	public SMethodInvocationExpr withTypeArgs(STree<SNodeListState> typeArgs) {
+	public SMethodInvocationExpr withTypeArgs(BUTree<SNodeListState> typeArgs) {
 		return new SMethodInvocationExpr(scope, typeArgs, name, args);
 	}
 
-	public STree<SName> name() {
+	public BUTree<SName> name() {
 		return name;
 	}
 
-	public SMethodInvocationExpr withName(STree<SName> name) {
+	public SMethodInvocationExpr withName(BUTree<SName> name) {
 		return new SMethodInvocationExpr(scope, typeArgs, name, args);
 	}
 
-	public STree<SNodeListState> args() {
+	public BUTree<SNodeListState> args() {
 		return args;
 	}
 
-	public SMethodInvocationExpr withArgs(STree<SNodeListState> args) {
+	public SMethodInvocationExpr withArgs(BUTree<SNodeListState> args) {
 		return new SMethodInvocationExpr(scope, typeArgs, name, args);
 	}
 
@@ -122,12 +122,12 @@ public class SMethodInvocationExpr extends SNodeState<SMethodInvocationExpr> imp
 	public static STypeSafeTraversal<SMethodInvocationExpr, SNodeOptionState, NodeOption<Expr>> SCOPE = new STypeSafeTraversal<SMethodInvocationExpr, SNodeOptionState, NodeOption<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodInvocationExpr state) {
+		public BUTree<?> doTraverse(SMethodInvocationExpr state) {
 			return state.scope;
 		}
 
 		@Override
-		public SMethodInvocationExpr doRebuildParentState(SMethodInvocationExpr state, STree<SNodeOptionState> child) {
+		public SMethodInvocationExpr doRebuildParentState(SMethodInvocationExpr state, BUTree<SNodeOptionState> child) {
 			return state.withScope(child);
 		}
 
@@ -145,12 +145,12 @@ public class SMethodInvocationExpr extends SNodeState<SMethodInvocationExpr> imp
 	public static STypeSafeTraversal<SMethodInvocationExpr, SNodeListState, NodeList<Type>> TYPE_ARGS = new STypeSafeTraversal<SMethodInvocationExpr, SNodeListState, NodeList<Type>>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodInvocationExpr state) {
+		public BUTree<?> doTraverse(SMethodInvocationExpr state) {
 			return state.typeArgs;
 		}
 
 		@Override
-		public SMethodInvocationExpr doRebuildParentState(SMethodInvocationExpr state, STree<SNodeListState> child) {
+		public SMethodInvocationExpr doRebuildParentState(SMethodInvocationExpr state, BUTree<SNodeListState> child) {
 			return state.withTypeArgs(child);
 		}
 
@@ -168,12 +168,12 @@ public class SMethodInvocationExpr extends SNodeState<SMethodInvocationExpr> imp
 	public static STypeSafeTraversal<SMethodInvocationExpr, SName, Name> NAME = new STypeSafeTraversal<SMethodInvocationExpr, SName, Name>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodInvocationExpr state) {
+		public BUTree<?> doTraverse(SMethodInvocationExpr state) {
 			return state.name;
 		}
 
 		@Override
-		public SMethodInvocationExpr doRebuildParentState(SMethodInvocationExpr state, STree<SName> child) {
+		public SMethodInvocationExpr doRebuildParentState(SMethodInvocationExpr state, BUTree<SName> child) {
 			return state.withName(child);
 		}
 
@@ -191,12 +191,12 @@ public class SMethodInvocationExpr extends SNodeState<SMethodInvocationExpr> imp
 	public static STypeSafeTraversal<SMethodInvocationExpr, SNodeListState, NodeList<Expr>> ARGS = new STypeSafeTraversal<SMethodInvocationExpr, SNodeListState, NodeList<Expr>>() {
 
 		@Override
-		public STree<?> doTraverse(SMethodInvocationExpr state) {
+		public BUTree<?> doTraverse(SMethodInvocationExpr state) {
 			return state.args;
 		}
 
 		@Override
-		public SMethodInvocationExpr doRebuildParentState(SMethodInvocationExpr state, STree<SNodeListState> child) {
+		public SMethodInvocationExpr doRebuildParentState(SMethodInvocationExpr state, BUTree<SNodeListState> child) {
 			return state.withArgs(child);
 		}
 

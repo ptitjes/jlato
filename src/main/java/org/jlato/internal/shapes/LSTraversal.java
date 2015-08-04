@@ -34,18 +34,18 @@ public class LSTraversal extends LSDecorated {
 		this.traversal = traversal;
 	}
 
-	protected STree traverse(STree tree) {
+	protected BUTree traverse(BUTree tree) {
 		return tree.traverse(traversal);
 	}
 
 	@Override
-	public boolean isDefined(STree tree) {
-		final STree child = traverse(tree);
+	public boolean isDefined(BUTree tree) {
+		final BUTree child = traverse(tree);
 		return child != null && (child.dressing != null || shape.isDefined(child));
 	}
 
 	@Override
-	public void dress(DressingBuilder<?> builder, STree<?> discriminator) {
+	public void dress(DressingBuilder<?> builder, BUTree<?> discriminator) {
 		builder.openChild(traversal);
 		shape.dress(builder, discriminator.traverse(traversal));
 		builder.closeChild();
@@ -67,8 +67,8 @@ public class LSTraversal extends LSDecorated {
 	}
 
 	@Override
-	public void render(STree tree, WRunRun run, Printer printer) {
-		final STree child = traverse(tree);
+	public void render(BUTree tree, WRunRun run, Printer printer) {
+		final BUTree child = traverse(tree);
 		if (child == null) return;
 
 		if (child.dressing != null) shape.render(child, printer);

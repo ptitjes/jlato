@@ -30,10 +30,10 @@ import java.util.Collections;
  */
 public class SNodeEitherState implements STreeState {
 
-	public final STree<?> element;
+	public final BUTree<?> element;
 	public final EitherSide side;
 
-	public SNodeEitherState(STree<?> element, EitherSide side) {
+	public SNodeEitherState(BUTree<?> element, EitherSide side) {
 		this.element = element;
 		this.side = side;
 	}
@@ -76,7 +76,7 @@ public class SNodeEitherState implements STreeState {
 		return elementTraversal();
 	}
 
-	public STree<?> element() {
+	public BUTree<?> element() {
 		return element;
 	}
 
@@ -84,15 +84,15 @@ public class SNodeEitherState implements STreeState {
 		return new SNodeEitherState(element, side);
 	}
 
-	public SNodeEitherState withElement(STree<?> element) {
+	public SNodeEitherState withElement(BUTree<?> element) {
 		return new SNodeEitherState(element, side);
 	}
 
-	public SNodeEitherState withLeft(STree<?> element) {
+	public SNodeEitherState withLeft(BUTree<?> element) {
 		return new SNodeEitherState(element, EitherSide.Left);
 	}
 
-	public SNodeEitherState withRight(STree<?> element) {
+	public SNodeEitherState withRight(BUTree<?> element) {
 		return new SNodeEitherState(element, EitherSide.Right);
 	}
 
@@ -116,7 +116,7 @@ public class SNodeEitherState implements STreeState {
 	}
 
 	@Override
-	public void validate(STree<?> tree) {
+	public void validate(BUTree<?> tree) {
 		if (element != null) element.validate();
 	}
 
@@ -133,12 +133,12 @@ public class SNodeEitherState implements STreeState {
 		}
 
 		@Override
-		public STree<?> doTraverse(SNodeEitherState state) {
+		public BUTree<?> doTraverse(SNodeEitherState state) {
 			return side == null || side == state.side ? state.element : null;
 		}
 
 		@Override
-		public SNodeEitherState doRebuildParentState(SNodeEitherState state, STree<STreeState> child) {
+		public SNodeEitherState doRebuildParentState(SNodeEitherState state, BUTree<STreeState> child) {
 			return state.withElement(child).withSide(side != null ? side : state.side);
 		}
 

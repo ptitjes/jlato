@@ -14,17 +14,17 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
 
-	public static STree<SFieldDecl> make(STree<SNodeListState> modifiers, STree<? extends SType> type, STree<SNodeListState> variables) {
-		return new STree<SFieldDecl>(new SFieldDecl(modifiers, type, variables));
+	public static BUTree<SFieldDecl> make(BUTree<SNodeListState> modifiers, BUTree<? extends SType> type, BUTree<SNodeListState> variables) {
+		return new BUTree<SFieldDecl>(new SFieldDecl(modifiers, type, variables));
 	}
 
-	public final STree<SNodeListState> modifiers;
+	public final BUTree<SNodeListState> modifiers;
 
-	public final STree<? extends SType> type;
+	public final BUTree<? extends SType> type;
 
-	public final STree<SNodeListState> variables;
+	public final BUTree<SNodeListState> variables;
 
-	public SFieldDecl(STree<SNodeListState> modifiers, STree<? extends SType> type, STree<SNodeListState> variables) {
+	public SFieldDecl(BUTree<SNodeListState> modifiers, BUTree<? extends SType> type, BUTree<SNodeListState> variables) {
 		this.modifiers = modifiers;
 		this.type = type;
 		this.variables = variables;
@@ -35,27 +35,27 @@ public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
 		return Kind.FieldDecl;
 	}
 
-	public STree<SNodeListState> modifiers() {
+	public BUTree<SNodeListState> modifiers() {
 		return modifiers;
 	}
 
-	public SFieldDecl withModifiers(STree<SNodeListState> modifiers) {
+	public SFieldDecl withModifiers(BUTree<SNodeListState> modifiers) {
 		return new SFieldDecl(modifiers, type, variables);
 	}
 
-	public STree<? extends SType> type() {
+	public BUTree<? extends SType> type() {
 		return type;
 	}
 
-	public SFieldDecl withType(STree<? extends SType> type) {
+	public SFieldDecl withType(BUTree<? extends SType> type) {
 		return new SFieldDecl(modifiers, type, variables);
 	}
 
-	public STree<SNodeListState> variables() {
+	public BUTree<SNodeListState> variables() {
 		return variables;
 	}
 
-	public SFieldDecl withVariables(STree<SNodeListState> variables) {
+	public SFieldDecl withVariables(BUTree<SNodeListState> variables) {
 		return new SFieldDecl(modifiers, type, variables);
 	}
 
@@ -107,12 +107,12 @@ public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
 	public static STypeSafeTraversal<SFieldDecl, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SFieldDecl, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(SFieldDecl state) {
+		public BUTree<?> doTraverse(SFieldDecl state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public SFieldDecl doRebuildParentState(SFieldDecl state, STree<SNodeListState> child) {
+		public SFieldDecl doRebuildParentState(SFieldDecl state, BUTree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -130,12 +130,12 @@ public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
 	public static STypeSafeTraversal<SFieldDecl, SType, Type> TYPE = new STypeSafeTraversal<SFieldDecl, SType, Type>() {
 
 		@Override
-		public STree<?> doTraverse(SFieldDecl state) {
+		public BUTree<?> doTraverse(SFieldDecl state) {
 			return state.type;
 		}
 
 		@Override
-		public SFieldDecl doRebuildParentState(SFieldDecl state, STree<SType> child) {
+		public SFieldDecl doRebuildParentState(SFieldDecl state, BUTree<SType> child) {
 			return state.withType(child);
 		}
 
@@ -153,12 +153,12 @@ public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
 	public static STypeSafeTraversal<SFieldDecl, SNodeListState, NodeList<VariableDeclarator>> VARIABLES = new STypeSafeTraversal<SFieldDecl, SNodeListState, NodeList<VariableDeclarator>>() {
 
 		@Override
-		public STree<?> doTraverse(SFieldDecl state) {
+		public BUTree<?> doTraverse(SFieldDecl state) {
 			return state.variables;
 		}
 
 		@Override
-		public SFieldDecl doRebuildParentState(SFieldDecl state, STree<SNodeListState> child) {
+		public SFieldDecl doRebuildParentState(SFieldDecl state, BUTree<SNodeListState> child) {
 			return state.withVariables(child);
 		}
 

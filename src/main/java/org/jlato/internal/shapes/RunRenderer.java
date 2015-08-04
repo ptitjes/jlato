@@ -19,7 +19,7 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.WRun;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
@@ -42,7 +42,7 @@ public class RunRenderer {
 		elements = run == null ? null : run.elements.iterator();
 	}
 
-	public void handleNext(LexicalShape shape, STree tree) {
+	public void handleNext(LexicalShape shape, BUTree tree) {
 		if (firstShape) firstShape = false;
 		else {
 			final WTokenRun tokens = (WTokenRun) safeNext(elements);

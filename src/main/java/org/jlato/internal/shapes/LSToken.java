@@ -19,8 +19,8 @@
 
 package org.jlato.internal.shapes;
 
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
 import org.jlato.printer.Printer;
@@ -41,12 +41,12 @@ public final class LSToken extends LexicalShape {
 	}
 
 	@Override
-	public boolean isDefined(STree tree) {
+	public boolean isDefined(BUTree tree) {
 		return true;
 	}
 
 	@Override
-	public void dress(DressingBuilder<?> builder, STree<?> discriminator) {
+	public void dress(DressingBuilder<?> builder, BUTree<?> discriminator) {
 		builder.addNullRun();
 	}
 
@@ -69,7 +69,7 @@ public final class LSToken extends LexicalShape {
 	}
 
 	@Override
-	public void render(STree tree, WRunRun run, Printer printer) {
+	public void render(BUTree tree, WRunRun run, Printer printer) {
 		final LToken token = provider.tokenFor(tree);
 		if (token == null) throw new IllegalStateException();
 
@@ -77,7 +77,7 @@ public final class LSToken extends LexicalShape {
 	}
 
 	public interface Provider {
-		LToken tokenFor(STree tree);
+		LToken tokenFor(BUTree tree);
 	}
 
 	private static class FixedProvider implements Provider {
@@ -89,7 +89,7 @@ public final class LSToken extends LexicalShape {
 		}
 
 		@Override
-		public LToken tokenFor(STree tree) {
+		public LToken tokenFor(BUTree tree) {
 			return token;
 		}
 	}

@@ -13,13 +13,13 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SBreakStmt extends SNodeState<SBreakStmt> implements SStmt {
 
-	public static STree<SBreakStmt> make(STree<SNodeOptionState> id) {
-		return new STree<SBreakStmt>(new SBreakStmt(id));
+	public static BUTree<SBreakStmt> make(BUTree<SNodeOptionState> id) {
+		return new BUTree<SBreakStmt>(new SBreakStmt(id));
 	}
 
-	public final STree<SNodeOptionState> id;
+	public final BUTree<SNodeOptionState> id;
 
-	public SBreakStmt(STree<SNodeOptionState> id) {
+	public SBreakStmt(BUTree<SNodeOptionState> id) {
 		this.id = id;
 	}
 
@@ -28,11 +28,11 @@ public class SBreakStmt extends SNodeState<SBreakStmt> implements SStmt {
 		return Kind.BreakStmt;
 	}
 
-	public STree<SNodeOptionState> id() {
+	public BUTree<SNodeOptionState> id() {
 		return id;
 	}
 
-	public SBreakStmt withId(STree<SNodeOptionState> id) {
+	public SBreakStmt withId(BUTree<SNodeOptionState> id) {
 		return new SBreakStmt(id);
 	}
 
@@ -78,12 +78,12 @@ public class SBreakStmt extends SNodeState<SBreakStmt> implements SStmt {
 	public static STypeSafeTraversal<SBreakStmt, SNodeOptionState, NodeOption<Name>> ID = new STypeSafeTraversal<SBreakStmt, SNodeOptionState, NodeOption<Name>>() {
 
 		@Override
-		public STree<?> doTraverse(SBreakStmt state) {
+		public BUTree<?> doTraverse(SBreakStmt state) {
 			return state.id;
 		}
 
 		@Override
-		public SBreakStmt doRebuildParentState(SBreakStmt state, STree<SNodeOptionState> child) {
+		public SBreakStmt doRebuildParentState(SBreakStmt state, BUTree<SNodeOptionState> child) {
 			return state.withId(child);
 		}
 

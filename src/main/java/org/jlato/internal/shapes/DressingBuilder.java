@@ -34,7 +34,7 @@ public class DressingBuilder<S extends STreeState> {
 	private final Iterator<WTokenRun> tokenIterator;
 	private Stack<RunStack> descendantStack = new Stack<RunStack>();
 
-	public DressingBuilder(STree<S> tree, Iterator<WTokenRun> tokenIterator) {
+	public DressingBuilder(BUTree<S> tree, Iterator<WTokenRun> tokenIterator) {
 		this.tokenIterator = tokenIterator;
 		descendantStack.push(new RunStack(null, tree));
 	}
@@ -53,8 +53,8 @@ public class DressingBuilder<S extends STreeState> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public STree<S> build() {
-		return (STree<S>) descendantStack.pop().tree;
+	public BUTree<S> build() {
+		return (BUTree<S>) descendantStack.pop().tree;
 	}
 
 	public void openRun() {
@@ -65,7 +65,7 @@ public class DressingBuilder<S extends STreeState> {
 		descendantStack.peek().closeRun();
 	}
 
-	public void handleNext(LexicalShape shape, STree<?> discriminator) {
+	public void handleNext(LexicalShape shape, BUTree<?> discriminator) {
 		descendantStack.peek().handleNext(shape, discriminator);
 	}
 
@@ -93,10 +93,10 @@ public class DressingBuilder<S extends STreeState> {
 
 	private class RunStack {
 		private STraversal traversal;
-		private STree<?> tree;
+		private BUTree<?> tree;
 		private Stack<RunBuilder> runStack = new Stack<RunBuilder>();
 
-		public RunStack(STraversal traversal, STree<?> tree) {
+		public RunStack(STraversal traversal, BUTree<?> tree) {
 			this.traversal = traversal;
 			this.tree = tree;
 		}
@@ -114,7 +114,7 @@ public class DressingBuilder<S extends STreeState> {
 			} else addSubRun(run);
 		}
 
-		public void handleNext(LexicalShape shape, STree<?> discriminator) {
+		public void handleNext(LexicalShape shape, BUTree<?> discriminator) {
 			runStack.peek().handleNext(shape, discriminator);
 		}
 
@@ -129,9 +129,9 @@ public class DressingBuilder<S extends STreeState> {
 		private boolean firstShape = true;
 		private boolean firstDefinedShape = true;
 		private LexicalShape lastDefinedShape = null;
-		private STree<?> lastDefinedDiscriminator = null;
+		private BUTree<?> lastDefinedDiscriminator = null;
 
-		public void handleNext(LexicalShape shape, STree<?> discriminator) {
+		public void handleNext(LexicalShape shape, BUTree<?> discriminator) {
 			final boolean defined = shape != null && shape.isDefined(discriminator);
 
 			if (!defined) {

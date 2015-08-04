@@ -1,9 +1,9 @@
 package org.jlato.internal.bu.type;
 
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.type.TDVoidType;
@@ -13,8 +13,8 @@ import static org.jlato.internal.shapes.LexicalShape.token;
 
 public class SVoidType extends SNodeState<SVoidType> implements SType {
 
-	public static STree<SVoidType> make() {
-		return new STree<SVoidType>(new SVoidType());
+	public static BUTree<SVoidType> make() {
+		return new BUTree<SVoidType>(new SVoidType());
 	}
 
 	public SVoidType() {

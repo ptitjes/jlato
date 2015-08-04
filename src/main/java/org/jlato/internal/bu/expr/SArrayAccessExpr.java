@@ -11,15 +11,15 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SArrayAccessExpr extends SNodeState<SArrayAccessExpr> implements SExpr {
 
-	public static STree<SArrayAccessExpr> make(STree<? extends SExpr> name, STree<? extends SExpr> index) {
-		return new STree<SArrayAccessExpr>(new SArrayAccessExpr(name, index));
+	public static BUTree<SArrayAccessExpr> make(BUTree<? extends SExpr> name, BUTree<? extends SExpr> index) {
+		return new BUTree<SArrayAccessExpr>(new SArrayAccessExpr(name, index));
 	}
 
-	public final STree<? extends SExpr> name;
+	public final BUTree<? extends SExpr> name;
 
-	public final STree<? extends SExpr> index;
+	public final BUTree<? extends SExpr> index;
 
-	public SArrayAccessExpr(STree<? extends SExpr> name, STree<? extends SExpr> index) {
+	public SArrayAccessExpr(BUTree<? extends SExpr> name, BUTree<? extends SExpr> index) {
 		this.name = name;
 		this.index = index;
 	}
@@ -29,19 +29,19 @@ public class SArrayAccessExpr extends SNodeState<SArrayAccessExpr> implements SE
 		return Kind.ArrayAccessExpr;
 	}
 
-	public STree<? extends SExpr> name() {
+	public BUTree<? extends SExpr> name() {
 		return name;
 	}
 
-	public SArrayAccessExpr withName(STree<? extends SExpr> name) {
+	public SArrayAccessExpr withName(BUTree<? extends SExpr> name) {
 		return new SArrayAccessExpr(name, index);
 	}
 
-	public STree<? extends SExpr> index() {
+	public BUTree<? extends SExpr> index() {
 		return index;
 	}
 
-	public SArrayAccessExpr withIndex(STree<? extends SExpr> index) {
+	public SArrayAccessExpr withIndex(BUTree<? extends SExpr> index) {
 		return new SArrayAccessExpr(name, index);
 	}
 
@@ -90,12 +90,12 @@ public class SArrayAccessExpr extends SNodeState<SArrayAccessExpr> implements SE
 	public static STypeSafeTraversal<SArrayAccessExpr, SExpr, Expr> NAME = new STypeSafeTraversal<SArrayAccessExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SArrayAccessExpr state) {
+		public BUTree<?> doTraverse(SArrayAccessExpr state) {
 			return state.name;
 		}
 
 		@Override
-		public SArrayAccessExpr doRebuildParentState(SArrayAccessExpr state, STree<SExpr> child) {
+		public SArrayAccessExpr doRebuildParentState(SArrayAccessExpr state, BUTree<SExpr> child) {
 			return state.withName(child);
 		}
 
@@ -113,12 +113,12 @@ public class SArrayAccessExpr extends SNodeState<SArrayAccessExpr> implements SE
 	public static STypeSafeTraversal<SArrayAccessExpr, SExpr, Expr> INDEX = new STypeSafeTraversal<SArrayAccessExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SArrayAccessExpr state) {
+		public BUTree<?> doTraverse(SArrayAccessExpr state) {
 			return state.index;
 		}
 
 		@Override
-		public SArrayAccessExpr doRebuildParentState(SArrayAccessExpr state, STree<SExpr> child) {
+		public SArrayAccessExpr doRebuildParentState(SArrayAccessExpr state, BUTree<SExpr> child) {
 			return state.withIndex(child);
 		}
 

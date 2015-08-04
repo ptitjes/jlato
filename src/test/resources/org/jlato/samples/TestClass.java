@@ -3,7 +3,7 @@ package org.jlato.tree;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 
@@ -23,12 +23,12 @@ public abstract class TestClass {
 		return location.root();
 	}
 
-	public static STree treeOf(Tree facade) {
+	public static BUTree treeOf(Tree facade) {
 		return facade == null ? null : facade.location.tree;
 	}
 
-	protected static ArrayList<STree> treesOf(Tree... facades) {
-		final Builder<STree, ArrayList<STree>> builder = ArrayList.<STree>factory().newBuilder();
+	protected static ArrayList<BUTree> treesOf(Tree... facades) {
+		final Builder<BUTree, ArrayList<BUTree>> builder = ArrayList.<BUTree>factory().newBuilder();
 		for (Tree facade : facades) {
 			builder.add(treeOf(facade));
 		}
@@ -43,8 +43,8 @@ public abstract class TestClass {
 		return builder.build();
 	}
 
-	protected static Vector<STree> treeListOf(Tree... facades) {
-		final Builder<STree, Vector<STree>> builder = Vector.<STree>factory().newBuilder();
+	protected static Vector<BUTree> treeListOf(Tree... facades) {
+		final Builder<BUTree, Vector<BUTree>> builder = Vector.<BUTree>factory().newBuilder();
 		for (Tree facade : facades) {
 			builder.add(treeOf(facade));
 		}

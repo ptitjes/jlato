@@ -12,13 +12,13 @@ import static org.jlato.internal.shapes.LexicalShape.child;
 
 public class SVariableDeclarationExpr extends SNodeState<SVariableDeclarationExpr> implements SExpr {
 
-	public static STree<SVariableDeclarationExpr> make(STree<SLocalVariableDecl> declaration) {
-		return new STree<SVariableDeclarationExpr>(new SVariableDeclarationExpr(declaration));
+	public static BUTree<SVariableDeclarationExpr> make(BUTree<SLocalVariableDecl> declaration) {
+		return new BUTree<SVariableDeclarationExpr>(new SVariableDeclarationExpr(declaration));
 	}
 
-	public final STree<SLocalVariableDecl> declaration;
+	public final BUTree<SLocalVariableDecl> declaration;
 
-	public SVariableDeclarationExpr(STree<SLocalVariableDecl> declaration) {
+	public SVariableDeclarationExpr(BUTree<SLocalVariableDecl> declaration) {
 		this.declaration = declaration;
 	}
 
@@ -27,11 +27,11 @@ public class SVariableDeclarationExpr extends SNodeState<SVariableDeclarationExp
 		return Kind.VariableDeclarationExpr;
 	}
 
-	public STree<SLocalVariableDecl> declaration() {
+	public BUTree<SLocalVariableDecl> declaration() {
 		return declaration;
 	}
 
-	public SVariableDeclarationExpr withDeclaration(STree<SLocalVariableDecl> declaration) {
+	public SVariableDeclarationExpr withDeclaration(BUTree<SLocalVariableDecl> declaration) {
 		return new SVariableDeclarationExpr(declaration);
 	}
 
@@ -77,12 +77,12 @@ public class SVariableDeclarationExpr extends SNodeState<SVariableDeclarationExp
 	public static STypeSafeTraversal<SVariableDeclarationExpr, SLocalVariableDecl, LocalVariableDecl> DECLARATION = new STypeSafeTraversal<SVariableDeclarationExpr, SLocalVariableDecl, LocalVariableDecl>() {
 
 		@Override
-		public STree<?> doTraverse(SVariableDeclarationExpr state) {
+		public BUTree<?> doTraverse(SVariableDeclarationExpr state) {
 			return state.declaration;
 		}
 
 		@Override
-		public SVariableDeclarationExpr doRebuildParentState(SVariableDeclarationExpr state, STree<SLocalVariableDecl> child) {
+		public SVariableDeclarationExpr doRebuildParentState(SVariableDeclarationExpr state, BUTree<SLocalVariableDecl> child) {
 			return state.withDeclaration(child);
 		}
 

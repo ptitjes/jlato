@@ -17,23 +17,23 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SConstructorDecl extends SNodeState<SConstructorDecl> implements SMemberDecl {
 
-	public static STree<SConstructorDecl> make(STree<SNodeListState> modifiers, STree<SNodeListState> typeParams, STree<SName> name, STree<SNodeListState> params, STree<SNodeListState> throwsClause, STree<SBlockStmt> body) {
-		return new STree<SConstructorDecl>(new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body));
+	public static BUTree<SConstructorDecl> make(BUTree<SNodeListState> modifiers, BUTree<SNodeListState> typeParams, BUTree<SName> name, BUTree<SNodeListState> params, BUTree<SNodeListState> throwsClause, BUTree<SBlockStmt> body) {
+		return new BUTree<SConstructorDecl>(new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body));
 	}
 
-	public final STree<SNodeListState> modifiers;
+	public final BUTree<SNodeListState> modifiers;
 
-	public final STree<SNodeListState> typeParams;
+	public final BUTree<SNodeListState> typeParams;
 
-	public final STree<SName> name;
+	public final BUTree<SName> name;
 
-	public final STree<SNodeListState> params;
+	public final BUTree<SNodeListState> params;
 
-	public final STree<SNodeListState> throwsClause;
+	public final BUTree<SNodeListState> throwsClause;
 
-	public final STree<SBlockStmt> body;
+	public final BUTree<SBlockStmt> body;
 
-	public SConstructorDecl(STree<SNodeListState> modifiers, STree<SNodeListState> typeParams, STree<SName> name, STree<SNodeListState> params, STree<SNodeListState> throwsClause, STree<SBlockStmt> body) {
+	public SConstructorDecl(BUTree<SNodeListState> modifiers, BUTree<SNodeListState> typeParams, BUTree<SName> name, BUTree<SNodeListState> params, BUTree<SNodeListState> throwsClause, BUTree<SBlockStmt> body) {
 		this.modifiers = modifiers;
 		this.typeParams = typeParams;
 		this.name = name;
@@ -47,51 +47,51 @@ public class SConstructorDecl extends SNodeState<SConstructorDecl> implements SM
 		return Kind.ConstructorDecl;
 	}
 
-	public STree<SNodeListState> modifiers() {
+	public BUTree<SNodeListState> modifiers() {
 		return modifiers;
 	}
 
-	public SConstructorDecl withModifiers(STree<SNodeListState> modifiers) {
+	public SConstructorDecl withModifiers(BUTree<SNodeListState> modifiers) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
-	public STree<SNodeListState> typeParams() {
+	public BUTree<SNodeListState> typeParams() {
 		return typeParams;
 	}
 
-	public SConstructorDecl withTypeParams(STree<SNodeListState> typeParams) {
+	public SConstructorDecl withTypeParams(BUTree<SNodeListState> typeParams) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
-	public STree<SName> name() {
+	public BUTree<SName> name() {
 		return name;
 	}
 
-	public SConstructorDecl withName(STree<SName> name) {
+	public SConstructorDecl withName(BUTree<SName> name) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
-	public STree<SNodeListState> params() {
+	public BUTree<SNodeListState> params() {
 		return params;
 	}
 
-	public SConstructorDecl withParams(STree<SNodeListState> params) {
+	public SConstructorDecl withParams(BUTree<SNodeListState> params) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
-	public STree<SNodeListState> throwsClause() {
+	public BUTree<SNodeListState> throwsClause() {
 		return throwsClause;
 	}
 
-	public SConstructorDecl withThrowsClause(STree<SNodeListState> throwsClause) {
+	public SConstructorDecl withThrowsClause(BUTree<SNodeListState> throwsClause) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
-	public STree<SBlockStmt> body() {
+	public BUTree<SBlockStmt> body() {
 		return body;
 	}
 
-	public SConstructorDecl withBody(STree<SBlockStmt> body) {
+	public SConstructorDecl withBody(BUTree<SBlockStmt> body) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
@@ -152,12 +152,12 @@ public class SConstructorDecl extends SNodeState<SConstructorDecl> implements SM
 	public static STypeSafeTraversal<SConstructorDecl, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SConstructorDecl, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(SConstructorDecl state) {
+		public BUTree<?> doTraverse(SConstructorDecl state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public SConstructorDecl doRebuildParentState(SConstructorDecl state, STree<SNodeListState> child) {
+		public SConstructorDecl doRebuildParentState(SConstructorDecl state, BUTree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -175,12 +175,12 @@ public class SConstructorDecl extends SNodeState<SConstructorDecl> implements SM
 	public static STypeSafeTraversal<SConstructorDecl, SNodeListState, NodeList<TypeParameter>> TYPE_PARAMS = new STypeSafeTraversal<SConstructorDecl, SNodeListState, NodeList<TypeParameter>>() {
 
 		@Override
-		public STree<?> doTraverse(SConstructorDecl state) {
+		public BUTree<?> doTraverse(SConstructorDecl state) {
 			return state.typeParams;
 		}
 
 		@Override
-		public SConstructorDecl doRebuildParentState(SConstructorDecl state, STree<SNodeListState> child) {
+		public SConstructorDecl doRebuildParentState(SConstructorDecl state, BUTree<SNodeListState> child) {
 			return state.withTypeParams(child);
 		}
 
@@ -198,12 +198,12 @@ public class SConstructorDecl extends SNodeState<SConstructorDecl> implements SM
 	public static STypeSafeTraversal<SConstructorDecl, SName, Name> NAME = new STypeSafeTraversal<SConstructorDecl, SName, Name>() {
 
 		@Override
-		public STree<?> doTraverse(SConstructorDecl state) {
+		public BUTree<?> doTraverse(SConstructorDecl state) {
 			return state.name;
 		}
 
 		@Override
-		public SConstructorDecl doRebuildParentState(SConstructorDecl state, STree<SName> child) {
+		public SConstructorDecl doRebuildParentState(SConstructorDecl state, BUTree<SName> child) {
 			return state.withName(child);
 		}
 
@@ -221,12 +221,12 @@ public class SConstructorDecl extends SNodeState<SConstructorDecl> implements SM
 	public static STypeSafeTraversal<SConstructorDecl, SNodeListState, NodeList<FormalParameter>> PARAMS = new STypeSafeTraversal<SConstructorDecl, SNodeListState, NodeList<FormalParameter>>() {
 
 		@Override
-		public STree<?> doTraverse(SConstructorDecl state) {
+		public BUTree<?> doTraverse(SConstructorDecl state) {
 			return state.params;
 		}
 
 		@Override
-		public SConstructorDecl doRebuildParentState(SConstructorDecl state, STree<SNodeListState> child) {
+		public SConstructorDecl doRebuildParentState(SConstructorDecl state, BUTree<SNodeListState> child) {
 			return state.withParams(child);
 		}
 
@@ -244,12 +244,12 @@ public class SConstructorDecl extends SNodeState<SConstructorDecl> implements SM
 	public static STypeSafeTraversal<SConstructorDecl, SNodeListState, NodeList<QualifiedType>> THROWS_CLAUSE = new STypeSafeTraversal<SConstructorDecl, SNodeListState, NodeList<QualifiedType>>() {
 
 		@Override
-		public STree<?> doTraverse(SConstructorDecl state) {
+		public BUTree<?> doTraverse(SConstructorDecl state) {
 			return state.throwsClause;
 		}
 
 		@Override
-		public SConstructorDecl doRebuildParentState(SConstructorDecl state, STree<SNodeListState> child) {
+		public SConstructorDecl doRebuildParentState(SConstructorDecl state, BUTree<SNodeListState> child) {
 			return state.withThrowsClause(child);
 		}
 
@@ -267,12 +267,12 @@ public class SConstructorDecl extends SNodeState<SConstructorDecl> implements SM
 	public static STypeSafeTraversal<SConstructorDecl, SBlockStmt, BlockStmt> BODY = new STypeSafeTraversal<SConstructorDecl, SBlockStmt, BlockStmt>() {
 
 		@Override
-		public STree<?> doTraverse(SConstructorDecl state) {
+		public BUTree<?> doTraverse(SConstructorDecl state) {
 			return state.body;
 		}
 
 		@Override
-		public SConstructorDecl doRebuildParentState(SConstructorDecl state, STree<SBlockStmt> child) {
+		public SConstructorDecl doRebuildParentState(SConstructorDecl state, BUTree<SBlockStmt> child) {
 			return state.withBody(child);
 		}
 

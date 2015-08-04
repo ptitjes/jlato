@@ -16,13 +16,13 @@ import static org.jlato.printer.SpacingConstraint.newLine;
 
 public class SBlockStmt extends SNodeState<SBlockStmt> implements SStmt {
 
-	public static STree<SBlockStmt> make(STree<SNodeListState> stmts) {
-		return new STree<SBlockStmt>(new SBlockStmt(stmts));
+	public static BUTree<SBlockStmt> make(BUTree<SNodeListState> stmts) {
+		return new BUTree<SBlockStmt>(new SBlockStmt(stmts));
 	}
 
-	public final STree<SNodeListState> stmts;
+	public final BUTree<SNodeListState> stmts;
 
-	public SBlockStmt(STree<SNodeListState> stmts) {
+	public SBlockStmt(BUTree<SNodeListState> stmts) {
 		this.stmts = stmts;
 	}
 
@@ -31,11 +31,11 @@ public class SBlockStmt extends SNodeState<SBlockStmt> implements SStmt {
 		return Kind.BlockStmt;
 	}
 
-	public STree<SNodeListState> stmts() {
+	public BUTree<SNodeListState> stmts() {
 		return stmts;
 	}
 
-	public SBlockStmt withStmts(STree<SNodeListState> stmts) {
+	public SBlockStmt withStmts(BUTree<SNodeListState> stmts) {
 		return new SBlockStmt(stmts);
 	}
 
@@ -81,12 +81,12 @@ public class SBlockStmt extends SNodeState<SBlockStmt> implements SStmt {
 	public static STypeSafeTraversal<SBlockStmt, SNodeListState, NodeList<Stmt>> STMTS = new STypeSafeTraversal<SBlockStmt, SNodeListState, NodeList<Stmt>>() {
 
 		@Override
-		public STree<?> doTraverse(SBlockStmt state) {
+		public BUTree<?> doTraverse(SBlockStmt state) {
 			return state.stmts;
 		}
 
 		@Override
-		public SBlockStmt doRebuildParentState(SBlockStmt state, STree<SNodeListState> child) {
+		public SBlockStmt doRebuildParentState(SBlockStmt state, BUTree<SNodeListState> child) {
 			return state.withStmts(child);
 		}
 

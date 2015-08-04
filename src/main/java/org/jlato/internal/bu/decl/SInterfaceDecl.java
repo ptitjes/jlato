@@ -14,21 +14,21 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SInterfaceDecl extends SNodeState<SInterfaceDecl> implements STypeDecl {
 
-	public static STree<SInterfaceDecl> make(STree<SNodeListState> modifiers, STree<SName> name, STree<SNodeListState> typeParams, STree<SNodeListState> extendsClause, STree<SNodeListState> members) {
-		return new STree<SInterfaceDecl>(new SInterfaceDecl(modifiers, name, typeParams, extendsClause, members));
+	public static BUTree<SInterfaceDecl> make(BUTree<SNodeListState> modifiers, BUTree<SName> name, BUTree<SNodeListState> typeParams, BUTree<SNodeListState> extendsClause, BUTree<SNodeListState> members) {
+		return new BUTree<SInterfaceDecl>(new SInterfaceDecl(modifiers, name, typeParams, extendsClause, members));
 	}
 
-	public final STree<SNodeListState> modifiers;
+	public final BUTree<SNodeListState> modifiers;
 
-	public final STree<SName> name;
+	public final BUTree<SName> name;
 
-	public final STree<SNodeListState> typeParams;
+	public final BUTree<SNodeListState> typeParams;
 
-	public final STree<SNodeListState> extendsClause;
+	public final BUTree<SNodeListState> extendsClause;
 
-	public final STree<SNodeListState> members;
+	public final BUTree<SNodeListState> members;
 
-	public SInterfaceDecl(STree<SNodeListState> modifiers, STree<SName> name, STree<SNodeListState> typeParams, STree<SNodeListState> extendsClause, STree<SNodeListState> members) {
+	public SInterfaceDecl(BUTree<SNodeListState> modifiers, BUTree<SName> name, BUTree<SNodeListState> typeParams, BUTree<SNodeListState> extendsClause, BUTree<SNodeListState> members) {
 		this.modifiers = modifiers;
 		this.name = name;
 		this.typeParams = typeParams;
@@ -41,43 +41,43 @@ public class SInterfaceDecl extends SNodeState<SInterfaceDecl> implements STypeD
 		return Kind.InterfaceDecl;
 	}
 
-	public STree<SNodeListState> modifiers() {
+	public BUTree<SNodeListState> modifiers() {
 		return modifiers;
 	}
 
-	public SInterfaceDecl withModifiers(STree<SNodeListState> modifiers) {
+	public SInterfaceDecl withModifiers(BUTree<SNodeListState> modifiers) {
 		return new SInterfaceDecl(modifiers, name, typeParams, extendsClause, members);
 	}
 
-	public STree<SName> name() {
+	public BUTree<SName> name() {
 		return name;
 	}
 
-	public SInterfaceDecl withName(STree<SName> name) {
+	public SInterfaceDecl withName(BUTree<SName> name) {
 		return new SInterfaceDecl(modifiers, name, typeParams, extendsClause, members);
 	}
 
-	public STree<SNodeListState> typeParams() {
+	public BUTree<SNodeListState> typeParams() {
 		return typeParams;
 	}
 
-	public SInterfaceDecl withTypeParams(STree<SNodeListState> typeParams) {
+	public SInterfaceDecl withTypeParams(BUTree<SNodeListState> typeParams) {
 		return new SInterfaceDecl(modifiers, name, typeParams, extendsClause, members);
 	}
 
-	public STree<SNodeListState> extendsClause() {
+	public BUTree<SNodeListState> extendsClause() {
 		return extendsClause;
 	}
 
-	public SInterfaceDecl withExtendsClause(STree<SNodeListState> extendsClause) {
+	public SInterfaceDecl withExtendsClause(BUTree<SNodeListState> extendsClause) {
 		return new SInterfaceDecl(modifiers, name, typeParams, extendsClause, members);
 	}
 
-	public STree<SNodeListState> members() {
+	public BUTree<SNodeListState> members() {
 		return members;
 	}
 
-	public SInterfaceDecl withMembers(STree<SNodeListState> members) {
+	public SInterfaceDecl withMembers(BUTree<SNodeListState> members) {
 		return new SInterfaceDecl(modifiers, name, typeParams, extendsClause, members);
 	}
 
@@ -135,12 +135,12 @@ public class SInterfaceDecl extends SNodeState<SInterfaceDecl> implements STypeD
 	public static STypeSafeTraversal<SInterfaceDecl, SNodeListState, NodeList<ExtendedModifier>> MODIFIERS = new STypeSafeTraversal<SInterfaceDecl, SNodeListState, NodeList<ExtendedModifier>>() {
 
 		@Override
-		public STree<?> doTraverse(SInterfaceDecl state) {
+		public BUTree<?> doTraverse(SInterfaceDecl state) {
 			return state.modifiers;
 		}
 
 		@Override
-		public SInterfaceDecl doRebuildParentState(SInterfaceDecl state, STree<SNodeListState> child) {
+		public SInterfaceDecl doRebuildParentState(SInterfaceDecl state, BUTree<SNodeListState> child) {
 			return state.withModifiers(child);
 		}
 
@@ -158,12 +158,12 @@ public class SInterfaceDecl extends SNodeState<SInterfaceDecl> implements STypeD
 	public static STypeSafeTraversal<SInterfaceDecl, SName, Name> NAME = new STypeSafeTraversal<SInterfaceDecl, SName, Name>() {
 
 		@Override
-		public STree<?> doTraverse(SInterfaceDecl state) {
+		public BUTree<?> doTraverse(SInterfaceDecl state) {
 			return state.name;
 		}
 
 		@Override
-		public SInterfaceDecl doRebuildParentState(SInterfaceDecl state, STree<SName> child) {
+		public SInterfaceDecl doRebuildParentState(SInterfaceDecl state, BUTree<SName> child) {
 			return state.withName(child);
 		}
 
@@ -181,12 +181,12 @@ public class SInterfaceDecl extends SNodeState<SInterfaceDecl> implements STypeD
 	public static STypeSafeTraversal<SInterfaceDecl, SNodeListState, NodeList<TypeParameter>> TYPE_PARAMS = new STypeSafeTraversal<SInterfaceDecl, SNodeListState, NodeList<TypeParameter>>() {
 
 		@Override
-		public STree<?> doTraverse(SInterfaceDecl state) {
+		public BUTree<?> doTraverse(SInterfaceDecl state) {
 			return state.typeParams;
 		}
 
 		@Override
-		public SInterfaceDecl doRebuildParentState(SInterfaceDecl state, STree<SNodeListState> child) {
+		public SInterfaceDecl doRebuildParentState(SInterfaceDecl state, BUTree<SNodeListState> child) {
 			return state.withTypeParams(child);
 		}
 
@@ -204,12 +204,12 @@ public class SInterfaceDecl extends SNodeState<SInterfaceDecl> implements STypeD
 	public static STypeSafeTraversal<SInterfaceDecl, SNodeListState, NodeList<QualifiedType>> EXTENDS_CLAUSE = new STypeSafeTraversal<SInterfaceDecl, SNodeListState, NodeList<QualifiedType>>() {
 
 		@Override
-		public STree<?> doTraverse(SInterfaceDecl state) {
+		public BUTree<?> doTraverse(SInterfaceDecl state) {
 			return state.extendsClause;
 		}
 
 		@Override
-		public SInterfaceDecl doRebuildParentState(SInterfaceDecl state, STree<SNodeListState> child) {
+		public SInterfaceDecl doRebuildParentState(SInterfaceDecl state, BUTree<SNodeListState> child) {
 			return state.withExtendsClause(child);
 		}
 
@@ -227,12 +227,12 @@ public class SInterfaceDecl extends SNodeState<SInterfaceDecl> implements STypeD
 	public static STypeSafeTraversal<SInterfaceDecl, SNodeListState, NodeList<MemberDecl>> MEMBERS = new STypeSafeTraversal<SInterfaceDecl, SNodeListState, NodeList<MemberDecl>>() {
 
 		@Override
-		public STree<?> doTraverse(SInterfaceDecl state) {
+		public BUTree<?> doTraverse(SInterfaceDecl state) {
 			return state.members;
 		}
 
 		@Override
-		public SInterfaceDecl doRebuildParentState(SInterfaceDecl state, STree<SNodeListState> child) {
+		public SInterfaceDecl doRebuildParentState(SInterfaceDecl state, BUTree<SNodeListState> child) {
 			return state.withMembers(child);
 		}
 

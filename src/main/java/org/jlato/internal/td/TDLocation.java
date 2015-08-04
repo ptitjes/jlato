@@ -29,26 +29,26 @@ import org.jlato.tree.Tree;
 public class TDLocation<S extends STreeState> {
 
 	private final TDContext<?> context;
-	public final STree<S> tree;
+	public final BUTree<S> tree;
 	public final boolean changed;
 	public final Tree facade;
 
-	public TDLocation(STree<S> tree) {
+	public TDLocation(BUTree<S> tree) {
 		this(null, tree, false);
 	}
 
-	public TDLocation(TDContext<?> context, STree<S> tree) {
+	public TDLocation(TDContext<?> context, BUTree<S> tree) {
 		this(context, tree, false);
 	}
 
-	public TDLocation(TDContext<?> context, STree<S> tree, boolean changed) {
+	public TDLocation(TDContext<?> context, BUTree<S> tree, boolean changed) {
 		this.context = context;
 		this.tree = tree;
 		this.changed = changed;
 		this.facade = tree.state.instantiate(this);
 	}
 
-	public TDLocation<S> withTree(STree<S> newTree) {
+	public TDLocation<S> withTree(BUTree<S> newTree) {
 		return newTree == tree ? this : new TDLocation<S>(context, newTree, true);
 	}
 
@@ -96,7 +96,7 @@ public class TDLocation<S extends STreeState> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Tree> T replaceTree(STree<S> newTree) {
+	public <T extends Tree> T replaceTree(BUTree<S> newTree) {
 		return (T) withTree(newTree).facade;
 	}
 

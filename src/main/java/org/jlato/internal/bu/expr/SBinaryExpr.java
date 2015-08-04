@@ -15,17 +15,17 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SBinaryExpr extends SNodeState<SBinaryExpr> implements SExpr {
 
-	public static STree<SBinaryExpr> make(STree<? extends SExpr> left, BinaryOp op, STree<? extends SExpr> right) {
-		return new STree<SBinaryExpr>(new SBinaryExpr(left, op, right));
+	public static BUTree<SBinaryExpr> make(BUTree<? extends SExpr> left, BinaryOp op, BUTree<? extends SExpr> right) {
+		return new BUTree<SBinaryExpr>(new SBinaryExpr(left, op, right));
 	}
 
-	public final STree<? extends SExpr> left;
+	public final BUTree<? extends SExpr> left;
 
 	public final BinaryOp op;
 
-	public final STree<? extends SExpr> right;
+	public final BUTree<? extends SExpr> right;
 
-	public SBinaryExpr(STree<? extends SExpr> left, BinaryOp op, STree<? extends SExpr> right) {
+	public SBinaryExpr(BUTree<? extends SExpr> left, BinaryOp op, BUTree<? extends SExpr> right) {
 		this.left = left;
 		this.op = op;
 		this.right = right;
@@ -36,11 +36,11 @@ public class SBinaryExpr extends SNodeState<SBinaryExpr> implements SExpr {
 		return Kind.BinaryExpr;
 	}
 
-	public STree<? extends SExpr> left() {
+	public BUTree<? extends SExpr> left() {
 		return left;
 	}
 
-	public SBinaryExpr withLeft(STree<? extends SExpr> left) {
+	public SBinaryExpr withLeft(BUTree<? extends SExpr> left) {
 		return new SBinaryExpr(left, op, right);
 	}
 
@@ -52,11 +52,11 @@ public class SBinaryExpr extends SNodeState<SBinaryExpr> implements SExpr {
 		return new SBinaryExpr(left, op, right);
 	}
 
-	public STree<? extends SExpr> right() {
+	public BUTree<? extends SExpr> right() {
 		return right;
 	}
 
-	public SBinaryExpr withRight(STree<? extends SExpr> right) {
+	public SBinaryExpr withRight(BUTree<? extends SExpr> right) {
 		return new SBinaryExpr(left, op, right);
 	}
 
@@ -113,12 +113,12 @@ public class SBinaryExpr extends SNodeState<SBinaryExpr> implements SExpr {
 	public static STypeSafeTraversal<SBinaryExpr, SExpr, Expr> LEFT = new STypeSafeTraversal<SBinaryExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SBinaryExpr state) {
+		public BUTree<?> doTraverse(SBinaryExpr state) {
 			return state.left;
 		}
 
 		@Override
-		public SBinaryExpr doRebuildParentState(SBinaryExpr state, STree<SExpr> child) {
+		public SBinaryExpr doRebuildParentState(SBinaryExpr state, BUTree<SExpr> child) {
 			return state.withLeft(child);
 		}
 
@@ -136,12 +136,12 @@ public class SBinaryExpr extends SNodeState<SBinaryExpr> implements SExpr {
 	public static STypeSafeTraversal<SBinaryExpr, SExpr, Expr> RIGHT = new STypeSafeTraversal<SBinaryExpr, SExpr, Expr>() {
 
 		@Override
-		public STree<?> doTraverse(SBinaryExpr state) {
+		public BUTree<?> doTraverse(SBinaryExpr state) {
 			return state.right;
 		}
 
 		@Override
-		public SBinaryExpr doRebuildParentState(SBinaryExpr state, STree<SExpr> child) {
+		public SBinaryExpr doRebuildParentState(SBinaryExpr state, BUTree<SExpr> child) {
 			return state.withRight(child);
 		}
 
@@ -172,7 +172,7 @@ public class SBinaryExpr extends SNodeState<SBinaryExpr> implements SExpr {
 	public static final LexicalShape shape = composite(
 			child(LEFT),
 			token(new LSToken.Provider() {
-				public LToken tokenFor(STree tree) {
+				public LToken tokenFor(BUTree tree) {
 					final BinaryOp op = ((SBinaryExpr) tree.state).op;
 					switch (op) {
 						case Or:

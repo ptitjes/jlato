@@ -13,13 +13,13 @@ import static org.jlato.printer.SpacingConstraint.space;
 
 public class SContinueStmt extends SNodeState<SContinueStmt> implements SStmt {
 
-	public static STree<SContinueStmt> make(STree<SNodeOptionState> id) {
-		return new STree<SContinueStmt>(new SContinueStmt(id));
+	public static BUTree<SContinueStmt> make(BUTree<SNodeOptionState> id) {
+		return new BUTree<SContinueStmt>(new SContinueStmt(id));
 	}
 
-	public final STree<SNodeOptionState> id;
+	public final BUTree<SNodeOptionState> id;
 
-	public SContinueStmt(STree<SNodeOptionState> id) {
+	public SContinueStmt(BUTree<SNodeOptionState> id) {
 		this.id = id;
 	}
 
@@ -28,11 +28,11 @@ public class SContinueStmt extends SNodeState<SContinueStmt> implements SStmt {
 		return Kind.ContinueStmt;
 	}
 
-	public STree<SNodeOptionState> id() {
+	public BUTree<SNodeOptionState> id() {
 		return id;
 	}
 
-	public SContinueStmt withId(STree<SNodeOptionState> id) {
+	public SContinueStmt withId(BUTree<SNodeOptionState> id) {
 		return new SContinueStmt(id);
 	}
 
@@ -78,12 +78,12 @@ public class SContinueStmt extends SNodeState<SContinueStmt> implements SStmt {
 	public static STypeSafeTraversal<SContinueStmt, SNodeOptionState, NodeOption<Name>> ID = new STypeSafeTraversal<SContinueStmt, SNodeOptionState, NodeOption<Name>>() {
 
 		@Override
-		public STree<?> doTraverse(SContinueStmt state) {
+		public BUTree<?> doTraverse(SContinueStmt state) {
 			return state.id;
 		}
 
 		@Override
-		public SContinueStmt doRebuildParentState(SContinueStmt state, STree<SNodeOptionState> child) {
+		public SContinueStmt doRebuildParentState(SContinueStmt state, BUTree<SNodeOptionState> child) {
 			return state.withId(child);
 		}
 

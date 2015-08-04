@@ -27,12 +27,12 @@ import org.jlato.tree.Kind;
  * @author Didier Villevalois
  */
 public abstract class LSCondition {
-	public abstract boolean test(STree tree);
+	public abstract boolean test(BUTree tree);
 
 	public static LSCondition not(final LSCondition condition) {
 		return new LSCondition() {
 			@Override
-			public boolean test(STree tree) {
+			public boolean test(BUTree tree) {
 				return !condition.test(tree);
 			}
 		};
@@ -41,7 +41,7 @@ public abstract class LSCondition {
 	public static <S extends STreeState> LSCondition data(final SProperty property) {
 		return new LSCondition() {
 			@Override
-			public boolean test(STree tree) {
+			public boolean test(BUTree tree) {
 				return (Boolean) property.retrieve((S) tree.state);
 			}
 		};
@@ -49,7 +49,7 @@ public abstract class LSCondition {
 
 	public static LSCondition childIs(final STraversal traversal, final LSCondition condition) {
 		return new LSCondition() {
-			public boolean test(STree tree) {
+			public boolean test(BUTree tree) {
 				return condition.test(tree.traverse(traversal));
 			}
 		};
@@ -61,7 +61,7 @@ public abstract class LSCondition {
 
 	public static LSCondition withKind(final Kind kind) {
 		return new LSCondition() {
-			public boolean test(STree tree) {
+			public boolean test(BUTree tree) {
 				return ((SNodeState) tree.state).kind() == kind;
 			}
 		};
@@ -70,11 +70,11 @@ public abstract class LSCondition {
 	public static LSCondition empty() {
 		return new LSCondition() {
 			@Override
-			public boolean test(STree tree) {
+			public boolean test(BUTree tree) {
 				if (tree.state instanceof SVarState) return false;
 
 				final SNodeListState state = (SNodeListState) tree.state;
-				final Vector<STree<?>> children = state.children;
+				final Vector<BUTree<?>> children = state.children;
 				return children == null || children.isEmpty();
 			}
 		};
@@ -83,9 +83,9 @@ public abstract class LSCondition {
 	public static LSCondition some() {
 		return new LSCondition() {
 			@Override
-			public boolean test(STree tree) {
+			public boolean test(BUTree tree) {
 				final SNodeOptionState state = (SNodeOptionState) tree.state;
-				final STree element = state.element;
+				final BUTree element = state.element;
 				return element != null;
 			}
 		};

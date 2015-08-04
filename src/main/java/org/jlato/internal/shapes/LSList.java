@@ -45,18 +45,18 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
-	public boolean isDefined(STree tree) {
+	public boolean isDefined(BUTree tree) {
 		if (tree.state instanceof SVarState) return true;
 
 		final SNodeListState state = (SNodeListState) tree.state;
-		final Vector<STree<?>> children = state.children;
+		final Vector<BUTree<?>> children = state.children;
 		return !children.isEmpty() || (renderIfEmpty &&
 				((before != null && before.isDefined(tree)) ||
 						(after != null && after.isDefined(tree))));
 	}
 
 	@Override
-	public void dress(DressingBuilder<?> builder, STree<?> discriminator) {
+	public void dress(DressingBuilder<?> builder, BUTree<?> discriminator) {
 		builder.openRun();
 
 		if (discriminator.state instanceof SVarState) {
@@ -67,7 +67,7 @@ public final class LSList extends LexicalShape {
 			builder.handleNext(after, discriminator);
 		} else {
 			final SNodeListState state = (SNodeListState) discriminator.state;
-			final Vector<STree<?>> children = state.children;
+			final Vector<BUTree<?>> children = state.children;
 			final boolean isEmpty = children.isEmpty();
 
 			builder.handleNext(isEmpty && !renderIfEmpty ? none() : before, discriminator);
@@ -105,18 +105,18 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
-	public void render(STree tree, WRunRun run, Printer printer) {
+	public void render(BUTree tree, WRunRun run, Printer printer) {
 		final RunRenderer renderer = new RunRenderer(printer, run);
 
 		final SNodeListState state = (SNodeListState) tree.state;
-		final Vector<STree<?>> children = state.children;
+		final Vector<BUTree<?>> children = state.children;
 		final boolean isEmpty = children.isEmpty();
 
 		renderer.handleNext(isEmpty && !renderIfEmpty ? none() : before, tree);
 
 		boolean firstElement = true;
-		STree previous = null;
-		for (STree child : children) {
+		BUTree previous = null;
+		for (BUTree child : children) {
 			if (firstElement) {
 				firstElement = false;
 			} else {

@@ -12,13 +12,13 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 
 public class SMarkerAnnotationExpr extends SNodeState<SMarkerAnnotationExpr> implements SAnnotationExpr {
 
-	public static STree<SMarkerAnnotationExpr> make(STree<SQualifiedName> name) {
-		return new STree<SMarkerAnnotationExpr>(new SMarkerAnnotationExpr(name));
+	public static BUTree<SMarkerAnnotationExpr> make(BUTree<SQualifiedName> name) {
+		return new BUTree<SMarkerAnnotationExpr>(new SMarkerAnnotationExpr(name));
 	}
 
-	public final STree<SQualifiedName> name;
+	public final BUTree<SQualifiedName> name;
 
-	public SMarkerAnnotationExpr(STree<SQualifiedName> name) {
+	public SMarkerAnnotationExpr(BUTree<SQualifiedName> name) {
 		this.name = name;
 	}
 
@@ -27,11 +27,11 @@ public class SMarkerAnnotationExpr extends SNodeState<SMarkerAnnotationExpr> imp
 		return Kind.MarkerAnnotationExpr;
 	}
 
-	public STree<SQualifiedName> name() {
+	public BUTree<SQualifiedName> name() {
 		return name;
 	}
 
-	public SMarkerAnnotationExpr withName(STree<SQualifiedName> name) {
+	public SMarkerAnnotationExpr withName(BUTree<SQualifiedName> name) {
 		return new SMarkerAnnotationExpr(name);
 	}
 
@@ -77,12 +77,12 @@ public class SMarkerAnnotationExpr extends SNodeState<SMarkerAnnotationExpr> imp
 	public static STypeSafeTraversal<SMarkerAnnotationExpr, SQualifiedName, QualifiedName> NAME = new STypeSafeTraversal<SMarkerAnnotationExpr, SQualifiedName, QualifiedName>() {
 
 		@Override
-		public STree<?> doTraverse(SMarkerAnnotationExpr state) {
+		public BUTree<?> doTraverse(SMarkerAnnotationExpr state) {
 			return state.name;
 		}
 
 		@Override
-		public SMarkerAnnotationExpr doRebuildParentState(SMarkerAnnotationExpr state, STree<SQualifiedName> child) {
+		public SMarkerAnnotationExpr doRebuildParentState(SMarkerAnnotationExpr state, BUTree<SQualifiedName> child) {
 			return state.withName(child);
 		}
 
