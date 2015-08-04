@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.expr.SFieldAccessExpr;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
 import org.jlato.tree.expr.Expr;
@@ -12,7 +12,7 @@ import org.jlato.tree.expr.FieldAccessExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.util.Mutation;
 
-public class TDFieldAccessExpr extends TreeBase<SFieldAccessExpr, Expr, FieldAccessExpr> implements FieldAccessExpr {
+public class TDFieldAccessExpr extends TDTree<SFieldAccessExpr, Expr, FieldAccessExpr> implements FieldAccessExpr {
 
 	public Kind kind() {
 		return Kind.FieldAccessExpr;
@@ -23,7 +23,7 @@ public class TDFieldAccessExpr extends TreeBase<SFieldAccessExpr, Expr, FieldAcc
 	}
 
 	public TDFieldAccessExpr(NodeOption<Expr> scope, Name name) {
-		super(new SLocation<SFieldAccessExpr>(SFieldAccessExpr.make(TreeBase.<SNodeOptionState>treeOf(scope), TreeBase.<SName>treeOf(name))));
+		super(new SLocation<SFieldAccessExpr>(SFieldAccessExpr.make(TDTree.<SNodeOptionState>treeOf(scope), TDTree.<SName>treeOf(name))));
 	}
 
 	public NodeOption<Expr> scope() {

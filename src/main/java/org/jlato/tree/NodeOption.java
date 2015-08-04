@@ -22,7 +22,7 @@ package org.jlato.tree;
 import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.util.Mutation;
 
 import java.util.Iterator;
@@ -30,7 +30,7 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public class NodeOption<T extends Tree> extends TreeBase<SNodeOptionState, NodeOption<T>, NodeOption<T>> implements Tree, Iterable<T> {
+public class NodeOption<T extends Tree> extends TDTree<SNodeOptionState, NodeOption<T>, NodeOption<T>> implements Tree, Iterable<T> {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends Tree> NodeOption<T> of(T tree) {

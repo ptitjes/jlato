@@ -26,7 +26,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WDressing;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.util.Function1;
 import org.jlato.util.Function2;
 import org.jlato.util.Mutation;
@@ -36,7 +36,7 @@ import java.util.Iterator;
 /**
  * @author Didier Villevalois
  */
-public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<T>, NodeList<T>> implements Tree, Iterable<T> {
+public class NodeList<T extends Tree> extends TDTree<SNodeListState, NodeList<T>, NodeList<T>> implements Tree, Iterable<T> {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends Tree> NodeList<T> empty() {
@@ -309,7 +309,7 @@ public class NodeList<T extends Tree> extends TreeBase<SNodeListState, NodeList<
 		Builder<STree<?>, Vector<STree<?>>> newTrees = Vector.<STree<?>>factory().newBuilder();
 		for (int i = 0; i < trees.size(); i++) {
 			T rewrote = mutator.mutate(get(i));
-			SLocation location = TreeBase.locationOf(rewrote);
+			SLocation location = TDTree.locationOf(rewrote);
 
 			// TODO Handle change in the node-list run (leading comments and trailing comment)
 

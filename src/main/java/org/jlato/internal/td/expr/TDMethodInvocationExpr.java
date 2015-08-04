@@ -5,7 +5,7 @@ import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.expr.SMethodInvocationExpr;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -15,7 +15,7 @@ import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDMethodInvocationExpr extends TreeBase<SMethodInvocationExpr, Expr, MethodInvocationExpr> implements MethodInvocationExpr {
+public class TDMethodInvocationExpr extends TDTree<SMethodInvocationExpr, Expr, MethodInvocationExpr> implements MethodInvocationExpr {
 
 	public Kind kind() {
 		return Kind.MethodInvocationExpr;
@@ -26,7 +26,7 @@ public class TDMethodInvocationExpr extends TreeBase<SMethodInvocationExpr, Expr
 	}
 
 	public TDMethodInvocationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
-		super(new SLocation<SMethodInvocationExpr>(SMethodInvocationExpr.make(TreeBase.<SNodeOptionState>treeOf(scope), TreeBase.<SNodeListState>treeOf(typeArgs), TreeBase.<SName>treeOf(name), TreeBase.<SNodeListState>treeOf(args))));
+		super(new SLocation<SMethodInvocationExpr>(SMethodInvocationExpr.make(TDTree.<SNodeOptionState>treeOf(scope), TDTree.<SNodeListState>treeOf(typeArgs), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(args))));
 	}
 
 	public NodeOption<Expr> scope() {

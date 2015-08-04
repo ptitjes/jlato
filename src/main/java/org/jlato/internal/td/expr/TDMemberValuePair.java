@@ -4,7 +4,7 @@ import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.expr.SMemberValuePair;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.expr.Expr;
@@ -12,7 +12,7 @@ import org.jlato.tree.expr.MemberValuePair;
 import org.jlato.tree.name.Name;
 import org.jlato.util.Mutation;
 
-public class TDMemberValuePair extends TreeBase<SMemberValuePair, Node, MemberValuePair> implements MemberValuePair {
+public class TDMemberValuePair extends TDTree<SMemberValuePair, Node, MemberValuePair> implements MemberValuePair {
 
 	public Kind kind() {
 		return Kind.MemberValuePair;
@@ -23,7 +23,7 @@ public class TDMemberValuePair extends TreeBase<SMemberValuePair, Node, MemberVa
 	}
 
 	public TDMemberValuePair(Name name, Expr value) {
-		super(new SLocation<SMemberValuePair>(SMemberValuePair.make(TreeBase.<SName>treeOf(name), TreeBase.<SExpr>treeOf(value))));
+		super(new SLocation<SMemberValuePair>(SMemberValuePair.make(TDTree.<SName>treeOf(name), TDTree.<SExpr>treeOf(value))));
 	}
 
 	public Name name() {

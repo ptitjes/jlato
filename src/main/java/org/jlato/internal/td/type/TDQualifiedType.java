@@ -5,7 +5,7 @@ import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.type.SQualifiedType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -16,7 +16,7 @@ import org.jlato.tree.type.ReferenceType;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDQualifiedType extends TreeBase<SQualifiedType, ReferenceType, QualifiedType> implements QualifiedType {
+public class TDQualifiedType extends TDTree<SQualifiedType, ReferenceType, QualifiedType> implements QualifiedType {
 
 	public Kind kind() {
 		return Kind.QualifiedType;
@@ -27,7 +27,7 @@ public class TDQualifiedType extends TreeBase<SQualifiedType, ReferenceType, Qua
 	}
 
 	public TDQualifiedType(NodeList<AnnotationExpr> annotations, NodeOption<QualifiedType> scope, Name name, NodeOption<NodeList<Type>> typeArgs) {
-		super(new SLocation<SQualifiedType>(SQualifiedType.make(TreeBase.<SNodeListState>treeOf(annotations), TreeBase.<SNodeOptionState>treeOf(scope), TreeBase.<SName>treeOf(name), TreeBase.<SNodeOptionState>treeOf(typeArgs))));
+		super(new SLocation<SQualifiedType>(SQualifiedType.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SNodeOptionState>treeOf(scope), TDTree.<SName>treeOf(name), TDTree.<SNodeOptionState>treeOf(typeArgs))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

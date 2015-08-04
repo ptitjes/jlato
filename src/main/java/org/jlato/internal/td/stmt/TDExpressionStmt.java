@@ -3,14 +3,14 @@ package org.jlato.internal.td.stmt;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SExpressionStmt;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.ExpressionStmt;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.util.Mutation;
 
-public class TDExpressionStmt extends TreeBase<SExpressionStmt, Stmt, ExpressionStmt> implements ExpressionStmt {
+public class TDExpressionStmt extends TDTree<SExpressionStmt, Stmt, ExpressionStmt> implements ExpressionStmt {
 
 	public Kind kind() {
 		return Kind.ExpressionStmt;
@@ -21,7 +21,7 @@ public class TDExpressionStmt extends TreeBase<SExpressionStmt, Stmt, Expression
 	}
 
 	public TDExpressionStmt(Expr expr) {
-		super(new SLocation<SExpressionStmt>(SExpressionStmt.make(TreeBase.<SExpr>treeOf(expr))));
+		super(new SLocation<SExpressionStmt>(SExpressionStmt.make(TDTree.<SExpr>treeOf(expr))));
 	}
 
 	public Expr expr() {

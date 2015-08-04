@@ -37,11 +37,11 @@ import static org.jlato.internal.bu.WToken.whitespace;
 /**
  * @author Didier Villevalois
  */
-public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends ST> implements Tree, TreeCombinators<T> {
+public abstract class TDTree<S extends STreeState, ST extends Tree, T extends ST> implements Tree, TreeCombinators<T> {
 
 	protected final SLocation<S> location;
 
-	protected TreeBase(SLocation<S> location) {
+	protected TDTree(SLocation<S> location) {
 		this.location = location;
 	}
 
@@ -70,9 +70,9 @@ public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		TreeBase<?, ?, ?> treeBase = (TreeBase<?, ?, ?>) o;
+		TDTree<?, ?, ?> tdTree = (TDTree<?, ?, ?>) o;
 
-		return location.tree.equals(treeBase.location.tree);
+		return location.tree.equals(tdTree.location.tree);
 	}
 
 	@Override
@@ -210,11 +210,11 @@ public abstract class TreeBase<S extends STreeState, ST extends Tree, T extends 
 
 	@SuppressWarnings("unchecked")
 	public static <S extends STreeState> SLocation<S> locationOf(Tree facade) {
-		return facade == null ? null : ((TreeBase<S, ?, ?>) facade).location;
+		return facade == null ? null : ((TDTree<S, ?, ?>) facade).location;
 	}
 
 	public static <S extends STreeState> STree<S> treeOf(Tree facade) {
-		final SLocation<S> location = TreeBase.locationOf(facade);
+		final SLocation<S> location = TDTree.locationOf(facade);
 		return location == null ? null : location.tree;
 	}
 

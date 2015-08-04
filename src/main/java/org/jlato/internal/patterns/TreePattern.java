@@ -24,7 +24,7 @@ import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.rewrite.Pattern;
 import org.jlato.rewrite.Substitution;
 import org.jlato.tree.Kind;
@@ -44,7 +44,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	@Override
 	public Substitution match(Object object, Substitution substitution) {
 		if (!(object instanceof Tree)) return null;
-		return matchTree(pattern, TreeBase.treeOf((Tree) object), substitution);
+		return matchTree(pattern, TDTree.treeOf((Tree) object), substitution);
 	}
 
 	protected static Substitution matchTree(STree<?> pattern, STree<?> tree, Substitution substitution) {
@@ -57,7 +57,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 			// Not an anonymous var
 			if (!name.equals("_")) {
 				if (substitution.binds(name)) {
-					STree<?> expected = TreeBase.treeOf((Tree) substitution.get(name));
+					STree<?> expected = TDTree.treeOf((Tree) substitution.get(name));
 					substitution = matchTree(expected, tree, substitution);
 				} else {
 					substitution = substitution.bind(name, tree.asTree());
@@ -152,7 +152,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		STreeState patternState = pattern.state;
 		if (patternState instanceof SVarState) {
 			String name = ((SVarState) patternState).name;
-			return TreeBase.treeOf((Tree) substitution.get(name));
+			return TDTree.treeOf((Tree) substitution.get(name));
 		} else {
 			final STree<S> tree;
 			if (patternState instanceof SNodeState) {

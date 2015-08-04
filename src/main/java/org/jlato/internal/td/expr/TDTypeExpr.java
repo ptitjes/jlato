@@ -3,14 +3,14 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.expr.STypeExpr;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.TypeExpr;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDTypeExpr extends TreeBase<STypeExpr, Expr, TypeExpr> implements TypeExpr {
+public class TDTypeExpr extends TDTree<STypeExpr, Expr, TypeExpr> implements TypeExpr {
 
 	public Kind kind() {
 		return Kind.TypeExpr;
@@ -21,7 +21,7 @@ public class TDTypeExpr extends TreeBase<STypeExpr, Expr, TypeExpr> implements T
 	}
 
 	public TDTypeExpr(Type type) {
-		super(new SLocation<STypeExpr>(STypeExpr.make(TreeBase.<SType>treeOf(type))));
+		super(new SLocation<STypeExpr>(STypeExpr.make(TDTree.<SType>treeOf(type))));
 	}
 
 	public Type type() {

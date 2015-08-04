@@ -23,7 +23,7 @@ import org.jlato.tree.NodeEither;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.internal.bu.SNodeState;
 import org.jlato.tree.expr.LiteralExpr;
 import org.jlato.tree.name.Name;
@@ -71,7 +71,7 @@ public class NormalizedJsonWriter {
 
 		builder.append("{\n");
 
-		final SNodeState state = (SNodeState) TreeBase.treeOf(tree).state;
+		final SNodeState state = (SNodeState) TDTree.treeOf(tree).state;
 		writeField("kind", String.class, state.kind(), indent + 1);
 
 		writeProperties(tree, treeClass, indent + 1);
@@ -103,7 +103,7 @@ public class NormalizedJsonWriter {
 	private void collectPropertyMethods(Tree tree, Class<? extends Tree> treeClass, List<Method> methods) {
 		Class<?> superclass = treeClass.getSuperclass();
 		if (Tree.class.isAssignableFrom(superclass) &&
-				!TreeBase.class.equals(superclass)) {
+				!TDTree.class.equals(superclass)) {
 			collectPropertyMethods(tree, superclass.asSubclass(Tree.class), methods);
 		}
 

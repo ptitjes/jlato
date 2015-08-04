@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeEitherState;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.expr.SLambdaExpr;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeEither;
 import org.jlato.tree.NodeList;
@@ -14,7 +14,7 @@ import org.jlato.tree.expr.LambdaExpr;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.util.Mutation;
 
-public class TDLambdaExpr extends TreeBase<SLambdaExpr, Expr, LambdaExpr> implements LambdaExpr {
+public class TDLambdaExpr extends TDTree<SLambdaExpr, Expr, LambdaExpr> implements LambdaExpr {
 
 	public Kind kind() {
 		return Kind.LambdaExpr;
@@ -25,7 +25,7 @@ public class TDLambdaExpr extends TreeBase<SLambdaExpr, Expr, LambdaExpr> implem
 	}
 
 	public TDLambdaExpr(NodeList<FormalParameter> params, boolean hasParens, NodeEither<Expr, BlockStmt> body) {
-		super(new SLocation<SLambdaExpr>(SLambdaExpr.make(TreeBase.<SNodeListState>treeOf(params), hasParens, TreeBase.<SNodeEitherState>treeOf(body))));
+		super(new SLocation<SLambdaExpr>(SLambdaExpr.make(TDTree.<SNodeListState>treeOf(params), hasParens, TDTree.<SNodeEitherState>treeOf(body))));
 	}
 
 	public NodeList<FormalParameter> params() {

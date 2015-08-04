@@ -5,7 +5,7 @@ import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SForStmt;
 import org.jlato.internal.bu.stmt.SStmt;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.expr.Expr;
@@ -13,7 +13,7 @@ import org.jlato.tree.stmt.ForStmt;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.util.Mutation;
 
-public class TDForStmt extends TreeBase<SForStmt, Stmt, ForStmt> implements ForStmt {
+public class TDForStmt extends TDTree<SForStmt, Stmt, ForStmt> implements ForStmt {
 
 	public Kind kind() {
 		return Kind.ForStmt;
@@ -24,7 +24,7 @@ public class TDForStmt extends TreeBase<SForStmt, Stmt, ForStmt> implements ForS
 	}
 
 	public TDForStmt(NodeList<Expr> init, Expr compare, NodeList<Expr> update, Stmt body) {
-		super(new SLocation<SForStmt>(SForStmt.make(TreeBase.<SNodeListState>treeOf(init), TreeBase.<SExpr>treeOf(compare), TreeBase.<SNodeListState>treeOf(update), TreeBase.<SStmt>treeOf(body))));
+		super(new SLocation<SForStmt>(SForStmt.make(TDTree.<SNodeListState>treeOf(init), TDTree.<SExpr>treeOf(compare), TDTree.<SNodeListState>treeOf(update), TDTree.<SStmt>treeOf(body))));
 	}
 
 	public NodeList<Expr> init() {

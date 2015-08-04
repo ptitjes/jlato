@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.stmt.SExplicitConstructorInvocationStmt;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -14,7 +14,7 @@ import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDExplicitConstructorInvocationStmt extends TreeBase<SExplicitConstructorInvocationStmt, Stmt, ExplicitConstructorInvocationStmt> implements ExplicitConstructorInvocationStmt {
+public class TDExplicitConstructorInvocationStmt extends TDTree<SExplicitConstructorInvocationStmt, Stmt, ExplicitConstructorInvocationStmt> implements ExplicitConstructorInvocationStmt {
 
 	public Kind kind() {
 		return Kind.ExplicitConstructorInvocationStmt;
@@ -25,7 +25,7 @@ public class TDExplicitConstructorInvocationStmt extends TreeBase<SExplicitConst
 	}
 
 	public TDExplicitConstructorInvocationStmt(NodeList<Type> typeArgs, boolean isThis, NodeOption<Expr> expr, NodeList<Expr> args) {
-		super(new SLocation<SExplicitConstructorInvocationStmt>(SExplicitConstructorInvocationStmt.make(TreeBase.<SNodeListState>treeOf(typeArgs), isThis, TreeBase.<SNodeOptionState>treeOf(expr), TreeBase.<SNodeListState>treeOf(args))));
+		super(new SLocation<SExplicitConstructorInvocationStmt>(SExplicitConstructorInvocationStmt.make(TDTree.<SNodeListState>treeOf(typeArgs), isThis, TDTree.<SNodeOptionState>treeOf(expr), TDTree.<SNodeListState>treeOf(args))));
 	}
 
 	public NodeList<Type> typeArgs() {

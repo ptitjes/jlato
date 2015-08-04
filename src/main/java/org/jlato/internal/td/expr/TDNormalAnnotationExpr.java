@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.expr.SNormalAnnotationExpr;
 import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.expr.AnnotationExpr;
@@ -13,7 +13,7 @@ import org.jlato.tree.expr.NormalAnnotationExpr;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
 
-public class TDNormalAnnotationExpr extends TreeBase<SNormalAnnotationExpr, AnnotationExpr, NormalAnnotationExpr> implements NormalAnnotationExpr {
+public class TDNormalAnnotationExpr extends TDTree<SNormalAnnotationExpr, AnnotationExpr, NormalAnnotationExpr> implements NormalAnnotationExpr {
 
 	public Kind kind() {
 		return Kind.NormalAnnotationExpr;
@@ -24,7 +24,7 @@ public class TDNormalAnnotationExpr extends TreeBase<SNormalAnnotationExpr, Anno
 	}
 
 	public TDNormalAnnotationExpr(QualifiedName name, NodeList<MemberValuePair> pairs) {
-		super(new SLocation<SNormalAnnotationExpr>(SNormalAnnotationExpr.make(TreeBase.<SQualifiedName>treeOf(name), TreeBase.<SNodeListState>treeOf(pairs))));
+		super(new SLocation<SNormalAnnotationExpr>(SNormalAnnotationExpr.make(TDTree.<SQualifiedName>treeOf(name), TDTree.<SNodeListState>treeOf(pairs))));
 	}
 
 	public QualifiedName name() {

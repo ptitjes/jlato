@@ -3,14 +3,14 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.expr.SAssignExpr;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.AssignExpr;
 import org.jlato.tree.expr.AssignOp;
 import org.jlato.tree.expr.Expr;
 import org.jlato.util.Mutation;
 
-public class TDAssignExpr extends TreeBase<SAssignExpr, Expr, AssignExpr> implements AssignExpr {
+public class TDAssignExpr extends TDTree<SAssignExpr, Expr, AssignExpr> implements AssignExpr {
 
 	public Kind kind() {
 		return Kind.AssignExpr;
@@ -21,7 +21,7 @@ public class TDAssignExpr extends TreeBase<SAssignExpr, Expr, AssignExpr> implem
 	}
 
 	public TDAssignExpr(Expr target, AssignOp op, Expr value) {
-		super(new SLocation<SAssignExpr>(SAssignExpr.make(TreeBase.<SExpr>treeOf(target), op, TreeBase.<SExpr>treeOf(value))));
+		super(new SLocation<SAssignExpr>(SAssignExpr.make(TDTree.<SExpr>treeOf(target), op, TDTree.<SExpr>treeOf(value))));
 	}
 
 	public Expr target() {

@@ -3,13 +3,13 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.expr.SConditionalExpr;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.ConditionalExpr;
 import org.jlato.tree.expr.Expr;
 import org.jlato.util.Mutation;
 
-public class TDConditionalExpr extends TreeBase<SConditionalExpr, Expr, ConditionalExpr> implements ConditionalExpr {
+public class TDConditionalExpr extends TDTree<SConditionalExpr, Expr, ConditionalExpr> implements ConditionalExpr {
 
 	public Kind kind() {
 		return Kind.ConditionalExpr;
@@ -20,7 +20,7 @@ public class TDConditionalExpr extends TreeBase<SConditionalExpr, Expr, Conditio
 	}
 
 	public TDConditionalExpr(Expr condition, Expr thenExpr, Expr elseExpr) {
-		super(new SLocation<SConditionalExpr>(SConditionalExpr.make(TreeBase.<SExpr>treeOf(condition), TreeBase.<SExpr>treeOf(thenExpr), TreeBase.<SExpr>treeOf(elseExpr))));
+		super(new SLocation<SConditionalExpr>(SConditionalExpr.make(TDTree.<SExpr>treeOf(condition), TDTree.<SExpr>treeOf(thenExpr), TDTree.<SExpr>treeOf(elseExpr))));
 	}
 
 	public Expr condition() {

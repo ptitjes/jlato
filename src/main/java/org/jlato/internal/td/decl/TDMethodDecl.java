@@ -6,7 +6,7 @@ import org.jlato.internal.bu.decl.SMethodDecl;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -22,7 +22,7 @@ import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDMethodDecl extends TreeBase<SMethodDecl, MemberDecl, MethodDecl> implements MethodDecl {
+public class TDMethodDecl extends TDTree<SMethodDecl, MemberDecl, MethodDecl> implements MethodDecl {
 
 	public Kind kind() {
 		return Kind.MethodDecl;
@@ -33,7 +33,7 @@ public class TDMethodDecl extends TreeBase<SMethodDecl, MemberDecl, MethodDecl> 
 	}
 
 	public TDMethodDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, NodeOption<BlockStmt> body) {
-		super(new SLocation<SMethodDecl>(SMethodDecl.make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<SNodeListState>treeOf(typeParams), TreeBase.<SType>treeOf(type), TreeBase.<SName>treeOf(name), TreeBase.<SNodeListState>treeOf(params), TreeBase.<SNodeListState>treeOf(dims), TreeBase.<SNodeListState>treeOf(throwsClause), TreeBase.<SNodeOptionState>treeOf(body))));
+		super(new SLocation<SMethodDecl>(SMethodDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SNodeListState>treeOf(typeParams), TDTree.<SType>treeOf(type), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(params), TDTree.<SNodeListState>treeOf(dims), TDTree.<SNodeListState>treeOf(throwsClause), TDTree.<SNodeOptionState>treeOf(body))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

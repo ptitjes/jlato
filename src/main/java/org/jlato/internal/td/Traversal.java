@@ -39,7 +39,7 @@ public abstract class Traversal<T extends Tree> {
 
 	@SuppressWarnings("unchecked")
 	public <R extends Tree> R traverse(R tree, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
-		SLocation location = TreeBase.locationOf(tree);
+		SLocation location = TDTree.locationOf(tree);
 		return (R) doTraverse(location, matcher, visitor).facade;
 	}
 
@@ -64,7 +64,7 @@ public abstract class Traversal<T extends Tree> {
 			Tree facade = location.facade;
 			Substitution match = matcher.match(facade);
 			if (match != null) {
-				SLocation rewrote = TreeBase.locationOf(visitor.visit((T) facade, match));
+				SLocation rewrote = TDTree.locationOf(visitor.visit((T) facade, match));
 				return location.withTree(rewrote.tree);
 			} else {
 				return location;

@@ -4,14 +4,14 @@ import org.jlato.internal.bu.expr.SCastExpr;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.CastExpr;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDCastExpr extends TreeBase<SCastExpr, Expr, CastExpr> implements CastExpr {
+public class TDCastExpr extends TDTree<SCastExpr, Expr, CastExpr> implements CastExpr {
 
 	public Kind kind() {
 		return Kind.CastExpr;
@@ -22,7 +22,7 @@ public class TDCastExpr extends TreeBase<SCastExpr, Expr, CastExpr> implements C
 	}
 
 	public TDCastExpr(Type type, Expr expr) {
-		super(new SLocation<SCastExpr>(SCastExpr.make(TreeBase.<SType>treeOf(type), TreeBase.<SExpr>treeOf(expr))));
+		super(new SLocation<SCastExpr>(SCastExpr.make(TDTree.<SType>treeOf(type), TDTree.<SExpr>treeOf(expr))));
 	}
 
 	public Type type() {

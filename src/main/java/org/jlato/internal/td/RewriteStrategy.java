@@ -29,7 +29,7 @@ public abstract class RewriteStrategy {
 
 	@SuppressWarnings("unchecked")
 	public <R extends Tree> R rewrite(R tree, RewriteRules rewriter) {
-		SLocation location = TreeBase.locationOf(tree);
+		SLocation location = TDTree.locationOf(tree);
 		return (R) doRewrite(location, rewriter).facade;
 	}
 
@@ -55,7 +55,7 @@ public abstract class RewriteStrategy {
 		}
 
 		private SLocation doApplyRewrite(SLocation location, RewriteRules rewriter) {
-			SLocation rewrote = TreeBase.locationOf(rewriter.rewrite(location.facade));
+			SLocation rewrote = TDTree.locationOf(rewriter.rewrite(location.facade));
 			return location.withTree(rewrote.tree);
 		}
 

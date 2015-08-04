@@ -4,14 +4,14 @@ import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.stmt.SLabeledStmt;
 import org.jlato.internal.bu.stmt.SStmt;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.LabeledStmt;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.util.Mutation;
 
-public class TDLabeledStmt extends TreeBase<SLabeledStmt, Stmt, LabeledStmt> implements LabeledStmt {
+public class TDLabeledStmt extends TDTree<SLabeledStmt, Stmt, LabeledStmt> implements LabeledStmt {
 
 	public Kind kind() {
 		return Kind.LabeledStmt;
@@ -22,7 +22,7 @@ public class TDLabeledStmt extends TreeBase<SLabeledStmt, Stmt, LabeledStmt> imp
 	}
 
 	public TDLabeledStmt(Name label, Stmt stmt) {
-		super(new SLocation<SLabeledStmt>(SLabeledStmt.make(TreeBase.<SName>treeOf(label), TreeBase.<SStmt>treeOf(stmt))));
+		super(new SLocation<SLabeledStmt>(SLabeledStmt.make(TDTree.<SName>treeOf(label), TDTree.<SStmt>treeOf(stmt))));
 	}
 
 	public Name label() {

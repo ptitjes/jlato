@@ -92,7 +92,7 @@ public class SLocation<S extends STreeState> {
 	}
 
 	public <T extends Tree> T replace(T replacement) {
-		return replaceTree(TreeBase.<S>treeOf(replacement));
+		return replaceTree(TDTree.<S>treeOf(replacement));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -121,7 +121,7 @@ public class SLocation<S extends STreeState> {
 	}
 
 	public <T extends Tree, C extends Tree> T safeTraversalReplace(STypeSafeTraversal<S, ?, C> traversal, C child) {
-		return replaceTree(tree.traverseReplace(traversal, TreeBase.treeOf(child)));
+		return replaceTree(tree.traverseReplace(traversal, TDTree.treeOf(child)));
 	}
 
 	public <T extends Tree, C extends Tree> T safeTraversalMutate(STypeSafeTraversal<S, ?, C> traversal, Mutation<C> mutation) {

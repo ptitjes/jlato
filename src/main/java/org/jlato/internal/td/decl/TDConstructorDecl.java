@@ -5,7 +5,7 @@ import org.jlato.internal.bu.decl.SConstructorDecl;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.decl.ConstructorDecl;
@@ -18,7 +18,7 @@ import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.util.Mutation;
 
-public class TDConstructorDecl extends TreeBase<SConstructorDecl, MemberDecl, ConstructorDecl> implements ConstructorDecl {
+public class TDConstructorDecl extends TDTree<SConstructorDecl, MemberDecl, ConstructorDecl> implements ConstructorDecl {
 
 	public Kind kind() {
 		return Kind.ConstructorDecl;
@@ -29,7 +29,7 @@ public class TDConstructorDecl extends TreeBase<SConstructorDecl, MemberDecl, Co
 	}
 
 	public TDConstructorDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Name name, NodeList<FormalParameter> params, NodeList<QualifiedType> throwsClause, BlockStmt body) {
-		super(new SLocation<SConstructorDecl>(SConstructorDecl.make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<SNodeListState>treeOf(typeParams), TreeBase.<SName>treeOf(name), TreeBase.<SNodeListState>treeOf(params), TreeBase.<SNodeListState>treeOf(throwsClause), TreeBase.<SBlockStmt>treeOf(body))));
+		super(new SLocation<SConstructorDecl>(SConstructorDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SNodeListState>treeOf(typeParams), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(params), TDTree.<SNodeListState>treeOf(throwsClause), TDTree.<SBlockStmt>treeOf(body))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

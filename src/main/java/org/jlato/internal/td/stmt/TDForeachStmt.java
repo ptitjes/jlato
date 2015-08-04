@@ -5,7 +5,7 @@ import org.jlato.internal.bu.expr.SVariableDeclarationExpr;
 import org.jlato.internal.bu.stmt.SForeachStmt;
 import org.jlato.internal.bu.stmt.SStmt;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.VariableDeclarationExpr;
@@ -13,7 +13,7 @@ import org.jlato.tree.stmt.ForeachStmt;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.util.Mutation;
 
-public class TDForeachStmt extends TreeBase<SForeachStmt, Stmt, ForeachStmt> implements ForeachStmt {
+public class TDForeachStmt extends TDTree<SForeachStmt, Stmt, ForeachStmt> implements ForeachStmt {
 
 	public Kind kind() {
 		return Kind.ForeachStmt;
@@ -24,7 +24,7 @@ public class TDForeachStmt extends TreeBase<SForeachStmt, Stmt, ForeachStmt> imp
 	}
 
 	public TDForeachStmt(VariableDeclarationExpr var, Expr iterable, Stmt body) {
-		super(new SLocation<SForeachStmt>(SForeachStmt.make(TreeBase.<SVariableDeclarationExpr>treeOf(var), TreeBase.<SExpr>treeOf(iterable), TreeBase.<SStmt>treeOf(body))));
+		super(new SLocation<SForeachStmt>(SForeachStmt.make(TDTree.<SVariableDeclarationExpr>treeOf(var), TDTree.<SExpr>treeOf(iterable), TDTree.<SStmt>treeOf(body))));
 	}
 
 	public VariableDeclarationExpr var() {

@@ -3,14 +3,14 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.expr.SArrayInitializerExpr;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.expr.ArrayInitializerExpr;
 import org.jlato.tree.expr.Expr;
 import org.jlato.util.Mutation;
 
-public class TDArrayInitializerExpr extends TreeBase<SArrayInitializerExpr, Expr, ArrayInitializerExpr> implements ArrayInitializerExpr {
+public class TDArrayInitializerExpr extends TDTree<SArrayInitializerExpr, Expr, ArrayInitializerExpr> implements ArrayInitializerExpr {
 
 	public Kind kind() {
 		return Kind.ArrayInitializerExpr;
@@ -21,7 +21,7 @@ public class TDArrayInitializerExpr extends TreeBase<SArrayInitializerExpr, Expr
 	}
 
 	public TDArrayInitializerExpr(NodeList<Expr> values, boolean trailingComma) {
-		super(new SLocation<SArrayInitializerExpr>(SArrayInitializerExpr.make(TreeBase.<SNodeListState>treeOf(values), trailingComma)));
+		super(new SLocation<SArrayInitializerExpr>(SArrayInitializerExpr.make(TDTree.<SNodeListState>treeOf(values), trailingComma)));
 	}
 
 	public NodeList<Expr> values() {

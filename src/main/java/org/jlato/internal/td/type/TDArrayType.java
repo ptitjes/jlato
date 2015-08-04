@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.type.SArrayType;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.decl.ArrayDim;
@@ -13,7 +13,7 @@ import org.jlato.tree.type.ReferenceType;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDArrayType extends TreeBase<SArrayType, ReferenceType, ArrayType> implements ArrayType {
+public class TDArrayType extends TDTree<SArrayType, ReferenceType, ArrayType> implements ArrayType {
 
 	public Kind kind() {
 		return Kind.ArrayType;
@@ -24,7 +24,7 @@ public class TDArrayType extends TreeBase<SArrayType, ReferenceType, ArrayType> 
 	}
 
 	public TDArrayType(Type componentType, NodeList<ArrayDim> dims) {
-		super(new SLocation<SArrayType>(SArrayType.make(TreeBase.<SType>treeOf(componentType), TreeBase.<SNodeListState>treeOf(dims))));
+		super(new SLocation<SArrayType>(SArrayType.make(TDTree.<SType>treeOf(componentType), TDTree.<SNodeListState>treeOf(dims))));
 	}
 
 	public Type componentType() {

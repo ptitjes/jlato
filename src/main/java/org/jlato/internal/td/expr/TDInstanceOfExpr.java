@@ -4,14 +4,14 @@ import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.expr.SInstanceOfExpr;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.InstanceOfExpr;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDInstanceOfExpr extends TreeBase<SInstanceOfExpr, Expr, InstanceOfExpr> implements InstanceOfExpr {
+public class TDInstanceOfExpr extends TDTree<SInstanceOfExpr, Expr, InstanceOfExpr> implements InstanceOfExpr {
 
 	public Kind kind() {
 		return Kind.InstanceOfExpr;
@@ -22,7 +22,7 @@ public class TDInstanceOfExpr extends TreeBase<SInstanceOfExpr, Expr, InstanceOf
 	}
 
 	public TDInstanceOfExpr(Expr expr, Type type) {
-		super(new SLocation<SInstanceOfExpr>(SInstanceOfExpr.make(TreeBase.<SExpr>treeOf(expr), TreeBase.<SType>treeOf(type))));
+		super(new SLocation<SInstanceOfExpr>(SInstanceOfExpr.make(TDTree.<SExpr>treeOf(expr), TDTree.<SType>treeOf(type))));
 	}
 
 	public Expr expr() {

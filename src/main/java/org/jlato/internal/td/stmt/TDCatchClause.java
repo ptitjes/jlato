@@ -4,7 +4,7 @@ import org.jlato.internal.bu.decl.SFormalParameter;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.bu.stmt.SCatchClause;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.decl.FormalParameter;
@@ -12,7 +12,7 @@ import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.stmt.CatchClause;
 import org.jlato.util.Mutation;
 
-public class TDCatchClause extends TreeBase<SCatchClause, Node, CatchClause> implements CatchClause {
+public class TDCatchClause extends TDTree<SCatchClause, Node, CatchClause> implements CatchClause {
 
 	public Kind kind() {
 		return Kind.CatchClause;
@@ -23,7 +23,7 @@ public class TDCatchClause extends TreeBase<SCatchClause, Node, CatchClause> imp
 	}
 
 	public TDCatchClause(FormalParameter except, BlockStmt catchBlock) {
-		super(new SLocation<SCatchClause>(SCatchClause.make(TreeBase.<SFormalParameter>treeOf(except), TreeBase.<SBlockStmt>treeOf(catchBlock))));
+		super(new SLocation<SCatchClause>(SCatchClause.make(TDTree.<SFormalParameter>treeOf(except), TDTree.<SBlockStmt>treeOf(catchBlock))));
 	}
 
 	public FormalParameter except() {

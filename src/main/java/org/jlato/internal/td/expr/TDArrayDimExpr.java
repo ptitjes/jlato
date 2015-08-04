@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.expr.SArrayDimExpr;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
@@ -13,7 +13,7 @@ import org.jlato.tree.expr.ArrayDimExpr;
 import org.jlato.tree.expr.Expr;
 import org.jlato.util.Mutation;
 
-public class TDArrayDimExpr extends TreeBase<SArrayDimExpr, Node, ArrayDimExpr> implements ArrayDimExpr {
+public class TDArrayDimExpr extends TDTree<SArrayDimExpr, Node, ArrayDimExpr> implements ArrayDimExpr {
 
 	public Kind kind() {
 		return Kind.ArrayDimExpr;
@@ -24,7 +24,7 @@ public class TDArrayDimExpr extends TreeBase<SArrayDimExpr, Node, ArrayDimExpr> 
 	}
 
 	public TDArrayDimExpr(NodeList<AnnotationExpr> annotations, Expr expr) {
-		super(new SLocation<SArrayDimExpr>(SArrayDimExpr.make(TreeBase.<SNodeListState>treeOf(annotations), TreeBase.<SExpr>treeOf(expr))));
+		super(new SLocation<SArrayDimExpr>(SArrayDimExpr.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SExpr>treeOf(expr))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

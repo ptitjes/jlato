@@ -24,7 +24,7 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WToken;
 import org.jlato.internal.bu.WTokenRun;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.parser.ParserImplConstants;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
@@ -190,7 +190,7 @@ public class Printer {
 	 */
 	public void print(Tree tree) {
 		reset();
-		final STree sTree = TreeBase.treeOf(tree);
+		final STree sTree = TDTree.treeOf(tree);
 		final LexicalShape shape = LexicalShape.defaultShape();
 		shape.render(sTree, this);
 		flush();
@@ -203,7 +203,7 @@ public class Printer {
 	 */
 	public void print(NodeList<? extends Tree> trees) {
 		reset();
-		final STree sTree = TreeBase.treeOf(trees);
+		final STree sTree = TDTree.treeOf(trees);
 		final LexicalShape shape = LexicalShape.list();
 		shape.render(sTree, this);
 		flush();

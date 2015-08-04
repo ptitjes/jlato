@@ -5,7 +5,7 @@ import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.expr.SArrayCreationExpr;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -17,7 +17,7 @@ import org.jlato.tree.expr.Expr;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDArrayCreationExpr extends TreeBase<SArrayCreationExpr, Expr, ArrayCreationExpr> implements ArrayCreationExpr {
+public class TDArrayCreationExpr extends TDTree<SArrayCreationExpr, Expr, ArrayCreationExpr> implements ArrayCreationExpr {
 
 	public Kind kind() {
 		return Kind.ArrayCreationExpr;
@@ -28,7 +28,7 @@ public class TDArrayCreationExpr extends TreeBase<SArrayCreationExpr, Expr, Arra
 	}
 
 	public TDArrayCreationExpr(Type type, NodeList<ArrayDimExpr> dimExprs, NodeList<ArrayDim> dims, NodeOption<ArrayInitializerExpr> init) {
-		super(new SLocation<SArrayCreationExpr>(SArrayCreationExpr.make(TreeBase.<SType>treeOf(type), TreeBase.<SNodeListState>treeOf(dimExprs), TreeBase.<SNodeListState>treeOf(dims), TreeBase.<SNodeOptionState>treeOf(init))));
+		super(new SLocation<SArrayCreationExpr>(SArrayCreationExpr.make(TDTree.<SType>treeOf(type), TDTree.<SNodeListState>treeOf(dimExprs), TDTree.<SNodeListState>treeOf(dims), TDTree.<SNodeOptionState>treeOf(init))));
 	}
 
 	public Type type() {

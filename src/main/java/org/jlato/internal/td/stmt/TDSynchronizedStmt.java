@@ -4,7 +4,7 @@ import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.bu.stmt.SSynchronizedStmt;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.BlockStmt;
@@ -12,7 +12,7 @@ import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.stmt.SynchronizedStmt;
 import org.jlato.util.Mutation;
 
-public class TDSynchronizedStmt extends TreeBase<SSynchronizedStmt, Stmt, SynchronizedStmt> implements SynchronizedStmt {
+public class TDSynchronizedStmt extends TDTree<SSynchronizedStmt, Stmt, SynchronizedStmt> implements SynchronizedStmt {
 
 	public Kind kind() {
 		return Kind.SynchronizedStmt;
@@ -23,7 +23,7 @@ public class TDSynchronizedStmt extends TreeBase<SSynchronizedStmt, Stmt, Synchr
 	}
 
 	public TDSynchronizedStmt(Expr expr, BlockStmt block) {
-		super(new SLocation<SSynchronizedStmt>(SSynchronizedStmt.make(TreeBase.<SExpr>treeOf(expr), TreeBase.<SBlockStmt>treeOf(block))));
+		super(new SLocation<SSynchronizedStmt>(SSynchronizedStmt.make(TDTree.<SExpr>treeOf(expr), TDTree.<SBlockStmt>treeOf(block))));
 	}
 
 	public Expr expr() {

@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.decl.STypeParameter;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
@@ -14,7 +14,7 @@ import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDTypeParameter extends TreeBase<STypeParameter, Node, TypeParameter> implements TypeParameter {
+public class TDTypeParameter extends TDTree<STypeParameter, Node, TypeParameter> implements TypeParameter {
 
 	public Kind kind() {
 		return Kind.TypeParameter;
@@ -25,7 +25,7 @@ public class TDTypeParameter extends TreeBase<STypeParameter, Node, TypeParamete
 	}
 
 	public TDTypeParameter(NodeList<AnnotationExpr> annotations, Name name, NodeList<Type> bounds) {
-		super(new SLocation<STypeParameter>(STypeParameter.make(TreeBase.<SNodeListState>treeOf(annotations), TreeBase.<SName>treeOf(name), TreeBase.<SNodeListState>treeOf(bounds))));
+		super(new SLocation<STypeParameter>(STypeParameter.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(bounds))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

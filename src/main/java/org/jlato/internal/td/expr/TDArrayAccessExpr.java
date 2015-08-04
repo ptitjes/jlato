@@ -3,13 +3,13 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.expr.SArrayAccessExpr;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.ArrayAccessExpr;
 import org.jlato.tree.expr.Expr;
 import org.jlato.util.Mutation;
 
-public class TDArrayAccessExpr extends TreeBase<SArrayAccessExpr, Expr, ArrayAccessExpr> implements ArrayAccessExpr {
+public class TDArrayAccessExpr extends TDTree<SArrayAccessExpr, Expr, ArrayAccessExpr> implements ArrayAccessExpr {
 
 	public Kind kind() {
 		return Kind.ArrayAccessExpr;
@@ -20,7 +20,7 @@ public class TDArrayAccessExpr extends TreeBase<SArrayAccessExpr, Expr, ArrayAcc
 	}
 
 	public TDArrayAccessExpr(Expr name, Expr index) {
-		super(new SLocation<SArrayAccessExpr>(SArrayAccessExpr.make(TreeBase.<SExpr>treeOf(name), TreeBase.<SExpr>treeOf(index))));
+		super(new SLocation<SArrayAccessExpr>(SArrayAccessExpr.make(TDTree.<SExpr>treeOf(name), TDTree.<SExpr>treeOf(index))));
 	}
 
 	public Expr name() {

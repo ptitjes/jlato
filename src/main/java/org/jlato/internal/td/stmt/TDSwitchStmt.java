@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SSwitchStmt;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.expr.Expr;
@@ -13,7 +13,7 @@ import org.jlato.tree.stmt.SwitchCase;
 import org.jlato.tree.stmt.SwitchStmt;
 import org.jlato.util.Mutation;
 
-public class TDSwitchStmt extends TreeBase<SSwitchStmt, Stmt, SwitchStmt> implements SwitchStmt {
+public class TDSwitchStmt extends TDTree<SSwitchStmt, Stmt, SwitchStmt> implements SwitchStmt {
 
 	public Kind kind() {
 		return Kind.SwitchStmt;
@@ -24,7 +24,7 @@ public class TDSwitchStmt extends TreeBase<SSwitchStmt, Stmt, SwitchStmt> implem
 	}
 
 	public TDSwitchStmt(Expr selector, NodeList<SwitchCase> cases) {
-		super(new SLocation<SSwitchStmt>(SSwitchStmt.make(TreeBase.<SExpr>treeOf(selector), TreeBase.<SNodeListState>treeOf(cases))));
+		super(new SLocation<SSwitchStmt>(SSwitchStmt.make(TDTree.<SExpr>treeOf(selector), TDTree.<SNodeListState>treeOf(cases))));
 	}
 
 	public Expr selector() {

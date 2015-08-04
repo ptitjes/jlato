@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.type.SWildcardType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -14,7 +14,7 @@ import org.jlato.tree.type.Type;
 import org.jlato.tree.type.WildcardType;
 import org.jlato.util.Mutation;
 
-public class TDWildcardType extends TreeBase<SWildcardType, Type, WildcardType> implements WildcardType {
+public class TDWildcardType extends TDTree<SWildcardType, Type, WildcardType> implements WildcardType {
 
 	public Kind kind() {
 		return Kind.WildcardType;
@@ -25,7 +25,7 @@ public class TDWildcardType extends TreeBase<SWildcardType, Type, WildcardType> 
 	}
 
 	public TDWildcardType(NodeList<AnnotationExpr> annotations, NodeOption<ReferenceType> ext, NodeOption<ReferenceType> sup) {
-		super(new SLocation<SWildcardType>(SWildcardType.make(TreeBase.<SNodeListState>treeOf(annotations), TreeBase.<SNodeOptionState>treeOf(ext), TreeBase.<SNodeOptionState>treeOf(sup))));
+		super(new SLocation<SWildcardType>(SWildcardType.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SNodeOptionState>treeOf(ext), TDTree.<SNodeOptionState>treeOf(sup))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

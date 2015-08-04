@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.decl.SLocalVariableDecl;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.decl.Decl;
@@ -14,7 +14,7 @@ import org.jlato.tree.decl.VariableDeclarator;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDLocalVariableDecl extends TreeBase<SLocalVariableDecl, Decl, LocalVariableDecl> implements LocalVariableDecl {
+public class TDLocalVariableDecl extends TDTree<SLocalVariableDecl, Decl, LocalVariableDecl> implements LocalVariableDecl {
 
 	public Kind kind() {
 		return Kind.LocalVariableDecl;
@@ -25,7 +25,7 @@ public class TDLocalVariableDecl extends TreeBase<SLocalVariableDecl, Decl, Loca
 	}
 
 	public TDLocalVariableDecl(NodeList<ExtendedModifier> modifiers, Type type, NodeList<VariableDeclarator> variables) {
-		super(new SLocation<SLocalVariableDecl>(SLocalVariableDecl.make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<SType>treeOf(type), TreeBase.<SNodeListState>treeOf(variables))));
+		super(new SLocation<SLocalVariableDecl>(SLocalVariableDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SType>treeOf(type), TDTree.<SNodeListState>treeOf(variables))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

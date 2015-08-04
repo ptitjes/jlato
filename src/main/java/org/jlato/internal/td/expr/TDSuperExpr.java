@@ -3,14 +3,14 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.expr.SSuperExpr;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.SuperExpr;
 import org.jlato.util.Mutation;
 
-public class TDSuperExpr extends TreeBase<SSuperExpr, Expr, SuperExpr> implements SuperExpr {
+public class TDSuperExpr extends TDTree<SSuperExpr, Expr, SuperExpr> implements SuperExpr {
 
 	public Kind kind() {
 		return Kind.SuperExpr;
@@ -21,7 +21,7 @@ public class TDSuperExpr extends TreeBase<SSuperExpr, Expr, SuperExpr> implement
 	}
 
 	public TDSuperExpr(NodeOption<Expr> classExpr) {
-		super(new SLocation<SSuperExpr>(SSuperExpr.make(TreeBase.<SNodeOptionState>treeOf(classExpr))));
+		super(new SLocation<SSuperExpr>(SSuperExpr.make(TDTree.<SNodeOptionState>treeOf(classExpr))));
 	}
 
 	public NodeOption<Expr> classExpr() {

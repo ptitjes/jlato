@@ -3,14 +3,14 @@ package org.jlato.internal.td.type;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.type.SUnionType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.type.Type;
 import org.jlato.tree.type.UnionType;
 import org.jlato.util.Mutation;
 
-public class TDUnionType extends TreeBase<SUnionType, Type, UnionType> implements UnionType {
+public class TDUnionType extends TDTree<SUnionType, Type, UnionType> implements UnionType {
 
 	public Kind kind() {
 		return Kind.UnionType;
@@ -21,7 +21,7 @@ public class TDUnionType extends TreeBase<SUnionType, Type, UnionType> implement
 	}
 
 	public TDUnionType(NodeList<Type> types) {
-		super(new SLocation<SUnionType>(SUnionType.make(TreeBase.<SNodeListState>treeOf(types))));
+		super(new SLocation<SUnionType>(SUnionType.make(TDTree.<SNodeListState>treeOf(types))));
 	}
 
 	public NodeList<Type> types() {

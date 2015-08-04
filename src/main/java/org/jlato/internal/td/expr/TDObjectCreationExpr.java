@@ -5,7 +5,7 @@ import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.expr.SObjectCreationExpr;
 import org.jlato.internal.bu.type.SQualifiedType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -16,7 +16,7 @@ import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDObjectCreationExpr extends TreeBase<SObjectCreationExpr, Expr, ObjectCreationExpr> implements ObjectCreationExpr {
+public class TDObjectCreationExpr extends TDTree<SObjectCreationExpr, Expr, ObjectCreationExpr> implements ObjectCreationExpr {
 
 	public Kind kind() {
 		return Kind.ObjectCreationExpr;
@@ -27,7 +27,7 @@ public class TDObjectCreationExpr extends TreeBase<SObjectCreationExpr, Expr, Ob
 	}
 
 	public TDObjectCreationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeOption<NodeList<MemberDecl>> body) {
-		super(new SLocation<SObjectCreationExpr>(SObjectCreationExpr.make(TreeBase.<SNodeOptionState>treeOf(scope), TreeBase.<SNodeListState>treeOf(typeArgs), TreeBase.<SQualifiedType>treeOf(type), TreeBase.<SNodeListState>treeOf(args), TreeBase.<SNodeOptionState>treeOf(body))));
+		super(new SLocation<SObjectCreationExpr>(SObjectCreationExpr.make(TDTree.<SNodeOptionState>treeOf(scope), TDTree.<SNodeListState>treeOf(typeArgs), TDTree.<SQualifiedType>treeOf(type), TDTree.<SNodeListState>treeOf(args), TDTree.<SNodeOptionState>treeOf(body))));
 	}
 
 	public NodeOption<Expr> scope() {

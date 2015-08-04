@@ -3,14 +3,14 @@ package org.jlato.internal.td.decl;
 import org.jlato.internal.bu.decl.SImportDecl;
 import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.decl.ImportDecl;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
 
-public class TDImportDecl extends TreeBase<SImportDecl, Node, ImportDecl> implements ImportDecl {
+public class TDImportDecl extends TDTree<SImportDecl, Node, ImportDecl> implements ImportDecl {
 
 	public Kind kind() {
 		return Kind.ImportDecl;
@@ -21,7 +21,7 @@ public class TDImportDecl extends TreeBase<SImportDecl, Node, ImportDecl> implem
 	}
 
 	public TDImportDecl(QualifiedName name, boolean isStatic, boolean isOnDemand) {
-		super(new SLocation<SImportDecl>(SImportDecl.make(TreeBase.<SQualifiedName>treeOf(name), isStatic, isOnDemand)));
+		super(new SLocation<SImportDecl>(SImportDecl.make(TDTree.<SQualifiedName>treeOf(name), isStatic, isOnDemand)));
 	}
 
 	public QualifiedName name() {

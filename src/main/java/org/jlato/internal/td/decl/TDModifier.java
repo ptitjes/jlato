@@ -2,14 +2,14 @@ package org.jlato.internal.td.decl;
 
 import org.jlato.internal.bu.decl.SModifier;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.Modifier;
 import org.jlato.tree.decl.ModifierKeyword;
 import org.jlato.util.Mutation;
 
-public class TDModifier extends TreeBase<SModifier, ExtendedModifier, Modifier> implements Modifier {
+public class TDModifier extends TDTree<SModifier, ExtendedModifier, Modifier> implements Modifier {
 
 	public Kind kind() {
 		return Kind.Modifier;

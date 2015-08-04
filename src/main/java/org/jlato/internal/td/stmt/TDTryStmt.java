@@ -5,7 +5,7 @@ import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.bu.stmt.STryStmt;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -16,7 +16,7 @@ import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.stmt.TryStmt;
 import org.jlato.util.Mutation;
 
-public class TDTryStmt extends TreeBase<STryStmt, Stmt, TryStmt> implements TryStmt {
+public class TDTryStmt extends TDTree<STryStmt, Stmt, TryStmt> implements TryStmt {
 
 	public Kind kind() {
 		return Kind.TryStmt;
@@ -27,7 +27,7 @@ public class TDTryStmt extends TreeBase<STryStmt, Stmt, TryStmt> implements TryS
 	}
 
 	public TDTryStmt(NodeList<VariableDeclarationExpr> resources, boolean trailingSemiColon, BlockStmt tryBlock, NodeList<CatchClause> catchs, NodeOption<BlockStmt> finallyBlock) {
-		super(new SLocation<STryStmt>(STryStmt.make(TreeBase.<SNodeListState>treeOf(resources), trailingSemiColon, TreeBase.<SBlockStmt>treeOf(tryBlock), TreeBase.<SNodeListState>treeOf(catchs), TreeBase.<SNodeOptionState>treeOf(finallyBlock))));
+		super(new SLocation<STryStmt>(STryStmt.make(TDTree.<SNodeListState>treeOf(resources), trailingSemiColon, TDTree.<SBlockStmt>treeOf(tryBlock), TDTree.<SNodeListState>treeOf(catchs), TDTree.<SNodeOptionState>treeOf(finallyBlock))));
 	}
 
 	public NodeList<VariableDeclarationExpr> resources() {

@@ -25,7 +25,7 @@ import com.github.andrewoma.dexx.collection.TreeMap;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeSetState;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
 
@@ -37,7 +37,7 @@ import java.io.PrintWriter;
 /**
  * @author Didier Villevalois
  */
-public class TreeSet<T extends Tree> extends TreeBase<STreeSetState, TreeSet<T>, TreeSet<T>> implements Tree {
+public class TreeSet<T extends Tree> extends TDTree<STreeSetState, TreeSet<T>, TreeSet<T>> implements Tree {
 
 	public TreeSet(SLocation<STreeSetState> location) {
 		super(location);

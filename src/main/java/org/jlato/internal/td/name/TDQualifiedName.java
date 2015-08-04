@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeOption;
@@ -12,7 +12,7 @@ import org.jlato.tree.name.Name;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
 
-public class TDQualifiedName extends TreeBase<SQualifiedName, Node, QualifiedName> implements QualifiedName {
+public class TDQualifiedName extends TDTree<SQualifiedName, Node, QualifiedName> implements QualifiedName {
 
 	public Kind kind() {
 		return Kind.QualifiedName;
@@ -23,7 +23,7 @@ public class TDQualifiedName extends TreeBase<SQualifiedName, Node, QualifiedNam
 	}
 
 	public TDQualifiedName(NodeOption<QualifiedName> qualifier, Name name) {
-		super(new SLocation<SQualifiedName>(SQualifiedName.make(TreeBase.<SNodeOptionState>treeOf(qualifier), TreeBase.<SName>treeOf(name))));
+		super(new SLocation<SQualifiedName>(SQualifiedName.make(TDTree.<SNodeOptionState>treeOf(qualifier), TDTree.<SName>treeOf(name))));
 	}
 
 	public NodeOption<QualifiedName> qualifier() {

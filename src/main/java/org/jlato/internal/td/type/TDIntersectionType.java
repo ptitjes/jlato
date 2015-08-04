@@ -3,14 +3,14 @@ package org.jlato.internal.td.type;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.type.SIntersectionType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.type.IntersectionType;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDIntersectionType extends TreeBase<SIntersectionType, Type, IntersectionType> implements IntersectionType {
+public class TDIntersectionType extends TDTree<SIntersectionType, Type, IntersectionType> implements IntersectionType {
 
 	public Kind kind() {
 		return Kind.IntersectionType;
@@ -21,7 +21,7 @@ public class TDIntersectionType extends TreeBase<SIntersectionType, Type, Inters
 	}
 
 	public TDIntersectionType(NodeList<Type> types) {
-		super(new SLocation<SIntersectionType>(SIntersectionType.make(TreeBase.<SNodeListState>treeOf(types))));
+		super(new SLocation<SIntersectionType>(SIntersectionType.make(TDTree.<SNodeListState>treeOf(types))));
 	}
 
 	public NodeList<Type> types() {

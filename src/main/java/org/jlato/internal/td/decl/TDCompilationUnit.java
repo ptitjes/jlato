@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.decl.SCompilationUnit;
 import org.jlato.internal.bu.decl.SPackageDecl;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
@@ -14,7 +14,7 @@ import org.jlato.tree.decl.PackageDecl;
 import org.jlato.tree.decl.TypeDecl;
 import org.jlato.util.Mutation;
 
-public class TDCompilationUnit extends TreeBase<SCompilationUnit, Node, CompilationUnit> implements CompilationUnit {
+public class TDCompilationUnit extends TDTree<SCompilationUnit, Node, CompilationUnit> implements CompilationUnit {
 
 	public Kind kind() {
 		return Kind.CompilationUnit;
@@ -25,7 +25,7 @@ public class TDCompilationUnit extends TreeBase<SCompilationUnit, Node, Compilat
 	}
 
 	public TDCompilationUnit(PackageDecl packageDecl, NodeList<ImportDecl> imports, NodeList<TypeDecl> types) {
-		super(new SLocation<SCompilationUnit>(SCompilationUnit.make(TreeBase.<SPackageDecl>treeOf(packageDecl), TreeBase.<SNodeListState>treeOf(imports), TreeBase.<SNodeListState>treeOf(types))));
+		super(new SLocation<SCompilationUnit>(SCompilationUnit.make(TDTree.<SPackageDecl>treeOf(packageDecl), TDTree.<SNodeListState>treeOf(imports), TDTree.<SNodeListState>treeOf(types))));
 	}
 
 	public PackageDecl packageDecl() {

@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.decl.SVariableDeclarator;
 import org.jlato.internal.bu.decl.SVariableDeclaratorId;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeOption;
@@ -13,7 +13,7 @@ import org.jlato.tree.decl.VariableDeclaratorId;
 import org.jlato.tree.expr.Expr;
 import org.jlato.util.Mutation;
 
-public class TDVariableDeclarator extends TreeBase<SVariableDeclarator, Node, VariableDeclarator> implements VariableDeclarator {
+public class TDVariableDeclarator extends TDTree<SVariableDeclarator, Node, VariableDeclarator> implements VariableDeclarator {
 
 	public Kind kind() {
 		return Kind.VariableDeclarator;
@@ -24,7 +24,7 @@ public class TDVariableDeclarator extends TreeBase<SVariableDeclarator, Node, Va
 	}
 
 	public TDVariableDeclarator(VariableDeclaratorId id, NodeOption<Expr> init) {
-		super(new SLocation<SVariableDeclarator>(SVariableDeclarator.make(TreeBase.<SVariableDeclaratorId>treeOf(id), TreeBase.<SNodeOptionState>treeOf(init))));
+		super(new SLocation<SVariableDeclarator>(SVariableDeclarator.make(TDTree.<SVariableDeclaratorId>treeOf(id), TDTree.<SNodeOptionState>treeOf(init))));
 	}
 
 	public VariableDeclaratorId id() {

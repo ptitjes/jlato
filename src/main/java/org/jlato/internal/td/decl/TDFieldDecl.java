@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.decl.SFieldDecl;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.decl.ExtendedModifier;
@@ -14,7 +14,7 @@ import org.jlato.tree.decl.VariableDeclarator;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDFieldDecl extends TreeBase<SFieldDecl, MemberDecl, FieldDecl> implements FieldDecl {
+public class TDFieldDecl extends TDTree<SFieldDecl, MemberDecl, FieldDecl> implements FieldDecl {
 
 	public Kind kind() {
 		return Kind.FieldDecl;
@@ -25,7 +25,7 @@ public class TDFieldDecl extends TreeBase<SFieldDecl, MemberDecl, FieldDecl> imp
 	}
 
 	public TDFieldDecl(NodeList<ExtendedModifier> modifiers, Type type, NodeList<VariableDeclarator> variables) {
-		super(new SLocation<SFieldDecl>(SFieldDecl.make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<SType>treeOf(type), TreeBase.<SNodeListState>treeOf(variables))));
+		super(new SLocation<SFieldDecl>(SFieldDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SType>treeOf(type), TDTree.<SNodeListState>treeOf(variables))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

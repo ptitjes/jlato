@@ -3,14 +3,14 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.expr.SBinaryExpr;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.BinaryExpr;
 import org.jlato.tree.expr.BinaryOp;
 import org.jlato.tree.expr.Expr;
 import org.jlato.util.Mutation;
 
-public class TDBinaryExpr extends TreeBase<SBinaryExpr, Expr, BinaryExpr> implements BinaryExpr {
+public class TDBinaryExpr extends TDTree<SBinaryExpr, Expr, BinaryExpr> implements BinaryExpr {
 
 	public Kind kind() {
 		return Kind.BinaryExpr;
@@ -21,7 +21,7 @@ public class TDBinaryExpr extends TreeBase<SBinaryExpr, Expr, BinaryExpr> implem
 	}
 
 	public TDBinaryExpr(Expr left, BinaryOp op, Expr right) {
-		super(new SLocation<SBinaryExpr>(SBinaryExpr.make(TreeBase.<SExpr>treeOf(left), op, TreeBase.<SExpr>treeOf(right))));
+		super(new SLocation<SBinaryExpr>(SBinaryExpr.make(TDTree.<SExpr>treeOf(left), op, TDTree.<SExpr>treeOf(right))));
 	}
 
 	public Expr left() {

@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.decl.SInitializerDecl;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.decl.ExtendedModifier;
@@ -13,7 +13,7 @@ import org.jlato.tree.decl.MemberDecl;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.util.Mutation;
 
-public class TDInitializerDecl extends TreeBase<SInitializerDecl, MemberDecl, InitializerDecl> implements InitializerDecl {
+public class TDInitializerDecl extends TDTree<SInitializerDecl, MemberDecl, InitializerDecl> implements InitializerDecl {
 
 	public Kind kind() {
 		return Kind.InitializerDecl;
@@ -24,7 +24,7 @@ public class TDInitializerDecl extends TreeBase<SInitializerDecl, MemberDecl, In
 	}
 
 	public TDInitializerDecl(NodeList<ExtendedModifier> modifiers, BlockStmt body) {
-		super(new SLocation<SInitializerDecl>(SInitializerDecl.make(TreeBase.<SNodeListState>treeOf(modifiers), TreeBase.<SBlockStmt>treeOf(body))));
+		super(new SLocation<SInitializerDecl>(SInitializerDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SBlockStmt>treeOf(body))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

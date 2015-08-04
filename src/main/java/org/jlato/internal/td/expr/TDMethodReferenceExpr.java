@@ -5,7 +5,7 @@ import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.expr.SMethodReferenceExpr;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.expr.Expr;
@@ -14,7 +14,7 @@ import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
-public class TDMethodReferenceExpr extends TreeBase<SMethodReferenceExpr, Expr, MethodReferenceExpr> implements MethodReferenceExpr {
+public class TDMethodReferenceExpr extends TDTree<SMethodReferenceExpr, Expr, MethodReferenceExpr> implements MethodReferenceExpr {
 
 	public Kind kind() {
 		return Kind.MethodReferenceExpr;
@@ -25,7 +25,7 @@ public class TDMethodReferenceExpr extends TreeBase<SMethodReferenceExpr, Expr, 
 	}
 
 	public TDMethodReferenceExpr(Expr scope, NodeList<Type> typeArgs, Name name) {
-		super(new SLocation<SMethodReferenceExpr>(SMethodReferenceExpr.make(TreeBase.<SExpr>treeOf(scope), TreeBase.<SNodeListState>treeOf(typeArgs), TreeBase.<SName>treeOf(name))));
+		super(new SLocation<SMethodReferenceExpr>(SMethodReferenceExpr.make(TDTree.<SExpr>treeOf(scope), TDTree.<SNodeListState>treeOf(typeArgs), TDTree.<SName>treeOf(name))));
 	}
 
 	public Expr scope() {

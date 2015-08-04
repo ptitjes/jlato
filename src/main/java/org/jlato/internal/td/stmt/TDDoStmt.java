@@ -4,14 +4,14 @@ import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SDoStmt;
 import org.jlato.internal.bu.stmt.SStmt;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.DoStmt;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.util.Mutation;
 
-public class TDDoStmt extends TreeBase<SDoStmt, Stmt, DoStmt> implements DoStmt {
+public class TDDoStmt extends TDTree<SDoStmt, Stmt, DoStmt> implements DoStmt {
 
 	public Kind kind() {
 		return Kind.DoStmt;
@@ -22,7 +22,7 @@ public class TDDoStmt extends TreeBase<SDoStmt, Stmt, DoStmt> implements DoStmt 
 	}
 
 	public TDDoStmt(Stmt body, Expr condition) {
-		super(new SLocation<SDoStmt>(SDoStmt.make(TreeBase.<SStmt>treeOf(body), TreeBase.<SExpr>treeOf(condition))));
+		super(new SLocation<SDoStmt>(SDoStmt.make(TDTree.<SStmt>treeOf(body), TDTree.<SExpr>treeOf(condition))));
 	}
 
 	public Stmt body() {

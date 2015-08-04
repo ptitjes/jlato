@@ -19,17 +19,8 @@
 
 package org.jlato.unit;
 
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.td.TreeBase;
-import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
-import org.jlato.parser.Parser;
-import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.FormattingSettings;
-import org.jlato.printer.Printer;
-import org.jlato.tree.decl.CompilationUnit;
-import org.jlato.tree.decl.ImportDecl;
-import org.jlato.tree.expr.Expr;
 import org.jlato.unit.util.BaseTestFromFiles;
 import org.junit.Assert;
 import org.junit.Test;

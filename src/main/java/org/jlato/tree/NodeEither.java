@@ -23,12 +23,12 @@ import org.jlato.internal.bu.SNodeEitherState;
 import org.jlato.internal.bu.SNodeEitherState.EitherSide;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 
 /**
  * @author Didier Villevalois
  */
-public class NodeEither<TL extends Tree, TR extends Tree> extends TreeBase<SNodeEitherState, NodeEither<TL, TR>, NodeEither<TL, TR>> implements Tree {
+public class NodeEither<TL extends Tree, TR extends Tree> extends TDTree<SNodeEitherState, NodeEither<TL, TR>, NodeEither<TL, TR>> implements Tree {
 
 	public static <TL extends Tree, TR extends Tree> NodeEither<TL, TR> left(TL tree) {
 		if (tree == null) throw new NullPointerException();

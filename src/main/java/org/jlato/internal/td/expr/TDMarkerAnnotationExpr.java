@@ -3,14 +3,14 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.expr.SMarkerAnnotationExpr;
 import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.expr.MarkerAnnotationExpr;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
 
-public class TDMarkerAnnotationExpr extends TreeBase<SMarkerAnnotationExpr, AnnotationExpr, MarkerAnnotationExpr> implements MarkerAnnotationExpr {
+public class TDMarkerAnnotationExpr extends TDTree<SMarkerAnnotationExpr, AnnotationExpr, MarkerAnnotationExpr> implements MarkerAnnotationExpr {
 
 	public Kind kind() {
 		return Kind.MarkerAnnotationExpr;
@@ -21,7 +21,7 @@ public class TDMarkerAnnotationExpr extends TreeBase<SMarkerAnnotationExpr, Anno
 	}
 
 	public TDMarkerAnnotationExpr(QualifiedName name) {
-		super(new SLocation<SMarkerAnnotationExpr>(SMarkerAnnotationExpr.make(TreeBase.<SQualifiedName>treeOf(name))));
+		super(new SLocation<SMarkerAnnotationExpr>(SMarkerAnnotationExpr.make(TDTree.<SQualifiedName>treeOf(name))));
 	}
 
 	public QualifiedName name() {

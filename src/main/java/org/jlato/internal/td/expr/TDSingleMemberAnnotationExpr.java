@@ -4,7 +4,7 @@ import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.expr.SSingleMemberAnnotationExpr;
 import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.expr.Expr;
@@ -12,7 +12,7 @@ import org.jlato.tree.expr.SingleMemberAnnotationExpr;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
 
-public class TDSingleMemberAnnotationExpr extends TreeBase<SSingleMemberAnnotationExpr, AnnotationExpr, SingleMemberAnnotationExpr> implements SingleMemberAnnotationExpr {
+public class TDSingleMemberAnnotationExpr extends TDTree<SSingleMemberAnnotationExpr, AnnotationExpr, SingleMemberAnnotationExpr> implements SingleMemberAnnotationExpr {
 
 	public Kind kind() {
 		return Kind.SingleMemberAnnotationExpr;
@@ -23,7 +23,7 @@ public class TDSingleMemberAnnotationExpr extends TreeBase<SSingleMemberAnnotati
 	}
 
 	public TDSingleMemberAnnotationExpr(QualifiedName name, Expr memberValue) {
-		super(new SLocation<SSingleMemberAnnotationExpr>(SSingleMemberAnnotationExpr.make(TreeBase.<SQualifiedName>treeOf(name), TreeBase.<SExpr>treeOf(memberValue))));
+		super(new SLocation<SSingleMemberAnnotationExpr>(SSingleMemberAnnotationExpr.make(TDTree.<SQualifiedName>treeOf(name), TDTree.<SExpr>treeOf(memberValue))));
 	}
 
 	public QualifiedName name() {

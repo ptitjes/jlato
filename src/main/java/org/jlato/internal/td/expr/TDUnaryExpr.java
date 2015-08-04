@@ -3,14 +3,14 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.expr.SUnaryExpr;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.UnaryExpr;
 import org.jlato.tree.expr.UnaryOp;
 import org.jlato.util.Mutation;
 
-public class TDUnaryExpr extends TreeBase<SUnaryExpr, Expr, UnaryExpr> implements UnaryExpr {
+public class TDUnaryExpr extends TDTree<SUnaryExpr, Expr, UnaryExpr> implements UnaryExpr {
 
 	public Kind kind() {
 		return Kind.UnaryExpr;
@@ -21,7 +21,7 @@ public class TDUnaryExpr extends TreeBase<SUnaryExpr, Expr, UnaryExpr> implement
 	}
 
 	public TDUnaryExpr(UnaryOp op, Expr expr) {
-		super(new SLocation<SUnaryExpr>(SUnaryExpr.make(op, TreeBase.<SExpr>treeOf(expr))));
+		super(new SLocation<SUnaryExpr>(SUnaryExpr.make(op, TDTree.<SExpr>treeOf(expr))));
 	}
 
 	public UnaryOp op() {

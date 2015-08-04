@@ -20,7 +20,7 @@
 package org.jlato.unit.util;
 
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
@@ -44,7 +44,7 @@ public class BaseTestFromFiles {
 	}
 
 	protected void validate(CompilationUnit cu) {
-		STree tree = TreeBase.treeOf(cu);
+		STree tree = TDTree.treeOf(cu);
 		tree.validate();
 	}
 

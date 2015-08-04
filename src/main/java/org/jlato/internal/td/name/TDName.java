@@ -2,13 +2,13 @@ package org.jlato.internal.td.name;
 
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
 import org.jlato.util.Mutation;
 
-public class TDName extends TreeBase<SName, Expr, Name> implements Name {
+public class TDName extends TDTree<SName, Expr, Name> implements Name {
 
 	public Kind kind() {
 		return Kind.Name;

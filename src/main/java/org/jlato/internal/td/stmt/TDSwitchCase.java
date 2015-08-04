@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.stmt.SSwitchCase;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
@@ -14,7 +14,7 @@ import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.stmt.SwitchCase;
 import org.jlato.util.Mutation;
 
-public class TDSwitchCase extends TreeBase<SSwitchCase, Node, SwitchCase> implements SwitchCase {
+public class TDSwitchCase extends TDTree<SSwitchCase, Node, SwitchCase> implements SwitchCase {
 
 	public Kind kind() {
 		return Kind.SwitchCase;
@@ -25,7 +25,7 @@ public class TDSwitchCase extends TreeBase<SSwitchCase, Node, SwitchCase> implem
 	}
 
 	public TDSwitchCase(NodeOption<Expr> label, NodeList<Stmt> stmts) {
-		super(new SLocation<SSwitchCase>(SSwitchCase.make(TreeBase.<SNodeOptionState>treeOf(label), TreeBase.<SNodeListState>treeOf(stmts))));
+		super(new SLocation<SSwitchCase>(SSwitchCase.make(TDTree.<SNodeOptionState>treeOf(label), TDTree.<SNodeListState>treeOf(stmts))));
 	}
 
 	public NodeOption<Expr> label() {

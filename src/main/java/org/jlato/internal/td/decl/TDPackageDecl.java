@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.decl.SPackageDecl;
 import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.SLocation;
-import org.jlato.internal.td.TreeBase;
+import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
@@ -13,7 +13,7 @@ import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
 
-public class TDPackageDecl extends TreeBase<SPackageDecl, Node, PackageDecl> implements PackageDecl {
+public class TDPackageDecl extends TDTree<SPackageDecl, Node, PackageDecl> implements PackageDecl {
 
 	public Kind kind() {
 		return Kind.PackageDecl;
@@ -24,7 +24,7 @@ public class TDPackageDecl extends TreeBase<SPackageDecl, Node, PackageDecl> imp
 	}
 
 	public TDPackageDecl(NodeList<AnnotationExpr> annotations, QualifiedName name) {
-		super(new SLocation<SPackageDecl>(SPackageDecl.make(TreeBase.<SNodeListState>treeOf(annotations), TreeBase.<SQualifiedName>treeOf(name))));
+		super(new SLocation<SPackageDecl>(SPackageDecl.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SQualifiedName>treeOf(name))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {
