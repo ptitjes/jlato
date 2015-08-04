@@ -32,6 +32,6 @@ public class TDLiteralExpr<T> extends TDTree<SLiteralExpr, Expr, LiteralExpr<T>>
 	}
 
 	public T value() {
-		return (T) Literals.valueFor(literalClass(), literalString());
+		return Literals.valueFor(literalClass(), literalString());
 	}
 }

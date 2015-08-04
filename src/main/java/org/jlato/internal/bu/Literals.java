@@ -19,8 +19,6 @@
 
 package org.jlato.internal.bu;
 
-import org.jlato.parser.ParserImplConstants;
-
 /**
  * @author Didier Villevalois
  */
@@ -53,31 +51,6 @@ public class Literals {
 			return "\"" + literalValue.toString() + "\"";
 		} else {
 			throw new IllegalArgumentException();
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T> Class<T> literalClassFor(int tokenKind) {
-		switch (tokenKind) {
-			case ParserImplConstants.NULL:
-				return (Class<T>) Void.class;
-			case ParserImplConstants.TRUE:
-			case ParserImplConstants.FALSE:
-				return (Class<T>) Boolean.class;
-			case ParserImplConstants.CHARACTER_LITERAL:
-				return (Class<T>) Character.class;
-			case ParserImplConstants.INTEGER_LITERAL:
-				return (Class<T>) Integer.class;
-			case ParserImplConstants.LONG_LITERAL:
-				return (Class<T>) Long.class;
-			case ParserImplConstants.FLOAT_LITERAL:
-				return (Class<T>) Float.class;
-			case ParserImplConstants.DOUBLE_LITERAL:
-				return (Class<T>) Double.class;
-			case ParserImplConstants.STRING_LITERAL:
-				return (Class<T>) String.class;
-			default:
-				throw new IllegalArgumentException();
 		}
 	}
 
