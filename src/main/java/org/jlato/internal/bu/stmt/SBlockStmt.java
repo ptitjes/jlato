@@ -11,9 +11,9 @@ import org.jlato.tree.stmt.*;
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
-import static org.jlato.printer.IndentationConstraint.indent;
-import static org.jlato.printer.IndentationConstraint.unIndent;
-import static org.jlato.printer.SpacingConstraint.newLine;
+import static org.jlato.internal.shapes.IndentationConstraint.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.SpacingConstraint.newLine;
 
 public class SBlockStmt extends SNode<SBlockStmt> implements SStmt {
 

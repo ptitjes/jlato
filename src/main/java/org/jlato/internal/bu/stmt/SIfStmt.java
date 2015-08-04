@@ -15,9 +15,9 @@ import static org.jlato.internal.shapes.LSCondition.withKind;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
-import static org.jlato.printer.IndentationConstraint.indent;
-import static org.jlato.printer.IndentationConstraint.unIndent;
-import static org.jlato.printer.SpacingConstraint.*;
+import static org.jlato.internal.shapes.IndentationConstraint.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.SpacingConstraint.*;
 
 public class SIfStmt extends SNode<SIfStmt> implements SStmt {
 

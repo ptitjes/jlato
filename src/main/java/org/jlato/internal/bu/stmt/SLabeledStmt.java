@@ -12,9 +12,9 @@ import org.jlato.tree.stmt.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.LabeledStmt_AfterLabel;
-import static org.jlato.printer.IndentationConstraint.indent;
-import static org.jlato.printer.IndentationConstraint.unIndent;
-import static org.jlato.printer.SpacingConstraint.spacing;
+import static org.jlato.internal.shapes.IndentationConstraint.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.SpacingConstraint.spacing;
 
 public class SLabeledStmt extends SNode<SLabeledStmt> implements SStmt {
 

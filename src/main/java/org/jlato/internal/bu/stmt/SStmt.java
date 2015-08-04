@@ -5,7 +5,7 @@ import org.jlato.internal.shapes.LexicalShape;
 
 import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.none;
-import static org.jlato.printer.SpacingConstraint.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.newLine;
 
 public interface SStmt extends STree {
 

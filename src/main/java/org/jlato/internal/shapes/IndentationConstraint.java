@@ -17,8 +17,9 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.printer;
+package org.jlato.internal.shapes;
 
+import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.FormattingSettings.IndentationContext;
 
 /**

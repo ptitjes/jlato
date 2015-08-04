@@ -22,11 +22,9 @@ package org.jlato.internal.shapes;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeEither;
 import org.jlato.internal.bu.coll.SNodeOption;
-import org.jlato.printer.IndentationConstraint;
 import org.jlato.printer.Printer;
-import org.jlato.printer.SpacingConstraint;
 
-import static org.jlato.printer.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.space;
 
 /**
  * @author Didier Villevalois

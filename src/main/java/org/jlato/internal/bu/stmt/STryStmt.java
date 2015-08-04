@@ -15,10 +15,10 @@ import java.util.Collections;
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TRY_RESOURCES;
-import static org.jlato.printer.IndentationConstraint.indent;
-import static org.jlato.printer.IndentationConstraint.unIndent;
-import static org.jlato.printer.SpacingConstraint.newLine;
-import static org.jlato.printer.SpacingConstraint.space;
+import static org.jlato.internal.shapes.IndentationConstraint.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.SpacingConstraint.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.space;
 
 public class STryStmt extends SNode<STryStmt> implements SStmt {
 

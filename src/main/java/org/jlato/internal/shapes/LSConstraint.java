@@ -21,9 +21,7 @@ package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.WRunRun;
-import org.jlato.printer.IndentationConstraint;
 import org.jlato.printer.Printer;
-import org.jlato.printer.SpacingConstraint;
 
 /**
  * @author Didier Villevalois

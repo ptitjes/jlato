@@ -8,8 +8,8 @@ import org.jlato.tree.*;
 import static org.jlato.internal.shapes.LSCondition.childHas;
 import static org.jlato.internal.shapes.LSCondition.withKind;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.SpacingConstraint.newLine;
-import static org.jlato.printer.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.space;
 
 public interface SExtendedModifier extends STree {
 

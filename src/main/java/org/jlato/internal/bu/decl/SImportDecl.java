@@ -13,8 +13,8 @@ import java.util.Arrays;
 import static org.jlato.internal.shapes.LSCondition.data;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterImports;
-import static org.jlato.printer.SpacingConstraint.newLine;
-import static org.jlato.printer.SpacingConstraint.spacing;
+import static org.jlato.internal.shapes.SpacingConstraint.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.spacing;
 
 public class SImportDecl extends SNode<SImportDecl> implements STree {
 

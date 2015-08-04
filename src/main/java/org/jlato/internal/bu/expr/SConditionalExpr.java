@@ -8,7 +8,7 @@ import org.jlato.tree.*;
 import org.jlato.tree.expr.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.space;
 
 public class SConditionalExpr extends SNode<SConditionalExpr> implements SExpr {
 

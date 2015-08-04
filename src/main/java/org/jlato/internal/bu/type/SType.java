@@ -6,7 +6,7 @@ import org.jlato.internal.shapes.LexicalShape;
 
 import static org.jlato.internal.shapes.LexicalShape.list;
 import static org.jlato.internal.shapes.LexicalShape.token;
-import static org.jlato.printer.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.space;
 
 public interface SType extends STree {
 

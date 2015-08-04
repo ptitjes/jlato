@@ -18,9 +18,9 @@ import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_AfterConstants;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_BetweenConstants;
-import static org.jlato.printer.IndentationConstraint.indent;
-import static org.jlato.printer.IndentationConstraint.unIndent;
-import static org.jlato.printer.SpacingConstraint.*;
+import static org.jlato.internal.shapes.IndentationConstraint.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.SpacingConstraint.*;
 
 public class SEnumDecl extends SNode<SEnumDecl> implements STypeDecl {
 

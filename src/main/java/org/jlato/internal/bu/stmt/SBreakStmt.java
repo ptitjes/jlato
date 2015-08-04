@@ -10,7 +10,7 @@ import org.jlato.tree.name.*;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.space;
 
 public class SBreakStmt extends SNode<SBreakStmt> implements SStmt {
 

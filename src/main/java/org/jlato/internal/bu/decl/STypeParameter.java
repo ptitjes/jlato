@@ -12,7 +12,7 @@ import org.jlato.tree.name.*;
 import org.jlato.tree.type.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.space;
 
 public class STypeParameter extends SNode<STypeParameter> implements STree {
 
