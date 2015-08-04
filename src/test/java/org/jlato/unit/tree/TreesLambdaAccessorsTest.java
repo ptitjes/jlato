@@ -6,7 +6,7 @@ import org.jlato.tree.expr.*;
 import org.jlato.tree.name.*;
 import org.jlato.tree.stmt.*;
 import org.jlato.tree.type.*;
-import static org.jlato.tree.TreeFactory.*;
+import static org.jlato.tree.Trees.*;
 import org.jlato.unit.util.Arbitrary;
 import org.jlato.util.Mutation;
 import org.junit.*;

@@ -12,7 +12,7 @@ import org.jlato.internal.td.name.*;
 import org.jlato.internal.td.stmt.*;
 import org.jlato.internal.td.type.*;
 
-import static org.jlato.tree.TreeFactory.*;
+import static org.jlato.tree.Trees.*;
 
 import org.jlato.util.Function0;
 import org.jlato.util.Function2;
@@ -74,7 +74,7 @@ public class Arbitrary {
 	public <T extends Tree> NodeOption<T> arbitraryOptionOf(Function0<T> gen) {
 		if (enableFalseNoneOrEmpty) {
 			final boolean none = arbitraryBoolean();
-			return none ? TreeFactory.<T>none() : some(gen.apply());
+			return none ? Trees.<T>none() : some(gen.apply());
 		} else {
 			return some(gen.apply());
 		}
@@ -143,7 +143,7 @@ public class Arbitrary {
 	}
 
 	public QualifiedType arbitraryQualifiedType() {
-		return new TDQualifiedType(arbitraryListAnnotationExpr(), TreeFactory.<QualifiedType>none(), arbitraryName(), arbitraryOptionListType());
+		return new TDQualifiedType(arbitraryListAnnotationExpr(), Trees.<QualifiedType>none(), arbitraryName(), arbitraryOptionListType());
 	}
 
 	public BlockStmt arbitraryBlockStmt() {
@@ -536,6 +536,6 @@ public class Arbitrary {
 
 	public NodeEither<Expr, BlockStmt> arbitraryEitherExprBlockStmt() {
 		boolean expr = arbitraryBoolean();
-		return expr ? TreeFactory.<Expr, BlockStmt>left(arbitraryExpr()) : TreeFactory.<Expr, BlockStmt>right(arbitraryBlockStmt());
+		return expr ? Trees.<Expr, BlockStmt>left(arbitraryExpr()) : Trees.<Expr, BlockStmt>right(arbitraryBlockStmt());
 	}
 }

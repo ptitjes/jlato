@@ -35,7 +35,7 @@ import org.junit.runners.JUnit4;
 
 import java.io.FileNotFoundException;
 
-import static org.jlato.tree.TreeFactory.*;
+import static org.jlato.tree.Trees.*;
 
 /**
  * @author Didier Villevalois
@@ -230,7 +230,7 @@ public class NodeContainersTest {
 
 	@Test
 	public void nodeListStaticCreationHelpers() {
-		assertNodeListContent(TreeFactory.<Name>emptyList(), 0);
+		assertNodeListContent(Trees.<Name>emptyList(), 0);
 		assertNodeListContent(listOf(indexedName(0)), 1);
 		assertNodeListContent(listOf(indexedName(0), indexedName(1)), 2);
 		assertNodeListContent(listOf(indexedName(0), indexedName(1), indexedName(2)), 3);
@@ -289,7 +289,7 @@ public class NodeContainersTest {
 
 	@Test
 	public void nodeEitherManipulations() throws FileNotFoundException, ParseException {
-		NodeEither<Expr, BlockStmt> either1 = TreeFactory.<Expr, BlockStmt>left(name("name"));
+		NodeEither<Expr, BlockStmt> either1 = Trees.<Expr, BlockStmt>left(name("name"));
 		Assert.assertTrue(either1.isLeft());
 		Assert.assertTrue(!either1.isRight());
 		Assert.assertEquals(name("name"), either1.left());

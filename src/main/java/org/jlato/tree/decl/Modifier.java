@@ -3,7 +3,7 @@ package org.jlato.tree.decl;
 import org.jlato.tree.TreeCombinators;
 import org.jlato.util.Mutation;
 
-import static org.jlato.tree.TreeFactory.modifier;
+import static org.jlato.tree.Trees.modifier;
 
 public interface Modifier extends ExtendedModifier, TreeCombinators<Modifier> {
 

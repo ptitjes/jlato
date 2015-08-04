@@ -36,7 +36,7 @@ import org.junit.runners.JUnit4;
 import java.io.FileNotFoundException;
 
 import static org.jlato.rewrite.Quotes.*;
-import static org.jlato.tree.TreeFactory.*;
+import static org.jlato.tree.Trees.*;
 
 /**
  * @author Didier Villevalois

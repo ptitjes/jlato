@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.jlato.tree.TreeFactory.*;
+import static org.jlato.tree.Trees.*;
 
 @RunWith(JUnit4.class)
 public class TreesEqualsHashCodeTest {
