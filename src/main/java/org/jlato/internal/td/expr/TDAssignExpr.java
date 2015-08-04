@@ -2,7 +2,7 @@ package org.jlato.internal.td.expr;
 
 import org.jlato.internal.bu.expr.SAssignExpr;
 import org.jlato.internal.bu.expr.SExpr;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.AssignExpr;
@@ -16,12 +16,12 @@ public class TDAssignExpr extends TDTree<SAssignExpr, Expr, AssignExpr> implemen
 		return Kind.AssignExpr;
 	}
 
-	public TDAssignExpr(SLocation<SAssignExpr> location) {
+	public TDAssignExpr(TDLocation<SAssignExpr> location) {
 		super(location);
 	}
 
 	public TDAssignExpr(Expr target, AssignOp op, Expr value) {
-		super(new SLocation<SAssignExpr>(SAssignExpr.make(TDTree.<SExpr>treeOf(target), op, TDTree.<SExpr>treeOf(value))));
+		super(new TDLocation<SAssignExpr>(SAssignExpr.make(TDTree.<SExpr>treeOf(target), op, TDTree.<SExpr>treeOf(value))));
 	}
 
 	public Expr target() {

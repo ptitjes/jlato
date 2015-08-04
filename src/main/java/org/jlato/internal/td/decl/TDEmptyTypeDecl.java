@@ -1,7 +1,7 @@
 package org.jlato.internal.td.decl;
 
 import org.jlato.internal.bu.decl.SEmptyTypeDecl;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.decl.EmptyTypeDecl;
@@ -13,11 +13,11 @@ public class TDEmptyTypeDecl extends TDTree<SEmptyTypeDecl, TypeDecl, EmptyTypeD
 		return Kind.EmptyTypeDecl;
 	}
 
-	public TDEmptyTypeDecl(SLocation<SEmptyTypeDecl> location) {
+	public TDEmptyTypeDecl(TDLocation<SEmptyTypeDecl> location) {
 		super(location);
 	}
 
 	public TDEmptyTypeDecl() {
-		super(new SLocation<SEmptyTypeDecl>(SEmptyTypeDecl.make()));
+		super(new TDLocation<SEmptyTypeDecl>(SEmptyTypeDecl.make()));
 	}
 }

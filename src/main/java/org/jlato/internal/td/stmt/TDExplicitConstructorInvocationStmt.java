@@ -3,7 +3,7 @@ package org.jlato.internal.td.stmt;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.stmt.SExplicitConstructorInvocationStmt;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
@@ -20,12 +20,12 @@ public class TDExplicitConstructorInvocationStmt extends TDTree<SExplicitConstru
 		return Kind.ExplicitConstructorInvocationStmt;
 	}
 
-	public TDExplicitConstructorInvocationStmt(SLocation<SExplicitConstructorInvocationStmt> location) {
+	public TDExplicitConstructorInvocationStmt(TDLocation<SExplicitConstructorInvocationStmt> location) {
 		super(location);
 	}
 
 	public TDExplicitConstructorInvocationStmt(NodeList<Type> typeArgs, boolean isThis, NodeOption<Expr> expr, NodeList<Expr> args) {
-		super(new SLocation<SExplicitConstructorInvocationStmt>(SExplicitConstructorInvocationStmt.make(TDTree.<SNodeListState>treeOf(typeArgs), isThis, TDTree.<SNodeOptionState>treeOf(expr), TDTree.<SNodeListState>treeOf(args))));
+		super(new TDLocation<SExplicitConstructorInvocationStmt>(SExplicitConstructorInvocationStmt.make(TDTree.<SNodeListState>treeOf(typeArgs), isThis, TDTree.<SNodeOptionState>treeOf(expr), TDTree.<SNodeListState>treeOf(args))));
 	}
 
 	public NodeList<Type> typeArgs() {

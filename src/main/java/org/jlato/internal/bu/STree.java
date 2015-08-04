@@ -19,8 +19,8 @@
 
 package org.jlato.internal.bu;
 
-import org.jlato.internal.td.SContext;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDContext;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.tree.Tree;
 
 /**
@@ -66,12 +66,12 @@ public class STree<S extends STreeState> {
 		return location().facade;
 	}
 
-	public SLocation<S> location() {
-		return new SLocation<S>(this);
+	public TDLocation<S> location() {
+		return new TDLocation<S>(this);
 	}
 
-	public SLocation<S> locationIn(SContext<?> context) {
-		return new SLocation<S>(context, this);
+	public TDLocation<S> locationIn(TDContext<?> context) {
+		return new TDLocation<S>(context, this);
 	}
 
 	public void validate() {

@@ -9,11 +9,8 @@ import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.shapes.*;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDFieldDecl;
-import org.jlato.parser.ParserImplConstants;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
@@ -21,11 +18,7 @@ import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.VariableDeclarator;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
-import static org.jlato.printer.IndentationConstraint.*;
 import static org.jlato.printer.SpacingConstraint.*;
 
 public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
@@ -76,7 +69,7 @@ public class SFieldDecl extends SNodeState<SFieldDecl> implements SMemberDecl {
 	}
 
 	@Override
-	protected Tree doInstantiate(SLocation<SFieldDecl> location) {
+	protected Tree doInstantiate(TDLocation<SFieldDecl> location) {
 		return new TDFieldDecl(location);
 	}
 

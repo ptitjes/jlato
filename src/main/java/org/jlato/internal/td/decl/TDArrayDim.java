@@ -2,7 +2,7 @@ package org.jlato.internal.td.decl;
 
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.decl.SArrayDim;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
@@ -17,12 +17,12 @@ public class TDArrayDim extends TDTree<SArrayDim, Node, ArrayDim> implements Arr
 		return Kind.ArrayDim;
 	}
 
-	public TDArrayDim(SLocation<SArrayDim> location) {
+	public TDArrayDim(TDLocation<SArrayDim> location) {
 		super(location);
 	}
 
 	public TDArrayDim(NodeList<AnnotationExpr> annotations) {
-		super(new SLocation<SArrayDim>(SArrayDim.make(TDTree.<SNodeListState>treeOf(annotations))));
+		super(new TDLocation<SArrayDim>(SArrayDim.make(TDTree.<SNodeListState>treeOf(annotations))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

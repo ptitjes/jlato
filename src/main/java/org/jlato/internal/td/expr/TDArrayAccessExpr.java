@@ -2,7 +2,7 @@ package org.jlato.internal.td.expr;
 
 import org.jlato.internal.bu.expr.SArrayAccessExpr;
 import org.jlato.internal.bu.expr.SExpr;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.ArrayAccessExpr;
@@ -15,12 +15,12 @@ public class TDArrayAccessExpr extends TDTree<SArrayAccessExpr, Expr, ArrayAcces
 		return Kind.ArrayAccessExpr;
 	}
 
-	public TDArrayAccessExpr(SLocation<SArrayAccessExpr> location) {
+	public TDArrayAccessExpr(TDLocation<SArrayAccessExpr> location) {
 		super(location);
 	}
 
 	public TDArrayAccessExpr(Expr name, Expr index) {
-		super(new SLocation<SArrayAccessExpr>(SArrayAccessExpr.make(TDTree.<SExpr>treeOf(name), TDTree.<SExpr>treeOf(index))));
+		super(new TDLocation<SArrayAccessExpr>(SArrayAccessExpr.make(TDTree.<SExpr>treeOf(name), TDTree.<SExpr>treeOf(index))));
 	}
 
 	public Expr name() {

@@ -8,23 +8,15 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.shapes.*;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.expr.TDArrayDimExpr;
-import org.jlato.parser.ParserImplConstants;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.expr.Expr;
 
-import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
-import static org.jlato.printer.IndentationConstraint.*;
-import static org.jlato.printer.SpacingConstraint.*;
 
 public class SArrayDimExpr extends SNodeState<SArrayDimExpr> implements STreeState {
 
@@ -63,7 +55,7 @@ public class SArrayDimExpr extends SNodeState<SArrayDimExpr> implements STreeSta
 	}
 
 	@Override
-	protected Tree doInstantiate(SLocation<SArrayDimExpr> location) {
+	protected Tree doInstantiate(TDLocation<SArrayDimExpr> location) {
 		return new TDArrayDimExpr(location);
 	}
 

@@ -2,7 +2,7 @@ package org.jlato.internal.td.expr;
 
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.expr.SParenthesizedExpr;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
@@ -15,12 +15,12 @@ public class TDParenthesizedExpr extends TDTree<SParenthesizedExpr, Expr, Parent
 		return Kind.ParenthesizedExpr;
 	}
 
-	public TDParenthesizedExpr(SLocation<SParenthesizedExpr> location) {
+	public TDParenthesizedExpr(TDLocation<SParenthesizedExpr> location) {
 		super(location);
 	}
 
 	public TDParenthesizedExpr(Expr inner) {
-		super(new SLocation<SParenthesizedExpr>(SParenthesizedExpr.make(TDTree.<SExpr>treeOf(inner))));
+		super(new TDLocation<SParenthesizedExpr>(SParenthesizedExpr.make(TDTree.<SExpr>treeOf(inner))));
 	}
 
 	public Expr inner() {

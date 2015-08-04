@@ -3,7 +3,7 @@ package org.jlato.internal.td.stmt;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SStmt;
 import org.jlato.internal.bu.stmt.SWhileStmt;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
@@ -17,12 +17,12 @@ public class TDWhileStmt extends TDTree<SWhileStmt, Stmt, WhileStmt> implements 
 		return Kind.WhileStmt;
 	}
 
-	public TDWhileStmt(SLocation<SWhileStmt> location) {
+	public TDWhileStmt(TDLocation<SWhileStmt> location) {
 		super(location);
 	}
 
 	public TDWhileStmt(Expr condition, Stmt body) {
-		super(new SLocation<SWhileStmt>(SWhileStmt.make(TDTree.<SExpr>treeOf(condition), TDTree.<SStmt>treeOf(body))));
+		super(new TDLocation<SWhileStmt>(SWhileStmt.make(TDTree.<SExpr>treeOf(condition), TDTree.<SStmt>treeOf(body))));
 	}
 
 	public Expr condition() {

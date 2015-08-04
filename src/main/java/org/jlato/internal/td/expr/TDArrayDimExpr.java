@@ -3,7 +3,7 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.expr.SArrayDimExpr;
 import org.jlato.internal.bu.expr.SExpr;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
@@ -19,12 +19,12 @@ public class TDArrayDimExpr extends TDTree<SArrayDimExpr, Node, ArrayDimExpr> im
 		return Kind.ArrayDimExpr;
 	}
 
-	public TDArrayDimExpr(SLocation<SArrayDimExpr> location) {
+	public TDArrayDimExpr(TDLocation<SArrayDimExpr> location) {
 		super(location);
 	}
 
 	public TDArrayDimExpr(NodeList<AnnotationExpr> annotations, Expr expr) {
-		super(new SLocation<SArrayDimExpr>(SArrayDimExpr.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SExpr>treeOf(expr))));
+		super(new TDLocation<SArrayDimExpr>(SArrayDimExpr.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SExpr>treeOf(expr))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

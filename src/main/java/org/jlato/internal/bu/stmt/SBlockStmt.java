@@ -8,11 +8,8 @@ import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.shapes.*;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDBlockStmt;
-import org.jlato.parser.ParserImplConstants;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
@@ -21,7 +18,6 @@ import org.jlato.tree.stmt.Stmt;
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.IndentationConstraint.*;
 import static org.jlato.printer.SpacingConstraint.*;
 
@@ -51,7 +47,7 @@ public class SBlockStmt extends SNodeState<SBlockStmt> implements SStmt {
 	}
 
 	@Override
-	protected Tree doInstantiate(SLocation<SBlockStmt> location) {
+	protected Tree doInstantiate(TDLocation<SBlockStmt> location) {
 		return new TDBlockStmt(location);
 	}
 

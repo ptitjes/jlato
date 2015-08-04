@@ -3,7 +3,7 @@ package org.jlato.internal.td.stmt;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.bu.stmt.SSynchronizedStmt;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
@@ -18,12 +18,12 @@ public class TDSynchronizedStmt extends TDTree<SSynchronizedStmt, Stmt, Synchron
 		return Kind.SynchronizedStmt;
 	}
 
-	public TDSynchronizedStmt(SLocation<SSynchronizedStmt> location) {
+	public TDSynchronizedStmt(TDLocation<SSynchronizedStmt> location) {
 		super(location);
 	}
 
 	public TDSynchronizedStmt(Expr expr, BlockStmt block) {
-		super(new SLocation<SSynchronizedStmt>(SSynchronizedStmt.make(TDTree.<SExpr>treeOf(expr), TDTree.<SBlockStmt>treeOf(block))));
+		super(new TDLocation<SSynchronizedStmt>(SSynchronizedStmt.make(TDTree.<SExpr>treeOf(expr), TDTree.<SBlockStmt>treeOf(block))));
 	}
 
 	public Expr expr() {

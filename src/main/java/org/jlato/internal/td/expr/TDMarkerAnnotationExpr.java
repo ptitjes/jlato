@@ -2,7 +2,7 @@ package org.jlato.internal.td.expr;
 
 import org.jlato.internal.bu.expr.SMarkerAnnotationExpr;
 import org.jlato.internal.bu.name.SQualifiedName;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.AnnotationExpr;
@@ -16,12 +16,12 @@ public class TDMarkerAnnotationExpr extends TDTree<SMarkerAnnotationExpr, Annota
 		return Kind.MarkerAnnotationExpr;
 	}
 
-	public TDMarkerAnnotationExpr(SLocation<SMarkerAnnotationExpr> location) {
+	public TDMarkerAnnotationExpr(TDLocation<SMarkerAnnotationExpr> location) {
 		super(location);
 	}
 
 	public TDMarkerAnnotationExpr(QualifiedName name) {
-		super(new SLocation<SMarkerAnnotationExpr>(SMarkerAnnotationExpr.make(TDTree.<SQualifiedName>treeOf(name))));
+		super(new TDLocation<SMarkerAnnotationExpr>(SMarkerAnnotationExpr.make(TDTree.<SQualifiedName>treeOf(name))));
 	}
 
 	public QualifiedName name() {

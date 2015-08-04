@@ -19,7 +19,7 @@
 
 package org.jlato.internal.bu;
 
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 
@@ -50,9 +50,9 @@ public abstract class SNodeState<S extends SNodeState<S>> implements STreeState 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public final Tree instantiate(SLocation<?> location) {
-		return doInstantiate((SLocation<S>) location);
+	public final Tree instantiate(TDLocation<?> location) {
+		return doInstantiate((TDLocation<S>) location);
 	}
 
-	protected abstract Tree doInstantiate(SLocation<S> location);
+	protected abstract Tree doInstantiate(TDLocation<S> location);
 }

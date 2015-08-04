@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.decl.SFormalParameter;
 import org.jlato.internal.bu.decl.SVariableDeclaratorId;
 import org.jlato.internal.bu.type.SType;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
@@ -21,12 +21,12 @@ public class TDFormalParameter extends TDTree<SFormalParameter, Node, FormalPara
 		return Kind.FormalParameter;
 	}
 
-	public TDFormalParameter(SLocation<SFormalParameter> location) {
+	public TDFormalParameter(TDLocation<SFormalParameter> location) {
 		super(location);
 	}
 
 	public TDFormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		super(new SLocation<SFormalParameter>(SFormalParameter.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SType>treeOf(type), isVarArgs, TDTree.<SVariableDeclaratorId>treeOf(id))));
+		super(new TDLocation<SFormalParameter>(SFormalParameter.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SType>treeOf(type), isVarArgs, TDTree.<SVariableDeclaratorId>treeOf(id))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

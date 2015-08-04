@@ -2,7 +2,7 @@ package org.jlato.internal.td.decl;
 
 import org.jlato.internal.bu.decl.SImportDecl;
 import org.jlato.internal.bu.name.SQualifiedName;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
@@ -16,12 +16,12 @@ public class TDImportDecl extends TDTree<SImportDecl, Node, ImportDecl> implemen
 		return Kind.ImportDecl;
 	}
 
-	public TDImportDecl(SLocation<SImportDecl> location) {
+	public TDImportDecl(TDLocation<SImportDecl> location) {
 		super(location);
 	}
 
 	public TDImportDecl(QualifiedName name, boolean isStatic, boolean isOnDemand) {
-		super(new SLocation<SImportDecl>(SImportDecl.make(TDTree.<SQualifiedName>treeOf(name), isStatic, isOnDemand)));
+		super(new TDLocation<SImportDecl>(SImportDecl.make(TDTree.<SQualifiedName>treeOf(name), isStatic, isOnDemand)));
 	}
 
 	public QualifiedName name() {

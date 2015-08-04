@@ -2,7 +2,7 @@ package org.jlato.internal.td.stmt;
 
 import org.jlato.internal.bu.decl.STypeDecl;
 import org.jlato.internal.bu.stmt.STypeDeclarationStmt;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.decl.TypeDecl;
@@ -16,12 +16,12 @@ public class TDTypeDeclarationStmt extends TDTree<STypeDeclarationStmt, Stmt, Ty
 		return Kind.TypeDeclarationStmt;
 	}
 
-	public TDTypeDeclarationStmt(SLocation<STypeDeclarationStmt> location) {
+	public TDTypeDeclarationStmt(TDLocation<STypeDeclarationStmt> location) {
 		super(location);
 	}
 
 	public TDTypeDeclarationStmt(TypeDecl typeDecl) {
-		super(new SLocation<STypeDeclarationStmt>(STypeDeclarationStmt.make(TDTree.<STypeDecl>treeOf(typeDecl))));
+		super(new TDLocation<STypeDeclarationStmt>(STypeDeclarationStmt.make(TDTree.<STypeDecl>treeOf(typeDecl))));
 	}
 
 	public TypeDecl typeDecl() {

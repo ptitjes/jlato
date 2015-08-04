@@ -3,7 +3,7 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.SNodeEitherState;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.expr.SLambdaExpr;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeEither;
@@ -20,12 +20,12 @@ public class TDLambdaExpr extends TDTree<SLambdaExpr, Expr, LambdaExpr> implemen
 		return Kind.LambdaExpr;
 	}
 
-	public TDLambdaExpr(SLocation<SLambdaExpr> location) {
+	public TDLambdaExpr(TDLocation<SLambdaExpr> location) {
 		super(location);
 	}
 
 	public TDLambdaExpr(NodeList<FormalParameter> params, boolean hasParens, NodeEither<Expr, BlockStmt> body) {
-		super(new SLocation<SLambdaExpr>(SLambdaExpr.make(TDTree.<SNodeListState>treeOf(params), hasParens, TDTree.<SNodeEitherState>treeOf(body))));
+		super(new TDLocation<SLambdaExpr>(SLambdaExpr.make(TDTree.<SNodeListState>treeOf(params), hasParens, TDTree.<SNodeEitherState>treeOf(body))));
 	}
 
 	public NodeList<FormalParameter> params() {

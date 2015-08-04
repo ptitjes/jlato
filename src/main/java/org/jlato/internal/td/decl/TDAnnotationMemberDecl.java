@@ -5,7 +5,7 @@ import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.decl.SAnnotationMemberDecl;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.type.SType;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
@@ -25,12 +25,12 @@ public class TDAnnotationMemberDecl extends TDTree<SAnnotationMemberDecl, Member
 		return Kind.AnnotationMemberDecl;
 	}
 
-	public TDAnnotationMemberDecl(SLocation<SAnnotationMemberDecl> location) {
+	public TDAnnotationMemberDecl(TDLocation<SAnnotationMemberDecl> location) {
 		super(location);
 	}
 
 	public TDAnnotationMemberDecl(NodeList<ExtendedModifier> modifiers, Type type, Name name, NodeList<ArrayDim> dims, NodeOption<Expr> defaultValue) {
-		super(new SLocation<SAnnotationMemberDecl>(SAnnotationMemberDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SType>treeOf(type), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(dims), TDTree.<SNodeOptionState>treeOf(defaultValue))));
+		super(new TDLocation<SAnnotationMemberDecl>(SAnnotationMemberDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SType>treeOf(type), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(dims), TDTree.<SNodeOptionState>treeOf(defaultValue))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

@@ -3,7 +3,7 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.expr.SMemberValuePair;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
@@ -18,12 +18,12 @@ public class TDMemberValuePair extends TDTree<SMemberValuePair, Node, MemberValu
 		return Kind.MemberValuePair;
 	}
 
-	public TDMemberValuePair(SLocation<SMemberValuePair> location) {
+	public TDMemberValuePair(TDLocation<SMemberValuePair> location) {
 		super(location);
 	}
 
 	public TDMemberValuePair(Name name, Expr value) {
-		super(new SLocation<SMemberValuePair>(SMemberValuePair.make(TDTree.<SName>treeOf(name), TDTree.<SExpr>treeOf(value))));
+		super(new TDLocation<SMemberValuePair>(SMemberValuePair.make(TDTree.<SName>treeOf(name), TDTree.<SExpr>treeOf(value))));
 	}
 
 	public Name name() {

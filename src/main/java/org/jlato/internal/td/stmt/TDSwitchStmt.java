@@ -3,7 +3,7 @@ package org.jlato.internal.td.stmt;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SSwitchStmt;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
@@ -19,12 +19,12 @@ public class TDSwitchStmt extends TDTree<SSwitchStmt, Stmt, SwitchStmt> implemen
 		return Kind.SwitchStmt;
 	}
 
-	public TDSwitchStmt(SLocation<SSwitchStmt> location) {
+	public TDSwitchStmt(TDLocation<SSwitchStmt> location) {
 		super(location);
 	}
 
 	public TDSwitchStmt(Expr selector, NodeList<SwitchCase> cases) {
-		super(new SLocation<SSwitchStmt>(SSwitchStmt.make(TDTree.<SExpr>treeOf(selector), TDTree.<SNodeListState>treeOf(cases))));
+		super(new TDLocation<SSwitchStmt>(SSwitchStmt.make(TDTree.<SExpr>treeOf(selector), TDTree.<SNodeListState>treeOf(cases))));
 	}
 
 	public Expr selector() {

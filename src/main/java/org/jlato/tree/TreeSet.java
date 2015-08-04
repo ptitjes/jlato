@@ -24,7 +24,7 @@ import com.github.andrewoma.dexx.collection.Pair;
 import com.github.andrewoma.dexx.collection.TreeMap;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.STreeSetState;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
@@ -39,16 +39,16 @@ import java.io.PrintWriter;
  */
 public class TreeSet<T extends Tree> extends TDTree<STreeSetState, TreeSet<T>, TreeSet<T>> implements Tree {
 
-	public TreeSet(SLocation<STreeSetState> location) {
+	public TreeSet(TDLocation<STreeSetState> location) {
 		super(location);
 	}
 
 	public TreeSet(String rootPath) {
-		this(new SLocation<STreeSetState>(new STree<STreeSetState>(new STreeSetState(rootPath))));
+		this(new TDLocation<STreeSetState>(new STree<STreeSetState>(new STreeSetState(rootPath))));
 	}
 
 	public TreeSet(String rootPath, TreeMap<String, STree<?>> trees) {
-		this(new SLocation<STreeSetState>(new STree<STreeSetState>(new STreeSetState(rootPath, trees))));
+		this(new TDLocation<STreeSetState>(new STree<STreeSetState>(new STreeSetState(rootPath, trees))));
 	}
 
 	@SuppressWarnings("unchecked")

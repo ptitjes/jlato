@@ -2,7 +2,7 @@ package org.jlato.internal.td.expr;
 
 import org.jlato.internal.bu.expr.SClassExpr;
 import org.jlato.internal.bu.type.SType;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.ClassExpr;
@@ -16,12 +16,12 @@ public class TDClassExpr extends TDTree<SClassExpr, Expr, ClassExpr> implements 
 		return Kind.ClassExpr;
 	}
 
-	public TDClassExpr(SLocation<SClassExpr> location) {
+	public TDClassExpr(TDLocation<SClassExpr> location) {
 		super(location);
 	}
 
 	public TDClassExpr(Type type) {
-		super(new SLocation<SClassExpr>(SClassExpr.make(TDTree.<SType>treeOf(type))));
+		super(new TDLocation<SClassExpr>(SClassExpr.make(TDTree.<SType>treeOf(type))));
 	}
 
 	public Type type() {

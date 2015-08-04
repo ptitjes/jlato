@@ -2,7 +2,7 @@ package org.jlato.internal.td.stmt;
 
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SExpressionStmt;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
@@ -16,12 +16,12 @@ public class TDExpressionStmt extends TDTree<SExpressionStmt, Stmt, ExpressionSt
 		return Kind.ExpressionStmt;
 	}
 
-	public TDExpressionStmt(SLocation<SExpressionStmt> location) {
+	public TDExpressionStmt(TDLocation<SExpressionStmt> location) {
 		super(location);
 	}
 
 	public TDExpressionStmt(Expr expr) {
-		super(new SLocation<SExpressionStmt>(SExpressionStmt.make(TDTree.<SExpr>treeOf(expr))));
+		super(new TDLocation<SExpressionStmt>(SExpressionStmt.make(TDTree.<SExpr>treeOf(expr))));
 	}
 
 	public Expr expr() {

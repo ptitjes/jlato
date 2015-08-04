@@ -20,7 +20,7 @@
 package org.jlato.internal.bu;
 
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.tree.NodeEither;
 import org.jlato.tree.Tree;
 
@@ -41,8 +41,8 @@ public class SNodeEitherState implements STreeState {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Tree instantiate(SLocation<?> location) {
-		return new NodeEither<Tree, Tree>((SLocation<SNodeEitherState>) location);
+	public Tree instantiate(TDLocation<?> location) {
+		return new NodeEither<Tree, Tree>((TDLocation<SNodeEitherState>) location);
 	}
 
 	@Override

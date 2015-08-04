@@ -21,7 +21,7 @@ package org.jlato.internal.bu;
 
 import com.github.andrewoma.dexx.collection.TreeMap;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.tree.Tree;
 import org.jlato.tree.TreeSet;
 
@@ -47,8 +47,8 @@ public class STreeSetState implements STreeState {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Tree instantiate(SLocation<?> location) {
-		return new TreeSet<Tree>((SLocation<STreeSetState>) location);
+	public Tree instantiate(TDLocation<?> location) {
+		return new TreeSet<Tree>((TDLocation<STreeSetState>) location);
 	}
 
 	@Override

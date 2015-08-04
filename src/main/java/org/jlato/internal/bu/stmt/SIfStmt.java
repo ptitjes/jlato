@@ -9,11 +9,8 @@ import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.shapes.*;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDIfStmt;
-import org.jlato.parser.ParserImplConstants;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
@@ -75,7 +72,7 @@ public class SIfStmt extends SNodeState<SIfStmt> implements SStmt {
 	}
 
 	@Override
-	protected Tree doInstantiate(SLocation<SIfStmt> location) {
+	protected Tree doInstantiate(TDLocation<SIfStmt> location) {
 		return new TDIfStmt(location);
 	}
 

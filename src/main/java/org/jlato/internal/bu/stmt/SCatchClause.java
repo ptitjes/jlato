@@ -8,21 +8,14 @@ import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.decl.SFormalParameter;
 import org.jlato.internal.shapes.*;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDCatchClause;
-import org.jlato.parser.ParserImplConstants;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.stmt.BlockStmt;
 
-import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
-import static org.jlato.printer.IndentationConstraint.*;
 import static org.jlato.printer.SpacingConstraint.*;
 
 public class SCatchClause extends SNodeState<SCatchClause> implements STreeState {
@@ -62,7 +55,7 @@ public class SCatchClause extends SNodeState<SCatchClause> implements STreeState
 	}
 
 	@Override
-	protected Tree doInstantiate(SLocation<SCatchClause> location) {
+	protected Tree doInstantiate(TDLocation<SCatchClause> location) {
 		return new TDCatchClause(location);
 	}
 

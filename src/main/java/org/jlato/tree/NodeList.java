@@ -25,7 +25,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.bu.WDressing;
 import org.jlato.internal.bu.WRunRun;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.util.Function1;
 import org.jlato.util.Function2;
@@ -166,12 +166,12 @@ public class NodeList<T extends Tree> extends TDTree<SNodeListState, NodeList<T>
 		return list;
 	}
 
-	public NodeList(SLocation<SNodeListState> location) {
+	public NodeList(TDLocation<SNodeListState> location) {
 		super(location);
 	}
 
 	public NodeList(T... elements) {
-		super(new SLocation<SNodeListState>(new STree<SNodeListState>(new SNodeListState(treeListOf(elements)))));
+		super(new TDLocation<SNodeListState>(new STree<SNodeListState>(new SNodeListState(treeListOf(elements)))));
 	}
 
 	public boolean isEmpty() {
@@ -309,7 +309,7 @@ public class NodeList<T extends Tree> extends TDTree<SNodeListState, NodeList<T>
 		Builder<STree<?>, Vector<STree<?>>> newTrees = Vector.<STree<?>>factory().newBuilder();
 		for (int i = 0; i < trees.size(); i++) {
 			T rewrote = mutator.mutate(get(i));
-			SLocation location = TDTree.locationOf(rewrote);
+			TDLocation location = TDTree.locationOf(rewrote);
 
 			// TODO Handle change in the node-list run (leading comments and trailing comment)
 

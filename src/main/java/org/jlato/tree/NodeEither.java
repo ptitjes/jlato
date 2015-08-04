@@ -22,7 +22,7 @@ package org.jlato.tree;
 import org.jlato.internal.bu.SNodeEitherState;
 import org.jlato.internal.bu.SNodeEitherState.EitherSide;
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 
 /**
@@ -40,12 +40,12 @@ public class NodeEither<TL extends Tree, TR extends Tree> extends TDTree<SNodeEi
 		return new NodeEither<TL, TR>(tree, EitherSide.Right);
 	}
 
-	public NodeEither(SLocation<SNodeEitherState> location) {
+	public NodeEither(TDLocation<SNodeEitherState> location) {
 		super(location);
 	}
 
 	private NodeEither(Tree element, EitherSide side) {
-		super(new SLocation<SNodeEitherState>(new STree<SNodeEitherState>(new SNodeEitherState(treeOf(element), side))));
+		super(new TDLocation<SNodeEitherState>(new STree<SNodeEitherState>(new SNodeEitherState(treeOf(element), side))));
 	}
 
 	public boolean isLeft() {

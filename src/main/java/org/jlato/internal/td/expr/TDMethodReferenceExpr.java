@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.expr.SMethodReferenceExpr;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
@@ -20,12 +20,12 @@ public class TDMethodReferenceExpr extends TDTree<SMethodReferenceExpr, Expr, Me
 		return Kind.MethodReferenceExpr;
 	}
 
-	public TDMethodReferenceExpr(SLocation<SMethodReferenceExpr> location) {
+	public TDMethodReferenceExpr(TDLocation<SMethodReferenceExpr> location) {
 		super(location);
 	}
 
 	public TDMethodReferenceExpr(Expr scope, NodeList<Type> typeArgs, Name name) {
-		super(new SLocation<SMethodReferenceExpr>(SMethodReferenceExpr.make(TDTree.<SExpr>treeOf(scope), TDTree.<SNodeListState>treeOf(typeArgs), TDTree.<SName>treeOf(name))));
+		super(new TDLocation<SMethodReferenceExpr>(SMethodReferenceExpr.make(TDTree.<SExpr>treeOf(scope), TDTree.<SNodeListState>treeOf(typeArgs), TDTree.<SName>treeOf(name))));
 	}
 
 	public Expr scope() {

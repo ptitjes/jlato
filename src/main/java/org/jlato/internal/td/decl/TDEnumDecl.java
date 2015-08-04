@@ -3,7 +3,7 @@ package org.jlato.internal.td.decl;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.decl.SEnumDecl;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
@@ -22,12 +22,12 @@ public class TDEnumDecl extends TDTree<SEnumDecl, TypeDecl, EnumDecl> implements
 		return Kind.EnumDecl;
 	}
 
-	public TDEnumDecl(SLocation<SEnumDecl> location) {
+	public TDEnumDecl(TDLocation<SEnumDecl> location) {
 		super(location);
 	}
 
 	public TDEnumDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, boolean trailingComma, NodeList<MemberDecl> members) {
-		super(new SLocation<SEnumDecl>(SEnumDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(implementsClause), TDTree.<SNodeListState>treeOf(enumConstants), trailingComma, TDTree.<SNodeListState>treeOf(members))));
+		super(new TDLocation<SEnumDecl>(SEnumDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(implementsClause), TDTree.<SNodeListState>treeOf(enumConstants), trailingComma, TDTree.<SNodeListState>treeOf(members))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

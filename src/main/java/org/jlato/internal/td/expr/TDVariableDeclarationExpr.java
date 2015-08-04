@@ -2,7 +2,7 @@ package org.jlato.internal.td.expr;
 
 import org.jlato.internal.bu.decl.SLocalVariableDecl;
 import org.jlato.internal.bu.expr.SVariableDeclarationExpr;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.decl.LocalVariableDecl;
@@ -16,12 +16,12 @@ public class TDVariableDeclarationExpr extends TDTree<SVariableDeclarationExpr, 
 		return Kind.VariableDeclarationExpr;
 	}
 
-	public TDVariableDeclarationExpr(SLocation<SVariableDeclarationExpr> location) {
+	public TDVariableDeclarationExpr(TDLocation<SVariableDeclarationExpr> location) {
 		super(location);
 	}
 
 	public TDVariableDeclarationExpr(LocalVariableDecl declaration) {
-		super(new SLocation<SVariableDeclarationExpr>(SVariableDeclarationExpr.make(TDTree.<SLocalVariableDecl>treeOf(declaration))));
+		super(new TDLocation<SVariableDeclarationExpr>(SVariableDeclarationExpr.make(TDTree.<SLocalVariableDecl>treeOf(declaration))));
 	}
 
 	public LocalVariableDecl declaration() {

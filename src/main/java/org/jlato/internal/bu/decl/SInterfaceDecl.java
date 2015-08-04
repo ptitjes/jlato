@@ -9,11 +9,8 @@ import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.shapes.*;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDInterfaceDecl;
-import org.jlato.parser.ParserImplConstants;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
@@ -23,12 +20,7 @@ import org.jlato.tree.decl.TypeParameter;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 
-import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
-import static org.jlato.printer.IndentationConstraint.*;
-import static org.jlato.printer.SpacingConstraint.*;
 
 public class SInterfaceDecl extends SNodeState<SInterfaceDecl> implements STypeDecl {
 
@@ -100,7 +92,7 @@ public class SInterfaceDecl extends SNodeState<SInterfaceDecl> implements STypeD
 	}
 
 	@Override
-	protected Tree doInstantiate(SLocation<SInterfaceDecl> location) {
+	protected Tree doInstantiate(TDLocation<SInterfaceDecl> location) {
 		return new TDInterfaceDecl(location);
 	}
 

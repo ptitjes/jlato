@@ -3,7 +3,7 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.expr.SCastExpr;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.type.SType;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.CastExpr;
@@ -17,12 +17,12 @@ public class TDCastExpr extends TDTree<SCastExpr, Expr, CastExpr> implements Cas
 		return Kind.CastExpr;
 	}
 
-	public TDCastExpr(SLocation<SCastExpr> location) {
+	public TDCastExpr(TDLocation<SCastExpr> location) {
 		super(location);
 	}
 
 	public TDCastExpr(Type type, Expr expr) {
-		super(new SLocation<SCastExpr>(SCastExpr.make(TDTree.<SType>treeOf(type), TDTree.<SExpr>treeOf(expr))));
+		super(new TDLocation<SCastExpr>(SCastExpr.make(TDTree.<SType>treeOf(type), TDTree.<SExpr>treeOf(expr))));
 	}
 
 	public Type type() {

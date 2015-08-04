@@ -2,7 +2,7 @@ package org.jlato.internal.td.stmt;
 
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SThrowStmt;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
@@ -16,12 +16,12 @@ public class TDThrowStmt extends TDTree<SThrowStmt, Stmt, ThrowStmt> implements 
 		return Kind.ThrowStmt;
 	}
 
-	public TDThrowStmt(SLocation<SThrowStmt> location) {
+	public TDThrowStmt(TDLocation<SThrowStmt> location) {
 		super(location);
 	}
 
 	public TDThrowStmt(Expr expr) {
-		super(new SLocation<SThrowStmt>(SThrowStmt.make(TDTree.<SExpr>treeOf(expr))));
+		super(new TDLocation<SThrowStmt>(SThrowStmt.make(TDTree.<SExpr>treeOf(expr))));
 	}
 
 	public Expr expr() {

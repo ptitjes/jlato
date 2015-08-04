@@ -26,68 +26,68 @@ import org.jlato.tree.Tree;
 /**
  * @author Didier Villevalois
  */
-public class SLocation<S extends STreeState> {
+public class TDLocation<S extends STreeState> {
 
-	private final SContext<?> context;
+	private final TDContext<?> context;
 	public final STree<S> tree;
 	public final boolean changed;
 	public final Tree facade;
 
-	public SLocation(STree<S> tree) {
+	public TDLocation(STree<S> tree) {
 		this(null, tree, false);
 	}
 
-	public SLocation(SContext<?> context, STree<S> tree) {
+	public TDLocation(TDContext<?> context, STree<S> tree) {
 		this(context, tree, false);
 	}
 
-	public SLocation(SContext<?> context, STree<S> tree, boolean changed) {
+	public TDLocation(TDContext<?> context, STree<S> tree, boolean changed) {
 		this.context = context;
 		this.tree = tree;
 		this.changed = changed;
 		this.facade = tree.state.instantiate(this);
 	}
 
-	public SLocation<S> withTree(STree<S> newTree) {
-		return newTree == tree ? this : new SLocation<S>(context, newTree, true);
+	public TDLocation<S> withTree(STree<S> newTree) {
+		return newTree == tree ? this : new TDLocation<S>(context, newTree, true);
 	}
 
-	public SContext<?> context() {
+	public TDContext<?> context() {
 		if (context == null) return null;
 		return changed ? context.rebuilt(tree) : context;
 	}
 
-	public SLocation<?> parent() {
-		SContext<?> context = context();
+	public TDLocation<?> parent() {
+		TDContext<?> context = context();
 		return context == null ? null : context.parent;
 	}
 
-	public SLocation<?> root() {
-		final SLocation parent = parent();
+	public TDLocation<?> root() {
+		final TDLocation parent = parent();
 		return parent == null ? this : parent.root();
 	}
 
-	public SLocation<?> firstChild() {
+	public TDLocation<?> firstChild() {
 		STraversal traversal = tree.state.firstChild();
 		return traversal == null ? null : traverse(traversal);
 	}
 
-	public SLocation<?> lastChild() {
+	public TDLocation<?> lastChild() {
 		STraversal traversal = tree.state.lastChild();
 		return traversal == null ? null : traverse(traversal);
 	}
 
-	public SLocation<?> traverse(STraversal traversal) {
-		return new SContext<S>(this, traversal).newLocation();
+	public TDLocation<?> traverse(STraversal traversal) {
+		return new TDContext<S>(this, traversal).newLocation();
 	}
 
-	public SLocation<?> leftSibling() {
-		SContext<?> leftSibling = context().leftSibling();
+	public TDLocation<?> leftSibling() {
+		TDContext<?> leftSibling = context().leftSibling();
 		return leftSibling == null ? null : leftSibling.newLocation();
 	}
 
-	public SLocation<?> rightSibling() {
-		SContext<?> rightSibling = context().rightSibling();
+	public TDLocation<?> rightSibling() {
+		TDContext<?> rightSibling = context().rightSibling();
 		return rightSibling == null ? null : rightSibling.newLocation();
 	}
 
@@ -116,7 +116,7 @@ public class SLocation<S extends STreeState> {
 
 	@SuppressWarnings("unchecked")
 	public <C extends Tree> C safeTraversal(STypeSafeTraversal<S, ?, C> traversal) {
-		final SLocation<?> location = traverse(traversal);
+		final TDLocation<?> location = traverse(traversal);
 		return location == null ? null : (C) location.facade;
 	}
 

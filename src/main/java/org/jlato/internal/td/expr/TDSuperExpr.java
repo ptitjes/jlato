@@ -2,7 +2,7 @@ package org.jlato.internal.td.expr;
 
 import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.expr.SSuperExpr;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
@@ -16,12 +16,12 @@ public class TDSuperExpr extends TDTree<SSuperExpr, Expr, SuperExpr> implements 
 		return Kind.SuperExpr;
 	}
 
-	public TDSuperExpr(SLocation<SSuperExpr> location) {
+	public TDSuperExpr(TDLocation<SSuperExpr> location) {
 		super(location);
 	}
 
 	public TDSuperExpr(NodeOption<Expr> classExpr) {
-		super(new SLocation<SSuperExpr>(SSuperExpr.make(TDTree.<SNodeOptionState>treeOf(classExpr))));
+		super(new TDLocation<SSuperExpr>(SSuperExpr.make(TDTree.<SNodeOptionState>treeOf(classExpr))));
 	}
 
 	public NodeOption<Expr> classExpr() {

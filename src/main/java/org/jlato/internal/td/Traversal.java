@@ -39,43 +39,43 @@ public abstract class Traversal<T extends Tree> {
 
 	@SuppressWarnings("unchecked")
 	public <R extends Tree> R traverse(R tree, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
-		SLocation location = TDTree.locationOf(tree);
+		TDLocation location = TDTree.locationOf(tree);
 		return (R) doTraverse(location, matcher, visitor).facade;
 	}
 
 	// TODO Trampoline recursion
 
-	protected abstract SLocation doTraverse(SLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor);
+	protected abstract TDLocation doTraverse(TDLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor);
 
 	public static abstract class DepthFirst<T extends Tree> extends Traversal<T> {
 
 		@Override
-		protected SLocation doTraverse(SLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
+		protected TDLocation doTraverse(TDLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
 			// Visit this location
-			SLocation afterVisit = doVisit(location, matcher, visitor);
+			TDLocation afterVisit = doVisit(location, matcher, visitor);
 
 			// Visit children
-			SLocation afterVisitChildren = doTraverseChildren(afterVisit, matcher, visitor);
+			TDLocation afterVisitChildren = doTraverseChildren(afterVisit, matcher, visitor);
 
 			return afterVisitChildren;
 		}
 
-		private SLocation doVisit(SLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
+		private TDLocation doVisit(TDLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
 			Tree facade = location.facade;
 			Substitution match = matcher.match(facade);
 			if (match != null) {
-				SLocation rewrote = TDTree.locationOf(visitor.visit((T) facade, match));
+				TDLocation rewrote = TDTree.locationOf(visitor.visit((T) facade, match));
 				return location.withTree(rewrote.tree);
 			} else {
 				return location;
 			}
 		}
 
-		private SLocation doTraverseChildren(SLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
-			SLocation child = child(location);
+		private TDLocation doTraverseChildren(TDLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
+			TDLocation child = child(location);
 			if (child == null) return location;
 
-			SLocation nextChild = child;
+			TDLocation nextChild = child;
 			while (nextChild != null) {
 				child = doTraverse(nextChild, matcher, visitor);
 				nextChild = sibling(child);
@@ -84,29 +84,29 @@ public abstract class Traversal<T extends Tree> {
 			return child.parent();
 		}
 
-		protected abstract SLocation child(SLocation location);
+		protected abstract TDLocation child(TDLocation location);
 
-		protected abstract SLocation sibling(SLocation location);
+		protected abstract TDLocation sibling(TDLocation location);
 	}
 
 	public static class LeftRightDepthFirst<T extends Tree> extends DepthFirst<T> {
 
-		protected SLocation child(SLocation location) {
+		protected TDLocation child(TDLocation location) {
 			return location.firstChild();
 		}
 
-		protected SLocation sibling(SLocation location) {
+		protected TDLocation sibling(TDLocation location) {
 			return location.rightSibling();
 		}
 	}
 
 	public static class RightLeftDepthFirst<T extends Tree> extends DepthFirst<T> {
 
-		protected SLocation child(SLocation location) {
+		protected TDLocation child(TDLocation location) {
 			return location.lastChild();
 		}
 
-		protected SLocation sibling(SLocation location) {
+		protected TDLocation sibling(TDLocation location) {
 			return location.leftSibling();
 		}
 	}

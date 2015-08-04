@@ -26,21 +26,21 @@ import org.jlato.internal.bu.STreeState;
 /**
  * @author Didier Villevalois
  */
-public final class SContext<P extends STreeState> {
+public final class TDContext<P extends STreeState> {
 
-	public final SLocation<P> parent;
+	public final TDLocation<P> parent;
 	public final STraversal traversal;
 
-	public SContext(SLocation<P> parent, STraversal traversal) {
+	public TDContext(TDLocation<P> parent, STraversal traversal) {
 		this.parent = parent;
 		this.traversal = traversal;
 	}
 
-	public SContext<P> rebuilt(STree<?> child) {
-		return new SContext<P>(rebuiltParent(child), traversal);
+	public TDContext<P> rebuilt(STree<?> child) {
+		return new TDContext<P>(rebuiltParent(child), traversal);
 	}
 
-	private SLocation<P> rebuiltParent(STree<?> child) {
+	private TDLocation<P> rebuiltParent(STree<?> child) {
 		return parent.withTree(parent.tree.traverseReplace(traversal, child));
 	}
 
@@ -48,18 +48,18 @@ public final class SContext<P extends STreeState> {
 		return traversal.traverse(parent.tree.state);
 	}
 
-	public SLocation<?> newLocation() {
+	public TDLocation<?> newLocation() {
 		STree<?> tree = peruse();
 		return tree == null ? null : tree.locationIn(this);
 	}
 
-	public SContext<P> leftSibling() {
+	public TDContext<P> leftSibling() {
 		STraversal leftSibling = traversal.leftSibling(parent.tree.state);
-		return leftSibling == null ? null : new SContext<P>(parent, leftSibling);
+		return leftSibling == null ? null : new TDContext<P>(parent, leftSibling);
 	}
 
-	public SContext<P> rightSibling() {
+	public TDContext<P> rightSibling() {
 		STraversal rightSibling = traversal.rightSibling(parent.tree.state);
-		return rightSibling == null ? null : new SContext<P>(parent, rightSibling);
+		return rightSibling == null ? null : new TDContext<P>(parent, rightSibling);
 	}
 }

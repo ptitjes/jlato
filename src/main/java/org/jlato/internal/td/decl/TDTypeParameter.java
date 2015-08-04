@@ -3,7 +3,7 @@ package org.jlato.internal.td.decl;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.decl.STypeParameter;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
@@ -20,12 +20,12 @@ public class TDTypeParameter extends TDTree<STypeParameter, Node, TypeParameter>
 		return Kind.TypeParameter;
 	}
 
-	public TDTypeParameter(SLocation<STypeParameter> location) {
+	public TDTypeParameter(TDLocation<STypeParameter> location) {
 		super(location);
 	}
 
 	public TDTypeParameter(NodeList<AnnotationExpr> annotations, Name name, NodeList<Type> bounds) {
-		super(new SLocation<STypeParameter>(STypeParameter.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(bounds))));
+		super(new TDLocation<STypeParameter>(STypeParameter.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(bounds))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

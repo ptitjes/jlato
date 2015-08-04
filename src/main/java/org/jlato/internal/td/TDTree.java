@@ -39,14 +39,14 @@ import static org.jlato.internal.bu.WToken.whitespace;
  */
 public abstract class TDTree<S extends STreeState, ST extends Tree, T extends ST> implements Tree, TreeCombinators<T> {
 
-	protected final SLocation<S> location;
+	protected final TDLocation<S> location;
 
-	protected TDTree(SLocation<S> location) {
+	protected TDTree(TDLocation<S> location) {
 		this.location = location;
 	}
 
 	public Tree parent() {
-		SLocation<?> parentLocation = location.parent();
+		TDLocation<?> parentLocation = location.parent();
 		return parentLocation == null ? null : parentLocation.facade;
 	}
 
@@ -209,12 +209,12 @@ public abstract class TDTree<S extends STreeState, ST extends Tree, T extends ST
 	// TODO Move that elsewhere
 
 	@SuppressWarnings("unchecked")
-	public static <S extends STreeState> SLocation<S> locationOf(Tree facade) {
+	public static <S extends STreeState> TDLocation<S> locationOf(Tree facade) {
 		return facade == null ? null : ((TDTree<S, ?, ?>) facade).location;
 	}
 
 	public static <S extends STreeState> STree<S> treeOf(Tree facade) {
-		final SLocation<S> location = TDTree.locationOf(facade);
+		final TDLocation<S> location = TDTree.locationOf(facade);
 		return location == null ? null : location.tree;
 	}
 

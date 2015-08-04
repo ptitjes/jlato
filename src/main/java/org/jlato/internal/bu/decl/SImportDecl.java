@@ -10,11 +10,8 @@ import org.jlato.internal.bu.STypeSafeProperty;
 import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.shapes.*;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDImportDecl;
-import org.jlato.parser.ParserImplConstants;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 import org.jlato.tree.name.QualifiedName;
@@ -23,9 +20,7 @@ import java.util.Arrays;
 
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
-import static org.jlato.printer.IndentationConstraint.*;
 import static org.jlato.printer.SpacingConstraint.*;
 
 public class SImportDecl extends SNodeState<SImportDecl> implements STreeState {
@@ -76,7 +71,7 @@ public class SImportDecl extends SNodeState<SImportDecl> implements STreeState {
 	}
 
 	@Override
-	protected Tree doInstantiate(SLocation<SImportDecl> location) {
+	protected Tree doInstantiate(TDLocation<SImportDecl> location) {
 		return new TDImportDecl(location);
 	}
 

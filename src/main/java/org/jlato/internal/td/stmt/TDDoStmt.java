@@ -3,7 +3,7 @@ package org.jlato.internal.td.stmt;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SDoStmt;
 import org.jlato.internal.bu.stmt.SStmt;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
@@ -17,12 +17,12 @@ public class TDDoStmt extends TDTree<SDoStmt, Stmt, DoStmt> implements DoStmt {
 		return Kind.DoStmt;
 	}
 
-	public TDDoStmt(SLocation<SDoStmt> location) {
+	public TDDoStmt(TDLocation<SDoStmt> location) {
 		super(location);
 	}
 
 	public TDDoStmt(Stmt body, Expr condition) {
-		super(new SLocation<SDoStmt>(SDoStmt.make(TDTree.<SStmt>treeOf(body), TDTree.<SExpr>treeOf(condition))));
+		super(new TDLocation<SDoStmt>(SDoStmt.make(TDTree.<SStmt>treeOf(body), TDTree.<SExpr>treeOf(condition))));
 	}
 
 	public Stmt body() {

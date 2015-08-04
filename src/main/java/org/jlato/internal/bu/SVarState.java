@@ -20,7 +20,7 @@
 package org.jlato.internal.bu;
 
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.tree.Tree;
 
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class SVarState implements STreeState {
 	}
 
 	@Override
-	public Tree instantiate(SLocation<?> location) {
+	public Tree instantiate(TDLocation<?> location) {
 		throw new UnsupportedOperationException();
 	}
 

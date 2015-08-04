@@ -2,7 +2,7 @@ package org.jlato.internal.td.expr;
 
 import org.jlato.internal.bu.expr.SConditionalExpr;
 import org.jlato.internal.bu.expr.SExpr;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.ConditionalExpr;
@@ -15,12 +15,12 @@ public class TDConditionalExpr extends TDTree<SConditionalExpr, Expr, Conditiona
 		return Kind.ConditionalExpr;
 	}
 
-	public TDConditionalExpr(SLocation<SConditionalExpr> location) {
+	public TDConditionalExpr(TDLocation<SConditionalExpr> location) {
 		super(location);
 	}
 
 	public TDConditionalExpr(Expr condition, Expr thenExpr, Expr elseExpr) {
-		super(new SLocation<SConditionalExpr>(SConditionalExpr.make(TDTree.<SExpr>treeOf(condition), TDTree.<SExpr>treeOf(thenExpr), TDTree.<SExpr>treeOf(elseExpr))));
+		super(new TDLocation<SConditionalExpr>(SConditionalExpr.make(TDTree.<SExpr>treeOf(condition), TDTree.<SExpr>treeOf(thenExpr), TDTree.<SExpr>treeOf(elseExpr))));
 	}
 
 	public Expr condition() {

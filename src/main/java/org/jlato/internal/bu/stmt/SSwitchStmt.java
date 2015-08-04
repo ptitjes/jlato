@@ -9,11 +9,8 @@ import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.shapes.*;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDSwitchStmt;
-import org.jlato.parser.ParserImplConstants;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
@@ -64,7 +61,7 @@ public class SSwitchStmt extends SNodeState<SSwitchStmt> implements SStmt {
 	}
 
 	@Override
-	protected Tree doInstantiate(SLocation<SSwitchStmt> location) {
+	protected Tree doInstantiate(TDLocation<SSwitchStmt> location) {
 		return new TDSwitchStmt(location);
 	}
 

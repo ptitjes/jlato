@@ -3,7 +3,7 @@ package org.jlato.internal.td.stmt;
 import org.jlato.internal.bu.decl.SFormalParameter;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.bu.stmt.SCatchClause;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
@@ -18,12 +18,12 @@ public class TDCatchClause extends TDTree<SCatchClause, Node, CatchClause> imple
 		return Kind.CatchClause;
 	}
 
-	public TDCatchClause(SLocation<SCatchClause> location) {
+	public TDCatchClause(TDLocation<SCatchClause> location) {
 		super(location);
 	}
 
 	public TDCatchClause(FormalParameter except, BlockStmt catchBlock) {
-		super(new SLocation<SCatchClause>(SCatchClause.make(TDTree.<SFormalParameter>treeOf(except), TDTree.<SBlockStmt>treeOf(catchBlock))));
+		super(new TDLocation<SCatchClause>(SCatchClause.make(TDTree.<SFormalParameter>treeOf(except), TDTree.<SBlockStmt>treeOf(catchBlock))));
 	}
 
 	public FormalParameter except() {

@@ -2,7 +2,7 @@ package org.jlato.internal.td.expr;
 
 import org.jlato.internal.bu.expr.SBinaryExpr;
 import org.jlato.internal.bu.expr.SExpr;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.BinaryExpr;
@@ -16,12 +16,12 @@ public class TDBinaryExpr extends TDTree<SBinaryExpr, Expr, BinaryExpr> implemen
 		return Kind.BinaryExpr;
 	}
 
-	public TDBinaryExpr(SLocation<SBinaryExpr> location) {
+	public TDBinaryExpr(TDLocation<SBinaryExpr> location) {
 		super(location);
 	}
 
 	public TDBinaryExpr(Expr left, BinaryOp op, Expr right) {
-		super(new SLocation<SBinaryExpr>(SBinaryExpr.make(TDTree.<SExpr>treeOf(left), op, TDTree.<SExpr>treeOf(right))));
+		super(new TDLocation<SBinaryExpr>(SBinaryExpr.make(TDTree.<SExpr>treeOf(left), op, TDTree.<SExpr>treeOf(right))));
 	}
 
 	public Expr left() {

@@ -2,7 +2,7 @@ package org.jlato.internal.td.expr;
 
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.expr.SUnaryExpr;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
@@ -16,12 +16,12 @@ public class TDUnaryExpr extends TDTree<SUnaryExpr, Expr, UnaryExpr> implements 
 		return Kind.UnaryExpr;
 	}
 
-	public TDUnaryExpr(SLocation<SUnaryExpr> location) {
+	public TDUnaryExpr(TDLocation<SUnaryExpr> location) {
 		super(location);
 	}
 
 	public TDUnaryExpr(UnaryOp op, Expr expr) {
-		super(new SLocation<SUnaryExpr>(SUnaryExpr.make(op, TDTree.<SExpr>treeOf(expr))));
+		super(new TDLocation<SUnaryExpr>(SUnaryExpr.make(op, TDTree.<SExpr>treeOf(expr))));
 	}
 
 	public UnaryOp op() {

@@ -21,7 +21,7 @@ package org.jlato.internal.bu;
 
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 
@@ -48,8 +48,8 @@ public class SNodeListState implements STreeState {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Tree instantiate(SLocation<?> location) {
-		return new NodeList<Tree>((SLocation<SNodeListState>) location);
+	public Tree instantiate(TDLocation<?> location) {
+		return new NodeList<Tree>((TDLocation<SNodeListState>) location);
 	}
 
 	@Override

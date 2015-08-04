@@ -11,11 +11,8 @@ import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.shapes.*;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDMethodDecl;
-import org.jlato.parser.ParserImplConstants;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -31,9 +28,6 @@ import org.jlato.tree.type.Type;
 
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
-import static org.jlato.printer.IndentationConstraint.*;
 import static org.jlato.printer.SpacingConstraint.*;
 
 public class SMethodDecl extends SNodeState<SMethodDecl> implements SMemberDecl {
@@ -139,7 +133,7 @@ public class SMethodDecl extends SNodeState<SMethodDecl> implements SMemberDecl 
 	}
 
 	@Override
-	protected Tree doInstantiate(SLocation<SMethodDecl> location) {
+	protected Tree doInstantiate(TDLocation<SMethodDecl> location) {
 		return new TDMethodDecl(location);
 	}
 

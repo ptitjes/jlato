@@ -11,11 +11,8 @@ import org.jlato.internal.bu.STypeSafeProperty;
 import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.shapes.*;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDEnumDecl;
-import org.jlato.parser.ParserImplConstants;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
@@ -115,7 +112,7 @@ public class SEnumDecl extends SNodeState<SEnumDecl> implements STypeDecl {
 	}
 
 	@Override
-	protected Tree doInstantiate(SLocation<SEnumDecl> location) {
+	protected Tree doInstantiate(TDLocation<SEnumDecl> location) {
 		return new TDEnumDecl(location);
 	}
 

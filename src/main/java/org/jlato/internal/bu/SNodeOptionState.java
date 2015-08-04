@@ -20,7 +20,7 @@
 package org.jlato.internal.bu;
 
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 
@@ -39,8 +39,8 @@ public class SNodeOptionState implements STreeState {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Tree instantiate(SLocation<?> location) {
-		return new NodeOption<Tree>((SLocation<SNodeOptionState>) location);
+	public Tree instantiate(TDLocation<?> location) {
+		return new NodeOption<Tree>((TDLocation<SNodeOptionState>) location);
 	}
 
 	@Override

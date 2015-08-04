@@ -3,7 +3,7 @@ package org.jlato.internal.td.decl;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.decl.SFieldDecl;
 import org.jlato.internal.bu.type.SType;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
@@ -20,12 +20,12 @@ public class TDFieldDecl extends TDTree<SFieldDecl, MemberDecl, FieldDecl> imple
 		return Kind.FieldDecl;
 	}
 
-	public TDFieldDecl(SLocation<SFieldDecl> location) {
+	public TDFieldDecl(TDLocation<SFieldDecl> location) {
 		super(location);
 	}
 
 	public TDFieldDecl(NodeList<ExtendedModifier> modifiers, Type type, NodeList<VariableDeclarator> variables) {
-		super(new SLocation<SFieldDecl>(SFieldDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SType>treeOf(type), TDTree.<SNodeListState>treeOf(variables))));
+		super(new TDLocation<SFieldDecl>(SFieldDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SType>treeOf(type), TDTree.<SNodeListState>treeOf(variables))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

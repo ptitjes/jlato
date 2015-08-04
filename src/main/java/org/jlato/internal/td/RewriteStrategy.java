@@ -29,24 +29,24 @@ public abstract class RewriteStrategy {
 
 	@SuppressWarnings("unchecked")
 	public <R extends Tree> R rewrite(R tree, RewriteRules rewriter) {
-		SLocation location = TDTree.locationOf(tree);
+		TDLocation location = TDTree.locationOf(tree);
 		return (R) doRewrite(location, rewriter).facade;
 	}
 
 	// TODO Trampoline recursion
 
-	protected abstract SLocation doRewrite(SLocation location, RewriteRules rewriter);
+	protected abstract TDLocation doRewrite(TDLocation location, RewriteRules rewriter);
 
 	public static final RewriteStrategy OutermostNeeded = new RewriteStrategy() {
 
-		protected SLocation doRewrite(SLocation location, RewriteRules rewriter) {
-			SLocation maybeRewrote = doApplyRewrite(location, rewriter);
+		protected TDLocation doRewrite(TDLocation location, RewriteRules rewriter) {
+			TDLocation maybeRewrote = doApplyRewrite(location, rewriter);
 
 			// If rewrote, then try to rewrite again
 			if (maybeRewrote != location) return doRewrite(maybeRewrote, rewriter);
 
 			// Else try to rewrite children
-			SLocation maybeRewroteThroughChild = doRewriteChildren(location, rewriter);
+			TDLocation maybeRewroteThroughChild = doRewriteChildren(location, rewriter);
 
 			// If rewrote, then try to rewrite again
 			if (maybeRewroteThroughChild != location) return doRewrite(maybeRewroteThroughChild, rewriter);
@@ -54,17 +54,17 @@ public abstract class RewriteStrategy {
 			return location;
 		}
 
-		private SLocation doApplyRewrite(SLocation location, RewriteRules rewriter) {
-			SLocation rewrote = TDTree.locationOf(rewriter.rewrite(location.facade));
+		private TDLocation doApplyRewrite(TDLocation location, RewriteRules rewriter) {
+			TDLocation rewrote = TDTree.locationOf(rewriter.rewrite(location.facade));
 			return location.withTree(rewrote.tree);
 		}
 
-		private SLocation doRewriteChildren(SLocation location, RewriteRules rewriter) {
-			SLocation child = location.firstChild();
+		private TDLocation doRewriteChildren(TDLocation location, RewriteRules rewriter) {
+			TDLocation child = location.firstChild();
 			if (child == null) return location;
 
 			while (child != null) {
-				SLocation maybeRewrote = doRewrite(child, rewriter);
+				TDLocation maybeRewrote = doRewrite(child, rewriter);
 
 				// If rewrote, then try to rewrite parent again
 				if (maybeRewrote != child) return maybeRewrote.parent();

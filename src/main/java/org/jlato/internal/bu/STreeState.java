@@ -20,7 +20,7 @@
 package org.jlato.internal.bu;
 
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.tree.Tree;
 
 /**
@@ -36,7 +36,7 @@ public interface STreeState {
 
 	void validate(STree<?> tree);
 
-	Tree instantiate(SLocation<?> location);
+	Tree instantiate(TDLocation<?> location);
 
 	LexicalShape shape();
 }

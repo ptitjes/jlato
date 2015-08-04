@@ -5,13 +5,13 @@ import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.STree;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 
 public abstract class TestClass {
 
-	protected final SLocation location;
+	protected final TDLocation location;
 
-	protected TestClass(SLocation location) {
+	protected TestClass(TDLocation location) {
 		this.location = location;
 	}
 
@@ -53,7 +53,7 @@ public abstract class TestClass {
 
 	public interface Kind {
 
-		Tree instantiate(SLocation location);
+		Tree instantiate(TDLocation location);
 
 		LexicalShape shape();
 	}

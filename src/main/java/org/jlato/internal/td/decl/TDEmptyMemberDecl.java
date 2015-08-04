@@ -1,7 +1,7 @@
 package org.jlato.internal.td.decl;
 
 import org.jlato.internal.bu.decl.SEmptyMemberDecl;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.decl.EmptyMemberDecl;
@@ -13,11 +13,11 @@ public class TDEmptyMemberDecl extends TDTree<SEmptyMemberDecl, MemberDecl, Empt
 		return Kind.EmptyMemberDecl;
 	}
 
-	public TDEmptyMemberDecl(SLocation<SEmptyMemberDecl> location) {
+	public TDEmptyMemberDecl(TDLocation<SEmptyMemberDecl> location) {
 		super(location);
 	}
 
 	public TDEmptyMemberDecl() {
-		super(new SLocation<SEmptyMemberDecl>(SEmptyMemberDecl.make()));
+		super(new TDLocation<SEmptyMemberDecl>(SEmptyMemberDecl.make()));
 	}
 }

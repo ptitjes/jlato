@@ -2,7 +2,7 @@ package org.jlato.internal.td.stmt;
 
 import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.stmt.SContinueStmt;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
@@ -17,12 +17,12 @@ public class TDContinueStmt extends TDTree<SContinueStmt, Stmt, ContinueStmt> im
 		return Kind.ContinueStmt;
 	}
 
-	public TDContinueStmt(SLocation<SContinueStmt> location) {
+	public TDContinueStmt(TDLocation<SContinueStmt> location) {
 		super(location);
 	}
 
 	public TDContinueStmt(NodeOption<Name> id) {
-		super(new SLocation<SContinueStmt>(SContinueStmt.make(TDTree.<SNodeOptionState>treeOf(id))));
+		super(new TDLocation<SContinueStmt>(SContinueStmt.make(TDTree.<SNodeOptionState>treeOf(id))));
 	}
 
 	public NodeOption<Name> id() {

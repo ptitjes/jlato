@@ -3,7 +3,7 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.expr.SInstanceOfExpr;
 import org.jlato.internal.bu.type.SType;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.expr.Expr;
@@ -17,12 +17,12 @@ public class TDInstanceOfExpr extends TDTree<SInstanceOfExpr, Expr, InstanceOfEx
 		return Kind.InstanceOfExpr;
 	}
 
-	public TDInstanceOfExpr(SLocation<SInstanceOfExpr> location) {
+	public TDInstanceOfExpr(TDLocation<SInstanceOfExpr> location) {
 		super(location);
 	}
 
 	public TDInstanceOfExpr(Expr expr, Type type) {
-		super(new SLocation<SInstanceOfExpr>(SInstanceOfExpr.make(TDTree.<SExpr>treeOf(expr), TDTree.<SType>treeOf(type))));
+		super(new TDLocation<SInstanceOfExpr>(SInstanceOfExpr.make(TDTree.<SExpr>treeOf(expr), TDTree.<SType>treeOf(type))));
 	}
 
 	public Expr expr() {

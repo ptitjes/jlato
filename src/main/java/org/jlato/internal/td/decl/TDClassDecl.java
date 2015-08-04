@@ -4,7 +4,7 @@ import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.decl.SClassDecl;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
@@ -24,12 +24,12 @@ public class TDClassDecl extends TDTree<SClassDecl, TypeDecl, ClassDecl> impleme
 		return Kind.ClassDecl;
 	}
 
-	public TDClassDecl(SLocation<SClassDecl> location) {
+	public TDClassDecl(TDLocation<SClassDecl> location) {
 		super(location);
 	}
 
 	public TDClassDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<TypeParameter> typeParams, NodeOption<QualifiedType> extendsClause, NodeList<QualifiedType> implementsClause, NodeList<MemberDecl> members) {
-		super(new SLocation<SClassDecl>(SClassDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(typeParams), TDTree.<SNodeOptionState>treeOf(extendsClause), TDTree.<SNodeListState>treeOf(implementsClause), TDTree.<SNodeListState>treeOf(members))));
+		super(new TDLocation<SClassDecl>(SClassDecl.make(TDTree.<SNodeListState>treeOf(modifiers), TDTree.<SName>treeOf(name), TDTree.<SNodeListState>treeOf(typeParams), TDTree.<SNodeOptionState>treeOf(extendsClause), TDTree.<SNodeListState>treeOf(implementsClause), TDTree.<SNodeListState>treeOf(members))));
 	}
 
 	public NodeList<ExtendedModifier> modifiers() {

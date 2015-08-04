@@ -3,7 +3,7 @@ package org.jlato.internal.td.expr;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.expr.SNormalAnnotationExpr;
 import org.jlato.internal.bu.name.SQualifiedName;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
@@ -19,12 +19,12 @@ public class TDNormalAnnotationExpr extends TDTree<SNormalAnnotationExpr, Annota
 		return Kind.NormalAnnotationExpr;
 	}
 
-	public TDNormalAnnotationExpr(SLocation<SNormalAnnotationExpr> location) {
+	public TDNormalAnnotationExpr(TDLocation<SNormalAnnotationExpr> location) {
 		super(location);
 	}
 
 	public TDNormalAnnotationExpr(QualifiedName name, NodeList<MemberValuePair> pairs) {
-		super(new SLocation<SNormalAnnotationExpr>(SNormalAnnotationExpr.make(TDTree.<SQualifiedName>treeOf(name), TDTree.<SNodeListState>treeOf(pairs))));
+		super(new TDLocation<SNormalAnnotationExpr>(SNormalAnnotationExpr.make(TDTree.<SQualifiedName>treeOf(name), TDTree.<SNodeListState>treeOf(pairs))));
 	}
 
 	public QualifiedName name() {

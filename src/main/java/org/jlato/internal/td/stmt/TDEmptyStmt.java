@@ -1,7 +1,7 @@
 package org.jlato.internal.td.stmt;
 
 import org.jlato.internal.bu.stmt.SEmptyStmt;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.stmt.EmptyStmt;
@@ -13,11 +13,11 @@ public class TDEmptyStmt extends TDTree<SEmptyStmt, Stmt, EmptyStmt> implements 
 		return Kind.EmptyStmt;
 	}
 
-	public TDEmptyStmt(SLocation<SEmptyStmt> location) {
+	public TDEmptyStmt(TDLocation<SEmptyStmt> location) {
 		super(location);
 	}
 
 	public TDEmptyStmt() {
-		super(new SLocation<SEmptyStmt>(SEmptyStmt.make()));
+		super(new TDLocation<SEmptyStmt>(SEmptyStmt.make()));
 	}
 }

@@ -2,7 +2,7 @@ package org.jlato.internal.td.expr;
 
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.expr.SArrayInitializerExpr;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
@@ -16,12 +16,12 @@ public class TDArrayInitializerExpr extends TDTree<SArrayInitializerExpr, Expr, 
 		return Kind.ArrayInitializerExpr;
 	}
 
-	public TDArrayInitializerExpr(SLocation<SArrayInitializerExpr> location) {
+	public TDArrayInitializerExpr(TDLocation<SArrayInitializerExpr> location) {
 		super(location);
 	}
 
 	public TDArrayInitializerExpr(NodeList<Expr> values, boolean trailingComma) {
-		super(new SLocation<SArrayInitializerExpr>(SArrayInitializerExpr.make(TDTree.<SNodeListState>treeOf(values), trailingComma)));
+		super(new TDLocation<SArrayInitializerExpr>(SArrayInitializerExpr.make(TDTree.<SNodeListState>treeOf(values), trailingComma)));
 	}
 
 	public NodeList<Expr> values() {

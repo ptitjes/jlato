@@ -3,7 +3,7 @@ package org.jlato.internal.td.stmt;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.stmt.SLabeledStmt;
 import org.jlato.internal.bu.stmt.SStmt;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.name.Name;
@@ -17,12 +17,12 @@ public class TDLabeledStmt extends TDTree<SLabeledStmt, Stmt, LabeledStmt> imple
 		return Kind.LabeledStmt;
 	}
 
-	public TDLabeledStmt(SLocation<SLabeledStmt> location) {
+	public TDLabeledStmt(TDLocation<SLabeledStmt> location) {
 		super(location);
 	}
 
 	public TDLabeledStmt(Name label, Stmt stmt) {
-		super(new SLocation<SLabeledStmt>(SLabeledStmt.make(TDTree.<SName>treeOf(label), TDTree.<SStmt>treeOf(stmt))));
+		super(new TDLocation<SLabeledStmt>(SLabeledStmt.make(TDTree.<SName>treeOf(label), TDTree.<SStmt>treeOf(stmt))));
 	}
 
 	public Name label() {

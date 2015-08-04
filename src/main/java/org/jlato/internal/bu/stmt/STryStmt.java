@@ -11,11 +11,8 @@ import org.jlato.internal.bu.STreeState;
 import org.jlato.internal.bu.STypeSafeProperty;
 import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.shapes.*;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDTryStmt;
-import org.jlato.parser.ParserImplConstants;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -29,7 +26,6 @@ import java.util.Collections;
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.printer.IndentationConstraint.*;
 import static org.jlato.printer.SpacingConstraint.*;
 
@@ -103,7 +99,7 @@ public class STryStmt extends SNodeState<STryStmt> implements SStmt {
 	}
 
 	@Override
-	protected Tree doInstantiate(SLocation<STryStmt> location) {
+	protected Tree doInstantiate(TDLocation<STryStmt> location) {
 		return new TDTryStmt(location);
 	}
 

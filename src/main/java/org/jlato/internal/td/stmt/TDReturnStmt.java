@@ -2,7 +2,7 @@ package org.jlato.internal.td.stmt;
 
 import org.jlato.internal.bu.SNodeOptionState;
 import org.jlato.internal.bu.stmt.SReturnStmt;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
@@ -17,12 +17,12 @@ public class TDReturnStmt extends TDTree<SReturnStmt, Stmt, ReturnStmt> implemen
 		return Kind.ReturnStmt;
 	}
 
-	public TDReturnStmt(SLocation<SReturnStmt> location) {
+	public TDReturnStmt(TDLocation<SReturnStmt> location) {
 		super(location);
 	}
 
 	public TDReturnStmt(NodeOption<Expr> expr) {
-		super(new SLocation<SReturnStmt>(SReturnStmt.make(TDTree.<SNodeOptionState>treeOf(expr))));
+		super(new TDLocation<SReturnStmt>(SReturnStmt.make(TDTree.<SNodeOptionState>treeOf(expr))));
 	}
 
 	public NodeOption<Expr> expr() {

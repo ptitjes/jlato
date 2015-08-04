@@ -3,7 +3,7 @@ package org.jlato.internal.td.decl;
 import org.jlato.internal.bu.SNodeListState;
 import org.jlato.internal.bu.decl.SPackageDecl;
 import org.jlato.internal.bu.name.SQualifiedName;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
@@ -19,12 +19,12 @@ public class TDPackageDecl extends TDTree<SPackageDecl, Node, PackageDecl> imple
 		return Kind.PackageDecl;
 	}
 
-	public TDPackageDecl(SLocation<SPackageDecl> location) {
+	public TDPackageDecl(TDLocation<SPackageDecl> location) {
 		super(location);
 	}
 
 	public TDPackageDecl(NodeList<AnnotationExpr> annotations, QualifiedName name) {
-		super(new SLocation<SPackageDecl>(SPackageDecl.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SQualifiedName>treeOf(name))));
+		super(new TDLocation<SPackageDecl>(SPackageDecl.make(TDTree.<SNodeListState>treeOf(annotations), TDTree.<SQualifiedName>treeOf(name))));
 	}
 
 	public NodeList<AnnotationExpr> annotations() {

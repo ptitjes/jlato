@@ -23,7 +23,7 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.rewrite.Pattern;
 import org.jlato.rewrite.Substitution;
@@ -145,7 +145,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public T build(Substitution substitution) {
-		return (T) new SLocation(null, buildTree(pattern, substitution)).facade;
+		return (T) new TDLocation(null, buildTree(pattern, substitution)).facade;
 	}
 
 	private <S extends STreeState> STree<S> buildTree(STree<S> pattern, Substitution substitution) {

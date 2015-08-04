@@ -1,7 +1,7 @@
 package org.jlato.internal.td.decl;
 
 import org.jlato.internal.bu.decl.SModifier;
-import org.jlato.internal.td.SLocation;
+import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.decl.ExtendedModifier;
@@ -15,12 +15,12 @@ public class TDModifier extends TDTree<SModifier, ExtendedModifier, Modifier> im
 		return Kind.Modifier;
 	}
 
-	public TDModifier(SLocation<SModifier> location) {
+	public TDModifier(TDLocation<SModifier> location) {
 		super(location);
 	}
 
 	public TDModifier(ModifierKeyword keyword) {
-		super(new SLocation<SModifier>(SModifier.make(keyword)));
+		super(new TDLocation<SModifier>(SModifier.make(keyword)));
 	}
 
 	public ModifierKeyword keyword() {
