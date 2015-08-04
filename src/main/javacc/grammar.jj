@@ -59,6 +59,7 @@ package org.jlato.parser;
 import java.io.*;
 import java.util.*;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.coll.*;
 import org.jlato.internal.bu.decl.*;
 import org.jlato.internal.bu.expr.*;
 import org.jlato.internal.bu.name.*;

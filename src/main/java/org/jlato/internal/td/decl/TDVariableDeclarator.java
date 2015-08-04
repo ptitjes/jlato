@@ -1,6 +1,6 @@
 package org.jlato.internal.td.decl;
 
-import org.jlato.internal.bu.SNodeOption;
+import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.decl.SVariableDeclarator;
 import org.jlato.internal.bu.decl.SVariableDeclaratorId;
 import org.jlato.internal.td.TDLocation;

@@ -17,9 +17,10 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.internal.bu;
+package org.jlato.internal.bu.coll;
 
 import com.github.andrewoma.dexx.collection.TreeMap;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.tree.*;

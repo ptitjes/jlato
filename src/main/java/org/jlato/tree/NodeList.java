@@ -22,7 +22,7 @@ package org.jlato.tree;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.WDressing;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.td.TDLocation;

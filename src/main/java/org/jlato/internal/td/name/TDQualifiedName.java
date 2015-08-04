@@ -1,6 +1,6 @@
 package org.jlato.internal.td.name;
 
-import org.jlato.internal.bu.SNodeOption;
+import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.TDLocation;

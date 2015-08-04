@@ -1,6 +1,6 @@
 package org.jlato.internal.td.expr;
 
-import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.expr.SMethodReferenceExpr;
 import org.jlato.internal.bu.name.SName;

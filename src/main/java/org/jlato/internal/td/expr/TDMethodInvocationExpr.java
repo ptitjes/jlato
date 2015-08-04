@@ -1,7 +1,7 @@
 package org.jlato.internal.td.expr;
 
-import org.jlato.internal.bu.SNodeList;
-import org.jlato.internal.bu.SNodeOption;
+import org.jlato.internal.bu.coll.SNodeList;
+import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.expr.SMethodInvocationExpr;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.td.TDLocation;

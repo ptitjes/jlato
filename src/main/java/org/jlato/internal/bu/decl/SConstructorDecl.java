@@ -1,6 +1,7 @@
 package org.jlato.internal.bu.decl;
 
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.shapes.LexicalShape;

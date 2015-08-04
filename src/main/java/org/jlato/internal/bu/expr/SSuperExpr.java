@@ -1,6 +1,7 @@
 package org.jlato.internal.bu.expr;
 
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.expr.TDSuperExpr;

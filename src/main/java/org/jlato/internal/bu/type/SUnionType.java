@@ -1,6 +1,7 @@
 package org.jlato.internal.bu.type;
 
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.type.TDUnionType;

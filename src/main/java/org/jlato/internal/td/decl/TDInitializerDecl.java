@@ -1,6 +1,6 @@
 package org.jlato.internal.td.decl;
 
-import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.decl.SInitializerDecl;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.td.TDLocation;

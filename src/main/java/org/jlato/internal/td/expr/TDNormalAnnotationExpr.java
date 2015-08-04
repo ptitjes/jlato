@@ -1,6 +1,6 @@
 package org.jlato.internal.td.expr;
 
-import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.expr.SNormalAnnotationExpr;
 import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.td.TDLocation;

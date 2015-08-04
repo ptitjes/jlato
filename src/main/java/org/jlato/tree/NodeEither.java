@@ -20,8 +20,8 @@
 package org.jlato.tree;
 
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.SNodeEither;
-import org.jlato.internal.bu.SNodeEither.EitherSide;
+import org.jlato.internal.bu.coll.SNodeEither;
+import org.jlato.internal.bu.coll.SNodeEither.EitherSide;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 

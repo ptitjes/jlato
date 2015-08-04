@@ -1,7 +1,7 @@
 package org.jlato.internal.td.decl;
 
-import org.jlato.internal.bu.SNodeList;
-import org.jlato.internal.bu.SNodeOption;
+import org.jlato.internal.bu.coll.SNodeList;
+import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.decl.SAnnotationMemberDecl;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.type.SType;

@@ -1,6 +1,6 @@
 package org.jlato.internal.td.stmt;
 
-import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.stmt.SForStmt;
 import org.jlato.internal.bu.stmt.SStmt;

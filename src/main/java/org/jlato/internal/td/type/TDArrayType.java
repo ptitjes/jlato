@@ -1,6 +1,6 @@
 package org.jlato.internal.td.type;
 
-import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.type.SArrayType;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.TDLocation;

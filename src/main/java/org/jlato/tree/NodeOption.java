@@ -20,7 +20,7 @@
 package org.jlato.tree;
 
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.SNodeOption;
+import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.util.Mutation;

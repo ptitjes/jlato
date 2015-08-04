@@ -1,6 +1,6 @@
 package org.jlato.internal.td.decl;
 
-import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.decl.SFormalParameter;
 import org.jlato.internal.bu.decl.SVariableDeclaratorId;
 import org.jlato.internal.bu.type.SType;

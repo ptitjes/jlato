@@ -1,6 +1,8 @@
 package org.jlato.internal.bu.expr;
 
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.coll.SNodeEither;
+import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.expr.TDLambdaExpr;

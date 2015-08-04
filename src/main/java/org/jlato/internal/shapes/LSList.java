@@ -21,6 +21,7 @@ package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.printer.Printer;
 
 /**

@@ -1,7 +1,7 @@
 package org.jlato.internal.td.stmt;
 
-import org.jlato.internal.bu.SNodeList;
-import org.jlato.internal.bu.SNodeOption;
+import org.jlato.internal.bu.coll.SNodeList;
+import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.bu.stmt.STryStmt;
 import org.jlato.internal.td.TDLocation;

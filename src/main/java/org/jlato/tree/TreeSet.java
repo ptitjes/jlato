@@ -23,7 +23,7 @@ import com.github.andrewoma.dexx.collection.Iterable;
 import com.github.andrewoma.dexx.collection.Pair;
 import com.github.andrewoma.dexx.collection.TreeMap;
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.STreeSet;
+import org.jlato.internal.bu.coll.STreeSet;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.printer.FormattingSettings;

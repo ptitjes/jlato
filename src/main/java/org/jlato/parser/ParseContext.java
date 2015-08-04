@@ -20,7 +20,7 @@
 package org.jlato.parser;
 
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.SNodeList;
+import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.STree;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.*;

@@ -23,6 +23,8 @@ import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.coll.SNodeList;
+import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.rewrite.Pattern;
