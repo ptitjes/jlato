@@ -1,8 +1,6 @@
 package org.jlato.unit.tree;
 
-import org.jlato.tree.NodeEither;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.NodeOption;
+import org.jlato.tree.*;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.*;
 import org.jlato.tree.name.*;
@@ -14,8 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.jlato.tree.Trees.*;
-
 @RunWith(JUnit4.class)
 public class TreesEqualsHashCodeTest {
 
@@ -26,20 +22,20 @@ public class TreesEqualsHashCodeTest {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Name name = arbitrary.arbitraryName();
 			NodeList<MemberDecl> members = arbitrary.arbitraryListMemberDecl();
-			AnnotationDecl expected = annotationDecl().withModifiers(modifiers).withName(name).withMembers(members);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			AnnotationDecl actual = annotationDecl();
-			Assert.assertFalse(expected.equals(actual));
+			AnnotationDecl expected = Trees.annotationDecl().withModifiers(modifiers).withName(name).withMembers(members);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			AnnotationDecl actual = Trees.annotationDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withModifiers(modifiers);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withMembers(members);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -53,26 +49,26 @@ public class TreesEqualsHashCodeTest {
 			Name name = arbitrary.arbitraryName();
 			NodeList<ArrayDim> dims = arbitrary.arbitraryListArrayDim();
 			NodeOption<Expr> defaultValue = arbitrary.arbitraryOptionExpr();
-			AnnotationMemberDecl expected = annotationMemberDecl().withModifiers(modifiers).withType(type).withName(name).withDims(dims).withDefaultValue(defaultValue);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			AnnotationMemberDecl actual = annotationMemberDecl();
-			Assert.assertFalse(expected.equals(actual));
+			AnnotationMemberDecl expected = Trees.annotationMemberDecl().withModifiers(modifiers).withType(type).withName(name).withDims(dims).withDefaultValue(defaultValue);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			AnnotationMemberDecl actual = Trees.annotationMemberDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withModifiers(modifiers);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withType(type);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withDims(dims);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withDefaultValue(defaultValue);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -82,14 +78,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
-			ArrayDim expected = arrayDim().withAnnotations(annotations);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ArrayDim actual = arrayDim();
-			Assert.assertFalse(expected.equals(actual));
+			ArrayDim expected = Trees.arrayDim().withAnnotations(annotations);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ArrayDim actual = Trees.arrayDim();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withAnnotations(annotations);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -104,29 +100,29 @@ public class TreesEqualsHashCodeTest {
 			NodeOption<QualifiedType> extendsClause = arbitrary.arbitraryOptionQualifiedType();
 			NodeList<QualifiedType> implementsClause = arbitrary.arbitraryListQualifiedType();
 			NodeList<MemberDecl> members = arbitrary.arbitraryListMemberDecl();
-			ClassDecl expected = classDecl().withModifiers(modifiers).withName(name).withTypeParams(typeParams).withExtendsClause(extendsClause).withImplementsClause(implementsClause).withMembers(members);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ClassDecl actual = classDecl();
-			Assert.assertFalse(expected.equals(actual));
+			ClassDecl expected = Trees.classDecl().withModifiers(modifiers).withName(name).withTypeParams(typeParams).withExtendsClause(extendsClause).withImplementsClause(implementsClause).withMembers(members);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ClassDecl actual = Trees.classDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withModifiers(modifiers);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypeParams(typeParams);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExtendsClause(extendsClause);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withImplementsClause(implementsClause);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withMembers(members);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -138,20 +134,20 @@ public class TreesEqualsHashCodeTest {
 			PackageDecl packageDecl = arbitrary.arbitraryPackageDecl();
 			NodeList<ImportDecl> imports = arbitrary.arbitraryListImportDecl();
 			NodeList<TypeDecl> types = arbitrary.arbitraryListTypeDecl();
-			CompilationUnit expected = compilationUnit().withPackageDecl(packageDecl).withImports(imports).withTypes(types);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			CompilationUnit actual = compilationUnit();
-			Assert.assertFalse(expected.equals(actual));
+			CompilationUnit expected = Trees.compilationUnit().withPackageDecl(packageDecl).withImports(imports).withTypes(types);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			CompilationUnit actual = Trees.compilationUnit();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withPackageDecl(packageDecl);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withImports(imports);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypes(types);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -166,57 +162,51 @@ public class TreesEqualsHashCodeTest {
 			NodeList<FormalParameter> params = arbitrary.arbitraryListFormalParameter();
 			NodeList<QualifiedType> throwsClause = arbitrary.arbitraryListQualifiedType();
 			BlockStmt body = arbitrary.arbitraryBlockStmt();
-			ConstructorDecl expected = constructorDecl().withModifiers(modifiers).withTypeParams(typeParams).withName(name).withParams(params).withThrowsClause(throwsClause).withBody(body);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ConstructorDecl actual = constructorDecl();
-			Assert.assertFalse(expected.equals(actual));
+			ConstructorDecl expected = Trees.constructorDecl().withModifiers(modifiers).withTypeParams(typeParams).withName(name).withParams(params).withThrowsClause(throwsClause).withBody(body);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ConstructorDecl actual = Trees.constructorDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withModifiers(modifiers);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypeParams(typeParams);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withParams(params);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withThrowsClause(throwsClause);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withBody(body);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
 
 	@Test
 	public void testEmptyMemberDecl() {
-		Arbitrary arbitrary = new Arbitrary();
-		for (int i = 0; i < 10; i++) {
-			EmptyMemberDecl expected = emptyMemberDecl();
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			EmptyMemberDecl actual = emptyMemberDecl();
-			Assert.assertTrue(expected.equals(actual));
-			Assert.assertEquals(expected.hashCode(), actual.hashCode());
-		}
+		EmptyMemberDecl expected = Trees.emptyMemberDecl();
+		Assert.assertEquals(expected, expected);
+		Assert.assertNotEquals(expected, null);
+		EmptyMemberDecl actual = Trees.emptyMemberDecl();
+		Assert.assertEquals(expected, actual);
+		Assert.assertEquals(expected.hashCode(), actual.hashCode());
 	}
 
 	@Test
 	public void testEmptyTypeDecl() {
-		Arbitrary arbitrary = new Arbitrary();
-		for (int i = 0; i < 10; i++) {
-			EmptyTypeDecl expected = emptyTypeDecl();
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			EmptyTypeDecl actual = emptyTypeDecl();
-			Assert.assertTrue(expected.equals(actual));
-			Assert.assertEquals(expected.hashCode(), actual.hashCode());
-		}
+		EmptyTypeDecl expected = Trees.emptyTypeDecl();
+		Assert.assertEquals(expected, expected);
+		Assert.assertNotEquals(expected, null);
+		EmptyTypeDecl actual = Trees.emptyTypeDecl();
+		Assert.assertEquals(expected, actual);
+		Assert.assertEquals(expected.hashCode(), actual.hashCode());
 	}
 
 	@Test
@@ -227,23 +217,23 @@ public class TreesEqualsHashCodeTest {
 			Name name = arbitrary.arbitraryName();
 			NodeOption<NodeList<Expr>> args = arbitrary.arbitraryOptionListExpr();
 			NodeOption<NodeList<MemberDecl>> classBody = arbitrary.arbitraryOptionListMemberDecl();
-			EnumConstantDecl expected = enumConstantDecl().withModifiers(modifiers).withName(name).withArgs(args).withClassBody(classBody);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			EnumConstantDecl actual = enumConstantDecl();
-			Assert.assertFalse(expected.equals(actual));
+			EnumConstantDecl expected = Trees.enumConstantDecl().withModifiers(modifiers).withName(name).withArgs(args).withClassBody(classBody);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			EnumConstantDecl actual = Trees.enumConstantDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withModifiers(modifiers);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withArgs(args);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withClassBody(classBody);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -258,29 +248,29 @@ public class TreesEqualsHashCodeTest {
 			NodeList<EnumConstantDecl> enumConstants = arbitrary.arbitraryListEnumConstantDecl();
 			boolean trailingComma = arbitrary.arbitraryBoolean();
 			NodeList<MemberDecl> members = arbitrary.arbitraryListMemberDecl();
-			EnumDecl expected = enumDecl().withModifiers(modifiers).withName(name).withImplementsClause(implementsClause).withEnumConstants(enumConstants).withTrailingComma(trailingComma).withMembers(members);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			EnumDecl actual = enumDecl();
-			Assert.assertFalse(expected.equals(actual));
+			EnumDecl expected = Trees.enumDecl().withModifiers(modifiers).withName(name).withImplementsClause(implementsClause).withEnumConstants(enumConstants).withTrailingComma(trailingComma).withMembers(members);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			EnumDecl actual = Trees.enumDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withModifiers(modifiers);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withImplementsClause(implementsClause);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withEnumConstants(enumConstants);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTrailingComma(trailingComma);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withMembers(members);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -292,20 +282,20 @@ public class TreesEqualsHashCodeTest {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Type type = arbitrary.arbitraryType();
 			NodeList<VariableDeclarator> variables = arbitrary.arbitraryListVariableDeclarator();
-			FieldDecl expected = fieldDecl().withModifiers(modifiers).withType(type).withVariables(variables);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			FieldDecl actual = fieldDecl();
-			Assert.assertFalse(expected.equals(actual));
+			FieldDecl expected = Trees.fieldDecl().withModifiers(modifiers).withType(type).withVariables(variables);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			FieldDecl actual = Trees.fieldDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withModifiers(modifiers);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withType(type);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withVariables(variables);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -318,23 +308,23 @@ public class TreesEqualsHashCodeTest {
 			Type type = arbitrary.arbitraryType();
 			boolean isVarArgs = arbitrary.arbitraryBoolean();
 			VariableDeclaratorId id = arbitrary.arbitraryVariableDeclaratorId();
-			FormalParameter expected = formalParameter().withModifiers(modifiers).withType(type).setVarArgs(isVarArgs).withId(id);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			FormalParameter actual = formalParameter();
-			Assert.assertFalse(expected.equals(actual));
+			FormalParameter expected = Trees.formalParameter().withModifiers(modifiers).withType(type).setVarArgs(isVarArgs).withId(id);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			FormalParameter actual = Trees.formalParameter();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withModifiers(modifiers);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withType(type);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.setVarArgs(isVarArgs);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withId(id);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -346,20 +336,20 @@ public class TreesEqualsHashCodeTest {
 			QualifiedName name = arbitrary.arbitraryQualifiedName();
 			boolean isStatic = arbitrary.arbitraryBoolean();
 			boolean isOnDemand = arbitrary.arbitraryBoolean();
-			ImportDecl expected = importDecl().withName(name).setStatic(isStatic).setOnDemand(isOnDemand);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ImportDecl actual = importDecl();
-			Assert.assertFalse(expected.equals(actual));
+			ImportDecl expected = Trees.importDecl().withName(name).setStatic(isStatic).setOnDemand(isOnDemand);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ImportDecl actual = Trees.importDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.setStatic(isStatic);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.setOnDemand(isOnDemand);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -370,17 +360,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			BlockStmt body = arbitrary.arbitraryBlockStmt();
-			InitializerDecl expected = initializerDecl().withModifiers(modifiers).withBody(body);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			InitializerDecl actual = initializerDecl();
-			Assert.assertFalse(expected.equals(actual));
+			InitializerDecl expected = Trees.initializerDecl().withModifiers(modifiers).withBody(body);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			InitializerDecl actual = Trees.initializerDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withModifiers(modifiers);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withBody(body);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -394,26 +384,26 @@ public class TreesEqualsHashCodeTest {
 			NodeList<TypeParameter> typeParams = arbitrary.arbitraryListTypeParameter();
 			NodeList<QualifiedType> extendsClause = arbitrary.arbitraryListQualifiedType();
 			NodeList<MemberDecl> members = arbitrary.arbitraryListMemberDecl();
-			InterfaceDecl expected = interfaceDecl().withModifiers(modifiers).withName(name).withTypeParams(typeParams).withExtendsClause(extendsClause).withMembers(members);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			InterfaceDecl actual = interfaceDecl();
-			Assert.assertFalse(expected.equals(actual));
+			InterfaceDecl expected = Trees.interfaceDecl().withModifiers(modifiers).withName(name).withTypeParams(typeParams).withExtendsClause(extendsClause).withMembers(members);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			InterfaceDecl actual = Trees.interfaceDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withModifiers(modifiers);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypeParams(typeParams);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExtendsClause(extendsClause);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withMembers(members);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -425,20 +415,20 @@ public class TreesEqualsHashCodeTest {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Type type = arbitrary.arbitraryType();
 			NodeList<VariableDeclarator> variables = arbitrary.arbitraryListVariableDeclarator();
-			LocalVariableDecl expected = localVariableDecl().withModifiers(modifiers).withType(type).withVariables(variables);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			LocalVariableDecl actual = localVariableDecl();
-			Assert.assertFalse(expected.equals(actual));
+			LocalVariableDecl expected = Trees.localVariableDecl().withModifiers(modifiers).withType(type).withVariables(variables);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			LocalVariableDecl actual = Trees.localVariableDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withModifiers(modifiers);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withType(type);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withVariables(variables);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -455,35 +445,52 @@ public class TreesEqualsHashCodeTest {
 			NodeList<ArrayDim> dims = arbitrary.arbitraryListArrayDim();
 			NodeList<QualifiedType> throwsClause = arbitrary.arbitraryListQualifiedType();
 			NodeOption<BlockStmt> body = arbitrary.arbitraryOptionBlockStmt();
-			MethodDecl expected = methodDecl().withModifiers(modifiers).withTypeParams(typeParams).withType(type).withName(name).withParams(params).withDims(dims).withThrowsClause(throwsClause).withBody(body);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			MethodDecl actual = methodDecl();
-			Assert.assertFalse(expected.equals(actual));
+			MethodDecl expected = Trees.methodDecl().withModifiers(modifiers).withTypeParams(typeParams).withType(type).withName(name).withParams(params).withDims(dims).withThrowsClause(throwsClause).withBody(body);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			MethodDecl actual = Trees.methodDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withModifiers(modifiers);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypeParams(typeParams);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withType(type);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withParams(params);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withDims(dims);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withThrowsClause(throwsClause);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withBody(body);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
+			Assert.assertEquals(expected.hashCode(), actual.hashCode());
+		}
+	}
+
+	@Test
+	public void testModifier() {
+		Arbitrary arbitrary = new Arbitrary();
+		for (int i = 0; i < 10; i++) {
+			ModifierKeyword keyword = arbitrary.arbitraryModifierKeyword();
+			Modifier expected = Trees.modifier().withKeyword(keyword);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			Modifier actual = Trees.modifier();
+			Assert.assertNotEquals(expected, actual);
+			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
+			actual = actual.withKeyword(keyword);
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -494,17 +501,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
 			QualifiedName name = arbitrary.arbitraryQualifiedName();
-			PackageDecl expected = packageDecl().withAnnotations(annotations).withName(name);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			PackageDecl actual = packageDecl();
-			Assert.assertFalse(expected.equals(actual));
+			PackageDecl expected = Trees.packageDecl().withAnnotations(annotations).withName(name);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			PackageDecl actual = Trees.packageDecl();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withAnnotations(annotations);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -516,20 +523,20 @@ public class TreesEqualsHashCodeTest {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
 			Name name = arbitrary.arbitraryName();
 			NodeList<Type> bounds = arbitrary.arbitraryListType();
-			TypeParameter expected = typeParameter().withAnnotations(annotations).withName(name).withBounds(bounds);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			TypeParameter actual = typeParameter();
-			Assert.assertFalse(expected.equals(actual));
+			TypeParameter expected = Trees.typeParameter().withAnnotations(annotations).withName(name).withBounds(bounds);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			TypeParameter actual = Trees.typeParameter();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withAnnotations(annotations);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withBounds(bounds);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -540,17 +547,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			VariableDeclaratorId id = arbitrary.arbitraryVariableDeclaratorId();
 			NodeOption<Expr> init = arbitrary.arbitraryOptionExpr();
-			VariableDeclarator expected = variableDeclarator().withId(id).withInit(init);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			VariableDeclarator actual = variableDeclarator();
-			Assert.assertFalse(expected.equals(actual));
+			VariableDeclarator expected = Trees.variableDeclarator().withId(id).withInit(init);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			VariableDeclarator actual = Trees.variableDeclarator();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withId(id);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withInit(init);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -561,17 +568,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			Name name = arbitrary.arbitraryName();
 			NodeList<ArrayDim> dims = arbitrary.arbitraryListArrayDim();
-			VariableDeclaratorId expected = variableDeclaratorId().withName(name).withDims(dims);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			VariableDeclaratorId actual = variableDeclaratorId();
-			Assert.assertFalse(expected.equals(actual));
+			VariableDeclaratorId expected = Trees.variableDeclaratorId().withName(name).withDims(dims);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			VariableDeclaratorId actual = Trees.variableDeclaratorId();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withDims(dims);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -582,17 +589,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			Expr name = arbitrary.arbitraryExpr();
 			Expr index = arbitrary.arbitraryExpr();
-			ArrayAccessExpr expected = arrayAccessExpr().withName(name).withIndex(index);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ArrayAccessExpr actual = arrayAccessExpr();
-			Assert.assertFalse(expected.equals(actual));
+			ArrayAccessExpr expected = Trees.arrayAccessExpr().withName(name).withIndex(index);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ArrayAccessExpr actual = Trees.arrayAccessExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withIndex(index);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -605,23 +612,23 @@ public class TreesEqualsHashCodeTest {
 			NodeList<ArrayDimExpr> dimExprs = arbitrary.arbitraryListArrayDimExpr();
 			NodeList<ArrayDim> dims = arbitrary.arbitraryListArrayDim();
 			NodeOption<ArrayInitializerExpr> init = arbitrary.arbitraryOptionArrayInitializerExpr();
-			ArrayCreationExpr expected = arrayCreationExpr().withType(type).withDimExprs(dimExprs).withDims(dims).withInit(init);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ArrayCreationExpr actual = arrayCreationExpr();
-			Assert.assertFalse(expected.equals(actual));
+			ArrayCreationExpr expected = Trees.arrayCreationExpr().withType(type).withDimExprs(dimExprs).withDims(dims).withInit(init);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ArrayCreationExpr actual = Trees.arrayCreationExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withType(type);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withDimExprs(dimExprs);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withDims(dims);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withInit(init);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -632,17 +639,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
 			Expr expr = arbitrary.arbitraryExpr();
-			ArrayDimExpr expected = arrayDimExpr().withAnnotations(annotations).withExpr(expr);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ArrayDimExpr actual = arrayDimExpr();
-			Assert.assertFalse(expected.equals(actual));
+			ArrayDimExpr expected = Trees.arrayDimExpr().withAnnotations(annotations).withExpr(expr);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ArrayDimExpr actual = Trees.arrayDimExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withAnnotations(annotations);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExpr(expr);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -653,17 +660,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			NodeList<Expr> values = arbitrary.arbitraryListExpr();
 			boolean trailingComma = arbitrary.arbitraryBoolean();
-			ArrayInitializerExpr expected = arrayInitializerExpr().withValues(values).withTrailingComma(trailingComma);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ArrayInitializerExpr actual = arrayInitializerExpr();
-			Assert.assertFalse(expected.equals(actual));
+			ArrayInitializerExpr expected = Trees.arrayInitializerExpr().withValues(values).withTrailingComma(trailingComma);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ArrayInitializerExpr actual = Trees.arrayInitializerExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withValues(values);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTrailingComma(trailingComma);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -675,20 +682,20 @@ public class TreesEqualsHashCodeTest {
 			Expr target = arbitrary.arbitraryExpr();
 			AssignOp op = arbitrary.arbitraryAssignOp();
 			Expr value = arbitrary.arbitraryExpr();
-			AssignExpr expected = assignExpr().withTarget(target).withOp(op).withValue(value);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			AssignExpr actual = assignExpr();
-			Assert.assertFalse(expected.equals(actual));
+			AssignExpr expected = Trees.assignExpr().withTarget(target).withOp(op).withValue(value);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			AssignExpr actual = Trees.assignExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTarget(target);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withOp(op);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withValue(value);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -700,20 +707,20 @@ public class TreesEqualsHashCodeTest {
 			Expr left = arbitrary.arbitraryExpr();
 			BinaryOp op = arbitrary.arbitraryBinaryOp();
 			Expr right = arbitrary.arbitraryExpr();
-			BinaryExpr expected = binaryExpr().withLeft(left).withOp(op).withRight(right);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			BinaryExpr actual = binaryExpr();
-			Assert.assertFalse(expected.equals(actual));
+			BinaryExpr expected = Trees.binaryExpr().withLeft(left).withOp(op).withRight(right);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			BinaryExpr actual = Trees.binaryExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withLeft(left);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withOp(op);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withRight(right);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -724,17 +731,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			Type type = arbitrary.arbitraryType();
 			Expr expr = arbitrary.arbitraryExpr();
-			CastExpr expected = castExpr().withType(type).withExpr(expr);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			CastExpr actual = castExpr();
-			Assert.assertFalse(expected.equals(actual));
+			CastExpr expected = Trees.castExpr().withType(type).withExpr(expr);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			CastExpr actual = Trees.castExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withType(type);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExpr(expr);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -744,14 +751,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			Type type = arbitrary.arbitraryType();
-			ClassExpr expected = classExpr().withType(type);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ClassExpr actual = classExpr();
-			Assert.assertFalse(expected.equals(actual));
+			ClassExpr expected = Trees.classExpr().withType(type);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ClassExpr actual = Trees.classExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withType(type);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -763,20 +770,20 @@ public class TreesEqualsHashCodeTest {
 			Expr condition = arbitrary.arbitraryExpr();
 			Expr thenExpr = arbitrary.arbitraryExpr();
 			Expr elseExpr = arbitrary.arbitraryExpr();
-			ConditionalExpr expected = conditionalExpr().withCondition(condition).withThenExpr(thenExpr).withElseExpr(elseExpr);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ConditionalExpr actual = conditionalExpr();
-			Assert.assertFalse(expected.equals(actual));
+			ConditionalExpr expected = Trees.conditionalExpr().withCondition(condition).withThenExpr(thenExpr).withElseExpr(elseExpr);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ConditionalExpr actual = Trees.conditionalExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withCondition(condition);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withThenExpr(thenExpr);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withElseExpr(elseExpr);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -787,17 +794,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Expr> scope = arbitrary.arbitraryOptionExpr();
 			Name name = arbitrary.arbitraryName();
-			FieldAccessExpr expected = fieldAccessExpr().withScope(scope).withName(name);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			FieldAccessExpr actual = fieldAccessExpr();
-			Assert.assertFalse(expected.equals(actual));
+			FieldAccessExpr expected = Trees.fieldAccessExpr().withScope(scope).withName(name);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			FieldAccessExpr actual = Trees.fieldAccessExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withScope(scope);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -808,17 +815,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			Expr expr = arbitrary.arbitraryExpr();
 			Type type = arbitrary.arbitraryType();
-			InstanceOfExpr expected = instanceOfExpr().withExpr(expr).withType(type);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			InstanceOfExpr actual = instanceOfExpr();
-			Assert.assertFalse(expected.equals(actual));
+			InstanceOfExpr expected = Trees.instanceOfExpr().withExpr(expr).withType(type);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			InstanceOfExpr actual = Trees.instanceOfExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExpr(expr);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withType(type);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -830,20 +837,20 @@ public class TreesEqualsHashCodeTest {
 			NodeList<FormalParameter> params = arbitrary.arbitraryListFormalParameter();
 			boolean hasParens = arbitrary.arbitraryBoolean();
 			NodeEither<Expr, BlockStmt> body = arbitrary.arbitraryEitherExprBlockStmt();
-			LambdaExpr expected = lambdaExpr().withParams(params).setParens(hasParens).withBody(body);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			LambdaExpr actual = lambdaExpr();
-			Assert.assertFalse(expected.equals(actual));
+			LambdaExpr expected = Trees.lambdaExpr().withParams(params).setParens(hasParens).withBody(body);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			LambdaExpr actual = Trees.lambdaExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withParams(params);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.setParens(hasParens);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withBody(body);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -853,14 +860,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			QualifiedName name = arbitrary.arbitraryQualifiedName();
-			MarkerAnnotationExpr expected = markerAnnotationExpr().withName(name);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			MarkerAnnotationExpr actual = markerAnnotationExpr();
-			Assert.assertFalse(expected.equals(actual));
+			MarkerAnnotationExpr expected = Trees.markerAnnotationExpr().withName(name);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			MarkerAnnotationExpr actual = Trees.markerAnnotationExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -871,17 +878,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			Name name = arbitrary.arbitraryName();
 			Expr value = arbitrary.arbitraryExpr();
-			MemberValuePair expected = memberValuePair().withName(name).withValue(value);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			MemberValuePair actual = memberValuePair();
-			Assert.assertFalse(expected.equals(actual));
+			MemberValuePair expected = Trees.memberValuePair().withName(name).withValue(value);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			MemberValuePair actual = Trees.memberValuePair();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withValue(value);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -894,23 +901,23 @@ public class TreesEqualsHashCodeTest {
 			NodeList<Type> typeArgs = arbitrary.arbitraryListType();
 			Name name = arbitrary.arbitraryName();
 			NodeList<Expr> args = arbitrary.arbitraryListExpr();
-			MethodInvocationExpr expected = methodInvocationExpr().withScope(scope).withTypeArgs(typeArgs).withName(name).withArgs(args);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			MethodInvocationExpr actual = methodInvocationExpr();
-			Assert.assertFalse(expected.equals(actual));
+			MethodInvocationExpr expected = Trees.methodInvocationExpr().withScope(scope).withTypeArgs(typeArgs).withName(name).withArgs(args);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			MethodInvocationExpr actual = Trees.methodInvocationExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withScope(scope);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypeArgs(typeArgs);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withArgs(args);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -922,20 +929,20 @@ public class TreesEqualsHashCodeTest {
 			Expr scope = arbitrary.arbitraryExpr();
 			NodeList<Type> typeArgs = arbitrary.arbitraryListType();
 			Name name = arbitrary.arbitraryName();
-			MethodReferenceExpr expected = methodReferenceExpr().withScope(scope).withTypeArgs(typeArgs).withName(name);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			MethodReferenceExpr actual = methodReferenceExpr();
-			Assert.assertFalse(expected.equals(actual));
+			MethodReferenceExpr expected = Trees.methodReferenceExpr().withScope(scope).withTypeArgs(typeArgs).withName(name);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			MethodReferenceExpr actual = Trees.methodReferenceExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withScope(scope);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypeArgs(typeArgs);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -946,17 +953,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			QualifiedName name = arbitrary.arbitraryQualifiedName();
 			NodeList<MemberValuePair> pairs = arbitrary.arbitraryListMemberValuePair();
-			NormalAnnotationExpr expected = normalAnnotationExpr().withName(name).withPairs(pairs);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			NormalAnnotationExpr actual = normalAnnotationExpr();
-			Assert.assertFalse(expected.equals(actual));
+			NormalAnnotationExpr expected = Trees.normalAnnotationExpr().withName(name).withPairs(pairs);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			NormalAnnotationExpr actual = Trees.normalAnnotationExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withPairs(pairs);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -970,26 +977,26 @@ public class TreesEqualsHashCodeTest {
 			QualifiedType type = arbitrary.arbitraryQualifiedType();
 			NodeList<Expr> args = arbitrary.arbitraryListExpr();
 			NodeOption<NodeList<MemberDecl>> body = arbitrary.arbitraryOptionListMemberDecl();
-			ObjectCreationExpr expected = objectCreationExpr().withScope(scope).withTypeArgs(typeArgs).withType(type).withArgs(args).withBody(body);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ObjectCreationExpr actual = objectCreationExpr();
-			Assert.assertFalse(expected.equals(actual));
+			ObjectCreationExpr expected = Trees.objectCreationExpr().withScope(scope).withTypeArgs(typeArgs).withType(type).withArgs(args).withBody(body);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ObjectCreationExpr actual = Trees.objectCreationExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withScope(scope);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypeArgs(typeArgs);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withType(type);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withArgs(args);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withBody(body);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -999,14 +1006,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			Expr inner = arbitrary.arbitraryExpr();
-			ParenthesizedExpr expected = parenthesizedExpr().withInner(inner);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ParenthesizedExpr actual = parenthesizedExpr();
-			Assert.assertFalse(expected.equals(actual));
+			ParenthesizedExpr expected = Trees.parenthesizedExpr().withInner(inner);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ParenthesizedExpr actual = Trees.parenthesizedExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withInner(inner);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1017,17 +1024,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			QualifiedName name = arbitrary.arbitraryQualifiedName();
 			Expr memberValue = arbitrary.arbitraryExpr();
-			SingleMemberAnnotationExpr expected = singleMemberAnnotationExpr().withName(name).withMemberValue(memberValue);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			SingleMemberAnnotationExpr actual = singleMemberAnnotationExpr();
-			Assert.assertFalse(expected.equals(actual));
+			SingleMemberAnnotationExpr expected = Trees.singleMemberAnnotationExpr().withName(name).withMemberValue(memberValue);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			SingleMemberAnnotationExpr actual = Trees.singleMemberAnnotationExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withMemberValue(memberValue);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1037,14 +1044,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Expr> classExpr = arbitrary.arbitraryOptionExpr();
-			SuperExpr expected = superExpr().withClassExpr(classExpr);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			SuperExpr actual = superExpr();
-			Assert.assertFalse(expected.equals(actual));
+			SuperExpr expected = Trees.superExpr().withClassExpr(classExpr);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			SuperExpr actual = Trees.superExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withClassExpr(classExpr);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1054,14 +1061,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Expr> classExpr = arbitrary.arbitraryOptionExpr();
-			ThisExpr expected = thisExpr().withClassExpr(classExpr);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ThisExpr actual = thisExpr();
-			Assert.assertFalse(expected.equals(actual));
+			ThisExpr expected = Trees.thisExpr().withClassExpr(classExpr);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ThisExpr actual = Trees.thisExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withClassExpr(classExpr);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1071,14 +1078,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			Type type = arbitrary.arbitraryType();
-			TypeExpr expected = typeExpr().withType(type);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			TypeExpr actual = typeExpr();
-			Assert.assertFalse(expected.equals(actual));
+			TypeExpr expected = Trees.typeExpr().withType(type);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			TypeExpr actual = Trees.typeExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withType(type);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1089,17 +1096,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			UnaryOp op = arbitrary.arbitraryUnaryOp();
 			Expr expr = arbitrary.arbitraryExpr();
-			UnaryExpr expected = unaryExpr().withOp(op).withExpr(expr);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			UnaryExpr actual = unaryExpr();
-			Assert.assertFalse(expected.equals(actual));
+			UnaryExpr expected = Trees.unaryExpr().withOp(op).withExpr(expr);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			UnaryExpr actual = Trees.unaryExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withOp(op);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExpr(expr);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1109,14 +1116,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			LocalVariableDecl declaration = arbitrary.arbitraryLocalVariableDecl();
-			VariableDeclarationExpr expected = variableDeclarationExpr().withDeclaration(declaration);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			VariableDeclarationExpr actual = variableDeclarationExpr();
-			Assert.assertFalse(expected.equals(actual));
+			VariableDeclarationExpr expected = Trees.variableDeclarationExpr().withDeclaration(declaration);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			VariableDeclarationExpr actual = Trees.variableDeclarationExpr();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withDeclaration(declaration);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1126,14 +1133,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			String id = arbitrary.arbitraryString();
-			Name expected = name().withId(id);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			Name actual = name();
-			Assert.assertFalse(expected.equals(actual));
+			Name expected = Trees.name().withId(id);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			Name actual = Trees.name();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withId(id);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1144,17 +1151,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			NodeOption<QualifiedName> qualifier = arbitrary.arbitraryOptionQualifiedName();
 			Name name = arbitrary.arbitraryName();
-			QualifiedName expected = qualifiedName().withQualifier(qualifier).withName(name);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			QualifiedName actual = qualifiedName();
-			Assert.assertFalse(expected.equals(actual));
+			QualifiedName expected = Trees.qualifiedName().withQualifier(qualifier).withName(name);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			QualifiedName actual = Trees.qualifiedName();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withQualifier(qualifier);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1165,17 +1172,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			Expr check = arbitrary.arbitraryExpr();
 			NodeOption<Expr> msg = arbitrary.arbitraryOptionExpr();
-			AssertStmt expected = assertStmt().withCheck(check).withMsg(msg);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			AssertStmt actual = assertStmt();
-			Assert.assertFalse(expected.equals(actual));
+			AssertStmt expected = Trees.assertStmt().withCheck(check).withMsg(msg);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			AssertStmt actual = Trees.assertStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withCheck(check);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withMsg(msg);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1185,14 +1192,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeList<Stmt> stmts = arbitrary.arbitraryListStmt();
-			BlockStmt expected = blockStmt().withStmts(stmts);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			BlockStmt actual = blockStmt();
-			Assert.assertFalse(expected.equals(actual));
+			BlockStmt expected = Trees.blockStmt().withStmts(stmts);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			BlockStmt actual = Trees.blockStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withStmts(stmts);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1202,14 +1209,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Name> id = arbitrary.arbitraryOptionName();
-			BreakStmt expected = breakStmt().withId(id);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			BreakStmt actual = breakStmt();
-			Assert.assertFalse(expected.equals(actual));
+			BreakStmt expected = Trees.breakStmt().withId(id);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			BreakStmt actual = Trees.breakStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withId(id);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1220,17 +1227,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			FormalParameter except = arbitrary.arbitraryFormalParameter();
 			BlockStmt catchBlock = arbitrary.arbitraryBlockStmt();
-			CatchClause expected = catchClause().withExcept(except).withCatchBlock(catchBlock);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			CatchClause actual = catchClause();
-			Assert.assertFalse(expected.equals(actual));
+			CatchClause expected = Trees.catchClause().withExcept(except).withCatchBlock(catchBlock);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			CatchClause actual = Trees.catchClause();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExcept(except);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withCatchBlock(catchBlock);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1240,14 +1247,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Name> id = arbitrary.arbitraryOptionName();
-			ContinueStmt expected = continueStmt().withId(id);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ContinueStmt actual = continueStmt();
-			Assert.assertFalse(expected.equals(actual));
+			ContinueStmt expected = Trees.continueStmt().withId(id);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ContinueStmt actual = Trees.continueStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withId(id);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1258,32 +1265,29 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			Stmt body = arbitrary.arbitraryStmt();
 			Expr condition = arbitrary.arbitraryExpr();
-			DoStmt expected = doStmt().withBody(body).withCondition(condition);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			DoStmt actual = doStmt();
-			Assert.assertFalse(expected.equals(actual));
+			DoStmt expected = Trees.doStmt().withBody(body).withCondition(condition);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			DoStmt actual = Trees.doStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withBody(body);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withCondition(condition);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
 
 	@Test
 	public void testEmptyStmt() {
-		Arbitrary arbitrary = new Arbitrary();
-		for (int i = 0; i < 10; i++) {
-			EmptyStmt expected = emptyStmt();
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			EmptyStmt actual = emptyStmt();
-			Assert.assertTrue(expected.equals(actual));
-			Assert.assertEquals(expected.hashCode(), actual.hashCode());
-		}
+		EmptyStmt expected = Trees.emptyStmt();
+		Assert.assertEquals(expected, expected);
+		Assert.assertNotEquals(expected, null);
+		EmptyStmt actual = Trees.emptyStmt();
+		Assert.assertEquals(expected, actual);
+		Assert.assertEquals(expected.hashCode(), actual.hashCode());
 	}
 
 	@Test
@@ -1294,23 +1298,23 @@ public class TreesEqualsHashCodeTest {
 			boolean isThis = arbitrary.arbitraryBoolean();
 			NodeOption<Expr> expr = arbitrary.arbitraryOptionExpr();
 			NodeList<Expr> args = arbitrary.arbitraryListExpr();
-			ExplicitConstructorInvocationStmt expected = explicitConstructorInvocationStmt().withTypeArgs(typeArgs).setThis(isThis).withExpr(expr).withArgs(args);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ExplicitConstructorInvocationStmt actual = explicitConstructorInvocationStmt();
-			Assert.assertFalse(expected.equals(actual));
+			ExplicitConstructorInvocationStmt expected = Trees.explicitConstructorInvocationStmt().withTypeArgs(typeArgs).setThis(isThis).withExpr(expr).withArgs(args);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ExplicitConstructorInvocationStmt actual = Trees.explicitConstructorInvocationStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypeArgs(typeArgs);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.setThis(isThis);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExpr(expr);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withArgs(args);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1320,14 +1324,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			Expr expr = arbitrary.arbitraryExpr();
-			ExpressionStmt expected = expressionStmt().withExpr(expr);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ExpressionStmt actual = expressionStmt();
-			Assert.assertFalse(expected.equals(actual));
+			ExpressionStmt expected = Trees.expressionStmt().withExpr(expr);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ExpressionStmt actual = Trees.expressionStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExpr(expr);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1340,23 +1344,23 @@ public class TreesEqualsHashCodeTest {
 			Expr compare = arbitrary.arbitraryExpr();
 			NodeList<Expr> update = arbitrary.arbitraryListExpr();
 			Stmt body = arbitrary.arbitraryStmt();
-			ForStmt expected = forStmt().withInit(init).withCompare(compare).withUpdate(update).withBody(body);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ForStmt actual = forStmt();
-			Assert.assertFalse(expected.equals(actual));
+			ForStmt expected = Trees.forStmt().withInit(init).withCompare(compare).withUpdate(update).withBody(body);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ForStmt actual = Trees.forStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withInit(init);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withCompare(compare);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withUpdate(update);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withBody(body);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1368,20 +1372,20 @@ public class TreesEqualsHashCodeTest {
 			VariableDeclarationExpr var = arbitrary.arbitraryVariableDeclarationExpr();
 			Expr iterable = arbitrary.arbitraryExpr();
 			Stmt body = arbitrary.arbitraryStmt();
-			ForeachStmt expected = foreachStmt().withVar(var).withIterable(iterable).withBody(body);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ForeachStmt actual = foreachStmt();
-			Assert.assertFalse(expected.equals(actual));
+			ForeachStmt expected = Trees.foreachStmt().withVar(var).withIterable(iterable).withBody(body);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ForeachStmt actual = Trees.foreachStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withVar(var);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withIterable(iterable);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withBody(body);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1393,20 +1397,20 @@ public class TreesEqualsHashCodeTest {
 			Expr condition = arbitrary.arbitraryExpr();
 			Stmt thenStmt = arbitrary.arbitraryStmt();
 			NodeOption<Stmt> elseStmt = arbitrary.arbitraryOptionStmt();
-			IfStmt expected = ifStmt().withCondition(condition).withThenStmt(thenStmt).withElseStmt(elseStmt);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			IfStmt actual = ifStmt();
-			Assert.assertFalse(expected.equals(actual));
+			IfStmt expected = Trees.ifStmt().withCondition(condition).withThenStmt(thenStmt).withElseStmt(elseStmt);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			IfStmt actual = Trees.ifStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withCondition(condition);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withThenStmt(thenStmt);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withElseStmt(elseStmt);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1417,17 +1421,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			Name label = arbitrary.arbitraryName();
 			Stmt stmt = arbitrary.arbitraryStmt();
-			LabeledStmt expected = labeledStmt().withLabel(label).withStmt(stmt);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			LabeledStmt actual = labeledStmt();
-			Assert.assertFalse(expected.equals(actual));
+			LabeledStmt expected = Trees.labeledStmt().withLabel(label).withStmt(stmt);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			LabeledStmt actual = Trees.labeledStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withLabel(label);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withStmt(stmt);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1437,14 +1441,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Expr> expr = arbitrary.arbitraryOptionExpr();
-			ReturnStmt expected = returnStmt().withExpr(expr);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ReturnStmt actual = returnStmt();
-			Assert.assertFalse(expected.equals(actual));
+			ReturnStmt expected = Trees.returnStmt().withExpr(expr);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ReturnStmt actual = Trees.returnStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExpr(expr);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1455,17 +1459,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Expr> label = arbitrary.arbitraryOptionExpr();
 			NodeList<Stmt> stmts = arbitrary.arbitraryListStmt();
-			SwitchCase expected = switchCase().withLabel(label).withStmts(stmts);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			SwitchCase actual = switchCase();
-			Assert.assertFalse(expected.equals(actual));
+			SwitchCase expected = Trees.switchCase().withLabel(label).withStmts(stmts);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			SwitchCase actual = Trees.switchCase();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withLabel(label);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withStmts(stmts);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1476,17 +1480,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			Expr selector = arbitrary.arbitraryExpr();
 			NodeList<SwitchCase> cases = arbitrary.arbitraryListSwitchCase();
-			SwitchStmt expected = switchStmt().withSelector(selector).withCases(cases);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			SwitchStmt actual = switchStmt();
-			Assert.assertFalse(expected.equals(actual));
+			SwitchStmt expected = Trees.switchStmt().withSelector(selector).withCases(cases);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			SwitchStmt actual = Trees.switchStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withSelector(selector);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withCases(cases);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1497,17 +1501,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			Expr expr = arbitrary.arbitraryExpr();
 			BlockStmt block = arbitrary.arbitraryBlockStmt();
-			SynchronizedStmt expected = synchronizedStmt().withExpr(expr).withBlock(block);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			SynchronizedStmt actual = synchronizedStmt();
-			Assert.assertFalse(expected.equals(actual));
+			SynchronizedStmt expected = Trees.synchronizedStmt().withExpr(expr).withBlock(block);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			SynchronizedStmt actual = Trees.synchronizedStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExpr(expr);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withBlock(block);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1517,14 +1521,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			Expr expr = arbitrary.arbitraryExpr();
-			ThrowStmt expected = throwStmt().withExpr(expr);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ThrowStmt actual = throwStmt();
-			Assert.assertFalse(expected.equals(actual));
+			ThrowStmt expected = Trees.throwStmt().withExpr(expr);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ThrowStmt actual = Trees.throwStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExpr(expr);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1534,26 +1538,30 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeList<VariableDeclarationExpr> resources = arbitrary.arbitraryListVariableDeclarationExpr();
+			boolean trailingSemiColon = arbitrary.arbitraryBoolean();
 			BlockStmt tryBlock = arbitrary.arbitraryBlockStmt();
 			NodeList<CatchClause> catchs = arbitrary.arbitraryListCatchClause();
 			NodeOption<BlockStmt> finallyBlock = arbitrary.arbitraryOptionBlockStmt();
-			TryStmt expected = tryStmt().withResources(resources).withTryBlock(tryBlock).withCatchs(catchs).withFinallyBlock(finallyBlock);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			TryStmt actual = tryStmt();
-			Assert.assertFalse(expected.equals(actual));
+			TryStmt expected = Trees.tryStmt().withResources(resources).withTrailingSemiColon(trailingSemiColon).withTryBlock(tryBlock).withCatchs(catchs).withFinallyBlock(finallyBlock);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			TryStmt actual = Trees.tryStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withResources(resources);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
+			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
+			actual = actual.withTrailingSemiColon(trailingSemiColon);
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTryBlock(tryBlock);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withCatchs(catchs);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withFinallyBlock(finallyBlock);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1563,14 +1571,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			TypeDecl typeDecl = arbitrary.arbitraryTypeDecl();
-			TypeDeclarationStmt expected = typeDeclarationStmt().withTypeDecl(typeDecl);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			TypeDeclarationStmt actual = typeDeclarationStmt();
-			Assert.assertFalse(expected.equals(actual));
+			TypeDeclarationStmt expected = Trees.typeDeclarationStmt().withTypeDecl(typeDecl);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			TypeDeclarationStmt actual = Trees.typeDeclarationStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypeDecl(typeDecl);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1581,17 +1589,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			Expr condition = arbitrary.arbitraryExpr();
 			Stmt body = arbitrary.arbitraryStmt();
-			WhileStmt expected = whileStmt().withCondition(condition).withBody(body);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			WhileStmt actual = whileStmt();
-			Assert.assertFalse(expected.equals(actual));
+			WhileStmt expected = Trees.whileStmt().withCondition(condition).withBody(body);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			WhileStmt actual = Trees.whileStmt();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withCondition(condition);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withBody(body);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1602,17 +1610,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			Type componentType = arbitrary.arbitraryType();
 			NodeList<ArrayDim> dims = arbitrary.arbitraryListArrayDim();
-			ArrayType expected = arrayType().withComponentType(componentType).withDims(dims);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			ArrayType actual = arrayType();
-			Assert.assertFalse(expected.equals(actual));
+			ArrayType expected = Trees.arrayType().withComponentType(componentType).withDims(dims);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			ArrayType actual = Trees.arrayType();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withComponentType(componentType);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withDims(dims);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1622,14 +1630,14 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeList<Type> types = arbitrary.arbitraryListType();
-			IntersectionType expected = intersectionType().withTypes(types);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			IntersectionType actual = intersectionType();
-			Assert.assertFalse(expected.equals(actual));
+			IntersectionType expected = Trees.intersectionType().withTypes(types);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			IntersectionType actual = Trees.intersectionType();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypes(types);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1640,17 +1648,17 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
 			Primitive primitive = arbitrary.arbitraryPrimitive();
-			PrimitiveType expected = primitiveType().withAnnotations(annotations).withPrimitive(primitive);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			PrimitiveType actual = primitiveType();
-			Assert.assertFalse(expected.equals(actual));
+			PrimitiveType expected = Trees.primitiveType().withAnnotations(annotations).withPrimitive(primitive);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			PrimitiveType actual = Trees.primitiveType();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withAnnotations(annotations);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withPrimitive(primitive);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1663,23 +1671,23 @@ public class TreesEqualsHashCodeTest {
 			NodeOption<QualifiedType> scope = arbitrary.arbitraryOptionQualifiedType();
 			Name name = arbitrary.arbitraryName();
 			NodeOption<NodeList<Type>> typeArgs = arbitrary.arbitraryOptionListType();
-			QualifiedType expected = qualifiedType().withAnnotations(annotations).withScope(scope).withName(name).withTypeArgs(typeArgs);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			QualifiedType actual = qualifiedType();
-			Assert.assertFalse(expected.equals(actual));
+			QualifiedType expected = Trees.qualifiedType().withAnnotations(annotations).withScope(scope).withName(name).withTypeArgs(typeArgs);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			QualifiedType actual = Trees.qualifiedType();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withAnnotations(annotations);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withScope(scope);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withName(name);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypeArgs(typeArgs);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
@@ -1689,42 +1697,36 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeList<Type> types = arbitrary.arbitraryListType();
-			UnionType expected = unionType().withTypes(types);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			UnionType actual = unionType();
-			Assert.assertFalse(expected.equals(actual));
+			UnionType expected = Trees.unionType().withTypes(types);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			UnionType actual = Trees.unionType();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypes(types);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}
 
 	@Test
 	public void testUnknownType() {
-		Arbitrary arbitrary = new Arbitrary();
-		for (int i = 0; i < 10; i++) {
-			UnknownType expected = unknownType();
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			UnknownType actual = unknownType();
-			Assert.assertTrue(expected.equals(actual));
-			Assert.assertEquals(expected.hashCode(), actual.hashCode());
-		}
+		UnknownType expected = Trees.unknownType();
+		Assert.assertEquals(expected, expected);
+		Assert.assertNotEquals(expected, null);
+		UnknownType actual = Trees.unknownType();
+		Assert.assertEquals(expected, actual);
+		Assert.assertEquals(expected.hashCode(), actual.hashCode());
 	}
 
 	@Test
 	public void testVoidType() {
-		Arbitrary arbitrary = new Arbitrary();
-		for (int i = 0; i < 10; i++) {
-			VoidType expected = voidType();
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			VoidType actual = voidType();
-			Assert.assertTrue(expected.equals(actual));
-			Assert.assertEquals(expected.hashCode(), actual.hashCode());
-		}
+		VoidType expected = Trees.voidType();
+		Assert.assertEquals(expected, expected);
+		Assert.assertNotEquals(expected, null);
+		VoidType actual = Trees.voidType();
+		Assert.assertEquals(expected, actual);
+		Assert.assertEquals(expected.hashCode(), actual.hashCode());
 	}
 
 	@Test
@@ -1734,20 +1736,20 @@ public class TreesEqualsHashCodeTest {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
 			NodeOption<ReferenceType> ext = arbitrary.arbitraryOptionReferenceType();
 			NodeOption<ReferenceType> sup = arbitrary.arbitraryOptionReferenceType();
-			WildcardType expected = wildcardType().withAnnotations(annotations).withExt(ext).withSup(sup);
-			Assert.assertTrue(expected.equals(expected));
-			Assert.assertFalse(expected.equals(null));
-			WildcardType actual = wildcardType();
-			Assert.assertFalse(expected.equals(actual));
+			WildcardType expected = Trees.wildcardType().withAnnotations(annotations).withExt(ext).withSup(sup);
+			Assert.assertEquals(expected, expected);
+			Assert.assertNotEquals(expected, null);
+			WildcardType actual = Trees.wildcardType();
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withAnnotations(annotations);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withExt(ext);
-			Assert.assertFalse(expected.equals(actual));
+			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withSup(sup);
-			Assert.assertTrue(expected.equals(actual));
+			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}
 	}

@@ -88,6 +88,10 @@ public class Arbitrary {
 		return new TDName(arbitraryString());
 	}
 
+	public ModifierKeyword arbitraryModifierKeyword() {
+		return choiceIn(ModifierKeyword.values());
+	}
+
 	public UnaryOp arbitraryUnaryOp() {
 		return choiceIn(UnaryOp.values());
 	}
