@@ -10,11 +10,11 @@ import org.jlato.tree.*;
 import org.jlato.tree.name.*;
 import org.jlato.tree.stmt.*;
 
-import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.LabeledStmt_AfterLabel;
 import static org.jlato.internal.shapes.IndentationConstraint.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.spacing;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.LabeledStmt_AfterLabel;
 
 public class SLabeledStmt extends SNode<SLabeledStmt> implements SStmt {
 

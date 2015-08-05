@@ -9,9 +9,9 @@ import org.jlato.tree.*;
 import org.jlato.tree.decl.*;
 
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterPackageDecl;
 import static org.jlato.internal.shapes.SpacingConstraint.newLine;
 import static org.jlato.internal.shapes.SpacingConstraint.spacing;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.CompilationUnit_AfterPackageDecl;
 
 public class SCompilationUnit extends SNode<SCompilationUnit> implements STree {
 

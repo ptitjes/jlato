@@ -14,8 +14,8 @@ import org.jlato.tree.name.*;
 
 import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.internal.shapes.SpacingConstraint.spacing;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
 public class SEnumConstantDecl extends SNode<SEnumConstantDecl> implements SMemberDecl {
 

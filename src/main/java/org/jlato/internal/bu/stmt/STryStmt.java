@@ -12,13 +12,13 @@ import org.jlato.tree.stmt.*;
 
 import java.util.Collections;
 
-import static org.jlato.internal.shapes.LSCondition.*;
-import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.TRY_RESOURCES;
 import static org.jlato.internal.shapes.IndentationConstraint.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.LSCondition.*;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.newLine;
 import static org.jlato.internal.shapes.SpacingConstraint.space;
+import static org.jlato.printer.FormattingSettings.IndentationContext.TRY_RESOURCES;
 
 public class STryStmt extends SNode<STryStmt> implements SStmt {
 

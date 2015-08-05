@@ -10,12 +10,12 @@ import org.jlato.tree.*;
 import org.jlato.tree.expr.*;
 import org.jlato.tree.stmt.*;
 
-import static org.jlato.internal.shapes.LSCondition.some;
-import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 import static org.jlato.internal.shapes.IndentationConstraint.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.LSCondition.some;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.newLine;
+import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 
 public class SSwitchCase extends SNode<SSwitchCase> implements STree {
 

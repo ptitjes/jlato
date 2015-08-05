@@ -3,13 +3,13 @@ package org.jlato.internal.bu.decl;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.shapes.LexicalShape;
 
-import static org.jlato.internal.shapes.LSCondition.empty;
-import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 import static org.jlato.internal.shapes.IndentationConstraint.indent;
 import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.LSCondition.empty;
+import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.TYPE_BODY;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
 public interface SMemberDecl extends SDecl {
 
