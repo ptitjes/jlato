@@ -177,11 +177,11 @@ public abstract class Trees {
 
 	@Deprecated
 	public static ConstructorDecl constructorDecl() {
-		return new TDConstructorDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), (Name) null, Trees.<FormalParameter>emptyList(), Trees.<QualifiedType>emptyList(), (BlockStmt) null);
+		return new TDConstructorDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), (Name) null, Trees.<FormalParameter>emptyList(), Trees.<QualifiedType>emptyList(), Trees.blockStmt());
 	}
 
-	public static ConstructorDecl constructorDecl(Name name, BlockStmt body) {
-		return new TDConstructorDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), name, Trees.<FormalParameter>emptyList(), Trees.<QualifiedType>emptyList(), body);
+	public static ConstructorDecl constructorDecl(Name name) {
+		return new TDConstructorDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), name, Trees.<FormalParameter>emptyList(), Trees.<QualifiedType>emptyList(), Trees.blockStmt());
 	}
 
 	public static EmptyMemberDecl emptyMemberDecl() {
