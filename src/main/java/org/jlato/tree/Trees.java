@@ -1,10 +1,13 @@
 package org.jlato.tree;
 
 import org.jlato.internal.bu.Literals;
-import org.jlato.internal.td.coll.*;
+import org.jlato.internal.td.coll.TDNodeEither;
+import org.jlato.internal.td.coll.TDNodeList;
+import org.jlato.internal.td.coll.TDNodeOption;
 import org.jlato.internal.td.decl.*;
 import org.jlato.internal.td.expr.*;
-import org.jlato.internal.td.name.*;
+import org.jlato.internal.td.name.TDName;
+import org.jlato.internal.td.name.TDQualifiedName;
 import org.jlato.internal.td.stmt.*;
 import org.jlato.internal.td.type.*;
 import org.jlato.tree.decl.*;
@@ -135,18 +138,16 @@ public abstract class Trees {
 		return TDNodeList.of(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23);
 	}
 
-	@Deprecated
 	public static AnnotationDecl annotationDecl() {
-		return new TDAnnotationDecl(Trees.<ExtendedModifier>emptyList(), (Name) null, Trees.<MemberDecl>emptyList());
+		return new TDAnnotationDecl(Trees.<ExtendedModifier>emptyList(), null, Trees.<MemberDecl>emptyList());
 	}
 
 	public static AnnotationDecl annotationDecl(Name name) {
 		return new TDAnnotationDecl(Trees.<ExtendedModifier>emptyList(), name, Trees.<MemberDecl>emptyList());
 	}
 
-	@Deprecated
 	public static AnnotationMemberDecl annotationMemberDecl() {
-		return new TDAnnotationMemberDecl(Trees.<ExtendedModifier>emptyList(), (Type) null, (Name) null, Trees.<ArrayDim>emptyList(), Trees.<Expr>none());
+		return new TDAnnotationMemberDecl(Trees.<ExtendedModifier>emptyList(), null, null, Trees.<ArrayDim>emptyList(), Trees.<Expr>none());
 	}
 
 	public static AnnotationMemberDecl annotationMemberDecl(Type type, Name name) {
@@ -157,27 +158,24 @@ public abstract class Trees {
 		return new TDArrayDim(Trees.<AnnotationExpr>emptyList());
 	}
 
-	@Deprecated
 	public static ClassDecl classDecl() {
-		return new TDClassDecl(Trees.<ExtendedModifier>emptyList(), (Name) null, Trees.<TypeParameter>emptyList(), Trees.<QualifiedType>none(), Trees.<QualifiedType>emptyList(), Trees.<MemberDecl>emptyList());
+		return new TDClassDecl(Trees.<ExtendedModifier>emptyList(), null, Trees.<TypeParameter>emptyList(), Trees.<QualifiedType>none(), Trees.<QualifiedType>emptyList(), Trees.<MemberDecl>emptyList());
 	}
 
 	public static ClassDecl classDecl(Name name) {
 		return new TDClassDecl(Trees.<ExtendedModifier>emptyList(), name, Trees.<TypeParameter>emptyList(), Trees.<QualifiedType>none(), Trees.<QualifiedType>emptyList(), Trees.<MemberDecl>emptyList());
 	}
 
-	@Deprecated
 	public static CompilationUnit compilationUnit() {
-		return new TDCompilationUnit((PackageDecl) null, Trees.<ImportDecl>emptyList(), Trees.<TypeDecl>emptyList());
+		return new TDCompilationUnit(null, Trees.<ImportDecl>emptyList(), Trees.<TypeDecl>emptyList());
 	}
 
 	public static CompilationUnit compilationUnit(PackageDecl packageDecl) {
 		return new TDCompilationUnit(packageDecl, Trees.<ImportDecl>emptyList(), Trees.<TypeDecl>emptyList());
 	}
 
-	@Deprecated
 	public static ConstructorDecl constructorDecl() {
-		return new TDConstructorDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), (Name) null, Trees.<FormalParameter>emptyList(), Trees.<QualifiedType>emptyList(), Trees.blockStmt());
+		return new TDConstructorDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), null, Trees.<FormalParameter>emptyList(), Trees.<QualifiedType>emptyList(), Trees.blockStmt());
 	}
 
 	public static ConstructorDecl constructorDecl(Name name) {
@@ -192,88 +190,78 @@ public abstract class Trees {
 		return new TDEmptyTypeDecl();
 	}
 
-	@Deprecated
 	public static EnumConstantDecl enumConstantDecl() {
-		return new TDEnumConstantDecl(Trees.<ExtendedModifier>emptyList(), (Name) null, Trees.<NodeList<Expr>>none(), Trees.<NodeList<MemberDecl>>none());
+		return new TDEnumConstantDecl(Trees.<ExtendedModifier>emptyList(), null, Trees.<NodeList<Expr>>none(), Trees.<NodeList<MemberDecl>>none());
 	}
 
 	public static EnumConstantDecl enumConstantDecl(Name name) {
 		return new TDEnumConstantDecl(Trees.<ExtendedModifier>emptyList(), name, Trees.<NodeList<Expr>>none(), Trees.<NodeList<MemberDecl>>none());
 	}
 
-	@Deprecated
 	public static EnumDecl enumDecl() {
-		return new TDEnumDecl(Trees.<ExtendedModifier>emptyList(), (Name) null, Trees.<QualifiedType>emptyList(), Trees.<EnumConstantDecl>emptyList(), false, Trees.<MemberDecl>emptyList());
+		return new TDEnumDecl(Trees.<ExtendedModifier>emptyList(), null, Trees.<QualifiedType>emptyList(), Trees.<EnumConstantDecl>emptyList(), false, Trees.<MemberDecl>emptyList());
 	}
 
 	public static EnumDecl enumDecl(Name name) {
 		return new TDEnumDecl(Trees.<ExtendedModifier>emptyList(), name, Trees.<QualifiedType>emptyList(), Trees.<EnumConstantDecl>emptyList(), false, Trees.<MemberDecl>emptyList());
 	}
 
-	@Deprecated
 	public static FieldDecl fieldDecl() {
-		return new TDFieldDecl(Trees.<ExtendedModifier>emptyList(), (Type) null, Trees.<VariableDeclarator>emptyList());
+		return new TDFieldDecl(Trees.<ExtendedModifier>emptyList(), null, Trees.<VariableDeclarator>emptyList());
 	}
 
 	public static FieldDecl fieldDecl(Type type) {
 		return new TDFieldDecl(Trees.<ExtendedModifier>emptyList(), type, Trees.<VariableDeclarator>emptyList());
 	}
 
-	@Deprecated
 	public static FormalParameter formalParameter() {
-		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), (Type) null, false, (VariableDeclaratorId) null);
+		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), null, false, null);
 	}
 
 	public static FormalParameter formalParameter(Type type, VariableDeclaratorId id) {
 		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), type, false, id);
 	}
 
-	@Deprecated
 	public static ImportDecl importDecl() {
-		return new TDImportDecl((QualifiedName) null, false, false);
+		return new TDImportDecl(null, false, false);
 	}
 
 	public static ImportDecl importDecl(QualifiedName name) {
 		return new TDImportDecl(name, false, false);
 	}
 
-	@Deprecated
 	public static InitializerDecl initializerDecl() {
-		return new TDInitializerDecl(Trees.<ExtendedModifier>emptyList(), (BlockStmt) null);
+		return new TDInitializerDecl(Trees.<ExtendedModifier>emptyList(), null);
 	}
 
 	public static InitializerDecl initializerDecl(BlockStmt body) {
 		return new TDInitializerDecl(Trees.<ExtendedModifier>emptyList(), body);
 	}
 
-	@Deprecated
 	public static InterfaceDecl interfaceDecl() {
-		return new TDInterfaceDecl(Trees.<ExtendedModifier>emptyList(), (Name) null, Trees.<TypeParameter>emptyList(), Trees.<QualifiedType>emptyList(), Trees.<MemberDecl>emptyList());
+		return new TDInterfaceDecl(Trees.<ExtendedModifier>emptyList(), null, Trees.<TypeParameter>emptyList(), Trees.<QualifiedType>emptyList(), Trees.<MemberDecl>emptyList());
 	}
 
 	public static InterfaceDecl interfaceDecl(Name name) {
 		return new TDInterfaceDecl(Trees.<ExtendedModifier>emptyList(), name, Trees.<TypeParameter>emptyList(), Trees.<QualifiedType>emptyList(), Trees.<MemberDecl>emptyList());
 	}
 
-	@Deprecated
 	public static LocalVariableDecl localVariableDecl() {
-		return new TDLocalVariableDecl(Trees.<ExtendedModifier>emptyList(), (Type) null, Trees.<VariableDeclarator>emptyList());
+		return new TDLocalVariableDecl(Trees.<ExtendedModifier>emptyList(), null, Trees.<VariableDeclarator>emptyList());
 	}
 
 	public static LocalVariableDecl localVariableDecl(Type type) {
 		return new TDLocalVariableDecl(Trees.<ExtendedModifier>emptyList(), type, Trees.<VariableDeclarator>emptyList());
 	}
 
-	@Deprecated
 	public static MethodDecl methodDecl() {
-		return new TDMethodDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), (Type) null, (Name) null, Trees.<FormalParameter>emptyList(), Trees.<ArrayDim>emptyList(), Trees.<QualifiedType>emptyList(), Trees.<BlockStmt>none());
+		return new TDMethodDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), null, null, Trees.<FormalParameter>emptyList(), Trees.<ArrayDim>emptyList(), Trees.<QualifiedType>emptyList(), Trees.<BlockStmt>none());
 	}
 
 	public static MethodDecl methodDecl(Type type, Name name) {
 		return new TDMethodDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), type, name, Trees.<FormalParameter>emptyList(), Trees.<ArrayDim>emptyList(), Trees.<QualifiedType>emptyList(), Trees.<BlockStmt>none());
 	}
 
-	@Deprecated
 	public static Modifier modifier() {
 		return new TDModifier((ModifierKeyword) null);
 	}
@@ -282,63 +270,56 @@ public abstract class Trees {
 		return new TDModifier(keyword);
 	}
 
-	@Deprecated
 	public static PackageDecl packageDecl() {
-		return new TDPackageDecl(Trees.<AnnotationExpr>emptyList(), (QualifiedName) null);
+		return new TDPackageDecl(Trees.<AnnotationExpr>emptyList(), null);
 	}
 
 	public static PackageDecl packageDecl(QualifiedName name) {
 		return new TDPackageDecl(Trees.<AnnotationExpr>emptyList(), name);
 	}
 
-	@Deprecated
 	public static TypeParameter typeParameter() {
-		return new TDTypeParameter(Trees.<AnnotationExpr>emptyList(), (Name) null, Trees.<Type>emptyList());
+		return new TDTypeParameter(Trees.<AnnotationExpr>emptyList(), null, Trees.<Type>emptyList());
 	}
 
 	public static TypeParameter typeParameter(Name name) {
 		return new TDTypeParameter(Trees.<AnnotationExpr>emptyList(), name, Trees.<Type>emptyList());
 	}
 
-	@Deprecated
 	public static VariableDeclarator variableDeclarator() {
-		return new TDVariableDeclarator((VariableDeclaratorId) null, Trees.<Expr>none());
+		return new TDVariableDeclarator(null, Trees.<Expr>none());
 	}
 
 	public static VariableDeclarator variableDeclarator(VariableDeclaratorId id) {
 		return new TDVariableDeclarator(id, Trees.<Expr>none());
 	}
 
-	@Deprecated
 	public static VariableDeclaratorId variableDeclaratorId() {
-		return new TDVariableDeclaratorId((Name) null, Trees.<ArrayDim>emptyList());
+		return new TDVariableDeclaratorId(null, Trees.<ArrayDim>emptyList());
 	}
 
 	public static VariableDeclaratorId variableDeclaratorId(Name name) {
 		return new TDVariableDeclaratorId(name, Trees.<ArrayDim>emptyList());
 	}
 
-	@Deprecated
 	public static ArrayAccessExpr arrayAccessExpr() {
-		return new TDArrayAccessExpr((Expr) null, (Expr) null);
+		return new TDArrayAccessExpr(null, null);
 	}
 
 	public static ArrayAccessExpr arrayAccessExpr(Expr name, Expr index) {
 		return new TDArrayAccessExpr(name, index);
 	}
 
-	@Deprecated
 	public static ArrayCreationExpr arrayCreationExpr() {
-		return new TDArrayCreationExpr((Type) null, Trees.<ArrayDimExpr>emptyList(), Trees.<ArrayDim>emptyList(), Trees.<ArrayInitializerExpr>none());
+		return new TDArrayCreationExpr(null, Trees.<ArrayDimExpr>emptyList(), Trees.<ArrayDim>emptyList(), Trees.<ArrayInitializerExpr>none());
 	}
 
 	public static ArrayCreationExpr arrayCreationExpr(Type type) {
 		return new TDArrayCreationExpr(type, Trees.<ArrayDimExpr>emptyList(), Trees.<ArrayDim>emptyList(), Trees.<ArrayInitializerExpr>none());
 	}
 
-	@Deprecated
 	public static ArrayDimExpr arrayDimExpr() {
-		return new TDArrayDimExpr(Trees.<AnnotationExpr>emptyList(), (Expr) null);
+		return new TDArrayDimExpr(Trees.<AnnotationExpr>emptyList(), null);
 	}
 
 	public static ArrayDimExpr arrayDimExpr(Expr expr) {
@@ -349,34 +330,30 @@ public abstract class Trees {
 		return new TDArrayInitializerExpr(Trees.<Expr>emptyList(), false);
 	}
 
-	@Deprecated
 	public static AssignExpr assignExpr() {
-		return new TDAssignExpr((Expr) null, (AssignOp) null, (Expr) null);
+		return new TDAssignExpr(null, null, null);
 	}
 
 	public static AssignExpr assignExpr(Expr target, AssignOp op, Expr value) {
 		return new TDAssignExpr(target, op, value);
 	}
 
-	@Deprecated
 	public static BinaryExpr binaryExpr() {
-		return new TDBinaryExpr((Expr) null, (BinaryOp) null, (Expr) null);
+		return new TDBinaryExpr(null, null, null);
 	}
 
 	public static BinaryExpr binaryExpr(Expr left, BinaryOp op, Expr right) {
 		return new TDBinaryExpr(left, op, right);
 	}
 
-	@Deprecated
 	public static CastExpr castExpr() {
-		return new TDCastExpr((Type) null, (Expr) null);
+		return new TDCastExpr(null, null);
 	}
 
 	public static CastExpr castExpr(Type type, Expr expr) {
 		return new TDCastExpr(type, expr);
 	}
 
-	@Deprecated
 	public static ClassExpr classExpr() {
 		return new TDClassExpr((Type) null);
 	}
@@ -385,27 +362,24 @@ public abstract class Trees {
 		return new TDClassExpr(type);
 	}
 
-	@Deprecated
 	public static ConditionalExpr conditionalExpr() {
-		return new TDConditionalExpr((Expr) null, (Expr) null, (Expr) null);
+		return new TDConditionalExpr(null, null, null);
 	}
 
 	public static ConditionalExpr conditionalExpr(Expr condition, Expr thenExpr, Expr elseExpr) {
 		return new TDConditionalExpr(condition, thenExpr, elseExpr);
 	}
 
-	@Deprecated
 	public static FieldAccessExpr fieldAccessExpr() {
-		return new TDFieldAccessExpr(Trees.<Expr>none(), (Name) null);
+		return new TDFieldAccessExpr(Trees.<Expr>none(), null);
 	}
 
 	public static FieldAccessExpr fieldAccessExpr(Name name) {
 		return new TDFieldAccessExpr(Trees.<Expr>none(), name);
 	}
 
-	@Deprecated
 	public static InstanceOfExpr instanceOfExpr() {
-		return new TDInstanceOfExpr((Expr) null, (Type) null);
+		return new TDInstanceOfExpr(null, null);
 	}
 
 	public static InstanceOfExpr instanceOfExpr(Expr expr, Type type) {
@@ -448,7 +422,6 @@ public abstract class Trees {
 	return new TDLiteralExpr<String>(String.class, Literals.from(String.class, value));
 	}
 
-	@Deprecated
 	public static MarkerAnnotationExpr markerAnnotationExpr() {
 		return new TDMarkerAnnotationExpr((QualifiedName) null);
 	}
@@ -457,52 +430,46 @@ public abstract class Trees {
 		return new TDMarkerAnnotationExpr(name);
 	}
 
-	@Deprecated
 	public static MemberValuePair memberValuePair() {
-		return new TDMemberValuePair((Name) null, (Expr) null);
+		return new TDMemberValuePair(null, null);
 	}
 
 	public static MemberValuePair memberValuePair(Name name, Expr value) {
 		return new TDMemberValuePair(name, value);
 	}
 
-	@Deprecated
 	public static MethodInvocationExpr methodInvocationExpr() {
-		return new TDMethodInvocationExpr(Trees.<Expr>none(), Trees.<Type>emptyList(), (Name) null, Trees.<Expr>emptyList());
+		return new TDMethodInvocationExpr(Trees.<Expr>none(), Trees.<Type>emptyList(), null, Trees.<Expr>emptyList());
 	}
 
 	public static MethodInvocationExpr methodInvocationExpr(Name name) {
 		return new TDMethodInvocationExpr(Trees.<Expr>none(), Trees.<Type>emptyList(), name, Trees.<Expr>emptyList());
 	}
 
-	@Deprecated
 	public static MethodReferenceExpr methodReferenceExpr() {
-		return new TDMethodReferenceExpr((Expr) null, Trees.<Type>emptyList(), (Name) null);
+		return new TDMethodReferenceExpr(null, Trees.<Type>emptyList(), null);
 	}
 
 	public static MethodReferenceExpr methodReferenceExpr(Expr scope, Name name) {
 		return new TDMethodReferenceExpr(scope, Trees.<Type>emptyList(), name);
 	}
 
-	@Deprecated
 	public static NormalAnnotationExpr normalAnnotationExpr() {
-		return new TDNormalAnnotationExpr((QualifiedName) null, Trees.<MemberValuePair>emptyList());
+		return new TDNormalAnnotationExpr(null, Trees.<MemberValuePair>emptyList());
 	}
 
 	public static NormalAnnotationExpr normalAnnotationExpr(QualifiedName name) {
 		return new TDNormalAnnotationExpr(name, Trees.<MemberValuePair>emptyList());
 	}
 
-	@Deprecated
 	public static ObjectCreationExpr objectCreationExpr() {
-		return new TDObjectCreationExpr(Trees.<Expr>none(), Trees.<Type>emptyList(), (QualifiedType) null, Trees.<Expr>emptyList(), Trees.<NodeList<MemberDecl>>none());
+		return new TDObjectCreationExpr(Trees.<Expr>none(), Trees.<Type>emptyList(), null, Trees.<Expr>emptyList(), Trees.<NodeList<MemberDecl>>none());
 	}
 
 	public static ObjectCreationExpr objectCreationExpr(QualifiedType type) {
 		return new TDObjectCreationExpr(Trees.<Expr>none(), Trees.<Type>emptyList(), type, Trees.<Expr>emptyList(), Trees.<NodeList<MemberDecl>>none());
 	}
 
-	@Deprecated
 	public static ParenthesizedExpr parenthesizedExpr() {
 		return new TDParenthesizedExpr((Expr) null);
 	}
@@ -511,9 +478,8 @@ public abstract class Trees {
 		return new TDParenthesizedExpr(inner);
 	}
 
-	@Deprecated
 	public static SingleMemberAnnotationExpr singleMemberAnnotationExpr() {
-		return new TDSingleMemberAnnotationExpr((QualifiedName) null, (Expr) null);
+		return new TDSingleMemberAnnotationExpr(null, null);
 	}
 
 	public static SingleMemberAnnotationExpr singleMemberAnnotationExpr(QualifiedName name, Expr memberValue) {
@@ -528,7 +494,6 @@ public abstract class Trees {
 		return new TDThisExpr(Trees.<Expr>none());
 	}
 
-	@Deprecated
 	public static TypeExpr typeExpr() {
 		return new TDTypeExpr((Type) null);
 	}
@@ -537,16 +502,14 @@ public abstract class Trees {
 		return new TDTypeExpr(type);
 	}
 
-	@Deprecated
 	public static UnaryExpr unaryExpr() {
-		return new TDUnaryExpr((UnaryOp) null, (Expr) null);
+		return new TDUnaryExpr(null, null);
 	}
 
 	public static UnaryExpr unaryExpr(UnaryOp op, Expr expr) {
 		return new TDUnaryExpr(op, expr);
 	}
 
-	@Deprecated
 	public static VariableDeclarationExpr variableDeclarationExpr() {
 		return new TDVariableDeclarationExpr((LocalVariableDecl) null);
 	}
@@ -555,7 +518,6 @@ public abstract class Trees {
 		return new TDVariableDeclarationExpr(declaration);
 	}
 
-	@Deprecated
 	public static Name name() {
 		return new TDName((String) null);
 	}
@@ -564,9 +526,8 @@ public abstract class Trees {
 		return new TDName(id);
 	}
 
-	@Deprecated
 	public static QualifiedName qualifiedName() {
-		return new TDQualifiedName(Trees.<QualifiedName>none(), (Name) null);
+		return new TDQualifiedName(Trees.<QualifiedName>none(), null);
 	}
 
 	public static QualifiedName qualifiedName(Name name) {
@@ -582,9 +543,8 @@ public abstract class Trees {
 		return name;
 	}
 
-	@Deprecated
 	public static AssertStmt assertStmt() {
-		return new TDAssertStmt((Expr) null, Trees.<Expr>none());
+		return new TDAssertStmt(null, Trees.<Expr>none());
 	}
 
 	public static AssertStmt assertStmt(Expr check) {
@@ -599,9 +559,8 @@ public abstract class Trees {
 		return new TDBreakStmt(Trees.<Name>none());
 	}
 
-	@Deprecated
 	public static CatchClause catchClause() {
-		return new TDCatchClause((FormalParameter) null, (BlockStmt) null);
+		return new TDCatchClause(null, null);
 	}
 
 	public static CatchClause catchClause(FormalParameter except, BlockStmt catchBlock) {
@@ -612,9 +571,8 @@ public abstract class Trees {
 		return new TDContinueStmt(Trees.<Name>none());
 	}
 
-	@Deprecated
 	public static DoStmt doStmt() {
-		return new TDDoStmt((Stmt) null, (Expr) null);
+		return new TDDoStmt(null, null);
 	}
 
 	public static DoStmt doStmt(Stmt body, Expr condition) {
@@ -629,7 +587,6 @@ public abstract class Trees {
 		return new TDExplicitConstructorInvocationStmt(Trees.<Type>emptyList(), false, Trees.<Expr>none(), Trees.<Expr>emptyList());
 	}
 
-	@Deprecated
 	public static ExpressionStmt expressionStmt() {
 		return new TDExpressionStmt((Expr) null);
 	}
@@ -638,36 +595,32 @@ public abstract class Trees {
 		return new TDExpressionStmt(expr);
 	}
 
-	@Deprecated
 	public static ForStmt forStmt() {
-		return new TDForStmt(Trees.<Expr>emptyList(), (Expr) null, Trees.<Expr>emptyList(), (Stmt) null);
+		return new TDForStmt(Trees.<Expr>emptyList(), null, Trees.<Expr>emptyList(), null);
 	}
 
 	public static ForStmt forStmt(Expr compare, Stmt body) {
 		return new TDForStmt(Trees.<Expr>emptyList(), compare, Trees.<Expr>emptyList(), body);
 	}
 
-	@Deprecated
 	public static ForeachStmt foreachStmt() {
-		return new TDForeachStmt((VariableDeclarationExpr) null, (Expr) null, (Stmt) null);
+		return new TDForeachStmt(null, null, null);
 	}
 
 	public static ForeachStmt foreachStmt(VariableDeclarationExpr var, Expr iterable, Stmt body) {
 		return new TDForeachStmt(var, iterable, body);
 	}
 
-	@Deprecated
 	public static IfStmt ifStmt() {
-		return new TDIfStmt((Expr) null, (Stmt) null, Trees.<Stmt>none());
+		return new TDIfStmt(null, null, Trees.<Stmt>none());
 	}
 
 	public static IfStmt ifStmt(Expr condition, Stmt thenStmt) {
 		return new TDIfStmt(condition, thenStmt, Trees.<Stmt>none());
 	}
 
-	@Deprecated
 	public static LabeledStmt labeledStmt() {
-		return new TDLabeledStmt((Name) null, (Stmt) null);
+		return new TDLabeledStmt(null, null);
 	}
 
 	public static LabeledStmt labeledStmt(Name label, Stmt stmt) {
@@ -682,25 +635,22 @@ public abstract class Trees {
 		return new TDSwitchCase(Trees.<Expr>none(), Trees.<Stmt>emptyList());
 	}
 
-	@Deprecated
 	public static SwitchStmt switchStmt() {
-		return new TDSwitchStmt((Expr) null, Trees.<SwitchCase>emptyList());
+		return new TDSwitchStmt(null, Trees.<SwitchCase>emptyList());
 	}
 
 	public static SwitchStmt switchStmt(Expr selector) {
 		return new TDSwitchStmt(selector, Trees.<SwitchCase>emptyList());
 	}
 
-	@Deprecated
 	public static SynchronizedStmt synchronizedStmt() {
-		return new TDSynchronizedStmt((Expr) null, (BlockStmt) null);
+		return new TDSynchronizedStmt(null, null);
 	}
 
 	public static SynchronizedStmt synchronizedStmt(Expr expr, BlockStmt block) {
 		return new TDSynchronizedStmt(expr, block);
 	}
 
-	@Deprecated
 	public static ThrowStmt throwStmt() {
 		return new TDThrowStmt((Expr) null);
 	}
@@ -709,16 +659,14 @@ public abstract class Trees {
 		return new TDThrowStmt(expr);
 	}
 
-	@Deprecated
 	public static TryStmt tryStmt() {
-		return new TDTryStmt(Trees.<VariableDeclarationExpr>emptyList(), false, (BlockStmt) null, Trees.<CatchClause>emptyList(), Trees.<BlockStmt>none());
+		return new TDTryStmt(Trees.<VariableDeclarationExpr>emptyList(), false, null, Trees.<CatchClause>emptyList(), Trees.<BlockStmt>none());
 	}
 
 	public static TryStmt tryStmt(BlockStmt tryBlock) {
 		return new TDTryStmt(Trees.<VariableDeclarationExpr>emptyList(), false, tryBlock, Trees.<CatchClause>emptyList(), Trees.<BlockStmt>none());
 	}
 
-	@Deprecated
 	public static TypeDeclarationStmt typeDeclarationStmt() {
 		return new TDTypeDeclarationStmt((TypeDecl) null);
 	}
@@ -727,18 +675,16 @@ public abstract class Trees {
 		return new TDTypeDeclarationStmt(typeDecl);
 	}
 
-	@Deprecated
 	public static WhileStmt whileStmt() {
-		return new TDWhileStmt((Expr) null, (Stmt) null);
+		return new TDWhileStmt(null, null);
 	}
 
 	public static WhileStmt whileStmt(Expr condition, Stmt body) {
 		return new TDWhileStmt(condition, body);
 	}
 
-	@Deprecated
 	public static ArrayType arrayType() {
-		return new TDArrayType((Type) null, Trees.<ArrayDim>emptyList());
+		return new TDArrayType(null, Trees.<ArrayDim>emptyList());
 	}
 
 	public static ArrayType arrayType(Type componentType) {
@@ -749,18 +695,16 @@ public abstract class Trees {
 		return new TDIntersectionType(Trees.<Type>emptyList());
 	}
 
-	@Deprecated
 	public static PrimitiveType primitiveType() {
-		return new TDPrimitiveType(Trees.<AnnotationExpr>emptyList(), (Primitive) null);
+		return new TDPrimitiveType(Trees.<AnnotationExpr>emptyList(), null);
 	}
 
 	public static PrimitiveType primitiveType(Primitive primitive) {
 		return new TDPrimitiveType(Trees.<AnnotationExpr>emptyList(), primitive);
 	}
 
-	@Deprecated
 	public static QualifiedType qualifiedType() {
-		return new TDQualifiedType(Trees.<AnnotationExpr>emptyList(), Trees.<QualifiedType>none(), (Name) null, Trees.<NodeList<Type>>none());
+		return new TDQualifiedType(Trees.<AnnotationExpr>emptyList(), Trees.<QualifiedType>none(), null, Trees.<NodeList<Type>>none());
 	}
 
 	public static QualifiedType qualifiedType(Name name) {
