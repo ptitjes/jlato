@@ -299,14 +299,15 @@ public class SEnumDecl extends SNode<SEnumDecl> implements STypeDecl {
 					.withIndentationAfter(indent(TYPE_BODY)),
 			child(ENUM_CONSTANTS, SEnumConstantDecl.listShape),
 			when(data(TRAILING_COMMA), token(LToken.Comma).withSpacingAfter(spacing(EnumBody_BetweenConstants))),
-			when(childIs(MEMBERS, empty()),
+			alternative(childIs(MEMBERS, empty()),
 					alternative(childIs(ENUM_CONSTANTS, empty()),
 							none().withSpacingAfter(newLine()),
 							none().withSpacingAfter(spacing(EnumBody_AfterConstants))
+					),
+					alternative(childIs(ENUM_CONSTANTS, empty()),
+							none(),
+							token(LToken.SemiColon).withSpacingAfter(spacing(EnumBody_AfterConstants))
 					)
-			),
-			when(childIs(MEMBERS, not(empty())),
-					token(LToken.SemiColon).withSpacingAfter(spacing(EnumBody_AfterConstants))
 			),
 			child(MEMBERS, SMemberDecl.membersShape),
 			token(LToken.BraceRight)
