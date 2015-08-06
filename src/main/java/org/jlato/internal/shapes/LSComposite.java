@@ -46,11 +46,6 @@ public final class LSComposite extends LexicalShape {
 	}
 
 	@Override
-	public boolean opensSubRun() {
-		return true;
-	}
-
-	@Override
 	public boolean isDefined(BUTree tree) {
 		for (LexicalShape shape : shapes) {
 			if (shape.isDefined(tree)) return true;

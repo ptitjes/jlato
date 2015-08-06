@@ -33,10 +33,6 @@ public abstract class LexicalShape {
 
 	// TODO Add argument to follow lexical runs
 
-	public boolean opensSubRun() {
-		return false;
-	}
-
 	public abstract boolean isDefined(BUTree tree);
 
 	public abstract void dress(DressingBuilder<?> builder, BUTree<?> discriminator);

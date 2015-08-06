@@ -184,7 +184,16 @@ public class DressingBuilder<S extends STree> {
 
 		public WRunRun build() {
 			final ArrayList<WRun> subRunElements = subRuns.build();
+			boolean someEvenNonNull = checkForAnyNonNullEvenElement(subRunElements);
 			return subRunElements.isEmpty() ? null : new WRunRun(subRunElements);
+		}
+
+		private boolean checkForAnyNonNullEvenElement(ArrayList<WRun> subRunElements) {
+			int size = subRunElements.size();
+			for (int i = 0; i < (size - 1) / 2 + 1; i++) {
+				if (subRunElements.get(i * 2) != null) return true;
+			}
+			return false;
 		}
 	}
 }

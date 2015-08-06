@@ -30,7 +30,7 @@ public class LSTraversal extends LSDecorated {
 	private final STraversal traversal;
 
 	public LSTraversal(STraversal traversal, LexicalShape shape) {
-		super(shape.opensSubRun() ? shape : new LSComposite(shape));
+		super(shape);
 		this.traversal = traversal;
 	}
 

@@ -41,11 +41,6 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
-	public boolean opensSubRun() {
-		return true;
-	}
-
-	@Override
 	public boolean isDefined(BUTree tree) {
 		if (tree.state instanceof SVar) return true;
 
