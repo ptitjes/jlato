@@ -149,7 +149,7 @@ abstract class ParserBase {
 	}
 
 	private <S extends STree> BUTree<S> doDress(BUTree<S> tree, LexicalShape shape,
-	                                                IndexedList<WTokenRun> tokens) {
+	                                            IndexedList<WTokenRun> tokens) {
 		try {
 			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
 			final BUTree<S> newTree;
@@ -323,11 +323,15 @@ abstract class ParserBase {
 		}
 	}
 
-	boolean isLambda() {
+	boolean isLambda(boolean readOpenParenthesis) {
 		for (int lookahead = 1; ; lookahead++) {
 			int kind = getToken(lookahead).kind;
 			switch (kind) {
 				case LPAREN:
+					if (!readOpenParenthesis) {
+						readOpenParenthesis = true;
+						break;
+					}
 					// ( after ( => Expr
 					return false;
 				case RPAREN:
@@ -337,15 +341,140 @@ abstract class ParserBase {
 		}
 	}
 
-	boolean isLambdaOrExpr(int lookaheadStart) {
-		for (int lookahead = lookaheadStart; ; lookahead++) {
+	// An fruitless attempt to do better lookahead than LOOKAHEAD(CastExpression())
+	boolean isCast(boolean readOpenParenthesis) {
+		int lookahead = 1;
+		if (!readOpenParenthesis) {
+			if (getToken(1).kind != LPAREN) return false;
+			lookahead++;
+		}
+
+		int ltCount = 0;
+		int gtCount = 0;
+		boolean hadPrimitiveType = false;
+		for (; ; lookahead++) {
 			int kind = getToken(lookahead).kind;
 			switch (kind) {
+				case LT:
+					ltCount++;
+					break;
+				case GT:
+					gtCount++;
+					break;
+				case COMMA:
+					if (ltCount - gtCount == 0) return false;
+					break;
+
+				case HOOK: // May be wildcard
+					break;
+
+				case ASSIGN:
+				case BANG:
+				case TILDE:
+				case COLON:
+				case EQ:
+				case LE:
+				case GE:
+				case NE:
+				case SC_OR:
+				case SC_AND:
+				case INCR:
+				case DECR:
+				case PLUS:
+				case MINUS:
+				case STAR:
+				case SLASH:
+				case BIT_OR:
+				case XOR:
+				case REM:
+				case LSHIFT:
+				case PLUSASSIGN:
+				case MINUSASSIGN:
+				case STARASSIGN:
+				case SLASHASSIGN:
+				case ANDASSIGN:
+				case ORASSIGN:
+				case XORASSIGN:
+				case REMASSIGN:
+				case LSHIFTASSIGN:
+				case RSIGNEDSHIFTASSIGN:
+				case RUNSIGNEDSHIFTASSIGN:
+				case ELLIPSIS:
+				case ARROW:
+				case DOUBLECOLON:
+				case INSTANCEOF:
+				case NULL:
+				case TRUE:
+				case FALSE:
+				case CHARACTER_LITERAL:
+				case INTEGER_LITERAL:
+				case LONG_LITERAL:
+				case FLOAT_LITERAL:
+				case DOUBLE_LITERAL:
+				case STRING_LITERAL:
+
+				case CLASS:
+				case THIS:
+				case SUPER:
+					return false;
+
+				case BOOLEAN:
+				case CHAR:
+				case BYTE:
+				case SHORT:
+				case INT:
+				case LONG:
+				case FLOAT:
+				case DOUBLE:
+					if (ltCount == 0) hadPrimitiveType = true;
+					break;
 				case LPAREN:
-					// ( => Expr
-					return true;
+					// ( after ( => Expr
+					return false;
 				case RPAREN:
-					return getToken(lookahead + 1).kind == ARROW;
+					int nextKind = getToken(lookahead + 1).kind;
+					if (hadPrimitiveType) return true;
+					else switch (nextKind) {
+						case ASSIGN:
+						case BANG:
+						case TILDE:
+						case HOOK:
+						case COLON:
+						case EQ:
+						case LE:
+						case GE:
+						case NE:
+						case SC_OR:
+						case SC_AND:
+						case INCR:
+						case DECR:
+						case PLUS:
+						case MINUS:
+						case STAR:
+						case SLASH:
+						case BIT_OR:
+						case XOR:
+						case REM:
+						case LSHIFT:
+						case PLUSASSIGN:
+						case MINUSASSIGN:
+						case STARASSIGN:
+						case SLASHASSIGN:
+						case ANDASSIGN:
+						case ORASSIGN:
+						case XORASSIGN:
+						case REMASSIGN:
+						case LSHIFTASSIGN:
+						case RSIGNEDSHIFTASSIGN:
+						case RUNSIGNEDSHIFTASSIGN:
+						case ELLIPSIS:
+						case ARROW:
+						case DOUBLECOLON:
+						case DOT:
+							return false;
+						default:
+							return true;
+					}
 			}
 		}
 	}

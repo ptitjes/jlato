@@ -1948,17 +1948,40 @@ BUTree<SInitializerDecl> InitializerDecl(BUTree<SNodeList> modifiers):
 
 BUTree<? extends SType> Type(BUTree<SNodeList> annotations):
 {
-	BUTree<? extends SType> ret;
+//	BUTree<? extends SType> ret;
+	BUTree<? extends SType> primitiveType = null;
+	BUTree<? extends SReferenceType> type = null;
+	BUTree<SNodeList> arrayDims;
 }
 {
   // Run may be started before annotations
 
+// Specialized this production:
+//  (
+//    LOOKAHEAD(2) ret = ReferenceType(annotations)
+//  |
+//    ret = PrimitiveType(annotations)
+//  )
+
   (
-    LOOKAHEAD(2) ret = ReferenceType(annotations)
+    primitiveType = PrimitiveType(annotations)
+    [
+      LOOKAHEAD( Annotations() "[" )
+      { lateRun(); }
+      arrayDims = ArrayDimsMandatory()
+      { type = dress(SArrayType.make(primitiveType, arrayDims)); }
+    ]
   |
-    ret = PrimitiveType(annotations)
+    type = QualifiedType(annotations)
+    [
+      LOOKAHEAD( Annotations() "[" )
+      { lateRun(); }
+      arrayDims = ArrayDimsMandatory()
+      { type = dress(SArrayType.make(type, arrayDims)); }
+    ]
   )
-  { return ret; }
+
+  { return type == null ? primitiveType : type; }
 }
 
 BUTree<? extends SReferenceType> ReferenceType(BUTree<SNodeList> annotations):
@@ -2580,6 +2603,7 @@ BUTree<? extends SExpr> UnaryExpressionNotPlusMinus():
 	{ ret = dress(SUnaryExpr.make(op, ret)); }
   |
     LOOKAHEAD(CastExpression())
+//    LOOKAHEAD( "(", {isCast(false)} )
     ret = CastExpression()
   |
     ret = PostfixExpression()
@@ -2615,7 +2639,8 @@ BUTree<? extends SExpr> CastExpression():
   (
     LOOKAHEAD( "(" PrimitiveCastType() ")" )
     { run(); }
-    "(" type = PrimitiveCastType() ")" ret = UnaryExpression()
+    "(" type = PrimitiveCastType() ")"
+    ret = UnaryExpression()
     { ret = dress(SCastExpr.make(type, ret)); }
   |
     { run(); }
@@ -2772,7 +2797,7 @@ BUTree<? extends SExpr> PrimaryPrefix():
       LOOKAHEAD( Name() "," )
       params = InferredFormalParameterList() ")" "->" ret = LambdaBody(params, true)
     |
-      LOOKAHEAD({ isLambda() })
+      LOOKAHEAD({ isLambda(true) })
       params = FormalParameterList() ")" "->" ret = LambdaBody(params, true)
     |
       ret = Expression() ")"
