@@ -351,10 +351,47 @@ public class Printer {
 	}
 
 	private void appendJavaDoc(String image) {
-		// TODO Implement JavaDoc comment formatting
+		appendJavaDocLine("/**", false);
+
+		// Remove /** and */
+		image = image.trim();
+		image = image.substring(3, image.length() - 2);
+
+		String[] lines = image.split("\n|\r\n|\r|\f");
+		for (int i = 0; i < lines.length; i++) {
+			String line = lines[i];
+			line = line.trim();
+			if (line.startsWith("*")) line = line.substring(1);
+			lines[i] = line.trim();
+		}
+
+		int first = 0;
+		int last = lines.length - 1;
+		for (int i = 0; i < lines.length; i++) {
+			if (!lines[i].isEmpty()) {
+				first = i;
+				break;
+			}
+		}
+		for (int i = lines.length - 1; i >= first; i--) {
+			if (!lines[i].isEmpty()) {
+				last = i;
+				break;
+			}
+		}
+
+		for (int i = first; i <= last; i++) {
+				String line = lines[i];
+			if (line.isEmpty()) appendJavaDocLine(" *", false);
+			else appendJavaDocLine(" * " + line, false);
+		}
+		appendJavaDocLine(" */", true);
+	}
+
+	private void appendJavaDocLine(String image, boolean last) {
+		if (needsIndentation) doPrintIndent();
 		writer.append(image);
-		afterAlpha = false;
-		needsIndentation = false;
+		if (!last) appendNewLine();
 	}
 
 	private void appendComment(String image) {
