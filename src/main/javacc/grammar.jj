@@ -1260,6 +1260,44 @@ BUTree<SNodeList> Modifiers():
   { return modifiers; }
 }
 
+BUTree<SNodeList> ModifiersNoDefault():
+{
+	BUTree<SNodeList> modifiers = emptyList();
+	BUTree<? extends SAnnotationExpr> ann;
+}
+{
+  (
+    LOOKAHEAD(2)
+    (
+      "public" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public)); }
+    |
+      "protected" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected)); }
+    |
+      "private" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private)); }
+    |
+      "abstract" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract)); }
+    |
+      "static" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static)); }
+    |
+      "final" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final)); }
+    |
+      "transient" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient)); }
+    |
+      "volatile" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile)); }
+    |
+      "synchronized" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized)); }
+    |
+      "native" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native)); }
+    |
+      "strictfp" { modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP)); }
+    |
+      ann = Annotation() { modifiers = append(modifiers, ann); }
+    )
+  )*
+
+  { return modifiers; }
+}
+
 /*
  * Decl syntax follows.
  */
@@ -1883,7 +1921,7 @@ BUTree<SNodeList> Statements():
   [
     LOOKAHEAD(2)
     (
-      ( LOOKAHEAD(2) stmt = BlockStatement() { ret = append(ret, stmt); } )+
+      ( stmt = BlockStatement() { ret = append(ret, stmt); } )+
     |
       LOOKAHEAD({quotesMode}) ret = NodeListVar()
     )
@@ -1933,7 +1971,6 @@ BUTree<? extends SReferenceType> ReferenceType(BUTree<SNodeList> annotations):
   // Run may be started before annotations
 
   (
-    LOOKAHEAD(2)
     primitiveType = PrimitiveType(annotations)
     { lateRun(); }
     arrayDims = ArrayDimsMandatory()
@@ -1941,7 +1978,7 @@ BUTree<? extends SReferenceType> ReferenceType(BUTree<SNodeList> annotations):
   |
     type = QualifiedType(annotations)
     [
-      LOOKAHEAD(2)
+      LOOKAHEAD( Annotations() "[" )
       { lateRun(); }
       arrayDims = ArrayDimsMandatory()
       { type = dress(SArrayType.make(type, arrayDims)); }
@@ -3024,9 +3061,9 @@ BUTree<? extends SStmt> BlockStatement():
 }
 {
   (
-    LOOKAHEAD( Modifiers() ("class" | "interface") )
+    LOOKAHEAD( ModifiersNoDefault() ("class" | "interface") )
     { run(); }
-    { run(); } modifiers = Modifiers() typeDecl = ClassOrInterfaceDecl(modifiers)
+    { run(); } modifiers = ModifiersNoDefault() typeDecl = ClassOrInterfaceDecl(modifiers)
     { ret = dress(STypeDeclarationStmt.make(typeDecl)); }
   |
     LOOKAHEAD( VariableDeclExpression() )
@@ -3046,7 +3083,7 @@ BUTree<SVariableDeclarationExpr> VariableDeclExpression():
 }
 {
   { run(); }
-  { run(); } modifiers = Modifiers() variableDecl = VariableDecl(modifiers)
+  { run(); } modifiers = ModifiersNoDefault() variableDecl = VariableDecl(modifiers)
   { return dress(SVariableDeclarationExpr.make(variableDecl)); }
 }
 
