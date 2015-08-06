@@ -1956,13 +1956,6 @@ BUTree<? extends SType> Type(BUTree<SNodeList> annotations):
 {
   // Run may be started before annotations
 
-// Specialized this production:
-//  (
-//    LOOKAHEAD(2) ret = ReferenceType(annotations)
-//  |
-//    ret = PrimitiveType(annotations)
-//  )
-
   (
     primitiveType = PrimitiveType(annotations)
     [
@@ -2630,49 +2623,56 @@ BUTree<? extends SExpr> PostfixExpression():
 
 BUTree<? extends SExpr> CastExpression():
 {
-	BUTree<? extends SExpr> ret;
-	BUTree<? extends SType> type;
-	BUTree<SNodeList> types = emptyList();
 	BUTree<SNodeList> annotations = null;
+	BUTree<? extends SType> primitiveType;
+	BUTree<? extends SType> type;
+	BUTree<SNodeList> arrayDims;
+	BUTree<? extends SExpr> ret;
 }
 {
+  { run(); }
+  "("
+  { run(); } annotations = Annotations()
   (
-    LOOKAHEAD( "(" PrimitiveCastType() ")" )
-    { run(); }
-    "(" type = PrimitiveCastType() ")"
-    ret = UnaryExpression()
-    { ret = dress(SCastExpr.make(type, ret)); }
+    primitiveType = PrimitiveType(annotations)
+    (
+      ")"
+      ret = UnaryExpression()
+      { ret = dress(SCastExpr.make(primitiveType, ret)); }
+    |
+      { lateRun(); }
+      arrayDims = ArrayDimsMandatory()
+      { type = dress(SArrayType.make(primitiveType, arrayDims)); }
+      type = ReferenceCastTypeRest(type)
+      ")"
+      ret = UnaryExpressionNotPlusMinus()
+      { ret = dress(SCastExpr.make(type, ret)); }
+    )
   |
-    { run(); }
-    "(" type = ReferenceCastType() ")"
+    type = QualifiedType(annotations)
+    [
+      LOOKAHEAD( Annotations() "[" )
+      { lateRun(); }
+      arrayDims = ArrayDimsMandatory()
+      { type = dress(SArrayType.make(type, arrayDims)); }
+    ]
+    type = ReferenceCastTypeRest(type)
+    ")"
     ret = UnaryExpressionNotPlusMinus()
     { ret = dress(SCastExpr.make(type, ret)); }
   )
   { return ret; }
 }
 
-BUTree<? extends SType> PrimitiveCastType():
+BUTree<? extends SType> ReferenceCastTypeRest(BUTree<? extends SType> type):
 {
-	BUTree<? extends SType> type;
 	BUTree<SNodeList> types = emptyList();
 	BUTree<SNodeList> annotations = null;
 }
 {
-  { run(); } annotations = Annotations() type = PrimitiveType(annotations)
-  { return type; }
-}
-
-BUTree<? extends SType> ReferenceCastType():
-{
-	BUTree<? extends SType> type;
-	BUTree<SNodeList> types = emptyList();
-	BUTree<SNodeList> annotations = null;
-}
-{
-  { run(); } annotations = Annotations() type = ReferenceType(annotations)
-  { types = append(types, type); }
   [
     LOOKAHEAD("&")
+    { types = append(types, type); }
     { lateRun(); }
     (
       "&"
