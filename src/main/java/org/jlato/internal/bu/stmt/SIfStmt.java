@@ -42,24 +42,12 @@ public class SIfStmt extends SNode<SIfStmt> implements SStmt {
 		return Kind.IfStmt;
 	}
 
-	public BUTree<? extends SExpr> condition() {
-		return condition;
-	}
-
 	public SIfStmt withCondition(BUTree<? extends SExpr> condition) {
 		return new SIfStmt(condition, thenStmt, elseStmt);
 	}
 
-	public BUTree<? extends SStmt> thenStmt() {
-		return thenStmt;
-	}
-
 	public SIfStmt withThenStmt(BUTree<? extends SStmt> thenStmt) {
 		return new SIfStmt(condition, thenStmt, elseStmt);
-	}
-
-	public BUTree<SNodeOption> elseStmt() {
-		return elseStmt;
 	}
 
 	public SIfStmt withElseStmt(BUTree<SNodeOption> elseStmt) {

@@ -28,10 +28,6 @@ public class SIntersectionType extends SNode<SIntersectionType> implements SType
 		return Kind.IntersectionType;
 	}
 
-	public BUTree<SNodeList> types() {
-		return types;
-	}
-
 	public SIntersectionType withTypes(BUTree<SNodeList> types) {
 		return new SIntersectionType(types);
 	}

@@ -29,10 +29,6 @@ public class SContinueStmt extends SNode<SContinueStmt> implements SStmt {
 		return Kind.ContinueStmt;
 	}
 
-	public BUTree<SNodeOption> id() {
-		return id;
-	}
-
 	public SContinueStmt withId(BUTree<SNodeOption> id) {
 		return new SContinueStmt(id);
 	}

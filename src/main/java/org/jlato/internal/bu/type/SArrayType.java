@@ -31,16 +31,8 @@ public class SArrayType extends SNode<SArrayType> implements SReferenceType {
 		return Kind.ArrayType;
 	}
 
-	public BUTree<? extends SType> componentType() {
-		return componentType;
-	}
-
 	public SArrayType withComponentType(BUTree<? extends SType> componentType) {
 		return new SArrayType(componentType, dims);
-	}
-
-	public BUTree<SNodeList> dims() {
-		return dims;
 	}
 
 	public SArrayType withDims(BUTree<SNodeList> dims) {

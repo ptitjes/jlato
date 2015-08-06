@@ -42,32 +42,16 @@ public class SQualifiedType extends SNode<SQualifiedType> implements SReferenceT
 		return Kind.QualifiedType;
 	}
 
-	public BUTree<SNodeList> annotations() {
-		return annotations;
-	}
-
 	public SQualifiedType withAnnotations(BUTree<SNodeList> annotations) {
 		return new SQualifiedType(annotations, scope, name, typeArgs);
-	}
-
-	public BUTree<SNodeOption> scope() {
-		return scope;
 	}
 
 	public SQualifiedType withScope(BUTree<SNodeOption> scope) {
 		return new SQualifiedType(annotations, scope, name, typeArgs);
 	}
 
-	public BUTree<SName> name() {
-		return name;
-	}
-
 	public SQualifiedType withName(BUTree<SName> name) {
 		return new SQualifiedType(annotations, scope, name, typeArgs);
-	}
-
-	public BUTree<SNodeOption> typeArgs() {
-		return typeArgs;
 	}
 
 	public SQualifiedType withTypeArgs(BUTree<SNodeOption> typeArgs) {

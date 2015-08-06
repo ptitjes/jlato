@@ -31,16 +31,8 @@ public class SInstanceOfExpr extends SNode<SInstanceOfExpr> implements SExpr {
 		return Kind.InstanceOfExpr;
 	}
 
-	public BUTree<? extends SExpr> expr() {
-		return expr;
-	}
-
 	public SInstanceOfExpr withExpr(BUTree<? extends SExpr> expr) {
 		return new SInstanceOfExpr(expr, type);
-	}
-
-	public BUTree<? extends SType> type() {
-		return type;
 	}
 
 	public SInstanceOfExpr withType(BUTree<? extends SType> type) {

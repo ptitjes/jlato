@@ -28,10 +28,6 @@ public class SThisExpr extends SNode<SThisExpr> implements SExpr {
 		return Kind.ThisExpr;
 	}
 
-	public BUTree<SNodeOption> classExpr() {
-		return classExpr;
-	}
-
 	public SThisExpr withClassExpr(BUTree<SNodeOption> classExpr) {
 		return new SThisExpr(classExpr);
 	}

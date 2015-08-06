@@ -49,40 +49,20 @@ public class STryStmt extends SNode<STryStmt> implements SStmt {
 		return Kind.TryStmt;
 	}
 
-	public BUTree<SNodeList> resources() {
-		return resources;
-	}
-
 	public STryStmt withResources(BUTree<SNodeList> resources) {
 		return new STryStmt(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
-	}
-
-	public boolean trailingSemiColon() {
-		return trailingSemiColon;
 	}
 
 	public STryStmt withTrailingSemiColon(boolean trailingSemiColon) {
 		return new STryStmt(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
 	}
 
-	public BUTree<SBlockStmt> tryBlock() {
-		return tryBlock;
-	}
-
 	public STryStmt withTryBlock(BUTree<SBlockStmt> tryBlock) {
 		return new STryStmt(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
 	}
 
-	public BUTree<SNodeList> catchs() {
-		return catchs;
-	}
-
 	public STryStmt withCatchs(BUTree<SNodeList> catchs) {
 		return new STryStmt(resources, trailingSemiColon, tryBlock, catchs, finallyBlock);
-	}
-
-	public BUTree<SNodeOption> finallyBlock() {
-		return finallyBlock;
 	}
 
 	public STryStmt withFinallyBlock(BUTree<SNodeOption> finallyBlock) {

@@ -27,10 +27,6 @@ public class SThrowStmt extends SNode<SThrowStmt> implements SStmt {
 		return Kind.ThrowStmt;
 	}
 
-	public BUTree<? extends SExpr> expr() {
-		return expr;
-	}
-
 	public SThrowStmt withExpr(BUTree<? extends SExpr> expr) {
 		return new SThrowStmt(expr);
 	}

@@ -36,24 +36,12 @@ public class SFieldDecl extends SNode<SFieldDecl> implements SMemberDecl {
 		return Kind.FieldDecl;
 	}
 
-	public BUTree<SNodeList> modifiers() {
-		return modifiers;
-	}
-
 	public SFieldDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SFieldDecl(modifiers, type, variables);
 	}
 
-	public BUTree<? extends SType> type() {
-		return type;
-	}
-
 	public SFieldDecl withType(BUTree<? extends SType> type) {
 		return new SFieldDecl(modifiers, type, variables);
-	}
-
-	public BUTree<SNodeList> variables() {
-		return variables;
 	}
 
 	public SFieldDecl withVariables(BUTree<SNodeList> variables) {

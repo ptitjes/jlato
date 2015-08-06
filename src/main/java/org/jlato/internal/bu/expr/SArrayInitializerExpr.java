@@ -34,16 +34,8 @@ public class SArrayInitializerExpr extends SNode<SArrayInitializerExpr> implemen
 		return Kind.ArrayInitializerExpr;
 	}
 
-	public BUTree<SNodeList> values() {
-		return values;
-	}
-
 	public SArrayInitializerExpr withValues(BUTree<SNodeList> values) {
 		return new SArrayInitializerExpr(values, trailingComma);
-	}
-
-	public boolean trailingComma() {
-		return trailingComma;
 	}
 
 	public SArrayInitializerExpr withTrailingComma(boolean trailingComma) {

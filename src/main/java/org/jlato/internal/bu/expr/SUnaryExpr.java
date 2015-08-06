@@ -33,16 +33,8 @@ public class SUnaryExpr extends SNode<SUnaryExpr> implements SExpr {
 		return Kind.UnaryExpr;
 	}
 
-	public UnaryOp op() {
-		return op;
-	}
-
 	public SUnaryExpr withOp(UnaryOp op) {
 		return new SUnaryExpr(op, expr);
-	}
-
-	public BUTree<? extends SExpr> expr() {
-		return expr;
 	}
 
 	public SUnaryExpr withExpr(BUTree<? extends SExpr> expr) {

@@ -41,32 +41,16 @@ public class SMethodInvocationExpr extends SNode<SMethodInvocationExpr> implemen
 		return Kind.MethodInvocationExpr;
 	}
 
-	public BUTree<SNodeOption> scope() {
-		return scope;
-	}
-
 	public SMethodInvocationExpr withScope(BUTree<SNodeOption> scope) {
 		return new SMethodInvocationExpr(scope, typeArgs, name, args);
-	}
-
-	public BUTree<SNodeList> typeArgs() {
-		return typeArgs;
 	}
 
 	public SMethodInvocationExpr withTypeArgs(BUTree<SNodeList> typeArgs) {
 		return new SMethodInvocationExpr(scope, typeArgs, name, args);
 	}
 
-	public BUTree<SName> name() {
-		return name;
-	}
-
 	public SMethodInvocationExpr withName(BUTree<SName> name) {
 		return new SMethodInvocationExpr(scope, typeArgs, name, args);
-	}
-
-	public BUTree<SNodeList> args() {
-		return args;
 	}
 
 	public SMethodInvocationExpr withArgs(BUTree<SNodeList> args) {

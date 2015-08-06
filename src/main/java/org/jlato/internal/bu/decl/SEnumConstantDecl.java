@@ -43,32 +43,16 @@ public class SEnumConstantDecl extends SNode<SEnumConstantDecl> implements SMemb
 		return Kind.EnumConstantDecl;
 	}
 
-	public BUTree<SNodeList> modifiers() {
-		return modifiers;
-	}
-
 	public SEnumConstantDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SEnumConstantDecl(modifiers, name, args, classBody);
-	}
-
-	public BUTree<SName> name() {
-		return name;
 	}
 
 	public SEnumConstantDecl withName(BUTree<SName> name) {
 		return new SEnumConstantDecl(modifiers, name, args, classBody);
 	}
 
-	public BUTree<SNodeOption> args() {
-		return args;
-	}
-
 	public SEnumConstantDecl withArgs(BUTree<SNodeOption> args) {
 		return new SEnumConstantDecl(modifiers, name, args, classBody);
-	}
-
-	public BUTree<SNodeOption> classBody() {
-		return classBody;
 	}
 
 	public SEnumConstantDecl withClassBody(BUTree<SNodeOption> classBody) {

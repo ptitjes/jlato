@@ -32,16 +32,8 @@ public class SWhileStmt extends SNode<SWhileStmt> implements SStmt {
 		return Kind.WhileStmt;
 	}
 
-	public BUTree<? extends SExpr> condition() {
-		return condition;
-	}
-
 	public SWhileStmt withCondition(BUTree<? extends SExpr> condition) {
 		return new SWhileStmt(condition, body);
-	}
-
-	public BUTree<? extends SStmt> body() {
-		return body;
 	}
 
 	public SWhileStmt withBody(BUTree<? extends SStmt> body) {

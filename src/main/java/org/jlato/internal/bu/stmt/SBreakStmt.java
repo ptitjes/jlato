@@ -29,10 +29,6 @@ public class SBreakStmt extends SNode<SBreakStmt> implements SStmt {
 		return Kind.BreakStmt;
 	}
 
-	public BUTree<SNodeOption> id() {
-		return id;
-	}
-
 	public SBreakStmt withId(BUTree<SNodeOption> id) {
 		return new SBreakStmt(id);
 	}

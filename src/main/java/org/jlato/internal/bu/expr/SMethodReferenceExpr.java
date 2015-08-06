@@ -36,24 +36,12 @@ public class SMethodReferenceExpr extends SNode<SMethodReferenceExpr> implements
 		return Kind.MethodReferenceExpr;
 	}
 
-	public BUTree<? extends SExpr> scope() {
-		return scope;
-	}
-
 	public SMethodReferenceExpr withScope(BUTree<? extends SExpr> scope) {
 		return new SMethodReferenceExpr(scope, typeArgs, name);
 	}
 
-	public BUTree<SNodeList> typeArgs() {
-		return typeArgs;
-	}
-
 	public SMethodReferenceExpr withTypeArgs(BUTree<SNodeList> typeArgs) {
 		return new SMethodReferenceExpr(scope, typeArgs, name);
-	}
-
-	public BUTree<SName> name() {
-		return name;
 	}
 
 	public SMethodReferenceExpr withName(BUTree<SName> name) {

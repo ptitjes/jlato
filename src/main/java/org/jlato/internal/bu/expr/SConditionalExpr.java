@@ -33,24 +33,12 @@ public class SConditionalExpr extends SNode<SConditionalExpr> implements SExpr {
 		return Kind.ConditionalExpr;
 	}
 
-	public BUTree<? extends SExpr> condition() {
-		return condition;
-	}
-
 	public SConditionalExpr withCondition(BUTree<? extends SExpr> condition) {
 		return new SConditionalExpr(condition, thenExpr, elseExpr);
 	}
 
-	public BUTree<? extends SExpr> thenExpr() {
-		return thenExpr;
-	}
-
 	public SConditionalExpr withThenExpr(BUTree<? extends SExpr> thenExpr) {
 		return new SConditionalExpr(condition, thenExpr, elseExpr);
-	}
-
-	public BUTree<? extends SExpr> elseExpr() {
-		return elseExpr;
 	}
 
 	public SConditionalExpr withElseExpr(BUTree<? extends SExpr> elseExpr) {

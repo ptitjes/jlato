@@ -37,16 +37,8 @@ public class SSwitchCase extends SNode<SSwitchCase> implements STree {
 		return Kind.SwitchCase;
 	}
 
-	public BUTree<SNodeOption> label() {
-		return label;
-	}
-
 	public SSwitchCase withLabel(BUTree<SNodeOption> label) {
 		return new SSwitchCase(label, stmts);
-	}
-
-	public BUTree<SNodeList> stmts() {
-		return stmts;
 	}
 
 	public SSwitchCase withStmts(BUTree<SNodeList> stmts) {

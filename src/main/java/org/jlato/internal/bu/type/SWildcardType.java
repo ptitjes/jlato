@@ -36,24 +36,12 @@ public class SWildcardType extends SNode<SWildcardType> implements SType {
 		return Kind.WildcardType;
 	}
 
-	public BUTree<SNodeList> annotations() {
-		return annotations;
-	}
-
 	public SWildcardType withAnnotations(BUTree<SNodeList> annotations) {
 		return new SWildcardType(annotations, ext, sup);
 	}
 
-	public BUTree<SNodeOption> ext() {
-		return ext;
-	}
-
 	public SWildcardType withExt(BUTree<SNodeOption> ext) {
 		return new SWildcardType(annotations, ext, sup);
-	}
-
-	public BUTree<SNodeOption> sup() {
-		return sup;
 	}
 
 	public SWildcardType withSup(BUTree<SNodeOption> sup) {

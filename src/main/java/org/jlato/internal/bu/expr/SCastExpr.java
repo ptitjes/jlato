@@ -32,16 +32,8 @@ public class SCastExpr extends SNode<SCastExpr> implements SExpr {
 		return Kind.CastExpr;
 	}
 
-	public BUTree<? extends SType> type() {
-		return type;
-	}
-
 	public SCastExpr withType(BUTree<? extends SType> type) {
 		return new SCastExpr(type, expr);
-	}
-
-	public BUTree<? extends SExpr> expr() {
-		return expr;
 	}
 
 	public SCastExpr withExpr(BUTree<? extends SExpr> expr) {

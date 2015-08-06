@@ -32,10 +32,6 @@ public class SBlockStmt extends SNode<SBlockStmt> implements SStmt {
 		return Kind.BlockStmt;
 	}
 
-	public BUTree<SNodeList> stmts() {
-		return stmts;
-	}
-
 	public SBlockStmt withStmts(BUTree<SNodeList> stmts) {
 		return new SBlockStmt(stmts);
 	}

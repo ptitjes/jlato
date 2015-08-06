@@ -45,40 +45,20 @@ public class SObjectCreationExpr extends SNode<SObjectCreationExpr> implements S
 		return Kind.ObjectCreationExpr;
 	}
 
-	public BUTree<SNodeOption> scope() {
-		return scope;
-	}
-
 	public SObjectCreationExpr withScope(BUTree<SNodeOption> scope) {
 		return new SObjectCreationExpr(scope, typeArgs, type, args, body);
-	}
-
-	public BUTree<SNodeList> typeArgs() {
-		return typeArgs;
 	}
 
 	public SObjectCreationExpr withTypeArgs(BUTree<SNodeList> typeArgs) {
 		return new SObjectCreationExpr(scope, typeArgs, type, args, body);
 	}
 
-	public BUTree<SQualifiedType> type() {
-		return type;
-	}
-
 	public SObjectCreationExpr withType(BUTree<SQualifiedType> type) {
 		return new SObjectCreationExpr(scope, typeArgs, type, args, body);
 	}
 
-	public BUTree<SNodeList> args() {
-		return args;
-	}
-
 	public SObjectCreationExpr withArgs(BUTree<SNodeList> args) {
 		return new SObjectCreationExpr(scope, typeArgs, type, args, body);
-	}
-
-	public BUTree<SNodeOption> body() {
-		return body;
 	}
 
 	public SObjectCreationExpr withBody(BUTree<SNodeOption> body) {

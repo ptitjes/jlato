@@ -32,16 +32,8 @@ public class SDoStmt extends SNode<SDoStmt> implements SStmt {
 		return Kind.DoStmt;
 	}
 
-	public BUTree<? extends SStmt> body() {
-		return body;
-	}
-
 	public SDoStmt withBody(BUTree<? extends SStmt> body) {
 		return new SDoStmt(body, condition);
-	}
-
-	public BUTree<? extends SExpr> condition() {
-		return condition;
 	}
 
 	public SDoStmt withCondition(BUTree<? extends SExpr> condition) {

@@ -37,24 +37,12 @@ public class SLocalVariableDecl extends SNode<SLocalVariableDecl> implements SDe
 		return Kind.LocalVariableDecl;
 	}
 
-	public BUTree<SNodeList> modifiers() {
-		return modifiers;
-	}
-
 	public SLocalVariableDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SLocalVariableDecl(modifiers, type, variables);
 	}
 
-	public BUTree<? extends SType> type() {
-		return type;
-	}
-
 	public SLocalVariableDecl withType(BUTree<? extends SType> type) {
 		return new SLocalVariableDecl(modifiers, type, variables);
-	}
-
-	public BUTree<SNodeList> variables() {
-		return variables;
 	}
 
 	public SLocalVariableDecl withVariables(BUTree<SNodeList> variables) {

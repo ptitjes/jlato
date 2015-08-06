@@ -47,40 +47,20 @@ public class SAnnotationMemberDecl extends SNode<SAnnotationMemberDecl> implemen
 		return Kind.AnnotationMemberDecl;
 	}
 
-	public BUTree<SNodeList> modifiers() {
-		return modifiers;
-	}
-
 	public SAnnotationMemberDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SAnnotationMemberDecl(modifiers, type, name, dims, defaultValue);
-	}
-
-	public BUTree<? extends SType> type() {
-		return type;
 	}
 
 	public SAnnotationMemberDecl withType(BUTree<? extends SType> type) {
 		return new SAnnotationMemberDecl(modifiers, type, name, dims, defaultValue);
 	}
 
-	public BUTree<SName> name() {
-		return name;
-	}
-
 	public SAnnotationMemberDecl withName(BUTree<SName> name) {
 		return new SAnnotationMemberDecl(modifiers, type, name, dims, defaultValue);
 	}
 
-	public BUTree<SNodeList> dims() {
-		return dims;
-	}
-
 	public SAnnotationMemberDecl withDims(BUTree<SNodeList> dims) {
 		return new SAnnotationMemberDecl(modifiers, type, name, dims, defaultValue);
-	}
-
-	public BUTree<SNodeOption> defaultValue() {
-		return defaultValue;
 	}
 
 	public SAnnotationMemberDecl withDefaultValue(BUTree<SNodeOption> defaultValue) {

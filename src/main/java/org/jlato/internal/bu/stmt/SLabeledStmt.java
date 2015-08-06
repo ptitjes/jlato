@@ -36,16 +36,8 @@ public class SLabeledStmt extends SNode<SLabeledStmt> implements SStmt {
 		return Kind.LabeledStmt;
 	}
 
-	public BUTree<SName> label() {
-		return label;
-	}
-
 	public SLabeledStmt withLabel(BUTree<SName> label) {
 		return new SLabeledStmt(label, stmt);
-	}
-
-	public BUTree<? extends SStmt> stmt() {
-		return stmt;
 	}
 
 	public SLabeledStmt withStmt(BUTree<? extends SStmt> stmt) {

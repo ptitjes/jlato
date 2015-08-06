@@ -47,48 +47,24 @@ public class SClassDecl extends SNode<SClassDecl> implements STypeDecl {
 		return Kind.ClassDecl;
 	}
 
-	public BUTree<SNodeList> modifiers() {
-		return modifiers;
-	}
-
 	public SClassDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
-	}
-
-	public BUTree<SName> name() {
-		return name;
 	}
 
 	public SClassDecl withName(BUTree<SName> name) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
-	public BUTree<SNodeList> typeParams() {
-		return typeParams;
-	}
-
 	public SClassDecl withTypeParams(BUTree<SNodeList> typeParams) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
-	}
-
-	public BUTree<SNodeOption> extendsClause() {
-		return extendsClause;
 	}
 
 	public SClassDecl withExtendsClause(BUTree<SNodeOption> extendsClause) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
-	public BUTree<SNodeList> implementsClause() {
-		return implementsClause;
-	}
-
 	public SClassDecl withImplementsClause(BUTree<SNodeList> implementsClause) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
-	}
-
-	public BUTree<SNodeList> members() {
-		return members;
 	}
 
 	public SClassDecl withMembers(BUTree<SNodeList> members) {

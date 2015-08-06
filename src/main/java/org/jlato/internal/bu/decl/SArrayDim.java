@@ -27,10 +27,6 @@ public class SArrayDim extends SNode<SArrayDim> implements STree {
 		return Kind.ArrayDim;
 	}
 
-	public BUTree<SNodeList> annotations() {
-		return annotations;
-	}
-
 	public SArrayDim withAnnotations(BUTree<SNodeList> annotations) {
 		return new SArrayDim(annotations);
 	}

@@ -42,32 +42,16 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 		return Kind.FormalParameter;
 	}
 
-	public BUTree<SNodeList> modifiers() {
-		return modifiers;
-	}
-
 	public SFormalParameter withModifiers(BUTree<SNodeList> modifiers) {
 		return new SFormalParameter(modifiers, type, isVarArgs, id);
-	}
-
-	public BUTree<? extends SType> type() {
-		return type;
 	}
 
 	public SFormalParameter withType(BUTree<? extends SType> type) {
 		return new SFormalParameter(modifiers, type, isVarArgs, id);
 	}
 
-	public boolean isVarArgs() {
-		return isVarArgs;
-	}
-
 	public SFormalParameter setVarArgs(boolean isVarArgs) {
 		return new SFormalParameter(modifiers, type, isVarArgs, id);
-	}
-
-	public BUTree<SVariableDeclaratorId> id() {
-		return id;
 	}
 
 	public SFormalParameter withId(BUTree<SVariableDeclaratorId> id) {

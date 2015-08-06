@@ -31,16 +31,8 @@ public class SQualifiedName extends SNode<SQualifiedName> implements STree {
 		return Kind.QualifiedName;
 	}
 
-	public BUTree<SNodeOption> qualifier() {
-		return qualifier;
-	}
-
 	public SQualifiedName withQualifier(BUTree<SNodeOption> qualifier) {
 		return new SQualifiedName(qualifier, name);
-	}
-
-	public BUTree<SName> name() {
-		return name;
 	}
 
 	public SQualifiedName withName(BUTree<SName> name) {

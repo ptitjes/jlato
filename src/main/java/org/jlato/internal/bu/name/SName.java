@@ -30,10 +30,6 @@ public class SName extends SNode<SName> implements SExpr {
 		return Kind.Name;
 	}
 
-	public String id() {
-		return id;
-	}
-
 	public SName withId(String id) {
 		return new SName(id);
 	}

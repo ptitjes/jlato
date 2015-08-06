@@ -36,24 +36,12 @@ public class SAnnotationDecl extends SNode<SAnnotationDecl> implements STypeDecl
 		return Kind.AnnotationDecl;
 	}
 
-	public BUTree<SNodeList> modifiers() {
-		return modifiers;
-	}
-
 	public SAnnotationDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SAnnotationDecl(modifiers, name, members);
 	}
 
-	public BUTree<SName> name() {
-		return name;
-	}
-
 	public SAnnotationDecl withName(BUTree<SName> name) {
 		return new SAnnotationDecl(modifiers, name, members);
-	}
-
-	public BUTree<SNodeList> members() {
-		return members;
 	}
 
 	public SAnnotationDecl withMembers(BUTree<SNodeList> members) {

@@ -29,16 +29,8 @@ public class SArrayAccessExpr extends SNode<SArrayAccessExpr> implements SExpr {
 		return Kind.ArrayAccessExpr;
 	}
 
-	public BUTree<? extends SExpr> name() {
-		return name;
-	}
-
 	public SArrayAccessExpr withName(BUTree<? extends SExpr> name) {
 		return new SArrayAccessExpr(name, index);
-	}
-
-	public BUTree<? extends SExpr> index() {
-		return index;
 	}
 
 	public SArrayAccessExpr withIndex(BUTree<? extends SExpr> index) {

@@ -39,24 +39,12 @@ public class SImportDecl extends SNode<SImportDecl> implements STree {
 		return Kind.ImportDecl;
 	}
 
-	public BUTree<SQualifiedName> name() {
-		return name;
-	}
-
 	public SImportDecl withName(BUTree<SQualifiedName> name) {
 		return new SImportDecl(name, isStatic, isOnDemand);
 	}
 
-	public boolean isStatic() {
-		return isStatic;
-	}
-
 	public SImportDecl setStatic(boolean isStatic) {
 		return new SImportDecl(name, isStatic, isOnDemand);
-	}
-
-	public boolean isOnDemand() {
-		return isOnDemand;
 	}
 
 	public SImportDecl setOnDemand(boolean isOnDemand) {

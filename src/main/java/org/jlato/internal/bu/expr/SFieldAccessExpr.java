@@ -33,16 +33,8 @@ public class SFieldAccessExpr extends SNode<SFieldAccessExpr> implements SExpr {
 		return Kind.FieldAccessExpr;
 	}
 
-	public BUTree<SNodeOption> scope() {
-		return scope;
-	}
-
 	public SFieldAccessExpr withScope(BUTree<SNodeOption> scope) {
 		return new SFieldAccessExpr(scope, name);
-	}
-
-	public BUTree<SName> name() {
-		return name;
 	}
 
 	public SFieldAccessExpr withName(BUTree<SName> name) {

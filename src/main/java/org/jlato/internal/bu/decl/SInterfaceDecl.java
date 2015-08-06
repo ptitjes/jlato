@@ -42,40 +42,20 @@ public class SInterfaceDecl extends SNode<SInterfaceDecl> implements STypeDecl {
 		return Kind.InterfaceDecl;
 	}
 
-	public BUTree<SNodeList> modifiers() {
-		return modifiers;
-	}
-
 	public SInterfaceDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SInterfaceDecl(modifiers, name, typeParams, extendsClause, members);
-	}
-
-	public BUTree<SName> name() {
-		return name;
 	}
 
 	public SInterfaceDecl withName(BUTree<SName> name) {
 		return new SInterfaceDecl(modifiers, name, typeParams, extendsClause, members);
 	}
 
-	public BUTree<SNodeList> typeParams() {
-		return typeParams;
-	}
-
 	public SInterfaceDecl withTypeParams(BUTree<SNodeList> typeParams) {
 		return new SInterfaceDecl(modifiers, name, typeParams, extendsClause, members);
 	}
 
-	public BUTree<SNodeList> extendsClause() {
-		return extendsClause;
-	}
-
 	public SInterfaceDecl withExtendsClause(BUTree<SNodeList> extendsClause) {
 		return new SInterfaceDecl(modifiers, name, typeParams, extendsClause, members);
-	}
-
-	public BUTree<SNodeList> members() {
-		return members;
 	}
 
 	public SInterfaceDecl withMembers(BUTree<SNodeList> members) {

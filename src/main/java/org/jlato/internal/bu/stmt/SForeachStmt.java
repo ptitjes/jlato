@@ -36,24 +36,12 @@ public class SForeachStmt extends SNode<SForeachStmt> implements SStmt {
 		return Kind.ForeachStmt;
 	}
 
-	public BUTree<SVariableDeclarationExpr> var() {
-		return var;
-	}
-
 	public SForeachStmt withVar(BUTree<SVariableDeclarationExpr> var) {
 		return new SForeachStmt(var, iterable, body);
 	}
 
-	public BUTree<? extends SExpr> iterable() {
-		return iterable;
-	}
-
 	public SForeachStmt withIterable(BUTree<? extends SExpr> iterable) {
 		return new SForeachStmt(var, iterable, body);
-	}
-
-	public BUTree<? extends SStmt> body() {
-		return body;
 	}
 
 	public SForeachStmt withBody(BUTree<? extends SStmt> body) {

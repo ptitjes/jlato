@@ -54,48 +54,24 @@ public class SEnumDecl extends SNode<SEnumDecl> implements STypeDecl {
 		return Kind.EnumDecl;
 	}
 
-	public BUTree<SNodeList> modifiers() {
-		return modifiers;
-	}
-
 	public SEnumDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SEnumDecl(modifiers, name, implementsClause, enumConstants, trailingComma, members);
-	}
-
-	public BUTree<SName> name() {
-		return name;
 	}
 
 	public SEnumDecl withName(BUTree<SName> name) {
 		return new SEnumDecl(modifiers, name, implementsClause, enumConstants, trailingComma, members);
 	}
 
-	public BUTree<SNodeList> implementsClause() {
-		return implementsClause;
-	}
-
 	public SEnumDecl withImplementsClause(BUTree<SNodeList> implementsClause) {
 		return new SEnumDecl(modifiers, name, implementsClause, enumConstants, trailingComma, members);
-	}
-
-	public BUTree<SNodeList> enumConstants() {
-		return enumConstants;
 	}
 
 	public SEnumDecl withEnumConstants(BUTree<SNodeList> enumConstants) {
 		return new SEnumDecl(modifiers, name, implementsClause, enumConstants, trailingComma, members);
 	}
 
-	public boolean trailingComma() {
-		return trailingComma;
-	}
-
 	public SEnumDecl withTrailingComma(boolean trailingComma) {
 		return new SEnumDecl(modifiers, name, implementsClause, enumConstants, trailingComma, members);
-	}
-
-	public BUTree<SNodeList> members() {
-		return members;
 	}
 
 	public SEnumDecl withMembers(BUTree<SNodeList> members) {

@@ -27,10 +27,6 @@ public class SVariableDeclarationExpr extends SNode<SVariableDeclarationExpr> im
 		return Kind.VariableDeclarationExpr;
 	}
 
-	public BUTree<SLocalVariableDecl> declaration() {
-		return declaration;
-	}
-
 	public SVariableDeclarationExpr withDeclaration(BUTree<SLocalVariableDecl> declaration) {
 		return new SVariableDeclarationExpr(declaration);
 	}

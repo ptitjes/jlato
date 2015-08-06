@@ -30,16 +30,8 @@ public class SArrayDimExpr extends SNode<SArrayDimExpr> implements STree {
 		return Kind.ArrayDimExpr;
 	}
 
-	public BUTree<SNodeList> annotations() {
-		return annotations;
-	}
-
 	public SArrayDimExpr withAnnotations(BUTree<SNodeList> annotations) {
 		return new SArrayDimExpr(annotations, expr);
-	}
-
-	public BUTree<? extends SExpr> expr() {
-		return expr;
 	}
 
 	public SArrayDimExpr withExpr(BUTree<? extends SExpr> expr) {

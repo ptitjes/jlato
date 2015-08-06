@@ -32,16 +32,8 @@ public class SMemberValuePair extends SNode<SMemberValuePair> implements STree {
 		return Kind.MemberValuePair;
 	}
 
-	public BUTree<SName> name() {
-		return name;
-	}
-
 	public SMemberValuePair withName(BUTree<SName> name) {
 		return new SMemberValuePair(name, value);
-	}
-
-	public BUTree<? extends SExpr> value() {
-		return value;
 	}
 
 	public SMemberValuePair withValue(BUTree<? extends SExpr> value) {

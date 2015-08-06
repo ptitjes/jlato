@@ -33,16 +33,8 @@ public class SAssertStmt extends SNode<SAssertStmt> implements SStmt {
 		return Kind.AssertStmt;
 	}
 
-	public BUTree<? extends SExpr> check() {
-		return check;
-	}
-
 	public SAssertStmt withCheck(BUTree<? extends SExpr> check) {
 		return new SAssertStmt(check, msg);
-	}
-
-	public BUTree<SNodeOption> msg() {
-		return msg;
 	}
 
 	public SAssertStmt withMsg(BUTree<SNodeOption> msg) {

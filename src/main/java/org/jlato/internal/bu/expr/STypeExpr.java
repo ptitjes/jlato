@@ -27,10 +27,6 @@ public class STypeExpr extends SNode<STypeExpr> implements SExpr {
 		return Kind.TypeExpr;
 	}
 
-	public BUTree<? extends SType> type() {
-		return type;
-	}
-
 	public STypeExpr withType(BUTree<? extends SType> type) {
 		return new STypeExpr(type);
 	}

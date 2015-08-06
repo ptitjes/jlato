@@ -42,32 +42,16 @@ public class SExplicitConstructorInvocationStmt extends SNode<SExplicitConstruct
 		return Kind.ExplicitConstructorInvocationStmt;
 	}
 
-	public BUTree<SNodeList> typeArgs() {
-		return typeArgs;
-	}
-
 	public SExplicitConstructorInvocationStmt withTypeArgs(BUTree<SNodeList> typeArgs) {
 		return new SExplicitConstructorInvocationStmt(typeArgs, isThis, expr, args);
-	}
-
-	public boolean isThis() {
-		return isThis;
 	}
 
 	public SExplicitConstructorInvocationStmt setThis(boolean isThis) {
 		return new SExplicitConstructorInvocationStmt(typeArgs, isThis, expr, args);
 	}
 
-	public BUTree<SNodeOption> expr() {
-		return expr;
-	}
-
 	public SExplicitConstructorInvocationStmt withExpr(BUTree<SNodeOption> expr) {
 		return new SExplicitConstructorInvocationStmt(typeArgs, isThis, expr, args);
-	}
-
-	public BUTree<SNodeList> args() {
-		return args;
 	}
 
 	public SExplicitConstructorInvocationStmt withArgs(BUTree<SNodeList> args) {

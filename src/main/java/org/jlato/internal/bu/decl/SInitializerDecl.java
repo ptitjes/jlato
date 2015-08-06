@@ -33,16 +33,8 @@ public class SInitializerDecl extends SNode<SInitializerDecl> implements SMember
 		return Kind.InitializerDecl;
 	}
 
-	public BUTree<SNodeList> modifiers() {
-		return modifiers;
-	}
-
 	public SInitializerDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SInitializerDecl(modifiers, body);
-	}
-
-	public BUTree<SBlockStmt> body() {
-		return body;
 	}
 
 	public SInitializerDecl withBody(BUTree<SBlockStmt> body) {

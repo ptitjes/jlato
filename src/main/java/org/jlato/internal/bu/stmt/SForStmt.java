@@ -39,32 +39,16 @@ public class SForStmt extends SNode<SForStmt> implements SStmt {
 		return Kind.ForStmt;
 	}
 
-	public BUTree<SNodeList> init() {
-		return init;
-	}
-
 	public SForStmt withInit(BUTree<SNodeList> init) {
 		return new SForStmt(init, compare, update, body);
-	}
-
-	public BUTree<? extends SExpr> compare() {
-		return compare;
 	}
 
 	public SForStmt withCompare(BUTree<? extends SExpr> compare) {
 		return new SForStmt(init, compare, update, body);
 	}
 
-	public BUTree<SNodeList> update() {
-		return update;
-	}
-
 	public SForStmt withUpdate(BUTree<SNodeList> update) {
 		return new SForStmt(init, compare, update, body);
-	}
-
-	public BUTree<? extends SStmt> body() {
-		return body;
 	}
 
 	public SForStmt withBody(BUTree<? extends SStmt> body) {

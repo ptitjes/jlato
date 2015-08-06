@@ -28,10 +28,6 @@ public class SSuperExpr extends SNode<SSuperExpr> implements SExpr {
 		return Kind.SuperExpr;
 	}
 
-	public BUTree<SNodeOption> classExpr() {
-		return classExpr;
-	}
-
 	public SSuperExpr withClassExpr(BUTree<SNodeOption> classExpr) {
 		return new SSuperExpr(classExpr);
 	}

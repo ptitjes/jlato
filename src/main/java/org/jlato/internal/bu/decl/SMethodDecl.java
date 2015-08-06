@@ -56,64 +56,32 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 		return Kind.MethodDecl;
 	}
 
-	public BUTree<SNodeList> modifiers() {
-		return modifiers;
-	}
-
 	public SMethodDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
-	}
-
-	public BUTree<SNodeList> typeParams() {
-		return typeParams;
 	}
 
 	public SMethodDecl withTypeParams(BUTree<SNodeList> typeParams) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 	}
 
-	public BUTree<? extends SType> type() {
-		return type;
-	}
-
 	public SMethodDecl withType(BUTree<? extends SType> type) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
-	}
-
-	public BUTree<SName> name() {
-		return name;
 	}
 
 	public SMethodDecl withName(BUTree<SName> name) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 	}
 
-	public BUTree<SNodeList> params() {
-		return params;
-	}
-
 	public SMethodDecl withParams(BUTree<SNodeList> params) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
-	}
-
-	public BUTree<SNodeList> dims() {
-		return dims;
 	}
 
 	public SMethodDecl withDims(BUTree<SNodeList> dims) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
 	}
 
-	public BUTree<SNodeList> throwsClause() {
-		return throwsClause;
-	}
-
 	public SMethodDecl withThrowsClause(BUTree<SNodeList> throwsClause) {
 		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
-	}
-
-	public BUTree<SNodeOption> body() {
-		return body;
 	}
 
 	public SMethodDecl withBody(BUTree<SNodeOption> body) {

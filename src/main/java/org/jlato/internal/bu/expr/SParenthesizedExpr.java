@@ -26,10 +26,6 @@ public class SParenthesizedExpr extends SNode<SParenthesizedExpr> implements SEx
 		return Kind.ParenthesizedExpr;
 	}
 
-	public BUTree<? extends SExpr> inner() {
-		return inner;
-	}
-
 	public SParenthesizedExpr withInner(BUTree<? extends SExpr> inner) {
 		return new SParenthesizedExpr(inner);
 	}

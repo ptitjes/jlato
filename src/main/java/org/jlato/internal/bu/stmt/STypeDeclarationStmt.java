@@ -28,10 +28,6 @@ public class STypeDeclarationStmt extends SNode<STypeDeclarationStmt> implements
 		return Kind.TypeDeclarationStmt;
 	}
 
-	public BUTree<? extends STypeDecl> typeDecl() {
-		return typeDecl;
-	}
-
 	public STypeDeclarationStmt withTypeDecl(BUTree<? extends STypeDecl> typeDecl) {
 		return new STypeDeclarationStmt(typeDecl);
 	}

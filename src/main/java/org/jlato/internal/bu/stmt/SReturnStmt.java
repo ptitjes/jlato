@@ -29,10 +29,6 @@ public class SReturnStmt extends SNode<SReturnStmt> implements SStmt {
 		return Kind.ReturnStmt;
 	}
 
-	public BUTree<SNodeOption> expr() {
-		return expr;
-	}
-
 	public SReturnStmt withExpr(BUTree<SNodeOption> expr) {
 		return new SReturnStmt(expr);
 	}

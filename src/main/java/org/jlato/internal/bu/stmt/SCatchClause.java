@@ -32,16 +32,8 @@ public class SCatchClause extends SNode<SCatchClause> implements STree {
 		return Kind.CatchClause;
 	}
 
-	public BUTree<SFormalParameter> param() {
-		return param;
-	}
-
 	public SCatchClause withParam(BUTree<SFormalParameter> param) {
 		return new SCatchClause(param, catchBlock);
-	}
-
-	public BUTree<SBlockStmt> catchBlock() {
-		return catchBlock;
 	}
 
 	public SCatchClause withCatchBlock(BUTree<SBlockStmt> catchBlock) {

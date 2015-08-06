@@ -34,16 +34,8 @@ public class SPrimitiveType extends SNode<SPrimitiveType> implements SType {
 		return Kind.PrimitiveType;
 	}
 
-	public BUTree<SNodeList> annotations() {
-		return annotations;
-	}
-
 	public SPrimitiveType withAnnotations(BUTree<SNodeList> annotations) {
 		return new SPrimitiveType(annotations, primitive);
-	}
-
-	public Primitive primitive() {
-		return primitive;
 	}
 
 	public SPrimitiveType withPrimitive(Primitive primitive) {

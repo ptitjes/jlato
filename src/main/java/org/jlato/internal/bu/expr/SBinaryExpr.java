@@ -36,24 +36,12 @@ public class SBinaryExpr extends SNode<SBinaryExpr> implements SExpr {
 		return Kind.BinaryExpr;
 	}
 
-	public BUTree<? extends SExpr> left() {
-		return left;
-	}
-
 	public SBinaryExpr withLeft(BUTree<? extends SExpr> left) {
 		return new SBinaryExpr(left, op, right);
 	}
 
-	public BinaryOp op() {
-		return op;
-	}
-
 	public SBinaryExpr withOp(BinaryOp op) {
 		return new SBinaryExpr(left, op, right);
-	}
-
-	public BUTree<? extends SExpr> right() {
-		return right;
 	}
 
 	public SBinaryExpr withRight(BUTree<? extends SExpr> right) {

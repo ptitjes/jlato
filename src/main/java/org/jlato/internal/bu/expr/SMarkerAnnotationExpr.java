@@ -27,10 +27,6 @@ public class SMarkerAnnotationExpr extends SNode<SMarkerAnnotationExpr> implemen
 		return Kind.MarkerAnnotationExpr;
 	}
 
-	public BUTree<SQualifiedName> name() {
-		return name;
-	}
-
 	public SMarkerAnnotationExpr withName(BUTree<SQualifiedName> name) {
 		return new SMarkerAnnotationExpr(name);
 	}

@@ -33,16 +33,8 @@ public class SVariableDeclarator extends SNode<SVariableDeclarator> implements S
 		return Kind.VariableDeclarator;
 	}
 
-	public BUTree<SVariableDeclaratorId> id() {
-		return id;
-	}
-
 	public SVariableDeclarator withId(BUTree<SVariableDeclaratorId> id) {
 		return new SVariableDeclarator(id, init);
-	}
-
-	public BUTree<SNodeOption> init() {
-		return init;
 	}
 
 	public SVariableDeclarator withInit(BUTree<SNodeOption> init) {

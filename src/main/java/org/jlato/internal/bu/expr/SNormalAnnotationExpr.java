@@ -33,16 +33,8 @@ public class SNormalAnnotationExpr extends SNode<SNormalAnnotationExpr> implemen
 		return Kind.NormalAnnotationExpr;
 	}
 
-	public BUTree<SQualifiedName> name() {
-		return name;
-	}
-
 	public SNormalAnnotationExpr withName(BUTree<SQualifiedName> name) {
 		return new SNormalAnnotationExpr(name, pairs);
-	}
-
-	public BUTree<SNodeList> pairs() {
-		return pairs;
 	}
 
 	public SNormalAnnotationExpr withPairs(BUTree<SNodeList> pairs) {

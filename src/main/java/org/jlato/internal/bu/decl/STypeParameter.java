@@ -37,24 +37,12 @@ public class STypeParameter extends SNode<STypeParameter> implements STree {
 		return Kind.TypeParameter;
 	}
 
-	public BUTree<SNodeList> annotations() {
-		return annotations;
-	}
-
 	public STypeParameter withAnnotations(BUTree<SNodeList> annotations) {
 		return new STypeParameter(annotations, name, bounds);
 	}
 
-	public BUTree<SName> name() {
-		return name;
-	}
-
 	public STypeParameter withName(BUTree<SName> name) {
 		return new STypeParameter(annotations, name, bounds);
-	}
-
-	public BUTree<SNodeList> bounds() {
-		return bounds;
 	}
 
 	public STypeParameter withBounds(BUTree<SNodeList> bounds) {

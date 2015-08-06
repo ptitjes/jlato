@@ -31,16 +31,8 @@ public class SSingleMemberAnnotationExpr extends SNode<SSingleMemberAnnotationEx
 		return Kind.SingleMemberAnnotationExpr;
 	}
 
-	public BUTree<SQualifiedName> name() {
-		return name;
-	}
-
 	public SSingleMemberAnnotationExpr withName(BUTree<SQualifiedName> name) {
 		return new SSingleMemberAnnotationExpr(name, memberValue);
-	}
-
-	public BUTree<? extends SExpr> memberValue() {
-		return memberValue;
 	}
 
 	public SSingleMemberAnnotationExpr withMemberValue(BUTree<? extends SExpr> memberValue) {

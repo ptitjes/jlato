@@ -38,16 +38,8 @@ public class SSwitchStmt extends SNode<SSwitchStmt> implements SStmt {
 		return Kind.SwitchStmt;
 	}
 
-	public BUTree<? extends SExpr> selector() {
-		return selector;
-	}
-
 	public SSwitchStmt withSelector(BUTree<? extends SExpr> selector) {
 		return new SSwitchStmt(selector, cases);
-	}
-
-	public BUTree<SNodeList> cases() {
-		return cases;
 	}
 
 	public SSwitchStmt withCases(BUTree<SNodeList> cases) {

@@ -42,32 +42,16 @@ public class SArrayCreationExpr extends SNode<SArrayCreationExpr> implements SEx
 		return Kind.ArrayCreationExpr;
 	}
 
-	public BUTree<? extends SType> type() {
-		return type;
-	}
-
 	public SArrayCreationExpr withType(BUTree<? extends SType> type) {
 		return new SArrayCreationExpr(type, dimExprs, dims, init);
-	}
-
-	public BUTree<SNodeList> dimExprs() {
-		return dimExprs;
 	}
 
 	public SArrayCreationExpr withDimExprs(BUTree<SNodeList> dimExprs) {
 		return new SArrayCreationExpr(type, dimExprs, dims, init);
 	}
 
-	public BUTree<SNodeList> dims() {
-		return dims;
-	}
-
 	public SArrayCreationExpr withDims(BUTree<SNodeList> dims) {
 		return new SArrayCreationExpr(type, dimExprs, dims, init);
-	}
-
-	public BUTree<SNodeOption> init() {
-		return init;
 	}
 
 	public SArrayCreationExpr withInit(BUTree<SNodeOption> init) {

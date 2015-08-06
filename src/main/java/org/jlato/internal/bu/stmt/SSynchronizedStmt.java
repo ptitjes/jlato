@@ -32,16 +32,8 @@ public class SSynchronizedStmt extends SNode<SSynchronizedStmt> implements SStmt
 		return Kind.SynchronizedStmt;
 	}
 
-	public BUTree<? extends SExpr> expr() {
-		return expr;
-	}
-
 	public SSynchronizedStmt withExpr(BUTree<? extends SExpr> expr) {
 		return new SSynchronizedStmt(expr, block);
-	}
-
-	public BUTree<SBlockStmt> block() {
-		return block;
 	}
 
 	public SSynchronizedStmt withBlock(BUTree<SBlockStmt> block) {

@@ -40,24 +40,12 @@ public class SLambdaExpr extends SNode<SLambdaExpr> implements SExpr {
 		return Kind.LambdaExpr;
 	}
 
-	public BUTree<SNodeList> params() {
-		return params;
-	}
-
 	public SLambdaExpr withParams(BUTree<SNodeList> params) {
 		return new SLambdaExpr(params, hasParens, body);
 	}
 
-	public boolean hasParens() {
-		return hasParens;
-	}
-
 	public SLambdaExpr setParens(boolean hasParens) {
 		return new SLambdaExpr(params, hasParens, body);
-	}
-
-	public BUTree<SNodeEither> body() {
-		return body;
 	}
 
 	public SLambdaExpr withBody(BUTree<SNodeEither> body) {

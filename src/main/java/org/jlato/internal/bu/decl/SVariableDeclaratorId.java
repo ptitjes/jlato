@@ -32,16 +32,8 @@ public class SVariableDeclaratorId extends SNode<SVariableDeclaratorId> implemen
 		return Kind.VariableDeclaratorId;
 	}
 
-	public BUTree<SName> name() {
-		return name;
-	}
-
 	public SVariableDeclaratorId withName(BUTree<SName> name) {
 		return new SVariableDeclaratorId(name, dims);
-	}
-
-	public BUTree<SNodeList> dims() {
-		return dims;
 	}
 
 	public SVariableDeclaratorId withDims(BUTree<SNodeList> dims) {

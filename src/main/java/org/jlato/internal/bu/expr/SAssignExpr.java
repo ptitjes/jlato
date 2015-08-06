@@ -36,24 +36,12 @@ public class SAssignExpr extends SNode<SAssignExpr> implements SExpr {
 		return Kind.AssignExpr;
 	}
 
-	public BUTree<? extends SExpr> target() {
-		return target;
-	}
-
 	public SAssignExpr withTarget(BUTree<? extends SExpr> target) {
 		return new SAssignExpr(target, op, value);
 	}
 
-	public AssignOp op() {
-		return op;
-	}
-
 	public SAssignExpr withOp(AssignOp op) {
 		return new SAssignExpr(target, op, value);
-	}
-
-	public BUTree<? extends SExpr> value() {
-		return value;
 	}
 
 	public SAssignExpr withValue(BUTree<? extends SExpr> value) {

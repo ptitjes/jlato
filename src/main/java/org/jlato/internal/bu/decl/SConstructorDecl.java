@@ -48,48 +48,24 @@ public class SConstructorDecl extends SNode<SConstructorDecl> implements SMember
 		return Kind.ConstructorDecl;
 	}
 
-	public BUTree<SNodeList> modifiers() {
-		return modifiers;
-	}
-
 	public SConstructorDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
-	}
-
-	public BUTree<SNodeList> typeParams() {
-		return typeParams;
 	}
 
 	public SConstructorDecl withTypeParams(BUTree<SNodeList> typeParams) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
-	public BUTree<SName> name() {
-		return name;
-	}
-
 	public SConstructorDecl withName(BUTree<SName> name) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
-	}
-
-	public BUTree<SNodeList> params() {
-		return params;
 	}
 
 	public SConstructorDecl withParams(BUTree<SNodeList> params) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
-	public BUTree<SNodeList> throwsClause() {
-		return throwsClause;
-	}
-
 	public SConstructorDecl withThrowsClause(BUTree<SNodeList> throwsClause) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
-	}
-
-	public BUTree<SBlockStmt> body() {
-		return body;
 	}
 
 	public SConstructorDecl withBody(BUTree<SBlockStmt> body) {

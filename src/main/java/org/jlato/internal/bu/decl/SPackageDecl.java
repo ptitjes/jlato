@@ -32,16 +32,8 @@ public class SPackageDecl extends SNode<SPackageDecl> implements STree {
 		return Kind.PackageDecl;
 	}
 
-	public BUTree<SNodeList> annotations() {
-		return annotations;
-	}
-
 	public SPackageDecl withAnnotations(BUTree<SNodeList> annotations) {
 		return new SPackageDecl(annotations, name);
-	}
-
-	public BUTree<SQualifiedName> name() {
-		return name;
 	}
 
 	public SPackageDecl withName(BUTree<SQualifiedName> name) {

@@ -36,24 +36,12 @@ public class SCompilationUnit extends SNode<SCompilationUnit> implements STree {
 		return Kind.CompilationUnit;
 	}
 
-	public BUTree<SPackageDecl> packageDecl() {
-		return packageDecl;
-	}
-
 	public SCompilationUnit withPackageDecl(BUTree<SPackageDecl> packageDecl) {
 		return new SCompilationUnit(packageDecl, imports, types);
 	}
 
-	public BUTree<SNodeList> imports() {
-		return imports;
-	}
-
 	public SCompilationUnit withImports(BUTree<SNodeList> imports) {
 		return new SCompilationUnit(packageDecl, imports, types);
-	}
-
-	public BUTree<SNodeList> types() {
-		return types;
 	}
 
 	public SCompilationUnit withTypes(BUTree<SNodeList> types) {

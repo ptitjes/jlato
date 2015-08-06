@@ -31,16 +31,8 @@ public class SLiteralExpr extends SNode<SLiteralExpr> implements SExpr {
 		return Kind.LiteralExpr;
 	}
 
-	public Class<?> literalClass() {
-		return literalClass;
-	}
-
 	public SLiteralExpr withLiteralClass(Class<?> literalClass) {
 		return new SLiteralExpr(literalClass, literalString);
-	}
-
-	public String literalString() {
-		return literalString;
 	}
 
 	public SLiteralExpr withLiteralString(String literalString) {

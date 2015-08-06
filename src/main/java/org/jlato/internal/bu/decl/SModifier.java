@@ -29,10 +29,6 @@ public class SModifier extends SNode<SModifier> implements SExtendedModifier {
 		return Kind.Modifier;
 	}
 
-	public ModifierKeyword keyword() {
-		return keyword;
-	}
-
 	public SModifier withKeyword(ModifierKeyword keyword) {
 		return new SModifier(keyword);
 	}

@@ -27,10 +27,6 @@ public class SExpressionStmt extends SNode<SExpressionStmt> implements SStmt {
 		return Kind.ExpressionStmt;
 	}
 
-	public BUTree<? extends SExpr> expr() {
-		return expr;
-	}
-
 	public SExpressionStmt withExpr(BUTree<? extends SExpr> expr) {
 		return new SExpressionStmt(expr);
 	}

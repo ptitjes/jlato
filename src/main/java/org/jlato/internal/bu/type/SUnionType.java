@@ -28,10 +28,6 @@ public class SUnionType extends SNode<SUnionType> implements SType {
 		return Kind.UnionType;
 	}
 
-	public BUTree<SNodeList> types() {
-		return types;
-	}
-
 	public SUnionType withTypes(BUTree<SNodeList> types) {
 		return new SUnionType(types);
 	}
