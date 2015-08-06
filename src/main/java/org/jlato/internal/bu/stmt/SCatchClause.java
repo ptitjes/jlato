@@ -14,16 +14,16 @@ import static org.jlato.internal.shapes.SpacingConstraint.space;
 
 public class SCatchClause extends SNode<SCatchClause> implements STree {
 
-	public static BUTree<SCatchClause> make(BUTree<SFormalParameter> except, BUTree<SBlockStmt> catchBlock) {
-		return new BUTree<SCatchClause>(new SCatchClause(except, catchBlock));
+	public static BUTree<SCatchClause> make(BUTree<SFormalParameter> param, BUTree<SBlockStmt> catchBlock) {
+		return new BUTree<SCatchClause>(new SCatchClause(param, catchBlock));
 	}
 
-	public final BUTree<SFormalParameter> except;
+	public final BUTree<SFormalParameter> param;
 
 	public final BUTree<SBlockStmt> catchBlock;
 
-	public SCatchClause(BUTree<SFormalParameter> except, BUTree<SBlockStmt> catchBlock) {
-		this.except = except;
+	public SCatchClause(BUTree<SFormalParameter> param, BUTree<SBlockStmt> catchBlock) {
+		this.param = param;
 		this.catchBlock = catchBlock;
 	}
 
@@ -32,12 +32,12 @@ public class SCatchClause extends SNode<SCatchClause> implements STree {
 		return Kind.CatchClause;
 	}
 
-	public BUTree<SFormalParameter> except() {
-		return except;
+	public BUTree<SFormalParameter> param() {
+		return param;
 	}
 
-	public SCatchClause withExcept(BUTree<SFormalParameter> except) {
-		return new SCatchClause(except, catchBlock);
+	public SCatchClause withParam(BUTree<SFormalParameter> param) {
+		return new SCatchClause(param, catchBlock);
 	}
 
 	public BUTree<SBlockStmt> catchBlock() {
@@ -45,7 +45,7 @@ public class SCatchClause extends SNode<SCatchClause> implements STree {
 	}
 
 	public SCatchClause withCatchBlock(BUTree<SBlockStmt> catchBlock) {
-		return new SCatchClause(except, catchBlock);
+		return new SCatchClause(param, catchBlock);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class SCatchClause extends SNode<SCatchClause> implements STree {
 
 	@Override
 	public STraversal firstChild() {
-		return EXCEPT;
+		return PARAM;
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class SCatchClause extends SNode<SCatchClause> implements STree {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		SCatchClause state = (SCatchClause) o;
-		if (except == null ? state.except != null : !except.equals(state.except))
+		if (param == null ? state.param != null : !param.equals(state.param))
 			return false;
 		if (catchBlock == null ? state.catchBlock != null : !catchBlock.equals(state.catchBlock))
 			return false;
@@ -85,21 +85,21 @@ public class SCatchClause extends SNode<SCatchClause> implements STree {
 	@Override
 	public int hashCode() {
 		int result = 17;
-		if (except != null) result = 37 * result + except.hashCode();
+		if (param != null) result = 37 * result + param.hashCode();
 		if (catchBlock != null) result = 37 * result + catchBlock.hashCode();
 		return result;
 	}
 
-	public static STypeSafeTraversal<SCatchClause, SFormalParameter, FormalParameter> EXCEPT = new STypeSafeTraversal<SCatchClause, SFormalParameter, FormalParameter>() {
+	public static STypeSafeTraversal<SCatchClause, SFormalParameter, FormalParameter> PARAM = new STypeSafeTraversal<SCatchClause, SFormalParameter, FormalParameter>() {
 
 		@Override
 		public BUTree<?> doTraverse(SCatchClause state) {
-			return state.except;
+			return state.param;
 		}
 
 		@Override
 		public SCatchClause doRebuildParentState(SCatchClause state, BUTree<SFormalParameter> child) {
-			return state.withExcept(child);
+			return state.withParam(child);
 		}
 
 		@Override
@@ -127,7 +127,7 @@ public class SCatchClause extends SNode<SCatchClause> implements STree {
 
 		@Override
 		public STraversal leftSibling(STree state) {
-			return EXCEPT;
+			return PARAM;
 		}
 
 		@Override
@@ -139,7 +139,7 @@ public class SCatchClause extends SNode<SCatchClause> implements STree {
 	public static final LexicalShape shape = composite(
 			keyword(LToken.Catch),
 			token(LToken.ParenthesisLeft).withSpacingBefore(space()),
-			child(EXCEPT),
+			child(PARAM),
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			child(CATCH_BLOCK)
 	);

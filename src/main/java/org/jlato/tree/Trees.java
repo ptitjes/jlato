@@ -563,8 +563,8 @@ public abstract class Trees {
 		return new TDCatchClause(null, null);
 	}
 
-	public static CatchClause catchClause(FormalParameter except, BlockStmt catchBlock) {
-		return new TDCatchClause(except, catchBlock);
+	public static CatchClause catchClause(FormalParameter param, BlockStmt catchBlock) {
+		return new TDCatchClause(param, catchBlock);
 	}
 
 	public static ContinueStmt continueStmt() {

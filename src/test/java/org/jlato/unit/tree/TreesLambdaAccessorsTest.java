@@ -1006,15 +1006,15 @@ public class TreesLambdaAccessorsTest {
 	public void testCatchClause() {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
-			FormalParameter except = arbitrary.arbitraryFormalParameter();
+			FormalParameter param = arbitrary.arbitraryFormalParameter();
 			BlockStmt catchBlock = arbitrary.arbitraryBlockStmt();
-			CatchClause t = Trees.catchClause().withExcept(except).withCatchBlock(catchBlock);
-			Assert.assertEquals(except, t.except());
+			CatchClause t = Trees.catchClause().withParam(param).withCatchBlock(catchBlock);
+			Assert.assertEquals(param, t.param());
 			Assert.assertEquals(catchBlock, t.catchBlock());
-			FormalParameter except2 = arbitrary.arbitraryFormalParameter();
+			FormalParameter param2 = arbitrary.arbitraryFormalParameter();
 			BlockStmt catchBlock2 = arbitrary.arbitraryBlockStmt();
-			CatchClause t2 = t.withExcept(mutationBy(except, except2)).withCatchBlock(mutationBy(catchBlock, catchBlock2));
-			Assert.assertEquals(except2, t2.except());
+			CatchClause t2 = t.withParam(mutationBy(param, param2)).withCatchBlock(mutationBy(catchBlock, catchBlock2));
+			Assert.assertEquals(param2, t2.param());
 			Assert.assertEquals(catchBlock2, t2.catchBlock());
 		}
 	}

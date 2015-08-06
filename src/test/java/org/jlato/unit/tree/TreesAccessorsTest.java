@@ -687,10 +687,10 @@ public class TreesAccessorsTest {
 	public void testCatchClause() {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
-			FormalParameter except = arbitrary.arbitraryFormalParameter();
+			FormalParameter param = arbitrary.arbitraryFormalParameter();
 			BlockStmt catchBlock = arbitrary.arbitraryBlockStmt();
-			CatchClause t = Trees.catchClause().withExcept(except).withCatchBlock(catchBlock);
-			Assert.assertEquals(except, t.except());
+			CatchClause t = Trees.catchClause().withParam(param).withCatchBlock(catchBlock);
+			Assert.assertEquals(param, t.param());
 			Assert.assertEquals(catchBlock, t.catchBlock());
 		}
 	}

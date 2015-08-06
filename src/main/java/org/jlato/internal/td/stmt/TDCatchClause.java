@@ -5,11 +5,9 @@ import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.bu.stmt.SCatchClause;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
-import org.jlato.tree.Kind;
-import org.jlato.tree.Node;
-import org.jlato.tree.decl.FormalParameter;
-import org.jlato.tree.stmt.BlockStmt;
-import org.jlato.tree.stmt.CatchClause;
+import org.jlato.tree.*;
+import org.jlato.tree.decl.*;
+import org.jlato.tree.stmt.*;
 import org.jlato.util.Mutation;
 
 public class TDCatchClause extends TDTree<SCatchClause, Node, CatchClause> implements CatchClause {
@@ -22,20 +20,20 @@ public class TDCatchClause extends TDTree<SCatchClause, Node, CatchClause> imple
 		super(location);
 	}
 
-	public TDCatchClause(FormalParameter except, BlockStmt catchBlock) {
-		super(new TDLocation<SCatchClause>(SCatchClause.make(TDTree.<SFormalParameter>treeOf(except), TDTree.<SBlockStmt>treeOf(catchBlock))));
+	public TDCatchClause(FormalParameter param, BlockStmt catchBlock) {
+		super(new TDLocation<SCatchClause>(SCatchClause.make(TDTree.<SFormalParameter>treeOf(param), TDTree.<SBlockStmt>treeOf(catchBlock))));
 	}
 
-	public FormalParameter except() {
-		return location.safeTraversal(SCatchClause.EXCEPT);
+	public FormalParameter param() {
+		return location.safeTraversal(SCatchClause.PARAM);
 	}
 
-	public CatchClause withExcept(FormalParameter except) {
-		return location.safeTraversalReplace(SCatchClause.EXCEPT, except);
+	public CatchClause withParam(FormalParameter param) {
+		return location.safeTraversalReplace(SCatchClause.PARAM, param);
 	}
 
-	public CatchClause withExcept(Mutation<FormalParameter> mutation) {
-		return location.safeTraversalMutate(SCatchClause.EXCEPT, mutation);
+	public CatchClause withParam(Mutation<FormalParameter> mutation) {
+		return location.safeTraversalMutate(SCatchClause.PARAM, mutation);
 	}
 
 	public BlockStmt catchBlock() {

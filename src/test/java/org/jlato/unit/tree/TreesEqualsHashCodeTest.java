@@ -1225,15 +1225,15 @@ public class TreesEqualsHashCodeTest {
 	public void testCatchClause() {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
-			FormalParameter except = arbitrary.arbitraryFormalParameter();
+			FormalParameter param = arbitrary.arbitraryFormalParameter();
 			BlockStmt catchBlock = arbitrary.arbitraryBlockStmt();
-			CatchClause expected = Trees.catchClause().withExcept(except).withCatchBlock(catchBlock);
+			CatchClause expected = Trees.catchClause().withParam(param).withCatchBlock(catchBlock);
 			Assert.assertEquals(expected, expected);
 			Assert.assertNotEquals(expected, null);
 			CatchClause actual = Trees.catchClause();
 			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
-			actual = actual.withExcept(except);
+			actual = actual.withParam(param);
 			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withCatchBlock(catchBlock);

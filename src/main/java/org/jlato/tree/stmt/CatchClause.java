@@ -1,17 +1,16 @@
 package org.jlato.tree.stmt;
 
-import org.jlato.tree.Node;
-import org.jlato.tree.TreeCombinators;
-import org.jlato.tree.decl.FormalParameter;
+import org.jlato.tree.*;
+import org.jlato.tree.decl.*;
 import org.jlato.util.Mutation;
 
 public interface CatchClause extends Node, TreeCombinators<CatchClause> {
 
-	FormalParameter except();
+	FormalParameter param();
 
-	CatchClause withExcept(FormalParameter except);
+	CatchClause withParam(FormalParameter param);
 
-	CatchClause withExcept(Mutation<FormalParameter> mutation);
+	CatchClause withParam(Mutation<FormalParameter> mutation);
 
 	BlockStmt catchBlock();
 
