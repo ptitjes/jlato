@@ -32,23 +32,23 @@ import java.util.Stack;
 public class DressingBuilder<S extends STree> {
 
 	private final Iterator<WTokenRun> tokenIterator;
-	private Stack<RunStack> descendantStack = new Stack<RunStack>();
+	private Stack<ChildRunBuilder> descendantStack = new Stack<ChildRunBuilder>();
 
 	public DressingBuilder(BUTree<S> tree, Iterator<WTokenRun> tokenIterator) {
 		this.tokenIterator = tokenIterator;
-		descendantStack.push(new RunStack(null, tree));
+		descendantStack.push(new ChildRunBuilder(null, tree));
 	}
 
 	public void openChild(STraversal traversal) {
-		final RunStack parentStack = descendantStack.peek();
+		final ChildRunBuilder parentStack = descendantStack.peek();
 
-		descendantStack.push(new RunStack(traversal, parentStack.tree.traverse(traversal)));
+		descendantStack.push(new ChildRunBuilder(traversal, parentStack.tree.traverse(traversal)));
 	}
 
 	public void closeChild() {
-		final RunStack childStack = descendantStack.pop();
+		final ChildRunBuilder childStack = descendantStack.pop();
 
-		final RunStack parentStack = descendantStack.peek();
+		final ChildRunBuilder parentStack = descendantStack.peek();
 		parentStack.tree = parentStack.tree.traverseReplace(childStack.traversal, childStack.tree);
 	}
 
@@ -70,7 +70,7 @@ public class DressingBuilder<S extends STree> {
 	}
 
 	public void setTrailing(WTokenRun tokens) {
-		final RunStack childStack = descendantStack.peek();
+		final ChildRunBuilder childStack = descendantStack.peek();
 
 		WDressing dressing = childStack.tree.dressing;
 		if (dressing == null) dressing = new WDressing();
@@ -79,7 +79,7 @@ public class DressingBuilder<S extends STree> {
 	}
 
 	public void setLeading(WTokenRun tokens) {
-		final RunStack childStack = descendantStack.peek();
+		final ChildRunBuilder childStack = descendantStack.peek();
 
 		WDressing dressing = childStack.tree.dressing;
 		if (dressing == null) dressing = new WDressing();
@@ -87,31 +87,29 @@ public class DressingBuilder<S extends STree> {
 		childStack.tree = childStack.tree.withDressing(dressing.withLeading(tokens));
 	}
 
-	private class RunStack {
+	private class ChildRunBuilder {
 		private STraversal traversal;
 		private BUTree<?> tree;
-		private Stack<RunBuilder> runStack = new Stack<RunBuilder>();
+		private RunBuilder runBuilder;
 
-		public RunStack(STraversal traversal, BUTree<?> tree) {
+		public ChildRunBuilder(STraversal traversal, BUTree<?> tree) {
 			this.traversal = traversal;
 			this.tree = tree;
 		}
 
 		public void openRun() {
-			runStack.push(new RunBuilder());
+			if (runBuilder != null) throw new IllegalStateException();
+			runBuilder = new RunBuilder();
 		}
 
 		public void closeRun() {
-			final RunBuilder runBuilder = runStack.pop();
 			final WRunRun run = runBuilder.build();
-
-			if (runStack.isEmpty()) {
-				if (tree.dressing == null && run != null) tree = tree.withDressing(new WDressing(run));
-			}
+			if (tree.dressing != null) throw new IllegalStateException();
+			if (run != null) tree = tree.withDressing(new WDressing(run));
 		}
 
 		public void handleNext(LexicalShape shape, BUTree<?> discriminator) {
-			runStack.peek().handleNext(shape, discriminator);
+			runBuilder.handleNext(shape, discriminator);
 		}
 	}
 
@@ -121,21 +119,20 @@ public class DressingBuilder<S extends STree> {
 		private boolean firstShape = true;
 		private boolean firstDefinedShape = true;
 		private LexicalShape lastDefinedShape = null;
-		private BUTree<?> lastDefinedDiscriminator = null;
 
 		public void handleNext(LexicalShape shape, BUTree<?> discriminator) {
 			final boolean defined = shape != null && shape.isDefined(discriminator);
 
 			if (!defined) {
 				if (firstShape) firstShape = false;
-				else addSubRun(WTokenRun.NULL);
+				else subRuns.add(WTokenRun.NULL);
 			} else {
 				if (firstShape) {
 					firstShape = false;
 					if (firstDefinedShape) firstDefinedShape = false;
 				} else if (firstDefinedShape) {
 					firstDefinedShape = false;
-					addSubRun(WTokenRun.NULL);
+					subRuns.add(WTokenRun.NULL);
 				} else {
 					WTokenRun tokens = tokenIterator.next();
 
@@ -158,18 +155,13 @@ public class DressingBuilder<S extends STree> {
 						}
 					}
 
-					addSubRun(tokens);
+					subRuns.add(tokens);
 				}
 
 				shape.dress(DressingBuilder.this, discriminator);
 
 				lastDefinedShape = shape;
-				lastDefinedDiscriminator = discriminator;
 			}
-		}
-
-		public void addSubRun(WRun run) {
-			subRuns.add(run);
 		}
 
 		public WRunRun build() {
