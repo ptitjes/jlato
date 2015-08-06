@@ -2,7 +2,6 @@ package org.jlato.internal.bu.stmt;
 
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeList;
-import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDBlockStmt;
@@ -14,7 +13,6 @@ import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.newLine;
-import static org.jlato.internal.shapes.SpacingConstraint.space;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 
 public class SBlockStmt extends SNode<SBlockStmt> implements SStmt {
