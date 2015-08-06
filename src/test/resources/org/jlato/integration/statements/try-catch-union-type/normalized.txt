@@ -8,7 +8,7 @@
         stmts: [
         ],
       },
-      except: {
+      param: {
         kind: FormalParameter,
         id: {
           kind: VariableDeclaratorId,
