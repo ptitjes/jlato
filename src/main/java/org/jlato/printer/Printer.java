@@ -198,19 +198,6 @@ public class Printer {
 		flush();
 	}
 
-	/**
-	 * Prints the specified node list.
-	 *
-	 * @param trees the trees to print
-	 */
-	public void print(NodeList<? extends Tree> trees) {
-		reset();
-		final BUTree buTree = TDTree.treeOf(trees);
-		final LexicalShape shape = LexicalShape.list();
-		shape.render(buTree, this);
-		flush();
-	}
-
 	private boolean start;
 	private int indentationLevel;
 	private boolean needsIndentation;
@@ -238,22 +225,22 @@ public class Printer {
 	public void encounteredWhitespace(WTokenRun whitespace) {
 		if (whitespace == null) return;
 
-		if (existingWhitespace == null) existingWhitespace = whitespace;
-		else existingWhitespace = existingWhitespace.appendAll(whitespace);
+		assert existingWhitespace == null;
+		existingWhitespace = whitespace;
 	}
 
 	public void encounteredLeading(WTokenRun whitespace) {
 		if (whitespace == null) return;
 
-		if (leadingWhitespace == null) leadingWhitespace = whitespace;
-		else leadingWhitespace = leadingWhitespace.appendAll(whitespace);
+		assert leadingWhitespace == null;
+		leadingWhitespace = whitespace;
 	}
 
 	public void encounteredTrailing(WTokenRun whitespace) {
 		if (whitespace == null) return;
 
-		if (trailingWhitespace == null) trailingWhitespace = whitespace;
-		else trailingWhitespace = trailingWhitespace.appendAll(whitespace);
+		assert trailingWhitespace == null;
+		trailingWhitespace = whitespace;
 	}
 
 	public void encounteredIndentation(IndentationConstraint constraint) {
@@ -331,7 +318,6 @@ public class Printer {
 		for (WToken token : tokens.elements) {
 			switch (token.kind) {
 				case ParserImplConstants.JAVA_DOC_COMMENT:
-					// TODO format javadoc comment
 					appendJavaDoc(token.string);
 					break;
 				case ParserImplConstants.SINGLE_LINE_COMMENT:
@@ -344,8 +330,6 @@ public class Printer {
 				case ParserImplConstants.WHITESPACE:
 					appendWhiteSpace(token.string);
 					break;
-				default:
-					throw new IllegalArgumentException("Tokens are supposed to be meaningless");
 			}
 		}
 	}
@@ -381,7 +365,7 @@ public class Printer {
 		}
 
 		for (int i = first; i <= last; i++) {
-				String line = lines[i];
+			String line = lines[i];
 			if (line.isEmpty()) appendJavaDocLine(" *", false);
 			else appendJavaDocLine(" * " + line, false);
 		}
