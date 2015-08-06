@@ -308,7 +308,7 @@ public class TDNodeList<T extends Tree> extends TDTree<SNodeList, NodeList<T>, N
 			final WRunRun run = dressing.run;
 			// If not last, insert before the element shape
 			// If last, insert after the last element shape
-			final WRunRun newRun = run.insert((index + (last ? -1 : 0)) * 2 + 1, 2, !last);
+			final WRunRun newRun = run.insert((index + (last ? -1 : 0)) * 2 + 1, 2);
 
 			tree = tree.withDressing(dressing.withRun(newRun));
 		}

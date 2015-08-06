@@ -69,10 +69,6 @@ public class DressingBuilder<S extends STree> {
 		descendantStack.peek().handleNext(shape, discriminator);
 	}
 
-	public void addNullRun() {
-		descendantStack.peek().addSubRun(null);
-	}
-
 	public void setTrailing(WTokenRun tokens) {
 		final RunStack childStack = descendantStack.peek();
 
@@ -111,15 +107,11 @@ public class DressingBuilder<S extends STree> {
 
 			if (runStack.isEmpty()) {
 				if (tree.dressing == null && run != null) tree = tree.withDressing(new WDressing(run));
-			} else addSubRun(run);
+			}
 		}
 
 		public void handleNext(LexicalShape shape, BUTree<?> discriminator) {
 			runStack.peek().handleNext(shape, discriminator);
-		}
-
-		public void addSubRun(WRun run) {
-			if (!runStack.isEmpty()) runStack.peek().addSubRun(run);
 		}
 	}
 
@@ -137,8 +129,6 @@ public class DressingBuilder<S extends STree> {
 			if (!defined) {
 				if (firstShape) firstShape = false;
 				else addSubRun(WTokenRun.NULL);
-
-				addSubRun(null);
 			} else {
 				if (firstShape) {
 					firstShape = false;
@@ -184,16 +174,7 @@ public class DressingBuilder<S extends STree> {
 
 		public WRunRun build() {
 			final ArrayList<WRun> subRunElements = subRuns.build();
-			boolean someEvenNonNull = checkForAnyNonNullEvenElement(subRunElements);
 			return subRunElements.isEmpty() ? null : new WRunRun(subRunElements);
-		}
-
-		private boolean checkForAnyNonNullEvenElement(ArrayList<WRun> subRunElements) {
-			int size = subRunElements.size();
-			for (int i = 0; i < (size - 1) / 2 + 1; i++) {
-				if (subRunElements.get(i * 2) != null) return true;
-			}
-			return false;
 		}
 	}
 }

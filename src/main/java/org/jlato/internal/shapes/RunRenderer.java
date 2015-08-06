@@ -49,9 +49,8 @@ public class RunRenderer {
 			printer.encounteredWhitespace(tokens);
 		}
 
-		final WRunRun subRun = (WRunRun) safeNext(elements);
 		if (shape != null) {
-			shape.render(tree, subRun, printer);
+			shape.render(tree, null, printer);
 		}
 	}
 

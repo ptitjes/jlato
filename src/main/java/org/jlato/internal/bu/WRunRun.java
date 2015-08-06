@@ -34,29 +34,20 @@ public class WRunRun extends WRun {
 		this.elements = elements;
 	}
 
-	public WRunRun insert(int index, int count, boolean before) {
-		if (index < 1 || index >= elements.size() / 2)
+	public WRunRun insert(int index, int count) {
+		if (index < 1 || index >= elements.size())
 			throw new IllegalArgumentException();
 		if (count < 1)
 			throw new IllegalArgumentException();
 
-		int cutIndex = index * 2 + (before ? 0 : +1);
-
-		IndexedList<WRun> left = elements.take(cutIndex);
-		IndexedList<WRun> right = elements.drop(cutIndex);
+		IndexedList<WRun> left = elements.take(index);
+		IndexedList<WRun> right = elements.drop(index);
 
 		IndexedList<WRun> newElements = left;
 
-		if (before) {
-			for (int i = 0; i < count; i++) {
-				// Append a sub-shape run and a whitespaces run
-				newElements = newElements.append(null).append(NULL);
-			}
-		} else {
-			for (int i = 0; i < count; i++) {
-				// Append a whitespaces run and a sub-shape run
-				newElements = newElements.append(NULL).append(null);
-			}
+		for (int i = 0; i < count; i++) {
+			// Append a whitespaces run
+			newElements = newElements.append(NULL);
 		}
 
 		for (WRun element : right) {

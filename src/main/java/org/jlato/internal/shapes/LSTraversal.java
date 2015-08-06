@@ -49,7 +49,6 @@ public class LSTraversal extends LSDecorated {
 		builder.openChild(traversal);
 		shape.dress(builder, discriminator.traverse(traversal));
 		builder.closeChild();
-		builder.addNullRun();
 	}
 
 	@Override
