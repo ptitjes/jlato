@@ -2,6 +2,7 @@ package org.jlato.internal.bu.stmt;
 
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeList;
+import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDBlockStmt;
@@ -13,6 +14,7 @@ import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.space;
 import static org.jlato.printer.FormattingSettings.IndentationContext.BLOCK;
 
 public class SBlockStmt extends SNode<SBlockStmt> implements SStmt {
@@ -102,20 +104,15 @@ public class SBlockStmt extends SNode<SBlockStmt> implements SStmt {
 		}
 	};
 
-	public static final LexicalShape shape = alternative(childIs(STMTS, not(empty())),
-			composite(
-					token(LToken.BraceLeft)
-							.withSpacingAfter(newLine())
-							.withIndentationAfter(indent(BLOCK)),
-					child(STMTS, listShape),
+	public static final LexicalShape shape = composite(
+			token(LToken.BraceLeft)
+					.withSpacingAfter(newLine())
+					.withIndentationAfter(indent(BLOCK)),
+			child(STMTS, listShape),
+			alternative(childIs(STMTS, not(empty())),
 					token(LToken.BraceRight)
 							.withIndentationBefore(unIndent(BLOCK))
-							.withSpacingBefore(newLine())
-			),
-			composite(
-					token(LToken.BraceLeft)
-							.withSpacingAfter(newLine())
-							.withIndentationAfter(indent(BLOCK)),
+							.withSpacingBefore(newLine()),
 					token(LToken.BraceRight)
 							.withIndentationBefore(unIndent(BLOCK))
 			)

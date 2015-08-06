@@ -253,15 +253,15 @@ public class STryStmt extends SNode<STryStmt> implements SStmt {
 	public static final LexicalShape shape = composite(
 			keyword(LToken.Try),
 			when(childIs(RESOURCES, not(empty())),
-					composite(
-							token(LToken.ParenthesisLeft)
-									.withIndentationAfter(indent(TRY_RESOURCES)),
-							child(RESOURCES, list(token(LToken.SemiColon).withSpacingAfter(newLine()))),
-							when(data(TRAILING_SEMI_COLON), token(LToken.SemiColon)),
-							token(LToken.ParenthesisRight)
-									.withIndentationBefore(unIndent(TRY_RESOURCES))
-									.withSpacingAfter(space())
-					)
+					token(LToken.ParenthesisLeft)
+							.withIndentationAfter(indent(TRY_RESOURCES))
+			),
+			child(RESOURCES, list(token(LToken.SemiColon).withSpacingAfter(newLine()))),
+			when(childIs(RESOURCES, not(empty())), when(data(TRAILING_SEMI_COLON), token(LToken.SemiColon))),
+			when(childIs(RESOURCES, not(empty())),
+					token(LToken.ParenthesisRight)
+							.withIndentationBefore(unIndent(TRY_RESOURCES))
+							.withSpacingAfter(space())
 			),
 			child(TRY_BLOCK),
 			child(CATCHS, SCatchClause.listShape),

@@ -147,23 +147,16 @@ public class SSwitchStmt extends SNode<SSwitchStmt> implements SStmt {
 			token(LToken.ParenthesisLeft).withSpacingBefore(spacing(SwitchStmt_AfterSwitchKeyword)),
 			child(SELECTOR),
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
+			token(LToken.BraceLeft)
+					.withSpacingAfter(newLine())
+					.withIndentationAfter(indent(BLOCK)),
+			child(CASES, SSwitchCase.listShape),
 			alternative(childIs(CASES, not(empty())),
-					composite(
-							token(LToken.BraceLeft)
-									.withSpacingAfter(newLine())
-									.withIndentationAfter(indent(BLOCK)),
-							child(CASES, SSwitchCase.listShape),
-							token(LToken.BraceRight)
-									.withIndentationBefore(unIndent(BLOCK))
-									.withSpacingBefore(newLine())
-					),
-					composite(
-							token(LToken.BraceLeft)
-									.withSpacingAfter(newLine())
-									.withIndentationAfter(indent(BLOCK)),
-							token(LToken.BraceRight)
-									.withIndentationBefore(unIndent(BLOCK))
-					)
+					token(LToken.BraceRight)
+							.withIndentationBefore(unIndent(BLOCK))
+							.withSpacingBefore(newLine()),
+					token(LToken.BraceRight)
+							.withIndentationBefore(unIndent(BLOCK))
 			)
 	);
 }

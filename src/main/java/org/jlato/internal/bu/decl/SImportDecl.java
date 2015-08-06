@@ -166,7 +166,8 @@ public class SImportDecl extends SNode<SImportDecl> implements STree {
 			keyword(LToken.Import),
 			when(data(STATIC), keyword(LToken.Static)),
 			child(NAME),
-			when(data(ON_DEMAND), composite(token(LToken.Dot), token(LToken.Times))),
+			when(data(ON_DEMAND), token(LToken.Dot)),
+			when(data(ON_DEMAND), token(LToken.Times)),
 			token(LToken.SemiColon)
 	);
 

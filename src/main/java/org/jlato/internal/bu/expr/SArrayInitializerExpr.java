@@ -134,15 +134,15 @@ public class SArrayInitializerExpr extends SNode<SArrayInitializerExpr> implemen
 	};
 
 	public static final LexicalShape shape = composite(
-			alternative(childIs(VALUES, not(empty())), composite(
+			alternative(childIs(VALUES, not(empty())),
 					token(LToken.BraceLeft).withSpacingAfter(space()),
-					child(VALUES, SExpr.listShape),
-					when(data(TRAILING_COMMA), token(LToken.Comma)),
-					token(LToken.BraceRight).withSpacingBefore(space())
-			), composite(
-					token(LToken.BraceLeft),
-					when(data(TRAILING_COMMA), token(LToken.Comma)),
+					token(LToken.BraceLeft)
+			),
+			child(VALUES, SExpr.listShape),
+			when(data(TRAILING_COMMA), token(LToken.Comma)),
+			alternative(childIs(VALUES, not(empty())),
+					token(LToken.BraceRight).withSpacingBefore(space()),
 					token(LToken.BraceRight)
-			))
+			)
 	);
 }
