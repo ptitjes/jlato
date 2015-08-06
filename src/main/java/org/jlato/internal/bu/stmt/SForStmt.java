@@ -1,32 +1,78 @@
 package org.jlato.internal.bu.stmt;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.expr.SExpr;
-import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDForStmt;
-import org.jlato.tree.*;
-import org.jlato.tree.expr.*;
-import org.jlato.tree.stmt.*;
+import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings.IndentationContext;
+import org.jlato.printer.FormattingSettings.SpacingLocation;
+import org.jlato.tree.Kind;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
+import org.jlato.tree.expr.Expr;
+import org.jlato.tree.stmt.Stmt;
 
+import static org.jlato.internal.shapes.IndentationConstraint.*;
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
+/**
+ * A state object for a 'for' statement.
+ */
 public class SForStmt extends SNode<SForStmt> implements SStmt {
 
+	/**
+	 * Creates a <code>BUTree</code> with a new 'for' statement.
+	 *
+	 * @param init    the init child <code>BUTree</code>.
+	 * @param compare the compare child <code>BUTree</code>.
+	 * @param update  the update child <code>BUTree</code>.
+	 * @param body    the body child <code>BUTree</code>.
+	 * @return the new <code>BUTree</code> with a 'for' statement.
+	 */
 	public static BUTree<SForStmt> make(BUTree<SNodeList> init, BUTree<? extends SExpr> compare, BUTree<SNodeList> update, BUTree<? extends SStmt> body) {
 		return new BUTree<SForStmt>(new SForStmt(init, compare, update, body));
 	}
 
+	/**
+	 * The init of this 'for' statement state.
+	 */
 	public final BUTree<SNodeList> init;
 
+	/**
+	 * The compare of this 'for' statement state.
+	 */
 	public final BUTree<? extends SExpr> compare;
 
+	/**
+	 * The update of this 'for' statement state.
+	 */
 	public final BUTree<SNodeList> update;
 
+	/**
+	 * The body of this 'for' statement state.
+	 */
 	public final BUTree<? extends SStmt> body;
 
+	/**
+	 * Constructs a 'for' statement state.
+	 *
+	 * @param init    the init child <code>BUTree</code>.
+	 * @param compare the compare child <code>BUTree</code>.
+	 * @param update  the update child <code>BUTree</code>.
+	 * @param body    the body child <code>BUTree</code>.
+	 */
 	public SForStmt(BUTree<SNodeList> init, BUTree<? extends SExpr> compare, BUTree<SNodeList> update, BUTree<? extends SStmt> body) {
 		this.init = init;
 		this.compare = compare;
@@ -34,47 +80,103 @@ public class SForStmt extends SNode<SForStmt> implements SStmt {
 		this.body = body;
 	}
 
+	/**
+	 * Returns the kind of this 'for' statement.
+	 *
+	 * @return the kind of this 'for' statement.
+	 */
 	@Override
 	public Kind kind() {
 		return Kind.ForStmt;
 	}
 
+	/**
+	 * Replaces the init of this 'for' statement state.
+	 *
+	 * @param init the replacement for the init of this 'for' statement state.
+	 * @return the resulting mutated 'for' statement state.
+	 */
 	public SForStmt withInit(BUTree<SNodeList> init) {
 		return new SForStmt(init, compare, update, body);
 	}
 
+	/**
+	 * Replaces the compare of this 'for' statement state.
+	 *
+	 * @param compare the replacement for the compare of this 'for' statement state.
+	 * @return the resulting mutated 'for' statement state.
+	 */
 	public SForStmt withCompare(BUTree<? extends SExpr> compare) {
 		return new SForStmt(init, compare, update, body);
 	}
 
+	/**
+	 * Replaces the update of this 'for' statement state.
+	 *
+	 * @param update the replacement for the update of this 'for' statement state.
+	 * @return the resulting mutated 'for' statement state.
+	 */
 	public SForStmt withUpdate(BUTree<SNodeList> update) {
 		return new SForStmt(init, compare, update, body);
 	}
 
+	/**
+	 * Replaces the body of this 'for' statement state.
+	 *
+	 * @param body the replacement for the body of this 'for' statement state.
+	 * @return the resulting mutated 'for' statement state.
+	 */
 	public SForStmt withBody(BUTree<? extends SStmt> body) {
 		return new SForStmt(init, compare, update, body);
 	}
 
+	/**
+	 * Builds a 'for' statement facade for the specified 'for' statement <code>TDLocation</code>.
+	 *
+	 * @param location the 'for' statement <code>TDLocation</code>.
+	 * @return a 'for' statement facade for the specified 'for' statement <code>TDLocation</code>.
+	 */
 	@Override
 	protected Tree doInstantiate(TDLocation<SForStmt> location) {
 		return new TDForStmt(location);
 	}
 
+	/**
+	 * Returns the shape for this 'for' statement state.
+	 *
+	 * @return the shape for this 'for' statement state.
+	 */
 	@Override
 	public LexicalShape shape() {
 		return shape;
 	}
 
+	/**
+	 * Returns the first child traversal for this 'for' statement state.
+	 *
+	 * @return the first child traversal for this 'for' statement state.
+	 */
 	@Override
 	public STraversal firstChild() {
 		return INIT;
 	}
 
+	/**
+	 * Returns the last child traversal for this 'for' statement state.
+	 *
+	 * @return the last child traversal for this 'for' statement state.
+	 */
 	@Override
 	public STraversal lastChild() {
 		return BODY;
 	}
 
+	/**
+	 * Compares this state object to the specified object.
+	 *
+	 * @param o the object to compare this state with.
+	 * @return <code>true</code> if the specified object is equal to this state, <code>false</code> otherwise.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -93,6 +195,11 @@ public class SForStmt extends SNode<SForStmt> implements SStmt {
 		return true;
 	}
 
+	/**
+	 * Returns a hash code for this state object.
+	 *
+	 * @return a hash code value for this object.
+	 */
 	@Override
 	public int hashCode() {
 		int result = 17;

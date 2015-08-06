@@ -14,52 +14,123 @@ import org.jlato.tree.type.Type;
 import org.jlato.tree.type.WildcardType;
 import org.jlato.util.Mutation;
 
+/**
+ * A wildcard type.
+ */
 public class TDWildcardType extends TDTree<SWildcardType, Type, WildcardType> implements WildcardType {
 
+	/**
+	 * Returns the kind of this wildcard type.
+	 *
+	 * @return the kind of this wildcard type.
+	 */
 	public Kind kind() {
 		return Kind.WildcardType;
 	}
 
+	/**
+	 * Creates a wildcard type for the specified tree location.
+	 *
+	 * @param location the tree location.
+	 */
 	public TDWildcardType(TDLocation<SWildcardType> location) {
 		super(location);
 	}
 
+	/**
+	 * Creates a wildcard type with the specified child trees.
+	 *
+	 * @param annotations the annotations child tree.
+	 * @param ext         the upper bound child tree.
+	 * @param sup         the lower bound child tree.
+	 */
 	public TDWildcardType(NodeList<AnnotationExpr> annotations, NodeOption<ReferenceType> ext, NodeOption<ReferenceType> sup) {
 		super(new TDLocation<SWildcardType>(SWildcardType.make(TDTree.<SNodeList>treeOf(annotations), TDTree.<SNodeOption>treeOf(ext), TDTree.<SNodeOption>treeOf(sup))));
 	}
 
+	/**
+	 * Returns the annotations of this wildcard type.
+	 *
+	 * @return the annotations of this wildcard type.
+	 */
 	public NodeList<AnnotationExpr> annotations() {
 		return location.safeTraversal(SWildcardType.ANNOTATIONS);
 	}
 
+	/**
+	 * Replaces the annotations of this wildcard type.
+	 *
+	 * @param annotations the replacement for the annotations of this wildcard type.
+	 * @return the resulting mutated wildcard type.
+	 */
 	public WildcardType withAnnotations(NodeList<AnnotationExpr> annotations) {
 		return location.safeTraversalReplace(SWildcardType.ANNOTATIONS, annotations);
 	}
 
+	/**
+	 * Mutates the annotations of this wildcard type.
+	 *
+	 * @param mutation the mutation to apply to the annotations of this wildcard type.
+	 * @return the resulting mutated wildcard type.
+	 */
 	public WildcardType withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
 		return location.safeTraversalMutate(SWildcardType.ANNOTATIONS, mutation);
 	}
 
+	/**
+	 * Returns the upper bound of this wildcard type.
+	 *
+	 * @return the upper bound of this wildcard type.
+	 */
 	public NodeOption<ReferenceType> ext() {
 		return location.safeTraversal(SWildcardType.EXT);
 	}
 
+	/**
+	 * Replaces the upper bound of this wildcard type.
+	 *
+	 * @param ext the replacement for the upper bound of this wildcard type.
+	 * @return the resulting mutated wildcard type.
+	 */
 	public WildcardType withExt(NodeOption<ReferenceType> ext) {
 		return location.safeTraversalReplace(SWildcardType.EXT, ext);
 	}
 
+	/**
+	 * Mutates the upper bound of this wildcard type.
+	 *
+	 * @param mutation the mutation to apply to the upper bound of this wildcard type.
+	 * @return the resulting mutated wildcard type.
+	 */
 	public WildcardType withExt(Mutation<NodeOption<ReferenceType>> mutation) {
 		return location.safeTraversalMutate(SWildcardType.EXT, mutation);
 	}
 
+	/**
+	 * Returns the lower bound of this wildcard type.
+	 *
+	 * @return the lower bound of this wildcard type.
+	 */
 	public NodeOption<ReferenceType> sup() {
 		return location.safeTraversal(SWildcardType.SUP);
 	}
 
+	/**
+	 * Replaces the lower bound of this wildcard type.
+	 *
+	 * @param sup the replacement for the lower bound of this wildcard type.
+	 * @return the resulting mutated wildcard type.
+	 */
 	public WildcardType withSup(NodeOption<ReferenceType> sup) {
 		return location.safeTraversalReplace(SWildcardType.SUP, sup);
 	}
 
+	/**
+	 * Mutates the lower bound of this wildcard type.
+	 *
+	 * @param mutation the mutation to apply to the lower bound of this wildcard type.
+	 * @return the resulting mutated wildcard type.
+	 */
 	public WildcardType withSup(Mutation<NodeOption<ReferenceType>> mutation) {
 		return location.safeTraversalMutate(SWildcardType.SUP, mutation);
 	}

@@ -1,38 +1,97 @@
 package org.jlato.internal.bu.decl;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDClassDecl;
-import org.jlato.tree.*;
-import org.jlato.tree.decl.*;
-import org.jlato.tree.name.*;
-import org.jlato.tree.type.*;
+import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings.IndentationContext;
+import org.jlato.printer.FormattingSettings.SpacingLocation;
+import org.jlato.tree.Kind;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
+import org.jlato.tree.Tree;
+import org.jlato.tree.decl.ExtendedModifier;
+import org.jlato.tree.decl.MemberDecl;
+import org.jlato.tree.decl.TypeParameter;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.type.QualifiedType;
 
-import static org.jlato.internal.shapes.LSCondition.some;
+import static org.jlato.internal.shapes.IndentationConstraint.*;
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.internal.shapes.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
+/**
+ * A state object for a class declaration.
+ */
 public class SClassDecl extends SNode<SClassDecl> implements STypeDecl {
 
+	/**
+	 * Creates a <code>BUTree</code> with a new class declaration.
+	 *
+	 * @param modifiers        the modifiers child <code>BUTree</code>.
+	 * @param name             the name child <code>BUTree</code>.
+	 * @param typeParams       the type parameters child <code>BUTree</code>.
+	 * @param extendsClause    the 'extends' clause child <code>BUTree</code>.
+	 * @param implementsClause the 'implements' clause child <code>BUTree</code>.
+	 * @param members          the members child <code>BUTree</code>.
+	 * @return the new <code>BUTree</code> with a class declaration.
+	 */
 	public static BUTree<SClassDecl> make(BUTree<SNodeList> modifiers, BUTree<SName> name, BUTree<SNodeList> typeParams, BUTree<SNodeOption> extendsClause, BUTree<SNodeList> implementsClause, BUTree<SNodeList> members) {
 		return new BUTree<SClassDecl>(new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members));
 	}
 
+	/**
+	 * The modifiers of this class declaration state.
+	 */
 	public final BUTree<SNodeList> modifiers;
 
+	/**
+	 * The name of this class declaration state.
+	 */
 	public final BUTree<SName> name;
 
+	/**
+	 * The type parameters of this class declaration state.
+	 */
 	public final BUTree<SNodeList> typeParams;
 
+	/**
+	 * The 'extends' clause of this class declaration state.
+	 */
 	public final BUTree<SNodeOption> extendsClause;
 
+	/**
+	 * The 'implements' clause of this class declaration state.
+	 */
 	public final BUTree<SNodeList> implementsClause;
 
+	/**
+	 * The members of this class declaration state.
+	 */
 	public final BUTree<SNodeList> members;
 
+	/**
+	 * Constructs a class declaration state.
+	 *
+	 * @param modifiers        the modifiers child <code>BUTree</code>.
+	 * @param name             the name child <code>BUTree</code>.
+	 * @param typeParams       the type parameters child <code>BUTree</code>.
+	 * @param extendsClause    the 'extends' clause child <code>BUTree</code>.
+	 * @param implementsClause the 'implements' clause child <code>BUTree</code>.
+	 * @param members          the members child <code>BUTree</code>.
+	 */
 	public SClassDecl(BUTree<SNodeList> modifiers, BUTree<SName> name, BUTree<SNodeList> typeParams, BUTree<SNodeOption> extendsClause, BUTree<SNodeList> implementsClause, BUTree<SNodeList> members) {
 		this.modifiers = modifiers;
 		this.name = name;
@@ -42,55 +101,123 @@ public class SClassDecl extends SNode<SClassDecl> implements STypeDecl {
 		this.members = members;
 	}
 
+	/**
+	 * Returns the kind of this class declaration.
+	 *
+	 * @return the kind of this class declaration.
+	 */
 	@Override
 	public Kind kind() {
 		return Kind.ClassDecl;
 	}
 
+	/**
+	 * Replaces the modifiers of this class declaration state.
+	 *
+	 * @param modifiers the replacement for the modifiers of this class declaration state.
+	 * @return the resulting mutated class declaration state.
+	 */
 	public SClassDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
+	/**
+	 * Replaces the name of this class declaration state.
+	 *
+	 * @param name the replacement for the name of this class declaration state.
+	 * @return the resulting mutated class declaration state.
+	 */
 	public SClassDecl withName(BUTree<SName> name) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
+	/**
+	 * Replaces the type parameters of this class declaration state.
+	 *
+	 * @param typeParams the replacement for the type parameters of this class declaration state.
+	 * @return the resulting mutated class declaration state.
+	 */
 	public SClassDecl withTypeParams(BUTree<SNodeList> typeParams) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
+	/**
+	 * Replaces the 'extends' clause of this class declaration state.
+	 *
+	 * @param extendsClause the replacement for the 'extends' clause of this class declaration state.
+	 * @return the resulting mutated class declaration state.
+	 */
 	public SClassDecl withExtendsClause(BUTree<SNodeOption> extendsClause) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
+	/**
+	 * Replaces the 'implements' clause of this class declaration state.
+	 *
+	 * @param implementsClause the replacement for the 'implements' clause of this class declaration state.
+	 * @return the resulting mutated class declaration state.
+	 */
 	public SClassDecl withImplementsClause(BUTree<SNodeList> implementsClause) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
+	/**
+	 * Replaces the members of this class declaration state.
+	 *
+	 * @param members the replacement for the members of this class declaration state.
+	 * @return the resulting mutated class declaration state.
+	 */
 	public SClassDecl withMembers(BUTree<SNodeList> members) {
 		return new SClassDecl(modifiers, name, typeParams, extendsClause, implementsClause, members);
 	}
 
+	/**
+	 * Builds a class declaration facade for the specified class declaration <code>TDLocation</code>.
+	 *
+	 * @param location the class declaration <code>TDLocation</code>.
+	 * @return a class declaration facade for the specified class declaration <code>TDLocation</code>.
+	 */
 	@Override
 	protected Tree doInstantiate(TDLocation<SClassDecl> location) {
 		return new TDClassDecl(location);
 	}
 
+	/**
+	 * Returns the shape for this class declaration state.
+	 *
+	 * @return the shape for this class declaration state.
+	 */
 	@Override
 	public LexicalShape shape() {
 		return shape;
 	}
 
+	/**
+	 * Returns the first child traversal for this class declaration state.
+	 *
+	 * @return the first child traversal for this class declaration state.
+	 */
 	@Override
 	public STraversal firstChild() {
 		return MODIFIERS;
 	}
 
+	/**
+	 * Returns the last child traversal for this class declaration state.
+	 *
+	 * @return the last child traversal for this class declaration state.
+	 */
 	@Override
 	public STraversal lastChild() {
 		return MEMBERS;
 	}
 
+	/**
+	 * Compares this state object to the specified object.
+	 *
+	 * @param o the object to compare this state with.
+	 * @return <code>true</code> if the specified object is equal to this state, <code>false</code> otherwise.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -113,6 +240,11 @@ public class SClassDecl extends SNode<SClassDecl> implements STypeDecl {
 		return true;
 	}
 
+	/**
+	 * Returns a hash code for this state object.
+	 *
+	 * @return a hash code value for this object.
+	 */
 	@Override
 	public int hashCode() {
 		int result = 17;

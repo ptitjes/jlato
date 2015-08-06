@@ -16,76 +16,183 @@ import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
+/**
+ * An object creation expression.
+ */
 public class TDObjectCreationExpr extends TDTree<SObjectCreationExpr, Expr, ObjectCreationExpr> implements ObjectCreationExpr {
 
+	/**
+	 * Returns the kind of this object creation expression.
+	 *
+	 * @return the kind of this object creation expression.
+	 */
 	public Kind kind() {
 		return Kind.ObjectCreationExpr;
 	}
 
+	/**
+	 * Creates an object creation expression for the specified tree location.
+	 *
+	 * @param location the tree location.
+	 */
 	public TDObjectCreationExpr(TDLocation<SObjectCreationExpr> location) {
 		super(location);
 	}
 
+	/**
+	 * Creates an object creation expression with the specified child trees.
+	 *
+	 * @param scope    the scope child tree.
+	 * @param typeArgs the type args child tree.
+	 * @param type     the type child tree.
+	 * @param args     the args child tree.
+	 * @param body     the body child tree.
+	 */
 	public TDObjectCreationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, QualifiedType type, NodeList<Expr> args, NodeOption<NodeList<MemberDecl>> body) {
 		super(new TDLocation<SObjectCreationExpr>(SObjectCreationExpr.make(TDTree.<SNodeOption>treeOf(scope), TDTree.<SNodeList>treeOf(typeArgs), TDTree.<SQualifiedType>treeOf(type), TDTree.<SNodeList>treeOf(args), TDTree.<SNodeOption>treeOf(body))));
 	}
 
+	/**
+	 * Returns the scope of this object creation expression.
+	 *
+	 * @return the scope of this object creation expression.
+	 */
 	public NodeOption<Expr> scope() {
 		return location.safeTraversal(SObjectCreationExpr.SCOPE);
 	}
 
+	/**
+	 * Replaces the scope of this object creation expression.
+	 *
+	 * @param scope the replacement for the scope of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
 	public ObjectCreationExpr withScope(NodeOption<Expr> scope) {
 		return location.safeTraversalReplace(SObjectCreationExpr.SCOPE, scope);
 	}
 
+	/**
+	 * Mutates the scope of this object creation expression.
+	 *
+	 * @param mutation the mutation to apply to the scope of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
 	public ObjectCreationExpr withScope(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(SObjectCreationExpr.SCOPE, mutation);
 	}
 
+	/**
+	 * Returns the type args of this object creation expression.
+	 *
+	 * @return the type args of this object creation expression.
+	 */
 	public NodeList<Type> typeArgs() {
 		return location.safeTraversal(SObjectCreationExpr.TYPE_ARGS);
 	}
 
+	/**
+	 * Replaces the type args of this object creation expression.
+	 *
+	 * @param typeArgs the replacement for the type args of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
 	public ObjectCreationExpr withTypeArgs(NodeList<Type> typeArgs) {
 		return location.safeTraversalReplace(SObjectCreationExpr.TYPE_ARGS, typeArgs);
 	}
 
+	/**
+	 * Mutates the type args of this object creation expression.
+	 *
+	 * @param mutation the mutation to apply to the type args of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
 	public ObjectCreationExpr withTypeArgs(Mutation<NodeList<Type>> mutation) {
 		return location.safeTraversalMutate(SObjectCreationExpr.TYPE_ARGS, mutation);
 	}
 
+	/**
+	 * Returns the type of this object creation expression.
+	 *
+	 * @return the type of this object creation expression.
+	 */
 	public QualifiedType type() {
 		return location.safeTraversal(SObjectCreationExpr.TYPE);
 	}
 
+	/**
+	 * Replaces the type of this object creation expression.
+	 *
+	 * @param type the replacement for the type of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
 	public ObjectCreationExpr withType(QualifiedType type) {
 		return location.safeTraversalReplace(SObjectCreationExpr.TYPE, type);
 	}
 
+	/**
+	 * Mutates the type of this object creation expression.
+	 *
+	 * @param mutation the mutation to apply to the type of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
 	public ObjectCreationExpr withType(Mutation<QualifiedType> mutation) {
 		return location.safeTraversalMutate(SObjectCreationExpr.TYPE, mutation);
 	}
 
+	/**
+	 * Returns the args of this object creation expression.
+	 *
+	 * @return the args of this object creation expression.
+	 */
 	public NodeList<Expr> args() {
 		return location.safeTraversal(SObjectCreationExpr.ARGS);
 	}
 
+	/**
+	 * Replaces the args of this object creation expression.
+	 *
+	 * @param args the replacement for the args of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
 	public ObjectCreationExpr withArgs(NodeList<Expr> args) {
 		return location.safeTraversalReplace(SObjectCreationExpr.ARGS, args);
 	}
 
+	/**
+	 * Mutates the args of this object creation expression.
+	 *
+	 * @param mutation the mutation to apply to the args of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
 	public ObjectCreationExpr withArgs(Mutation<NodeList<Expr>> mutation) {
 		return location.safeTraversalMutate(SObjectCreationExpr.ARGS, mutation);
 	}
 
+	/**
+	 * Returns the body of this object creation expression.
+	 *
+	 * @return the body of this object creation expression.
+	 */
 	public NodeOption<NodeList<MemberDecl>> body() {
 		return location.safeTraversal(SObjectCreationExpr.BODY);
 	}
 
+	/**
+	 * Replaces the body of this object creation expression.
+	 *
+	 * @param body the replacement for the body of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
 	public ObjectCreationExpr withBody(NodeOption<NodeList<MemberDecl>> body) {
 		return location.safeTraversalReplace(SObjectCreationExpr.BODY, body);
 	}
 
+	/**
+	 * Mutates the body of this object creation expression.
+	 *
+	 * @param mutation the mutation to apply to the body of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
 	public ObjectCreationExpr withBody(Mutation<NodeOption<NodeList<MemberDecl>>> mutation) {
 		return location.safeTraversalMutate(SObjectCreationExpr.BODY, mutation);
 	}

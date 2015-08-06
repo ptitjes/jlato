@@ -13,40 +13,93 @@ import org.jlato.tree.stmt.SwitchCase;
 import org.jlato.tree.stmt.SwitchStmt;
 import org.jlato.util.Mutation;
 
+/**
+ * A 'switch' statement.
+ */
 public class TDSwitchStmt extends TDTree<SSwitchStmt, Stmt, SwitchStmt> implements SwitchStmt {
 
+	/**
+	 * Returns the kind of this 'switch' statement.
+	 *
+	 * @return the kind of this 'switch' statement.
+	 */
 	public Kind kind() {
 		return Kind.SwitchStmt;
 	}
 
+	/**
+	 * Creates a 'switch' statement for the specified tree location.
+	 *
+	 * @param location the tree location.
+	 */
 	public TDSwitchStmt(TDLocation<SSwitchStmt> location) {
 		super(location);
 	}
 
+	/**
+	 * Creates a 'switch' statement with the specified child trees.
+	 *
+	 * @param selector the selector child tree.
+	 * @param cases    the cases child tree.
+	 */
 	public TDSwitchStmt(Expr selector, NodeList<SwitchCase> cases) {
 		super(new TDLocation<SSwitchStmt>(SSwitchStmt.make(TDTree.<SExpr>treeOf(selector), TDTree.<SNodeList>treeOf(cases))));
 	}
 
+	/**
+	 * Returns the selector of this 'switch' statement.
+	 *
+	 * @return the selector of this 'switch' statement.
+	 */
 	public Expr selector() {
 		return location.safeTraversal(SSwitchStmt.SELECTOR);
 	}
 
+	/**
+	 * Replaces the selector of this 'switch' statement.
+	 *
+	 * @param selector the replacement for the selector of this 'switch' statement.
+	 * @return the resulting mutated 'switch' statement.
+	 */
 	public SwitchStmt withSelector(Expr selector) {
 		return location.safeTraversalReplace(SSwitchStmt.SELECTOR, selector);
 	}
 
+	/**
+	 * Mutates the selector of this 'switch' statement.
+	 *
+	 * @param mutation the mutation to apply to the selector of this 'switch' statement.
+	 * @return the resulting mutated 'switch' statement.
+	 */
 	public SwitchStmt withSelector(Mutation<Expr> mutation) {
 		return location.safeTraversalMutate(SSwitchStmt.SELECTOR, mutation);
 	}
 
+	/**
+	 * Returns the cases of this 'switch' statement.
+	 *
+	 * @return the cases of this 'switch' statement.
+	 */
 	public NodeList<SwitchCase> cases() {
 		return location.safeTraversal(SSwitchStmt.CASES);
 	}
 
+	/**
+	 * Replaces the cases of this 'switch' statement.
+	 *
+	 * @param cases the replacement for the cases of this 'switch' statement.
+	 * @return the resulting mutated 'switch' statement.
+	 */
 	public SwitchStmt withCases(NodeList<SwitchCase> cases) {
 		return location.safeTraversalReplace(SSwitchStmt.CASES, cases);
 	}
 
+	/**
+	 * Mutates the cases of this 'switch' statement.
+	 *
+	 * @param mutation the mutation to apply to the cases of this 'switch' statement.
+	 * @return the resulting mutated 'switch' statement.
+	 */
 	public SwitchStmt withCases(Mutation<NodeList<SwitchCase>> mutation) {
 		return location.safeTraversalMutate(SSwitchStmt.CASES, mutation);
 	}

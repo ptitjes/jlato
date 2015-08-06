@@ -1,66 +1,146 @@
 package org.jlato.internal.bu.expr;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.expr.TDFieldAccessExpr;
-import org.jlato.tree.*;
-import org.jlato.tree.expr.*;
-import org.jlato.tree.name.*;
+import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings.IndentationContext;
+import org.jlato.printer.FormattingSettings.SpacingLocation;
+import org.jlato.tree.Kind;
+import org.jlato.tree.NodeOption;
+import org.jlato.tree.Tree;
+import org.jlato.tree.expr.Expr;
+import org.jlato.tree.name.Name;
 
-import static org.jlato.internal.shapes.LSCondition.some;
+import static org.jlato.internal.shapes.IndentationConstraint.*;
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.internal.shapes.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
+/**
+ * A state object for a field access expression.
+ */
 public class SFieldAccessExpr extends SNode<SFieldAccessExpr> implements SExpr {
 
+	/**
+	 * Creates a <code>BUTree</code> with a new field access expression.
+	 *
+	 * @param scope the scope child <code>BUTree</code>.
+	 * @param name  the name child <code>BUTree</code>.
+	 * @return the new <code>BUTree</code> with a field access expression.
+	 */
 	public static BUTree<SFieldAccessExpr> make(BUTree<SNodeOption> scope, BUTree<SName> name) {
 		return new BUTree<SFieldAccessExpr>(new SFieldAccessExpr(scope, name));
 	}
 
+	/**
+	 * The scope of this field access expression state.
+	 */
 	public final BUTree<SNodeOption> scope;
 
+	/**
+	 * The name of this field access expression state.
+	 */
 	public final BUTree<SName> name;
 
+	/**
+	 * Constructs a field access expression state.
+	 *
+	 * @param scope the scope child <code>BUTree</code>.
+	 * @param name  the name child <code>BUTree</code>.
+	 */
 	public SFieldAccessExpr(BUTree<SNodeOption> scope, BUTree<SName> name) {
 		this.scope = scope;
 		this.name = name;
 	}
 
+	/**
+	 * Returns the kind of this field access expression.
+	 *
+	 * @return the kind of this field access expression.
+	 */
 	@Override
 	public Kind kind() {
 		return Kind.FieldAccessExpr;
 	}
 
+	/**
+	 * Replaces the scope of this field access expression state.
+	 *
+	 * @param scope the replacement for the scope of this field access expression state.
+	 * @return the resulting mutated field access expression state.
+	 */
 	public SFieldAccessExpr withScope(BUTree<SNodeOption> scope) {
 		return new SFieldAccessExpr(scope, name);
 	}
 
+	/**
+	 * Replaces the name of this field access expression state.
+	 *
+	 * @param name the replacement for the name of this field access expression state.
+	 * @return the resulting mutated field access expression state.
+	 */
 	public SFieldAccessExpr withName(BUTree<SName> name) {
 		return new SFieldAccessExpr(scope, name);
 	}
 
+	/**
+	 * Builds a field access expression facade for the specified field access expression <code>TDLocation</code>.
+	 *
+	 * @param location the field access expression <code>TDLocation</code>.
+	 * @return a field access expression facade for the specified field access expression <code>TDLocation</code>.
+	 */
 	@Override
 	protected Tree doInstantiate(TDLocation<SFieldAccessExpr> location) {
 		return new TDFieldAccessExpr(location);
 	}
 
+	/**
+	 * Returns the shape for this field access expression state.
+	 *
+	 * @return the shape for this field access expression state.
+	 */
 	@Override
 	public LexicalShape shape() {
 		return shape;
 	}
 
+	/**
+	 * Returns the first child traversal for this field access expression state.
+	 *
+	 * @return the first child traversal for this field access expression state.
+	 */
 	@Override
 	public STraversal firstChild() {
 		return SCOPE;
 	}
 
+	/**
+	 * Returns the last child traversal for this field access expression state.
+	 *
+	 * @return the last child traversal for this field access expression state.
+	 */
 	@Override
 	public STraversal lastChild() {
 		return NAME;
 	}
 
+	/**
+	 * Compares this state object to the specified object.
+	 *
+	 * @param o the object to compare this state with.
+	 * @return <code>true</code> if the specified object is equal to this state, <code>false</code> otherwise.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -75,6 +155,11 @@ public class SFieldAccessExpr extends SNode<SFieldAccessExpr> implements SExpr {
 		return true;
 	}
 
+	/**
+	 * Returns a hash code for this state object.
+	 *
+	 * @return a hash code value for this object.
+	 */
 	@Override
 	public int hashCode() {
 		int result = 17;

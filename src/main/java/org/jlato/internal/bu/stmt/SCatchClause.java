@@ -1,65 +1,144 @@
 package org.jlato.internal.bu.stmt;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.decl.SFormalParameter;
-import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDCatchClause;
-import org.jlato.tree.*;
-import org.jlato.tree.decl.*;
-import org.jlato.tree.stmt.*;
+import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings.IndentationContext;
+import org.jlato.printer.FormattingSettings.SpacingLocation;
+import org.jlato.tree.Kind;
+import org.jlato.tree.Tree;
+import org.jlato.tree.decl.FormalParameter;
+import org.jlato.tree.stmt.BlockStmt;
 
+import static org.jlato.internal.shapes.IndentationConstraint.*;
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
+/**
+ * A state object for a 'catch' clause.
+ */
 public class SCatchClause extends SNode<SCatchClause> implements STree {
 
+	/**
+	 * Creates a <code>BUTree</code> with a new 'catch' clause.
+	 *
+	 * @param param      the parameter child <code>BUTree</code>.
+	 * @param catchBlock the 'catch' block child <code>BUTree</code>.
+	 * @return the new <code>BUTree</code> with a 'catch' clause.
+	 */
 	public static BUTree<SCatchClause> make(BUTree<SFormalParameter> param, BUTree<SBlockStmt> catchBlock) {
 		return new BUTree<SCatchClause>(new SCatchClause(param, catchBlock));
 	}
 
+	/**
+	 * The parameter of this 'catch' clause state.
+	 */
 	public final BUTree<SFormalParameter> param;
 
+	/**
+	 * The 'catch' block of this 'catch' clause state.
+	 */
 	public final BUTree<SBlockStmt> catchBlock;
 
+	/**
+	 * Constructs a 'catch' clause state.
+	 *
+	 * @param param      the parameter child <code>BUTree</code>.
+	 * @param catchBlock the 'catch' block child <code>BUTree</code>.
+	 */
 	public SCatchClause(BUTree<SFormalParameter> param, BUTree<SBlockStmt> catchBlock) {
 		this.param = param;
 		this.catchBlock = catchBlock;
 	}
 
+	/**
+	 * Returns the kind of this 'catch' clause.
+	 *
+	 * @return the kind of this 'catch' clause.
+	 */
 	@Override
 	public Kind kind() {
 		return Kind.CatchClause;
 	}
 
+	/**
+	 * Replaces the parameter of this 'catch' clause state.
+	 *
+	 * @param param the replacement for the parameter of this 'catch' clause state.
+	 * @return the resulting mutated 'catch' clause state.
+	 */
 	public SCatchClause withParam(BUTree<SFormalParameter> param) {
 		return new SCatchClause(param, catchBlock);
 	}
 
+	/**
+	 * Replaces the 'catch' block of this 'catch' clause state.
+	 *
+	 * @param catchBlock the replacement for the 'catch' block of this 'catch' clause state.
+	 * @return the resulting mutated 'catch' clause state.
+	 */
 	public SCatchClause withCatchBlock(BUTree<SBlockStmt> catchBlock) {
 		return new SCatchClause(param, catchBlock);
 	}
 
+	/**
+	 * Builds a 'catch' clause facade for the specified 'catch' clause <code>TDLocation</code>.
+	 *
+	 * @param location the 'catch' clause <code>TDLocation</code>.
+	 * @return a 'catch' clause facade for the specified 'catch' clause <code>TDLocation</code>.
+	 */
 	@Override
 	protected Tree doInstantiate(TDLocation<SCatchClause> location) {
 		return new TDCatchClause(location);
 	}
 
+	/**
+	 * Returns the shape for this 'catch' clause state.
+	 *
+	 * @return the shape for this 'catch' clause state.
+	 */
 	@Override
 	public LexicalShape shape() {
 		return shape;
 	}
 
+	/**
+	 * Returns the first child traversal for this 'catch' clause state.
+	 *
+	 * @return the first child traversal for this 'catch' clause state.
+	 */
 	@Override
 	public STraversal firstChild() {
 		return PARAM;
 	}
 
+	/**
+	 * Returns the last child traversal for this 'catch' clause state.
+	 *
+	 * @return the last child traversal for this 'catch' clause state.
+	 */
 	@Override
 	public STraversal lastChild() {
 		return CATCH_BLOCK;
 	}
 
+	/**
+	 * Compares this state object to the specified object.
+	 *
+	 * @param o the object to compare this state with.
+	 * @return <code>true</code> if the specified object is equal to this state, <code>false</code> otherwise.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -74,6 +153,11 @@ public class SCatchClause extends SNode<SCatchClause> implements STree {
 		return true;
 	}
 
+	/**
+	 * Returns a hash code for this state object.
+	 *
+	 * @return a hash code value for this object.
+	 */
 	@Override
 	public int hashCode() {
 		int result = 17;

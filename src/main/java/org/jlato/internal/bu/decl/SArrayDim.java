@@ -1,56 +1,126 @@
 package org.jlato.internal.bu.decl;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.coll.SNodeList;
-import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDArrayDim;
-import org.jlato.tree.*;
-import org.jlato.tree.expr.*;
+import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings.IndentationContext;
+import org.jlato.printer.FormattingSettings.SpacingLocation;
+import org.jlato.tree.Kind;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
+import org.jlato.tree.expr.AnnotationExpr;
 
+import static org.jlato.internal.shapes.IndentationConstraint.*;
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
+import static org.jlato.internal.shapes.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
+/**
+ * A state object for an array dimension.
+ */
 public class SArrayDim extends SNode<SArrayDim> implements STree {
 
+	/**
+	 * Creates a <code>BUTree</code> with a new array dimension.
+	 *
+	 * @param annotations the annotations child <code>BUTree</code>.
+	 * @return the new <code>BUTree</code> with an array dimension.
+	 */
 	public static BUTree<SArrayDim> make(BUTree<SNodeList> annotations) {
 		return new BUTree<SArrayDim>(new SArrayDim(annotations));
 	}
 
+	/**
+	 * The annotations of this array dimension state.
+	 */
 	public final BUTree<SNodeList> annotations;
 
+	/**
+	 * Constructs an array dimension state.
+	 *
+	 * @param annotations the annotations child <code>BUTree</code>.
+	 */
 	public SArrayDim(BUTree<SNodeList> annotations) {
 		this.annotations = annotations;
 	}
 
+	/**
+	 * Returns the kind of this array dimension.
+	 *
+	 * @return the kind of this array dimension.
+	 */
 	@Override
 	public Kind kind() {
 		return Kind.ArrayDim;
 	}
 
+	/**
+	 * Replaces the annotations of this array dimension state.
+	 *
+	 * @param annotations the replacement for the annotations of this array dimension state.
+	 * @return the resulting mutated array dimension state.
+	 */
 	public SArrayDim withAnnotations(BUTree<SNodeList> annotations) {
 		return new SArrayDim(annotations);
 	}
 
+	/**
+	 * Builds an array dimension facade for the specified array dimension <code>TDLocation</code>.
+	 *
+	 * @param location the array dimension <code>TDLocation</code>.
+	 * @return an array dimension facade for the specified array dimension <code>TDLocation</code>.
+	 */
 	@Override
 	protected Tree doInstantiate(TDLocation<SArrayDim> location) {
 		return new TDArrayDim(location);
 	}
 
+	/**
+	 * Returns the shape for this array dimension state.
+	 *
+	 * @return the shape for this array dimension state.
+	 */
 	@Override
 	public LexicalShape shape() {
 		return shape;
 	}
 
+	/**
+	 * Returns the first child traversal for this array dimension state.
+	 *
+	 * @return the first child traversal for this array dimension state.
+	 */
 	@Override
 	public STraversal firstChild() {
 		return ANNOTATIONS;
 	}
 
+	/**
+	 * Returns the last child traversal for this array dimension state.
+	 *
+	 * @return the last child traversal for this array dimension state.
+	 */
 	@Override
 	public STraversal lastChild() {
 		return ANNOTATIONS;
 	}
 
+	/**
+	 * Compares this state object to the specified object.
+	 *
+	 * @param o the object to compare this state with.
+	 * @return <code>true</code> if the specified object is equal to this state, <code>false</code> otherwise.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -63,6 +133,11 @@ public class SArrayDim extends SNode<SArrayDim> implements STree {
 		return true;
 	}
 
+	/**
+	 * Returns a hash code for this state object.
+	 *
+	 * @return a hash code value for this object.
+	 */
 	@Override
 	public int hashCode() {
 		int result = 17;

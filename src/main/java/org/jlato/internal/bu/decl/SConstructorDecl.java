@@ -1,39 +1,97 @@
 package org.jlato.internal.bu.decl;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.stmt.SBlockStmt;
-import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDConstructorDecl;
-import org.jlato.tree.*;
-import org.jlato.tree.decl.*;
-import org.jlato.tree.name.*;
-import org.jlato.tree.stmt.*;
-import org.jlato.tree.type.*;
+import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings.IndentationContext;
+import org.jlato.printer.FormattingSettings.SpacingLocation;
+import org.jlato.tree.Kind;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
+import org.jlato.tree.decl.ExtendedModifier;
+import org.jlato.tree.decl.FormalParameter;
+import org.jlato.tree.decl.TypeParameter;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.stmt.BlockStmt;
+import org.jlato.tree.type.QualifiedType;
 
+import static org.jlato.internal.shapes.IndentationConstraint.*;
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
+/**
+ * A state object for a constructor declaration.
+ */
 public class SConstructorDecl extends SNode<SConstructorDecl> implements SMemberDecl {
 
+	/**
+	 * Creates a <code>BUTree</code> with a new constructor declaration.
+	 *
+	 * @param modifiers    the modifiers child <code>BUTree</code>.
+	 * @param typeParams   the type parameters child <code>BUTree</code>.
+	 * @param name         the name child <code>BUTree</code>.
+	 * @param params       the parameters child <code>BUTree</code>.
+	 * @param throwsClause the 'throws' clause child <code>BUTree</code>.
+	 * @param body         the body child <code>BUTree</code>.
+	 * @return the new <code>BUTree</code> with a constructor declaration.
+	 */
 	public static BUTree<SConstructorDecl> make(BUTree<SNodeList> modifiers, BUTree<SNodeList> typeParams, BUTree<SName> name, BUTree<SNodeList> params, BUTree<SNodeList> throwsClause, BUTree<SBlockStmt> body) {
 		return new BUTree<SConstructorDecl>(new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body));
 	}
 
+	/**
+	 * The modifiers of this constructor declaration state.
+	 */
 	public final BUTree<SNodeList> modifiers;
 
+	/**
+	 * The type parameters of this constructor declaration state.
+	 */
 	public final BUTree<SNodeList> typeParams;
 
+	/**
+	 * The name of this constructor declaration state.
+	 */
 	public final BUTree<SName> name;
 
+	/**
+	 * The parameters of this constructor declaration state.
+	 */
 	public final BUTree<SNodeList> params;
 
+	/**
+	 * The 'throws' clause of this constructor declaration state.
+	 */
 	public final BUTree<SNodeList> throwsClause;
 
+	/**
+	 * The body of this constructor declaration state.
+	 */
 	public final BUTree<SBlockStmt> body;
 
+	/**
+	 * Constructs a constructor declaration state.
+	 *
+	 * @param modifiers    the modifiers child <code>BUTree</code>.
+	 * @param typeParams   the type parameters child <code>BUTree</code>.
+	 * @param name         the name child <code>BUTree</code>.
+	 * @param params       the parameters child <code>BUTree</code>.
+	 * @param throwsClause the 'throws' clause child <code>BUTree</code>.
+	 * @param body         the body child <code>BUTree</code>.
+	 */
 	public SConstructorDecl(BUTree<SNodeList> modifiers, BUTree<SNodeList> typeParams, BUTree<SName> name, BUTree<SNodeList> params, BUTree<SNodeList> throwsClause, BUTree<SBlockStmt> body) {
 		this.modifiers = modifiers;
 		this.typeParams = typeParams;
@@ -43,55 +101,123 @@ public class SConstructorDecl extends SNode<SConstructorDecl> implements SMember
 		this.body = body;
 	}
 
+	/**
+	 * Returns the kind of this constructor declaration.
+	 *
+	 * @return the kind of this constructor declaration.
+	 */
 	@Override
 	public Kind kind() {
 		return Kind.ConstructorDecl;
 	}
 
+	/**
+	 * Replaces the modifiers of this constructor declaration state.
+	 *
+	 * @param modifiers the replacement for the modifiers of this constructor declaration state.
+	 * @return the resulting mutated constructor declaration state.
+	 */
 	public SConstructorDecl withModifiers(BUTree<SNodeList> modifiers) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
+	/**
+	 * Replaces the type parameters of this constructor declaration state.
+	 *
+	 * @param typeParams the replacement for the type parameters of this constructor declaration state.
+	 * @return the resulting mutated constructor declaration state.
+	 */
 	public SConstructorDecl withTypeParams(BUTree<SNodeList> typeParams) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
+	/**
+	 * Replaces the name of this constructor declaration state.
+	 *
+	 * @param name the replacement for the name of this constructor declaration state.
+	 * @return the resulting mutated constructor declaration state.
+	 */
 	public SConstructorDecl withName(BUTree<SName> name) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
+	/**
+	 * Replaces the parameters of this constructor declaration state.
+	 *
+	 * @param params the replacement for the parameters of this constructor declaration state.
+	 * @return the resulting mutated constructor declaration state.
+	 */
 	public SConstructorDecl withParams(BUTree<SNodeList> params) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
+	/**
+	 * Replaces the 'throws' clause of this constructor declaration state.
+	 *
+	 * @param throwsClause the replacement for the 'throws' clause of this constructor declaration state.
+	 * @return the resulting mutated constructor declaration state.
+	 */
 	public SConstructorDecl withThrowsClause(BUTree<SNodeList> throwsClause) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
+	/**
+	 * Replaces the body of this constructor declaration state.
+	 *
+	 * @param body the replacement for the body of this constructor declaration state.
+	 * @return the resulting mutated constructor declaration state.
+	 */
 	public SConstructorDecl withBody(BUTree<SBlockStmt> body) {
 		return new SConstructorDecl(modifiers, typeParams, name, params, throwsClause, body);
 	}
 
+	/**
+	 * Builds a constructor declaration facade for the specified constructor declaration <code>TDLocation</code>.
+	 *
+	 * @param location the constructor declaration <code>TDLocation</code>.
+	 * @return a constructor declaration facade for the specified constructor declaration <code>TDLocation</code>.
+	 */
 	@Override
 	protected Tree doInstantiate(TDLocation<SConstructorDecl> location) {
 		return new TDConstructorDecl(location);
 	}
 
+	/**
+	 * Returns the shape for this constructor declaration state.
+	 *
+	 * @return the shape for this constructor declaration state.
+	 */
 	@Override
 	public LexicalShape shape() {
 		return shape;
 	}
 
+	/**
+	 * Returns the first child traversal for this constructor declaration state.
+	 *
+	 * @return the first child traversal for this constructor declaration state.
+	 */
 	@Override
 	public STraversal firstChild() {
 		return MODIFIERS;
 	}
 
+	/**
+	 * Returns the last child traversal for this constructor declaration state.
+	 *
+	 * @return the last child traversal for this constructor declaration state.
+	 */
 	@Override
 	public STraversal lastChild() {
 		return BODY;
 	}
 
+	/**
+	 * Compares this state object to the specified object.
+	 *
+	 * @param o the object to compare this state with.
+	 * @return <code>true</code> if the specified object is equal to this state, <code>false</code> otherwise.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -114,6 +240,11 @@ public class SConstructorDecl extends SNode<SConstructorDecl> implements SMember
 		return true;
 	}
 
+	/**
+	 * Returns a hash code for this state object.
+	 *
+	 * @return a hash code value for this object.
+	 */
 	@Override
 	public int hashCode() {
 		int result = 17;

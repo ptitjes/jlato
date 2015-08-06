@@ -1,58 +1,126 @@
 package org.jlato.internal.bu.stmt;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.coll.SNodeOption;
-import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDBreakStmt;
-import org.jlato.tree.*;
-import org.jlato.tree.name.*;
+import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings.IndentationContext;
+import org.jlato.printer.FormattingSettings.SpacingLocation;
+import org.jlato.tree.Kind;
+import org.jlato.tree.NodeOption;
+import org.jlato.tree.Tree;
+import org.jlato.tree.name.Name;
 
-import static org.jlato.internal.shapes.LSCondition.some;
+import static org.jlato.internal.shapes.IndentationConstraint.*;
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
+/**
+ * A state object for a 'break' statement.
+ */
 public class SBreakStmt extends SNode<SBreakStmt> implements SStmt {
 
+	/**
+	 * Creates a <code>BUTree</code> with a new 'break' statement.
+	 *
+	 * @param id the identifier child <code>BUTree</code>.
+	 * @return the new <code>BUTree</code> with a 'break' statement.
+	 */
 	public static BUTree<SBreakStmt> make(BUTree<SNodeOption> id) {
 		return new BUTree<SBreakStmt>(new SBreakStmt(id));
 	}
 
+	/**
+	 * The identifier of this 'break' statement state.
+	 */
 	public final BUTree<SNodeOption> id;
 
+	/**
+	 * Constructs a 'break' statement state.
+	 *
+	 * @param id the identifier child <code>BUTree</code>.
+	 */
 	public SBreakStmt(BUTree<SNodeOption> id) {
 		this.id = id;
 	}
 
+	/**
+	 * Returns the kind of this 'break' statement.
+	 *
+	 * @return the kind of this 'break' statement.
+	 */
 	@Override
 	public Kind kind() {
 		return Kind.BreakStmt;
 	}
 
+	/**
+	 * Replaces the identifier of this 'break' statement state.
+	 *
+	 * @param id the replacement for the identifier of this 'break' statement state.
+	 * @return the resulting mutated 'break' statement state.
+	 */
 	public SBreakStmt withId(BUTree<SNodeOption> id) {
 		return new SBreakStmt(id);
 	}
 
+	/**
+	 * Builds a 'break' statement facade for the specified 'break' statement <code>TDLocation</code>.
+	 *
+	 * @param location the 'break' statement <code>TDLocation</code>.
+	 * @return a 'break' statement facade for the specified 'break' statement <code>TDLocation</code>.
+	 */
 	@Override
 	protected Tree doInstantiate(TDLocation<SBreakStmt> location) {
 		return new TDBreakStmt(location);
 	}
 
+	/**
+	 * Returns the shape for this 'break' statement state.
+	 *
+	 * @return the shape for this 'break' statement state.
+	 */
 	@Override
 	public LexicalShape shape() {
 		return shape;
 	}
 
+	/**
+	 * Returns the first child traversal for this 'break' statement state.
+	 *
+	 * @return the first child traversal for this 'break' statement state.
+	 */
 	@Override
 	public STraversal firstChild() {
 		return ID;
 	}
 
+	/**
+	 * Returns the last child traversal for this 'break' statement state.
+	 *
+	 * @return the last child traversal for this 'break' statement state.
+	 */
 	@Override
 	public STraversal lastChild() {
 		return ID;
 	}
 
+	/**
+	 * Compares this state object to the specified object.
+	 *
+	 * @param o the object to compare this state with.
+	 * @return <code>true</code> if the specified object is equal to this state, <code>false</code> otherwise.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -65,6 +133,11 @@ public class SBreakStmt extends SNode<SBreakStmt> implements SStmt {
 		return true;
 	}
 
+	/**
+	 * Returns a hash code for this state object.
+	 *
+	 * @return a hash code value for this object.
+	 */
 	@Override
 	public int hashCode() {
 		int result = 17;

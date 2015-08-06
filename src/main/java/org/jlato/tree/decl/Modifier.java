@@ -5,6 +5,9 @@ import org.jlato.util.Mutation;
 
 import static org.jlato.tree.Trees.modifier;
 
+/**
+ * A modifier.
+ */
 public interface Modifier extends ExtendedModifier, TreeCombinators<Modifier> {
 
 	Modifier Public = modifier(ModifierKeyword.Public);
@@ -31,9 +34,26 @@ public interface Modifier extends ExtendedModifier, TreeCombinators<Modifier> {
 
 	Modifier StrictFP = modifier(ModifierKeyword.StrictFP);
 
+	/**
+	 * Returns the keyword of this modifier.
+	 *
+	 * @return the keyword of this modifier.
+	 */
 	ModifierKeyword keyword();
 
+	/**
+	 * Replaces the keyword of this modifier.
+	 *
+	 * @param keyword the replacement for the keyword of this modifier.
+	 * @return the resulting mutated modifier.
+	 */
 	Modifier withKeyword(ModifierKeyword keyword);
 
+	/**
+	 * Mutates the keyword of this modifier.
+	 *
+	 * @param mutation the mutation to apply to the keyword of this modifier.
+	 * @return the resulting mutated modifier.
+	 */
 	Modifier withKeyword(Mutation<ModifierKeyword> mutation);
 }

@@ -15,64 +15,153 @@ import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
+/**
+ * A method invocation expression.
+ */
 public class TDMethodInvocationExpr extends TDTree<SMethodInvocationExpr, Expr, MethodInvocationExpr> implements MethodInvocationExpr {
 
+	/**
+	 * Returns the kind of this method invocation expression.
+	 *
+	 * @return the kind of this method invocation expression.
+	 */
 	public Kind kind() {
 		return Kind.MethodInvocationExpr;
 	}
 
+	/**
+	 * Creates a method invocation expression for the specified tree location.
+	 *
+	 * @param location the tree location.
+	 */
 	public TDMethodInvocationExpr(TDLocation<SMethodInvocationExpr> location) {
 		super(location);
 	}
 
+	/**
+	 * Creates a method invocation expression with the specified child trees.
+	 *
+	 * @param scope    the scope child tree.
+	 * @param typeArgs the type args child tree.
+	 * @param name     the name child tree.
+	 * @param args     the args child tree.
+	 */
 	public TDMethodInvocationExpr(NodeOption<Expr> scope, NodeList<Type> typeArgs, Name name, NodeList<Expr> args) {
 		super(new TDLocation<SMethodInvocationExpr>(SMethodInvocationExpr.make(TDTree.<SNodeOption>treeOf(scope), TDTree.<SNodeList>treeOf(typeArgs), TDTree.<SName>treeOf(name), TDTree.<SNodeList>treeOf(args))));
 	}
 
+	/**
+	 * Returns the scope of this method invocation expression.
+	 *
+	 * @return the scope of this method invocation expression.
+	 */
 	public NodeOption<Expr> scope() {
 		return location.safeTraversal(SMethodInvocationExpr.SCOPE);
 	}
 
+	/**
+	 * Replaces the scope of this method invocation expression.
+	 *
+	 * @param scope the replacement for the scope of this method invocation expression.
+	 * @return the resulting mutated method invocation expression.
+	 */
 	public MethodInvocationExpr withScope(NodeOption<Expr> scope) {
 		return location.safeTraversalReplace(SMethodInvocationExpr.SCOPE, scope);
 	}
 
+	/**
+	 * Mutates the scope of this method invocation expression.
+	 *
+	 * @param mutation the mutation to apply to the scope of this method invocation expression.
+	 * @return the resulting mutated method invocation expression.
+	 */
 	public MethodInvocationExpr withScope(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(SMethodInvocationExpr.SCOPE, mutation);
 	}
 
+	/**
+	 * Returns the type args of this method invocation expression.
+	 *
+	 * @return the type args of this method invocation expression.
+	 */
 	public NodeList<Type> typeArgs() {
 		return location.safeTraversal(SMethodInvocationExpr.TYPE_ARGS);
 	}
 
+	/**
+	 * Replaces the type args of this method invocation expression.
+	 *
+	 * @param typeArgs the replacement for the type args of this method invocation expression.
+	 * @return the resulting mutated method invocation expression.
+	 */
 	public MethodInvocationExpr withTypeArgs(NodeList<Type> typeArgs) {
 		return location.safeTraversalReplace(SMethodInvocationExpr.TYPE_ARGS, typeArgs);
 	}
 
+	/**
+	 * Mutates the type args of this method invocation expression.
+	 *
+	 * @param mutation the mutation to apply to the type args of this method invocation expression.
+	 * @return the resulting mutated method invocation expression.
+	 */
 	public MethodInvocationExpr withTypeArgs(Mutation<NodeList<Type>> mutation) {
 		return location.safeTraversalMutate(SMethodInvocationExpr.TYPE_ARGS, mutation);
 	}
 
+	/**
+	 * Returns the name of this method invocation expression.
+	 *
+	 * @return the name of this method invocation expression.
+	 */
 	public Name name() {
 		return location.safeTraversal(SMethodInvocationExpr.NAME);
 	}
 
+	/**
+	 * Replaces the name of this method invocation expression.
+	 *
+	 * @param name the replacement for the name of this method invocation expression.
+	 * @return the resulting mutated method invocation expression.
+	 */
 	public MethodInvocationExpr withName(Name name) {
 		return location.safeTraversalReplace(SMethodInvocationExpr.NAME, name);
 	}
 
+	/**
+	 * Mutates the name of this method invocation expression.
+	 *
+	 * @param mutation the mutation to apply to the name of this method invocation expression.
+	 * @return the resulting mutated method invocation expression.
+	 */
 	public MethodInvocationExpr withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SMethodInvocationExpr.NAME, mutation);
 	}
 
+	/**
+	 * Returns the args of this method invocation expression.
+	 *
+	 * @return the args of this method invocation expression.
+	 */
 	public NodeList<Expr> args() {
 		return location.safeTraversal(SMethodInvocationExpr.ARGS);
 	}
 
+	/**
+	 * Replaces the args of this method invocation expression.
+	 *
+	 * @param args the replacement for the args of this method invocation expression.
+	 * @return the resulting mutated method invocation expression.
+	 */
 	public MethodInvocationExpr withArgs(NodeList<Expr> args) {
 		return location.safeTraversalReplace(SMethodInvocationExpr.ARGS, args);
 	}
 
+	/**
+	 * Mutates the args of this method invocation expression.
+	 *
+	 * @param mutation the mutation to apply to the args of this method invocation expression.
+	 * @return the resulting mutated method invocation expression.
+	 */
 	public MethodInvocationExpr withArgs(Mutation<NodeList<Expr>> mutation) {
 		return location.safeTraversalMutate(SMethodInvocationExpr.ARGS, mutation);
 	}

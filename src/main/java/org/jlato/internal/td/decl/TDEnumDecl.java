@@ -16,88 +16,213 @@ import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.util.Mutation;
 
+/**
+ * An enum declaration.
+ */
 public class TDEnumDecl extends TDTree<SEnumDecl, TypeDecl, EnumDecl> implements EnumDecl {
 
+	/**
+	 * Returns the kind of this enum declaration.
+	 *
+	 * @return the kind of this enum declaration.
+	 */
 	public Kind kind() {
 		return Kind.EnumDecl;
 	}
 
+	/**
+	 * Creates an enum declaration for the specified tree location.
+	 *
+	 * @param location the tree location.
+	 */
 	public TDEnumDecl(TDLocation<SEnumDecl> location) {
 		super(location);
 	}
 
+	/**
+	 * Creates an enum declaration with the specified child trees.
+	 *
+	 * @param modifiers        the modifiers child tree.
+	 * @param name             the name child tree.
+	 * @param implementsClause the 'implements' clause child tree.
+	 * @param enumConstants    the enum constants child tree.
+	 * @param trailingComma    the has a trailing comma child tree.
+	 * @param members          the members child tree.
+	 */
 	public TDEnumDecl(NodeList<ExtendedModifier> modifiers, Name name, NodeList<QualifiedType> implementsClause, NodeList<EnumConstantDecl> enumConstants, boolean trailingComma, NodeList<MemberDecl> members) {
 		super(new TDLocation<SEnumDecl>(SEnumDecl.make(TDTree.<SNodeList>treeOf(modifiers), TDTree.<SName>treeOf(name), TDTree.<SNodeList>treeOf(implementsClause), TDTree.<SNodeList>treeOf(enumConstants), trailingComma, TDTree.<SNodeList>treeOf(members))));
 	}
 
+	/**
+	 * Returns the modifiers of this enum declaration.
+	 *
+	 * @return the modifiers of this enum declaration.
+	 */
 	public NodeList<ExtendedModifier> modifiers() {
 		return location.safeTraversal(SEnumDecl.MODIFIERS);
 	}
 
+	/**
+	 * Replaces the modifiers of this enum declaration.
+	 *
+	 * @param modifiers the replacement for the modifiers of this enum declaration.
+	 * @return the resulting mutated enum declaration.
+	 */
 	public EnumDecl withModifiers(NodeList<ExtendedModifier> modifiers) {
 		return location.safeTraversalReplace(SEnumDecl.MODIFIERS, modifiers);
 	}
 
+	/**
+	 * Mutates the modifiers of this enum declaration.
+	 *
+	 * @param mutation the mutation to apply to the modifiers of this enum declaration.
+	 * @return the resulting mutated enum declaration.
+	 */
 	public EnumDecl withModifiers(Mutation<NodeList<ExtendedModifier>> mutation) {
 		return location.safeTraversalMutate(SEnumDecl.MODIFIERS, mutation);
 	}
 
+	/**
+	 * Returns the name of this enum declaration.
+	 *
+	 * @return the name of this enum declaration.
+	 */
 	public Name name() {
 		return location.safeTraversal(SEnumDecl.NAME);
 	}
 
+	/**
+	 * Replaces the name of this enum declaration.
+	 *
+	 * @param name the replacement for the name of this enum declaration.
+	 * @return the resulting mutated enum declaration.
+	 */
 	public EnumDecl withName(Name name) {
 		return location.safeTraversalReplace(SEnumDecl.NAME, name);
 	}
 
+	/**
+	 * Mutates the name of this enum declaration.
+	 *
+	 * @param mutation the mutation to apply to the name of this enum declaration.
+	 * @return the resulting mutated enum declaration.
+	 */
 	public EnumDecl withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SEnumDecl.NAME, mutation);
 	}
 
+	/**
+	 * Returns the 'implements' clause of this enum declaration.
+	 *
+	 * @return the 'implements' clause of this enum declaration.
+	 */
 	public NodeList<QualifiedType> implementsClause() {
 		return location.safeTraversal(SEnumDecl.IMPLEMENTS_CLAUSE);
 	}
 
+	/**
+	 * Replaces the 'implements' clause of this enum declaration.
+	 *
+	 * @param implementsClause the replacement for the 'implements' clause of this enum declaration.
+	 * @return the resulting mutated enum declaration.
+	 */
 	public EnumDecl withImplementsClause(NodeList<QualifiedType> implementsClause) {
 		return location.safeTraversalReplace(SEnumDecl.IMPLEMENTS_CLAUSE, implementsClause);
 	}
 
+	/**
+	 * Mutates the 'implements' clause of this enum declaration.
+	 *
+	 * @param mutation the mutation to apply to the 'implements' clause of this enum declaration.
+	 * @return the resulting mutated enum declaration.
+	 */
 	public EnumDecl withImplementsClause(Mutation<NodeList<QualifiedType>> mutation) {
 		return location.safeTraversalMutate(SEnumDecl.IMPLEMENTS_CLAUSE, mutation);
 	}
 
+	/**
+	 * Returns the enum constants of this enum declaration.
+	 *
+	 * @return the enum constants of this enum declaration.
+	 */
 	public NodeList<EnumConstantDecl> enumConstants() {
 		return location.safeTraversal(SEnumDecl.ENUM_CONSTANTS);
 	}
 
+	/**
+	 * Replaces the enum constants of this enum declaration.
+	 *
+	 * @param enumConstants the replacement for the enum constants of this enum declaration.
+	 * @return the resulting mutated enum declaration.
+	 */
 	public EnumDecl withEnumConstants(NodeList<EnumConstantDecl> enumConstants) {
 		return location.safeTraversalReplace(SEnumDecl.ENUM_CONSTANTS, enumConstants);
 	}
 
+	/**
+	 * Mutates the enum constants of this enum declaration.
+	 *
+	 * @param mutation the mutation to apply to the enum constants of this enum declaration.
+	 * @return the resulting mutated enum declaration.
+	 */
 	public EnumDecl withEnumConstants(Mutation<NodeList<EnumConstantDecl>> mutation) {
 		return location.safeTraversalMutate(SEnumDecl.ENUM_CONSTANTS, mutation);
 	}
 
+	/**
+	 * Tests whether this enum declaration has a trailing comma.
+	 *
+	 * @return <code>true</code> if this enum declaration has a trailing comma, <code>false</code> otherwise.
+	 */
 	public boolean trailingComma() {
 		return location.safeProperty(SEnumDecl.TRAILING_COMMA);
 	}
 
+	/**
+	 * Sets whether this enum declaration has a trailing comma.
+	 *
+	 * @param trailingComma <code>true</code> if this enum declaration has a trailing comma, <code>false</code> otherwise.
+	 * @return the resulting mutated enum declaration.
+	 */
 	public EnumDecl withTrailingComma(boolean trailingComma) {
 		return location.safePropertyReplace(SEnumDecl.TRAILING_COMMA, trailingComma);
 	}
 
+	/**
+	 * Mutates whether this enum declaration has a trailing comma.
+	 *
+	 * @param mutation the mutation to apply to whether this enum declaration has a trailing comma.
+	 * @return the resulting mutated enum declaration.
+	 */
 	public EnumDecl withTrailingComma(Mutation<Boolean> mutation) {
 		return location.safePropertyMutate(SEnumDecl.TRAILING_COMMA, mutation);
 	}
 
+	/**
+	 * Returns the members of this enum declaration.
+	 *
+	 * @return the members of this enum declaration.
+	 */
 	public NodeList<MemberDecl> members() {
 		return location.safeTraversal(SEnumDecl.MEMBERS);
 	}
 
+	/**
+	 * Replaces the members of this enum declaration.
+	 *
+	 * @param members the replacement for the members of this enum declaration.
+	 * @return the resulting mutated enum declaration.
+	 */
 	public EnumDecl withMembers(NodeList<MemberDecl> members) {
 		return location.safeTraversalReplace(SEnumDecl.MEMBERS, members);
 	}
 
+	/**
+	 * Mutates the members of this enum declaration.
+	 *
+	 * @param mutation the mutation to apply to the members of this enum declaration.
+	 * @return the resulting mutated enum declaration.
+	 */
 	public EnumDecl withMembers(Mutation<NodeList<MemberDecl>> mutation) {
 		return location.safeTraversalMutate(SEnumDecl.MEMBERS, mutation);
 	}

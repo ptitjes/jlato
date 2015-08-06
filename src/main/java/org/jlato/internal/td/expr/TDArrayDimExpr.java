@@ -13,40 +13,93 @@ import org.jlato.tree.expr.ArrayDimExpr;
 import org.jlato.tree.expr.Expr;
 import org.jlato.util.Mutation;
 
+/**
+ * An array dimension expression.
+ */
 public class TDArrayDimExpr extends TDTree<SArrayDimExpr, Node, ArrayDimExpr> implements ArrayDimExpr {
 
+	/**
+	 * Returns the kind of this array dimension expression.
+	 *
+	 * @return the kind of this array dimension expression.
+	 */
 	public Kind kind() {
 		return Kind.ArrayDimExpr;
 	}
 
+	/**
+	 * Creates an array dimension expression for the specified tree location.
+	 *
+	 * @param location the tree location.
+	 */
 	public TDArrayDimExpr(TDLocation<SArrayDimExpr> location) {
 		super(location);
 	}
 
+	/**
+	 * Creates an array dimension expression with the specified child trees.
+	 *
+	 * @param annotations the annotations child tree.
+	 * @param expr        the expression child tree.
+	 */
 	public TDArrayDimExpr(NodeList<AnnotationExpr> annotations, Expr expr) {
 		super(new TDLocation<SArrayDimExpr>(SArrayDimExpr.make(TDTree.<SNodeList>treeOf(annotations), TDTree.<SExpr>treeOf(expr))));
 	}
 
+	/**
+	 * Returns the annotations of this array dimension expression.
+	 *
+	 * @return the annotations of this array dimension expression.
+	 */
 	public NodeList<AnnotationExpr> annotations() {
 		return location.safeTraversal(SArrayDimExpr.ANNOTATIONS);
 	}
 
+	/**
+	 * Replaces the annotations of this array dimension expression.
+	 *
+	 * @param annotations the replacement for the annotations of this array dimension expression.
+	 * @return the resulting mutated array dimension expression.
+	 */
 	public ArrayDimExpr withAnnotations(NodeList<AnnotationExpr> annotations) {
 		return location.safeTraversalReplace(SArrayDimExpr.ANNOTATIONS, annotations);
 	}
 
+	/**
+	 * Mutates the annotations of this array dimension expression.
+	 *
+	 * @param mutation the mutation to apply to the annotations of this array dimension expression.
+	 * @return the resulting mutated array dimension expression.
+	 */
 	public ArrayDimExpr withAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
 		return location.safeTraversalMutate(SArrayDimExpr.ANNOTATIONS, mutation);
 	}
 
+	/**
+	 * Returns the expression of this array dimension expression.
+	 *
+	 * @return the expression of this array dimension expression.
+	 */
 	public Expr expr() {
 		return location.safeTraversal(SArrayDimExpr.EXPR);
 	}
 
+	/**
+	 * Replaces the expression of this array dimension expression.
+	 *
+	 * @param expr the replacement for the expression of this array dimension expression.
+	 * @return the resulting mutated array dimension expression.
+	 */
 	public ArrayDimExpr withExpr(Expr expr) {
 		return location.safeTraversalReplace(SArrayDimExpr.EXPR, expr);
 	}
 
+	/**
+	 * Mutates the expression of this array dimension expression.
+	 *
+	 * @param mutation the mutation to apply to the expression of this array dimension expression.
+	 * @return the resulting mutated array dimension expression.
+	 */
 	public ArrayDimExpr withExpr(Mutation<Expr> mutation) {
 		return location.safeTraversalMutate(SArrayDimExpr.EXPR, mutation);
 	}

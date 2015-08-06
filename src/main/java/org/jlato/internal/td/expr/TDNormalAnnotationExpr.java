@@ -13,40 +13,93 @@ import org.jlato.tree.expr.NormalAnnotationExpr;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
 
+/**
+ * A normal annotation expression.
+ */
 public class TDNormalAnnotationExpr extends TDTree<SNormalAnnotationExpr, AnnotationExpr, NormalAnnotationExpr> implements NormalAnnotationExpr {
 
+	/**
+	 * Returns the kind of this normal annotation expression.
+	 *
+	 * @return the kind of this normal annotation expression.
+	 */
 	public Kind kind() {
 		return Kind.NormalAnnotationExpr;
 	}
 
+	/**
+	 * Creates a normal annotation expression for the specified tree location.
+	 *
+	 * @param location the tree location.
+	 */
 	public TDNormalAnnotationExpr(TDLocation<SNormalAnnotationExpr> location) {
 		super(location);
 	}
 
+	/**
+	 * Creates a normal annotation expression with the specified child trees.
+	 *
+	 * @param name  the name child tree.
+	 * @param pairs the pairs child tree.
+	 */
 	public TDNormalAnnotationExpr(QualifiedName name, NodeList<MemberValuePair> pairs) {
 		super(new TDLocation<SNormalAnnotationExpr>(SNormalAnnotationExpr.make(TDTree.<SQualifiedName>treeOf(name), TDTree.<SNodeList>treeOf(pairs))));
 	}
 
+	/**
+	 * Returns the name of this normal annotation expression.
+	 *
+	 * @return the name of this normal annotation expression.
+	 */
 	public QualifiedName name() {
 		return location.safeTraversal(SNormalAnnotationExpr.NAME);
 	}
 
+	/**
+	 * Replaces the name of this normal annotation expression.
+	 *
+	 * @param name the replacement for the name of this normal annotation expression.
+	 * @return the resulting mutated normal annotation expression.
+	 */
 	public NormalAnnotationExpr withName(QualifiedName name) {
 		return location.safeTraversalReplace(SNormalAnnotationExpr.NAME, name);
 	}
 
+	/**
+	 * Mutates the name of this normal annotation expression.
+	 *
+	 * @param mutation the mutation to apply to the name of this normal annotation expression.
+	 * @return the resulting mutated normal annotation expression.
+	 */
 	public NormalAnnotationExpr withName(Mutation<QualifiedName> mutation) {
 		return location.safeTraversalMutate(SNormalAnnotationExpr.NAME, mutation);
 	}
 
+	/**
+	 * Returns the pairs of this normal annotation expression.
+	 *
+	 * @return the pairs of this normal annotation expression.
+	 */
 	public NodeList<MemberValuePair> pairs() {
 		return location.safeTraversal(SNormalAnnotationExpr.PAIRS);
 	}
 
+	/**
+	 * Replaces the pairs of this normal annotation expression.
+	 *
+	 * @param pairs the replacement for the pairs of this normal annotation expression.
+	 * @return the resulting mutated normal annotation expression.
+	 */
 	public NormalAnnotationExpr withPairs(NodeList<MemberValuePair> pairs) {
 		return location.safeTraversalReplace(SNormalAnnotationExpr.PAIRS, pairs);
 	}
 
+	/**
+	 * Mutates the pairs of this normal annotation expression.
+	 *
+	 * @param mutation the mutation to apply to the pairs of this normal annotation expression.
+	 * @return the resulting mutated normal annotation expression.
+	 */
 	public NormalAnnotationExpr withPairs(Mutation<NodeList<MemberValuePair>> mutation) {
 		return location.safeTraversalMutate(SNormalAnnotationExpr.PAIRS, mutation);
 	}

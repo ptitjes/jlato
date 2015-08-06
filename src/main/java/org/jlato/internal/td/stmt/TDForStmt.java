@@ -13,64 +13,153 @@ import org.jlato.tree.stmt.ForStmt;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.util.Mutation;
 
+/**
+ * A 'for' statement.
+ */
 public class TDForStmt extends TDTree<SForStmt, Stmt, ForStmt> implements ForStmt {
 
+	/**
+	 * Returns the kind of this 'for' statement.
+	 *
+	 * @return the kind of this 'for' statement.
+	 */
 	public Kind kind() {
 		return Kind.ForStmt;
 	}
 
+	/**
+	 * Creates a 'for' statement for the specified tree location.
+	 *
+	 * @param location the tree location.
+	 */
 	public TDForStmt(TDLocation<SForStmt> location) {
 		super(location);
 	}
 
+	/**
+	 * Creates a 'for' statement with the specified child trees.
+	 *
+	 * @param init    the init child tree.
+	 * @param compare the compare child tree.
+	 * @param update  the update child tree.
+	 * @param body    the body child tree.
+	 */
 	public TDForStmt(NodeList<Expr> init, Expr compare, NodeList<Expr> update, Stmt body) {
 		super(new TDLocation<SForStmt>(SForStmt.make(TDTree.<SNodeList>treeOf(init), TDTree.<SExpr>treeOf(compare), TDTree.<SNodeList>treeOf(update), TDTree.<SStmt>treeOf(body))));
 	}
 
+	/**
+	 * Returns the init of this 'for' statement.
+	 *
+	 * @return the init of this 'for' statement.
+	 */
 	public NodeList<Expr> init() {
 		return location.safeTraversal(SForStmt.INIT);
 	}
 
+	/**
+	 * Replaces the init of this 'for' statement.
+	 *
+	 * @param init the replacement for the init of this 'for' statement.
+	 * @return the resulting mutated 'for' statement.
+	 */
 	public ForStmt withInit(NodeList<Expr> init) {
 		return location.safeTraversalReplace(SForStmt.INIT, init);
 	}
 
+	/**
+	 * Mutates the init of this 'for' statement.
+	 *
+	 * @param mutation the mutation to apply to the init of this 'for' statement.
+	 * @return the resulting mutated 'for' statement.
+	 */
 	public ForStmt withInit(Mutation<NodeList<Expr>> mutation) {
 		return location.safeTraversalMutate(SForStmt.INIT, mutation);
 	}
 
+	/**
+	 * Returns the compare of this 'for' statement.
+	 *
+	 * @return the compare of this 'for' statement.
+	 */
 	public Expr compare() {
 		return location.safeTraversal(SForStmt.COMPARE);
 	}
 
+	/**
+	 * Replaces the compare of this 'for' statement.
+	 *
+	 * @param compare the replacement for the compare of this 'for' statement.
+	 * @return the resulting mutated 'for' statement.
+	 */
 	public ForStmt withCompare(Expr compare) {
 		return location.safeTraversalReplace(SForStmt.COMPARE, compare);
 	}
 
+	/**
+	 * Mutates the compare of this 'for' statement.
+	 *
+	 * @param mutation the mutation to apply to the compare of this 'for' statement.
+	 * @return the resulting mutated 'for' statement.
+	 */
 	public ForStmt withCompare(Mutation<Expr> mutation) {
 		return location.safeTraversalMutate(SForStmt.COMPARE, mutation);
 	}
 
+	/**
+	 * Returns the update of this 'for' statement.
+	 *
+	 * @return the update of this 'for' statement.
+	 */
 	public NodeList<Expr> update() {
 		return location.safeTraversal(SForStmt.UPDATE);
 	}
 
+	/**
+	 * Replaces the update of this 'for' statement.
+	 *
+	 * @param update the replacement for the update of this 'for' statement.
+	 * @return the resulting mutated 'for' statement.
+	 */
 	public ForStmt withUpdate(NodeList<Expr> update) {
 		return location.safeTraversalReplace(SForStmt.UPDATE, update);
 	}
 
+	/**
+	 * Mutates the update of this 'for' statement.
+	 *
+	 * @param mutation the mutation to apply to the update of this 'for' statement.
+	 * @return the resulting mutated 'for' statement.
+	 */
 	public ForStmt withUpdate(Mutation<NodeList<Expr>> mutation) {
 		return location.safeTraversalMutate(SForStmt.UPDATE, mutation);
 	}
 
+	/**
+	 * Returns the body of this 'for' statement.
+	 *
+	 * @return the body of this 'for' statement.
+	 */
 	public Stmt body() {
 		return location.safeTraversal(SForStmt.BODY);
 	}
 
+	/**
+	 * Replaces the body of this 'for' statement.
+	 *
+	 * @param body the replacement for the body of this 'for' statement.
+	 * @return the resulting mutated 'for' statement.
+	 */
 	public ForStmt withBody(Stmt body) {
 		return location.safeTraversalReplace(SForStmt.BODY, body);
 	}
 
+	/**
+	 * Mutates the body of this 'for' statement.
+	 *
+	 * @param mutation the mutation to apply to the body of this 'for' statement.
+	 * @return the resulting mutated 'for' statement.
+	 */
 	public ForStmt withBody(Mutation<Stmt> mutation) {
 		return location.safeTraversalMutate(SForStmt.BODY, mutation);
 	}

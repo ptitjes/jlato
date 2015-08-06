@@ -1,35 +1,82 @@
 package org.jlato.internal.bu.type;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.type.TDQualifiedType;
-import org.jlato.tree.*;
-import org.jlato.tree.expr.*;
-import org.jlato.tree.name.*;
-import org.jlato.tree.type.*;
+import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings.IndentationContext;
+import org.jlato.printer.FormattingSettings.SpacingLocation;
+import org.jlato.tree.Kind;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
+import org.jlato.tree.Tree;
+import org.jlato.tree.expr.AnnotationExpr;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.type.QualifiedType;
+import org.jlato.tree.type.Type;
 
-import static org.jlato.internal.shapes.LSCondition.some;
+import static org.jlato.internal.shapes.IndentationConstraint.*;
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
+/**
+ * A state object for a qualified type.
+ */
 public class SQualifiedType extends SNode<SQualifiedType> implements SReferenceType {
 
+	/**
+	 * Creates a <code>BUTree</code> with a new qualified type.
+	 *
+	 * @param annotations the annotations child <code>BUTree</code>.
+	 * @param scope       the scope child <code>BUTree</code>.
+	 * @param name        the name child <code>BUTree</code>.
+	 * @param typeArgs    the type args child <code>BUTree</code>.
+	 * @return the new <code>BUTree</code> with a qualified type.
+	 */
 	public static BUTree<SQualifiedType> make(BUTree<SNodeList> annotations, BUTree<SNodeOption> scope, BUTree<SName> name, BUTree<SNodeOption> typeArgs) {
 		return new BUTree<SQualifiedType>(new SQualifiedType(annotations, scope, name, typeArgs));
 	}
 
+	/**
+	 * The annotations of this qualified type state.
+	 */
 	public final BUTree<SNodeList> annotations;
 
+	/**
+	 * The scope of this qualified type state.
+	 */
 	public final BUTree<SNodeOption> scope;
 
+	/**
+	 * The name of this qualified type state.
+	 */
 	public final BUTree<SName> name;
 
+	/**
+	 * The type args of this qualified type state.
+	 */
 	public final BUTree<SNodeOption> typeArgs;
 
+	/**
+	 * Constructs a qualified type state.
+	 *
+	 * @param annotations the annotations child <code>BUTree</code>.
+	 * @param scope       the scope child <code>BUTree</code>.
+	 * @param name        the name child <code>BUTree</code>.
+	 * @param typeArgs    the type args child <code>BUTree</code>.
+	 */
 	public SQualifiedType(BUTree<SNodeList> annotations, BUTree<SNodeOption> scope, BUTree<SName> name, BUTree<SNodeOption> typeArgs) {
 		this.annotations = annotations;
 		this.scope = scope;
@@ -37,47 +84,103 @@ public class SQualifiedType extends SNode<SQualifiedType> implements SReferenceT
 		this.typeArgs = typeArgs;
 	}
 
+	/**
+	 * Returns the kind of this qualified type.
+	 *
+	 * @return the kind of this qualified type.
+	 */
 	@Override
 	public Kind kind() {
 		return Kind.QualifiedType;
 	}
 
+	/**
+	 * Replaces the annotations of this qualified type state.
+	 *
+	 * @param annotations the replacement for the annotations of this qualified type state.
+	 * @return the resulting mutated qualified type state.
+	 */
 	public SQualifiedType withAnnotations(BUTree<SNodeList> annotations) {
 		return new SQualifiedType(annotations, scope, name, typeArgs);
 	}
 
+	/**
+	 * Replaces the scope of this qualified type state.
+	 *
+	 * @param scope the replacement for the scope of this qualified type state.
+	 * @return the resulting mutated qualified type state.
+	 */
 	public SQualifiedType withScope(BUTree<SNodeOption> scope) {
 		return new SQualifiedType(annotations, scope, name, typeArgs);
 	}
 
+	/**
+	 * Replaces the name of this qualified type state.
+	 *
+	 * @param name the replacement for the name of this qualified type state.
+	 * @return the resulting mutated qualified type state.
+	 */
 	public SQualifiedType withName(BUTree<SName> name) {
 		return new SQualifiedType(annotations, scope, name, typeArgs);
 	}
 
+	/**
+	 * Replaces the type args of this qualified type state.
+	 *
+	 * @param typeArgs the replacement for the type args of this qualified type state.
+	 * @return the resulting mutated qualified type state.
+	 */
 	public SQualifiedType withTypeArgs(BUTree<SNodeOption> typeArgs) {
 		return new SQualifiedType(annotations, scope, name, typeArgs);
 	}
 
+	/**
+	 * Builds a qualified type facade for the specified qualified type <code>TDLocation</code>.
+	 *
+	 * @param location the qualified type <code>TDLocation</code>.
+	 * @return a qualified type facade for the specified qualified type <code>TDLocation</code>.
+	 */
 	@Override
 	protected Tree doInstantiate(TDLocation<SQualifiedType> location) {
 		return new TDQualifiedType(location);
 	}
 
+	/**
+	 * Returns the shape for this qualified type state.
+	 *
+	 * @return the shape for this qualified type state.
+	 */
 	@Override
 	public LexicalShape shape() {
 		return shape;
 	}
 
+	/**
+	 * Returns the first child traversal for this qualified type state.
+	 *
+	 * @return the first child traversal for this qualified type state.
+	 */
 	@Override
 	public STraversal firstChild() {
 		return ANNOTATIONS;
 	}
 
+	/**
+	 * Returns the last child traversal for this qualified type state.
+	 *
+	 * @return the last child traversal for this qualified type state.
+	 */
 	@Override
 	public STraversal lastChild() {
 		return TYPE_ARGS;
 	}
 
+	/**
+	 * Compares this state object to the specified object.
+	 *
+	 * @param o the object to compare this state with.
+	 * @return <code>true</code> if the specified object is equal to this state, <code>false</code> otherwise.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -96,6 +199,11 @@ public class SQualifiedType extends SNode<SQualifiedType> implements SReferenceT
 		return true;
 	}
 
+	/**
+	 * Returns a hash code for this state object.
+	 *
+	 * @return a hash code value for this object.
+	 */
 	@Override
 	public int hashCode() {
 		int result = 17;

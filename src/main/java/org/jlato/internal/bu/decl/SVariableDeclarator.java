@@ -1,66 +1,145 @@
 package org.jlato.internal.bu.decl;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.coll.SNodeOption;
-import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDVariableDeclarator;
-import org.jlato.tree.*;
-import org.jlato.tree.decl.*;
-import org.jlato.tree.expr.*;
+import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings.IndentationContext;
+import org.jlato.printer.FormattingSettings.SpacingLocation;
+import org.jlato.tree.Kind;
+import org.jlato.tree.NodeOption;
+import org.jlato.tree.Tree;
+import org.jlato.tree.decl.VariableDeclaratorId;
+import org.jlato.tree.expr.Expr;
 
-import static org.jlato.internal.shapes.LSCondition.some;
+import static org.jlato.internal.shapes.IndentationConstraint.*;
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
+/**
+ * A state object for a variable declarator.
+ */
 public class SVariableDeclarator extends SNode<SVariableDeclarator> implements STree {
 
+	/**
+	 * Creates a <code>BUTree</code> with a new variable declarator.
+	 *
+	 * @param id   the identifier child <code>BUTree</code>.
+	 * @param init the init child <code>BUTree</code>.
+	 * @return the new <code>BUTree</code> with a variable declarator.
+	 */
 	public static BUTree<SVariableDeclarator> make(BUTree<SVariableDeclaratorId> id, BUTree<SNodeOption> init) {
 		return new BUTree<SVariableDeclarator>(new SVariableDeclarator(id, init));
 	}
 
+	/**
+	 * The identifier of this variable declarator state.
+	 */
 	public final BUTree<SVariableDeclaratorId> id;
 
+	/**
+	 * The init of this variable declarator state.
+	 */
 	public final BUTree<SNodeOption> init;
 
+	/**
+	 * Constructs a variable declarator state.
+	 *
+	 * @param id   the identifier child <code>BUTree</code>.
+	 * @param init the init child <code>BUTree</code>.
+	 */
 	public SVariableDeclarator(BUTree<SVariableDeclaratorId> id, BUTree<SNodeOption> init) {
 		this.id = id;
 		this.init = init;
 	}
 
+	/**
+	 * Returns the kind of this variable declarator.
+	 *
+	 * @return the kind of this variable declarator.
+	 */
 	@Override
 	public Kind kind() {
 		return Kind.VariableDeclarator;
 	}
 
+	/**
+	 * Replaces the identifier of this variable declarator state.
+	 *
+	 * @param id the replacement for the identifier of this variable declarator state.
+	 * @return the resulting mutated variable declarator state.
+	 */
 	public SVariableDeclarator withId(BUTree<SVariableDeclaratorId> id) {
 		return new SVariableDeclarator(id, init);
 	}
 
+	/**
+	 * Replaces the init of this variable declarator state.
+	 *
+	 * @param init the replacement for the init of this variable declarator state.
+	 * @return the resulting mutated variable declarator state.
+	 */
 	public SVariableDeclarator withInit(BUTree<SNodeOption> init) {
 		return new SVariableDeclarator(id, init);
 	}
 
+	/**
+	 * Builds a variable declarator facade for the specified variable declarator <code>TDLocation</code>.
+	 *
+	 * @param location the variable declarator <code>TDLocation</code>.
+	 * @return a variable declarator facade for the specified variable declarator <code>TDLocation</code>.
+	 */
 	@Override
 	protected Tree doInstantiate(TDLocation<SVariableDeclarator> location) {
 		return new TDVariableDeclarator(location);
 	}
 
+	/**
+	 * Returns the shape for this variable declarator state.
+	 *
+	 * @return the shape for this variable declarator state.
+	 */
 	@Override
 	public LexicalShape shape() {
 		return shape;
 	}
 
+	/**
+	 * Returns the first child traversal for this variable declarator state.
+	 *
+	 * @return the first child traversal for this variable declarator state.
+	 */
 	@Override
 	public STraversal firstChild() {
 		return ID;
 	}
 
+	/**
+	 * Returns the last child traversal for this variable declarator state.
+	 *
+	 * @return the last child traversal for this variable declarator state.
+	 */
 	@Override
 	public STraversal lastChild() {
 		return INIT;
 	}
 
+	/**
+	 * Compares this state object to the specified object.
+	 *
+	 * @param o the object to compare this state with.
+	 * @return <code>true</code> if the specified object is equal to this state, <code>false</code> otherwise.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -75,6 +154,11 @@ public class SVariableDeclarator extends SNode<SVariableDeclarator> implements S
 		return true;
 	}
 
+	/**
+	 * Returns a hash code for this state object.
+	 *
+	 * @return a hash code value for this object.
+	 */
 	@Override
 	public int hashCode() {
 		int result = 17;
