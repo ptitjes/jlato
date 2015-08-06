@@ -28,12 +28,14 @@ import org.jlato.tree.*;
 import org.jlato.tree.expr.*;
 import org.jlato.tree.name.*;
 import org.jlato.tree.stmt.*;
+import org.jlato.util.Mutation;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.FileNotFoundException;
+import java.util.NoSuchElementException;
 
 import static org.jlato.tree.Trees.*;
 
@@ -271,6 +273,26 @@ public class NodeContainersTest {
 		Assert.assertEquals(null, option1.get());
 		Assert.assertTrue(!option1.contains(name("name")));
 		Assert.assertTrue(option1.contains(null));
+		Assert.assertEquals("(null)", option1.mkString("(", "", ")"));
+		Assert.assertFalse(option1.iterator().hasNext());
+		{
+			Throwable e = null;
+			try {
+				option1.iterator().next();
+			} catch (Throwable ex) {
+				e = ex;
+			}
+			Assert.assertTrue(e instanceof NoSuchElementException);
+		}
+		{
+			Throwable e = null;
+			try {
+				option1.iterator().remove();
+			} catch (Throwable ex) {
+				e = ex;
+			}
+			Assert.assertTrue(e instanceof UnsupportedOperationException);
+		}
 
 		NodeOption<Expr> option2 = option1.set(name("name"));
 		Assert.assertTrue(option2.isDefined());
@@ -278,6 +300,18 @@ public class NodeContainersTest {
 		Assert.assertEquals(name("name"), option2.get());
 		Assert.assertTrue(option2.contains(name("name")));
 		Assert.assertTrue(!option2.contains(null));
+		Assert.assertEquals("(name)", option2.mkString("(", "", ")"));
+		Assert.assertTrue(option2.iterator().hasNext());
+		Assert.assertEquals(name("name"), option2.iterator().next());
+		{
+			Throwable e = null;
+			try {
+				option2.iterator().remove();
+			} catch (Throwable ex) {
+				e = ex;
+			}
+			Assert.assertTrue(e instanceof UnsupportedOperationException);
+		}
 
 		NodeOption<Expr> option3 = option2.setNone();
 		Assert.assertTrue(!option3.isDefined());
@@ -285,6 +319,45 @@ public class NodeContainersTest {
 		Assert.assertEquals(null, option3.get());
 		Assert.assertTrue(!option3.contains(name("name")));
 		Assert.assertTrue(option3.contains(null));
+		Assert.assertEquals("(null)", option3.mkString("(", "", ")"));
+		Assert.assertFalse(option3.iterator().hasNext());
+		{
+			Throwable e = null;
+			try {
+				option3.iterator().next();
+			} catch (Throwable ex) {
+				e = ex;
+			}
+			Assert.assertTrue(e instanceof NoSuchElementException);
+		}
+		{
+			Throwable e = null;
+			try {
+				option3.iterator().remove();
+			} catch (Throwable ex) {
+				e = ex;
+			}
+			Assert.assertTrue(e instanceof UnsupportedOperationException);
+		}
+
+		NodeOption<Expr> option4 = option3.set(this.<Expr>mutationBy(null, name("name2")));
+		Assert.assertTrue(option4.isDefined());
+		Assert.assertTrue(option4.isSome());
+		Assert.assertEquals(name("name2"), option4.get());
+		Assert.assertTrue(option4.contains(name("name2")));
+		Assert.assertTrue(!option4.contains(null));
+		Assert.assertEquals("(name2)", option4.mkString("(", "", ")"));
+		Assert.assertTrue(option4.iterator().hasNext());
+		Assert.assertEquals(name("name2"), option4.iterator().next());
+		{
+			Throwable e = null;
+			try {
+				option4.iterator().remove();
+			} catch (Throwable ex) {
+				e = ex;
+			}
+			Assert.assertTrue(e instanceof UnsupportedOperationException);
+		}
 	}
 
 	@Test
@@ -314,5 +387,15 @@ public class NodeContainersTest {
 
 	public BlockStmt emptyBlock() {
 		return blockStmt();
+	}
+
+	private <T> Mutation<T> mutationBy(final T before, final T after) {
+		return new Mutation<T>() {
+
+			public T mutate(final T t) {
+				Assert.assertEquals(before, t);
+				return after;
+			}
+		};
 	}
 }

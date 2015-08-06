@@ -27,6 +27,7 @@ import org.jlato.tree.*;
 import org.jlato.util.Mutation;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author Didier Villevalois
@@ -125,10 +126,12 @@ public class TDNodeOption<T extends Tree> extends TDTree<SNodeOption, TDNodeOpti
 		private boolean done = false;
 
 		public boolean hasNext() {
-			return !done;
+			return !done && location.tree.state.element != null;
 		}
 
 		public T next() {
+			if (done || location.tree.state.element == null)
+				throw new NoSuchElementException();
 			done = true;
 			return get();
 		}
