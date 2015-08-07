@@ -356,7 +356,8 @@ public class SAnnotationMemberDecl extends SNode<SAnnotationMemberDecl> implemen
 
 	public static final LexicalShape shape = composite(
 			child(MODIFIERS, SExtendedModifier.multiLineShape),
-			child(TYPE), child(NAME),
+			child(TYPE),
+			child(NAME).withSpacingBefore(space()),
 			token(LToken.ParenthesisLeft), token(LToken.ParenthesisRight),
 			child(DEFAULT_VALUE, when(some(), defaultValShape)),
 			token(LToken.SemiColon)
