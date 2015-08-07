@@ -22,7 +22,7 @@ package org.jlato.parser;
 import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.STree;
-import org.jlato.tree.Tree;
+import org.jlato.tree.*;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.Stmt;
@@ -60,6 +60,13 @@ public abstract class ParseContext<T extends Tree> {
 		@Override
 		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
 			return wrapWithPrologAndEpilog(parser, parser.TypeDecl());
+		}
+	};
+
+	public final static ParseContext<NodeList<Modifier>> Modifiers = new ParseContext<NodeList<Modifier>>() {
+		@Override
+		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
+			return parser.Modifiers();
 		}
 	};
 
