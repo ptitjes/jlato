@@ -186,7 +186,24 @@
 							<goal>prepare-agent</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>report</id>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
 				</executions>
+				<configuration>
+					<excludes>
+						<exclude>org.jlato.parser.JavaCharStream</exclude>
+						<exclude>org.jlato.parser.ParseException</exclude>
+						<exclude>org.jlato.parser.ParserImpl</exclude>
+						<exclude>org.jlato.parser.ParserImplConstants</exclude>
+						<exclude>org.jlato.parser.ParserImplTokenManager</exclude>
+						<exclude>org.jlato.parser.Token</exclude>
+						<exclude>org.jlato.parser.TokenMgrError</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.eluder.coveralls</groupId>
