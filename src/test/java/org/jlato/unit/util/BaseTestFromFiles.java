@@ -59,8 +59,12 @@ public class BaseTestFromFiles {
 	}
 
 	protected String resourceAsString(String name) throws IOException {
+		return resourceAsString(name, "UTF-8");
+	}
+
+	protected String resourceAsString(String name, String charset) throws IOException {
 		final InputStream inputStream = ClassLoader.getSystemResourceAsStream(name);
-		return new String(readFully(inputStream), "UTF-8");
+		return new String(readFully(inputStream), charset);
 	}
 
 	private byte[] readFully(InputStream inputStream)

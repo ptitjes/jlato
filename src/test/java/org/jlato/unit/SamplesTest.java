@@ -38,19 +38,45 @@ public class SamplesTest extends BaseTestFromFiles {
 	@Test
 	public void testClass() throws IOException, ParseException {
 		final String original = resourceAsString("org/jlato/samples/TestClass.java");
-		Assert.assertEquals(original, parseAndPrint(original, false, true, FormattingSettings.Default));
-		Assert.assertEquals(original, parseAndPrint(original, false, false, FormattingSettings.Default));
-		Assert.assertEquals(original, parseAndPrint(original, true, false, FormattingSettings.Default));
-		Assert.assertEquals(original, parseAndPrint(original, true, true, FormattingSettings.Default));
+		FormattingSettings settings = FormattingSettings.Default;
+
+		Assert.assertEquals(original, parseAndPrint(original, false, true, settings));
+		Assert.assertEquals(original, parseAndPrint(original, false, false, settings));
+		Assert.assertEquals(original, parseAndPrint(original, true, false, settings));
+		Assert.assertEquals(original, parseAndPrint(original, true, true, settings));
 	}
 
 	@Test
 	public void javaConcepts() throws IOException, ParseException {
 		final String original = resourceAsString("org/jlato/samples/JavaConcepts.java");
-		Assert.assertEquals(original, parseAndPrint(original, false, true, FormattingSettings.JavaParser));
-		Assert.assertEquals(original, parseAndPrint(original, false, false, FormattingSettings.JavaParser));
-		Assert.assertEquals(original, parseAndPrint(original, true, false, FormattingSettings.JavaParser));
-		Assert.assertEquals(original, parseAndPrint(original, true, true, FormattingSettings.JavaParser));
+		FormattingSettings settings = FormattingSettings.JavaParser;
+
+		Assert.assertEquals(original, parseAndPrint(original, false, true, settings));
+		Assert.assertEquals(original, parseAndPrint(original, false, false, settings));
+		Assert.assertEquals(original, parseAndPrint(original, true, false, settings));
+		Assert.assertEquals(original, parseAndPrint(original, true, true, settings));
+	}
+
+	@Test
+	public void testEncoding_CP1252_CRLF() throws IOException, ParseException {
+		final String original = resourceAsString("org/jlato/samples/TestEncoding_CP1252_CRLF.java", "CP1252");
+		FormattingSettings settings = FormattingSettings.Default.withNewLine(FormattingSettings.NewLine_Windows);
+
+		Assert.assertEquals(original, parseAndPrint(original, false, true, settings));
+		Assert.assertEquals(original, parseAndPrint(original, false, false, settings));
+		Assert.assertEquals(original, parseAndPrint(original, true, false, settings));
+		Assert.assertEquals(original, parseAndPrint(original, true, true, settings));
+	}
+
+	@Test
+	public void testEncoding_UTF8_LF() throws IOException, ParseException {
+		final String original = resourceAsString("org/jlato/samples/TestEncoding_UTF8_LF.java", "UTF-8");
+		FormattingSettings settings = FormattingSettings.Default.withNewLine(FormattingSettings.NewLine_Unix);
+
+		Assert.assertEquals(original, parseAndPrint(original, false, true, settings));
+		Assert.assertEquals(original, parseAndPrint(original, false, false, settings));
+		Assert.assertEquals(original, parseAndPrint(original, true, false, settings));
+		Assert.assertEquals(original, parseAndPrint(original, true, true, settings));
 	}
 
 	@Test
