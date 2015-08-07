@@ -195,13 +195,13 @@
 				</executions>
 				<configuration>
 					<excludes>
-						<exclude>org.jlato.parser.JavaCharStream</exclude>
-						<exclude>org.jlato.parser.ParseException</exclude>
-						<exclude>org.jlato.parser.ParserImpl</exclude>
-						<exclude>org.jlato.parser.ParserImplConstants</exclude>
-						<exclude>org.jlato.parser.ParserImplTokenManager</exclude>
-						<exclude>org.jlato.parser.Token</exclude>
-						<exclude>org.jlato.parser.TokenMgrError</exclude>
+						<exclude>org/jlato/parser/JavaCharStream.class</exclude>
+						<exclude>org/jlato/parser/ParseException.class</exclude>
+						<exclude>org/jlato/parser/ParserImpl.class</exclude>
+						<exclude>org/jlato/parser/ParserImplConstants.class</exclude>
+						<exclude>org/jlato/parser/ParserImplTokenManager.class</exclude>
+						<exclude>org/jlato/parser/Token.class</exclude>
+						<exclude>org/jlato/parser/TokenMgrError.class</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
