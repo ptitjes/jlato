@@ -2269,32 +2269,6 @@ BUTree<SLambdaExpr> LambdaBody(BUTree<SNodeList> parameters, boolean parenthesis
   { return ret; }
 }
 
-BUTree<SNodeList> LambdaParameters(ByRef<Boolean> parenthesis):
-{
-	BUTree<SNodeList> ret;
-	BUTree<SFormalParameter> param;
-}
-{
-  (
-    { run(); }
-    param = InferredFormalParameter()
-    {
-      parenthesis.value = false;
-      ret = dress(singletonList(param));
-    }
-  |
-    "("
-    (
-      LOOKAHEAD(InferredFormalParameterList()) ret = InferredFormalParameterList()
-    |
-      ret = FormalParameterList()
-    )
-    ")"
-    { parenthesis.value = true; }
-  )
-  { return ret; }
-}
-
 BUTree<SNodeList> InferredFormalParameterList():
 {
 	BUTree<SNodeList> ret = emptyList();
