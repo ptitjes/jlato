@@ -131,51 +131,37 @@ abstract class ParserBase {
 	protected <S extends STree> BUTree<S> dress(BUTree<S> tree) {
 		if (!configuration.preserveWhitespaces) return tree;
 
-		try {
-			final IndexedList<WTokenRun> tokens = popTokens();
+		final IndexedList<WTokenRun> tokens = popTokens();
 
-			if (tree == null) return null;
+		if (tree == null) return null;
 
-			final LexicalShape shape = tree.state.shape();
-			return doDress(tree, shape, tokens);
-
-		} catch (EmptyStackException e) {
-			debugFailedPopTokens();
-			throw e;
-		} catch (IllegalStateException e) {
-			debugFailedPopTokens();
-			throw e;
-		}
+		final LexicalShape shape = tree.state.shape();
+		return doDress(tree, shape, tokens);
 	}
 
 	private <S extends STree> BUTree<S> doDress(BUTree<S> tree, LexicalShape shape,
 	                                            IndexedList<WTokenRun> tokens) {
-		try {
-			final Iterator<WTokenRun> tokenIterator = tokens.iterator();
-			final BUTree<S> newTree;
-			if (shape != null) {
-				final DressingBuilder<S> builder = new DressingBuilder<S>(tree, tokenIterator);
-				shape.dress(builder, tree);
-				newTree = builder.build();
-			} else newTree = tree;
 
+		final Iterator<WTokenRun> tokenIterator = tokens.iterator();
+		final BUTree<S> newTree;
+		if (shape != null) {
+			final DressingBuilder<S> builder = new DressingBuilder<S>(tree, tokenIterator);
+			shape.dress(builder, tree);
+			newTree = builder.build();
+		} else newTree = tree;
+
+		if (tokenIterator.hasNext()) {
+			// Flow up the remaining whitespace run for consumption by parent tree
+			final WTokenRun deferred = tokenIterator.next();
+			pushWhitespace(deferred);
+
+			// Only one whitespace run at most should flow up
 			if (tokenIterator.hasNext()) {
-				// Flow up the remaining whitespace run for consumption by parent tree
-				final WTokenRun deferred = tokenIterator.next();
-				pushWhitespace(deferred);
-
-				// Only one whitespace run at most should flow up
-				if (tokenIterator.hasNext()) {
-					throw new IllegalStateException();
-				}
+				throw new IllegalStateException();
 			}
-
-			return newTree;
-
-		} catch (NoSuchElementException e) {
-			debugFailedEnRun(tree, shape, tokens);
-			throw e;
 		}
+
+		return newTree;
 	}
 
 	protected <S extends STree> BUTree<S> dressWithPrologAndEpilog(BUTree<S> tree) {
@@ -342,7 +328,7 @@ abstract class ParserBase {
 	}
 
 	// An fruitless attempt to do better lookahead than LOOKAHEAD(CastExpression())
-	boolean isCast(boolean readOpenParenthesis) {
+	/*boolean isCast(boolean readOpenParenthesis) {
 		int lookahead = 1;
 		if (!readOpenParenthesis) {
 			if (getToken(1).kind != LPAREN) return false;
@@ -477,69 +463,5 @@ abstract class ParserBase {
 					}
 			}
 		}
-	}
-
-	// Debug methods
-
-	private void debugFailedPopTokens() {
-		System.out.println("Error at location: " + getToken(0).beginLine + ", " + getToken(0).beginColumn);
-		System.out.println("Failed to pop tokens !");
-	}
-
-	private void debugFailedEnRun(BUTree tree, LexicalShape shape, IndexedList<WTokenRun> tokens) {
-		final Token token = getToken(0);
-		System.out.println("Error at location: " + token.beginLine + ", " + token.beginColumn + "; Token: " + token.image);
-
-		System.out.print("Failed to enRun tokens: ");
-		System.out.println(tokens);
-
-		System.out.println("For tree of kind: " + ((SNode) tree.state).kind());
-
-		final STree state = tree.state;
-
-/*
-		Iterable<? extends STree> children =
-				state instanceof SNodeListState ? ((SNodeListState) state).children :
-						state instanceof SNodeState ? ((SNodeState) state).children :
-								Vector.<STree>empty();
-		System.out.println("With children: ");
-		int index = 0;
-		for (STree child : children) {
-			System.out.print("  " + index + " - ");
-			if (child == null) {
-				System.out.println("null");
-			} else {
-				System.out.print(child.kind + ": ");
-				System.out.println(Printer.printToString(child.asTree()));
-			}
-			index++;
-		}
-*/
-
-		System.out.println("For shape: " + shape);
-		dumpRunStack();
-	}
-
-	private void dumpRunStack() {
-		System.out.println("RunStack dump:");
-		for (int i = runStack.size() - 1; i >= 0; i--) {
-			System.out.println("  " + runStack.get(i));
-		}
-	}
-
-	public static boolean lContains(IndexedList<LToken> tokens, String str) {
-		for (LToken token : tokens) {
-			if (token.string.equals("/*" + str + "*/")) return true;
-		}
-		return false;
-	}
-
-	public static boolean llContains(IndexedList<IndexedList<LToken>> tokens, String str) {
-		for (IndexedList<LToken> tokenList : tokens) {
-			for (LToken token : tokenList) {
-				if (token.string.contains("/*" + str + "*/")) return true;
-			}
-		}
-		return false;
-	}
+	}*/
 }
