@@ -2149,20 +2149,6 @@ BUTree<? extends SType> ResultType():
   { return ret; }
 }
 
-BUTree<SNodeList> QualifiedTypeList():
-{
-	BUTree<SNodeList> ret = emptyList();
-	BUTree<SQualifiedType> type;
-}
-{
-  { run(); }
-
-  type = AnnotatedQualifiedType() { ret = append(ret, type); }
-  ( "," type = AnnotatedQualifiedType() { ret = append(ret, type); } )*
-
-  { return dress(ret); }
-}
-
 BUTree<SQualifiedType> AnnotatedQualifiedType():
 {
     BUTree<SNodeList> annotations;
