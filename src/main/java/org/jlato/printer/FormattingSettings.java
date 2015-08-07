@@ -76,7 +76,13 @@ public class FormattingSettings {
 		}
 	}
 
+	public static final String NewLine_Unix = "\n";
+	public static final String NewLine_Windows = "\r\n";
+	public static final String NewLine_Platform = System.getProperty("line.separator");
+
 	public static FormattingSettings Default = new FormattingSettings()
+			.withNewLine(NewLine_Unix)
+
 			.withIndentationLevel(IndentationContext.PARAMETERS, 2)
 			.withIndentationLevel(IndentationContext.STATEMENT, 2)
 			.withIndentationLevel(IndentationContext.TRY_RESOURCES, 2)
@@ -96,6 +102,7 @@ public class FormattingSettings {
 			;
 
 	public static FormattingSettings JavaParser = Default
+			.withNewLine(NewLine_Platform)
 			.withIndentation("    ")
 
 			.withIndentationLevel(IndentationContext.TRY_RESOURCES, 1)
