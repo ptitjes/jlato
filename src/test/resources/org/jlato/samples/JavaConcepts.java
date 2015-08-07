@@ -413,10 +413,12 @@ interface XXX extends Serializable, Cloneable {
     String aStringMember();
 
     String aStringMemberWithDefault() default "FortyTwo";
+
+    String[] aStringArrayMember();
 }
 
 @AnAnnotation(42)
-@AnAnnotationWithPairs(anIntMember = 9, aStringMember = "Nine")
+@AnAnnotationWithPairs(anIntMember = 9, aStringMember = "Nine", aStringArrayMember = { "first", "second" })
 class AnAnnotatedClass {
 
     void method(AClassType object) {
@@ -427,5 +429,6 @@ class AnAnnotatedClass {
         F2<String, String, String> f4 = (String x, String y) -> x + y;
         F2<String, String, String> f5 = (F2<String, String, String>) (String x, String y) -> x + y;
         F1<Int, String> toStr = Integer::toString;
+        F0<String> constant1 = () -> "Forty Two";
     }
 }
