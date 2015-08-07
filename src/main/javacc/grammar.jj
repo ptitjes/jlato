@@ -1350,7 +1350,6 @@ BUTree<? extends STypeDecl> ClassOrInterfaceDecl(BUTree<SNodeList> modifiers):
     name = Name()
     [ typeParams = TypeParameters() ]
     [ extendsClause = ExtendsList() ]
-    [ implementsClause = ImplementsList(typeKind) ]
   )
   members = ClassOrInterfaceBody(typeKind)
 
