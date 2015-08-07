@@ -1,9 +1,9 @@
 package org.jlato.internal.bu.decl;
 
 import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.shapes.*;
-import org.jlato.tree.Kind;
+import org.jlato.printer.FormattingSettings;
+import org.jlato.printer.FormattingSettings.IndentationContext;
 
 import static org.jlato.internal.shapes.IndentationConstraint.*;
 import static org.jlato.internal.shapes.LSCondition.*;
@@ -21,17 +21,17 @@ public interface SMemberDecl extends SDecl {
 			alternative(empty(),
 					token(LToken.BraceLeft)
 							.withSpacing(space(), newLine())
-							.withIndentationAfter(indent(TYPE_BODY)),
+							.withIndentationAfter(indent(IndentationContext.TypeBody)),
 					token(LToken.BraceLeft)
 							.withSpacing(space(), spacing(ClassBody_BeforeMembers))
-							.withIndentationAfter(indent(TYPE_BODY))
+							.withIndentationAfter(indent(IndentationContext.TypeBody))
 			),
 			none().withSpacingAfter(spacing(ClassBody_BetweenMembers)),
 			alternative(empty(),
 					token(LToken.BraceRight)
-							.withIndentationBefore(unIndent(TYPE_BODY)),
+							.withIndentationBefore(unIndent(IndentationContext.TypeBody)),
 					token(LToken.BraceRight)
-							.withIndentationBefore(unIndent(TYPE_BODY))
+							.withIndentationBefore(unIndent(IndentationContext.TypeBody))
 							.withSpacingBefore(spacing(ClassBody_AfterMembers))
 			)
 	);

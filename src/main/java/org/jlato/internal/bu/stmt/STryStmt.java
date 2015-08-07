@@ -13,9 +13,8 @@ import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDTryStmt;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -31,7 +30,6 @@ import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
 /**
  * A state object for a 'try' statement.
@@ -356,13 +354,13 @@ public class STryStmt extends SNode<STryStmt> implements SStmt {
 			keyword(LToken.Try),
 			when(childIs(RESOURCES, not(empty())),
 					token(LToken.ParenthesisLeft)
-							.withIndentationAfter(indent(TRY_RESOURCES))
+							.withIndentationAfter(indent(IndentationContext.TryResources))
 			),
 			child(RESOURCES, list(token(LToken.SemiColon).withSpacingAfter(newLine()))),
 			when(childIs(RESOURCES, not(empty())), when(data(TRAILING_SEMI_COLON), token(LToken.SemiColon))),
 			when(childIs(RESOURCES, not(empty())),
 					token(LToken.ParenthesisRight)
-							.withIndentationBefore(unIndent(TRY_RESOURCES))
+							.withIndentationBefore(unIndent(IndentationContext.TryResources))
 							.withSpacingAfter(space())
 			),
 			child(TRY_BLOCK),

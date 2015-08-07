@@ -11,9 +11,8 @@ import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDSwitchStmt;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
@@ -221,14 +220,14 @@ public class SSwitchStmt extends SNode<SSwitchStmt> implements SStmt {
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			token(LToken.BraceLeft)
 					.withSpacingAfter(newLine())
-					.withIndentationAfter(indent(BLOCK)),
+					.withIndentationAfter(indent(IndentationContext.Switch)),
 			child(CASES, SSwitchCase.listShape),
 			alternative(childIs(CASES, not(empty())),
 					token(LToken.BraceRight)
-							.withIndentationBefore(unIndent(BLOCK))
+							.withIndentationBefore(unIndent(IndentationContext.Switch))
 							.withSpacingBefore(newLine()),
 					token(LToken.BraceRight)
-							.withIndentationBefore(unIndent(BLOCK))
+							.withIndentationBefore(unIndent(IndentationContext.Switch))
 			)
 	);
 }

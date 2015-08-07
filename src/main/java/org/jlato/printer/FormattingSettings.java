@@ -31,15 +31,15 @@ import static org.jlato.printer.Spacing.*;
 public class FormattingSettings {
 
 	public enum IndentationContext {
-		TYPE_BODY,
-		BLOCK,
-		PARAMETERS,
-		STATEMENT,
-		SWITCH,
-		SWITCH_CASE,
-		IF_ELSE,
-		TRY_RESOURCES,
-		LABEL,
+		TypeBody,
+		Block,
+		Parameters,
+		Statement,
+		Switch,
+		SwitchCase,
+		IfElse,
+		TryResources,
+		Label,
 		// Keep the last comma
 	}
 
@@ -83,10 +83,10 @@ public class FormattingSettings {
 	public static FormattingSettings Default = new FormattingSettings()
 			.withNewLine(NewLine_Unix)
 
-			.withIndentationLevel(IndentationContext.PARAMETERS, 2)
-			.withIndentationLevel(IndentationContext.STATEMENT, 2)
-			.withIndentationLevel(IndentationContext.TRY_RESOURCES, 2)
-			.withIndentationLevel(IndentationContext.LABEL, 0)
+			.withIndentationLevel(IndentationContext.Parameters, 2)
+			.withIndentationLevel(IndentationContext.Statement, 2)
+			.withIndentationLevel(IndentationContext.TryResources, 2)
+			.withIndentationLevel(IndentationContext.Label, 0)
 
 			.withSpacing(SpacingLocation.DefaultSpace, spaces(1))
 			.withSpacing(SpacingLocation.DefaultNewLine, lines(1))
@@ -105,7 +105,7 @@ public class FormattingSettings {
 			.withNewLine(NewLine_Platform)
 			.withIndentation("    ")
 
-			.withIndentationLevel(IndentationContext.TRY_RESOURCES, 1)
+			.withIndentationLevel(IndentationContext.TryResources, 1)
 
 			.withSpacing(SpacingLocation.EnumBody_BeforeConstants, lines(2))
 			.withSpacing(SpacingLocation.EnumBody_BetweenConstants, oneSpace)

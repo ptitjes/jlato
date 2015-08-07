@@ -11,9 +11,8 @@ import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDIfStmt;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
@@ -269,13 +268,13 @@ public class SIfStmt extends SNode<SIfStmt> implements SStmt {
 							alternative(withKind(Kind.ExpressionStmt),
 									defaultShape()
 											.withSpacingBefore(spacing(IfStmt_ThenExpressionStmt))
-											.withIndentationBefore(indent(BLOCK))
-											.withIndentationAfter(unIndent(BLOCK))
+											.withIndentationBefore(indent(IndentationContext.IfElse))
+											.withIndentationAfter(unIndent(IndentationContext.IfElse))
 											.withSpacingAfter(newLine()),
 									defaultShape()
 											.withSpacingBefore(spacing(IfStmt_ThenOtherStmt))
-											.withIndentationBefore(indent(BLOCK))
-											.withIndentationAfter(unIndent(BLOCK))
+											.withIndentationBefore(indent(IndentationContext.IfElse))
+											.withIndentationAfter(unIndent(IndentationContext.IfElse))
 											.withSpacingAfter(newLine())
 							)
 					)
@@ -289,12 +288,12 @@ public class SIfStmt extends SNode<SIfStmt> implements SStmt {
 									alternative(withKind(Kind.ExpressionStmt),
 											defaultShape()
 													.withSpacingBefore(spacing(IfStmt_ElseExpressionStmt))
-													.withIndentationBefore(indent(BLOCK))
-													.withIndentationAfter(unIndent(BLOCK)),
+													.withIndentationBefore(indent(IndentationContext.IfElse))
+													.withIndentationAfter(unIndent(IndentationContext.IfElse)),
 											defaultShape()
 													.withSpacingBefore(spacing(IfStmt_ElseOtherStmt))
-													.withIndentationBefore(indent(BLOCK))
-													.withIndentationAfter(unIndent(BLOCK))
+													.withIndentationBefore(indent(IndentationContext.IfElse))
+													.withIndentationAfter(unIndent(IndentationContext.IfElse))
 													.withSpacingAfter(newLine())
 									)
 							)
