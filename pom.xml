@@ -195,6 +195,7 @@
 				</executions>
 				<configuration>
 					<excludes>
+						<exclude>org/jlato/parser/SimpleCharStream.class</exclude>
 						<exclude>org/jlato/parser/JavaCharStream.class</exclude>
 						<exclude>org/jlato/parser/ParseException.class</exclude>
 						<exclude>org/jlato/parser/ParserImpl.class</exclude>
