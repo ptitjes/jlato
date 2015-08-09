@@ -28,6 +28,7 @@ import org.jlato.tree.*;
 import org.jlato.tree.expr.*;
 import org.jlato.tree.name.*;
 import org.jlato.tree.stmt.*;
+import org.jlato.util.Function1;
 import org.jlato.util.Mutation;
 import org.junit.Assert;
 import org.junit.Test;
@@ -269,6 +270,46 @@ public class NodeContainersTest {
 	}
 
 	@Test
+	public void nodeListFirstLast() {
+		NodeList<Name> list = listOf(indexedName(0), indexedName(1), indexedName(2));
+		Assert.assertEquals(indexedName(0), list.first());
+		Assert.assertEquals(indexedName(2), list.last());
+	}
+
+	@Test
+	public void nodeListMap() {
+		NodeList<Name> list = listOf(indexedName(0), indexedName(1), indexedName(2)).map(new Function1<Name, Name>() {
+			@Override
+			public Name apply(Name name) {
+				return name("prefix" + name.id());
+			}
+		});
+		Assert.assertEquals(indexedName("prefix", 0), list.get(0));
+		Assert.assertEquals(indexedName("prefix", 1), list.get(1));
+		Assert.assertEquals(indexedName("prefix", 2), list.get(2));
+	}
+
+	@Test
+	public void nodeListRewriteAll() {
+		NodeList<Name> list = listOf(indexedName(0), indexedName(1), indexedName(2)).rewriteAll(new Mutation<Name>() {
+			@Override
+			public Name mutate(Name name) {
+				return name("prefix" + name.id());
+			}
+		});
+		Assert.assertEquals(indexedName("prefix", 0), list.get(0));
+		Assert.assertEquals(indexedName("prefix", 1), list.get(1));
+		Assert.assertEquals(indexedName("prefix", 2), list.get(2));
+	}
+
+	@Test
+	public void nodeListMkString() {
+		NodeList<Name> list = listOf(indexedName(0), indexedName(1), indexedName(2));
+		Assert.assertEquals("[name0, name1, name2]", list.mkString("[", ", ", "]"));
+		Assert.assertEquals("(name0|name1|name2)", list.mkString("(", "|", ")"));
+	}
+
+	@Test
 	public void nodeOptionManipulations() throws FileNotFoundException, ParseException {
 		NodeOption<Expr> option1 = none();
 		Assert.assertTrue(!option1.isDefined());
@@ -276,7 +317,7 @@ public class NodeContainersTest {
 		Assert.assertEquals(null, option1.get());
 		Assert.assertTrue(!option1.contains(name("name")));
 		Assert.assertTrue(option1.contains(null));
-		Assert.assertEquals("(null)", option1.mkString("(", "", ")"));
+		Assert.assertEquals("()", option1.mkString("(", "", ")"));
 		Assert.assertFalse(option1.iterator().hasNext());
 		{
 			Throwable e = null;
@@ -322,7 +363,7 @@ public class NodeContainersTest {
 		Assert.assertEquals(null, option3.get());
 		Assert.assertTrue(!option3.contains(name("name")));
 		Assert.assertTrue(option3.contains(null));
-		Assert.assertEquals("(null)", option3.mkString("(", "", ")"));
+		Assert.assertEquals("()", option3.mkString("(", "", ")"));
 		Assert.assertFalse(option3.iterator().hasNext());
 		{
 			Throwable e = null;
@@ -364,28 +405,43 @@ public class NodeContainersTest {
 	}
 
 	@Test
+	public void nodeOptionMkString() {
+		Assert.assertEquals("[name0]", some(indexedName(0)).mkString("[", ", ", "]"));
+		Assert.assertEquals("(name0)", some(indexedName(0)).mkString("(", "|", ")"));
+		Assert.assertEquals("()", none().mkString("(", "|", ")"));
+	}
+
+	@Test
 	public void nodeEitherManipulations() throws FileNotFoundException, ParseException {
 		NodeEither<Expr, BlockStmt> either1 = Trees.<Expr, BlockStmt>left(name("name"));
 		Assert.assertTrue(either1.isLeft());
 		Assert.assertTrue(!either1.isRight());
 		Assert.assertEquals(name("name"), either1.left());
 		Assert.assertEquals(null, either1.right());
+		Assert.assertEquals("(name)", either1.mkString("(", ", ", ")"));
+		Assert.assertEquals("[name]", either1.mkString("[", "|", "]"));
 
 		NodeEither<Expr, BlockStmt> either2 = either1.setRight(emptyBlock());
 		Assert.assertTrue(!either2.isLeft());
 		Assert.assertTrue(either2.isRight());
 		Assert.assertEquals(null, either2.left());
 		Assert.assertEquals(emptyBlock(), either2.right());
+		Assert.assertEquals("({\n})", either2.mkString("(", ", ", ")"));
 
 		NodeEither<Expr, BlockStmt> either3 = either2.setLeft(name("name2"));
 		Assert.assertTrue(either3.isLeft());
 		Assert.assertTrue(!either3.isRight());
 		Assert.assertEquals(name("name2"), either3.left());
 		Assert.assertEquals(null, either3.right());
+		Assert.assertEquals("(name2)", either3.mkString("(", ", ", ")"));
 	}
 
 	public Name indexedName(int index) {
 		return name("name" + index);
+	}
+
+	public Name indexedName(String prefix, int index) {
+		return name(prefix + "name" + index);
 	}
 
 	public BlockStmt emptyBlock() {

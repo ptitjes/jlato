@@ -115,7 +115,7 @@ public class TDNodeOption<T extends Tree> extends TDTree<SNodeOption, TDNodeOpti
 		builder.append(start);
 
 		Tree tree = location.safeTraversal(SNodeOption.elementTraversal());
-		builder.append(tree);
+		if (tree != null) builder.append(tree);
 
 		builder.append(end);
 		return builder.toString();
