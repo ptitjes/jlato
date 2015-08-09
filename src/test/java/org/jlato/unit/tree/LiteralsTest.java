@@ -23,6 +23,7 @@ import org.jlato.internal.bu.Literals;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
+import org.jlato.tree.*;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.*;
 import org.junit.Assert;
@@ -381,6 +382,8 @@ public class LiteralsTest {
 	}
 
 	private LiteralExpr parseLiteral(Parser parser, String string) throws ParseException {
-		return (LiteralExpr) parser.parse(ParseContext.Expression, string);
+		Expr expr = parser.parse(ParseContext.Expression, string);
+		Assert.assertEquals(Kind.LiteralExpr, expr.kind());
+		return (LiteralExpr) expr;
 	}
 }
