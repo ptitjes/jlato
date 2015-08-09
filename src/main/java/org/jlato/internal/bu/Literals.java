@@ -67,7 +67,35 @@ public class Literals {
 		StringBuilder buffer = new StringBuilder();
 		char[] chars = string.toCharArray();
 		for (int i = 0; i < chars.length; i++) {
-			buffer.append(escapeChar(chars[i]));
+			char c = chars[i];
+			switch (c) {
+				case '\t':
+					buffer.append("\\t");
+					break;
+				case '\b':
+					buffer.append("\\b");
+					break;
+				case '\n':
+					buffer.append("\\n");
+					break;
+				case '\r':
+					buffer.append("\\r");
+					break;
+				case '\f':
+					buffer.append("\\f");
+					break;
+				case '\'':
+					buffer.append("\\'");
+					break;
+				case '\"':
+					buffer.append("\\\"");
+					break;
+				case '\\':
+					buffer.append("\\\\");
+					break;
+				default:
+					buffer.append(c);
+			}
 		}
 		return buffer.toString();
 	}
@@ -196,9 +224,6 @@ public class Literals {
 						return '\"';
 					case '\\':
 						return '\\';
-					case 'u':
-						// TODO This is incorrect - unicode escape should happen earlier
-						return readUnicodeChar(chars, index + 2);
 					default:
 						int codePoint;
 						boolean firstZeroToThree = false;
@@ -280,9 +305,6 @@ public class Literals {
 						return 2;
 					case '\\':
 						return 2;
-					case 'u':
-						// TODO This is incorrect - unicode escape should happen earlier
-						return 6;
 					default:
 						boolean firstZeroToThree = false;
 						switch (value[index + 1]) {
@@ -336,59 +358,5 @@ public class Literals {
 			default:
 				return 1;
 		}
-	}
-
-	private static char readUnicodeChar(char[] chars, int offset) {
-		return (char)
-				(hexValue(chars[offset]) << 12 |
-						hexValue(chars[offset + 1]) << 8 |
-						hexValue(chars[offset + 2]) << 4 |
-						hexValue(chars[offset + 3]));
-	}
-
-	private static int hexValue(char c) {
-		switch (c) {
-			case '0':
-				return 0;
-			case '1':
-				return 1;
-			case '2':
-				return 2;
-			case '3':
-				return 3;
-			case '4':
-				return 4;
-			case '5':
-				return 5;
-			case '6':
-				return 6;
-			case '7':
-				return 7;
-			case '8':
-				return 8;
-			case '9':
-				return 9;
-
-			case 'a':
-			case 'A':
-				return 10;
-			case 'b':
-			case 'B':
-				return 11;
-			case 'c':
-			case 'C':
-				return 12;
-			case 'd':
-			case 'D':
-				return 13;
-			case 'e':
-			case 'E':
-				return 14;
-			case 'f':
-			case 'F':
-				return 15;
-		}
-
-		throw new IllegalArgumentException();
 	}
 }

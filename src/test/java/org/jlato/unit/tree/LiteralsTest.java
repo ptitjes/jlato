@@ -204,10 +204,6 @@ public class LiteralsTest {
 		Assert.assertEquals(literalExpr('a'), parseLiteral(parser, "'a'"));
 		Assert.assertEquals("'a'", parseLiteral(parser, "'a'").toString());
 
-		Assert.assertEquals('\u0042', parseLiteral(parser, "'\\u0042'").value());
-		Assert.assertEquals(literalExpr('\u0042'), parseLiteral(parser, "'B'"));
-		Assert.assertEquals("'\\u0042'", parseLiteral(parser, "'\\u0042'").toString());
-
 		Assert.assertEquals('\042', parseLiteral(parser, "'\\042'").value());
 		Assert.assertEquals(literalExpr('\042'), parseLiteral(parser, "'\\\"'"));
 		Assert.assertEquals("'\\042'", parseLiteral(parser, "'\\042'").toString());
@@ -252,10 +248,6 @@ public class LiteralsTest {
 		Assert.assertEquals("abcdefgh", parseLiteral(parser, "\"abcdefgh\"").value());
 		Assert.assertEquals(literalExpr("abcdefgh"), parseLiteral(parser, "\"abcdefgh\""));
 		Assert.assertEquals("\"abcdefgh\"", parseLiteral(parser, "\"abcdefgh\"").toString());
-
-		Assert.assertEquals("abcdefgh", parseLiteral(parser, "\"a\\u0062c\\u0064e\\u0066g\\u0068\"").value());
-		Assert.assertEquals(literalExpr("a\u0062c\u0064e\u0066g\u0068"), parseLiteral(parser, "\"a\u0062c\u0064e\u0066g\u0068\""));
-		Assert.assertEquals("\"a\\u0062c\\u0064e\\u0066g\\u0068\"", parseLiteral(parser, "\"a\\u0062c\\u0064e\\u0066g\\u0068\"").toString());
 
 		Assert.assertEquals("\t\b\n\r\f\'\"\\", parseLiteral(parser, "\"\\t\\b\\n\\r\\f\\'\\\"\\\\\"").value());
 		Assert.assertEquals(literalExpr("\t\b\n\r\f\'\"\\"), parseLiteral(parser, "\"\\t\\b\\n\\r\\f\\'\\\"\\\\\""));
