@@ -1,0 +1,2 @@
+TestEncoding_CRLF.java      eol=crlf
+TestEncoding_UTF8_LF.java   eol=lf
