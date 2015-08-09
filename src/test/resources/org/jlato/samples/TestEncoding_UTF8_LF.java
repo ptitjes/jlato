@@ -9,7 +9,7 @@ import java.util.*;
 
 public class TestEncoding_UTF8_LF {
 
-	private String aString = "\u203f";
+	private String aString = "‿";
 
 	private String aFunkyIdentifier‿;
 }
