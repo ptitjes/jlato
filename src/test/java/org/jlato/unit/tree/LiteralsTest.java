@@ -249,6 +249,10 @@ public class LiteralsTest {
 		Assert.assertEquals(literalExpr("abcdefgh"), parseLiteral(parser, "\"abcdefgh\""));
 		Assert.assertEquals("\"abcdefgh\"", parseLiteral(parser, "\"abcdefgh\"").toString());
 
+		Assert.assertEquals("\042\043\044", parseLiteral(parser, "\"\\042\\043\\044\"").value());
+		Assert.assertEquals(literalExpr("\042\043\044"), parseLiteral(parser, "\"\\\"#$\""));
+		Assert.assertEquals("\"\\042\\043\\044\"", parseLiteral(parser, "\"\\042\\043\\044\"").toString());
+
 		Assert.assertEquals("\t\b\n\r\f\'\"\\", parseLiteral(parser, "\"\\t\\b\\n\\r\\f\\'\\\"\\\\\"").value());
 		Assert.assertEquals(literalExpr("\t\b\n\r\f\'\"\\"), parseLiteral(parser, "\"\\t\\b\\n\\r\\f\\'\\\"\\\\\""));
 		Assert.assertEquals("\"\\t\\b\\n\\r\\f\\'\\\"\\\\\"", parseLiteral(parser, "\"\\t\\b\\n\\r\\f\\'\\\"\\\\\"").toString());
