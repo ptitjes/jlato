@@ -35,6 +35,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 import static org.jlato.tree.Trees.*;
@@ -232,6 +233,8 @@ public class NodeContainersTest {
 
 	@Test
 	public void nodeListStaticCreationHelpers() {
+		assertNodeListContent(listOf(Arrays.asList(indexedName(0), indexedName(1), indexedName(2))), 3);
+
 		assertNodeListContent(Trees.<Name>emptyList(), 0);
 		assertNodeListContent(listOf(indexedName(0)), 1);
 		assertNodeListContent(listOf(indexedName(0), indexedName(1)), 2);
