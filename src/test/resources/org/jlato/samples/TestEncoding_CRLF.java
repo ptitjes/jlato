@@ -1,6 +1,6 @@
 package org.jlato.samples;
 
-public class TestEncoding_CP1252_CRLF {
+public class TestEncoding_CRLF {
 
 	private String aString = "_";
 

@@ -58,8 +58,8 @@ public class SamplesTest extends BaseTestFromFiles {
 	}
 
 	@Test
-	public void testEncoding_CP1252_CRLF() throws IOException, ParseException {
-		final String original = resourceAsString("org/jlato/samples/TestEncoding_CP1252_CRLF.java", "CP1252");
+	public void testEncoding_CRLF() throws IOException, ParseException {
+		final String original = resourceAsString("org/jlato/samples/TestEncoding_CRLF.java", "UTF-8");
 		FormattingSettings settings = FormattingSettings.Default.withNewLine(FormattingSettings.NewLine_Windows);
 
 		Assert.assertEquals(original, parseAndPrint(original, false, true, settings));
