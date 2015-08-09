@@ -1,11 +1,13 @@
 package org.jlato.tree;
 
 import org.jlato.internal.bu.Literals;
+import org.jlato.internal.td.coll.*;
 import org.jlato.internal.td.coll.TDNodeEither;
 import org.jlato.internal.td.coll.TDNodeList;
 import org.jlato.internal.td.coll.TDNodeOption;
 import org.jlato.internal.td.decl.*;
 import org.jlato.internal.td.expr.*;
+import org.jlato.internal.td.name.*;
 import org.jlato.internal.td.name.TDName;
 import org.jlato.internal.td.name.TDQualifiedName;
 import org.jlato.internal.td.stmt.*;
@@ -19,7 +21,10 @@ import org.jlato.tree.type.*;
 /**
  * A factory for tree nodes.
  */
-public abstract class Trees {
+public final class Trees {
+
+	private Trees() {
+	}
 
 	public static <T extends Tree> NodeOption<T> none() {
 		return TDNodeOption.none();
@@ -750,35 +755,35 @@ public abstract class Trees {
 	}
 
 	public static LiteralExpr<Void> nullLiteralExpr() {
-		return new TDLiteralExpr<Void>(Void.class, Literals.from(Void.class, null));
+	return new TDLiteralExpr<Void>(Void.class, Literals.from(Void.class, null));
 	}
 
 	public static LiteralExpr<Boolean> literalExpr(boolean value) {
-		return new TDLiteralExpr<Boolean>(Boolean.class, Literals.from(Boolean.class, value));
+	return new TDLiteralExpr<Boolean>(Boolean.class, Literals.from(Boolean.class, value));
 	}
 
 	public static LiteralExpr<Integer> literalExpr(int value) {
-		return new TDLiteralExpr<Integer>(Integer.class, Literals.from(Integer.class, value));
+	return new TDLiteralExpr<Integer>(Integer.class, Literals.from(Integer.class, value));
 	}
 
 	public static LiteralExpr<Long> literalExpr(long value) {
-		return new TDLiteralExpr<Long>(Long.class, Literals.from(Long.class, value));
+	return new TDLiteralExpr<Long>(Long.class, Literals.from(Long.class, value));
 	}
 
 	public static LiteralExpr<Float> literalExpr(float value) {
-		return new TDLiteralExpr<Float>(Float.class, Literals.from(Float.class, value));
+	return new TDLiteralExpr<Float>(Float.class, Literals.from(Float.class, value));
 	}
 
 	public static LiteralExpr<Double> literalExpr(double value) {
-		return new TDLiteralExpr<Double>(Double.class, Literals.from(Double.class, value));
+	return new TDLiteralExpr<Double>(Double.class, Literals.from(Double.class, value));
 	}
 
 	public static LiteralExpr<Character> literalExpr(char value) {
-		return new TDLiteralExpr<Character>(Character.class, Literals.from(Character.class, value));
+	return new TDLiteralExpr<Character>(Character.class, Literals.from(Character.class, value));
 	}
 
 	public static LiteralExpr<String> literalExpr(String value) {
-		return new TDLiteralExpr<String>(String.class, Literals.from(String.class, value));
+	return new TDLiteralExpr<String>(String.class, Literals.from(String.class, value));
 	}
 
 	/**

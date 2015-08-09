@@ -22,8 +22,10 @@ package org.jlato.internal.bu;
 /**
  * @author Didier Villevalois
  */
-public class Literals {
-	// TODO rework parsing and rendering
+public final class Literals {
+
+	private Literals() {
+	}
 
 	public static <T> String from(Class<T> literalClass, T literalValue) {
 		if (Void.class.isAssignableFrom(literalClass)) {

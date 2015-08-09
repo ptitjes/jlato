@@ -33,7 +33,10 @@ import org.jlato.tree.type.Type;
 /**
  * @author Didier Villevalois
  */
-public abstract class Quotes {
+public final class Quotes {
+
+	private Quotes() {
+	}
 
 	public static Pattern<PackageDecl> packageDecl(String string) {
 		return quote(ParseContext.PackageDecl, string);
