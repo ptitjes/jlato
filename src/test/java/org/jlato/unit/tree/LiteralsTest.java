@@ -19,6 +19,7 @@
 
 package org.jlato.unit.tree;
 
+import org.jlato.internal.bu.Literals;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
@@ -44,6 +45,18 @@ public class LiteralsTest {
 
 		Assert.assertEquals(null, parseLiteral(parser, "null").value());
 		Assert.assertEquals(nullLiteralExpr(), parseLiteral(parser, "null"));
+
+		try {
+			Literals.from((Class) Void.class, new Object());
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+
+		try {
+			Literals.valueFor(Void.class, "dummy");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 	@Test
@@ -54,6 +67,18 @@ public class LiteralsTest {
 		Assert.assertEquals(literalExpr(false), parseLiteral(parser, "false"));
 		Assert.assertEquals(true, parseLiteral(parser, "true").value());
 		Assert.assertEquals(literalExpr(true), parseLiteral(parser, "true"));
+
+		try {
+			Literals.from((Class) Boolean.class, new Object());
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+
+		try {
+			Literals.valueFor(Boolean.class, "dummy");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 	@Test
@@ -204,6 +229,14 @@ public class LiteralsTest {
 		Assert.assertEquals(literalExpr('a'), parseLiteral(parser, "'a'"));
 		Assert.assertEquals("'a'", parseLiteral(parser, "'a'").toString());
 
+		Assert.assertEquals('\4', parseLiteral(parser, "'\\4'").value());
+		Assert.assertEquals(literalExpr('\4'), parseLiteral(parser, "'\4'"));
+		Assert.assertEquals("'\\4'", parseLiteral(parser, "'\\4'").toString());
+
+		Assert.assertEquals('\42', parseLiteral(parser, "'\\42'").value());
+		Assert.assertEquals(literalExpr('\42'), parseLiteral(parser, "'\\\"'"));
+		Assert.assertEquals("'\\42'", parseLiteral(parser, "'\\42'").toString());
+
 		Assert.assertEquals('\042', parseLiteral(parser, "'\\042'").value());
 		Assert.assertEquals(literalExpr('\042'), parseLiteral(parser, "'\\\"'"));
 		Assert.assertEquals("'\\042'", parseLiteral(parser, "'\\042'").toString());
@@ -249,6 +282,10 @@ public class LiteralsTest {
 		Assert.assertEquals(literalExpr("abcdefgh"), parseLiteral(parser, "\"abcdefgh\""));
 		Assert.assertEquals("\"abcdefgh\"", parseLiteral(parser, "\"abcdefgh\"").toString());
 
+		Assert.assertEquals("\42\43\44", parseLiteral(parser, "\"\\42\\43\\44\"").value());
+		Assert.assertEquals(literalExpr("\42\43\44"), parseLiteral(parser, "\"\\\"#$\""));
+		Assert.assertEquals("\"\\42\\43\\44\"", parseLiteral(parser, "\"\\42\\43\\44\"").toString());
+
 		Assert.assertEquals("\042\043\044", parseLiteral(parser, "\"\\042\\043\\044\"").value());
 		Assert.assertEquals(literalExpr("\042\043\044"), parseLiteral(parser, "\"\\\"#$\""));
 		Assert.assertEquals("\"\\042\\043\\044\"", parseLiteral(parser, "\"\\042\\043\\044\"").toString());
@@ -256,6 +293,91 @@ public class LiteralsTest {
 		Assert.assertEquals("\t\b\n\r\f\'\"\\", parseLiteral(parser, "\"\\t\\b\\n\\r\\f\\'\\\"\\\\\"").value());
 		Assert.assertEquals(literalExpr("\t\b\n\r\f\'\"\\"), parseLiteral(parser, "\"\\t\\b\\n\\r\\f\\'\\\"\\\\\""));
 		Assert.assertEquals("\"\\t\\b\\n\\r\\f\\'\\\"\\\\\"", parseLiteral(parser, "\"\\t\\b\\n\\r\\f\\'\\\"\\\\\"").toString());
+	}
+
+	@Test
+	public void legalCharacterLiterals() throws ParseException {
+		try {
+			Literals.unEscapeChar("\'\'");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+
+		try {
+			Literals.unEscapeChar("\"a\"");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+
+		try {
+			Literals.unEscapeChar("\'\\777\'");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+
+		try {
+			Literals.unEscapeChar("\'\\\'");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+
+		try {
+			Literals.unEscapeChar("\'\\g\'");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+
+		try {
+			Literals.unEscapeChar("\'\\8\'");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	public void legalStringLiterals() throws ParseException {
+		Assert.assertEquals("", Literals.unEscapeString("\"\""));
+
+		try {
+			Literals.unEscapeString("\'a\'");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+
+		Assert.assertEquals("?7", Literals.unEscapeString("\"\\777\""));
+
+		try {
+			Literals.unEscapeString("\"\\\"");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+
+		try {
+			Literals.unEscapeString("\"\\g\"");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+
+		try {
+			Literals.unEscapeString("\"\\8\"");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	public void legalLiterals() throws ParseException {
+		try {
+			Literals.from(Class.class, this.getClass());
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+
+		try {
+			Literals.valueFor(Class.class, "dummy");
+			Assert.fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 	private LiteralExpr parseLiteral(Parser parser, String string) throws ParseException {

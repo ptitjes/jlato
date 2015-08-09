@@ -34,34 +34,39 @@ public final class Literals {
 			}
 			return LToken.Null.string;
 
-		} else if (Boolean.class.isAssignableFrom(literalClass)) {
-			if (Boolean.TRUE.equals(literalValue))
-				return LToken.True.string;
-			else if (Boolean.FALSE.equals(literalValue))
-				return LToken.False.string;
-			else throw new IllegalStateException();
-
-		} else if (Character.class.isAssignableFrom(literalClass)) {
-			char c = (char) (Character) literalValue;
-			return "'" + escapeChar(c) + "'";
-
-		} else if (Integer.class.isAssignableFrom(literalClass)) {
-			return literalValue.toString();
-
-		} else if (Long.class.isAssignableFrom(literalClass)) {
-			return literalValue.toString() + "L";
-
-		} else if (Float.class.isAssignableFrom(literalClass)) {
-			return literalValue.toString() + "F";
-
-		} else if (Double.class.isAssignableFrom(literalClass)) {
-			return literalValue.toString();
-
-		} else if (String.class.isAssignableFrom(literalClass)) {
-			return "\"" + escapeString((String) literalValue) + "\"";
-
 		} else {
-			throw new IllegalArgumentException();
+			if (!literalClass.isInstance(literalValue)) {
+				throw new IllegalArgumentException();
+			}
+
+			if (Boolean.class.isAssignableFrom(literalClass)) {
+				if (Boolean.TRUE.equals(literalValue))
+					return LToken.True.string;
+				else
+					return LToken.False.string;
+
+			} else if (Character.class.isAssignableFrom(literalClass)) {
+				char c = (char) (Character) literalValue;
+				return "'" + escapeChar(c) + "'";
+
+			} else if (Integer.class.isAssignableFrom(literalClass)) {
+				return literalValue.toString();
+
+			} else if (Long.class.isAssignableFrom(literalClass)) {
+				return literalValue.toString() + "L";
+
+			} else if (Float.class.isAssignableFrom(literalClass)) {
+				return literalValue.toString() + "F";
+
+			} else if (Double.class.isAssignableFrom(literalClass)) {
+				return literalValue.toString();
+
+			} else if (String.class.isAssignableFrom(literalClass)) {
+				return "\"" + escapeString((String) literalValue) + "\"";
+
+			} else {
+				throw new IllegalArgumentException();
+			}
 		}
 	}
 
@@ -128,6 +133,9 @@ public final class Literals {
 	@SuppressWarnings("unchecked")
 	public static <T> T valueFor(Class<T> literalClass, String literalString) {
 		if (Void.class.isAssignableFrom(literalClass)) {
+			if (!literalString.equals("null"))
+				throw new IllegalArgumentException();
+
 			return null;
 
 		} else if (Boolean.class.isAssignableFrom(literalClass)) {
@@ -135,13 +143,10 @@ public final class Literals {
 				return (T) Boolean.TRUE;
 			else if (literalString.equals("false"))
 				return (T) Boolean.FALSE;
-			else throw new IllegalStateException();
+			else throw new IllegalArgumentException();
 
 		} else if (Character.class.isAssignableFrom(literalClass)) {
-			if (literalString.startsWith("'\\")) {
-				char[] chars = literalString.toCharArray();
-				return (T) Character.valueOf(unEscapeChar(chars, 1));
-			} else return (T) Character.valueOf(literalString.charAt(1));
+			return (T) unEscapeChar(literalString);
 
 		} else if (Integer.class.isAssignableFrom(literalClass)) {
 			literalString = removeUnderscores(literalString);
@@ -176,7 +181,7 @@ public final class Literals {
 			return (T) unEscapeString(literalString);
 
 		} else {
-			throw new IllegalStateException();
+			throw new IllegalArgumentException("Unknown literal class");
 		}
 	}
 
@@ -193,23 +198,41 @@ public final class Literals {
 		return literalString;
 	}
 
-	public static String unEscapeString(String string) {
+	public static Character unEscapeChar(String literalString) {
+		char[] chars = literalString.toCharArray();
+		int length = chars.length - 1;
+
+		if (length - 1 <= 0 || !(chars[0] == '\'' && chars[length] == '\''))
+			throw new IllegalArgumentException("Illegal character literal");
+
+		if (escapedCharLength(chars, 1, length) + 1 != length)
+			throw new IllegalArgumentException("Illegal character literal");
+
+		return unEscapeChar(chars, 1, length);
+	}
+
+	public static String unEscapeString(String literalString) {
+		char[] chars = literalString.toCharArray();
+		int length = chars.length - 1;
+
+		if (!(chars[0] == '\"' && chars[length] == '\"'))
+			throw new IllegalArgumentException("Illegal string literal");
+
 		StringBuilder buffer = new StringBuilder();
-		char[] chars = string.toCharArray();
-		for (int i = 1; i < chars.length - 1; ) {
-			buffer.append(unEscapeChar(chars, i));
-			i += escapedCharLength(chars, i);
+		for (int i = 1; i < length; ) {
+			buffer.append(unEscapeChar(chars, i, length));
+			i += escapedCharLength(chars, i, length);
 		}
 		return buffer.toString();
 	}
 
-	public static char unEscapeChar(char[] chars, int index) {
-		switch (chars[index]) {
+	private static char unEscapeChar(char[] chars, int offset, int length) {
+		switch (chars[offset]) {
 			case '\\':
-				if (chars.length == index + 1) {
-					throw new IllegalArgumentException("Unknown char escape '" + chars[index] + "'");
+				if (length == offset + 1) {
+					throw new IllegalArgumentException("Unknown char escape '" + chars[offset] + "'");
 				}
-				switch (chars[index + 1]) {
+				switch (chars[offset + 1]) {
 					case 't':
 						return '\t';
 					case 'b':
@@ -229,7 +252,7 @@ public final class Literals {
 					default:
 						int codePoint;
 						boolean firstZeroToThree = false;
-						switch (chars[index + 1]) {
+						switch (chars[offset + 1]) {
 							case '0':
 							case '1':
 							case '2':
@@ -239,9 +262,9 @@ public final class Literals {
 							case '5':
 							case '6':
 							case '7':
-								codePoint = Character.digit(chars[index + 1], 8);
-								if (chars.length > index + 2) {
-									switch (chars[index + 2]) {
+								codePoint = Character.digit(chars[offset + 1], 8);
+								if (length > offset + 2) {
+									switch (chars[offset + 2]) {
 										case '0':
 										case '1':
 										case '2':
@@ -250,9 +273,9 @@ public final class Literals {
 										case '5':
 										case '6':
 										case '7':
-											codePoint = codePoint * 8 + Character.digit(chars[index + 2], 8);
-											if (chars.length > index + 3) {
-												switch (chars[index + 3]) {
+											codePoint = codePoint * 8 + Character.digit(chars[offset + 2], 8);
+											if (firstZeroToThree && length > offset + 3) {
+												switch (chars[offset + 3]) {
 													case '0':
 													case '1':
 													case '2':
@@ -261,12 +284,7 @@ public final class Literals {
 													case '5':
 													case '6':
 													case '7':
-														if (!firstZeroToThree) {
-															throw new IllegalArgumentException("Unknown char escape '" +
-																	chars[index] + chars[index + 1] +
-																	chars[index + 2] + chars[index + 3] + "'");
-														}
-														codePoint = codePoint * 8 + Character.digit(chars[index + 3], 8);
+														codePoint = codePoint * 8 + Character.digit(chars[offset + 3], 8);
 													default:
 												}
 											}
@@ -277,20 +295,20 @@ public final class Literals {
 							default:
 						}
 
-						throw new IllegalArgumentException("Unknown char escape '" + chars[index] + chars[index + 1] + "'");
+						throw new IllegalArgumentException("Unknown char escape '" + chars[offset] + chars[offset + 1] + "'");
 				}
 			default:
-				return chars[index];
+				return chars[offset];
 		}
 	}
 
-	private static char escapedCharLength(char[] value, int index) {
-		switch (value[index]) {
+	private static char escapedCharLength(char[] chars, int offset, int length) {
+		switch (chars[offset]) {
 			case '\\':
-				if (value.length < index + 1) {
-					throw new IllegalArgumentException("Unknown char escape '" + value[index] + "'");
+				if (length == offset + 1) {
+					throw new IllegalArgumentException("Unknown char escape '" + chars[offset] + "'");
 				}
-				switch (value[index + 1]) {
+				switch (chars[offset + 1]) {
 					case 't':
 						return 2;
 					case 'b':
@@ -309,7 +327,7 @@ public final class Literals {
 						return 2;
 					default:
 						boolean firstZeroToThree = false;
-						switch (value[index + 1]) {
+						switch (chars[offset + 1]) {
 							case '0':
 							case '1':
 							case '2':
@@ -319,8 +337,8 @@ public final class Literals {
 							case '5':
 							case '6':
 							case '7':
-								if (value.length > index + 2) {
-									switch (value[index + 2]) {
+								if (length > offset + 2) {
+									switch (chars[offset + 2]) {
 										case '0':
 										case '1':
 										case '2':
@@ -329,8 +347,8 @@ public final class Literals {
 										case '5':
 										case '6':
 										case '7':
-											if (value.length > index + 3) {
-												switch (value[index + 3]) {
+											if (firstZeroToThree && length > offset + 3) {
+												switch (chars[offset + 3]) {
 													case '0':
 													case '1':
 													case '2':
@@ -339,11 +357,6 @@ public final class Literals {
 													case '5':
 													case '6':
 													case '7':
-														if (!firstZeroToThree) {
-															throw new IllegalArgumentException("Unknown char escape '" +
-																	value[index] + value[index + 1] +
-																	value[index + 2] + value[index + 3] + "'");
-														}
 														return 4;
 													default:
 												}
@@ -355,7 +368,7 @@ public final class Literals {
 								return 2;
 							default:
 						}
-						throw new IllegalArgumentException("Unknown char escape '" + value[index] + value[index + 1] + "'");
+						throw new IllegalArgumentException("Unknown char escape '" + chars[offset] + chars[offset + 1] + "'");
 				}
 			default:
 				return 1;
