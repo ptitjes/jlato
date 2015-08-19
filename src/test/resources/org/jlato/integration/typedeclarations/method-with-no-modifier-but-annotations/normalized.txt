@@ -1,0 +1,39 @@
+{
+  kind: ClassDecl,
+  extendsClause: null,
+  implementsClause: [
+  ],
+  members: [
+    {
+      kind: MethodDecl,
+      body: {
+        kind: BlockStmt,
+        stmts: [
+        ],
+      },
+      dims: [
+      ],
+      modifiers: [
+        {
+          kind: MarkerAnnotationExpr,
+          name: Detectable,
+        },
+      ],
+      name: test,
+      params: [
+      ],
+      throwsClause: [
+      ],
+      type: {
+        kind: VoidType,
+      },
+      typeParams: [
+      ],
+    },
+  ],
+  modifiers: [
+  ],
+  name: Test,
+  typeParams: [
+  ],
+}
