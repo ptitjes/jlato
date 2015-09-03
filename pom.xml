@@ -23,7 +23,7 @@
 
 	<groupId>org.jlato</groupId>
 	<artifactId>jlato</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6-SNAPSHOT</version>
 
 	<name>JLaTo</name>
 	<description>Java Language Tools</description>
@@ -34,7 +34,7 @@
 		<connection>scm:git:git://github.com/ptitjes/jlato.git</connection>
 		<developerConnection>scm:git:git@github.com:ptitjes/jlato.git</developerConnection>
 		<url>https://github.com/ptitjes/jlato.git</url>
-		<tag>jlato-0.0.5</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
