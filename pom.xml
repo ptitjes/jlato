@@ -30,6 +30,7 @@
 	<name>JLaTo</name>
 	<description>Java Language Tools</description>
 	<inceptionYear>2015</inceptionYear>
+    <url>http://github.com/ptitjes/jlato</url>
 
 	<scm>
 		<connection>scm:git:git://github.com/ptitjes/jlato.git</connection>
