@@ -2,6 +2,7 @@
 
 JLaTo is a Java Language Tools library.
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.jlato/jlato/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.jlato/jlato)
 [![Build Status](https://travis-ci.org/ptitjes/jlato.svg?branch=master)](https://travis-ci.org/ptitjes/jlato)
 [![Coverage Status](https://coveralls.io/repos/ptitjes/jlato/badge.svg?branch=master&service=github)](https://coveralls.io/github/ptitjes/jlato?branch=master)
 <a href="https://www.irccloud.com/invite?channel=%23jlato&amp;hostname=irc.freenode.net&amp;port=6697&amp;ssl=1" target="_blank"><img src="https://www.irccloud.com/invite-svg?channel=%23jlato&amp;hostname=irc.freenode.net&amp;port=6697&amp;ssl=1"  height="20"></a>
