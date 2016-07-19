@@ -8,6 +8,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.MethodReferenceExpr;
 import org.jlato.tree.name.Name;
@@ -133,5 +134,15 @@ public class TDMethodReferenceExpr extends TDTree<SMethodReferenceExpr, Expr, Me
 	 */
 	public MethodReferenceExpr withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SMethodReferenceExpr.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this method reference expression.
+	 *
+	 * @param name the replacement for the name of this method reference expression.
+	 * @return the resulting mutated method reference expression.
+	 */
+	public MethodReferenceExpr withName(String name) {
+		return location.safeTraversalReplace(SMethodReferenceExpr.NAME, Trees.name(name));
 	}
 }

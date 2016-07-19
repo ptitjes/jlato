@@ -107,6 +107,14 @@ public interface MethodDecl extends MemberDecl, TreeCombinators<MethodDecl> {
 	MethodDecl withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this method declaration.
+	 *
+	 * @param name the replacement for the name of this method declaration.
+	 * @return the resulting mutated method declaration.
+	 */
+	MethodDecl withName(String name);
+
+	/**
 	 * Returns the parameters of this method declaration.
 	 *
 	 * @return the parameters of this method declaration.

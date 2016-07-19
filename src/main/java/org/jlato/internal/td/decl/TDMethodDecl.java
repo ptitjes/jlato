@@ -10,6 +10,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.FormalParameter;
@@ -175,6 +176,16 @@ public class TDMethodDecl extends TDTree<SMethodDecl, MemberDecl, MethodDecl> im
 	 */
 	public MethodDecl withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SMethodDecl.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this method declaration.
+	 *
+	 * @param name the replacement for the name of this method declaration.
+	 * @return the resulting mutated method declaration.
+	 */
+	public MethodDecl withName(String name) {
+		return location.safeTraversalReplace(SMethodDecl.NAME, Trees.name(name));
 	}
 
 	/**

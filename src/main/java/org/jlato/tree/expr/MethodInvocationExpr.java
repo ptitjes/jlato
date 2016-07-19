@@ -82,6 +82,14 @@ public interface MethodInvocationExpr extends Expr, TreeCombinators<MethodInvoca
 	MethodInvocationExpr withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this method invocation expression.
+	 *
+	 * @param name the replacement for the name of this method invocation expression.
+	 * @return the resulting mutated method invocation expression.
+	 */
+	MethodInvocationExpr withName(String name);
+
+	/**
 	 * Returns the args of this method invocation expression.
 	 *
 	 * @return the args of this method invocation expression.

@@ -33,6 +33,14 @@ public interface LabeledStmt extends Stmt, TreeCombinators<LabeledStmt> {
 	LabeledStmt withLabel(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the label of this labeled statement.
+	 *
+	 * @param label the replacement for the label of this labeled statement.
+	 * @return the resulting mutated labeled statement.
+	 */
+	LabeledStmt withLabel(String label);
+
+	/**
 	 * Returns the statement of this labeled statement.
 	 *
 	 * @return the statement of this labeled statement.

@@ -8,6 +8,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.decl.VariableDeclaratorId;
 import org.jlato.tree.name.Name;
@@ -73,6 +74,16 @@ public class TDVariableDeclaratorId extends TDTree<SVariableDeclaratorId, Node, 
 	 */
 	public VariableDeclaratorId withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SVariableDeclaratorId.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this variable declarator identifier.
+	 *
+	 * @param name the replacement for the name of this variable declarator identifier.
+	 * @return the resulting mutated variable declarator identifier.
+	 */
+	public VariableDeclaratorId withName(String name) {
+		return location.safeTraversalReplace(SVariableDeclaratorId.NAME, Trees.name(name));
 	}
 
 	/**

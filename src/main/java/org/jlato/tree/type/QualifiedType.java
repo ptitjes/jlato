@@ -82,6 +82,14 @@ public interface QualifiedType extends ReferenceType, TreeCombinators<QualifiedT
 	QualifiedType withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this qualified type.
+	 *
+	 * @param name the replacement for the name of this qualified type.
+	 * @return the resulting mutated qualified type.
+	 */
+	QualifiedType withName(String name);
+
+	/**
 	 * Returns the type args of this qualified type.
 	 *
 	 * @return the type args of this qualified type.

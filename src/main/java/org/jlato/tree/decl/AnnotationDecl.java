@@ -57,6 +57,14 @@ public interface AnnotationDecl extends TypeDecl, TreeCombinators<AnnotationDecl
 	AnnotationDecl withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this annotation type declaration.
+	 *
+	 * @param name the replacement for the name of this annotation type declaration.
+	 * @return the resulting mutated annotation type declaration.
+	 */
+	AnnotationDecl withName(String name);
+
+	/**
 	 * Returns the members of this annotation type declaration.
 	 *
 	 * @return the members of this annotation type declaration.

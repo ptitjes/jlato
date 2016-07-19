@@ -9,6 +9,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
@@ -136,6 +137,16 @@ public class TDQualifiedType extends TDTree<SQualifiedType, ReferenceType, Quali
 	 */
 	public QualifiedType withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SQualifiedType.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this qualified type.
+	 *
+	 * @param name the replacement for the name of this qualified type.
+	 * @return the resulting mutated qualified type.
+	 */
+	public QualifiedType withName(String name) {
+		return location.safeTraversalReplace(SQualifiedType.NAME, Trees.name(name));
 	}
 
 	/**

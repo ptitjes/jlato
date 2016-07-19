@@ -83,6 +83,14 @@ public interface AnnotationMemberDecl extends MemberDecl, TreeCombinators<Annota
 	AnnotationMemberDecl withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this annotation type member declaration.
+	 *
+	 * @param name the replacement for the name of this annotation type member declaration.
+	 * @return the resulting mutated annotation type member declaration.
+	 */
+	AnnotationMemberDecl withName(String name);
+
+	/**
 	 * Returns the dimensions of this annotation type member declaration.
 	 *
 	 * @return the dimensions of this annotation type member declaration.

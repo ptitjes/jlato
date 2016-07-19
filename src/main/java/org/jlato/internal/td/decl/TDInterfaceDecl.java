@@ -7,6 +7,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.InterfaceDecl;
 import org.jlato.tree.decl.MemberDecl;
@@ -108,6 +109,16 @@ public class TDInterfaceDecl extends TDTree<SInterfaceDecl, TypeDecl, InterfaceD
 	 */
 	public InterfaceDecl withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SInterfaceDecl.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this interface declaration.
+	 *
+	 * @param name the replacement for the name of this interface declaration.
+	 * @return the resulting mutated interface declaration.
+	 */
+	public InterfaceDecl withName(String name) {
+		return location.safeTraversalReplace(SInterfaceDecl.NAME, Trees.name(name));
 	}
 
 	/**

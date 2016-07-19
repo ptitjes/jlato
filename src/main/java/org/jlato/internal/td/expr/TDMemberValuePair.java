@@ -7,6 +7,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.MemberValuePair;
 import org.jlato.tree.name.Name;
@@ -72,6 +73,16 @@ public class TDMemberValuePair extends TDTree<SMemberValuePair, Node, MemberValu
 	 */
 	public MemberValuePair withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SMemberValuePair.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this annotation member value pair.
+	 *
+	 * @param name the replacement for the name of this annotation member value pair.
+	 * @return the resulting mutated annotation member value pair.
+	 */
+	public MemberValuePair withName(String name) {
+		return location.safeTraversalReplace(SMemberValuePair.NAME, Trees.name(name));
 	}
 
 	/**

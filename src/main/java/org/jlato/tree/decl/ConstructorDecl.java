@@ -82,6 +82,14 @@ public interface ConstructorDecl extends MemberDecl, TreeCombinators<Constructor
 	ConstructorDecl withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this constructor declaration.
+	 *
+	 * @param name the replacement for the name of this constructor declaration.
+	 * @return the resulting mutated constructor declaration.
+	 */
+	ConstructorDecl withName(String name);
+
+	/**
 	 * Returns the parameters of this constructor declaration.
 	 *
 	 * @return the parameters of this constructor declaration.

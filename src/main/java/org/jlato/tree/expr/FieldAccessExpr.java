@@ -55,4 +55,12 @@ public interface FieldAccessExpr extends Expr, TreeCombinators<FieldAccessExpr> 
 	 * @return the resulting mutated field access expression.
 	 */
 	FieldAccessExpr withName(Mutation<Name> mutation);
+
+	/**
+	 * Replaces the name of this field access expression.
+	 *
+	 * @param name the replacement for the name of this field access expression.
+	 * @return the resulting mutated field access expression.
+	 */
+	FieldAccessExpr withName(String name);
 }

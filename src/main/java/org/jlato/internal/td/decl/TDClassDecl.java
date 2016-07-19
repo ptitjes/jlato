@@ -9,6 +9,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.ClassDecl;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.MemberDecl;
@@ -111,6 +112,16 @@ public class TDClassDecl extends TDTree<SClassDecl, TypeDecl, ClassDecl> impleme
 	 */
 	public ClassDecl withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SClassDecl.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this class declaration.
+	 *
+	 * @param name the replacement for the name of this class declaration.
+	 * @return the resulting mutated class declaration.
+	 */
+	public ClassDecl withName(String name) {
+		return location.safeTraversalReplace(SClassDecl.NAME, Trees.name(name));
 	}
 
 	/**

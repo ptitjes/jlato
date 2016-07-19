@@ -60,6 +60,14 @@ public interface TypeParameter extends Node, TreeCombinators<TypeParameter> {
 	TypeParameter withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this type parameter.
+	 *
+	 * @param name the replacement for the name of this type parameter.
+	 * @return the resulting mutated type parameter.
+	 */
+	TypeParameter withName(String name);
+
+	/**
 	 * Returns the bounds of this type parameter.
 	 *
 	 * @return the bounds of this type parameter.

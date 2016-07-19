@@ -7,6 +7,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.EnumConstantDecl;
 import org.jlato.tree.decl.EnumDecl;
 import org.jlato.tree.decl.ExtendedModifier;
@@ -109,6 +110,16 @@ public class TDEnumDecl extends TDTree<SEnumDecl, TypeDecl, EnumDecl> implements
 	 */
 	public EnumDecl withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SEnumDecl.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this enum declaration.
+	 *
+	 * @param name the replacement for the name of this enum declaration.
+	 * @return the resulting mutated enum declaration.
+	 */
+	public EnumDecl withName(String name) {
+		return location.safeTraversalReplace(SEnumDecl.NAME, Trees.name(name));
 	}
 
 	/**

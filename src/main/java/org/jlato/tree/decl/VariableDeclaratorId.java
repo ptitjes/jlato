@@ -35,6 +35,14 @@ public interface VariableDeclaratorId extends Node, TreeCombinators<VariableDecl
 	VariableDeclaratorId withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this variable declarator identifier.
+	 *
+	 * @param name the replacement for the name of this variable declarator identifier.
+	 * @return the resulting mutated variable declarator identifier.
+	 */
+	VariableDeclaratorId withName(String name);
+
+	/**
 	 * Returns the dimensions of this variable declarator identifier.
 	 *
 	 * @return the dimensions of this variable declarator identifier.

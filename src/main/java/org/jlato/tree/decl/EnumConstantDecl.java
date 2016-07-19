@@ -59,6 +59,14 @@ public interface EnumConstantDecl extends MemberDecl, TreeCombinators<EnumConsta
 	EnumConstantDecl withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this enum constant declaration.
+	 *
+	 * @param name the replacement for the name of this enum constant declaration.
+	 * @return the resulting mutated enum constant declaration.
+	 */
+	EnumConstantDecl withName(String name);
+
+	/**
 	 * Returns the args of this enum constant declaration.
 	 *
 	 * @return the args of this enum constant declaration.

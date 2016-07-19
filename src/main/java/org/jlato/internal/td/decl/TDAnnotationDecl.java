@@ -7,6 +7,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.AnnotationDecl;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.MemberDecl;
@@ -104,6 +105,16 @@ public class TDAnnotationDecl extends TDTree<SAnnotationDecl, TypeDecl, Annotati
 	 */
 	public AnnotationDecl withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SAnnotationDecl.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this annotation type declaration.
+	 *
+	 * @param name the replacement for the name of this annotation type declaration.
+	 * @return the resulting mutated annotation type declaration.
+	 */
+	public AnnotationDecl withName(String name) {
+		return location.safeTraversalReplace(SAnnotationDecl.NAME, Trees.name(name));
 	}
 
 	/**

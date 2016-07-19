@@ -7,6 +7,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.FieldAccessExpr;
 import org.jlato.tree.name.Name;
@@ -101,5 +102,15 @@ public class TDFieldAccessExpr extends TDTree<SFieldAccessExpr, Expr, FieldAcces
 	 */
 	public FieldAccessExpr withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SFieldAccessExpr.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this field access expression.
+	 *
+	 * @param name the replacement for the name of this field access expression.
+	 * @return the resulting mutated field access expression.
+	 */
+	public FieldAccessExpr withName(String name) {
+		return location.safeTraversalReplace(SFieldAccessExpr.NAME, Trees.name(name));
 	}
 }

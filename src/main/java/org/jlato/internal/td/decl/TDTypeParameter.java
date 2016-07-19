@@ -8,6 +8,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.TypeParameter;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
@@ -104,6 +105,16 @@ public class TDTypeParameter extends TDTree<STypeParameter, Node, TypeParameter>
 	 */
 	public TypeParameter withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(STypeParameter.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this type parameter.
+	 *
+	 * @param name the replacement for the name of this type parameter.
+	 * @return the resulting mutated type parameter.
+	 */
+	public TypeParameter withName(String name) {
+		return location.safeTraversalReplace(STypeParameter.NAME, Trees.name(name));
 	}
 
 	/**

@@ -58,6 +58,14 @@ public interface InterfaceDecl extends TypeDecl, TreeCombinators<InterfaceDecl> 
 	InterfaceDecl withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this interface declaration.
+	 *
+	 * @param name the replacement for the name of this interface declaration.
+	 * @return the resulting mutated interface declaration.
+	 */
+	InterfaceDecl withName(String name);
+
+	/**
 	 * Returns the type parameters of this interface declaration.
 	 *
 	 * @return the type parameters of this interface declaration.

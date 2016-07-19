@@ -59,6 +59,14 @@ public interface ClassDecl extends TypeDecl, TreeCombinators<ClassDecl> {
 	ClassDecl withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this class declaration.
+	 *
+	 * @param name the replacement for the name of this class declaration.
+	 * @return the resulting mutated class declaration.
+	 */
+	ClassDecl withName(String name);
+
+	/**
 	 * Returns the type parameters of this class declaration.
 	 *
 	 * @return the type parameters of this class declaration.

@@ -8,6 +8,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.ConstructorDecl;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.FormalParameter;
@@ -140,6 +141,16 @@ public class TDConstructorDecl extends TDTree<SConstructorDecl, MemberDecl, Cons
 	 */
 	public ConstructorDecl withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SConstructorDecl.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this constructor declaration.
+	 *
+	 * @param name the replacement for the name of this constructor declaration.
+	 * @return the resulting mutated constructor declaration.
+	 */
+	public ConstructorDecl withName(String name) {
+		return location.safeTraversalReplace(SConstructorDecl.NAME, Trees.name(name));
 	}
 
 	/**

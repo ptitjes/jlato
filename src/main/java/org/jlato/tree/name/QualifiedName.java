@@ -55,4 +55,12 @@ public interface QualifiedName extends Node, TreeCombinators<QualifiedName> {
 	 * @return the resulting mutated qualified name.
 	 */
 	QualifiedName withName(Mutation<Name> mutation);
+
+	/**
+	 * Replaces the name of this qualified name.
+	 *
+	 * @param name the replacement for the name of this qualified name.
+	 * @return the resulting mutated qualified name.
+	 */
+	QualifiedName withName(String name);
 }

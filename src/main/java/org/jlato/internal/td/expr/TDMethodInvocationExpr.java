@@ -9,6 +9,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.MethodInvocationExpr;
 import org.jlato.tree.name.Name;
@@ -135,6 +136,16 @@ public class TDMethodInvocationExpr extends TDTree<SMethodInvocationExpr, Expr, 
 	 */
 	public MethodInvocationExpr withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SMethodInvocationExpr.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this method invocation expression.
+	 *
+	 * @param name the replacement for the name of this method invocation expression.
+	 * @return the resulting mutated method invocation expression.
+	 */
+	public MethodInvocationExpr withName(String name) {
+		return location.safeTraversalReplace(SMethodInvocationExpr.NAME, Trees.name(name));
 	}
 
 	/**

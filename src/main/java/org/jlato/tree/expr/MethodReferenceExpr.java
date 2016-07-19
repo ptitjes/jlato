@@ -79,4 +79,12 @@ public interface MethodReferenceExpr extends Expr, TreeCombinators<MethodReferen
 	 * @return the resulting mutated method reference expression.
 	 */
 	MethodReferenceExpr withName(Mutation<Name> mutation);
+
+	/**
+	 * Replaces the name of this method reference expression.
+	 *
+	 * @param name the replacement for the name of this method reference expression.
+	 * @return the resulting mutated method reference expression.
+	 */
+	MethodReferenceExpr withName(String name);
 }

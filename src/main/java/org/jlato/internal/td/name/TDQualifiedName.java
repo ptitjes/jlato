@@ -8,6 +8,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.util.Mutation;
@@ -101,5 +102,15 @@ public class TDQualifiedName extends TDTree<SQualifiedName, Node, QualifiedName>
 	 */
 	public QualifiedName withName(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SQualifiedName.NAME, mutation);
+	}
+
+	/**
+	 * Replaces the name of this qualified name.
+	 *
+	 * @param name the replacement for the name of this qualified name.
+	 * @return the resulting mutated qualified name.
+	 */
+	public QualifiedName withName(String name) {
+		return location.safeTraversalReplace(SQualifiedName.NAME, Trees.name(name));
 	}
 }

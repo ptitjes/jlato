@@ -58,6 +58,14 @@ public interface EnumDecl extends TypeDecl, TreeCombinators<EnumDecl> {
 	EnumDecl withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this enum declaration.
+	 *
+	 * @param name the replacement for the name of this enum declaration.
+	 * @return the resulting mutated enum declaration.
+	 */
+	EnumDecl withName(String name);
+
+	/**
 	 * Returns the 'implements' clause of this enum declaration.
 	 *
 	 * @return the 'implements' clause of this enum declaration.

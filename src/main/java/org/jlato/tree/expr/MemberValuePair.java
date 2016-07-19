@@ -34,6 +34,14 @@ public interface MemberValuePair extends Node, TreeCombinators<MemberValuePair> 
 	MemberValuePair withName(Mutation<Name> mutation);
 
 	/**
+	 * Replaces the name of this annotation member value pair.
+	 *
+	 * @param name the replacement for the name of this annotation member value pair.
+	 * @return the resulting mutated annotation member value pair.
+	 */
+	MemberValuePair withName(String name);
+
+	/**
 	 * Returns the value of this annotation member value pair.
 	 *
 	 * @return the value of this annotation member value pair.

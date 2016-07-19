@@ -6,6 +6,7 @@ import org.jlato.internal.bu.stmt.SStmt;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
+import org.jlato.tree.Trees;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.LabeledStmt;
 import org.jlato.tree.stmt.Stmt;
@@ -71,6 +72,16 @@ public class TDLabeledStmt extends TDTree<SLabeledStmt, Stmt, LabeledStmt> imple
 	 */
 	public LabeledStmt withLabel(Mutation<Name> mutation) {
 		return location.safeTraversalMutate(SLabeledStmt.LABEL, mutation);
+	}
+
+	/**
+	 * Replaces the label of this labeled statement.
+	 *
+	 * @param label the replacement for the label of this labeled statement.
+	 * @return the resulting mutated labeled statement.
+	 */
+	public LabeledStmt withLabel(String label) {
+		return location.safeTraversalReplace(SLabeledStmt.LABEL, Trees.name(label));
 	}
 
 	/**
