@@ -13,8 +13,9 @@ import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDTryStmt;
-import org.jlato.printer.FormattingSettings;
+import org.jlato.parser.ParserImplConstants;
 import org.jlato.printer.FormattingSettings.IndentationContext;
+import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -30,6 +31,7 @@ import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.*;
 import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
 /**
  * A state object for a 'try' statement.
