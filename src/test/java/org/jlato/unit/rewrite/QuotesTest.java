@@ -22,6 +22,7 @@ package org.jlato.unit.rewrite;
 import org.jlato.parser.ParseException;
 import org.jlato.printer.Printer;
 import org.jlato.rewrite.Pattern;
+import org.jlato.rewrite.Quotes;
 import org.jlato.rewrite.Substitution;
 import org.jlato.tree.*;
 import org.jlato.tree.decl.*;
@@ -35,7 +36,9 @@ import org.junit.runners.JUnit4;
 
 import java.io.FileNotFoundException;
 
-import static org.jlato.rewrite.Quotes.*;
+import static org.jlato.rewrite.Quotes.memberDecl;
+import static org.jlato.rewrite.Quotes.stmt;
+import static org.jlato.rewrite.Quotes.expr;
 import static org.jlato.tree.Trees.*;
 
 /**
@@ -46,7 +49,7 @@ public class QuotesTest extends BaseTestFromFiles {
 
 	@Test
 	public void methodCalls() throws FileNotFoundException, ParseException {
-		final Pattern<Expr> expr = expr("$p.hashCode()");
+		final Pattern<Expr> expr = Quotes.expr("$p.hashCode()");
 	}
 
 	@Test

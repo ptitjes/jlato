@@ -117,3 +117,79 @@ final ImportDecl newImportDecl = anImportDecl.withName(QualifiedName.of("com.acm
 final CompilationUnit newCU = (CompilationUnit) newImportDecl.root();
 Assert.assertEquals("import com.acme.MyClass;", Printer.printToString(newCU.imports().get(0)));
 ```
+
+## Using patterns to match, filter and search
+
+Every abstract syntax tree objects derive from the `TreeCombinators` interface which provides combinators to search,
+match and rewrite sub-trees. For instance, you can rewrite all names of a compilation unit and add a "42" suffix to
+those:
+
+```java
+final CompilationUnit cu = // ...
+
+final CompilationUnit rewrote = cu.forAll(
+    new TypeSafeMatcher<Name>() {
+        @Override
+        public Substitution match(Object o) {
+            return match(o, Substitution.empty());
+        }
+
+        @Override
+        public Substitution match(Object o, Substitution s) {
+            return o instanceof Node && ((Node) o).kind() == Kind.Name ? s : null;
+        }
+    }, new MatchVisitor<Name>() {
+        @Override
+        public Name visit(Name name, Substitution s) {
+            return name.withId(name.id() + "42");
+        }
+    });
+```
+
+In the previous example we implemented manually the implementations of `TypeSafeMatcher`. Fortunately, JLaTo provides
+quasi-quotations to do the exact same thing with Java code quote. For instance, one can rewrite all names:
+
+```java
+final CompilationUnit cu = // ...
+
+final CompilationUnit rewrote = cu.forAll(Quotes.names(),
+    new MatchVisitor<Name>() {
+      @Override
+      public Name visit(Name name, Substitution s) {
+          return name.withId(name.id() + "42");
+      }
+  });
+```
+
+or only all parameter names:
+
+```java
+final CompilationUnit cu = // ...
+
+final CompilationUnit rewrote = cu.forAll(
+    Quotes.param("$t $n").or(Quotes.param("$t... $n")),
+    new MatchVisitor<FormalParameter>() {
+        @Override
+        public FormalParameter visit(FormalParameter p, Substitution s) {
+            return p.withId(p.id().withName(name(p.id().name().id() + "42")));
+        }
+    });
+```
+
+or only all public abstract classes:
+
+```java
+final CompilationUnit cu = // ...
+
+final CompilationUnit rewrote = cu.forAll(
+    Quotes.typeDecl("public abstract class $t { ..$_ }"),
+    new MatchVisitor<TypeDecl>() {
+        @Override
+        public TypeDecl visit(TypeDecl t, Substitution s) {
+            ClassDecl c = (ClassDecl) t;
+            return c.withName(c.name().withId(c.name().id() + "42"));
+        }
+    });
+```
+
+Look at the `TreeCombinators` interface for more information on the other methods to match, filter and search.

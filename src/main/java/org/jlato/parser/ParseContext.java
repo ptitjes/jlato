@@ -22,9 +22,12 @@ package org.jlato.parser;
 import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.name.SName;
 import org.jlato.tree.*;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.Expr;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.name.QualifiedName;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.type.Type;
 
@@ -158,9 +161,23 @@ public abstract class ParseContext<T extends Tree> {
 		}
 	};
 
+	public final static ParseContext<QualifiedName> QualifiedName = new ParseContext<QualifiedName>() {
+		@Override
+		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
+			return wrapWithPrologAndEpilog(parser, parser.QualifiedName());
+		}
+	};
+
+	public final static ParseContext<Name> Name = new ParseContext<Name>() {
+		@Override
+		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
+			return wrapWithPrologAndEpilog(parser, parser.Name());
+		}
+	};
+
 	protected abstract BUTree<?> callProduction(ParserBase parser) throws ParseException;
 
-	protected <S extends STree> BUTree<S> wrapWithPrologAndEpilog(ParserBase parser, BUTree<S> tree) throws ParseException {
+	private static <S extends STree> BUTree<S> wrapWithPrologAndEpilog(ParserBase parser, BUTree<S> tree) throws ParseException {
 		parser.Epilog();
 		return parser.dressWithPrologAndEpilog(tree);
 	}

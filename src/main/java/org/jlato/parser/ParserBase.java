@@ -27,6 +27,8 @@ import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.decl.*;
 import org.jlato.internal.bu.expr.SExpr;
+import org.jlato.internal.bu.name.SName;
+import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.bu.stmt.SStmt;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.shapes.DressingBuilder;
@@ -241,6 +243,10 @@ abstract class ParserBase {
 	abstract BUTree<SNodeList> Annotations() throws ParseException;
 
 	abstract BUTree<? extends SType> Type(BUTree<SNodeList> annotations) throws ParseException;
+
+	abstract BUTree<SQualifiedName> QualifiedName() throws ParseException;
+
+	abstract BUTree<SName> Name() throws ParseException;
 
 	public enum TypeKind {
 		Empty,

@@ -24,11 +24,16 @@ import org.jlato.internal.patterns.TreePattern;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.QuotesParser;
+import org.jlato.tree.Kind;
+import org.jlato.tree.Node;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.Expr;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.name.QualifiedName;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.type.Type;
+import org.jlato.util.Function1;
 
 /**
  * @author Didier Villevalois
@@ -70,10 +75,28 @@ public final class Quotes {
 		return quote(ParseContext.Type, string);
 	}
 
+	public static Pattern<QualifiedName> qualifiedName(String string) {
+		return quote(ParseContext.QualifiedName, string);
+	}
+
+	public static TypeSafeMatcher<Name> names() {
+		return new TypeSafeMatcher<Name>() {
+			@Override
+			public Substitution match(Object o) {
+				return match(o, Substitution.empty());
+			}
+
+			@Override
+			public Substitution match(Object o, Substitution s) {
+				return o instanceof Node && ((Node) o).kind() == Kind.Name ? s : null;
+			}
+		};
+	}
+
 	public static <T extends Tree> Pattern<T> quote(ParseContext<T> context, String string) {
 		QuotesParser parser = new QuotesParser();
 		try {
-			BUTree<?> tree = tree = parser.parse(context, string);
+			BUTree<?> tree = parser.parse(context, string);
 			return new TreePattern<T>(tree);
 		} catch (ParseException e) {
 			throw new IllegalArgumentException("Can't parse quote: " + string, e);

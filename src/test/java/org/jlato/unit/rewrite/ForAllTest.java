@@ -21,16 +21,18 @@ package org.jlato.unit.rewrite;
 
 import org.jlato.parser.ParseException;
 import org.jlato.printer.FormattingSettings;
-import org.jlato.rewrite.MatchVisitor;
-import org.jlato.rewrite.Pattern;
-import org.jlato.rewrite.Substitution;
-import org.jlato.util.Mutation;
+import org.jlato.rewrite.*;
+import org.jlato.tree.Kind;
+import org.jlato.tree.Node;
+import org.jlato.tree.decl.ClassDecl;
 import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.FormalParameter;
+import org.jlato.tree.decl.TypeDecl;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 import org.jlato.unit.util.BaseTestFromFiles;
+import org.jlato.util.Mutation;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +42,7 @@ import java.io.IOException;
 
 import static org.jlato.rewrite.Quotes.param;
 import static org.jlato.rewrite.Quotes.type;
+import static org.jlato.rewrite.Quotes.typeDecl;
 import static org.jlato.tree.Trees.name;
 
 /**
@@ -47,6 +50,51 @@ import static org.jlato.tree.Trees.name;
  */
 @RunWith(JUnit4.class)
 public class ForAllTest extends BaseTestFromFiles {
+
+	@Test
+	public void renamedNamesDirectly() throws IOException, ParseException {
+		final String original = resourceAsString("org/jlato/samples/TestClass.java");
+		CompilationUnit cu = parse(original, true);
+
+		final CompilationUnit rewrote = cu.forAll(
+				new TypeSafeMatcher<Name>() {
+					@Override
+					public Substitution match(Object o) {
+						return match(o, Substitution.empty());
+					}
+
+					@Override
+					public Substitution match(Object o, Substitution s) {
+						return o instanceof Node && ((Node) o).kind() == Kind.Name ? s : null;
+					}
+				}, new MatchVisitor<Name>() {
+					@Override
+					public Name visit(Name name, Substitution s) {
+						return name.withId(name.id() + "42");
+					}
+				});
+
+		final String expected = resourceAsString("org/jlato/samples/rewrote/TestClass-renamed-names");
+		Assert.assertEquals(expected, print(rewrote, false, FormattingSettings.Default));
+	}
+
+	@Test
+	public void renamedNames() throws IOException, ParseException {
+		final String original = resourceAsString("org/jlato/samples/TestClass.java");
+		CompilationUnit cu = parse(original, true);
+
+		final TypeSafeMatcher<Name> namePattern = Quotes.names();
+
+		final CompilationUnit rewrote = cu.forAll(namePattern, new MatchVisitor<Name>() {
+			@Override
+			public Name visit(Name name, Substitution s) {
+				return name.withId(name.id() + "42");
+			}
+		});
+
+		final String expected = resourceAsString("org/jlato/samples/rewrote/TestClass-renamed-names");
+		Assert.assertEquals(expected, print(rewrote, false, FormattingSettings.Default));
+	}
 
 	@Test
 	public void renamedParameters() throws IOException, ParseException {
@@ -89,6 +137,25 @@ public class ForAllTest extends BaseTestFromFiles {
 		});
 
 		final String expected = resourceAsString("org/jlato/samples/rewrote/TestClass-renamed-types");
+		Assert.assertEquals(expected, print(rewrote, false, FormattingSettings.Default));
+	}
+
+	@Test
+	public void renamedClasses() throws IOException, ParseException {
+		final String original = resourceAsString("org/jlato/samples/TestClass.java");
+		CompilationUnit cu = parse(original, true);
+
+		final Pattern<TypeDecl> classPattern = typeDecl("public abstract class $t { ..$_ }");
+
+		final CompilationUnit rewrote = cu.forAll(classPattern, new MatchVisitor<TypeDecl>() {
+			@Override
+			public TypeDecl visit(TypeDecl t, Substitution s) {
+				ClassDecl c = (ClassDecl) t;
+				return c.withName(c.name().withId(c.name().id() + "42"));
+			}
+		});
+
+		final String expected = resourceAsString("org/jlato/samples/rewrote/TestClass-renamed-classes");
 		Assert.assertEquals(expected, print(rewrote, false, FormattingSettings.Default));
 	}
 }

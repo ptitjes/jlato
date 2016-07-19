@@ -17,6 +17,8 @@ JLaTo currently provides:
 * An **immutable** abstract syntax tree with fluent mutators
 * Lexical preservation of whitespaces and comments
 * Formatting of new (and already formatted) abstract syntax trees with formatting settings
+* [Experimental] Matching/Filtering/Searching of abstract syntax trees with patterns
+* [Experimental] Quasi-quotes of Java snippets to ease the building of new abstract syntax trees and patterns
 
 ### Roadmap
 
@@ -24,8 +26,6 @@ In the long term, JLaTo also aims to provide:
 
 * Semantic analysis of abstract syntax trees
 * A add-on mechanism to enable syntactic and semantic extensions
-* Matching/Filtering/Searching of abstract syntax trees with patterns
-* Quasi-quotes of Java snippets to ease the building of new abstract syntax trees and patterns
 
 ## Documentation
 

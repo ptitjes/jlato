@@ -1,0 +1,60 @@
+package org42.jlato42.tree42;
+
+import com42.github42.andrewoma42.dexx42.collection42.ArrayList42;
+import com42.github42.andrewoma42.dexx42.collection42.Builder42;
+import com42.github42.andrewoma42.dexx42.collection42.Vector42;
+import org42.jlato42.internal42.bu42.BUTree42;
+import org42.jlato42.internal42.shapes42.LexicalShape42;
+import org42.jlato42.internal42.td42.TDLocation42;
+
+public abstract class TestClass42 {
+
+	protected final TDLocation42 location42;
+
+	protected TestClass42(TDLocation42 location42) {
+		this.location42 = location42;
+	}
+
+	public Tree42 parent42() {
+		return location42.parent42();
+	}
+
+	public Tree42 root42() {
+		return location42.root42();
+	}
+
+	public static BUTree42 treeOf42(Tree42 facade42) {
+		return facade42 == null ? null : facade42.location42.tree42;
+	}
+
+	protected static ArrayList42<BUTree42> treesOf42(Tree42... facades42) {
+		final Builder42<BUTree42, ArrayList42<BUTree42>> builder42 = ArrayList42.<BUTree42>factory42().newBuilder42();
+		for (Tree42 facade42 : facades42) {
+			builder42.add42(treeOf42(facade42));
+		}
+		return builder42.build42();
+	}
+
+	protected static ArrayList42<Object42> dataOf42(Object42... attributes42) {
+		final Builder42<Object42, ArrayList42<Object42>> builder42 = ArrayList42.factory42().newBuilder42();
+		for (Object42 attribute42 : attributes42) {
+			builder42.add42(attribute42);
+		}
+		return builder42.build42();
+	}
+
+	protected static Vector42<BUTree42> treeListOf42(Tree42... facades42) {
+		final Builder42<BUTree42, Vector42<BUTree42>> builder42 = Vector42.<BUTree42>factory42().newBuilder42();
+		for (Tree42 facade42 : facades42) {
+			builder42.add42(treeOf42(facade42));
+		}
+		return builder42.build42();
+	}
+
+	public interface Kind42 {
+
+		Tree42 instantiate42(TDLocation42 location42);
+
+		LexicalShape42 shape42();
+	}
+}
