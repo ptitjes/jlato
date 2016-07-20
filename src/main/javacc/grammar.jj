@@ -1775,7 +1775,7 @@ BUTree<SMethodDecl> MethodDecl(BUTree<SNodeList> modifiers):
     ";"
     {
       if(modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)))
-        problem = new BUProblem(Severity.ERROR, "default methods must have a body");
+        problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
 	}
   )
 
