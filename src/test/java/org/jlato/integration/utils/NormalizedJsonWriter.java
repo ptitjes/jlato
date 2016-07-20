@@ -113,7 +113,7 @@ public class NormalizedJsonWriter {
 
 			String name = method.getName();
 
-			if (name.equals("toString") || name.equals("kind")) continue;
+			if (name.equals("toString") || name.equals("kind") || name.startsWith("with")) continue;
 			if (LiteralExpr.class.isAssignableFrom(treeClass) && name.equals("value")) continue;
 
 			methods.add(method);
