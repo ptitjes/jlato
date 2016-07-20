@@ -8,6 +8,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeEither;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.LambdaExpr;
@@ -133,5 +134,25 @@ public class TDLambdaExpr extends TDTree<SLambdaExpr, Expr, LambdaExpr> implemen
 	 */
 	public LambdaExpr withBody(Mutation<NodeEither<Expr, BlockStmt>> mutation) {
 		return location.safeTraversalMutate(SLambdaExpr.BODY, mutation);
+	}
+
+	/**
+	 * Replaces the body of this lambda expression.
+	 *
+	 * @param body the replacement for the body of this lambda expression.
+	 * @return the resulting mutated lambda expression.
+	 */
+	public LambdaExpr withBody(Expr body) {
+		return location.safeTraversalReplace(SLambdaExpr.BODY, Trees.<Expr, BlockStmt>left(body));
+	}
+
+	/**
+	 * Replaces the body of this lambda expression.
+	 *
+	 * @param body the replacement for the body of this lambda expression.
+	 * @return the resulting mutated lambda expression.
+	 */
+	public LambdaExpr withBody(BlockStmt body) {
+		return location.safeTraversalReplace(SLambdaExpr.BODY, Trees.<Expr, BlockStmt>right(body));
 	}
 }

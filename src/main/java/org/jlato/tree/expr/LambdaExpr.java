@@ -80,4 +80,20 @@ public interface LambdaExpr extends Expr, TreeCombinators<LambdaExpr> {
 	 * @return the resulting mutated lambda expression.
 	 */
 	LambdaExpr withBody(Mutation<NodeEither<Expr, BlockStmt>> mutation);
+
+	/**
+	 * Replaces the body of this lambda expression.
+	 *
+	 * @param body the replacement for the body of this lambda expression.
+	 * @return the resulting mutated lambda expression.
+	 */
+	LambdaExpr withBody(Expr body);
+
+	/**
+	 * Replaces the body of this lambda expression.
+	 *
+	 * @param body the replacement for the body of this lambda expression.
+	 * @return the resulting mutated lambda expression.
+	 */
+	LambdaExpr withBody(BlockStmt body);
 }

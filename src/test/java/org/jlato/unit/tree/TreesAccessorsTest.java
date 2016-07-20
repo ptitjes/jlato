@@ -596,7 +596,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testLambdaExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<FormalParameter> params = arbitrary.arbitraryListFormalParameter();
 			boolean hasParens = arbitrary.arbitraryBoolean();
@@ -604,6 +604,9 @@ public class TreesAccessorsTest {
 			LambdaExpr t = Trees.lambdaExpr().withParams(params).setParens(hasParens).withBody(body);
 			Assert.assertEquals(params, t.params());
 			Assert.assertEquals(hasParens, t.hasParens());
+			Assert.assertEquals(body, t.body());
+			if (body.isLeft()) t = t.withBody(body.left());
+			else t = t.withBody(body.right());
 			Assert.assertEquals(body, t.body());
 		}
 	}
