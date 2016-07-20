@@ -131,6 +131,10 @@ abstract class ParserBase {
 	}
 
 	protected <S extends STree> BUTree<S> dress(BUTree<S> tree) {
+		return doCollectProblems(doDress(tree));
+	}
+
+	protected <S extends STree> BUTree<S> doDress(BUTree<S> tree) {
 		if (!configuration.preserveWhitespaces) return tree;
 
 		final IndexedList<WTokenRun> tokens = popTokens();
@@ -164,6 +168,33 @@ abstract class ParserBase {
 		}
 
 		return newTree;
+	}
+
+	private <S extends STree> BUTree<S> doCollectProblems(BUTree<S> tree) {
+		S state = tree.state;
+		boolean hasProblem = false;
+
+		STraversal traversal = state.firstChild();
+		while (traversal != null) {
+			BUTree<?> child = traversal.traverse(state);
+
+			if (child != null) {
+				if (child.state instanceof SNodeList
+						|| child.state instanceof SNodeOption
+						|| child.state instanceof SNodeEither) {
+					child = doCollectProblems(child);
+					if (child.hasProblems()) {
+						tree = tree.traverseReplace(traversal, child);
+					}
+				}
+				if (child.hasProblems()) hasProblem = true;
+			}
+
+			traversal = traversal.rightSibling(state);
+		}
+
+		if (hasProblem) tree = tree.setProblems();
+		return tree;
 	}
 
 	protected <S extends STree> BUTree<S> dressWithPrologAndEpilog(BUTree<S> tree) {

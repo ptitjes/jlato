@@ -70,6 +70,7 @@ import org.jlato.tree.expr.AssignOp;
 import org.jlato.tree.expr.BinaryOp;
 import org.jlato.tree.expr.UnaryOp;
 import org.jlato.tree.type.Primitive;
+import org.jlato.tree.Problem.Severity;
 
 /**
  * <p>This class was generated automatically by javacc, do not edit.</p>
@@ -1768,6 +1769,7 @@ BUTree<SMethodDecl> MethodDecl(BUTree<SNodeList> modifiers):
 	BUTree<SNodeList> arrayDims;
 	BUTree<SNodeList> throwsClause = null;
 	BUTree<SBlockStmt> block = null;
+	BUProblem problem = null;
 }
 {
   // Run is started before modifiers
@@ -1782,11 +1784,11 @@ BUTree<SMethodDecl> MethodDecl(BUTree<SNodeList> modifiers):
     ";"
     {
       if(modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)))
-	    throwParseException(token, "default methods must have a body");
+        problem = new BUProblem(Severity.ERROR, "default methods must have a body");
 	}
   )
 
-  { return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))); }
+  { return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem); }
 }
 
 BUTree<SNodeList> FormalParameters():

@@ -19,10 +19,11 @@
 
 package org.jlato.integration.utils;
 
-import org.jlato.tree.NodeEither;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.NodeOption;
-import org.jlato.tree.Tree;
+import com.github.andrewoma.dexx.collection.Vector;
+import org.jlato.internal.bu.BUProblem;
+import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.bu.STree;
+import org.jlato.tree.*;
 import org.jlato.internal.td.TDTree;
 import org.jlato.internal.bu.SNode;
 import org.jlato.tree.expr.LiteralExpr;
@@ -33,6 +34,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A normalized JSON writer. We write commas (',') even for the last name/value pairs and array elements. This is to
@@ -71,13 +74,31 @@ public class NormalizedJsonWriter {
 
 		builder.append("{\n");
 
-		final SNode state = (SNode) TDTree.treeOf(tree).state;
+		BUTree<STree> buTree = TDTree.treeOf(tree);
+
+		final SNode state = (SNode) buTree.state;
 		writeField("kind", String.class, state.kind(), indent + 1);
+
+		Vector<BUProblem> problems = buTree.problems();
+		if (!problems.isEmpty()) writeProblems(problems, indent + 1);
 
 		writeProperties(tree, treeClass, indent + 1);
 
 		writeIndent(indent);
 		builder.append("}");
+	}
+
+	private void writeProblems(Vector<BUProblem> problems, int indent) {
+		writeIndent(indent);
+		builder.append("problems: ");
+		builder.append("[\n");
+		for (BUProblem problem : problems) {
+			writeField("severity", Problem.Severity.class, problem.severity(), indent + 1);
+			writeField("code", String.class, problem.code(), indent + 1);
+		}
+		writeIndent(indent);
+		builder.append("]");
+		builder.append(",\n");
 	}
 
 	private void writeProperties(Tree tree, Class<? extends Tree> treeClass, int indent) {

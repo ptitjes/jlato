@@ -19,6 +19,7 @@
 
 package org.jlato.internal.bu;
 
+import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.td.TDContext;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.tree.*;
@@ -30,14 +31,18 @@ public class BUTree<S extends STree> {
 
 	public final S state;
 	public final WDressing dressing;
+	private final boolean hasProblems;
+	private final Vector<BUProblem> problems;
 
 	public BUTree(S state) {
-		this(state, null);
+		this(state, null, false, Vector.<BUProblem>empty());
 	}
 
-	public BUTree(S state, WDressing dressing) {
+	public BUTree(S state, WDressing dressing, boolean hasProblems, Vector<BUProblem> problems) {
 		this.state = state;
 		this.dressing = dressing;
+		this.hasProblems = hasProblems;
+		this.problems = problems;
 	}
 
 	public int width() {
@@ -45,11 +50,27 @@ public class BUTree<S extends STree> {
 	}
 
 	public BUTree<S> withState(S state) {
-		return new BUTree<S>(state, dressing);
+		return new BUTree<S>(state, dressing, hasProblems, problems);
 	}
 
 	public BUTree<S> withDressing(WDressing dressing) {
-		return new BUTree<S>(state, dressing);
+		return new BUTree<S>(state, dressing, hasProblems, problems);
+	}
+
+	public boolean hasProblems() {
+		return hasProblems;
+	}
+
+	public Vector<BUProblem> problems() {
+		return problems;
+	}
+
+	public BUTree<S> setProblems() {
+		return new BUTree<S>(state, dressing, true, problems);
+	}
+
+	public BUTree<S> withProblem(BUProblem problem) {
+		return problem == null ? this : new BUTree<S>(state, dressing, true, problems.append(problem));
 	}
 
 	public BUTree<?> traverse(STraversal traversal) {

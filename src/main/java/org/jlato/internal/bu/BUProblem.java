@@ -17,31 +17,29 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.tree;
+package org.jlato.internal.bu;
 
-import org.jlato.internal.bu.BUProblem;
-import org.jlato.rewrite.Matcher;
-import org.jlato.rewrite.Substitution;
-import org.jlato.rewrite.TypeSafeMatcher;
+import org.jlato.tree.Problem;
 
 /**
  * @author Didier Villevalois
  */
-public interface Tree {
+public class BUProblem {
 
-	Tree parent();
+	public BUProblem(Problem.Severity severity, String code) {
+		this.severity = severity;
+		this.code = code;
+	}
 
-	Tree root();
+	private final Problem.Severity severity;
 
-	boolean hasProblems();
+	private final String code;
 
-	Iterable<Problem> problems();
+	public Problem.Severity severity() {
+		return severity;
+	}
 
-	// Non-typed combinators
-
-	Substitution match(Matcher matcher);
-
-	boolean matches(Matcher matcher);
-
-	<U extends Tree> Iterable<U> findAll(TypeSafeMatcher<U> matcher);
+	public String code() {
+		return code;
+	}
 }

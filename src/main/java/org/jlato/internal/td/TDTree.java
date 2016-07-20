@@ -54,6 +54,46 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		return location.root().facade;
 	}
 
+	@Override
+	public boolean hasProblems() {
+		return location.tree.hasProblems();
+	}
+
+	@Override
+	public java.lang.Iterable<Problem> problems() {
+		ProblemCollector collector = new ProblemCollector();
+		leftForAll(new TypeSafeMatcher<Tree>() {
+			@Override
+			public Substitution match(Object object) {
+				return match(object, Substitution.empty());
+			}
+
+			@Override
+			public Substitution match(Object object, Substitution substitution) {
+				return object instanceof TDTree && !((TDTree) object).location.tree.problems().isEmpty() ? substitution : null;
+			}
+		}, collector);
+		return collector.getList();
+	}
+
+	private static class ProblemCollector implements MatchVisitor<Tree> {
+
+		private final LinkedList<Problem> list = new LinkedList<Problem>();
+
+		@Override
+		public Tree visit(Tree t, Substitution s) {
+			Vector<BUProblem> problems = ((TDTree<?, ?, ?>) t).location.tree.problems();
+			for (BUProblem problem : problems) {
+				list.add(new TDProblem(problem, t));
+			}
+			return t;
+		}
+
+		public LinkedList<Problem> getList() {
+			return list;
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	private T self() {
 		return (T) this;

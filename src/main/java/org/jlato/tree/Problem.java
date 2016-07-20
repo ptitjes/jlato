@@ -19,29 +19,16 @@
 
 package org.jlato.tree;
 
-import org.jlato.internal.bu.BUProblem;
-import org.jlato.rewrite.Matcher;
-import org.jlato.rewrite.Substitution;
-import org.jlato.rewrite.TypeSafeMatcher;
-
 /**
  * @author Didier Villevalois
  */
-public interface Tree {
+public interface Problem {
 
-	Tree parent();
+	enum Severity {FATAL, ERROR, WARNING, INFO}
 
-	Tree root();
+	Severity severity();
 
-	boolean hasProblems();
+	String code();
 
-	Iterable<Problem> problems();
-
-	// Non-typed combinators
-
-	Substitution match(Matcher matcher);
-
-	boolean matches(Matcher matcher);
-
-	<U extends Tree> Iterable<U> findAll(TypeSafeMatcher<U> matcher);
+	Tree tree();
 }

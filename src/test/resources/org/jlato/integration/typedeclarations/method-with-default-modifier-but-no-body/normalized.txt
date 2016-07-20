@@ -1,0 +1,38 @@
+{
+  kind: InterfaceDecl,
+  extendsClause: [
+  ],
+  members: [
+    {
+      kind: MethodDecl,
+      problems: [
+        severity: ERROR,
+        code: default methods must have a body,
+      ],
+      body: null,
+      dims: [
+      ],
+      modifiers: [
+        {
+          kind: Modifier,
+          keyword: Default,
+        },
+      ],
+      name: test,
+      params: [
+      ],
+      throwsClause: [
+      ],
+      type: {
+        kind: VoidType,
+      },
+      typeParams: [
+      ],
+    },
+  ],
+  modifiers: [
+  ],
+  name: Test,
+  typeParams: [
+  ],
+}
