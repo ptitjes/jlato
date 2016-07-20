@@ -1,14 +1,97 @@
 package org.jlato.unit.tree;
 
-import org.jlato.tree.*;
-import org.jlato.tree.decl.*;
-import org.jlato.tree.expr.*;
-import org.jlato.tree.name.*;
-import org.jlato.tree.stmt.*;
-import org.jlato.tree.type.*;
+import org.jlato.tree.NodeEither;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
+import org.jlato.tree.decl.AnnotationDecl;
+import org.jlato.tree.decl.AnnotationMemberDecl;
+import org.jlato.tree.decl.ArrayDim;
+import org.jlato.tree.decl.ClassDecl;
+import org.jlato.tree.decl.CompilationUnit;
+import org.jlato.tree.decl.ConstructorDecl;
+import org.jlato.tree.decl.EnumConstantDecl;
+import org.jlato.tree.decl.EnumDecl;
+import org.jlato.tree.decl.ExtendedModifier;
+import org.jlato.tree.decl.FieldDecl;
+import org.jlato.tree.decl.FormalParameter;
+import org.jlato.tree.decl.ImportDecl;
+import org.jlato.tree.decl.InitializerDecl;
+import org.jlato.tree.decl.InterfaceDecl;
+import org.jlato.tree.decl.LocalVariableDecl;
+import org.jlato.tree.decl.MemberDecl;
+import org.jlato.tree.decl.MethodDecl;
+import org.jlato.tree.decl.Modifier;
+import org.jlato.tree.decl.ModifierKeyword;
+import org.jlato.tree.decl.PackageDecl;
+import org.jlato.tree.decl.TypeDecl;
+import org.jlato.tree.decl.TypeParameter;
+import org.jlato.tree.decl.VariableDeclarator;
+import org.jlato.tree.decl.VariableDeclaratorId;
+import org.jlato.tree.expr.AnnotationExpr;
+import org.jlato.tree.expr.ArrayAccessExpr;
+import org.jlato.tree.expr.ArrayCreationExpr;
+import org.jlato.tree.expr.ArrayDimExpr;
+import org.jlato.tree.expr.ArrayInitializerExpr;
+import org.jlato.tree.expr.AssignExpr;
+import org.jlato.tree.expr.AssignOp;
+import org.jlato.tree.expr.BinaryExpr;
+import org.jlato.tree.expr.BinaryOp;
+import org.jlato.tree.expr.CastExpr;
+import org.jlato.tree.expr.ClassExpr;
+import org.jlato.tree.expr.ConditionalExpr;
+import org.jlato.tree.expr.Expr;
+import org.jlato.tree.expr.FieldAccessExpr;
+import org.jlato.tree.expr.InstanceOfExpr;
+import org.jlato.tree.expr.LambdaExpr;
+import org.jlato.tree.expr.MarkerAnnotationExpr;
+import org.jlato.tree.expr.MemberValuePair;
+import org.jlato.tree.expr.MethodInvocationExpr;
+import org.jlato.tree.expr.MethodReferenceExpr;
+import org.jlato.tree.expr.NormalAnnotationExpr;
+import org.jlato.tree.expr.ObjectCreationExpr;
+import org.jlato.tree.expr.ParenthesizedExpr;
+import org.jlato.tree.expr.SingleMemberAnnotationExpr;
+import org.jlato.tree.expr.SuperExpr;
+import org.jlato.tree.expr.ThisExpr;
+import org.jlato.tree.expr.TypeExpr;
+import org.jlato.tree.expr.UnaryExpr;
+import org.jlato.tree.expr.UnaryOp;
+import org.jlato.tree.expr.VariableDeclarationExpr;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.name.QualifiedName;
+import org.jlato.tree.stmt.AssertStmt;
+import org.jlato.tree.stmt.BlockStmt;
+import org.jlato.tree.stmt.BreakStmt;
+import org.jlato.tree.stmt.CatchClause;
+import org.jlato.tree.stmt.ContinueStmt;
+import org.jlato.tree.stmt.DoStmt;
+import org.jlato.tree.stmt.ExplicitConstructorInvocationStmt;
+import org.jlato.tree.stmt.ExpressionStmt;
+import org.jlato.tree.stmt.ForStmt;
+import org.jlato.tree.stmt.ForeachStmt;
+import org.jlato.tree.stmt.IfStmt;
+import org.jlato.tree.stmt.LabeledStmt;
+import org.jlato.tree.stmt.ReturnStmt;
+import org.jlato.tree.stmt.Stmt;
+import org.jlato.tree.stmt.SwitchCase;
+import org.jlato.tree.stmt.SwitchStmt;
+import org.jlato.tree.stmt.SynchronizedStmt;
+import org.jlato.tree.stmt.ThrowStmt;
+import org.jlato.tree.stmt.TryStmt;
+import org.jlato.tree.stmt.TypeDeclarationStmt;
+import org.jlato.tree.stmt.WhileStmt;
+import org.jlato.tree.type.ArrayType;
+import org.jlato.tree.type.IntersectionType;
+import org.jlato.tree.type.Primitive;
+import org.jlato.tree.type.PrimitiveType;
+import org.jlato.tree.type.QualifiedType;
+import org.jlato.tree.type.ReferenceType;
+import org.jlato.tree.type.Type;
+import org.jlato.tree.type.UnionType;
+import org.jlato.tree.type.WildcardType;
 import org.jlato.unit.util.Arbitrary;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -26,6 +109,8 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(modifiers, t.modifiers());
 			Assert.assertEquals(name, t.name());
 			Assert.assertEquals(members, t.members());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -44,6 +129,8 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(name, t.name());
 			Assert.assertEquals(dims, t.dims());
 			Assert.assertEquals(defaultValue, t.defaultValue());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -74,6 +161,8 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(extendsClause, t.extendsClause());
 			Assert.assertEquals(implementsClause, t.implementsClause());
 			Assert.assertEquals(members, t.members());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -108,6 +197,8 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(params, t.params());
 			Assert.assertEquals(throwsClause, t.throwsClause());
 			Assert.assertEquals(body, t.body());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -124,6 +215,8 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(name, t.name());
 			Assert.assertEquals(args, t.args());
 			Assert.assertEquals(classBody, t.classBody());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -144,6 +237,8 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(enumConstants, t.enumConstants());
 			Assert.assertEquals(trailingComma, t.trailingComma());
 			Assert.assertEquals(members, t.members());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -218,6 +313,8 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(typeParams, t.typeParams());
 			Assert.assertEquals(extendsClause, t.extendsClause());
 			Assert.assertEquals(members, t.members());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -256,6 +353,8 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(dims, t.dims());
 			Assert.assertEquals(throwsClause, t.throwsClause());
 			Assert.assertEquals(body, t.body());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -292,6 +391,8 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(annotations, t.annotations());
 			Assert.assertEquals(name, t.name());
 			Assert.assertEquals(bounds, t.bounds());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -316,6 +417,8 @@ public class TreesAccessorsTest {
 			VariableDeclaratorId t = Trees.variableDeclaratorId().withName(name).withDims(dims);
 			Assert.assertEquals(name, t.name());
 			Assert.assertEquals(dims, t.dims());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -444,6 +547,8 @@ public class TreesAccessorsTest {
 			FieldAccessExpr t = Trees.fieldAccessExpr().withScope(scope).withName(name);
 			Assert.assertEquals(scope, t.scope());
 			Assert.assertEquals(name, t.name());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -492,6 +597,8 @@ public class TreesAccessorsTest {
 			MemberValuePair t = Trees.memberValuePair().withName(name).withValue(value);
 			Assert.assertEquals(name, t.name());
 			Assert.assertEquals(value, t.value());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -508,6 +615,8 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(typeArgs, t.typeArgs());
 			Assert.assertEquals(name, t.name());
 			Assert.assertEquals(args, t.args());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
@@ -521,6 +630,8 @@ public class TreesAccessorsTest {
 			MethodReferenceExpr t = Trees.methodReferenceExpr().withScope(scope).withTypeArgs(typeArgs).withName(name);
 			Assert.assertEquals(scope, t.scope());
 			Assert.assertEquals(typeArgs, t.typeArgs());
+			Assert.assertEquals(name, t.name());
+			t = t.withName(name.id());
 			Assert.assertEquals(name, t.name());
 		}
 	}
@@ -647,6 +758,8 @@ public class TreesAccessorsTest {
 			Name name = arbitrary.arbitraryName();
 			QualifiedName t = Trees.qualifiedName().withQualifier(qualifier).withName(name);
 			Assert.assertEquals(qualifier, t.qualifier());
+			Assert.assertEquals(name, t.name());
+			t = t.withName(name.id());
 			Assert.assertEquals(name, t.name());
 		}
 	}
@@ -796,6 +909,8 @@ public class TreesAccessorsTest {
 			LabeledStmt t = Trees.labeledStmt().withLabel(label).withStmt(stmt);
 			Assert.assertEquals(label, t.label());
 			Assert.assertEquals(stmt, t.stmt());
+			t = t.withLabel(label.id());
+			Assert.assertEquals(label, t.label());
 		}
 	}
 
@@ -942,6 +1057,8 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(scope, t.scope());
 			Assert.assertEquals(name, t.name());
 			Assert.assertEquals(typeArgs, t.typeArgs());
+			t = t.withName(name.id());
+			Assert.assertEquals(name, t.name());
 		}
 	}
 
