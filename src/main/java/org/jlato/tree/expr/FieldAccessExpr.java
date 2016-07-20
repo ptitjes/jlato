@@ -34,6 +34,21 @@ public interface FieldAccessExpr extends Expr, TreeCombinators<FieldAccessExpr> 
 	FieldAccessExpr withScope(Mutation<NodeOption<Expr>> mutation);
 
 	/**
+	 * Replaces the scope of this field access expression.
+	 *
+	 * @param scope the replacement for the scope of this field access expression.
+	 * @return the resulting mutated field access expression.
+	 */
+	FieldAccessExpr withScope(Expr scope);
+
+	/**
+	 * Replaces the scope of this field access expression.
+	 *
+	 * @return the resulting mutated field access expression.
+	 */
+	FieldAccessExpr withNoScope();
+
+	/**
 	 * Returns the name of this field access expression.
 	 *
 	 * @return the name of this field access expression.

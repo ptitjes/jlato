@@ -113,6 +113,21 @@ public interface ClassDecl extends TypeDecl, TreeCombinators<ClassDecl> {
 	ClassDecl withExtendsClause(Mutation<NodeOption<QualifiedType>> mutation);
 
 	/**
+	 * Replaces the 'extends' clause of this class declaration.
+	 *
+	 * @param extendsClause the replacement for the 'extends' clause of this class declaration.
+	 * @return the resulting mutated class declaration.
+	 */
+	ClassDecl withExtendsClause(QualifiedType extendsClause);
+
+	/**
+	 * Replaces the 'extends' clause of this class declaration.
+	 *
+	 * @return the resulting mutated class declaration.
+	 */
+	ClassDecl withNoExtendsClause();
+
+	/**
 	 * Returns the 'implements' clause of this class declaration.
 	 *
 	 * @return the 'implements' clause of this class declaration.

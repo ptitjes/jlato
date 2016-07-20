@@ -6,6 +6,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.ThisExpr;
 import org.jlato.util.Mutation;
@@ -69,5 +70,24 @@ public class TDThisExpr extends TDTree<SThisExpr, Expr, ThisExpr> implements Thi
 	 */
 	public ThisExpr withClassExpr(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(SThisExpr.CLASS_EXPR, mutation);
+	}
+
+	/**
+	 * Replaces the 'class' expression of this 'this' expression.
+	 *
+	 * @param classExpr the replacement for the 'class' expression of this 'this' expression.
+	 * @return the resulting mutated 'this' expression.
+	 */
+	public ThisExpr withClassExpr(Expr classExpr) {
+		return location.safeTraversalReplace(SThisExpr.CLASS_EXPR, Trees.some(classExpr));
+	}
+
+	/**
+	 * Replaces the 'class' expression of this 'this' expression.
+	 *
+	 * @return the resulting mutated 'this' expression.
+	 */
+	public ThisExpr withNoClassExpr() {
+		return location.safeTraversalReplace(SThisExpr.CLASS_EXPR, Trees.<Expr>none());
 	}
 }

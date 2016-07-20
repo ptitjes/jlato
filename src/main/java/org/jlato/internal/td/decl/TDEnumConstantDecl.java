@@ -150,6 +150,25 @@ public class TDEnumConstantDecl extends TDTree<SEnumConstantDecl, MemberDecl, En
 	}
 
 	/**
+	 * Replaces the args of this enum constant declaration.
+	 *
+	 * @param args the replacement for the args of this enum constant declaration.
+	 * @return the resulting mutated enum constant declaration.
+	 */
+	public EnumConstantDecl withArgs(NodeList<Expr> args) {
+		return location.safeTraversalReplace(SEnumConstantDecl.ARGS, Trees.some(args));
+	}
+
+	/**
+	 * Replaces the args of this enum constant declaration.
+	 *
+	 * @return the resulting mutated enum constant declaration.
+	 */
+	public EnumConstantDecl withNoArgs() {
+		return location.safeTraversalReplace(SEnumConstantDecl.ARGS, Trees.<NodeList<Expr>>none());
+	}
+
+	/**
 	 * Returns the class body of this enum constant declaration.
 	 *
 	 * @return the class body of this enum constant declaration.
@@ -176,5 +195,24 @@ public class TDEnumConstantDecl extends TDTree<SEnumConstantDecl, MemberDecl, En
 	 */
 	public EnumConstantDecl withClassBody(Mutation<NodeOption<NodeList<MemberDecl>>> mutation) {
 		return location.safeTraversalMutate(SEnumConstantDecl.CLASS_BODY, mutation);
+	}
+
+	/**
+	 * Replaces the class body of this enum constant declaration.
+	 *
+	 * @param classBody the replacement for the class body of this enum constant declaration.
+	 * @return the resulting mutated enum constant declaration.
+	 */
+	public EnumConstantDecl withClassBody(NodeList<MemberDecl> classBody) {
+		return location.safeTraversalReplace(SEnumConstantDecl.CLASS_BODY, Trees.some(classBody));
+	}
+
+	/**
+	 * Replaces the class body of this enum constant declaration.
+	 *
+	 * @return the resulting mutated enum constant declaration.
+	 */
+	public EnumConstantDecl withNoClassBody() {
+		return location.safeTraversalReplace(SEnumConstantDecl.CLASS_BODY, Trees.<NodeList<MemberDecl>>none());
 	}
 }

@@ -9,6 +9,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.VariableDeclarationExpr;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.stmt.CatchClause;
@@ -195,5 +196,24 @@ public class TDTryStmt extends TDTree<STryStmt, Stmt, TryStmt> implements TryStm
 	 */
 	public TryStmt withFinallyBlock(Mutation<NodeOption<BlockStmt>> mutation) {
 		return location.safeTraversalMutate(STryStmt.FINALLY_BLOCK, mutation);
+	}
+
+	/**
+	 * Replaces the 'finally' block of this 'try' statement.
+	 *
+	 * @param finallyBlock the replacement for the 'finally' block of this 'try' statement.
+	 * @return the resulting mutated 'try' statement.
+	 */
+	public TryStmt withFinallyBlock(BlockStmt finallyBlock) {
+		return location.safeTraversalReplace(STryStmt.FINALLY_BLOCK, Trees.some(finallyBlock));
+	}
+
+	/**
+	 * Replaces the 'finally' block of this 'try' statement.
+	 *
+	 * @return the resulting mutated 'try' statement.
+	 */
+	public TryStmt withNoFinallyBlock() {
+		return location.safeTraversalReplace(STryStmt.FINALLY_BLOCK, Trees.<BlockStmt>none());
 	}
 }

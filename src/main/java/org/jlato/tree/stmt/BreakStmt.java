@@ -32,4 +32,19 @@ public interface BreakStmt extends Stmt, TreeCombinators<BreakStmt> {
 	 * @return the resulting mutated 'break' statement.
 	 */
 	BreakStmt withId(Mutation<NodeOption<Name>> mutation);
+
+	/**
+	 * Replaces the identifier of this 'break' statement.
+	 *
+	 * @param id the replacement for the identifier of this 'break' statement.
+	 * @return the resulting mutated 'break' statement.
+	 */
+	BreakStmt withId(Name id);
+
+	/**
+	 * Replaces the identifier of this 'break' statement.
+	 *
+	 * @return the resulting mutated 'break' statement.
+	 */
+	BreakStmt withNoId();
 }

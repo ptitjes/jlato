@@ -6,6 +6,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.ReturnStmt;
 import org.jlato.tree.stmt.Stmt;
@@ -70,5 +71,24 @@ public class TDReturnStmt extends TDTree<SReturnStmt, Stmt, ReturnStmt> implemen
 	 */
 	public ReturnStmt withExpr(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(SReturnStmt.EXPR, mutation);
+	}
+
+	/**
+	 * Replaces the expression of this 'return' statement.
+	 *
+	 * @param expr the replacement for the expression of this 'return' statement.
+	 * @return the resulting mutated 'return' statement.
+	 */
+	public ReturnStmt withExpr(Expr expr) {
+		return location.safeTraversalReplace(SReturnStmt.EXPR, Trees.some(expr));
+	}
+
+	/**
+	 * Replaces the expression of this 'return' statement.
+	 *
+	 * @return the resulting mutated 'return' statement.
+	 */
+	public ReturnStmt withNoExpr() {
+		return location.safeTraversalReplace(SReturnStmt.EXPR, Trees.<Expr>none());
 	}
 }

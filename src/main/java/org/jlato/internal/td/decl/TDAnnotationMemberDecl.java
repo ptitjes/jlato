@@ -210,4 +210,23 @@ public class TDAnnotationMemberDecl extends TDTree<SAnnotationMemberDecl, Member
 	public AnnotationMemberDecl withDefaultValue(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(SAnnotationMemberDecl.DEFAULT_VALUE, mutation);
 	}
+
+	/**
+	 * Replaces the default value of this annotation type member declaration.
+	 *
+	 * @param defaultValue the replacement for the default value of this annotation type member declaration.
+	 * @return the resulting mutated annotation type member declaration.
+	 */
+	public AnnotationMemberDecl withDefaultValue(Expr defaultValue) {
+		return location.safeTraversalReplace(SAnnotationMemberDecl.DEFAULT_VALUE, Trees.some(defaultValue));
+	}
+
+	/**
+	 * Replaces the default value of this annotation type member declaration.
+	 *
+	 * @return the resulting mutated annotation type member declaration.
+	 */
+	public AnnotationMemberDecl withNoDefaultValue() {
+		return location.safeTraversalReplace(SAnnotationMemberDecl.DEFAULT_VALUE, Trees.<Expr>none());
+	}
 }

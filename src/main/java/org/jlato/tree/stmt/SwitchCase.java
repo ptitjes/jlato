@@ -36,6 +36,21 @@ public interface SwitchCase extends Node, TreeCombinators<SwitchCase> {
 	SwitchCase withLabel(Mutation<NodeOption<Expr>> mutation);
 
 	/**
+	 * Replaces the label of this 'switch' case.
+	 *
+	 * @param label the replacement for the label of this 'switch' case.
+	 * @return the resulting mutated 'switch' case.
+	 */
+	SwitchCase withLabel(Expr label);
+
+	/**
+	 * Replaces the label of this 'switch' case.
+	 *
+	 * @return the resulting mutated 'switch' case.
+	 */
+	SwitchCase withNoLabel();
+
+	/**
 	 * Returns the statements of this 'switch' case.
 	 *
 	 * @return the statements of this 'switch' case.

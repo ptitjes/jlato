@@ -7,6 +7,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.AssertStmt;
 import org.jlato.tree.stmt.Stmt;
@@ -101,5 +102,24 @@ public class TDAssertStmt extends TDTree<SAssertStmt, Stmt, AssertStmt> implemen
 	 */
 	public AssertStmt withMsg(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(SAssertStmt.MSG, mutation);
+	}
+
+	/**
+	 * Replaces the msg of this 'assert' statement.
+	 *
+	 * @param msg the replacement for the msg of this 'assert' statement.
+	 * @return the resulting mutated 'assert' statement.
+	 */
+	public AssertStmt withMsg(Expr msg) {
+		return location.safeTraversalReplace(SAssertStmt.MSG, Trees.some(msg));
+	}
+
+	/**
+	 * Replaces the msg of this 'assert' statement.
+	 *
+	 * @return the resulting mutated 'assert' statement.
+	 */
+	public AssertStmt withNoMsg() {
+		return location.safeTraversalReplace(SAssertStmt.MSG, Trees.<Expr>none());
 	}
 }

@@ -8,6 +8,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.ExplicitConstructorInvocationStmt;
 import org.jlato.tree.stmt.Stmt;
@@ -134,6 +135,25 @@ public class TDExplicitConstructorInvocationStmt extends TDTree<SExplicitConstru
 	 */
 	public ExplicitConstructorInvocationStmt withExpr(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(SExplicitConstructorInvocationStmt.EXPR, mutation);
+	}
+
+	/**
+	 * Replaces the expression of this explicit constructor invocation statement.
+	 *
+	 * @param expr the replacement for the expression of this explicit constructor invocation statement.
+	 * @return the resulting mutated explicit constructor invocation statement.
+	 */
+	public ExplicitConstructorInvocationStmt withExpr(Expr expr) {
+		return location.safeTraversalReplace(SExplicitConstructorInvocationStmt.EXPR, Trees.some(expr));
+	}
+
+	/**
+	 * Replaces the expression of this explicit constructor invocation statement.
+	 *
+	 * @return the resulting mutated explicit constructor invocation statement.
+	 */
+	public ExplicitConstructorInvocationStmt withNoExpr() {
+		return location.safeTraversalReplace(SExplicitConstructorInvocationStmt.EXPR, Trees.<Expr>none());
 	}
 
 	/**

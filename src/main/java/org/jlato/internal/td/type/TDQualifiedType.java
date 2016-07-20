@@ -111,6 +111,25 @@ public class TDQualifiedType extends TDTree<SQualifiedType, ReferenceType, Quali
 	}
 
 	/**
+	 * Replaces the scope of this qualified type.
+	 *
+	 * @param scope the replacement for the scope of this qualified type.
+	 * @return the resulting mutated qualified type.
+	 */
+	public QualifiedType withScope(QualifiedType scope) {
+		return location.safeTraversalReplace(SQualifiedType.SCOPE, Trees.some(scope));
+	}
+
+	/**
+	 * Replaces the scope of this qualified type.
+	 *
+	 * @return the resulting mutated qualified type.
+	 */
+	public QualifiedType withNoScope() {
+		return location.safeTraversalReplace(SQualifiedType.SCOPE, Trees.<QualifiedType>none());
+	}
+
+	/**
 	 * Returns the name of this qualified type.
 	 *
 	 * @return the name of this qualified type.
@@ -176,5 +195,24 @@ public class TDQualifiedType extends TDTree<SQualifiedType, ReferenceType, Quali
 	 */
 	public QualifiedType withTypeArgs(Mutation<NodeOption<NodeList<Type>>> mutation) {
 		return location.safeTraversalMutate(SQualifiedType.TYPE_ARGS, mutation);
+	}
+
+	/**
+	 * Replaces the type args of this qualified type.
+	 *
+	 * @param typeArgs the replacement for the type args of this qualified type.
+	 * @return the resulting mutated qualified type.
+	 */
+	public QualifiedType withTypeArgs(NodeList<Type> typeArgs) {
+		return location.safeTraversalReplace(SQualifiedType.TYPE_ARGS, Trees.some(typeArgs));
+	}
+
+	/**
+	 * Replaces the type args of this qualified type.
+	 *
+	 * @return the resulting mutated qualified type.
+	 */
+	public QualifiedType withNoTypeArgs() {
+		return location.safeTraversalReplace(SQualifiedType.TYPE_ARGS, Trees.<NodeList<Type>>none());
 	}
 }

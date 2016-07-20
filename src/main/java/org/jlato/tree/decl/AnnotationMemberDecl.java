@@ -135,4 +135,19 @@ public interface AnnotationMemberDecl extends MemberDecl, TreeCombinators<Annota
 	 * @return the resulting mutated annotation type member declaration.
 	 */
 	AnnotationMemberDecl withDefaultValue(Mutation<NodeOption<Expr>> mutation);
+
+	/**
+	 * Replaces the default value of this annotation type member declaration.
+	 *
+	 * @param defaultValue the replacement for the default value of this annotation type member declaration.
+	 * @return the resulting mutated annotation type member declaration.
+	 */
+	AnnotationMemberDecl withDefaultValue(Expr defaultValue);
+
+	/**
+	 * Replaces the default value of this annotation type member declaration.
+	 *
+	 * @return the resulting mutated annotation type member declaration.
+	 */
+	AnnotationMemberDecl withNoDefaultValue();
 }

@@ -183,6 +183,25 @@ public class TDClassDecl extends TDTree<SClassDecl, TypeDecl, ClassDecl> impleme
 	}
 
 	/**
+	 * Replaces the 'extends' clause of this class declaration.
+	 *
+	 * @param extendsClause the replacement for the 'extends' clause of this class declaration.
+	 * @return the resulting mutated class declaration.
+	 */
+	public ClassDecl withExtendsClause(QualifiedType extendsClause) {
+		return location.safeTraversalReplace(SClassDecl.EXTENDS_CLAUSE, Trees.some(extendsClause));
+	}
+
+	/**
+	 * Replaces the 'extends' clause of this class declaration.
+	 *
+	 * @return the resulting mutated class declaration.
+	 */
+	public ClassDecl withNoExtendsClause() {
+		return location.safeTraversalReplace(SClassDecl.EXTENDS_CLAUSE, Trees.<QualifiedType>none());
+	}
+
+	/**
 	 * Returns the 'implements' clause of this class declaration.
 	 *
 	 * @return the 'implements' clause of this class declaration.

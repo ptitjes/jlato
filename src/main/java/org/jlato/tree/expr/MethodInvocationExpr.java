@@ -36,6 +36,21 @@ public interface MethodInvocationExpr extends Expr, TreeCombinators<MethodInvoca
 	MethodInvocationExpr withScope(Mutation<NodeOption<Expr>> mutation);
 
 	/**
+	 * Replaces the scope of this method invocation expression.
+	 *
+	 * @param scope the replacement for the scope of this method invocation expression.
+	 * @return the resulting mutated method invocation expression.
+	 */
+	MethodInvocationExpr withScope(Expr scope);
+
+	/**
+	 * Replaces the scope of this method invocation expression.
+	 *
+	 * @return the resulting mutated method invocation expression.
+	 */
+	MethodInvocationExpr withNoScope();
+
+	/**
 	 * Returns the type args of this method invocation expression.
 	 *
 	 * @return the type args of this method invocation expression.

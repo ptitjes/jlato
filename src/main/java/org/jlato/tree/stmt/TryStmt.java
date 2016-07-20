@@ -125,4 +125,19 @@ public interface TryStmt extends Stmt, TreeCombinators<TryStmt> {
 	 * @return the resulting mutated 'try' statement.
 	 */
 	TryStmt withFinallyBlock(Mutation<NodeOption<BlockStmt>> mutation);
+
+	/**
+	 * Replaces the 'finally' block of this 'try' statement.
+	 *
+	 * @param finallyBlock the replacement for the 'finally' block of this 'try' statement.
+	 * @return the resulting mutated 'try' statement.
+	 */
+	TryStmt withFinallyBlock(BlockStmt finallyBlock);
+
+	/**
+	 * Replaces the 'finally' block of this 'try' statement.
+	 *
+	 * @return the resulting mutated 'try' statement.
+	 */
+	TryStmt withNoFinallyBlock();
 }

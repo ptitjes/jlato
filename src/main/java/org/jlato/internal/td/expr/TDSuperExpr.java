@@ -6,6 +6,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.SuperExpr;
 import org.jlato.util.Mutation;
@@ -69,5 +70,24 @@ public class TDSuperExpr extends TDTree<SSuperExpr, Expr, SuperExpr> implements 
 	 */
 	public SuperExpr withClassExpr(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(SSuperExpr.CLASS_EXPR, mutation);
+	}
+
+	/**
+	 * Replaces the 'class' expression of this 'super' expression.
+	 *
+	 * @param classExpr the replacement for the 'class' expression of this 'super' expression.
+	 * @return the resulting mutated 'super' expression.
+	 */
+	public SuperExpr withClassExpr(Expr classExpr) {
+		return location.safeTraversalReplace(SSuperExpr.CLASS_EXPR, Trees.some(classExpr));
+	}
+
+	/**
+	 * Replaces the 'class' expression of this 'super' expression.
+	 *
+	 * @return the resulting mutated 'super' expression.
+	 */
+	public SuperExpr withNoClassExpr() {
+		return location.safeTraversalReplace(SSuperExpr.CLASS_EXPR, Trees.<Expr>none());
 	}
 }

@@ -78,4 +78,19 @@ public interface IfStmt extends Stmt, TreeCombinators<IfStmt> {
 	 * @return the resulting mutated 'if' statement.
 	 */
 	IfStmt withElseStmt(Mutation<NodeOption<Stmt>> mutation);
+
+	/**
+	 * Replaces the else statement of this 'if' statement.
+	 *
+	 * @param elseStmt the replacement for the else statement of this 'if' statement.
+	 * @return the resulting mutated 'if' statement.
+	 */
+	IfStmt withElseStmt(Stmt elseStmt);
+
+	/**
+	 * Replaces the else statement of this 'if' statement.
+	 *
+	 * @return the resulting mutated 'if' statement.
+	 */
+	IfStmt withNoElseStmt();
 }

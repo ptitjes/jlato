@@ -37,6 +37,21 @@ public interface ObjectCreationExpr extends Expr, TreeCombinators<ObjectCreation
 	ObjectCreationExpr withScope(Mutation<NodeOption<Expr>> mutation);
 
 	/**
+	 * Replaces the scope of this object creation expression.
+	 *
+	 * @param scope the replacement for the scope of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
+	ObjectCreationExpr withScope(Expr scope);
+
+	/**
+	 * Replaces the scope of this object creation expression.
+	 *
+	 * @return the resulting mutated object creation expression.
+	 */
+	ObjectCreationExpr withNoScope();
+
+	/**
 	 * Returns the type args of this object creation expression.
 	 *
 	 * @return the type args of this object creation expression.
@@ -127,4 +142,19 @@ public interface ObjectCreationExpr extends Expr, TreeCombinators<ObjectCreation
 	 * @return the resulting mutated object creation expression.
 	 */
 	ObjectCreationExpr withBody(Mutation<NodeOption<NodeList<MemberDecl>>> mutation);
+
+	/**
+	 * Replaces the body of this object creation expression.
+	 *
+	 * @param body the replacement for the body of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
+	ObjectCreationExpr withBody(NodeList<MemberDecl> body);
+
+	/**
+	 * Replaces the body of this object creation expression.
+	 *
+	 * @return the resulting mutated object creation expression.
+	 */
+	ObjectCreationExpr withNoBody();
 }

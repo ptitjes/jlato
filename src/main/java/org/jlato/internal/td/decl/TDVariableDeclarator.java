@@ -8,6 +8,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.VariableDeclarator;
 import org.jlato.tree.decl.VariableDeclaratorId;
 import org.jlato.tree.expr.Expr;
@@ -102,5 +103,24 @@ public class TDVariableDeclarator extends TDTree<SVariableDeclarator, Node, Vari
 	 */
 	public VariableDeclarator withInit(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(SVariableDeclarator.INIT, mutation);
+	}
+
+	/**
+	 * Replaces the init of this variable declarator.
+	 *
+	 * @param init the replacement for the init of this variable declarator.
+	 * @return the resulting mutated variable declarator.
+	 */
+	public VariableDeclarator withInit(Expr init) {
+		return location.safeTraversalReplace(SVariableDeclarator.INIT, Trees.some(init));
+	}
+
+	/**
+	 * Replaces the init of this variable declarator.
+	 *
+	 * @return the resulting mutated variable declarator.
+	 */
+	public VariableDeclarator withNoInit() {
+		return location.safeTraversalReplace(SVariableDeclarator.INIT, Trees.<Expr>none());
 	}
 }

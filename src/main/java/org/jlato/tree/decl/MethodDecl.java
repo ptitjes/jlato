@@ -205,4 +205,19 @@ public interface MethodDecl extends MemberDecl, TreeCombinators<MethodDecl> {
 	 * @return the resulting mutated method declaration.
 	 */
 	MethodDecl withBody(Mutation<NodeOption<BlockStmt>> mutation);
+
+	/**
+	 * Replaces the body of this method declaration.
+	 *
+	 * @param body the replacement for the body of this method declaration.
+	 * @return the resulting mutated method declaration.
+	 */
+	MethodDecl withBody(BlockStmt body);
+
+	/**
+	 * Replaces the body of this method declaration.
+	 *
+	 * @return the resulting mutated method declaration.
+	 */
+	MethodDecl withNoBody();
 }

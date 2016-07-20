@@ -31,4 +31,19 @@ public interface ThisExpr extends Expr, TreeCombinators<ThisExpr> {
 	 * @return the resulting mutated 'this' expression.
 	 */
 	ThisExpr withClassExpr(Mutation<NodeOption<Expr>> mutation);
+
+	/**
+	 * Replaces the 'class' expression of this 'this' expression.
+	 *
+	 * @param classExpr the replacement for the 'class' expression of this 'this' expression.
+	 * @return the resulting mutated 'this' expression.
+	 */
+	ThisExpr withClassExpr(Expr classExpr);
+
+	/**
+	 * Replaces the 'class' expression of this 'this' expression.
+	 *
+	 * @return the resulting mutated 'this' expression.
+	 */
+	ThisExpr withNoClassExpr();
 }

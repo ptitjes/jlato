@@ -76,6 +76,25 @@ public class TDFieldAccessExpr extends TDTree<SFieldAccessExpr, Expr, FieldAcces
 	}
 
 	/**
+	 * Replaces the scope of this field access expression.
+	 *
+	 * @param scope the replacement for the scope of this field access expression.
+	 * @return the resulting mutated field access expression.
+	 */
+	public FieldAccessExpr withScope(Expr scope) {
+		return location.safeTraversalReplace(SFieldAccessExpr.SCOPE, Trees.some(scope));
+	}
+
+	/**
+	 * Replaces the scope of this field access expression.
+	 *
+	 * @return the resulting mutated field access expression.
+	 */
+	public FieldAccessExpr withNoScope() {
+		return location.safeTraversalReplace(SFieldAccessExpr.SCOPE, Trees.<Expr>none());
+	}
+
+	/**
 	 * Returns the name of this field access expression.
 	 *
 	 * @return the name of this field access expression.

@@ -8,6 +8,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.type.ReferenceType;
 import org.jlato.tree.type.Type;
@@ -107,6 +108,25 @@ public class TDWildcardType extends TDTree<SWildcardType, Type, WildcardType> im
 	}
 
 	/**
+	 * Replaces the upper bound of this wildcard type.
+	 *
+	 * @param ext the replacement for the upper bound of this wildcard type.
+	 * @return the resulting mutated wildcard type.
+	 */
+	public WildcardType withExt(ReferenceType ext) {
+		return location.safeTraversalReplace(SWildcardType.EXT, Trees.some(ext));
+	}
+
+	/**
+	 * Replaces the upper bound of this wildcard type.
+	 *
+	 * @return the resulting mutated wildcard type.
+	 */
+	public WildcardType withNoExt() {
+		return location.safeTraversalReplace(SWildcardType.EXT, Trees.<ReferenceType>none());
+	}
+
+	/**
 	 * Returns the lower bound of this wildcard type.
 	 *
 	 * @return the lower bound of this wildcard type.
@@ -133,5 +153,24 @@ public class TDWildcardType extends TDTree<SWildcardType, Type, WildcardType> im
 	 */
 	public WildcardType withSup(Mutation<NodeOption<ReferenceType>> mutation) {
 		return location.safeTraversalMutate(SWildcardType.SUP, mutation);
+	}
+
+	/**
+	 * Replaces the lower bound of this wildcard type.
+	 *
+	 * @param sup the replacement for the lower bound of this wildcard type.
+	 * @return the resulting mutated wildcard type.
+	 */
+	public WildcardType withSup(ReferenceType sup) {
+		return location.safeTraversalReplace(SWildcardType.SUP, Trees.some(sup));
+	}
+
+	/**
+	 * Replaces the lower bound of this wildcard type.
+	 *
+	 * @return the resulting mutated wildcard type.
+	 */
+	public WildcardType withNoSup() {
+		return location.safeTraversalReplace(SWildcardType.SUP, Trees.<ReferenceType>none());
 	}
 }

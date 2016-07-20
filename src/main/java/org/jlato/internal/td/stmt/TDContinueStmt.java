@@ -6,6 +6,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.ContinueStmt;
 import org.jlato.tree.stmt.Stmt;
@@ -70,5 +71,24 @@ public class TDContinueStmt extends TDTree<SContinueStmt, Stmt, ContinueStmt> im
 	 */
 	public ContinueStmt withId(Mutation<NodeOption<Name>> mutation) {
 		return location.safeTraversalMutate(SContinueStmt.ID, mutation);
+	}
+
+	/**
+	 * Replaces the identifier of this 'continue' statement.
+	 *
+	 * @param id the replacement for the identifier of this 'continue' statement.
+	 * @return the resulting mutated 'continue' statement.
+	 */
+	public ContinueStmt withId(Name id) {
+		return location.safeTraversalReplace(SContinueStmt.ID, Trees.some(id));
+	}
+
+	/**
+	 * Replaces the identifier of this 'continue' statement.
+	 *
+	 * @return the resulting mutated 'continue' statement.
+	 */
+	public ContinueStmt withNoId() {
+		return location.safeTraversalReplace(SContinueStmt.ID, Trees.<Name>none());
 	}
 }

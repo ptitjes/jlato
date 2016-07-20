@@ -90,6 +90,21 @@ public interface EnumConstantDecl extends MemberDecl, TreeCombinators<EnumConsta
 	EnumConstantDecl withArgs(Mutation<NodeOption<NodeList<Expr>>> mutation);
 
 	/**
+	 * Replaces the args of this enum constant declaration.
+	 *
+	 * @param args the replacement for the args of this enum constant declaration.
+	 * @return the resulting mutated enum constant declaration.
+	 */
+	EnumConstantDecl withArgs(NodeList<Expr> args);
+
+	/**
+	 * Replaces the args of this enum constant declaration.
+	 *
+	 * @return the resulting mutated enum constant declaration.
+	 */
+	EnumConstantDecl withNoArgs();
+
+	/**
 	 * Returns the class body of this enum constant declaration.
 	 *
 	 * @return the class body of this enum constant declaration.
@@ -111,4 +126,19 @@ public interface EnumConstantDecl extends MemberDecl, TreeCombinators<EnumConsta
 	 * @return the resulting mutated enum constant declaration.
 	 */
 	EnumConstantDecl withClassBody(Mutation<NodeOption<NodeList<MemberDecl>>> mutation);
+
+	/**
+	 * Replaces the class body of this enum constant declaration.
+	 *
+	 * @param classBody the replacement for the class body of this enum constant declaration.
+	 * @return the resulting mutated enum constant declaration.
+	 */
+	EnumConstantDecl withClassBody(NodeList<MemberDecl> classBody);
+
+	/**
+	 * Replaces the class body of this enum constant declaration.
+	 *
+	 * @return the resulting mutated enum constant declaration.
+	 */
+	EnumConstantDecl withNoClassBody();
 }

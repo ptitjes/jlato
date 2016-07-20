@@ -76,6 +76,25 @@ public class TDQualifiedName extends TDTree<SQualifiedName, Node, QualifiedName>
 	}
 
 	/**
+	 * Replaces the qualifier of this qualified name.
+	 *
+	 * @param qualifier the replacement for the qualifier of this qualified name.
+	 * @return the resulting mutated qualified name.
+	 */
+	public QualifiedName withQualifier(QualifiedName qualifier) {
+		return location.safeTraversalReplace(SQualifiedName.QUALIFIER, Trees.some(qualifier));
+	}
+
+	/**
+	 * Replaces the qualifier of this qualified name.
+	 *
+	 * @return the resulting mutated qualified name.
+	 */
+	public QualifiedName withNoQualifier() {
+		return location.safeTraversalReplace(SQualifiedName.QUALIFIER, Trees.<QualifiedName>none());
+	}
+
+	/**
 	 * Returns the name of this qualified name.
 	 *
 	 * @return the name of this qualified name.

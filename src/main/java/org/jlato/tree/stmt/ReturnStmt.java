@@ -32,4 +32,19 @@ public interface ReturnStmt extends Stmt, TreeCombinators<ReturnStmt> {
 	 * @return the resulting mutated 'return' statement.
 	 */
 	ReturnStmt withExpr(Mutation<NodeOption<Expr>> mutation);
+
+	/**
+	 * Replaces the expression of this 'return' statement.
+	 *
+	 * @param expr the replacement for the expression of this 'return' statement.
+	 * @return the resulting mutated 'return' statement.
+	 */
+	ReturnStmt withExpr(Expr expr);
+
+	/**
+	 * Replaces the expression of this 'return' statement.
+	 *
+	 * @return the resulting mutated 'return' statement.
+	 */
+	ReturnStmt withNoExpr();
 }

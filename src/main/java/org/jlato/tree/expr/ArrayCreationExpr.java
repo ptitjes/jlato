@@ -103,4 +103,19 @@ public interface ArrayCreationExpr extends Expr, TreeCombinators<ArrayCreationEx
 	 * @return the resulting mutated array creation expression.
 	 */
 	ArrayCreationExpr withInit(Mutation<NodeOption<ArrayInitializerExpr>> mutation);
+
+	/**
+	 * Replaces the init of this array creation expression.
+	 *
+	 * @param init the replacement for the init of this array creation expression.
+	 * @return the resulting mutated array creation expression.
+	 */
+	ArrayCreationExpr withInit(ArrayInitializerExpr init);
+
+	/**
+	 * Replaces the init of this array creation expression.
+	 *
+	 * @return the resulting mutated array creation expression.
+	 */
+	ArrayCreationExpr withNoInit();
 }

@@ -303,4 +303,23 @@ public class TDMethodDecl extends TDTree<SMethodDecl, MemberDecl, MethodDecl> im
 	public MethodDecl withBody(Mutation<NodeOption<BlockStmt>> mutation) {
 		return location.safeTraversalMutate(SMethodDecl.BODY, mutation);
 	}
+
+	/**
+	 * Replaces the body of this method declaration.
+	 *
+	 * @param body the replacement for the body of this method declaration.
+	 * @return the resulting mutated method declaration.
+	 */
+	public MethodDecl withBody(BlockStmt body) {
+		return location.safeTraversalReplace(SMethodDecl.BODY, Trees.some(body));
+	}
+
+	/**
+	 * Replaces the body of this method declaration.
+	 *
+	 * @return the resulting mutated method declaration.
+	 */
+	public MethodDecl withNoBody() {
+		return location.safeTraversalReplace(SMethodDecl.BODY, Trees.<BlockStmt>none());
+	}
 }

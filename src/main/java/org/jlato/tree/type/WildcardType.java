@@ -58,6 +58,21 @@ public interface WildcardType extends Type, TreeCombinators<WildcardType> {
 	WildcardType withExt(Mutation<NodeOption<ReferenceType>> mutation);
 
 	/**
+	 * Replaces the upper bound of this wildcard type.
+	 *
+	 * @param ext the replacement for the upper bound of this wildcard type.
+	 * @return the resulting mutated wildcard type.
+	 */
+	WildcardType withExt(ReferenceType ext);
+
+	/**
+	 * Replaces the upper bound of this wildcard type.
+	 *
+	 * @return the resulting mutated wildcard type.
+	 */
+	WildcardType withNoExt();
+
+	/**
 	 * Returns the lower bound of this wildcard type.
 	 *
 	 * @return the lower bound of this wildcard type.
@@ -79,4 +94,19 @@ public interface WildcardType extends Type, TreeCombinators<WildcardType> {
 	 * @return the resulting mutated wildcard type.
 	 */
 	WildcardType withSup(Mutation<NodeOption<ReferenceType>> mutation);
+
+	/**
+	 * Replaces the lower bound of this wildcard type.
+	 *
+	 * @param sup the replacement for the lower bound of this wildcard type.
+	 * @return the resulting mutated wildcard type.
+	 */
+	WildcardType withSup(ReferenceType sup);
+
+	/**
+	 * Replaces the lower bound of this wildcard type.
+	 *
+	 * @return the resulting mutated wildcard type.
+	 */
+	WildcardType withNoSup();
 }

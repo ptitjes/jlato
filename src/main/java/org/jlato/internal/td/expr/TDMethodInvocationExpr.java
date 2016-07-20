@@ -81,6 +81,25 @@ public class TDMethodInvocationExpr extends TDTree<SMethodInvocationExpr, Expr, 
 	}
 
 	/**
+	 * Replaces the scope of this method invocation expression.
+	 *
+	 * @param scope the replacement for the scope of this method invocation expression.
+	 * @return the resulting mutated method invocation expression.
+	 */
+	public MethodInvocationExpr withScope(Expr scope) {
+		return location.safeTraversalReplace(SMethodInvocationExpr.SCOPE, Trees.some(scope));
+	}
+
+	/**
+	 * Replaces the scope of this method invocation expression.
+	 *
+	 * @return the resulting mutated method invocation expression.
+	 */
+	public MethodInvocationExpr withNoScope() {
+		return location.safeTraversalReplace(SMethodInvocationExpr.SCOPE, Trees.<Expr>none());
+	}
+
+	/**
 	 * Returns the type args of this method invocation expression.
 	 *
 	 * @return the type args of this method invocation expression.

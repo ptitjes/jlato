@@ -6,6 +6,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BreakStmt;
 import org.jlato.tree.stmt.Stmt;
@@ -70,5 +71,24 @@ public class TDBreakStmt extends TDTree<SBreakStmt, Stmt, BreakStmt> implements 
 	 */
 	public BreakStmt withId(Mutation<NodeOption<Name>> mutation) {
 		return location.safeTraversalMutate(SBreakStmt.ID, mutation);
+	}
+
+	/**
+	 * Replaces the identifier of this 'break' statement.
+	 *
+	 * @param id the replacement for the identifier of this 'break' statement.
+	 * @return the resulting mutated 'break' statement.
+	 */
+	public BreakStmt withId(Name id) {
+		return location.safeTraversalReplace(SBreakStmt.ID, Trees.some(id));
+	}
+
+	/**
+	 * Replaces the identifier of this 'break' statement.
+	 *
+	 * @return the resulting mutated 'break' statement.
+	 */
+	public BreakStmt withNoId() {
+		return location.safeTraversalReplace(SBreakStmt.ID, Trees.<Name>none());
 	}
 }

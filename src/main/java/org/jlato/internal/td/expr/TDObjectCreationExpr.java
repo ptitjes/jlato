@@ -9,6 +9,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.MemberDecl;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.ObjectCreationExpr;
@@ -79,6 +80,25 @@ public class TDObjectCreationExpr extends TDTree<SObjectCreationExpr, Expr, Obje
 	 */
 	public ObjectCreationExpr withScope(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(SObjectCreationExpr.SCOPE, mutation);
+	}
+
+	/**
+	 * Replaces the scope of this object creation expression.
+	 *
+	 * @param scope the replacement for the scope of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
+	public ObjectCreationExpr withScope(Expr scope) {
+		return location.safeTraversalReplace(SObjectCreationExpr.SCOPE, Trees.some(scope));
+	}
+
+	/**
+	 * Replaces the scope of this object creation expression.
+	 *
+	 * @return the resulting mutated object creation expression.
+	 */
+	public ObjectCreationExpr withNoScope() {
+		return location.safeTraversalReplace(SObjectCreationExpr.SCOPE, Trees.<Expr>none());
 	}
 
 	/**
@@ -195,5 +215,24 @@ public class TDObjectCreationExpr extends TDTree<SObjectCreationExpr, Expr, Obje
 	 */
 	public ObjectCreationExpr withBody(Mutation<NodeOption<NodeList<MemberDecl>>> mutation) {
 		return location.safeTraversalMutate(SObjectCreationExpr.BODY, mutation);
+	}
+
+	/**
+	 * Replaces the body of this object creation expression.
+	 *
+	 * @param body the replacement for the body of this object creation expression.
+	 * @return the resulting mutated object creation expression.
+	 */
+	public ObjectCreationExpr withBody(NodeList<MemberDecl> body) {
+		return location.safeTraversalReplace(SObjectCreationExpr.BODY, Trees.some(body));
+	}
+
+	/**
+	 * Replaces the body of this object creation expression.
+	 *
+	 * @return the resulting mutated object creation expression.
+	 */
+	public ObjectCreationExpr withNoBody() {
+		return location.safeTraversalReplace(SObjectCreationExpr.BODY, Trees.<NodeList<MemberDecl>>none());
 	}
 }

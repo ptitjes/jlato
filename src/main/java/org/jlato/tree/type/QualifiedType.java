@@ -59,6 +59,21 @@ public interface QualifiedType extends ReferenceType, TreeCombinators<QualifiedT
 	QualifiedType withScope(Mutation<NodeOption<QualifiedType>> mutation);
 
 	/**
+	 * Replaces the scope of this qualified type.
+	 *
+	 * @param scope the replacement for the scope of this qualified type.
+	 * @return the resulting mutated qualified type.
+	 */
+	QualifiedType withScope(QualifiedType scope);
+
+	/**
+	 * Replaces the scope of this qualified type.
+	 *
+	 * @return the resulting mutated qualified type.
+	 */
+	QualifiedType withNoScope();
+
+	/**
 	 * Returns the name of this qualified type.
 	 *
 	 * @return the name of this qualified type.
@@ -111,4 +126,19 @@ public interface QualifiedType extends ReferenceType, TreeCombinators<QualifiedT
 	 * @return the resulting mutated qualified type.
 	 */
 	QualifiedType withTypeArgs(Mutation<NodeOption<NodeList<Type>>> mutation);
+
+	/**
+	 * Replaces the type args of this qualified type.
+	 *
+	 * @param typeArgs the replacement for the type args of this qualified type.
+	 * @return the resulting mutated qualified type.
+	 */
+	QualifiedType withTypeArgs(NodeList<Type> typeArgs);
+
+	/**
+	 * Replaces the type args of this qualified type.
+	 *
+	 * @return the resulting mutated qualified type.
+	 */
+	QualifiedType withNoTypeArgs();
 }

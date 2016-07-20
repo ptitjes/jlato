@@ -55,4 +55,19 @@ public interface AssertStmt extends Stmt, TreeCombinators<AssertStmt> {
 	 * @return the resulting mutated 'assert' statement.
 	 */
 	AssertStmt withMsg(Mutation<NodeOption<Expr>> mutation);
+
+	/**
+	 * Replaces the msg of this 'assert' statement.
+	 *
+	 * @param msg the replacement for the msg of this 'assert' statement.
+	 * @return the resulting mutated 'assert' statement.
+	 */
+	AssertStmt withMsg(Expr msg);
+
+	/**
+	 * Replaces the msg of this 'assert' statement.
+	 *
+	 * @return the resulting mutated 'assert' statement.
+	 */
+	AssertStmt withNoMsg();
 }

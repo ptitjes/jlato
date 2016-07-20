@@ -56,4 +56,19 @@ public interface VariableDeclarator extends Node, TreeCombinators<VariableDeclar
 	 * @return the resulting mutated variable declarator.
 	 */
 	VariableDeclarator withInit(Mutation<NodeOption<Expr>> mutation);
+
+	/**
+	 * Replaces the init of this variable declarator.
+	 *
+	 * @param init the replacement for the init of this variable declarator.
+	 * @return the resulting mutated variable declarator.
+	 */
+	VariableDeclarator withInit(Expr init);
+
+	/**
+	 * Replaces the init of this variable declarator.
+	 *
+	 * @return the resulting mutated variable declarator.
+	 */
+	VariableDeclarator withNoInit();
 }

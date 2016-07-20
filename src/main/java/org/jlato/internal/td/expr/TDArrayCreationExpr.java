@@ -9,6 +9,7 @@ import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.expr.ArrayCreationExpr;
 import org.jlato.tree.expr.ArrayDimExpr;
@@ -166,5 +167,24 @@ public class TDArrayCreationExpr extends TDTree<SArrayCreationExpr, Expr, ArrayC
 	 */
 	public ArrayCreationExpr withInit(Mutation<NodeOption<ArrayInitializerExpr>> mutation) {
 		return location.safeTraversalMutate(SArrayCreationExpr.INIT, mutation);
+	}
+
+	/**
+	 * Replaces the init of this array creation expression.
+	 *
+	 * @param init the replacement for the init of this array creation expression.
+	 * @return the resulting mutated array creation expression.
+	 */
+	public ArrayCreationExpr withInit(ArrayInitializerExpr init) {
+		return location.safeTraversalReplace(SArrayCreationExpr.INIT, Trees.some(init));
+	}
+
+	/**
+	 * Replaces the init of this array creation expression.
+	 *
+	 * @return the resulting mutated array creation expression.
+	 */
+	public ArrayCreationExpr withNoInit() {
+		return location.safeTraversalReplace(SArrayCreationExpr.INIT, Trees.<ArrayInitializerExpr>none());
 	}
 }

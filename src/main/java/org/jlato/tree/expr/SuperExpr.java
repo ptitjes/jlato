@@ -31,4 +31,19 @@ public interface SuperExpr extends Expr, TreeCombinators<SuperExpr> {
 	 * @return the resulting mutated 'super' expression.
 	 */
 	SuperExpr withClassExpr(Mutation<NodeOption<Expr>> mutation);
+
+	/**
+	 * Replaces the 'class' expression of this 'super' expression.
+	 *
+	 * @param classExpr the replacement for the 'class' expression of this 'super' expression.
+	 * @return the resulting mutated 'super' expression.
+	 */
+	SuperExpr withClassExpr(Expr classExpr);
+
+	/**
+	 * Replaces the 'class' expression of this 'super' expression.
+	 *
+	 * @return the resulting mutated 'super' expression.
+	 */
+	SuperExpr withNoClassExpr();
 }

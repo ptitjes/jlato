@@ -32,4 +32,19 @@ public interface ContinueStmt extends Stmt, TreeCombinators<ContinueStmt> {
 	 * @return the resulting mutated 'continue' statement.
 	 */
 	ContinueStmt withId(Mutation<NodeOption<Name>> mutation);
+
+	/**
+	 * Replaces the identifier of this 'continue' statement.
+	 *
+	 * @param id the replacement for the identifier of this 'continue' statement.
+	 * @return the resulting mutated 'continue' statement.
+	 */
+	ContinueStmt withId(Name id);
+
+	/**
+	 * Replaces the identifier of this 'continue' statement.
+	 *
+	 * @return the resulting mutated 'continue' statement.
+	 */
+	ContinueStmt withNoId();
 }

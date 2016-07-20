@@ -82,6 +82,21 @@ public interface ExplicitConstructorInvocationStmt extends Stmt, TreeCombinators
 	ExplicitConstructorInvocationStmt withExpr(Mutation<NodeOption<Expr>> mutation);
 
 	/**
+	 * Replaces the expression of this explicit constructor invocation statement.
+	 *
+	 * @param expr the replacement for the expression of this explicit constructor invocation statement.
+	 * @return the resulting mutated explicit constructor invocation statement.
+	 */
+	ExplicitConstructorInvocationStmt withExpr(Expr expr);
+
+	/**
+	 * Replaces the expression of this explicit constructor invocation statement.
+	 *
+	 * @return the resulting mutated explicit constructor invocation statement.
+	 */
+	ExplicitConstructorInvocationStmt withNoExpr();
+
+	/**
 	 * Returns the args of this explicit constructor invocation statement.
 	 *
 	 * @return the args of this explicit constructor invocation statement.

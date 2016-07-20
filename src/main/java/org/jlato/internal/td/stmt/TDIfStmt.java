@@ -8,6 +8,7 @@ import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.IfStmt;
 import org.jlato.tree.stmt.Stmt;
@@ -132,5 +133,24 @@ public class TDIfStmt extends TDTree<SIfStmt, Stmt, IfStmt> implements IfStmt {
 	 */
 	public IfStmt withElseStmt(Mutation<NodeOption<Stmt>> mutation) {
 		return location.safeTraversalMutate(SIfStmt.ELSE_STMT, mutation);
+	}
+
+	/**
+	 * Replaces the else statement of this 'if' statement.
+	 *
+	 * @param elseStmt the replacement for the else statement of this 'if' statement.
+	 * @return the resulting mutated 'if' statement.
+	 */
+	public IfStmt withElseStmt(Stmt elseStmt) {
+		return location.safeTraversalReplace(SIfStmt.ELSE_STMT, Trees.some(elseStmt));
+	}
+
+	/**
+	 * Replaces the else statement of this 'if' statement.
+	 *
+	 * @return the resulting mutated 'if' statement.
+	 */
+	public IfStmt withNoElseStmt() {
+		return location.safeTraversalReplace(SIfStmt.ELSE_STMT, Trees.<Stmt>none());
 	}
 }

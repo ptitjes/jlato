@@ -9,6 +9,7 @@ import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.stmt.SwitchCase;
@@ -74,6 +75,25 @@ public class TDSwitchCase extends TDTree<SSwitchCase, Node, SwitchCase> implemen
 	 */
 	public SwitchCase withLabel(Mutation<NodeOption<Expr>> mutation) {
 		return location.safeTraversalMutate(SSwitchCase.LABEL, mutation);
+	}
+
+	/**
+	 * Replaces the label of this 'switch' case.
+	 *
+	 * @param label the replacement for the label of this 'switch' case.
+	 * @return the resulting mutated 'switch' case.
+	 */
+	public SwitchCase withLabel(Expr label) {
+		return location.safeTraversalReplace(SSwitchCase.LABEL, Trees.some(label));
+	}
+
+	/**
+	 * Replaces the label of this 'switch' case.
+	 *
+	 * @return the resulting mutated 'switch' case.
+	 */
+	public SwitchCase withNoLabel() {
+		return location.safeTraversalReplace(SSwitchCase.LABEL, Trees.<Expr>none());
 	}
 
 	/**
