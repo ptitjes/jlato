@@ -131,6 +131,10 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(defaultValue, t.defaultValue());
 			t = t.withName(name.id());
 			Assert.assertEquals(name, t.name());
+			t = t.withDefaultValue(defaultValue.get());
+			Assert.assertEquals(defaultValue, t.defaultValue());
+			t = t.withNoDefaultValue();
+			Assert.assertEquals(Trees.<Expr>none(), t.defaultValue());
 		}
 	}
 
@@ -163,6 +167,10 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(members, t.members());
 			t = t.withName(name.id());
 			Assert.assertEquals(name, t.name());
+			t = t.withExtendsClause(extendsClause.get());
+			Assert.assertEquals(extendsClause, t.extendsClause());
+			t = t.withNoExtendsClause();
+			Assert.assertEquals(Trees.<QualifiedType>none(), t.extendsClause());
 		}
 	}
 
@@ -217,6 +225,12 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(classBody, t.classBody());
 			t = t.withName(name.id());
 			Assert.assertEquals(name, t.name());
+			t = t.withArgs(args.get()).withClassBody(classBody.get());
+			Assert.assertEquals(args, t.args());
+			Assert.assertEquals(classBody, t.classBody());
+			t = t.withNoArgs().withNoClassBody();
+			Assert.assertEquals(Trees.<NodeList<Expr>>none(), t.args());
+			Assert.assertEquals(Trees.<NodeList<MemberDecl>>none(), t.classBody());
 		}
 	}
 
@@ -355,6 +369,10 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(body, t.body());
 			t = t.withName(name.id());
 			Assert.assertEquals(name, t.name());
+			t = t.withBody(body.get());
+			Assert.assertEquals(body, t.body());
+			t = t.withNoBody();
+			Assert.assertEquals(Trees.<BlockStmt>none(), t.body());
 		}
 	}
 
@@ -405,6 +423,10 @@ public class TreesAccessorsTest {
 			VariableDeclarator t = Trees.variableDeclarator().withId(id).withInit(init);
 			Assert.assertEquals(id, t.id());
 			Assert.assertEquals(init, t.init());
+			t = t.withInit(init.get());
+			Assert.assertEquals(init, t.init());
+			t = t.withNoInit();
+			Assert.assertEquals(Trees.<Expr>none(), t.init());
 		}
 	}
 
@@ -447,6 +469,10 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(dimExprs, t.dimExprs());
 			Assert.assertEquals(dims, t.dims());
 			Assert.assertEquals(init, t.init());
+			t = t.withInit(init.get());
+			Assert.assertEquals(init, t.init());
+			t = t.withNoInit();
+			Assert.assertEquals(Trees.<ArrayInitializerExpr>none(), t.init());
 		}
 	}
 
@@ -549,6 +575,10 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(name, t.name());
 			t = t.withName(name.id());
 			Assert.assertEquals(name, t.name());
+			t = t.withScope(scope.get());
+			Assert.assertEquals(scope, t.scope());
+			t = t.withNoScope();
+			Assert.assertEquals(Trees.<Expr>none(), t.scope());
 		}
 	}
 
@@ -617,6 +647,10 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(args, t.args());
 			t = t.withName(name.id());
 			Assert.assertEquals(name, t.name());
+			t = t.withScope(scope.get());
+			Assert.assertEquals(scope, t.scope());
+			t = t.withNoScope();
+			Assert.assertEquals(Trees.<Expr>none(), t.scope());
 		}
 	}
 
@@ -663,6 +697,12 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(type, t.type());
 			Assert.assertEquals(args, t.args());
 			Assert.assertEquals(body, t.body());
+			t = t.withScope(scope.get()).withBody(body.get());
+			Assert.assertEquals(scope, t.scope());
+			Assert.assertEquals(body, t.body());
+			t = t.withNoScope().withNoBody();
+			Assert.assertEquals(Trees.<Expr>none(), t.scope());
+			Assert.assertEquals(Trees.<NodeList<MemberDecl>>none(), t.body());
 		}
 	}
 
@@ -695,6 +735,10 @@ public class TreesAccessorsTest {
 			NodeOption<Expr> classExpr = arbitrary.arbitraryOptionExpr();
 			SuperExpr t = Trees.superExpr().withClassExpr(classExpr);
 			Assert.assertEquals(classExpr, t.classExpr());
+			t = t.withClassExpr(classExpr.get());
+			Assert.assertEquals(classExpr, t.classExpr());
+			t = t.withNoClassExpr();
+			Assert.assertEquals(Trees.<Expr>none(), t.classExpr());
 		}
 	}
 
@@ -705,6 +749,10 @@ public class TreesAccessorsTest {
 			NodeOption<Expr> classExpr = arbitrary.arbitraryOptionExpr();
 			ThisExpr t = Trees.thisExpr().withClassExpr(classExpr);
 			Assert.assertEquals(classExpr, t.classExpr());
+			t = t.withClassExpr(classExpr.get());
+			Assert.assertEquals(classExpr, t.classExpr());
+			t = t.withNoClassExpr();
+			Assert.assertEquals(Trees.<Expr>none(), t.classExpr());
 		}
 	}
 
@@ -761,6 +809,10 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(name, t.name());
 			t = t.withName(name.id());
 			Assert.assertEquals(name, t.name());
+			t = t.withQualifier(qualifier.get());
+			Assert.assertEquals(qualifier, t.qualifier());
+			t = t.withNoQualifier();
+			Assert.assertEquals(Trees.<QualifiedName>none(), t.qualifier());
 		}
 	}
 
@@ -773,6 +825,10 @@ public class TreesAccessorsTest {
 			AssertStmt t = Trees.assertStmt().withCheck(check).withMsg(msg);
 			Assert.assertEquals(check, t.check());
 			Assert.assertEquals(msg, t.msg());
+			t = t.withMsg(msg.get());
+			Assert.assertEquals(msg, t.msg());
+			t = t.withNoMsg();
+			Assert.assertEquals(Trees.<Expr>none(), t.msg());
 		}
 	}
 
@@ -793,6 +849,10 @@ public class TreesAccessorsTest {
 			NodeOption<Name> id = arbitrary.arbitraryOptionName();
 			BreakStmt t = Trees.breakStmt().withId(id);
 			Assert.assertEquals(id, t.id());
+			t = t.withId(id.get());
+			Assert.assertEquals(id, t.id());
+			t = t.withNoId();
+			Assert.assertEquals(Trees.<Name>none(), t.id());
 		}
 	}
 
@@ -815,6 +875,10 @@ public class TreesAccessorsTest {
 			NodeOption<Name> id = arbitrary.arbitraryOptionName();
 			ContinueStmt t = Trees.continueStmt().withId(id);
 			Assert.assertEquals(id, t.id());
+			t = t.withId(id.get());
+			Assert.assertEquals(id, t.id());
+			t = t.withNoId();
+			Assert.assertEquals(Trees.<Name>none(), t.id());
 		}
 	}
 
@@ -843,6 +907,10 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(isThis, t.isThis());
 			Assert.assertEquals(expr, t.expr());
 			Assert.assertEquals(args, t.args());
+			t = t.withExpr(expr.get());
+			Assert.assertEquals(expr, t.expr());
+			t = t.withNoExpr();
+			Assert.assertEquals(Trees.<Expr>none(), t.expr());
 		}
 	}
 
@@ -897,6 +965,10 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(condition, t.condition());
 			Assert.assertEquals(thenStmt, t.thenStmt());
 			Assert.assertEquals(elseStmt, t.elseStmt());
+			t = t.withElseStmt(elseStmt.get());
+			Assert.assertEquals(elseStmt, t.elseStmt());
+			t = t.withNoElseStmt();
+			Assert.assertEquals(Trees.<Stmt>none(), t.elseStmt());
 		}
 	}
 
@@ -921,6 +993,10 @@ public class TreesAccessorsTest {
 			NodeOption<Expr> expr = arbitrary.arbitraryOptionExpr();
 			ReturnStmt t = Trees.returnStmt().withExpr(expr);
 			Assert.assertEquals(expr, t.expr());
+			t = t.withExpr(expr.get());
+			Assert.assertEquals(expr, t.expr());
+			t = t.withNoExpr();
+			Assert.assertEquals(Trees.<Expr>none(), t.expr());
 		}
 	}
 
@@ -933,6 +1009,10 @@ public class TreesAccessorsTest {
 			SwitchCase t = Trees.switchCase().withLabel(label).withStmts(stmts);
 			Assert.assertEquals(label, t.label());
 			Assert.assertEquals(stmts, t.stmts());
+			t = t.withLabel(label.get());
+			Assert.assertEquals(label, t.label());
+			t = t.withNoLabel();
+			Assert.assertEquals(Trees.<Expr>none(), t.label());
 		}
 	}
 
@@ -985,6 +1065,10 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(tryBlock, t.tryBlock());
 			Assert.assertEquals(catchs, t.catchs());
 			Assert.assertEquals(finallyBlock, t.finallyBlock());
+			t = t.withFinallyBlock(finallyBlock.get());
+			Assert.assertEquals(finallyBlock, t.finallyBlock());
+			t = t.withNoFinallyBlock();
+			Assert.assertEquals(Trees.<BlockStmt>none(), t.finallyBlock());
 		}
 	}
 
@@ -1059,6 +1143,12 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(typeArgs, t.typeArgs());
 			t = t.withName(name.id());
 			Assert.assertEquals(name, t.name());
+			t = t.withScope(scope.get()).withTypeArgs(typeArgs.get());
+			Assert.assertEquals(scope, t.scope());
+			Assert.assertEquals(typeArgs, t.typeArgs());
+			t = t.withNoScope().withNoTypeArgs();
+			Assert.assertEquals(Trees.<QualifiedType>none(), t.scope());
+			Assert.assertEquals(Trees.<NodeList<Type>>none(), t.typeArgs());
 		}
 	}
 
@@ -1083,6 +1173,12 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(annotations, t.annotations());
 			Assert.assertEquals(ext, t.ext());
 			Assert.assertEquals(sup, t.sup());
+			t = t.withExt(ext.get()).withSup(sup.get());
+			Assert.assertEquals(ext, t.ext());
+			Assert.assertEquals(sup, t.sup());
+			t = t.withNoExt().withNoSup();
+			Assert.assertEquals(Trees.<ReferenceType>none(), t.ext());
+			Assert.assertEquals(Trees.<ReferenceType>none(), t.sup());
 		}
 	}
 }
