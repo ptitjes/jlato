@@ -100,7 +100,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testAnnotationDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Name name = arbitrary.arbitraryName();
@@ -116,7 +116,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testAnnotationMemberDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Type type = arbitrary.arbitraryType();
@@ -140,7 +140,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testArrayDim() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
 			ArrayDim t = Trees.arrayDim().withAnnotations(annotations);
@@ -150,7 +150,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testClassDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Name name = arbitrary.arbitraryName();
@@ -176,7 +176,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testCompilationUnit() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			PackageDecl packageDecl = arbitrary.arbitraryPackageDecl();
 			NodeList<ImportDecl> imports = arbitrary.arbitraryListImportDecl();
@@ -190,7 +190,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testConstructorDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			NodeList<TypeParameter> typeParams = arbitrary.arbitraryListTypeParameter();
@@ -212,7 +212,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testEnumConstantDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Name name = arbitrary.arbitraryName();
@@ -236,7 +236,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testEnumDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Name name = arbitrary.arbitraryName();
@@ -258,7 +258,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testFieldDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Type type = arbitrary.arbitraryType();
@@ -272,7 +272,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testFormalParameter() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Type type = arbitrary.arbitraryType();
@@ -288,7 +288,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testImportDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			QualifiedName name = arbitrary.arbitraryQualifiedName();
 			boolean isStatic = arbitrary.arbitraryBoolean();
@@ -302,7 +302,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testInitializerDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			BlockStmt body = arbitrary.arbitraryBlockStmt();
@@ -314,7 +314,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testInterfaceDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Name name = arbitrary.arbitraryName();
@@ -334,7 +334,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testLocalVariableDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Type type = arbitrary.arbitraryType();
@@ -348,7 +348,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testMethodDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			NodeList<TypeParameter> typeParams = arbitrary.arbitraryListTypeParameter();
@@ -378,7 +378,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testModifier() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			ModifierKeyword keyword = arbitrary.arbitraryModifierKeyword();
 			Modifier t = Trees.modifier().withKeyword(keyword);
@@ -388,7 +388,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testPackageDecl() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
 			QualifiedName name = arbitrary.arbitraryQualifiedName();
@@ -400,7 +400,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testTypeParameter() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
 			Name name = arbitrary.arbitraryName();
@@ -416,7 +416,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testVariableDeclarator() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			VariableDeclaratorId id = arbitrary.arbitraryVariableDeclaratorId();
 			NodeOption<Expr> init = arbitrary.arbitraryOptionExpr();
@@ -432,7 +432,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testVariableDeclaratorId() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Name name = arbitrary.arbitraryName();
 			NodeList<ArrayDim> dims = arbitrary.arbitraryListArrayDim();
@@ -446,7 +446,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testArrayAccessExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr name = arbitrary.arbitraryExpr();
 			Expr index = arbitrary.arbitraryExpr();
@@ -458,7 +458,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testArrayCreationExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Type type = arbitrary.arbitraryType();
 			NodeList<ArrayDimExpr> dimExprs = arbitrary.arbitraryListArrayDimExpr();
@@ -478,7 +478,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testArrayDimExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
 			Expr expr = arbitrary.arbitraryExpr();
@@ -490,7 +490,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testArrayInitializerExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<Expr> values = arbitrary.arbitraryListExpr();
 			boolean trailingComma = arbitrary.arbitraryBoolean();
@@ -502,7 +502,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testAssignExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr target = arbitrary.arbitraryExpr();
 			AssignOp op = arbitrary.arbitraryAssignOp();
@@ -516,7 +516,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testBinaryExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr left = arbitrary.arbitraryExpr();
 			BinaryOp op = arbitrary.arbitraryBinaryOp();
@@ -530,7 +530,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testCastExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Type type = arbitrary.arbitraryType();
 			Expr expr = arbitrary.arbitraryExpr();
@@ -542,7 +542,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testClassExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Type type = arbitrary.arbitraryType();
 			ClassExpr t = Trees.classExpr().withType(type);
@@ -552,7 +552,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testConditionalExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr condition = arbitrary.arbitraryExpr();
 			Expr thenExpr = arbitrary.arbitraryExpr();
@@ -566,7 +566,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testFieldAccessExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Expr> scope = arbitrary.arbitraryOptionExpr();
 			Name name = arbitrary.arbitraryName();
@@ -584,7 +584,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testInstanceOfExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr expr = arbitrary.arbitraryExpr();
 			Type type = arbitrary.arbitraryType();
@@ -613,7 +613,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testMarkerAnnotationExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			QualifiedName name = arbitrary.arbitraryQualifiedName();
 			MarkerAnnotationExpr t = Trees.markerAnnotationExpr().withName(name);
@@ -623,7 +623,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testMemberValuePair() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Name name = arbitrary.arbitraryName();
 			Expr value = arbitrary.arbitraryExpr();
@@ -637,7 +637,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testMethodInvocationExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Expr> scope = arbitrary.arbitraryOptionExpr();
 			NodeList<Type> typeArgs = arbitrary.arbitraryListType();
@@ -659,7 +659,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testMethodReferenceExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr scope = arbitrary.arbitraryExpr();
 			NodeList<Type> typeArgs = arbitrary.arbitraryListType();
@@ -675,7 +675,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testNormalAnnotationExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			QualifiedName name = arbitrary.arbitraryQualifiedName();
 			NodeList<MemberValuePair> pairs = arbitrary.arbitraryListMemberValuePair();
@@ -687,7 +687,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testObjectCreationExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Expr> scope = arbitrary.arbitraryOptionExpr();
 			NodeList<Type> typeArgs = arbitrary.arbitraryListType();
@@ -711,7 +711,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testParenthesizedExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr inner = arbitrary.arbitraryExpr();
 			ParenthesizedExpr t = Trees.parenthesizedExpr().withInner(inner);
@@ -721,7 +721,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testSingleMemberAnnotationExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			QualifiedName name = arbitrary.arbitraryQualifiedName();
 			Expr memberValue = arbitrary.arbitraryExpr();
@@ -733,7 +733,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testSuperExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Expr> classExpr = arbitrary.arbitraryOptionExpr();
 			SuperExpr t = Trees.superExpr().withClassExpr(classExpr);
@@ -747,7 +747,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testThisExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Expr> classExpr = arbitrary.arbitraryOptionExpr();
 			ThisExpr t = Trees.thisExpr().withClassExpr(classExpr);
@@ -761,7 +761,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testTypeExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Type type = arbitrary.arbitraryType();
 			TypeExpr t = Trees.typeExpr().withType(type);
@@ -771,7 +771,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testUnaryExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			UnaryOp op = arbitrary.arbitraryUnaryOp();
 			Expr expr = arbitrary.arbitraryExpr();
@@ -783,7 +783,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testVariableDeclarationExpr() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			LocalVariableDecl declaration = arbitrary.arbitraryLocalVariableDecl();
 			VariableDeclarationExpr t = Trees.variableDeclarationExpr().withDeclaration(declaration);
@@ -793,7 +793,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testName() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			String id = arbitrary.arbitraryString();
 			Name t = Trees.name().withId(id);
@@ -803,7 +803,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testQualifiedName() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeOption<QualifiedName> qualifier = arbitrary.arbitraryOptionQualifiedName();
 			Name name = arbitrary.arbitraryName();
@@ -821,7 +821,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testAssertStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr check = arbitrary.arbitraryExpr();
 			NodeOption<Expr> msg = arbitrary.arbitraryOptionExpr();
@@ -837,7 +837,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testBlockStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<Stmt> stmts = arbitrary.arbitraryListStmt();
 			BlockStmt t = Trees.blockStmt().withStmts(stmts);
@@ -847,7 +847,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testBreakStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Name> id = arbitrary.arbitraryOptionName();
 			BreakStmt t = Trees.breakStmt().withId(id);
@@ -861,7 +861,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testCatchClause() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			FormalParameter param = arbitrary.arbitraryFormalParameter();
 			BlockStmt catchBlock = arbitrary.arbitraryBlockStmt();
@@ -873,7 +873,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testContinueStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Name> id = arbitrary.arbitraryOptionName();
 			ContinueStmt t = Trees.continueStmt().withId(id);
@@ -887,7 +887,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testDoStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Stmt body = arbitrary.arbitraryStmt();
 			Expr condition = arbitrary.arbitraryExpr();
@@ -899,7 +899,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testExplicitConstructorInvocationStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<Type> typeArgs = arbitrary.arbitraryListType();
 			boolean isThis = arbitrary.arbitraryBoolean();
@@ -919,7 +919,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testExpressionStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr expr = arbitrary.arbitraryExpr();
 			ExpressionStmt t = Trees.expressionStmt().withExpr(expr);
@@ -929,7 +929,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testForStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<Expr> init = arbitrary.arbitraryListExpr();
 			Expr compare = arbitrary.arbitraryExpr();
@@ -945,7 +945,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testForeachStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			VariableDeclarationExpr var = arbitrary.arbitraryVariableDeclarationExpr();
 			Expr iterable = arbitrary.arbitraryExpr();
@@ -959,7 +959,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testIfStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr condition = arbitrary.arbitraryExpr();
 			Stmt thenStmt = arbitrary.arbitraryStmt();
@@ -977,7 +977,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testLabeledStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Name label = arbitrary.arbitraryName();
 			Stmt stmt = arbitrary.arbitraryStmt();
@@ -991,7 +991,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testReturnStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Expr> expr = arbitrary.arbitraryOptionExpr();
 			ReturnStmt t = Trees.returnStmt().withExpr(expr);
@@ -1005,7 +1005,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testSwitchCase() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeOption<Expr> label = arbitrary.arbitraryOptionExpr();
 			NodeList<Stmt> stmts = arbitrary.arbitraryListStmt();
@@ -1021,7 +1021,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testSwitchStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr selector = arbitrary.arbitraryExpr();
 			NodeList<SwitchCase> cases = arbitrary.arbitraryListSwitchCase();
@@ -1033,7 +1033,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testSynchronizedStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr expr = arbitrary.arbitraryExpr();
 			BlockStmt block = arbitrary.arbitraryBlockStmt();
@@ -1045,7 +1045,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testThrowStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr expr = arbitrary.arbitraryExpr();
 			ThrowStmt t = Trees.throwStmt().withExpr(expr);
@@ -1055,7 +1055,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testTryStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<VariableDeclarationExpr> resources = arbitrary.arbitraryListVariableDeclarationExpr();
 			boolean trailingSemiColon = arbitrary.arbitraryBoolean();
@@ -1077,7 +1077,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testTypeDeclarationStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			TypeDecl typeDecl = arbitrary.arbitraryTypeDecl();
 			TypeDeclarationStmt t = Trees.typeDeclarationStmt().withTypeDecl(typeDecl);
@@ -1087,7 +1087,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testWhileStmt() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Expr condition = arbitrary.arbitraryExpr();
 			Stmt body = arbitrary.arbitraryStmt();
@@ -1099,7 +1099,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testArrayType() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			Type componentType = arbitrary.arbitraryType();
 			NodeList<ArrayDim> dims = arbitrary.arbitraryListArrayDim();
@@ -1111,7 +1111,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testIntersectionType() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<Type> types = arbitrary.arbitraryListType();
 			IntersectionType t = Trees.intersectionType().withTypes(types);
@@ -1121,7 +1121,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testPrimitiveType() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
 			Primitive primitive = arbitrary.arbitraryPrimitive();
@@ -1133,7 +1133,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testQualifiedType() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
 			NodeOption<QualifiedType> scope = arbitrary.arbitraryOptionQualifiedType();
@@ -1157,7 +1157,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testUnionType() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<Type> types = arbitrary.arbitraryListType();
 			UnionType t = Trees.unionType().withTypes(types);
@@ -1167,7 +1167,7 @@ public class TreesAccessorsTest {
 
 	@Test
 	public void testWildcardType() {
-		Arbitrary arbitrary = new Arbitrary();
+		Arbitrary arbitrary = new Arbitrary(true);
 		for (int i = 0; i < 10; i++) {
 			NodeList<AnnotationExpr> annotations = arbitrary.arbitraryListAnnotationExpr();
 			NodeOption<ReferenceType> ext = arbitrary.arbitraryOptionReferenceType();
