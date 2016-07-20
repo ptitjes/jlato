@@ -1,0 +1,8 @@
+interface Test {
+
+	{
+	}
+
+	public Test() {
+	}
+}

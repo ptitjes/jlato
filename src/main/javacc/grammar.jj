@@ -86,20 +86,6 @@ final class ParserImpl extends ParserBase {
         ReInit(reader);
         reset();
     }
-
-    private void throwParseException(Token token, String message) throws ParseException {
-        StringBuilder buf = new StringBuilder();
-        buf.append(message);
-        buf.append(": '");
-        buf.append(token.image);
-        buf.append("' at line ");
-        buf.append(token.beginLine);
-        buf.append(", column ");
-        buf.append(token.beginColumn);
-        ParseException e = new ParseException(buf.toString());
-        e.currentToken = token;
-        throw e;
-    }
 }
 
 PARSER_END(ParserImpl)
@@ -1336,6 +1322,7 @@ BUTree<? extends STypeDecl> ClassOrInterfaceDecl(BUTree<SNodeList> modifiers):
 	BUTree<SNodeList> extendsClause = null;
 	BUTree<SNodeList> implementsClause = null;
 	BUTree<SNodeList> members;
+	ByRef<BUProblem> problem = new ByRef<BUProblem>(null);
 }
 {
   // Run is started before modifiers
@@ -1345,7 +1332,7 @@ BUTree<? extends STypeDecl> ClassOrInterfaceDecl(BUTree<SNodeList> modifiers):
     name = Name()
     [ typeParams = TypeParameters() ]
     [ "extends" superClassType = AnnotatedQualifiedType() ]
-    [ implementsClause = ImplementsList(typeKind) ]
+    [ implementsClause = ImplementsList(typeKind, problem) ]
   |
     "interface" { typeKind = TypeKind.Interface; }
     name = Name()
@@ -1356,7 +1343,8 @@ BUTree<? extends STypeDecl> ClassOrInterfaceDecl(BUTree<SNodeList> modifiers):
 
   {
     if (typeKind == TypeKind.Interface)
-      return dress(SInterfaceDecl.make(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members));
+      return dress(SInterfaceDecl.make(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members))
+                .withProblem(problem.value);
     else {
       return dress(SClassDecl.make(modifiers, name, ensureNotNull(typeParams), optionOf(superClassType), ensureNotNull(implementsClause), members));
     }
@@ -1380,7 +1368,7 @@ BUTree<SNodeList> ExtendsList():
   { return ret; }
 }
 
-BUTree<SNodeList> ImplementsList(TypeKind typeKind):
+BUTree<SNodeList> ImplementsList(TypeKind typeKind, ByRef<BUProblem> problem):
 {
 	BUTree<SNodeList> ret = emptyList();
 	BUTree<SQualifiedType> cit;
@@ -1393,7 +1381,7 @@ BUTree<SNodeList> ImplementsList(TypeKind typeKind):
     ( "," cit = AnnotatedQualifiedType() { ret = append(ret, cit); } )*
     {
       if (typeKind == TypeKind.Interface)
-        throwParseException(token, "An interface cannot implement other interfaces");
+        problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
     }
   |
     LOOKAHEAD({quotesMode}) ret = NodeListVar()
@@ -1409,11 +1397,12 @@ BUTree<? extends STypeDecl> EnumDecl(BUTree<SNodeList> modifiers):
 	BUTree<SNodeList> constants = emptyList();
 	boolean trailingComma = false;
 	BUTree<SNodeList> members = null;
+	ByRef<BUProblem> problem = new ByRef<BUProblem>(null);
 }
 {
   // Run is started before modifiers
 
-  "enum" name = Name() [ implementsClause = ImplementsList(TypeKind.Enum) ]
+  "enum" name = Name() [ implementsClause = ImplementsList(TypeKind.Enum, problem) ]
   "{"
   [
     entry = EnumConstantDecl() { constants = append(constants, entry); }
@@ -1425,7 +1414,8 @@ BUTree<? extends STypeDecl> EnumDecl(BUTree<SNodeList> modifiers):
   [ ";" members = ClassOrInterfaceBodyDecls(TypeKind.Enum) ]
   "}"
 
-  { return dress(SEnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))); }
+  { return dress(SEnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members)))
+                .withProblem(problem.value); }
 }
 
 BUTree<SEnumConstantDecl> EnumConstantDecl():
@@ -1604,6 +1594,7 @@ BUTree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind typeKind):
 {
 	BUTree<SNodeList> modifiers;
 	BUTree<? extends SMemberDecl> ret;
+	BUProblem problem = null;
 }
 {
   { run(); }
@@ -1614,14 +1605,14 @@ BUTree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind typeKind):
     modifiers = Modifiers()
     {
       if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface)
-        throwParseException(token, "Only interfaces can have default members");
+        problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
     }
     (
       LOOKAHEAD( "{" )
       ret = InitializerDecl(modifiers)
       {
         if (typeKind == TypeKind.Interface)
-	      throwParseException(token, "An interface cannot have initializers");
+          ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
 	  }
     |
       ret = ClassOrInterfaceDecl(modifiers)
@@ -1634,7 +1625,7 @@ BUTree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind typeKind):
       ret = ConstructorDecl(modifiers)
       {
         if (typeKind == TypeKind.Interface)
-	      throwParseException(token, "An interface cannot have constructors");
+          ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
 	  }
     |
       LOOKAHEAD( Type() Name() ( "[" "]" )* ( "," | "=" | ";" ) )
@@ -1644,7 +1635,7 @@ BUTree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind typeKind):
     )
   )
 
-  { return ret; }
+  { return ret.withProblem(problem); }
 }
 
 BUTree<SFieldDecl> FieldDecl(BUTree<SNodeList> modifiers):

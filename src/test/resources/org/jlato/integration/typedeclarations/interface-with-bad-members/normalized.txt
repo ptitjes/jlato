@@ -1,0 +1,51 @@
+{
+  kind: InterfaceDecl,
+  extendsClause: [
+  ],
+  members: [
+    {
+      kind: InitializerDecl,
+      problems: [
+        severity: ERROR,
+        code: An interface cannot have initializers,
+      ],
+      body: {
+        kind: BlockStmt,
+        stmts: [
+        ],
+      },
+      modifiers: [
+      ],
+    },
+    {
+      kind: ConstructorDecl,
+      problems: [
+        severity: ERROR,
+        code: An interface cannot have constructors,
+      ],
+      body: {
+        kind: BlockStmt,
+        stmts: [
+        ],
+      },
+      modifiers: [
+        {
+          kind: Modifier,
+          keyword: Public,
+        },
+      ],
+      name: Test,
+      params: [
+      ],
+      throwsClause: [
+      ],
+      typeParams: [
+      ],
+    },
+  ],
+  modifiers: [
+  ],
+  name: Test,
+  typeParams: [
+  ],
+}

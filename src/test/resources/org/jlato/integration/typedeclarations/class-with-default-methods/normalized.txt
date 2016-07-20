@@ -1,15 +1,20 @@
 {
-  kind: InterfaceDecl,
-  extendsClause: [
+  kind: ClassDecl,
+  extendsClause: null,
+  implementsClause: [
   ],
   members: [
     {
       kind: MethodDecl,
       problems: [
         severity: ERROR,
-        code: Default methods must have a body,
+        code: Only interfaces can have default members,
       ],
-      body: null,
+      body: {
+        kind: BlockStmt,
+        stmts: [
+        ],
+      },
       dims: [
       ],
       modifiers: [

@@ -1,0 +1,8 @@
+interface Test {
+    {
+        // An initializer in an interface
+    }
+    public Test() {
+        // A constructor in an interface
+    }
+}

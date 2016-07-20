@@ -67,7 +67,7 @@ public class ProblemsTest {
 		Assert.assertTrue(cu.hasProblems());
 		Iterator<Problem> problemIterator = cu.problems().iterator();
 		Assert.assertTrue(problemIterator.hasNext());
-		Assert.assertEquals("default methods must have a body", problemIterator.next().code());
+		Assert.assertEquals("Default methods must have a body", problemIterator.next().code());
 		Assert.assertFalse(problemIterator.hasNext());
 	}
 }
