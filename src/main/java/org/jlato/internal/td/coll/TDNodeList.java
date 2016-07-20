@@ -191,6 +191,11 @@ public class TDNodeList<T extends Tree> extends TDTree<SNodeList, NodeList<T>, N
 	}
 
 	@Override
+	public int indexOf(T element) {
+		return location.tree.state.children.indexOf(treeOf(element));
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public T get(final int index) {
 		return (T) location.safeTraversal(SNodeList.elementTraversal(index));
@@ -313,6 +318,67 @@ public class TDNodeList<T extends Tree> extends TDTree<SNodeList, NodeList<T>, N
 			tree = tree.withDressing(dressing.withRun(newRun));
 		}
 		return tree;
+	}
+
+	@Override
+	public NodeList<T> insert(T before, T element) {
+		int index = indexOf(before);
+		return index == -1 ? append(element) : insert(index, element);
+	}
+
+	@Override
+	public NodeList<T> insertAll(T before, NodeList<? extends T> elements) {
+		int index = indexOf(before);
+		return index == -1 ? appendAll(elements) : insertAll(index, elements);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public NodeList<T> delete(int index) {
+		final BUTree<SNodeList> tree = location.tree;
+
+		final SNodeList state = tree.state;
+		final Vector<BUTree<?>> trees = state.children;
+
+		if (index < 0 || index > trees.size())
+			throw new IllegalArgumentException();
+
+		final SNodeList newState = state.withChildren(deleteAt(trees, index));
+		BUTree newTree = tree.withState(newState);
+
+		newTree = deleteInDressing(newTree, index, index == trees.size());
+
+		return (NodeList<T>) location.withTree(newTree).facade;
+	}
+
+	private Vector<BUTree<?>> deleteAt(Vector<BUTree<?>> trees, int index) {
+		Vector<BUTree<?>> leftTrees = trees.take(index);
+		Vector<BUTree<?>> rightTrees = trees.drop(index + 1);
+		Vector<BUTree<?>> newTrees = leftTrees;
+		for (BUTree<?> rightTree : rightTrees) {
+			newTrees = newTrees.append(rightTree);
+		}
+		return newTrees;
+	}
+
+	private BUTree deleteInDressing(BUTree tree, int index, boolean last) {
+		WDressing dressing = tree.dressing == null ? null : tree.dressing;
+		if (dressing != null && dressing.run != null) {
+
+			final WRunRun run = dressing.run;
+			// If not last, delete before the element shape
+			// If last, delete after the last element shape
+			final WRunRun newRun = run.delete((index + (last ? -1 : 0)) * 2 + 1, 2);
+
+			tree = tree.withDressing(dressing.withRun(newRun));
+		}
+		return tree;
+	}
+
+	@Override
+	public NodeList<T> delete(T element) {
+		int index = indexOf(element);
+		return index == -1 ? this : delete(index);
 	}
 
 	@Override

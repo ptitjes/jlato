@@ -163,6 +163,42 @@ public class NodeContainersTest {
 						expr.args().insertAll(1, listOf(name("newArg1"), name("newArg2")))
 				), false)
 		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, newArg2, newArg1, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().insert(1, name("newArg1")).insert(name("newArg1"), name("newArg2"))
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, newArg2, newArg3, newArg1, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().insert(1, name("newArg1")).insertAll(name("newArg1"), listOf(name("newArg2"), name("newArg3")))
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, newArg2, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().insertAll(1, listOf(name("newArg1"), name("newArg2"))).delete(1)
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().delete(0)
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method()",
+				Printer.printToString(expr.withArgs(
+						expr.args().delete(0).delete(0)
+				), false)
+		);
+		Assert.assertEquals(
+				"scope.method(/*1*/arg1/*2*/, newArg2, /*3*/arg2/*4*/)",
+				Printer.printToString(expr.withArgs(
+						expr.args().insertAll(1, listOf(name("newArg1"), name("newArg2"))).delete(name("newArg1"))
+				), false)
+		);
 	}
 
 	@Test

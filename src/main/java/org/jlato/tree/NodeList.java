@@ -36,6 +36,8 @@ public interface NodeList<T extends Tree> extends Tree, Iterable<T> {
 
 	boolean contains(T element);
 
+	int indexOf(T element);
+
 	T get(final int index);
 
 	T first();
@@ -55,6 +57,14 @@ public interface NodeList<T extends Tree> extends Tree, Iterable<T> {
 	NodeList<T> insert(int index, T element);
 
 	NodeList<T> insertAll(int index, NodeList<? extends T> elements);
+
+	NodeList<T> insert(T before, T element);
+
+	NodeList<T> insertAll(T before, NodeList<? extends T> elements);
+
+	NodeList<T> delete(int index);
+
+	NodeList<T> delete(T element);
 
 	NodeList<T> rewriteAll(Mutation<T> mutator);
 

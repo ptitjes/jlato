@@ -56,6 +56,23 @@ public class WRunRun extends WRun {
 		return new WRunRun(newElements);
 	}
 
+	public WRunRun delete(int index, int count) {
+		if (index < 1 || index >= elements.size())
+			throw new IllegalArgumentException();
+		if (count < 1)
+			throw new IllegalArgumentException();
+
+		IndexedList<WRun> left = elements.take(index);
+		IndexedList<WRun> right = elements.drop(index + count);
+
+		IndexedList<WRun> newElements = left;
+
+		for (WRun element : right) {
+			newElements = newElements.append(element);
+		}
+		return new WRunRun(newElements);
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
