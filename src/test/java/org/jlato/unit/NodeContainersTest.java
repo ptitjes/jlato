@@ -290,6 +290,40 @@ public class NodeContainersTest {
 	}
 
 	@Test
+	public void nodeListExists() {
+		NodeList<Name> list = listOf(indexedName(0), indexedName(1), indexedName(2));
+		Assert.assertTrue(list.exists(new Function1<Name, Boolean>() {
+			@Override
+			public Boolean apply(Name name) {
+				return name.id().equals("name1");
+			}
+		}));
+		Assert.assertFalse(list.exists(new Function1<Name, Boolean>() {
+			@Override
+			public Boolean apply(Name name) {
+				return name.id().equals("name3");
+			}
+		}));
+	}
+
+	@Test
+	public void nodeListFilter() {
+		NodeList<Name> list = listOf(indexedName(0), indexedName(1), indexedName(2));
+		Assert.assertEquals(1, list.filter(new Function1<Name, Boolean>() {
+			@Override
+			public Boolean apply(Name name) {
+				return name.id().equals("name1");
+			}
+		}).size());
+		Assert.assertEquals(2, list.filter(new Function1<Name, Boolean>() {
+			@Override
+			public Boolean apply(Name name) {
+				return !name.id().equals("name1");
+			}
+		}).size());
+	}
+
+	@Test
 	public void nodeListRewriteAll() {
 		NodeList<Name> list = listOf(indexedName(0), indexedName(1), indexedName(2)).rewriteAll(new Mutation<Name>() {
 			@Override

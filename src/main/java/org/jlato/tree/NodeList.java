@@ -62,6 +62,24 @@ public interface NodeList<T extends Tree> extends Tree, Iterable<T> {
 
 	<U extends Tree> U foldLeft(U z, Function2<U, T, U> f);
 
+	/**
+	 * Tests whether a predicate holds for some of the elements of this node list.
+	 *
+	 * @param p the predicate used to test elements.
+	 * @return <code>true</code> if the given predicate p holds for some of the elements of this sequence,
+	 * <code>false</code> otherwise.
+	 */
+	boolean exists(Function1<T, Boolean> p);
+
+	/**
+	 * Selects all elements of this sequence which satisfy a predicate.
+	 *
+	 * @param p the predicate used to test elements.
+	 * @return a new sequence consisting of all elements of this sequence that satisfy the given predicate p.
+	 * The order of the elements is preserved.
+	 */
+	NodeList<T> filter(Function1<T, Boolean> p);
+
 	Iterator<T> iterator();
 
 	String mkString(String start, String sep, String end);

@@ -359,6 +359,23 @@ public class TDNodeList<T extends Tree> extends TDTree<SNodeList, NodeList<T>, N
 	}
 
 	@Override
+	public boolean exists(Function1<T, Boolean> p) {
+		for (T e: this) {
+			if (p.apply(e)) return true;
+		}
+		return false;
+	}
+
+	@Override
+	public NodeList<T> filter(Function1<T, Boolean> p) {
+		NodeList<T> nl = TDNodeList.empty();
+		for (T e: this) {
+			if (p.apply(e)) nl = nl.append(e);
+		}
+		return nl;
+	}
+
+	@Override
 	public Iterator<T> iterator() {
 		return new ChildIterator();
 	}
