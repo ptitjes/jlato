@@ -25,8 +25,10 @@ import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.Printer;
 import org.jlato.tree.Problem;
+import org.jlato.tree.decl.ClassDecl;
 import org.jlato.tree.decl.CompilationUnit;
 import org.jlato.tree.decl.FieldDecl;
+import org.jlato.tree.decl.InterfaceDecl;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.type.Primitive;
 import org.junit.Assert;
@@ -66,8 +68,14 @@ public class ProblemsTest {
 		final CompilationUnit cu = parser.parse(ParseContext.CompilationUnit, content);
 		Assert.assertTrue(cu.hasProblems());
 		Iterator<Problem> problemIterator = cu.problems().iterator();
+
 		Assert.assertTrue(problemIterator.hasNext());
-		Assert.assertEquals("Default methods must have a body", problemIterator.next().code());
+
+		Problem problem = problemIterator.next();
+		Assert.assertEquals(Problem.Severity.ERROR, problem.severity());
+		Assert.assertEquals("Default methods must have a body", problem.code());
+		Assert.assertEquals(((InterfaceDecl) cu.types().first()).members().first(), problem.tree());
+
 		Assert.assertFalse(problemIterator.hasNext());
 	}
 }
