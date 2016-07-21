@@ -22,6 +22,7 @@ package org.jlato.internal.td;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
+import org.jlato.parser.ParserImplConstants;
 import org.jlato.printer.Printer;
 import org.jlato.rewrite.MatchVisitor;
 import org.jlato.rewrite.Matcher;
@@ -200,9 +201,9 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 
 		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
 		final WTokenRun newLeading;
-		if (comment.isJavaDocComment()) {
+		if (comment.kind == ParserImplConstants.JAVA_DOC_COMMENT) {
 			newLeading = leading.append(comment).append(newLine());
-		} else if (comment.isMultiLineComment()) {
+		} else if (comment.kind == ParserImplConstants.MULTI_LINE_COMMENT) {
 			newLeading = leading.append(comment).append(whitespace(" "));
 		} else {
 			newLeading = leading.append(comment).append(newLine());
@@ -226,7 +227,7 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 
 		final WTokenRun trailing = dressing.trailing == null ? WTokenRun.EMPTY : dressing.trailing;
 		final WTokenRun newTrailing;
-		if (comment.isMultiLineComment()) {
+		if (comment.kind == ParserImplConstants.MULTI_LINE_COMMENT) {
 			newTrailing = trailing.append(whitespace(" ")).append(comment);
 		} else {
 			newTrailing = trailing.append(whitespace(" ")).append(comment).append(newLine());

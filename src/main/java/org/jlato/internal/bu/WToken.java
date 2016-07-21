@@ -65,36 +65,6 @@ public class WToken {
 		this.string = string;
 	}
 
-	public boolean isNewLine() {
-		return kind == ParserImplConstants.NEWLINE;
-	}
-
-	public boolean isSpaces() {
-		return kind == ParserImplConstants.WHITESPACE;
-	}
-
-	public boolean isComment() {
-		switch (kind) {
-			case ParserImplConstants.SINGLE_LINE_COMMENT:
-			case ParserImplConstants.MULTI_LINE_COMMENT:
-			case ParserImplConstants.JAVA_DOC_COMMENT:
-				return true;
-		}
-		return false;
-	}
-
-	public boolean isSingleLineComment() {
-		return kind == ParserImplConstants.SINGLE_LINE_COMMENT;
-	}
-
-	public boolean isMultiLineComment() {
-		return kind == ParserImplConstants.MULTI_LINE_COMMENT;
-	}
-
-	public boolean isJavaDocComment() {
-		return kind == ParserImplConstants.JAVA_DOC_COMMENT;
-	}
-
 	@Override
 	public String toString() {
 		return string.replace("\n", "\\n").replace("\t", "\\t");
