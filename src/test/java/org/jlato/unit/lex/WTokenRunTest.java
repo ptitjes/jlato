@@ -43,6 +43,7 @@ public class WTokenRunTest {
 		final WTokenRun.TwoWaySplit split = run.splitTrailingComment();
 		Assert.assertEquals(NULL, split.left);
 		Assert.assertEquals(1, split.right.elements.size());
+		Assert.assertEquals("[ ]", split.right.toString());
 	}
 
 	@Test
@@ -55,6 +56,7 @@ public class WTokenRunTest {
 		final WTokenRun.TwoWaySplit split = run.splitTrailingComment();
 		Assert.assertEquals(NULL, split.left);
 		Assert.assertEquals(2, split.right.elements.size());
+		Assert.assertEquals("[\\n,\\t]", split.right.toString());
 	}
 
 	@Test
@@ -69,6 +71,8 @@ public class WTokenRunTest {
 		final WTokenRun.TwoWaySplit split = run.splitTrailingComment();
 		Assert.assertEquals(2, split.left.elements.size());
 		Assert.assertEquals(2, split.right.elements.size());
+		Assert.assertEquals("[ ,// Comment]", split.left.toString());
+		Assert.assertEquals("[\\n,\\t]", split.right.toString());
 	}
 
 	@Test
@@ -82,6 +86,8 @@ public class WTokenRunTest {
 		final WTokenRun.TwoWaySplit split = run.splitTrailingComment();
 		Assert.assertEquals(2, split.left.elements.size());
 		Assert.assertEquals(1, split.right.elements.size());
+		Assert.assertEquals("[ ,/* Comment */]", split.left.toString());
+		Assert.assertEquals("[ ]", split.right.toString());
 	}
 
 	@Test
@@ -93,6 +99,7 @@ public class WTokenRunTest {
 		final WTokenRun.TwoWaySplit split = run.splitLeadingComments();
 		Assert.assertEquals(1, split.left.elements.size());
 		Assert.assertEquals(NULL, split.right);
+		Assert.assertEquals("[ ]", split.left.toString());
 	}
 
 	@Test
@@ -105,6 +112,7 @@ public class WTokenRunTest {
 		final WTokenRun.TwoWaySplit split = run.splitLeadingComments();
 		Assert.assertEquals(2, split.left.elements.size());
 		Assert.assertEquals(NULL, split.right);
+		Assert.assertEquals("[\\n,\\t]", split.left.toString());
 	}
 
 	@Test
@@ -120,6 +128,8 @@ public class WTokenRunTest {
 		final WTokenRun.TwoWaySplit split = run.splitLeadingComments();
 		Assert.assertEquals(2, split.left.elements.size());
 		Assert.assertEquals(3, split.right.elements.size());
+		Assert.assertEquals("[\\n,\\t]", split.left.toString());
+		Assert.assertEquals("[/* Comment */,\\n,\\t]", split.right.toString());
 	}
 
 	@Test
@@ -138,6 +148,8 @@ public class WTokenRunTest {
 		final WTokenRun.TwoWaySplit split = run.splitLeadingComments();
 		Assert.assertEquals(2, split.left.elements.size());
 		Assert.assertEquals(6, split.right.elements.size());
+		Assert.assertEquals("[\\n,\\t]", split.left.toString());
+		Assert.assertEquals("[/* Comment */,\\n,\\t,/* Comment */,\\n,\\t]", split.right.toString());
 	}
 
 	@Test
@@ -157,6 +169,8 @@ public class WTokenRunTest {
 		final WTokenRun.TwoWaySplit split = run.splitLeadingComments();
 		Assert.assertEquals(6, split.left.elements.size());
 		Assert.assertEquals(3, split.right.elements.size());
+		Assert.assertEquals("[\\n,\\t,/* Comment */,\\n,\\n,\\t]", split.left.toString());
+		Assert.assertEquals("[/* Comment */,\\n,\\t]", split.right.toString());
 	}
 
 	@Test
@@ -169,6 +183,7 @@ public class WTokenRunTest {
 		Assert.assertEquals(NULL, split.left);
 		Assert.assertEquals(1, split.middle.elements.size());
 		Assert.assertEquals(NULL, split.right);
+		Assert.assertEquals("[ ]", split.middle.toString());
 	}
 
 	@Test
@@ -184,6 +199,8 @@ public class WTokenRunTest {
 		Assert.assertEquals(2, split.left.elements.size());
 		Assert.assertEquals(2, split.middle.elements.size());
 		Assert.assertEquals(NULL, split.right);
+		Assert.assertEquals("[ ,// Comment]", split.left.toString());
+		Assert.assertEquals("[\\n,\\t]", split.middle.toString());
 	}
 
 	@Test
@@ -200,6 +217,8 @@ public class WTokenRunTest {
 		Assert.assertEquals(NULL, split.left);
 		Assert.assertEquals(2, split.middle.elements.size());
 		Assert.assertEquals(3, split.right.elements.size());
+		Assert.assertEquals("[\\n,\\t]", split.middle.toString());
+		Assert.assertEquals("[/* Comment */,\\n,\\t]", split.right.toString());
 	}
 
 	@Test
@@ -214,6 +233,8 @@ public class WTokenRunTest {
 		Assert.assertEquals(NULL, split.left);
 		Assert.assertEquals(1, split.middle.elements.size());
 		Assert.assertEquals(2, split.right.elements.size());
+		Assert.assertEquals("[ ]", split.middle.toString());
+		Assert.assertEquals("[/* Comment */, ]", split.right.toString());
 	}
 
 	@Test
@@ -230,6 +251,9 @@ public class WTokenRunTest {
 		Assert.assertEquals(2, split.left.elements.size());
 		Assert.assertEquals(1, split.middle.elements.size());
 		Assert.assertEquals(2, split.right.elements.size());
+		Assert.assertEquals("[ ,/* Comment */]", split.left.toString());
+		Assert.assertEquals("[ ]", split.middle.toString());
+		Assert.assertEquals("[/* Comment */, ]", split.right.toString());
 	}
 
 	@Test
@@ -248,5 +272,8 @@ public class WTokenRunTest {
 		Assert.assertEquals(2, split.left.elements.size());
 		Assert.assertEquals(1, split.middle.elements.size());
 		Assert.assertEquals(4, split.right.elements.size());
+		Assert.assertEquals("[ ,/* Comment */]", split.left.toString());
+		Assert.assertEquals("[ ]", split.middle.toString());
+		Assert.assertEquals("[/* Comment */, ,/* Comment */, ]", split.right.toString());
 	}
 }
