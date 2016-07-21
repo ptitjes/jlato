@@ -32,10 +32,6 @@ public abstract class SpacingConstraint {
 
 	// TODO add context argument (Expression, Statement, Block, Declaration, ...) ??
 
-	public static SpacingConstraint noSpace() {
-		return new FixedConstraint(Spacing.noSpace);
-	}
-
 	public static SpacingConstraint space() {
 		return spacing(SpacingLocation.DefaultSpace);
 	}
@@ -46,19 +42,6 @@ public abstract class SpacingConstraint {
 
 	public static SpacingConstraint spacing(final SpacingLocation location) {
 		return new LocationBasedConstraint(location);
-	}
-
-	private static class FixedConstraint extends SpacingConstraint {
-
-		public final Spacing spacing;
-
-		public FixedConstraint(Spacing spacing) {
-			this.spacing = spacing;
-		}
-
-		public Spacing resolve(FormattingSettings settings) {
-			return spacing;
-		}
 	}
 
 	private static class LocationBasedConstraint extends SpacingConstraint {
