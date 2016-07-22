@@ -23,7 +23,7 @@ import com.github.andrewoma.dexx.collection.Iterable;
 import com.github.andrewoma.dexx.collection.Pair;
 import com.github.andrewoma.dexx.collection.TreeMap;
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.coll.STreeSet;
+import org.jlato.internal.bu.coll.SNodeMap;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.printer.FormattingSettings;
@@ -38,29 +38,33 @@ import java.io.PrintWriter;
 /**
  * @author Didier Villevalois
  */
-public class TDTreeSet<T extends Tree> extends TDTree<STreeSet, org.jlato.tree.TreeSet<T>, org.jlato.tree.TreeSet<T>> implements TreeSet<T> {
+public class TDNodeMap<T extends Tree> extends TDTree<SNodeMap, org.jlato.tree.NodeMap<T>, org.jlato.tree.NodeMap<T>> implements NodeMap<T> {
 
-	public TDTreeSet(TDLocation<STreeSet> location) {
+	public static <T extends Tree> NodeMap<T> empty() {
+		return new TDNodeMap<T>();
+	}
+
+	public TDNodeMap(TDLocation<SNodeMap> location) {
 		super(location);
 	}
 
-	public TDTreeSet(String rootPath) {
-		this(new TDLocation<STreeSet>(new BUTree<STreeSet>(new STreeSet(rootPath))));
+	public TDNodeMap() {
+		this(new TDLocation<SNodeMap>(new BUTree<SNodeMap>(new SNodeMap())));
 	}
 
-	public TDTreeSet(String rootPath, TreeMap<String, BUTree<?>> trees) {
-		this(new TDLocation<STreeSet>(new BUTree<STreeSet>(new STreeSet(rootPath, trees))));
+	public TDNodeMap(TreeMap<String, BUTree<?>> trees) {
+		this(new TDLocation<SNodeMap>(new BUTree<SNodeMap>(new SNodeMap(trees))));
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public T get(String path) {
-		return (T) location.safeTraversal(STreeSet.treeTraversal(path));
+		return (T) location.safeTraversal(SNodeMap.treeTraversal(path));
 	}
 
 	@Override
-	public TreeSet<T> put(String path, T tree) {
-		return location.safeTraversalReplace(STreeSet.treeTraversal(path), tree);
+	public NodeMap<T> put(String path, T tree) {
+		return location.safeTraversalReplace(SNodeMap.treeTraversal(path), tree);
 	}
 
 	@Override
@@ -75,12 +79,11 @@ public class TDTreeSet<T extends Tree> extends TDTree<STreeSet, org.jlato.tree.T
 
 	@Override
 	public void updateOnDisk(boolean format, FormattingSettings formattingSettings) throws IOException {
-		final String rootPath = location.tree.state.rootPath;
 		for (Pair<String, BUTree<?>> pair : location.tree.state.trees) {
 			final String path = pair.component1();
 			final BUTree tree = pair.component2();
 
-			final File file = new File(rootPath + path);
+			final File file = new File(path);
 			if (!file.exists()) {
 				file.getParentFile().mkdirs();
 				file.createNewFile();

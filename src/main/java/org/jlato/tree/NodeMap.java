@@ -27,11 +27,11 @@ import java.io.IOException;
 /**
  * @author Didier Villevalois
  */
-public interface TreeSet<T extends Tree> extends Tree {
+public interface NodeMap<T extends Tree> extends Tree {
 
 	T get(String path);
 
-	TreeSet<T> put(String path, T tree);
+	NodeMap<T> put(String path, T tree);
 
 	Iterable<String> paths();
 

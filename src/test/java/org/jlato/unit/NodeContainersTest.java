@@ -24,6 +24,9 @@ import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.Printer;
+import org.jlato.rewrite.Quotes;
+import org.jlato.rewrite.Substitution;
+import org.jlato.rewrite.TypeSafeMatcher;
 import org.jlato.tree.*;
 import org.jlato.tree.expr.*;
 import org.jlato.tree.name.*;
@@ -36,8 +39,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
 
 import static org.jlato.tree.Trees.*;
 
@@ -504,6 +510,56 @@ public class NodeContainersTest {
 		Assert.assertEquals(name("name2"), either3.left());
 		Assert.assertEquals(null, either3.right());
 		Assert.assertEquals("(name2)", either3.mkString("(", ", ", ")"));
+	}
+
+	@Test
+	public void treeSetManipulations() {
+		ArrayList<Integer> numbers = new ArrayList<Integer>();
+		for (int i = 0; i < 10; i++) {
+			numbers.add(i);
+		}
+
+		// Can't shuffle because of a bug of com.github.andrewoma.dexx.collection
+		// Collections.shuffle(numbers);
+
+		NodeMap<Tree> map = Trees.emptyMap();
+		for (Integer i : numbers) {
+			Name name = name("" + i);
+			map = map.put("name" + i, name);
+		}
+
+		TypeSafeMatcher<Name> oddNameMatcher = new TypeSafeMatcher<Name>() {
+			@Override
+			public Substitution match(Object o) {
+				return match(o, Substitution.empty());
+			}
+
+			@Override
+			public Substitution match(Object object, Substitution substitution) {
+				return object instanceof Name && Integer.parseInt(((Name) object).id()) % 2 == 1 ? substitution : null;
+			}
+		};
+
+		Assert.assertEquals(5, countIterable(map.leftFindAll(oddNameMatcher)));
+		Assert.assertEquals(5, countIterable(map.rightFindAll(oddNameMatcher)));
+		Assert.assertArrayEquals(new String[]{"1", "3", "5", "7", "9"}, nameIterableAsArray(map.leftFindAll(oddNameMatcher)));
+		Assert.assertArrayEquals(new String[]{"9", "7", "5", "3", "1"}, nameIterableAsArray(map.rightFindAll(oddNameMatcher)));
+	}
+
+	private int countIterable(Iterable<? extends Tree> trees) {
+		int count = 0;
+		for (Tree tree : trees) {
+			count++;
+		}
+		return count;
+	}
+
+	private String[] nameIterableAsArray(Iterable<Name> names) {
+		java.util.ArrayList<String> nameStrings = new java.util.ArrayList<String>();
+		for (Name name : names) {
+			nameStrings.add(name.id());
+		}
+		return nameStrings.toArray(new String[nameStrings.size()]);
 	}
 
 	public Name indexedName(int index) {

@@ -20,9 +20,10 @@
 package org.jlato.parser;
 
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.td.coll.TDTreeSet;
+import org.jlato.internal.td.coll.TDNodeMap;
 import org.jlato.tree.Tree;
-import org.jlato.tree.TreeSet;
+import org.jlato.tree.NodeMap;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.CompilationUnit;
 
 import java.io.*;
@@ -73,13 +74,13 @@ public class Parser {
 		return parse(ParseContext.CompilationUnit, new FileInputStream(file), encoding);
 	}
 
-	public TreeSet<CompilationUnit> parseAll(File directory, String encoding) throws ParseException, FileNotFoundException {
+	public NodeMap<CompilationUnit> parseAll(File directory, String encoding) throws ParseException, FileNotFoundException {
 		List<File> files = collectAllJavaFiles(directory, new ArrayList<File>());
 
 		String rootPath = directory.getAbsolutePath();
 		if (!rootPath.endsWith("/")) rootPath = rootPath + "/";
 
-		TreeSet<CompilationUnit> set = new TDTreeSet<CompilationUnit>(rootPath);
+		NodeMap<CompilationUnit> set = Trees.emptyMap();
 		for (File file : files) {
 			final CompilationUnit cu = parse(file, encoding);
 			final String path = file.getAbsolutePath().substring(rootPath.length());
@@ -91,6 +92,8 @@ public class Parser {
 	// TODO Use NIO filesystem walker
 	private static List<File> collectAllJavaFiles(File rootDirectory, List<File> files) {
 		final File[] localFiles = rootDirectory.listFiles(JAVA_FILTER);
+		assert localFiles != null;
+
 		files.addAll(Arrays.asList(localFiles));
 
 		for (File directory : rootDirectory.listFiles(DIRECTORY_FILTER)) {
