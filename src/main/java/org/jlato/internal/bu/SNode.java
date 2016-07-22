@@ -40,11 +40,11 @@ public abstract class SNode<S extends SNode<S>> implements STree {
 	}
 
 	public void validate(BUTree<?> tree) {
-//		for (STree<?> child : children) {
-//			if (child == null) // TODO Add better error message
-//				throw new IllegalStateException();
-//			child.validate();
-//		}
+	//		for (STree<?> child : children) {
+	//			if (child == null) // TODO Add better error message
+	//				throw new IllegalStateException();
+	//			child.validate();
+	//		}
 	}
 
 	@Override

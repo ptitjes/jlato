@@ -25,22 +25,16 @@ import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.Printer;
 import org.jlato.tree.Trees;
-import org.jlato.tree.decl.FieldDecl;
-import org.jlato.tree.expr.MethodInvocationExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.stmt.ReturnStmt;
 import org.jlato.tree.stmt.Stmt;
-import org.jlato.tree.type.Primitive;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.FileNotFoundException;
-
-import static org.jlato.tree.Trees.*;
+import static org.jlato.tree.Trees.blockStmt;
 
 /**
  * @author Didier Villevalois
