@@ -68,15 +68,4 @@ public abstract class Pattern<T> implements TypeSafeMatcher<T>, TypeSafeBuilder<
 			}
 		};
 	}
-
-	public RewriteRules rewriteTo(final Pattern<T> rewrote) {
-		return new RewriteRules() {
-			@Override
-			@SuppressWarnings("unchecked")
-			public <T extends Tree> T rewrite(T t) {
-				Substitution match = Pattern.this.match(t);
-				return match == null ? t : (T) rewrote.build(match);
-			}
-		};
-	}
 }
