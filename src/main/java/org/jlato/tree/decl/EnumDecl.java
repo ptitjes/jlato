@@ -9,7 +9,7 @@ import org.jlato.util.Mutation;
 /**
  * An enum declaration.
  */
-public interface EnumDecl extends TypeDecl, TreeCombinators<EnumDecl> {
+public interface EnumDecl extends TypeDecl, Documentable<EnumDecl>, TreeCombinators<EnumDecl> {
 
 	/**
 	 * Returns the modifiers of this enum declaration.

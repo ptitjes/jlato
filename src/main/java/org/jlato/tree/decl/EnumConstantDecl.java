@@ -10,7 +10,7 @@ import org.jlato.util.Mutation;
 /**
  * An enum constant declaration.
  */
-public interface EnumConstantDecl extends MemberDecl, TreeCombinators<EnumConstantDecl> {
+public interface EnumConstantDecl extends MemberDecl, Documentable<EnumConstantDecl>, TreeCombinators<EnumConstantDecl> {
 
 	/**
 	 * Returns the modifiers of this enum constant declaration.

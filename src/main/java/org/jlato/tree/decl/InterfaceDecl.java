@@ -9,7 +9,7 @@ import org.jlato.util.Mutation;
 /**
  * An interface declaration.
  */
-public interface InterfaceDecl extends TypeDecl, TreeCombinators<InterfaceDecl> {
+public interface InterfaceDecl extends TypeDecl, Documentable<InterfaceDecl>, TreeCombinators<InterfaceDecl> {
 
 	/**
 	 * Returns the modifiers of this interface declaration.

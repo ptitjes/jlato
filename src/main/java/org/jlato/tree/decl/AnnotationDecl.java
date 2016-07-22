@@ -8,7 +8,7 @@ import org.jlato.util.Mutation;
 /**
  * An annotation type declaration.
  */
-public interface AnnotationDecl extends TypeDecl, TreeCombinators<AnnotationDecl> {
+public interface AnnotationDecl extends TypeDecl, Documentable<AnnotationDecl>, TreeCombinators<AnnotationDecl> {
 
 	/**
 	 * Returns the modifiers of this annotation type declaration.

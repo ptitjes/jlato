@@ -10,7 +10,7 @@ import org.jlato.util.Mutation;
 /**
  * A package declaration.
  */
-public interface PackageDecl extends Node, TreeCombinators<PackageDecl> {
+public interface PackageDecl extends Node, Documentable<PackageDecl>, TreeCombinators<PackageDecl> {
 
 	/**
 	 * Returns the annotations of this package declaration.

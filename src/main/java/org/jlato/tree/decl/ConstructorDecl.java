@@ -10,7 +10,7 @@ import org.jlato.util.Mutation;
 /**
  * A constructor declaration.
  */
-public interface ConstructorDecl extends MemberDecl, TreeCombinators<ConstructorDecl> {
+public interface ConstructorDecl extends MemberDecl, Documentable<ConstructorDecl>, TreeCombinators<ConstructorDecl> {
 
 	/**
 	 * Returns the modifiers of this constructor declaration.

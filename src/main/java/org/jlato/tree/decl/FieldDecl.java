@@ -8,7 +8,7 @@ import org.jlato.util.Mutation;
 /**
  * A field declaration.
  */
-public interface FieldDecl extends MemberDecl, TreeCombinators<FieldDecl> {
+public interface FieldDecl extends MemberDecl, Documentable<FieldDecl>, TreeCombinators<FieldDecl> {
 
 	/**
 	 * Returns the modifiers of this field declaration.

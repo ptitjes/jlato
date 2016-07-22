@@ -187,14 +187,7 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 	// - single-line followed by new-line for statement
 
 	public T insertLeadingComment(String commentString) {
-		final WToken comment;
-		if (commentString.startsWith("/**") && commentString.endsWith("*/")) {
-			comment = WToken.javaDocComment(commentString);
-		} else if (commentString.startsWith("/*") && commentString.endsWith("*/")) {
-			comment = WToken.multiLineComment(commentString);
-		} else if (commentString.startsWith("//")) {
-			comment = WToken.singleLineComment(commentString);
-		} else throw new IllegalArgumentException();
+		final WToken comment = createComment(commentString);
 
 		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
@@ -213,14 +206,7 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 	}
 
 	public T insertTrailingComment(String commentString) {
-		final WToken comment;
-		if (commentString.startsWith("/**") && commentString.endsWith("*/")) {
-			throw new IllegalArgumentException();
-		} else if (commentString.startsWith("/*") && commentString.endsWith("*/")) {
-			comment = WToken.multiLineComment(commentString);
-		} else if (commentString.startsWith("//")) {
-			comment = WToken.singleLineComment(commentString);
-		} else throw new IllegalArgumentException();
+		final WToken comment = createComment(commentString);
 
 		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
@@ -234,6 +220,43 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		}
 
 		return location.replaceTree(tree.withDressing(dressing.withTrailing(newTrailing)));
+	}
+
+	private WToken createComment(String commentString) {
+		final WToken comment;
+		if (commentString.startsWith("/**") && commentString.endsWith("*/")) {
+			comment = WToken.javaDocComment(commentString);
+		} else if (commentString.startsWith("/*") && commentString.endsWith("*/")) {
+			comment = WToken.multiLineComment(commentString);
+		} else if (commentString.startsWith("//")) {
+			comment = WToken.singleLineComment(commentString);
+		} else throw new IllegalArgumentException();
+		return comment;
+	}
+
+	public T withDocComment(String commentString) {
+		WToken comment = WToken.javaDocComment("/** " + commentString.trim() + " */");
+
+		final BUTree<S> tree = location.tree;
+		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
+
+		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
+		final WTokenRun newLeading = leading.replaceOrAppendDocComment(comment);
+
+		return location.replaceTree(tree.withDressing(dressing.withLeading(newLeading)));
+	}
+
+	public String docComment() {
+		final BUTree<S> tree = location.tree;
+		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
+
+		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
+		final WToken docComment = leading.getDocComment();
+		return docComment != null ? trimDocCommentString(docComment.string) : null;
+	}
+
+	private String trimDocCommentString(String docCommentString) {
+		return docCommentString.substring("/**".length(), docCommentString.length() - "*/".length()).trim();
 	}
 
 	public T insertNewLineBefore() {

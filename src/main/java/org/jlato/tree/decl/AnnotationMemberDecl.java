@@ -11,7 +11,7 @@ import org.jlato.util.Mutation;
 /**
  * An annotation type member declaration.
  */
-public interface AnnotationMemberDecl extends MemberDecl, TreeCombinators<AnnotationMemberDecl> {
+public interface AnnotationMemberDecl extends MemberDecl, Documentable<AnnotationMemberDecl>, TreeCombinators<AnnotationMemberDecl> {
 
 	/**
 	 * Returns the modifiers of this annotation type member declaration.

@@ -12,7 +12,7 @@ import org.jlato.util.Mutation;
 /**
  * A method declaration.
  */
-public interface MethodDecl extends MemberDecl, TreeCombinators<MethodDecl> {
+public interface MethodDecl extends MemberDecl, Documentable<MethodDecl>, TreeCombinators<MethodDecl> {
 
 	/**
 	 * Returns the modifiers of this method declaration.

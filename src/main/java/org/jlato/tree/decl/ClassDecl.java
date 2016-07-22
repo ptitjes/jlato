@@ -10,7 +10,7 @@ import org.jlato.util.Mutation;
 /**
  * A class declaration.
  */
-public interface ClassDecl extends TypeDecl, TreeCombinators<ClassDecl> {
+public interface ClassDecl extends TypeDecl, Documentable<ClassDecl>, TreeCombinators<ClassDecl> {
 
 	/**
 	 * Returns the modifiers of this class declaration.

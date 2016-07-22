@@ -38,33 +38,58 @@ import static org.jlato.tree.Trees.*;
 @RunWith(JUnit4.class)
 public class JavaDocTest {
 
+	FieldDecl base = fieldDecl(primitiveType(Primitive.Int))
+			.withVariables(listOf(
+					variableDeclarator().withId(variableDeclaratorId().withName(name("field")))
+			));
+
+	@Test
+	public void testForNoJavaDoc() throws FileNotFoundException, ParseException {
+		Assert.assertNull(base.docComment());
+	}
+
 	@Test
 	public void formatJavaDoc() throws FileNotFoundException, ParseException {
-		FieldDecl decl = fieldDecl(primitiveType(Primitive.Int))
-				.withVariables(listOf(
-						variableDeclarator().withId(variableDeclaratorId().withName(name("field")))
-				))
-				.insertLeadingComment("/** A simple comment. */");
+		FieldDecl decl = base.withDocComment("A simple comment.");
 		Assert.assertEquals("/**\n" +
 						" * A simple comment.\n" +
 						" */\n" +
 						"int field;",
 				Printer.printToString(decl)
 		);
+		Assert.assertEquals("A simple comment.", decl.docComment());
 	}
 
 	@Test
 	public void formatJavaDocWithEmptyLines() throws FileNotFoundException, ParseException {
-		FieldDecl decl = fieldDecl(primitiveType(Primitive.Int))
-				.withVariables(listOf(
-						variableDeclarator().withId(variableDeclaratorId().withName(name("field")))
-				))
-				.insertLeadingComment("/**\n\n\n\nA simple comment.\n\n\n\n*/");
+		FieldDecl decl = base.withDocComment("\n\n\n\nA simple comment.\n\n\n\n");
 		Assert.assertEquals("/**\n" +
 						" * A simple comment.\n" +
 						" */\n" +
 						"int field;",
 				Printer.printToString(decl)
 		);
+		Assert.assertEquals("A simple comment.", decl.docComment());
+	}
+
+	@Test
+	public void formatJavaDocTwice() throws FileNotFoundException, ParseException {
+		FieldDecl decl = base.withDocComment("A first comment.");
+		Assert.assertEquals("/**\n" +
+						" * A first comment.\n" +
+						" */\n" +
+						"int field;",
+				Printer.printToString(decl)
+		);
+		Assert.assertEquals("A first comment.", decl.docComment());
+
+		decl = decl.withDocComment("A second comment.");
+		Assert.assertEquals("/**\n" +
+						" * A second comment.\n" +
+						" */\n" +
+						"int field;",
+				Printer.printToString(decl)
+		);
+		Assert.assertEquals("A second comment.", decl.docComment());
 	}
 }

@@ -41,6 +41,20 @@ public class WTokenRun extends WRun {
 		return new WTokenRun(elements.append(element));
 	}
 
+	public WTokenRun replaceOrAppendDocComment(WToken docComment) {
+		int indexOfDocComment = indexOfDocComment();
+		if (indexOfDocComment != -1) {
+			return new WTokenRun(elements.set(indexOfDocComment, docComment));
+		} else {
+			return append(docComment).append(WToken.newLine());
+		}
+	}
+
+	public WToken getDocComment() {
+		int indexOfDocComment = indexOfDocComment();
+		return indexOfDocComment != -1 ? elements.get(indexOfDocComment) : null;
+	}
+
 	public WTokenRun appendAll(WTokenRun tokens) {
 		WTokenRun concatenation = this;
 		for (WToken token : tokens.elements) {
@@ -161,6 +175,26 @@ public class WTokenRun extends WRun {
 			}
 		}
 		return splitIndex;
+	}
+
+	private int indexOfDocComment() {
+		for (int i = 0; i < elements.size(); i++) {
+			final WToken token = elements.get(i);
+			switch (token.kind) {
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+					break;
+				case ParserImplConstants.JAVA_DOC_COMMENT:
+					return i;
+				case ParserImplConstants.NEWLINE:
+				case ParserImplConstants.WHITESPACE:
+					break;
+				default:
+					// Checked at WToken instantiation
+					throw new IllegalStateException();
+			}
+		}
+		return -1;
 	}
 
 	public boolean containsOneCommentNoNewLine() {
