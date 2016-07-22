@@ -20,20 +20,13 @@
 package org.jlato.internal.td.coll;
 
 import com.github.andrewoma.dexx.collection.Iterable;
-import com.github.andrewoma.dexx.collection.Pair;
 import com.github.andrewoma.dexx.collection.TreeMap;
 import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.coll.SNodeMap;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
-import org.jlato.printer.FormattingSettings;
-import org.jlato.internal.shapes.Print;
-import org.jlato.tree.*;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.jlato.tree.NodeMap;
+import org.jlato.tree.Tree;
 
 /**
  * @author Didier Villevalois
@@ -70,28 +63,5 @@ public class TDNodeMap<T extends Tree> extends TDTree<SNodeMap, org.jlato.tree.N
 	@Override
 	public Iterable<String> keys() {
 		return location.tree.state.trees.keys();
-	}
-
-	@Override
-	public void updateOnDisk() throws IOException {
-		updateOnDisk(false, FormattingSettings.Default);
-	}
-
-	@Override
-	public void updateOnDisk(boolean format, FormattingSettings formattingSettings) throws IOException {
-		for (Pair<String, BUTree<?>> pair : location.tree.state.trees) {
-			final String path = pair.component1();
-			final BUTree tree = pair.component2();
-
-			final File file = new File(path);
-			if (!file.exists()) {
-				file.getParentFile().mkdirs();
-				file.createNewFile();
-			}
-			final PrintWriter writer = new PrintWriter(new FileWriter(file));
-			final Print print = new Print(writer, format, formattingSettings);
-			print.print(tree.asTree());
-			writer.close();
-		}
 	}
 }

@@ -20,8 +20,12 @@
 package org.jlato.printer;
 
 import org.jlato.internal.shapes.Print;
+import org.jlato.tree.NodeMap;
 import org.jlato.tree.Tree;
+import org.jlato.tree.decl.CompilationUnit;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -177,5 +181,21 @@ public class Printer {
 	 */
 	public void print(Tree tree, PrintWriter writer) {
 		new Print(writer, format, formattingSettings).print(tree);
+	}
+
+	public void printAll(NodeMap<CompilationUnit> compilationUnits, File directory, String encoding) throws IOException {
+		for (String path : compilationUnits.keys()) {
+			final CompilationUnit cu = compilationUnits.get(path);
+
+			final File file = new File(directory, path);
+			if (!file.exists()) {
+				file.getParentFile().mkdirs();
+				file.createNewFile();
+			}
+
+			final PrintWriter writer = new PrintWriter(file, encoding);
+			print(cu, writer);
+			writer.close();
+		}
 	}
 }

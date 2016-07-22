@@ -20,9 +20,6 @@
 package org.jlato.tree;
 
 import com.github.andrewoma.dexx.collection.Iterable;
-import org.jlato.printer.FormattingSettings;
-
-import java.io.IOException;
 
 /**
  * @author Didier Villevalois
@@ -34,8 +31,4 @@ public interface NodeMap<T extends Tree> extends Tree {
 	NodeMap<T> put(String key, T tree);
 
 	Iterable<String> keys();
-
-	void updateOnDisk() throws IOException;
-
-	void updateOnDisk(boolean format, FormattingSettings formattingSettings) throws IOException;
 }
