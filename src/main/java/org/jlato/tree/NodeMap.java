@@ -29,11 +29,11 @@ import java.io.IOException;
  */
 public interface NodeMap<T extends Tree> extends Tree {
 
-	T get(String path);
+	T get(String key);
 
-	NodeMap<T> put(String path, T tree);
+	NodeMap<T> put(String key, T tree);
 
-	Iterable<String> paths();
+	Iterable<String> keys();
 
 	void updateOnDisk() throws IOException;
 

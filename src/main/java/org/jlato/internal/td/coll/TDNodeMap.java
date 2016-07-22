@@ -58,17 +58,17 @@ public class TDNodeMap<T extends Tree> extends TDTree<SNodeMap, org.jlato.tree.N
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public T get(String path) {
-		return (T) location.safeTraversal(SNodeMap.treeTraversal(path));
+	public T get(String key) {
+		return (T) location.safeTraversal(SNodeMap.treeTraversal(key));
 	}
 
 	@Override
-	public NodeMap<T> put(String path, T tree) {
-		return location.safeTraversalReplace(SNodeMap.treeTraversal(path), tree);
+	public NodeMap<T> put(String key, T tree) {
+		return location.safeTraversalReplace(SNodeMap.treeTraversal(key), tree);
 	}
 
 	@Override
-	public Iterable<String> paths() {
+	public Iterable<String> keys() {
 		return location.tree.state.trees.keys();
 	}
 
