@@ -279,9 +279,19 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
 		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
-		final WTokenRun newLeading = leading.append(newLine());
+		final WTokenRun newLeading = leading.prepend(newLine());
 
 		return location.replaceTree(tree.withDressing(dressing.withLeading(newLeading)));
+	}
+
+	public T insertNewLineAfter() {
+		final BUTree<S> tree = location.tree;
+		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
+
+		final WTokenRun trailing = dressing.trailing == null ? WTokenRun.EMPTY : dressing.trailing;
+		final WTokenRun newTrailing = trailing.append(newLine());
+
+		return location.replaceTree(tree.withDressing(dressing.withTrailing(newTrailing)));
 	}
 
 	// Convenience conversion helper methods

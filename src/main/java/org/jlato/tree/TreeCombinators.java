@@ -84,4 +84,6 @@ public interface TreeCombinators<T extends Tree> extends Tree {
 	T insertTrailingComment(String commentString, boolean forceMultiLine);
 
 	T insertNewLineBefore();
+
+	T insertNewLineAfter();
 }
