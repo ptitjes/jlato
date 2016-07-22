@@ -24,9 +24,11 @@ import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.Printer;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.FieldDecl;
 import org.jlato.tree.expr.MethodInvocationExpr;
 import org.jlato.tree.name.Name;
+import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.stmt.ReturnStmt;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.type.Primitive;
@@ -80,6 +82,17 @@ public class CommentsTest {
 				Printer.printToString(stmt3, true));
 		Assert.assertArrayEquals(new String[]{"leading1", "leading2"}, stmt3.leadingComments());
 		Assert.assertArrayEquals(new String[]{"trailing2", "trailing1"}, stmt3.trailingComments());
+	}
+
+	@Test
+	public void commentsOnStatementsWithNewLines() throws ParseException {
+		BlockStmt stmt1 = blockStmt().withStmts(Trees.<Stmt>listOf(
+				stmt.insertLeadingComment("leading1"),
+				stmt.insertNewLineBefore().insertLeadingComment("leading2")
+		));
+		Assert.assertEquals(
+				"{\n\t// leading1\n\treturn foo;\n\n\t// leading2\n\treturn foo;\n}",
+				Printer.printToString(stmt1, true));
 	}
 
 	@Test

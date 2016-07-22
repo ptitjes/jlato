@@ -379,6 +379,7 @@ public class Printer {
 	}
 
 	private void appendComment(String image) {
+		if (needsIndentation) doPrintIndent();
 		writer.append(image);
 		afterAlpha = false;
 		needsIndentation = false;
