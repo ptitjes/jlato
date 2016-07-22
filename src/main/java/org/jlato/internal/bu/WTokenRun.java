@@ -87,14 +87,6 @@ public class WTokenRun extends WRun {
 		return indexOfDocComment != -1 ? elements.get(indexOfDocComment) : null;
 	}
 
-	public WTokenRun appendAll(WTokenRun tokens) {
-		WTokenRun concatenation = this;
-		for (WToken token : tokens.elements) {
-			concatenation = concatenation.append(token);
-		}
-		return concatenation;
-	}
-
 	public TwoWaySplit splitTrailingComment() {
 		int splitIndex = splitIndexOfTrailingComment();
 		return new TwoWaySplit(
