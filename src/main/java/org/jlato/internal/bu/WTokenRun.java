@@ -110,14 +110,20 @@ public class WTokenRun extends WRun {
 
 	private int splitIndexOfTrailingComment() {
 		// We expect to find one comment at beginning with no new line before
-		//int splitIndex = 0;
+		// We can also have many trailing comments before a new line
+		boolean containsNewLines = containsNewLines();
+		boolean containsComments = containsComments();
+
+		if (!containsComments) return 0;
+
 		for (int i = 0; i < elements.size(); i++) {
 			final WToken token = elements.get(i);
 			switch (token.kind) {
 				case ParserImplConstants.SINGLE_LINE_COMMENT:
 				case ParserImplConstants.MULTI_LINE_COMMENT:
 				case ParserImplConstants.JAVA_DOC_COMMENT:
-					return i + 1;
+					if (!containsNewLines) return i + 1;
+					else break;
 				case ParserImplConstants.NEWLINE:
 					return i;
 				case ParserImplConstants.WHITESPACE:
@@ -127,7 +133,7 @@ public class WTokenRun extends WRun {
 					throw new IllegalStateException();
 			}
 		}
-		return 0;
+		return elements.size();
 	}
 
 	private int splitIndexOfLeadingComments() {
@@ -202,6 +208,25 @@ public class WTokenRun extends WRun {
 			}
 		}
 		return count;
+	}
+
+	public boolean containsNewLines() {
+		for (WToken token : elements) {
+			switch (token.kind) {
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case ParserImplConstants.JAVA_DOC_COMMENT:
+					break;
+				case ParserImplConstants.NEWLINE:
+					return true;
+				case ParserImplConstants.WHITESPACE:
+					break;
+				default:
+					// Checked at WToken instantiation
+					throw new IllegalStateException();
+			}
+		}
+		return false;
 	}
 
 	public boolean containsComments() {

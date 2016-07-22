@@ -222,6 +222,75 @@ public class WTokenRunTest {
 	}
 
 	@Test
+	public void splitTrailingLeadingWithManyTrailingMultiLineComments() {
+		final WTokenRun.Builder builder = new WTokenRun.Builder();
+		builder.add(WToken.multiLineComment("/* Comment */"));
+		builder.add(WToken.whitespace(" "));
+		builder.add(WToken.multiLineComment("/* Comment */"));
+		builder.add(WToken.newLine());
+		builder.add(WToken.whitespace("\t"));
+		builder.add(WToken.multiLineComment("/* Comment */"));
+		builder.add(WToken.newLine());
+		builder.add(WToken.whitespace("\t"));
+		final WTokenRun run = builder.build();
+
+		final WTokenRun.ThreeWaySplit split = run.splitTrailingAndLeadingComments();
+		Assert.assertEquals(3, split.left.elements.size());
+		Assert.assertEquals(2, split.middle.elements.size());
+		Assert.assertEquals(3, split.right.elements.size());
+		Assert.assertEquals("[/* Comment */, ,/* Comment */]", split.left.toString());
+		Assert.assertEquals("[\\n,\\t]", split.middle.toString());
+		Assert.assertEquals("[/* Comment */,\\n,\\t]", split.right.toString());
+	}
+
+	@Test
+	public void splitTrailingLeadingWithManyTrailingMultiLineCommentsButNewLine() {
+		final WTokenRun.Builder builder = new WTokenRun.Builder();
+		builder.add(WToken.multiLineComment("/* Comment */"));
+		builder.add(WToken.newLine());
+		builder.add(WToken.whitespace("\t"));
+		builder.add(WToken.multiLineComment("/* Comment */"));
+		builder.add(WToken.newLine());
+		builder.add(WToken.whitespace("\t"));
+		builder.add(WToken.multiLineComment("/* Comment */"));
+		builder.add(WToken.newLine());
+		builder.add(WToken.whitespace("\t"));
+		final WTokenRun run = builder.build();
+
+		final WTokenRun.ThreeWaySplit split = run.splitTrailingAndLeadingComments();
+		Assert.assertEquals(1, split.left.elements.size());
+		Assert.assertEquals(2, split.middle.elements.size());
+		Assert.assertEquals(6, split.right.elements.size());
+		Assert.assertEquals("[/* Comment */]", split.left.toString());
+		Assert.assertEquals("[\\n,\\t]", split.middle.toString());
+		Assert.assertEquals("[/* Comment */,\\n,\\t,/* Comment */,\\n,\\t]", split.right.toString());
+	}
+
+	@Test
+	public void splitTrailingLeadingWithManyTrailingMultiLineCommentsButNewLines() {
+		final WTokenRun.Builder builder = new WTokenRun.Builder();
+		builder.add(WToken.multiLineComment("/* Comment */"));
+		builder.add(WToken.newLine());
+		builder.add(WToken.whitespace("\t"));
+		builder.add(WToken.multiLineComment("/* Comment */"));
+		builder.add(WToken.newLine());
+		builder.add(WToken.newLine());
+		builder.add(WToken.whitespace("\t"));
+		builder.add(WToken.multiLineComment("/* Comment */"));
+		builder.add(WToken.newLine());
+		builder.add(WToken.whitespace("\t"));
+		final WTokenRun run = builder.build();
+
+		final WTokenRun.ThreeWaySplit split = run.splitTrailingAndLeadingComments();
+		Assert.assertEquals(1, split.left.elements.size());
+		Assert.assertEquals(6, split.middle.elements.size());
+		Assert.assertEquals(3, split.right.elements.size());
+		Assert.assertEquals("[/* Comment */]", split.left.toString());
+		Assert.assertEquals("[\\n,\\t,/* Comment */,\\n,\\n,\\t]", split.middle.toString());
+		Assert.assertEquals("[/* Comment */,\\n,\\t]", split.right.toString());
+	}
+
+	@Test
 	public void splitTrailingLeadingWithOneCommentNoNewLine() {
 		final WTokenRun.Builder builder = new WTokenRun.Builder();
 		builder.add(WToken.whitespace(" "));
