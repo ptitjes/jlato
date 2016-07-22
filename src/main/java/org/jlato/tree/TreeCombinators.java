@@ -41,12 +41,6 @@ public interface TreeCombinators<T extends Tree> extends Tree {
 
 	T match(TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor);
 
-	<U extends Tree> Iterable<U> findAll(TypeSafeMatcher<U> matcher);
-
-	<U extends Tree> Iterable<U> leftFindAll(TypeSafeMatcher<U> matcher);
-
-	<U extends Tree> Iterable<U> rightFindAll(TypeSafeMatcher<U> matcher);
-
 	/**
 	 * Inserts a leading comment to this tree with the specified comment string.
 	 * This uses sensible defaults to chose between single-line or multi-line comment,

@@ -57,4 +57,8 @@ public interface Tree {
 	boolean matches(Matcher matcher);
 
 	<U extends Tree> Iterable<U> findAll(TypeSafeMatcher<U> matcher);
+
+	<U extends Tree> Iterable<U> leftFindAll(TypeSafeMatcher<U> matcher);
+
+	<U extends Tree> Iterable<U> rightFindAll(TypeSafeMatcher<U> matcher);
 }

@@ -24,8 +24,10 @@ import org.jlato.printer.FormattingSettings;
 import org.jlato.rewrite.MatchVisitor;
 import org.jlato.rewrite.Substitution;
 import org.jlato.rewrite.TypeSafeMatcher;
+import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.CompilationUnit;
+import org.jlato.tree.name.Name;
 import org.jlato.unit.util.BaseTestFromFiles;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,6 +35,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.IOException;
+
+import static org.jlato.tree.Trees.listOf;
+import static org.jlato.tree.Trees.name;
 
 /**
  * @author Didier Villevalois
@@ -43,7 +48,7 @@ public class TraversalTest extends BaseTestFromFiles {
 	@Test
 	public void javaConceptLeftRightTraversal() throws IOException, ParseException {
 		final String original = resourceAsString("org/jlato/samples/JavaConcepts.java");
-		CompilationUnit cu = parse(original, true);
+		final CompilationUnit cu = parse(original, true);
 
 		final CompilationUnit rewrote = cu.leftForAll(ANY_NODE, new MatchVisitor<Tree>() {
 			@Override
@@ -58,7 +63,7 @@ public class TraversalTest extends BaseTestFromFiles {
 	@Test
 	public void javaConceptRightLeftTraversal() throws IOException, ParseException {
 		final String original = resourceAsString("org/jlato/samples/JavaConcepts.java");
-		CompilationUnit cu = parse(original, true);
+		final CompilationUnit cu = parse(original, true);
 
 		final CompilationUnit rewrote = cu.rightForAll(ANY_NODE, new MatchVisitor<Tree>() {
 			@Override
@@ -70,15 +75,73 @@ public class TraversalTest extends BaseTestFromFiles {
 		Assert.assertEquals(original, print(rewrote, false, FormattingSettings.Default));
 	}
 
+	@Test
+	public void javaConceptLeftRightFindAll() throws IOException, ParseException {
+		final String original = resourceAsString("org/jlato/samples/JavaConcepts.java");
+		final CompilationUnit cu = parse(original, true);
+
+		final int nodeCount = countIterable(cu.findAll(ANY_NODE));
+
+		Assert.assertEquals(3514, nodeCount);
+	}
+
+	@Test
+	public void javaConceptRightLeftFindAll() throws IOException, ParseException {
+		final String original = resourceAsString("org/jlato/samples/JavaConcepts.java");
+		final CompilationUnit cu = parse(original, true);
+
+		final int nodeCount = countIterable(cu.rightFindAll(ANY_NODE));
+
+		Assert.assertEquals(3514, nodeCount);
+	}
+
+	@Test
+	public void findAllOrder() throws IOException, ParseException {
+		NodeList<Name> names = listOf(name("1"), name("2"), name("3"), name("4"), name("5"));
+
+		TypeSafeMatcher<Name> oddNameMatcher = new TypeSafeMatcher<Name>() {
+			@Override
+			public Substitution match(Object o) {
+				return match(o, Substitution.empty());
+			}
+
+			@Override
+			public Substitution match(Object object, Substitution substitution) {
+				return object instanceof Name && Integer.parseInt(((Name) object).id()) % 2 == 1 ? substitution : null;
+			}
+		};
+
+		Assert.assertEquals(3, countIterable(names.leftFindAll(oddNameMatcher)));
+		Assert.assertEquals(3, countIterable(names.rightFindAll(oddNameMatcher)));
+		Assert.assertArrayEquals(new String[]{"1", "3", "5"}, nameIterableAsArray(names.leftFindAll(oddNameMatcher)));
+		Assert.assertArrayEquals(new String[]{"5", "3", "1"}, nameIterableAsArray(names.rightFindAll(oddNameMatcher)));
+	}
+
 	public static final TypeSafeMatcher<Tree> ANY_NODE = new TypeSafeMatcher<Tree>() {
 		@Override
 		public Substitution match(Object o) {
-			return null;
+			return match(o, Substitution.empty());
 		}
 
 		@Override
 		public Substitution match(Object object, Substitution substitution) {
-			return null;
+			return substitution;
 		}
 	};
+
+	private int countIterable(Iterable<? extends Tree> trees) {
+		int count = 0;
+		for (Tree tree : trees) {
+			count++;
+		}
+		return count;
+	}
+
+	private String[] nameIterableAsArray(Iterable<Name> names) {
+		java.util.ArrayList<String> nameStrings = new java.util.ArrayList<String>();
+		for (Name name : names) {
+			nameStrings.add(name.id());
+		}
+		return nameStrings.toArray(new String[nameStrings.size()]);
+	}
 }

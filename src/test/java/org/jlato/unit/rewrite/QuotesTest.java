@@ -19,7 +19,9 @@
 
 package org.jlato.unit.rewrite;
 
+import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
+import org.jlato.parser.Parser;
 import org.jlato.printer.Printer;
 import org.jlato.rewrite.Pattern;
 import org.jlato.rewrite.Quotes;
@@ -50,6 +52,14 @@ public class QuotesTest extends BaseTestFromFiles {
 	@Test
 	public void methodCalls() throws FileNotFoundException, ParseException {
 		final Pattern<Expr> expr = Quotes.expr("$p.hashCode()");
+
+		Assert.assertTrue(parseExpr("o.hashCode()").matches(expr));
+		Assert.assertFalse(parseExpr("o.otherMethod()").matches(expr));
+
+		Assert.assertNotNull(parseExpr("o.hashCode()").match(expr));
+		Assert.assertNull(parseExpr("o.otherMethod()").match(expr));
+		Assert.assertTrue(parseExpr("o.hashCode()").match(expr).binds("p"));
+		Assert.assertEquals(name("o"), parseExpr("o.hashCode()").match(expr).get("p"));
 	}
 
 	@Test
@@ -80,5 +90,9 @@ public class QuotesTest extends BaseTestFromFiles {
 						"\treturn result;\n" +
 						"}",
 				Printer.printToString(decl));
+	}
+
+	private Expr parseExpr(String content) throws ParseException {
+		return new Parser().parse(ParseContext.Expression, content);
 	}
 }
