@@ -24,15 +24,21 @@ import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.Printer;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.ImportDecl;
 import org.jlato.tree.expr.Expr;
+import org.jlato.tree.expr.MethodInvocationExpr;
+import org.jlato.tree.name.Name;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import static org.jlato.tree.Trees.*;
 
 /**
  * @author Didier Villevalois
@@ -87,5 +93,24 @@ public class BasicTest {
 		final String original = "$name";
 		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
 		final Expr e = parser.parse(ParseContext.Expression, original);
+	}
+
+	@Test
+	@Ignore
+	public void methodInvocationWithNewLines() throws IOException, ParseException {
+		Name object1 = name("object");
+
+		MethodInvocationExpr object2 = methodInvocationExpr(name("method1"))
+				.withScope(object1.insertNewLineAfter())
+				.withArgs(Trees.<Expr>listOf(name("arg1"), name("arg2")));
+
+		MethodInvocationExpr object3 = methodInvocationExpr(name("method2"))
+				.withScope(object2.insertNewLineAfter())
+				.withArgs(Trees.<Expr>listOf(name("arg1"), name("arg2")));
+
+		Assert.assertEquals(
+				"object\n\t\t.method1(arg1, arg2)\n\t\t.method2(arg1, arg2);",
+				Printer.printToString(expressionStmt().withExpr(object3), true)
+		);
 	}
 }
