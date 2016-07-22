@@ -21,7 +21,6 @@ package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.WRunRun;
-import org.jlato.printer.Printer;
 
 /**
  * @author Didier Villevalois
@@ -71,13 +70,13 @@ public final class LSConstraint extends LSDecorated {
 	}
 
 	@Override
-	public void render(BUTree tree, WRunRun run, Printer printer) {
-		if (spacingBefore != null) printer.encounteredSpacing(spacingBefore);
-		if (indentationBefore != null) printer.encounteredIndentation(indentationBefore);
+	public void render(BUTree tree, WRunRun run, Print print) {
+		if (spacingBefore != null) print.encounteredSpacing(spacingBefore);
+		if (indentationBefore != null) print.encounteredIndentation(indentationBefore);
 
-		super.render(tree, run, printer);
+		super.render(tree, run, print);
 
-		if (indentationAfter != null) printer.encounteredIndentation(indentationAfter);
-		if (spacingAfter != null) printer.encounteredSpacing(spacingAfter);
+		if (indentationAfter != null) print.encounteredIndentation(indentationAfter);
+		if (spacingAfter != null) print.encounteredSpacing(spacingAfter);
 	}
 }

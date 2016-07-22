@@ -1,23 +1,33 @@
 package org.jlato.unit.util;
 
+import org.jlato.internal.td.decl.*;
+import org.jlato.internal.td.expr.*;
+import org.jlato.internal.td.name.TDName;
+import org.jlato.internal.td.name.TDQualifiedName;
+import org.jlato.internal.td.stmt.*;
+import org.jlato.internal.td.type.TDPrimitiveType;
+import org.jlato.internal.td.type.TDQualifiedType;
+import org.jlato.internal.td.type.TDUnknownType;
+import org.jlato.internal.td.type.TDVoidType;
 import org.jlato.tree.*;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.*;
-import org.jlato.tree.name.*;
-import org.jlato.tree.stmt.*;
-import org.jlato.tree.type.*;
-import org.jlato.internal.td.decl.*;
-import org.jlato.internal.td.expr.*;
-import org.jlato.internal.td.name.*;
-import org.jlato.internal.td.stmt.*;
-import org.jlato.internal.td.type.*;
-
-import static org.jlato.tree.Trees.*;
-
+import org.jlato.tree.name.Name;
+import org.jlato.tree.name.QualifiedName;
+import org.jlato.tree.stmt.BlockStmt;
+import org.jlato.tree.stmt.CatchClause;
+import org.jlato.tree.stmt.Stmt;
+import org.jlato.tree.stmt.SwitchCase;
+import org.jlato.tree.type.Primitive;
+import org.jlato.tree.type.QualifiedType;
+import org.jlato.tree.type.ReferenceType;
+import org.jlato.tree.type.Type;
 import org.jlato.util.Function0;
 import org.jlato.util.Function2;
 
 import java.util.Random;
+
+import static org.jlato.tree.Trees.*;
 
 public class Arbitrary {
 

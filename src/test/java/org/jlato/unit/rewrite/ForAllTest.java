@@ -40,9 +40,7 @@ import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 
-import static org.jlato.rewrite.Quotes.param;
-import static org.jlato.rewrite.Quotes.type;
-import static org.jlato.rewrite.Quotes.typeDecl;
+import static org.jlato.rewrite.Quotes.*;
 import static org.jlato.tree.Trees.name;
 
 /**

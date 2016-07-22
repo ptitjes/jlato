@@ -22,7 +22,6 @@ package org.jlato.internal.shapes;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeEither;
 import org.jlato.internal.bu.coll.SNodeOption;
-import org.jlato.printer.Printer;
 
 import static org.jlato.internal.shapes.SpacingConstraint.space;
 
@@ -45,11 +44,11 @@ public abstract class LexicalShape {
 
 	public abstract void dressLeading(WTokenRun tokens, DressingBuilder<?> builder);
 
-	public void render(BUTree tree, Printer printer) {
-		render(tree, tree.dressing == null ? null : tree.dressing.run, printer);
+	public void render(BUTree tree, Print print) {
+		render(tree, tree.dressing == null ? null : tree.dressing.run, print);
 	}
 
-	public abstract void render(BUTree tree, WRunRun run, Printer printer);
+	public abstract void render(BUTree tree, WRunRun run, Print print);
 
 	public LSDecorated withSpacing(SpacingConstraint before, SpacingConstraint after) {
 		return new LSConstraint(this, before, after, null, null);

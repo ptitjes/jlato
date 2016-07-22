@@ -22,7 +22,7 @@ package org.jlato.unit;
 import org.jlato.internal.bu.Literals;
 import org.jlato.parser.ParseException;
 import org.jlato.rewrite.Quotes;
-import org.jlato.tree.*;
+import org.jlato.tree.Trees;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

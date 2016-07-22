@@ -23,7 +23,6 @@ import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.WRun;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
-import org.jlato.printer.Printer;
 
 import java.util.Iterator;
 
@@ -32,13 +31,13 @@ import java.util.Iterator;
  */
 public class RunRenderer {
 
-	private final Printer printer;
+	private final Print print;
 	private final Iterator<WRun> elements;
 
 	private boolean firstShape = true;
 
-	public RunRenderer(Printer printer, WRunRun run) {
-		this.printer = printer;
+	public RunRenderer(Print print, WRunRun run) {
+		this.print = print;
 		elements = run == null ? null : run.elements.iterator();
 	}
 
@@ -46,11 +45,11 @@ public class RunRenderer {
 		if (firstShape) firstShape = false;
 		else {
 			final WTokenRun tokens = (WTokenRun) safeNext(elements);
-			printer.encounteredWhitespace(tokens);
+			print.encounteredWhitespace(tokens);
 		}
 
 		if (shape != null) {
-			shape.render(tree, null, printer);
+			shape.render(tree, null, print);
 		}
 	}
 

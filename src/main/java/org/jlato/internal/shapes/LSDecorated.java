@@ -22,7 +22,6 @@ package org.jlato.internal.shapes;
 import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
-import org.jlato.printer.Printer;
 
 /**
  * @author Didier Villevalois
@@ -66,7 +65,7 @@ public class LSDecorated extends LexicalShape {
 	}
 
 	@Override
-	public void render(BUTree tree, WRunRun run, Printer printer) {
-		shape.render(tree, run, printer);
+	public void render(BUTree tree, WRunRun run, Print print) {
+		shape.render(tree, run, print);
 	}
 }

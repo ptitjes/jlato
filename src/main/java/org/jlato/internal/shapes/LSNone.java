@@ -22,7 +22,6 @@ package org.jlato.internal.shapes;
 import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
-import org.jlato.printer.Printer;
 
 /**
  * @author Didier Villevalois
@@ -60,6 +59,6 @@ public final class LSNone extends LexicalShape {
 	}
 
 	@Override
-	public void render(BUTree tree, WRunRun run, Printer printer) {
+	public void render(BUTree tree, WRunRun run, Print print) {
 	}
 }

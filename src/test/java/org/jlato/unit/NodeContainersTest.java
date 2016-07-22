@@ -24,13 +24,13 @@ import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.Printer;
-import org.jlato.rewrite.Quotes;
 import org.jlato.rewrite.Substitution;
 import org.jlato.rewrite.TypeSafeMatcher;
 import org.jlato.tree.*;
-import org.jlato.tree.expr.*;
-import org.jlato.tree.name.*;
-import org.jlato.tree.stmt.*;
+import org.jlato.tree.expr.Expr;
+import org.jlato.tree.expr.MethodInvocationExpr;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.util.Function1;
 import org.jlato.util.Mutation;
 import org.junit.Assert;
@@ -41,9 +41,7 @@ import org.junit.runners.JUnit4;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.NoSuchElementException;
-import java.util.regex.Pattern;
 
 import static org.jlato.tree.Trees.*;
 

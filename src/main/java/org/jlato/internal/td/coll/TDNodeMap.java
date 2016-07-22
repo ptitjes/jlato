@@ -27,7 +27,7 @@ import org.jlato.internal.bu.coll.SNodeMap;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
 import org.jlato.printer.FormattingSettings;
-import org.jlato.printer.Printer;
+import org.jlato.internal.shapes.Print;
 import org.jlato.tree.*;
 
 import java.io.File;
@@ -89,8 +89,8 @@ public class TDNodeMap<T extends Tree> extends TDTree<SNodeMap, org.jlato.tree.N
 				file.createNewFile();
 			}
 			final PrintWriter writer = new PrintWriter(new FileWriter(file));
-			final Printer printer = new Printer(writer, format, formattingSettings);
-			printer.print(tree.asTree());
+			final Print print = new Print(writer, format, formattingSettings);
+			print.print(tree.asTree());
 			writer.close();
 		}
 	}

@@ -23,6 +23,7 @@ import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.shapes.Print;
 import org.jlato.printer.Printer;
 import org.jlato.rewrite.MatchVisitor;
 import org.jlato.rewrite.Matcher;
@@ -31,7 +32,6 @@ import org.jlato.rewrite.TypeSafeMatcher;
 import org.jlato.tree.*;
 import org.jlato.tree.expr.Expr;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import static org.jlato.internal.bu.WToken.newLine;

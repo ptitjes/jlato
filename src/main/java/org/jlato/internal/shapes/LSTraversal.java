@@ -20,7 +20,6 @@
 package org.jlato.internal.shapes;
 
 import org.jlato.internal.bu.*;
-import org.jlato.printer.Printer;
 
 /**
  * @author Didier Villevalois
@@ -66,11 +65,11 @@ public class LSTraversal extends LSDecorated {
 	}
 
 	@Override
-	public void render(BUTree tree, WRunRun run, Printer printer) {
+	public void render(BUTree tree, WRunRun run, Print print) {
 		final BUTree child = traverse(tree);
 		if (child == null) return;
 
-		if (child.dressing != null) shape.render(child, printer);
-		else shape.render(child, run, printer);
+		if (child.dressing != null) shape.render(child, print);
+		else shape.render(child, run, print);
 	}
 }

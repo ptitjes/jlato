@@ -23,7 +23,6 @@ import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.SVar;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
-import org.jlato.printer.Printer;
 
 /**
  * @author Didier Villevalois
@@ -70,11 +69,11 @@ public final class LSDefault extends LexicalShape {
 	}
 
 	@Override
-	public void render(BUTree tree, WRunRun run, Printer printer) {
+	public void render(BUTree tree, WRunRun run, Print print) {
 		final LexicalShape shape = shapeFor(tree);
 
-		if (tree.dressing != null) printer.encounteredLeading(tree.dressing.leading);
-		shape.render(tree, printer);
-		if (tree.dressing != null) printer.encounteredTrailing(tree.dressing.trailing);
+		if (tree.dressing != null) print.encounteredLeading(tree.dressing.leading);
+		shape.render(tree, print);
+		if (tree.dressing != null) print.encounteredTrailing(tree.dressing.trailing);
 	}
 }

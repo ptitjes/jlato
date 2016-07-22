@@ -26,10 +26,10 @@ import org.jlato.printer.Printer;
 import org.jlato.rewrite.Pattern;
 import org.jlato.rewrite.Quotes;
 import org.jlato.rewrite.Substitution;
-import org.jlato.tree.*;
-import org.jlato.tree.decl.*;
-import org.jlato.tree.expr.*;
-import org.jlato.tree.stmt.*;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.decl.MethodDecl;
+import org.jlato.tree.expr.Expr;
+import org.jlato.tree.stmt.Stmt;
 import org.jlato.unit.util.BaseTestFromFiles;
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,9 +38,7 @@ import org.junit.runners.JUnit4;
 
 import java.io.FileNotFoundException;
 
-import static org.jlato.rewrite.Quotes.memberDecl;
-import static org.jlato.rewrite.Quotes.stmt;
-import static org.jlato.rewrite.Quotes.expr;
+import static org.jlato.rewrite.Quotes.*;
 import static org.jlato.tree.Trees.*;
 
 /**

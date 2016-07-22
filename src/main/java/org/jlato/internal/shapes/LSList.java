@@ -22,7 +22,6 @@ package org.jlato.internal.shapes;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeList;
-import org.jlato.printer.Printer;
 
 /**
  * @author Didier Villevalois
@@ -101,8 +100,8 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
-	public void render(BUTree tree, WRunRun run, Printer printer) {
-		final RunRenderer renderer = new RunRenderer(printer, run);
+	public void render(BUTree tree, WRunRun run, Print print) {
+		final RunRenderer renderer = new RunRenderer(print, run);
 
 		final SNodeList state = (SNodeList) tree.state;
 		final Vector<BUTree<?>> children = state.children;

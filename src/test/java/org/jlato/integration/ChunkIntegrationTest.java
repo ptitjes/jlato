@@ -19,11 +19,11 @@
 
 package org.jlato.integration;
 
-import org.jlato.parser.ParseException;
 import org.jlato.integration.utils.BulkTestClass;
 import org.jlato.integration.utils.BulkTestRunner;
 import org.jlato.integration.utils.NormalizedJsonWriter;
 import org.jlato.integration.utils.TestResources;
+import org.jlato.parser.ParseException;
 import org.jlato.printer.Printer;
 import org.jlato.tree.Tree;
 import org.junit.Assert;

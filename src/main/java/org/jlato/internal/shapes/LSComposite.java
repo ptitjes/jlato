@@ -24,7 +24,6 @@ import com.github.andrewoma.dexx.collection.Builder;
 import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
-import org.jlato.printer.Printer;
 
 /**
  * @author Didier Villevalois
@@ -81,8 +80,8 @@ public final class LSComposite extends LexicalShape {
 	}
 
 	@Override
-	public void render(BUTree tree, WRunRun run, Printer printer) {
-		final RunRenderer renderer = new RunRenderer(printer, run);
+	public void render(BUTree tree, WRunRun run, Print print) {
+		final RunRenderer renderer = new RunRenderer(print, run);
 
 		for (LexicalShape shape : shapes) {
 			renderer.handleNext(shape, tree);

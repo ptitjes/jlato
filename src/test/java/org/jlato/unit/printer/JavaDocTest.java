@@ -21,8 +21,8 @@ package org.jlato.unit.printer;
 
 import org.jlato.parser.ParseException;
 import org.jlato.printer.Printer;
-import org.jlato.tree.decl.*;
-import org.jlato.tree.type.*;
+import org.jlato.tree.decl.FieldDecl;
+import org.jlato.tree.type.Primitive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

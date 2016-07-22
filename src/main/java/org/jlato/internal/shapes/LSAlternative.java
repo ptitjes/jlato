@@ -22,7 +22,6 @@ package org.jlato.internal.shapes;
 import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
-import org.jlato.printer.Printer;
 
 /**
  * @author Didier Villevalois
@@ -73,11 +72,11 @@ public final class LSAlternative extends LexicalShape {
 	}
 
 	@Override
-	public void render(BUTree tree, WRunRun run, Printer printer) {
+	public void render(BUTree tree, WRunRun run, Print print) {
 		if (condition.test(tree)) {
-			if (shape != null) shape.render(tree, run, printer);
+			if (shape != null) shape.render(tree, run, print);
 		} else {
-			if (alternative != null) alternative.render(tree, run, printer);
+			if (alternative != null) alternative.render(tree, run, print);
 		}
 	}
 }

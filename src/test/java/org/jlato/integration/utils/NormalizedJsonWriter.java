@@ -22,10 +22,10 @@ package org.jlato.integration.utils;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.BUProblem;
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.STree;
-import org.jlato.tree.*;
-import org.jlato.internal.td.TDTree;
 import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.td.TDTree;
+import org.jlato.tree.*;
 import org.jlato.tree.expr.LiteralExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.name.QualifiedName;
@@ -33,8 +33,9 @@ import org.jlato.tree.name.QualifiedName;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**

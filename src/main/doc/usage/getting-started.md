@@ -47,8 +47,8 @@ You have to create a `Printer` object and call its `print(...)` method:
 ```java
 final CompilationUnit cu = // ...
 PrintWriter writer = new PrintWriter(new FileWriter("out.java"));
-Printer printer = new Printer(writer);
-printer.print(cu);
+Printer printer = new Printer();
+printer.print(cu, writer);
 ```
 
 The `Printer` class also propose static helper methods:
@@ -66,8 +66,8 @@ A `Printer` can be instantiated with an additional boolean flag to enable format
 
 ```java
 // ...
-Printer printer = new Printer(writer, true, FormattingSettings.Default.withIndentation("    "));
-printer.print(cu);
+Printer printer = new Printer(true, FormattingSettings.Default.withIndentation("    "));
+printer.print(cu, writer);
 ```
 
 Two base settings are provided (`FormattingSettings.Default` and `FormattingSettings.JavaParser`). Please refer to the

@@ -23,7 +23,6 @@ import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.WRunRun;
 import org.jlato.internal.bu.WTokenRun;
-import org.jlato.printer.Printer;
 
 /**
  * @author Didier Villevalois
@@ -68,11 +67,11 @@ public final class LSToken extends LexicalShape {
 	}
 
 	@Override
-	public void render(BUTree tree, WRunRun run, Printer printer) {
+	public void render(BUTree tree, WRunRun run, Print print) {
 		final LToken token = provider.tokenFor(tree);
 		if (token == null) throw new IllegalStateException();
 
-		printer.append(token, true);
+		print.append(token, true);
 	}
 
 	public interface Provider {
