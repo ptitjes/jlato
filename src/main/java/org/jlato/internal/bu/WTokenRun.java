@@ -19,6 +19,7 @@
 
 package org.jlato.internal.bu;
 
+import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.parser.ParserImplConstants;
@@ -37,8 +38,39 @@ public class WTokenRun extends WRun {
 		this.elements = elements;
 	}
 
+	public WTokenRun prepend(WToken element) {
+		return new WTokenRun(elements.prepend(element));
+	}
+
 	public WTokenRun append(WToken element) {
 		return new WTokenRun(elements.append(element));
+	}
+
+	public String[] getComments() {
+		java.util.ArrayList<String> comments = new java.util.ArrayList<String>();
+		for (WToken token : elements) {
+			switch (token.kind) {
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+					comments.add(trimmedCommentString(token));
+					break;
+				case ParserImplConstants.JAVA_DOC_COMMENT:
+				case ParserImplConstants.NEWLINE:
+				case ParserImplConstants.WHITESPACE:
+					break;
+				default:
+					// Checked at WToken instantiation
+					throw new IllegalStateException();
+			}
+		}
+		return comments.toArray(new String[comments.size()]);
+	}
+
+	private String trimmedCommentString(WToken comment) {
+		String commentString = comment.string;
+		return comment.kind == ParserImplConstants.SINGLE_LINE_COMMENT ?
+				commentString.substring("//".length()).trim() :
+				commentString.substring("/*".length(), commentString.length() - "*/".length()).trim();
 	}
 
 	public WTokenRun replaceOrAppendDocComment(WToken docComment) {
@@ -270,6 +302,24 @@ public class WTokenRun extends WRun {
 				case ParserImplConstants.MULTI_LINE_COMMENT:
 				case ParserImplConstants.JAVA_DOC_COMMENT:
 					return true;
+				case ParserImplConstants.NEWLINE:
+				case ParserImplConstants.WHITESPACE:
+					break;
+				default:
+					// Checked at WToken instantiation
+					throw new IllegalStateException();
+			}
+		}
+		return false;
+	}
+
+	public boolean containsSingleLineComment() {
+		for (WToken token : elements) {
+			switch (token.kind) {
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+					return true;
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case ParserImplConstants.JAVA_DOC_COMMENT:
 				case ParserImplConstants.NEWLINE:
 				case ParserImplConstants.WHITESPACE:
 					break;

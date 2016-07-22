@@ -19,7 +19,6 @@
 
 package org.jlato.tree;
 
-import org.jlato.internal.bu.BUProblem;
 import org.jlato.rewrite.Matcher;
 import org.jlato.rewrite.Substitution;
 import org.jlato.rewrite.TypeSafeMatcher;
@@ -38,6 +37,20 @@ public interface Tree {
 	Iterable<Problem> problems();
 
 	// Non-typed combinators
+
+	/**
+	 * Returns the leading comment strings of this tree, apart from documentation comments.
+	 *
+	 * @return the leading comment strings.
+	 */
+	String[] leadingComments();
+
+	/**
+	 * Returns the trailing comment strings of this tree.
+	 *
+	 * @return the trailing comment strings.
+	 */
+	String[] trailingComments();
 
 	Substitution match(Matcher matcher);
 

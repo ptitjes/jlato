@@ -29,7 +29,9 @@ import org.jlato.rewrite.Matcher;
 import org.jlato.rewrite.Substitution;
 import org.jlato.rewrite.TypeSafeMatcher;
 import org.jlato.tree.*;
+import org.jlato.tree.expr.Expr;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import static org.jlato.internal.bu.WToken.newLine;
@@ -181,22 +183,35 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 
 	// Comment manipulation functions
 
-	// TODO Make those methods internal and have a front-end that use sensible defaults for the type of comments
-	// depending on the type of node:
-	// - multi-line followed by space for expr
-	// - single-line followed by new-line for statement
+	private static final String[] NO_COMMENTS = {};
+
+	public String[] leadingComments() {
+		final BUTree<S> tree = location.tree;
+		return tree.dressing == null || tree.dressing.leading == null ? NO_COMMENTS :
+				tree.dressing.leading.getComments();
+	}
+
+	public String[] trailingComments() {
+		final BUTree<S> tree = location.tree;
+		return tree.dressing == null || tree.dressing.trailing == null ? NO_COMMENTS :
+				tree.dressing.trailing.getComments();
+	}
 
 	public T insertLeadingComment(String commentString) {
-		final WToken comment = createComment(commentString);
+		return insertLeadingComment(commentString, false);
+	}
+
+	public T insertLeadingComment(String commentString, boolean forceMultiLine) {
+		boolean expressionContext = expressionContext();
 
 		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
 		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
+
+		final WToken comment = createComment(commentString, expressionContext, forceMultiLine);
 		final WTokenRun newLeading;
-		if (comment.kind == ParserImplConstants.JAVA_DOC_COMMENT) {
-			newLeading = leading.append(comment).append(newLine());
-		} else if (comment.kind == ParserImplConstants.MULTI_LINE_COMMENT) {
+		if (expressionContext && comment.kind != ParserImplConstants.SINGLE_LINE_COMMENT) {
 			newLeading = leading.append(comment).append(whitespace(" "));
 		} else {
 			newLeading = leading.append(comment).append(newLine());
@@ -206,32 +221,32 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 	}
 
 	public T insertTrailingComment(String commentString) {
-		final WToken comment = createComment(commentString);
+		return insertTrailingComment(commentString, false);
+	}
+
+	public T insertTrailingComment(String commentString, boolean forceMultiLine) {
+		boolean expressionContext = expressionContext();
 
 		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
 		final WTokenRun trailing = dressing.trailing == null ? WTokenRun.EMPTY : dressing.trailing;
-		final WTokenRun newTrailing;
-		if (comment.kind == ParserImplConstants.MULTI_LINE_COMMENT) {
-			newTrailing = trailing.append(whitespace(" ")).append(comment);
-		} else {
-			newTrailing = trailing.append(whitespace(" ")).append(comment).append(newLine());
-		}
+
+		final WToken comment = createComment(commentString, expressionContext, forceMultiLine || trailing.containsSingleLineComment());
+		final WTokenRun newTrailing = trailing.prepend(comment).prepend(whitespace(" "));
 
 		return location.replaceTree(tree.withDressing(dressing.withTrailing(newTrailing)));
 	}
 
-	private WToken createComment(String commentString) {
-		final WToken comment;
-		if (commentString.startsWith("/**") && commentString.endsWith("*/")) {
-			comment = WToken.javaDocComment(commentString);
-		} else if (commentString.startsWith("/*") && commentString.endsWith("*/")) {
-			comment = WToken.multiLineComment(commentString);
-		} else if (commentString.startsWith("//")) {
-			comment = WToken.singleLineComment(commentString);
-		} else throw new IllegalArgumentException();
-		return comment;
+	private boolean expressionContext() {
+		return this instanceof Expr;
+	}
+
+	private WToken createComment(String commentString, boolean expressionContext, boolean forceMultiLine) {
+		if (expressionContext || forceMultiLine)
+			return WToken.multiLineComment("/* " + commentString.trim() + " */");
+		else
+			return WToken.singleLineComment("// " + commentString.trim());
 	}
 
 	public T withDocComment(String commentString) {

@@ -47,9 +47,47 @@ public interface TreeCombinators<T extends Tree> extends Tree {
 
 	<U extends Tree> Iterable<U> rightFindAll(TypeSafeMatcher<U> matcher);
 
+	/**
+	 * Inserts a leading comment to this tree with the specified comment string.
+	 * This uses sensible defaults to chose between single-line or multi-line comment,
+	 * depending on the context of this tree (expression, statement, ...).
+	 *
+	 * @param commentString the comment string (without comment start and stop markers).
+	 * @return this tree with the inserted leading comment.
+	 */
 	T insertLeadingComment(String commentString);
 
+	/**
+	 * Inserts a leading comment to this tree with the specified comment string.
+	 * This uses sensible defaults to chose between single-line or multi-line comment,
+	 * depending on the context of this tree (expression, statement, ...).
+	 *
+	 * @param commentString the comment string (without comment start and stop markers).
+	 * @param forceMultiLine whether to force the use of a single-line comment.
+	 * @return this tree with the inserted leading comment.
+	 */
+	T insertLeadingComment(String commentString, boolean forceMultiLine);
+
+	/**
+	 * Inserts a trailing comment to this tree with the specified comment string.
+	 * This uses sensible defaults to chose between single-line or multi-line comment,
+	 * depending on the context of this tree (expression, statement, ...).
+	 *
+	 * @param commentString the comment string (without comment start and stop markers).
+	 * @return this tree with the inserted trailing comment.
+	 */
 	T insertTrailingComment(String commentString);
+
+	/**
+	 * Inserts a trailing comment to this tree with the specified comment string.
+	 * This uses sensible defaults to chose between single-line or multi-line comment,
+	 * depending on the context of this tree (expression, statement, ...).
+	 *
+	 * @param commentString the comment string (without comment start and stop markers).
+	 * @param forceMultiLine whether to force the use of a single-line comment.
+	 * @return this tree with the inserted trailing comment.
+	 */
+	T insertTrailingComment(String commentString, boolean forceMultiLine);
 
 	T insertNewLineBefore();
 }

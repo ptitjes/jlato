@@ -211,49 +211,49 @@ public class NodeContainersTest {
 		Assert.assertTrue(expr.args().contains(name("arg2")));
 
 		Assert.assertEquals(
-				"scope.method(/*leading*/ newArg /*trailing*/, /*3*/arg2/*4*/)",
+				"scope.method(/* leading */ newArg /* trailing */, /*3*/arg2/*4*/)",
 				Printer.printToString(expr.withArgs(
 						expr.args().set(0, newArgWithComments())
 				), false)
 		);
 		Assert.assertEquals(
-				"scope.method(/*1*/arg1/*2*/, /*leading*/ newArg /*trailing*/)",
+				"scope.method(/*1*/arg1/*2*/, /* leading */ newArg /* trailing */)",
 				Printer.printToString(expr.withArgs(
 						expr.args().set(1, newArgWithComments())
 				), false)
 		);
 		Assert.assertEquals(
-				"scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/, /*leading*/ newArg /*trailing*/)",
+				"scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/, /* leading */ newArg /* trailing */)",
 				Printer.printToString(expr.withArgs(
 						expr.args().append(newArgWithComments())
 				), false)
 		);
 		Assert.assertEquals(
-				"scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/, /*leading1*/ newArg1 /*trailing1*/, /*leading2*/ newArg2 /*trailing2*/)",
+				"scope.method(/*1*/arg1/*2*/, /*3*/arg2/*4*/, /* leading1 */ newArg1 /* trailing1 */, /* leading2 */ newArg2 /* trailing2 */)",
 				Printer.printToString(expr.withArgs(
 						expr.args().appendAll(listOf(newArgWithComments(1), newArgWithComments(2)))
 				), false)
 		);
 		Assert.assertEquals(
-				"scope.method(/*leading*/ newArg /*trailing*/, /*1*/arg1/*2*/, /*3*/arg2/*4*/)",
+				"scope.method(/* leading */ newArg /* trailing */, /*1*/arg1/*2*/, /*3*/arg2/*4*/)",
 				Printer.printToString(expr.withArgs(
 						expr.args().prepend(newArgWithComments())
 				), false)
 		);
 		Assert.assertEquals(
-				"scope.method(/*leading1*/ newArg1 /*trailing1*/, /*leading2*/ newArg2 /*trailing2*/, /*1*/arg1/*2*/, /*3*/arg2/*4*/)",
+				"scope.method(/* leading1 */ newArg1 /* trailing1 */, /* leading2 */ newArg2 /* trailing2 */, /*1*/arg1/*2*/, /*3*/arg2/*4*/)",
 				Printer.printToString(expr.withArgs(
 						expr.args().prependAll(listOf(newArgWithComments(1), newArgWithComments(2)))
 				), false)
 		);
 		Assert.assertEquals(
-				"scope.method(/*1*/arg1/*2*/, /*leading*/ newArg /*trailing*/, /*3*/arg2/*4*/)",
+				"scope.method(/*1*/arg1/*2*/, /* leading */ newArg /* trailing */, /*3*/arg2/*4*/)",
 				Printer.printToString(expr.withArgs(
 						expr.args().insert(1, newArgWithComments())
 				), false)
 		);
 		Assert.assertEquals(
-				"scope.method(/*1*/arg1/*2*/, /*leading1*/ newArg1 /*trailing1*/, /*leading2*/ newArg2 /*trailing2*/, /*3*/arg2/*4*/)",
+				"scope.method(/*1*/arg1/*2*/, /* leading1 */ newArg1 /* trailing1 */, /* leading2 */ newArg2 /* trailing2 */, /*3*/arg2/*4*/)",
 				Printer.printToString(expr.withArgs(
 						expr.args().insertAll(1, listOf(newArgWithComments(1), newArgWithComments(2)))
 				), false)
@@ -261,11 +261,11 @@ public class NodeContainersTest {
 	}
 
 	private Expr newArgWithComments() {
-		return name("newArg").insertLeadingComment("/*leading*/").insertTrailingComment("/*trailing*/");
+		return name("newArg").insertLeadingComment("leading").insertTrailingComment("trailing");
 	}
 
 	private Expr newArgWithComments(int index) {
-		return name("newArg" + index).insertLeadingComment("/*leading" + index + "*/").insertTrailingComment("/*trailing" + index + "*/");
+		return name("newArg" + index).insertLeadingComment("leading" + index).insertTrailingComment("trailing" + index);
 	}
 
 	@Test
