@@ -307,6 +307,13 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		return location == null ? null : location.tree;
 	}
 
+	public static <S extends SNode> S stateOf(Node facade) {
+		assert facade != null;
+		BUTree<S> tree = treeOf(facade);
+		assert tree != null;
+		return tree.state;
+	}
+
 	public static Vector<BUTree<? extends STree>> treeListOf(Tree... facades) {
 		final Builder<BUTree<?>, Vector<BUTree<?>>> builder = Vector.<BUTree<?>>factory().newBuilder();
 		for (Tree facade : facades) {
