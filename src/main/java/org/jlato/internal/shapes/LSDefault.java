@@ -45,10 +45,6 @@ public final class LSDefault extends LexicalShape {
 	}
 
 	@Override
-	public void dress(DressingBuilder<?> builder, BUTree<?> discriminator) {
-	}
-
-	@Override
 	public boolean acceptsTrailingWhitespace() {
 		return true;
 	}

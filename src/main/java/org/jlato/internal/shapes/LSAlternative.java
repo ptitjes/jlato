@@ -54,24 +54,6 @@ public final class LSAlternative extends LexicalShape {
 	}
 
 	@Override
-	public boolean acceptsTrailingWhitespace() {
-		return false;
-	}
-
-	@Override
-	public boolean acceptsLeadingWhitespace() {
-		return false;
-	}
-
-	@Override
-	public void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder) {
-	}
-
-	@Override
-	public void dressLeading(WTokenRun tokens, DressingBuilder<?> builder) {
-	}
-
-	@Override
 	public void render(BUTree tree, WRunRun run, Print print) {
 		if (condition.test(tree)) {
 			if (shape != null) shape.render(tree, run, print);

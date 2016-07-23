@@ -45,28 +45,6 @@ public final class LSToken extends LexicalShape {
 	}
 
 	@Override
-	public void dress(DressingBuilder<?> builder, BUTree<?> discriminator) {
-	}
-
-	@Override
-	public boolean acceptsTrailingWhitespace() {
-		return false;
-	}
-
-	@Override
-	public boolean acceptsLeadingWhitespace() {
-		return false;
-	}
-
-	@Override
-	public void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder) {
-	}
-
-	@Override
-	public void dressLeading(WTokenRun tokens, DressingBuilder<?> builder) {
-	}
-
-	@Override
 	public void render(BUTree tree, WRunRun run, Print print) {
 		final LToken token = provider.tokenFor(tree);
 		if (token == null) throw new IllegalStateException();

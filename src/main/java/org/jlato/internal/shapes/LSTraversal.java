@@ -40,27 +40,27 @@ public class LSTraversal extends LSDecorated {
 	@Override
 	public boolean isDefined(BUTree tree) {
 		final BUTree child = traverse(tree);
-		return child != null && (child.dressing != null || shape.isDefined(child));
+		return child != null && (child.dressing != null || super.isDefined(child));
 	}
 
 	@Override
 	public void dress(DressingBuilder<?> builder, BUTree<?> discriminator) {
 		builder.openChild(traversal);
-		shape.dress(builder, discriminator.traverse(traversal));
+		super.dress(builder, discriminator.traverse(traversal));
 		builder.closeChild();
 	}
 
 	@Override
 	public void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder) {
 		builder.openChild(traversal);
-		shape.dressTrailing(tokens, builder);
+		super.dressTrailing(tokens, builder);
 		builder.closeChild();
 	}
 
 	@Override
 	public void dressLeading(WTokenRun tokens, DressingBuilder<?> builder) {
 		builder.openChild(traversal);
-		shape.dressLeading(tokens, builder);
+		super.dressLeading(tokens, builder);
 		builder.closeChild();
 	}
 
@@ -70,6 +70,6 @@ public class LSTraversal extends LSDecorated {
 		if (child == null) return;
 
 		if (child.dressing != null) shape.render(child, print);
-		else shape.render(child, run, print);
+		else super.render(child, run, print);
 	}
 }

@@ -19,46 +19,11 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.WRunRun;
-import org.jlato.internal.bu.WTokenRun;
-
 /**
  * @author Didier Villevalois
  */
 public final class LSNone extends LexicalShape {
 
 	public LSNone() {
-	}
-
-	@Override
-	public boolean isDefined(BUTree tree) {
-		return false;
-	}
-
-	@Override
-	public void dress(DressingBuilder<?> builder, BUTree<?> discriminator) {
-	}
-
-	@Override
-	public boolean acceptsTrailingWhitespace() {
-		return false;
-	}
-
-	@Override
-	public boolean acceptsLeadingWhitespace() {
-		return false;
-	}
-
-	@Override
-	public void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder) {
-	}
-
-	@Override
-	public void dressLeading(WTokenRun tokens, DressingBuilder<?> builder) {
-	}
-
-	@Override
-	public void render(BUTree tree, WRunRun run, Print print) {
 	}
 }

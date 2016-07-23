@@ -32,7 +32,11 @@ public final class LSConstraint extends LSDecorated {
 	private final IndentationConstraint indentationBefore;
 	private final IndentationConstraint indentationAfter;
 
-	public LSConstraint(LexicalShape shape,
+	public LSConstraint(LexicalShape shape) {
+		this(shape, null, null, null, null);
+	}
+
+	private LSConstraint(LexicalShape shape,
 	                    SpacingConstraint spacingBefore,
 	                    SpacingConstraint spacingAfter,
 	                    IndentationConstraint indentationBefore,
@@ -62,11 +66,6 @@ public final class LSConstraint extends LSDecorated {
 
 	public LSConstraint withIndentationAfter(IndentationConstraint indentationAfter) {
 		return new LSConstraint(shape, spacingBefore, spacingAfter, indentationBefore, indentationAfter);
-	}
-
-	@Override
-	public boolean isDefined(BUTree tree) {
-		return shape.isDefined(tree);
 	}
 
 	@Override

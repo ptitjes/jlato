@@ -82,24 +82,6 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
-	public boolean acceptsTrailingWhitespace() {
-		return false;
-	}
-
-	@Override
-	public boolean acceptsLeadingWhitespace() {
-		return false;
-	}
-
-	@Override
-	public void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder) {
-	}
-
-	@Override
-	public void dressLeading(WTokenRun tokens, DressingBuilder<?> builder) {
-	}
-
-	@Override
 	public void render(BUTree tree, WRunRun run, Print print) {
 		final RunRenderer renderer = new RunRenderer(print, run);
 

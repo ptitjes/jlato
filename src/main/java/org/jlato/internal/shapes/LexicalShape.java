@@ -32,42 +32,52 @@ public abstract class LexicalShape {
 
 	// TODO Add argument to follow lexical runs
 
-	public abstract boolean isDefined(BUTree tree);
+	public boolean isDefined(BUTree tree) {
+		return false;
+	}
 
-	public abstract void dress(DressingBuilder<?> builder, BUTree<?> discriminator);
+	public void dress(DressingBuilder<?> builder, BUTree<?> discriminator) {
+	}
 
-	public abstract boolean acceptsTrailingWhitespace();
+	public boolean acceptsTrailingWhitespace() {
+		return false;
+	}
 
-	public abstract boolean acceptsLeadingWhitespace();
+	public boolean acceptsLeadingWhitespace() {
+		return false;
+	}
 
-	public abstract void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder);
+	public void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder) {
+	}
 
-	public abstract void dressLeading(WTokenRun tokens, DressingBuilder<?> builder);
+	public void dressLeading(WTokenRun tokens, DressingBuilder<?> builder) {
+	}
 
 	public void render(BUTree tree, Print print) {
 		render(tree, tree.dressing == null ? null : tree.dressing.run, print);
 	}
 
-	public abstract void render(BUTree tree, WRunRun run, Print print);
+	public void render(BUTree tree, WRunRun run, Print print) {
+	}
 
 	public LSDecorated withSpacing(SpacingConstraint before, SpacingConstraint after) {
-		return new LSConstraint(this, before, after, null, null);
+		return new LSConstraint(this).withSpacing(before, after);
 	}
 
 	public LSDecorated withSpacingBefore(SpacingConstraint spacingBefore) {
-		return new LSConstraint(this, spacingBefore, null, null, null);
+		return new LSConstraint(this).withSpacingBefore(spacingBefore);
 	}
 
 	public LSDecorated withSpacingAfter(SpacingConstraint spacingAfter) {
-		return new LSConstraint(this, null, spacingAfter, null, null);
+		return new LSConstraint(this).withSpacingAfter(spacingAfter);
 	}
 
 	public LSDecorated withIndentationBefore(IndentationConstraint indentationBefore) {
-		return new LSConstraint(this, null, null, indentationBefore, null);
+		return new LSConstraint(this).withIndentationBefore(indentationBefore);
 	}
 
 	public LSDecorated withIndentationAfter(IndentationConstraint indentationAfter) {
-		return new LSConstraint(this, null, null, null, indentationAfter);
+		return new LSConstraint(this).withIndentationAfter(indentationAfter);
 	}
 
 	public static LSNone none() {

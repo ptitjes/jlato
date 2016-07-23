@@ -36,7 +36,7 @@ public class LSDecorated extends LexicalShape {
 
 	@Override
 	public boolean isDefined(BUTree tree) {
-		return true;
+		return shape.isDefined(tree);
 	}
 
 	@Override
