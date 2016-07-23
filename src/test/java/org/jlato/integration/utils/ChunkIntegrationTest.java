@@ -17,7 +17,7 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.integration;
+package org.jlato.integration.utils;
 
 import org.jlato.integration.utils.BulkTestClass;
 import org.jlato.integration.utils.BulkTestRunner;

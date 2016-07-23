@@ -17,7 +17,7 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.integration;
+package org.jlato.integration.live;
 
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;

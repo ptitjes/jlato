@@ -17,27 +17,28 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.integration;
+package org.jlato.integration.chunks;
 
 import org.jlato.integration.utils.BulkTestRunner;
+import org.jlato.integration.utils.ChunkIntegrationTest;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
-import org.jlato.tree.expr.Expr;
+import org.jlato.tree.decl.TypeDecl;
 import org.junit.runner.RunWith;
 
 /**
  * @author Didier Villevalois
  */
 @RunWith(BulkTestRunner.class)
-public class ExpressionIT extends ChunkIntegrationTest<Expr> {
+public class TypeDeclIT extends ChunkIntegrationTest<TypeDecl> {
 
 	public String testResourcesPath() {
-		return "org/jlato/integration/expressions";
+		return "org/jlato/integration/TypeDecls";
 	}
 
 	@Override
-	protected Expr parse(String content) throws ParseException {
-		return new Parser().parse(ParseContext.Expression, content);
+	protected TypeDecl parse(String content) throws ParseException {
+		return new Parser().parse(ParseContext.TypeDecl, content);
 	}
 }
