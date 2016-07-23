@@ -33,7 +33,6 @@ import org.jlato.tree.name.Name;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.type.Type;
-import org.jlato.util.Function1;
 
 /**
  * @author Didier Villevalois
@@ -79,8 +78,8 @@ public final class Quotes {
 		return quote(ParseContext.QualifiedName, string);
 	}
 
-	public static TypeSafeMatcher<Name> names() {
-		return new TypeSafeMatcher<Name>() {
+	public static Matcher<Name> names() {
+		return new Matcher<Name>() {
 			@Override
 			public Substitution match(Object o, Substitution s) {
 				return o instanceof Node && ((Node) o).kind() == Kind.Name ? s : null;

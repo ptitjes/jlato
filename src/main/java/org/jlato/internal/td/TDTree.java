@@ -23,13 +23,14 @@ import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.parser.ParserImplConstants;
-import org.jlato.internal.shapes.Print;
 import org.jlato.printer.Printer;
 import org.jlato.rewrite.MatchVisitor;
 import org.jlato.rewrite.Matcher;
 import org.jlato.rewrite.Substitution;
-import org.jlato.rewrite.TypeSafeMatcher;
-import org.jlato.tree.*;
+import org.jlato.tree.Node;
+import org.jlato.tree.Problem;
+import org.jlato.tree.Tree;
+import org.jlato.tree.TreeCombinators;
 import org.jlato.tree.expr.Expr;
 
 import java.util.LinkedList;
@@ -65,7 +66,7 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 	@Override
 	public java.lang.Iterable<Problem> problems() {
 		ProblemCollector collector = new ProblemCollector();
-		leftForAll(new TypeSafeMatcher<Tree>() {
+		leftForAll(new Matcher<Tree>() {
 			@Override
 			public Substitution match(Object object, Substitution substitution) {
 				return object instanceof TDTree && !((TDTree) object).location.tree.problems().isEmpty() ? substitution : null;
@@ -120,42 +121,42 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 
 	// Combinators
 
-	public <U extends Tree> T forAll(TypeSafeMatcher<? extends U> matcher, MatchVisitor<U> visitor) {
+	public <U extends Tree> T forAll(Matcher<? extends U> matcher, MatchVisitor<U> visitor) {
 		return leftForAll(matcher, visitor);
 	}
 
-	public <U extends Tree> T leftForAll(TypeSafeMatcher<? extends U> matcher, MatchVisitor<U> visitor) {
+	public <U extends Tree> T leftForAll(Matcher<? extends U> matcher, MatchVisitor<U> visitor) {
 		return Traversal.leftForAll(self(), matcher, visitor);
 	}
 
-	public <U extends Tree> T rightForAll(TypeSafeMatcher<? extends U> matcher, MatchVisitor<U> visitor) {
+	public <U extends Tree> T rightForAll(Matcher<? extends U> matcher, MatchVisitor<U> visitor) {
 		return Traversal.rightForAll(self(), matcher, visitor);
 	}
 
-	public Substitution match(Matcher matcher) {
+	public Substitution match(Matcher<?> matcher) {
 		return matcher.match(this, Substitution.empty());
 	}
 
-	public boolean matches(Matcher matcher) {
+	public boolean matches(Matcher<?> matcher) {
 		return matcher.match(this, Substitution.empty()) != null;
 	}
 
-	public T match(TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
+	public T match(Matcher<? extends T> matcher, MatchVisitor<T> visitor) {
 		Substitution match = matcher.match(this, Substitution.empty());
 		return match == null ? self() : visitor.visit(self(), match);
 	}
 
-	public <U extends Tree> Iterable<U> findAll(TypeSafeMatcher<U> matcher) {
+	public <U extends Tree> Iterable<U> findAll(Matcher<U> matcher) {
 		return leftFindAll(matcher);
 	}
 
-	public <U extends Tree> Iterable<U> leftFindAll(TypeSafeMatcher<U> matcher) {
+	public <U extends Tree> Iterable<U> leftFindAll(Matcher<U> matcher) {
 		final MatchCollector<U> collector = new MatchCollector<U>();
 		leftForAll(matcher, collector);
 		return collector.getList();
 	}
 
-	public <U extends Tree> Iterable<U> rightFindAll(TypeSafeMatcher<U> matcher) {
+	public <U extends Tree> Iterable<U> rightFindAll(Matcher<U> matcher) {
 		final MatchCollector<U> collector = new MatchCollector<U>();
 		rightForAll(matcher, collector);
 		return collector.getList();

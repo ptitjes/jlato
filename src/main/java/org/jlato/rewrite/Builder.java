@@ -22,7 +22,7 @@ package org.jlato.rewrite;
 /**
  * @author Didier Villevalois
  */
-public interface Builder {
+public interface Builder<T> {
 
-	Object build(Substitution substitution);
+	T build(Substitution substitution);
 }

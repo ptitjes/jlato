@@ -21,25 +21,19 @@ package org.jlato.tree;
 
 import org.jlato.rewrite.MatchVisitor;
 import org.jlato.rewrite.Matcher;
-import org.jlato.rewrite.Substitution;
-import org.jlato.rewrite.TypeSafeMatcher;
 
 /**
  * @author Didier Villevalois
  */
 public interface TreeCombinators<T extends Tree> extends Tree {
 
-	<U extends Tree> T forAll(TypeSafeMatcher<? extends U> matcher, MatchVisitor<U> visitor);
+	<U extends Tree> T forAll(Matcher<? extends U> matcher, MatchVisitor<U> visitor);
 
-	<U extends Tree> T leftForAll(TypeSafeMatcher<? extends U> matcher, MatchVisitor<U> visitor);
+	<U extends Tree> T leftForAll(Matcher<? extends U> matcher, MatchVisitor<U> visitor);
 
-	<U extends Tree> T rightForAll(TypeSafeMatcher<? extends U> matcher, MatchVisitor<U> visitor);
+	<U extends Tree> T rightForAll(Matcher<? extends U> matcher, MatchVisitor<U> visitor);
 
-	Substitution match(Matcher matcher);
-
-	boolean matches(Matcher matcher);
-
-	T match(TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor);
+	T match(Matcher<? extends T> matcher, MatchVisitor<T> visitor);
 
 	/**
 	 * Inserts a leading comment to this tree with the specified comment string.

@@ -55,7 +55,7 @@ public class ForAllTest extends BaseTestFromFiles {
 		CompilationUnit cu = parse(original, true);
 
 		final CompilationUnit rewrote = cu.forAll(
-				new TypeSafeMatcher<Name>() {
+				new Matcher<Name>() {
 					@Override
 					public Substitution match(Object o, Substitution s) {
 						return o instanceof Node && ((Node) o).kind() == Kind.Name ? s : null;
@@ -76,7 +76,7 @@ public class ForAllTest extends BaseTestFromFiles {
 		final String original = resourceAsString("org/jlato/samples/TestClass.java");
 		CompilationUnit cu = parse(original, true);
 
-		final TypeSafeMatcher<Name> namePattern = Quotes.names();
+		final Matcher<Name> namePattern = Quotes.names();
 
 		final CompilationUnit rewrote = cu.forAll(namePattern, new MatchVisitor<Name>() {
 			@Override

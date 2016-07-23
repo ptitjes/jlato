@@ -20,13 +20,12 @@
 package org.jlato.rewrite;
 
 import org.jlato.internal.patterns.DecoratedPattern;
-import org.jlato.tree.Tree;
 import org.jlato.util.Function1;
 
 /**
  * @author Didier Villevalois
  */
-public abstract class Pattern<T> implements TypeSafeMatcher<T>, TypeSafeBuilder<T> {
+public abstract class Pattern<T> implements Matcher<T>, Builder<T> {
 
 	public final Substitution match(Object object) {
 		return match(object, Substitution.empty());

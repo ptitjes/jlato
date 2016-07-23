@@ -128,12 +128,7 @@ those:
 final CompilationUnit cu = // ...
 
 final CompilationUnit rewrote = cu.forAll(
-    new TypeSafeMatcher<Name>() {
-        @Override
-        public Substitution match(Object o) {
-            return match(o, Substitution.empty());
-        }
-
+    new Matcher<Name>() {
         @Override
         public Substitution match(Object o, Substitution s) {
             return o instanceof Node && ((Node) o).kind() == Kind.Name ? s : null;
@@ -146,7 +141,7 @@ final CompilationUnit rewrote = cu.forAll(
     });
 ```
 
-In the previous example we implemented manually the implementations of `TypeSafeMatcher`. Fortunately, JLaTo provides
+In the previous example we implemented manually the implementations of `Matcher`. Fortunately, JLaTo provides
 quasi-quotations to do the exact same thing with Java code quote. For instance, one can rewrite all names:
 
 ```java

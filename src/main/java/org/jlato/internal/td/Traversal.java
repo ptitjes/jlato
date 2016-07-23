@@ -20,8 +20,8 @@
 package org.jlato.internal.td;
 
 import org.jlato.rewrite.MatchVisitor;
+import org.jlato.rewrite.Matcher;
 import org.jlato.rewrite.Substitution;
-import org.jlato.rewrite.TypeSafeMatcher;
 import org.jlato.tree.Tree;
 
 /**
@@ -29,28 +29,28 @@ import org.jlato.tree.Tree;
  */
 public abstract class Traversal<T extends Tree> {
 
-	public static <R extends Tree, T extends Tree> R leftForAll(R from, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
+	public static <R extends Tree, T extends Tree> R leftForAll(R from, Matcher<? extends T> matcher, MatchVisitor<T> visitor) {
 		return new LeftRightDepthFirst<T>().traverse(from, matcher, visitor);
 	}
 
-	public static <R extends Tree, T extends Tree> R rightForAll(R from, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
+	public static <R extends Tree, T extends Tree> R rightForAll(R from, Matcher<? extends T> matcher, MatchVisitor<T> visitor) {
 		return new RightLeftDepthFirst<T>().traverse(from, matcher, visitor);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <R extends Tree> R traverse(R tree, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
+	public <R extends Tree> R traverse(R tree, Matcher<? extends T> matcher, MatchVisitor<T> visitor) {
 		TDLocation location = TDTree.locationOf(tree);
 		return (R) doTraverse(location, matcher, visitor).facade;
 	}
 
 	// TODO Trampoline recursion
 
-	protected abstract TDLocation doTraverse(TDLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor);
+	protected abstract TDLocation doTraverse(TDLocation location, Matcher<? extends T> matcher, MatchVisitor<T> visitor);
 
 	public static abstract class DepthFirst<T extends Tree> extends Traversal<T> {
 
 		@Override
-		protected TDLocation doTraverse(TDLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
+		protected TDLocation doTraverse(TDLocation location, Matcher<? extends T> matcher, MatchVisitor<T> visitor) {
 			// Visit this location
 			TDLocation afterVisit = doVisit(location, matcher, visitor);
 
@@ -60,7 +60,7 @@ public abstract class Traversal<T extends Tree> {
 			return afterVisitChildren;
 		}
 
-		private TDLocation doVisit(TDLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
+		private TDLocation doVisit(TDLocation location, Matcher<? extends T> matcher, MatchVisitor<T> visitor) {
 			Tree facade = location.facade;
 			Substitution match = matcher.match(facade, Substitution.empty());
 			if (match != null) {
@@ -71,7 +71,7 @@ public abstract class Traversal<T extends Tree> {
 			}
 		}
 
-		private TDLocation doTraverseChildren(TDLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
+		private TDLocation doTraverseChildren(TDLocation location, Matcher<? extends T> matcher, MatchVisitor<T> visitor) {
 			TDLocation child = child(location);
 			if (child == null) return location;
 

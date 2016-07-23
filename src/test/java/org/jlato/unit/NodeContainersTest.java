@@ -24,8 +24,8 @@ import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.Printer;
+import org.jlato.rewrite.Matcher;
 import org.jlato.rewrite.Substitution;
-import org.jlato.rewrite.TypeSafeMatcher;
 import org.jlato.tree.*;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.expr.MethodInvocationExpr;
@@ -526,7 +526,7 @@ public class NodeContainersTest {
 			map = map.put("name" + i, name);
 		}
 
-		TypeSafeMatcher<Name> oddNameMatcher = new TypeSafeMatcher<Name>() {
+		Matcher<Name> oddNameMatcher = new Matcher<Name>() {
 			@Override
 			public Substitution match(Object object, Substitution substitution) {
 				return object instanceof Name && Integer.parseInt(((Name) object).id()) % 2 == 1 ? substitution : null;

@@ -21,7 +21,6 @@ package org.jlato.tree;
 
 import org.jlato.rewrite.Matcher;
 import org.jlato.rewrite.Substitution;
-import org.jlato.rewrite.TypeSafeMatcher;
 
 /**
  * @author Didier Villevalois
@@ -52,13 +51,13 @@ public interface Tree {
 	 */
 	String[] trailingComments();
 
-	Substitution match(Matcher matcher);
+	Substitution match(Matcher<?> matcher);
 
-	boolean matches(Matcher matcher);
+	boolean matches(Matcher<?> matcher);
 
-	<U extends Tree> Iterable<U> findAll(TypeSafeMatcher<U> matcher);
+	<U extends Tree> Iterable<U> findAll(Matcher<U> matcher);
 
-	<U extends Tree> Iterable<U> leftFindAll(TypeSafeMatcher<U> matcher);
+	<U extends Tree> Iterable<U> leftFindAll(Matcher<U> matcher);
 
-	<U extends Tree> Iterable<U> rightFindAll(TypeSafeMatcher<U> matcher);
+	<U extends Tree> Iterable<U> rightFindAll(Matcher<U> matcher);
 }

@@ -22,7 +22,8 @@ package org.jlato.rewrite;
 /**
  * @author Didier Villevalois
  */
-public interface Matcher {
+@SuppressWarnings("unused")
+public interface Matcher<T> {
 
 	Substitution match(Object object, Substitution substitution);
 }

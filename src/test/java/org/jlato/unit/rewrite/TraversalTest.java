@@ -22,8 +22,8 @@ package org.jlato.unit.rewrite;
 import org.jlato.parser.ParseException;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.rewrite.MatchVisitor;
+import org.jlato.rewrite.Matcher;
 import org.jlato.rewrite.Substitution;
-import org.jlato.rewrite.TypeSafeMatcher;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.CompilationUnit;
@@ -99,7 +99,7 @@ public class TraversalTest extends BaseTestFromFiles {
 	public void findAllOrder() throws IOException, ParseException {
 		NodeList<Name> names = listOf(name("1"), name("2"), name("3"), name("4"), name("5"));
 
-		TypeSafeMatcher<Name> oddNameMatcher = new TypeSafeMatcher<Name>() {
+		Matcher<Name> oddNameMatcher = new Matcher<Name>() {
 			@Override
 			public Substitution match(Object object, Substitution substitution) {
 				return object instanceof Name && Integer.parseInt(((Name) object).id()) % 2 == 1 ? substitution : null;
@@ -112,7 +112,7 @@ public class TraversalTest extends BaseTestFromFiles {
 		Assert.assertArrayEquals(new String[]{"5", "3", "1"}, nameIterableAsArray(names.rightFindAll(oddNameMatcher)));
 	}
 
-	public static final TypeSafeMatcher<Tree> ANY_NODE = new TypeSafeMatcher<Tree>() {
+	public static final Matcher<Tree> ANY_NODE = new Matcher<Tree>() {
 		@Override
 		public Substitution match(Object object, Substitution substitution) {
 			return substitution;
