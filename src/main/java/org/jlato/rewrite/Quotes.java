@@ -35,6 +35,10 @@ import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.type.Type;
 
 /**
+ * The <code>Quotes</code> provides quick access to a static QuotesParser via a set of helper methods.
+ * Note that this class is not thread-safe as the single instance of QuotesParser is state-less. If you want to parse
+ * quotes in multiple threads simultaneously, you have to instantiate as many QuotesParser directly.
+ *
  * @author Didier Villevalois
  */
 public final class Quotes {
@@ -87,8 +91,9 @@ public final class Quotes {
 		};
 	}
 
+	private static QuotesParser parser = new QuotesParser();
+
 	public static <T extends Tree> Pattern<T> quote(ParseContext<T> context, String string) {
-		QuotesParser parser = new QuotesParser();
 		try {
 			BUTree<?> tree = parser.parse(context, string);
 			return new TreePattern<T>(tree);
