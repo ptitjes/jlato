@@ -82,11 +82,6 @@ public final class Quotes {
 	public static TypeSafeMatcher<Name> names() {
 		return new TypeSafeMatcher<Name>() {
 			@Override
-			public Substitution match(Object o) {
-				return match(o, Substitution.empty());
-			}
-
-			@Override
 			public Substitution match(Object o, Substitution s) {
 				return o instanceof Node && ((Node) o).kind() == Kind.Name ? s : null;
 			}

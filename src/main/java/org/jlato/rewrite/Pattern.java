@@ -28,21 +28,20 @@ import org.jlato.util.Function1;
  */
 public abstract class Pattern<T> implements TypeSafeMatcher<T>, TypeSafeBuilder<T> {
 
-	public Substitution match(Object object) {
+	public final Substitution match(Object object) {
 		return match(object, Substitution.empty());
 	}
 
-	@Override
-	public T build() {
+	public final T build() {
 		return build(Substitution.empty());
 	}
 
 	public Pattern<T> or(final Pattern<T> other) {
 		return new DecoratedPattern<T>(this) {
 			@Override
-			public Substitution match(Object object) {
-				Substitution match = super.match(object);
-				return match != null ? match : other.match(object);
+			public Substitution match(Object object, Substitution substitution) {
+				Substitution match = super.match(object, substitution);
+				return match != null ? match : other.match(object, substitution);
 			}
 		};
 	}
@@ -51,8 +50,8 @@ public abstract class Pattern<T> implements TypeSafeMatcher<T>, TypeSafeBuilder<
 		return new DecoratedPattern<T>(this) {
 			@Override
 			@SuppressWarnings("unchecked")
-			public Substitution match(Object object) {
-				Substitution match = super.match(object);
+			public Substitution match(Object object, Substitution substitution) {
+				Substitution match = super.match(object, substitution);
 				return match != null && predicate.apply((T) object) ? match : null;
 			}
 		};
@@ -62,8 +61,8 @@ public abstract class Pattern<T> implements TypeSafeMatcher<T>, TypeSafeBuilder<
 		return new DecoratedPattern<T>(this) {
 			@Override
 			@SuppressWarnings("unchecked")
-			public Substitution match(Object object) {
-				Substitution match = super.match(object);
+			public Substitution match(Object object, Substitution substitution) {
+				Substitution match = super.match(object, substitution);
 				return match != null && predicate.apply(match.<U>get(var)) ? match : null;
 			}
 		};

@@ -24,7 +24,5 @@ package org.jlato.rewrite;
  */
 public interface TypeSafeBuilder<T> extends Builder {
 
-	T build();
-
 	T build(Substitution substitution);
 }

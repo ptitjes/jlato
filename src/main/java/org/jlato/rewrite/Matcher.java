@@ -24,7 +24,5 @@ package org.jlato.rewrite;
  */
 public interface Matcher {
 
-	Substitution match(Object o);
-
 	Substitution match(Object object, Substitution substitution);
 }

@@ -62,7 +62,7 @@ public abstract class Traversal<T extends Tree> {
 
 		private TDLocation doVisit(TDLocation location, TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
 			Tree facade = location.facade;
-			Substitution match = matcher.match(facade);
+			Substitution match = matcher.match(facade, Substitution.empty());
 			if (match != null) {
 				TDLocation rewrote = TDTree.locationOf(visitor.visit((T) facade, match));
 				return location.withTree(rewrote.tree);

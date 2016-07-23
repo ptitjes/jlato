@@ -57,11 +57,6 @@ public class ForAllTest extends BaseTestFromFiles {
 		final CompilationUnit rewrote = cu.forAll(
 				new TypeSafeMatcher<Name>() {
 					@Override
-					public Substitution match(Object o) {
-						return match(o, Substitution.empty());
-					}
-
-					@Override
 					public Substitution match(Object o, Substitution s) {
 						return o instanceof Node && ((Node) o).kind() == Kind.Name ? s : null;
 					}

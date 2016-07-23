@@ -101,11 +101,6 @@ public class TraversalTest extends BaseTestFromFiles {
 
 		TypeSafeMatcher<Name> oddNameMatcher = new TypeSafeMatcher<Name>() {
 			@Override
-			public Substitution match(Object o) {
-				return match(o, Substitution.empty());
-			}
-
-			@Override
 			public Substitution match(Object object, Substitution substitution) {
 				return object instanceof Name && Integer.parseInt(((Name) object).id()) % 2 == 1 ? substitution : null;
 			}
@@ -118,11 +113,6 @@ public class TraversalTest extends BaseTestFromFiles {
 	}
 
 	public static final TypeSafeMatcher<Tree> ANY_NODE = new TypeSafeMatcher<Tree>() {
-		@Override
-		public Substitution match(Object o) {
-			return match(o, Substitution.empty());
-		}
-
 		@Override
 		public Substitution match(Object object, Substitution substitution) {
 			return substitution;

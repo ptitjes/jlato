@@ -67,11 +67,6 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		ProblemCollector collector = new ProblemCollector();
 		leftForAll(new TypeSafeMatcher<Tree>() {
 			@Override
-			public Substitution match(Object object) {
-				return match(object, Substitution.empty());
-			}
-
-			@Override
 			public Substitution match(Object object, Substitution substitution) {
 				return object instanceof TDTree && !((TDTree) object).location.tree.problems().isEmpty() ? substitution : null;
 			}
@@ -138,15 +133,15 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 	}
 
 	public Substitution match(Matcher matcher) {
-		return matcher.match(this);
+		return matcher.match(this, Substitution.empty());
 	}
 
 	public boolean matches(Matcher matcher) {
-		return matcher.match(this) != null;
+		return matcher.match(this, Substitution.empty()) != null;
 	}
 
 	public T match(TypeSafeMatcher<? extends T> matcher, MatchVisitor<T> visitor) {
-		Substitution match = matcher.match(this);
+		Substitution match = matcher.match(this, Substitution.empty());
 		return match == null ? self() : visitor.visit(self(), match);
 	}
 

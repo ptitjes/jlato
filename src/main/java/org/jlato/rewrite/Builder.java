@@ -24,7 +24,5 @@ package org.jlato.rewrite;
  */
 public interface Builder {
 
-	Object build();
-
 	Object build(Substitution substitution);
 }
