@@ -22,14 +22,11 @@ package org.jlato.unit.rewrite;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
-import org.jlato.printer.Printer;
 import org.jlato.rewrite.Pattern;
 import org.jlato.rewrite.Quotes;
 import org.jlato.rewrite.Substitution;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.decl.MethodDecl;
+import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
-import org.jlato.tree.stmt.Stmt;
 import org.jlato.unit.util.BaseTestFromFiles;
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,7 +35,7 @@ import org.junit.runners.JUnit4;
 
 import java.io.FileNotFoundException;
 
-import static org.jlato.rewrite.Quotes.*;
+import static org.jlato.parser.ParseContext.Expression;
 import static org.jlato.tree.Trees.*;
 
 /**
@@ -47,26 +44,35 @@ import static org.jlato.tree.Trees.*;
 @RunWith(JUnit4.class)
 public class MatchTest extends BaseTestFromFiles {
 
+	private final Parser parser = new Parser();
+
 	@Test
 	public void methodCalls() throws FileNotFoundException, ParseException {
-		final Pattern<Expr> expr = Quotes.expr("$p.hashCode()");
+		final Pattern<Expr> pattern = Quotes.expr("$p.hashCode()");
 
-		Assert.assertFalse(parseExpr("o.otherMethod()").matches(expr));
-		Assert.assertTrue(parseExpr("o.hashCode()").matches(expr));
+		Assert.assertFalse(pattern.matches(parse(Expression, "o.otherMethod()")));
+		Assert.assertTrue(pattern.matches(parse(Expression, "o.hashCode()")));
 
-		Assert.assertNull(parseExpr("o.otherMethod()").match(expr));
-		Assert.assertNotNull(parseExpr("o.hashCode()").match(expr));
-		Assert.assertTrue(parseExpr("o.hashCode()").match(expr).binds("p"));
-		Assert.assertEquals(name("o"), parseExpr("o.hashCode()").match(expr).get("p"));
+		Assert.assertNull(pattern.match(parse(Expression, "o.otherMethod()")));
+		Assert.assertNotNull(pattern.match(parse(Expression, "o.hashCode()")));
 
-		Assert.assertNull(expr.match(parseExpr("o.otherMethod()"), Substitution.empty().bind("p", name("o"))));
-		Assert.assertNull(expr.match(parseExpr("o.hashCode()"), Substitution.empty().bind("p", name("other"))));
-		Assert.assertNotNull(expr.match(parseExpr("o.hashCode()"), Substitution.empty().bind("p", name("o"))));
-		Assert.assertTrue(expr.match(parseExpr("o.hashCode()"), Substitution.empty().bind("p", name("o"))).binds("p"));
-		Assert.assertEquals(name("o"), expr.match(parseExpr("o.hashCode()"), Substitution.empty().bind("p", name("o"))).get("p"));
+		Assert.assertFalse(parse(Expression, "o.otherMethod()").matches(pattern));
+		Assert.assertTrue(parse(Expression, "o.hashCode()").matches(pattern));
+
+		Assert.assertNull(parse(Expression, "o.otherMethod()").match(pattern));
+		Assert.assertNotNull(parse(Expression, "o.hashCode()").match(pattern));
+
+		Assert.assertTrue(parse(Expression, "o.hashCode()").match(pattern).binds("p"));
+		Assert.assertEquals(name("o"), parse(Expression, "o.hashCode()").match(pattern).get("p"));
+
+		Assert.assertNull(pattern.match(parse(Expression, "o.otherMethod()"), Substitution.empty().bind("p", name("o"))));
+		Assert.assertNull(pattern.match(parse(Expression, "o.hashCode()"), Substitution.empty().bind("p", name("other"))));
+		Assert.assertNotNull(pattern.match(parse(Expression, "o.hashCode()"), Substitution.empty().bind("p", name("o"))));
+		Assert.assertTrue(pattern.match(parse(Expression, "o.hashCode()"), Substitution.empty().bind("p", name("o"))).binds("p"));
+		Assert.assertEquals(name("o"), pattern.match(parse(Expression, "o.hashCode()"), Substitution.empty().bind("p", name("o"))).get("p"));
 	}
 
-	private Expr parseExpr(String content) throws ParseException {
-		return new Parser().parse(ParseContext.Expression, content);
+	private <T extends Tree> T parse(ParseContext<T> context, String content) throws ParseException {
+		return parser.parse(context, content);
 	}
 }

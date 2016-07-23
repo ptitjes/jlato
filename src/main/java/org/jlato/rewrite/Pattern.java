@@ -31,6 +31,10 @@ public abstract class Pattern<T> implements Matcher<T>, Builder<T> {
 		return match(object, Substitution.empty());
 	}
 
+	public final boolean matches(Object object) {
+		return match(object) != null;
+	}
+
 	public final T build() {
 		return build(Substitution.empty());
 	}
@@ -59,7 +63,6 @@ public abstract class Pattern<T> implements Matcher<T>, Builder<T> {
 	public <U> Pattern<T> suchThat(final String var, final Function1<U, Boolean> predicate) {
 		return new DecoratedPattern<T>(this) {
 			@Override
-			@SuppressWarnings("unchecked")
 			public Substitution match(Object object, Substitution substitution) {
 				Substitution match = super.match(object, substitution);
 				return match != null && predicate.apply(match.<U>get(var)) ? match : null;
