@@ -4,7 +4,7 @@ JLaTo is a Java Language Tools library.
 
 [![Maven Central][shield-maven]][info-maven]
 [![JavaDoc][shield-javadoc]][info-javadoc]
-[![Doc][shield-doc]][info-doc]
+[![Documentation][shield-doc]][info-doc]
 [![Build Status][shield-build]][info-build]
 [![Coverage Status][shield-coverage]][info-coverage]
 [![Issues][shield-issues]][info-issues]
@@ -13,7 +13,7 @@ JLaTo is a Java Language Tools library.
 
 [info-maven]: https://maven-badges.herokuapp.com/maven-central/org.jlato/jlato
 [info-javadoc]: http://javadoc.io/doc/org.jlato/jlato
-[info-doc]: https://jlato.readthedocs.io/en/latest/?badge=latest
+[info-doc]: https://jlato.readthedocs.io/
 [info-build]: https://travis-ci.org/ptitjes/jlato
 [info-coverage]: https://coveralls.io/github/ptitjes/jlato?branch=master
 [info-issues]: https://github.com/ptitjes/jlato/issues
@@ -81,11 +81,7 @@ You can also use [JitPack](https://jitpack.io/#ptitjes/jlato), if ever you requi
 
 ## Documentation
 
-JLaTo is still in heavy development. Documentation will be gathered along the way in the [Documentation Directory](src/main/doc/).
-
-For now, we provide [basic usage instructions](src/main/doc/usage/getting-started.md).
-
-And you can find the latest javadoc on [javadoc.io][info-javadoc].
+You will find the documentation at [readthedocs.io][info-doc] and the latest javadoc on [javadoc.io][info-javadoc].
 
 ## License
 
