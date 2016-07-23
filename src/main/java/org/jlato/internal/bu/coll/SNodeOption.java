@@ -68,10 +68,6 @@ public class SNodeOption implements STree {
 		return elementTraversal();
 	}
 
-	public BUTree<?> element() {
-		return element;
-	}
-
 	public SNodeOption withElement(BUTree<?> element) {
 		return new SNodeOption(element);
 	}

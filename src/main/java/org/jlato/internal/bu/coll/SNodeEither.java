@@ -78,24 +78,12 @@ public class SNodeEither implements STree {
 		return elementTraversal();
 	}
 
-	public BUTree<?> element() {
-		return element;
-	}
-
 	public SNodeEither withSide(EitherSide side) {
 		return new SNodeEither(element, side);
 	}
 
 	public SNodeEither withElement(BUTree<?> element) {
 		return new SNodeEither(element, side);
-	}
-
-	public SNodeEither withLeft(BUTree<?> element) {
-		return new SNodeEither(element, EitherSide.Left);
-	}
-
-	public SNodeEither withRight(BUTree<?> element) {
-		return new SNodeEither(element, EitherSide.Right);
 	}
 
 	@Override
