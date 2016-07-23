@@ -49,7 +49,7 @@ public final class LSToken extends LexicalShape {
 		final LToken token = provider.tokenFor(tree);
 		if (token == null) throw new IllegalStateException();
 
-		print.append(token, true);
+		print.append(token);
 	}
 
 	public interface Provider {

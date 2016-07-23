@@ -116,7 +116,8 @@ public class Print {
 		indentationLevel += constraint.resolve(formattingSettings);
 	}
 
-	public void append(LToken token, boolean requiresFormatting) {
+	public void append(LToken token) {
+		boolean requiresFormatting = existingWhitespace == null;
 		if (!start) {
 			renderTrailing();
 			renderSpacing();
@@ -242,16 +243,15 @@ public class Print {
 	}
 
 	private void appendJavaDocLine(String image, boolean last) {
-		if (needsIndentation) doPrintIndent();
+		if (format && needsIndentation) doPrintIndent();
 		writer.append(image);
 		if (!last) appendNewLine();
 	}
 
 	private void appendComment(String image) {
-		if (needsIndentation) doPrintIndent();
+		if (format && needsIndentation) doPrintIndent();
 		writer.append(image);
 		afterAlpha = false;
-		needsIndentation = false;
 	}
 
 	private void appendWhiteSpace(String string) {
