@@ -45,10 +45,6 @@ public class TDNodeMap<T extends Tree> extends TDTree<SNodeMap, org.jlato.tree.N
 		this(new TDLocation<SNodeMap>(new BUTree<SNodeMap>(new SNodeMap())));
 	}
 
-	public TDNodeMap(TreeMap<String, BUTree<?>> trees) {
-		this(new TDLocation<SNodeMap>(new BUTree<SNodeMap>(new SNodeMap(trees))));
-	}
-
 	@Override
 	@SuppressWarnings("unchecked")
 	public T get(String key) {
