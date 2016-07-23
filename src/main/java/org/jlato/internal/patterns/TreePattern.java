@@ -19,7 +19,6 @@
 
 package org.jlato.internal.patterns;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
@@ -52,9 +51,8 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 	protected static Substitution matchTree(BUTree<?> pattern, BUTree<?> tree, Substitution substitution) {
 		STree patternState = pattern.state;
 		STree state = tree.state;
-		boolean isVariable = patternState instanceof SVar;
 
-		if (isVariable) {
+		if (patternState instanceof SVar) {
 			String name = ((SVar) patternState).name;
 			// Not an anonymous var
 			if (!name.equals("_")) {
@@ -68,31 +66,27 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		} else if (patternState instanceof SNode) {
 			if (!(state instanceof SNode)) return null;
 			if (((SNode) patternState).kind() != ((SNode) state).kind()) return null;
-
-			substitution = mathData((SNode) patternState, (SNode) state, substitution);
-			if (substitution == null) return null;
-			substitution = mathChildren((SNode) patternState, (SNode) state, substitution);
+			substitution = matchNode((SNode) patternState, (SNode) state, substitution);
 		} else if (patternState instanceof SNodeOption) {
 			if (!(state instanceof SNodeOption)) return null;
 			if (substitution == null) return null;
-			substitution = mathChildren((SNodeOption) patternState, (SNodeOption) state, substitution);
+			substitution = matchOption((SNodeOption) patternState, (SNodeOption) state, substitution);
 		} else if (patternState instanceof SNodeList) {
 			if (!(state instanceof SNodeList)) return null;
 			if (substitution == null) return null;
-			substitution = mathChildren((SNodeList) patternState, (SNodeList) state, substitution);
+			substitution = matchList((SNodeList) patternState, (SNodeList) state, substitution);
 		}
 		return substitution;
 	}
 
-	protected static <S extends SNode<S>> Substitution mathData(S patternState, S state, Substitution substitution) {
+	protected static <S extends SNode<S>> Substitution matchNode(S patternState, S state, Substitution substitution) {
+		// Properties
 		for (SProperty prop : patternState.allProperties()) {
 			substitution = matchObject(prop.retrieve(patternState), prop.retrieve(state), substitution);
 			if (substitution == null) return null;
 		}
-		return substitution;
-	}
 
-	protected static <S extends SNode<S>> Substitution mathChildren(S patternState, S state, Substitution substitution) {
+		// Children
 		STraversal traversal = patternState.firstChild();
 		while (traversal != null) {
 			substitution = matchTree(traversal.traverse(patternState), traversal.traverse(state), substitution);
@@ -102,7 +96,8 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		return substitution;
 	}
 
-	private static Substitution mathChildren(SNodeOption patternState, SNodeOption state, Substitution substitution) {
+	private static Substitution matchOption(SNodeOption patternState, SNodeOption state, Substitution substitution) {
+		// Element
 		BUTree patternElement = patternState.element;
 		BUTree element = state.element;
 		return patternElement == null && element == null ? substitution :
@@ -110,7 +105,8 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 						matchTree(patternElement, element, substitution);
 	}
 
-	private static Substitution mathChildren(SNodeList patternState, SNodeList state, Substitution substitution) {
+	private static Substitution matchList(SNodeList patternState, SNodeList state, Substitution substitution) {
+		// Elements
 		Vector<BUTree<?>> patternChildren = patternState.children;
 		Vector<BUTree<?>> children = state.children;
 		if (patternChildren.size() != children.size()) return null;
@@ -150,6 +146,7 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		return (T) new TDLocation(null, buildTree(pattern, substitution)).facade;
 	}
 
+	@SuppressWarnings("unchecked")
 	private <S extends STree> BUTree<S> buildTree(BUTree<S> pattern, Substitution substitution) {
 		STree patternState = pattern.state;
 		if (patternState instanceof SVar) {
@@ -159,11 +156,11 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 			final BUTree<S> tree;
 			if (patternState instanceof SNode) {
 				final SNode nodeState = (SNode) patternState;
-				tree = (BUTree<S>) buildNodeTree(nodeState.kind(), nodeState, substitution);
+				tree = (BUTree<S>) buildNode(nodeState.kind(), nodeState, substitution);
 			} else if (patternState instanceof SNodeOption) {
-				tree = (BUTree<S>) buildNodeOptionTree((SNodeOption) patternState, substitution);
+				tree = (BUTree<S>) buildOption((SNodeOption) patternState, substitution);
 			} else if (patternState instanceof SNodeList) {
-				tree = (BUTree<S>) buildNodeListTree((SNodeList) patternState, substitution);
+				tree = (BUTree<S>) buildList((SNodeList) patternState, substitution);
 			} else {
 				// TODO Handle NodeEither
 				throw new UnsupportedOperationException();
@@ -172,9 +169,16 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		}
 	}
 
-	private <S extends SNode<S>> BUTree<S> buildNodeTree(Kind kind, S patternState, Substitution substitution) {
+	@SuppressWarnings("unchecked")
+	private <S extends SNode<S>> BUTree<S> buildNode(Kind kind, S patternState, Substitution substitution) {
 		S buildState = patternState;
 
+		// Properties
+		for (SProperty property : patternState.allProperties()) {
+			buildState = (S) property.rebuildParentState(buildState, buildData(property.retrieve(patternState), substitution));
+		}
+
+		// Children
 		STraversal traversal = patternState.firstChild();
 		while (traversal != null) {
 			buildState = (S) traversal.rebuildParentState(buildState, buildTree(traversal.traverse(patternState), substitution));
@@ -183,12 +187,14 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		return new BUTree<S>(buildState);
 	}
 
-	private BUTree<SNodeOption> buildNodeOptionTree(SNodeOption patternState, Substitution substitution) {
+	private BUTree<SNodeOption> buildOption(SNodeOption patternState, Substitution substitution) {
+		// Element
 		final BUTree<? extends STree> elementTree = patternState.element == null ? null : buildTree(patternState.element, substitution);
 		return new BUTree<SNodeOption>(new SNodeOption(elementTree));
 	}
 
-	private BUTree<SNodeList> buildNodeListTree(SNodeList patternState, Substitution substitution) {
+	private BUTree<SNodeList> buildList(SNodeList patternState, Substitution substitution) {
+		// Elements
 		Builder<BUTree<?>, Vector<BUTree<?>>> childrenBuilder = Vector.<BUTree<?>>factory().newBuilder();
 		for (BUTree<?> childPattern : patternState.children) {
 			childrenBuilder.add(buildTree(childPattern, substitution));
@@ -196,22 +202,17 @@ public class TreePattern<T extends Tree> extends Pattern<T> {
 		return new BUTree<SNodeList>(new SNodeList(childrenBuilder.build()));
 	}
 
-	private ArrayList<Object> buildData(ArrayList<Object> pattern, Substitution substitution) {
-		Builder<Object, ArrayList<Object>> childrenBuilder = ArrayList.<Object>factory().newBuilder();
-		for (Object childPattern : pattern) {
-			if (childPattern instanceof BUTree) {
-				STree patternState = ((BUTree) childPattern).state;
-				if (patternState instanceof SVar) {
-					String name = ((SVar) patternState).name;
-
-					childrenBuilder.add(substitution.get(name));
-				} else {
-					childrenBuilder.add(childPattern);
-				}
+	private Object buildData(Object pattern, Substitution substitution) {
+		if (pattern instanceof BUTree) {
+			STree patternState = ((BUTree) pattern).state;
+			if (patternState instanceof SVar) {
+				String name = ((SVar) patternState).name;
+				return substitution.get(name);
 			} else {
-				childrenBuilder.add(childPattern);
+				return pattern;
 			}
+		} else {
+			return pattern;
 		}
-		return childrenBuilder.build();
 	}
 }
