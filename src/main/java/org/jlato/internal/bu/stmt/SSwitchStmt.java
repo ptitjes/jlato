@@ -143,10 +143,8 @@ public class SSwitchStmt extends SNode<SSwitchStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SSwitchStmt state = (SSwitchStmt) o;
 		if (selector == null ? state.selector != null : !selector.equals(state.selector))
 			return false;

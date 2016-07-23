@@ -179,10 +179,8 @@ public class SForStmt extends SNode<SForStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SForStmt state = (SForStmt) o;
 		if (!init.equals(state.init))
 			return false;

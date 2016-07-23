@@ -141,10 +141,8 @@ public class SDoStmt extends SNode<SDoStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SDoStmt state = (SDoStmt) o;
 		if (body == null ? state.body != null : !body.equals(state.body))
 			return false;

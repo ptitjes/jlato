@@ -133,10 +133,8 @@ public class SName extends SNode<SName> implements SExpr {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SName state = (SName) o;
 		if (id == null ? state.id != null : !id.equals(state.id))
 			return false;

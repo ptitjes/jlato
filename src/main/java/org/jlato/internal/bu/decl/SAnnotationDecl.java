@@ -162,10 +162,8 @@ public class SAnnotationDecl extends SNode<SAnnotationDecl> implements STypeDecl
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SAnnotationDecl state = (SAnnotationDecl) o;
 		if (!modifiers.equals(state.modifiers))
 			return false;

@@ -154,10 +154,8 @@ public class SUnaryExpr extends SNode<SUnaryExpr> implements SExpr {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SUnaryExpr state = (SUnaryExpr) o;
 		if (op == null ? state.op != null : !op.equals(state.op))
 			return false;

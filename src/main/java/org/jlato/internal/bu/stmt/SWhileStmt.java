@@ -141,10 +141,8 @@ public class SWhileStmt extends SNode<SWhileStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SWhileStmt state = (SWhileStmt) o;
 		if (condition == null ? state.condition != null : !condition.equals(state.condition))
 			return false;

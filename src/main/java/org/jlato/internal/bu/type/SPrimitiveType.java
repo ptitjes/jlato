@@ -156,10 +156,8 @@ public class SPrimitiveType extends SNode<SPrimitiveType> implements SType {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SPrimitiveType state = (SPrimitiveType) o;
 		if (!annotations.equals(state.annotations))
 			return false;

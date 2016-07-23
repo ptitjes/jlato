@@ -123,10 +123,8 @@ public class SUnionType extends SNode<SUnionType> implements SType {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SUnionType state = (SUnionType) o;
 		if (!types.equals(state.types))
 			return false;

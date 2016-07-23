@@ -183,10 +183,8 @@ public class SQualifiedType extends SNode<SQualifiedType> implements SReferenceT
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SQualifiedType state = (SQualifiedType) o;
 		if (!annotations.equals(state.annotations))
 			return false;

@@ -122,10 +122,8 @@ public class STypeDeclarationStmt extends SNode<STypeDeclarationStmt> implements
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		STypeDeclarationStmt state = (STypeDeclarationStmt) o;
 		if (typeDecl == null ? state.typeDecl != null : !typeDecl.equals(state.typeDecl))
 			return false;

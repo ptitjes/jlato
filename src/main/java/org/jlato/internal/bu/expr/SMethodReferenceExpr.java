@@ -162,10 +162,8 @@ public class SMethodReferenceExpr extends SNode<SMethodReferenceExpr> implements
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SMethodReferenceExpr state = (SMethodReferenceExpr) o;
 		if (scope == null ? state.scope != null : !scope.equals(state.scope))
 			return false;

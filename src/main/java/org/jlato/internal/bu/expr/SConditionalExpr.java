@@ -157,10 +157,8 @@ public class SConditionalExpr extends SNode<SConditionalExpr> implements SExpr {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SConditionalExpr state = (SConditionalExpr) o;
 		if (condition == null ? state.condition != null : !condition.equals(state.condition))
 			return false;

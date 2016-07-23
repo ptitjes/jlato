@@ -141,10 +141,8 @@ public class SCatchClause extends SNode<SCatchClause> implements STree {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SCatchClause state = (SCatchClause) o;
 		if (param == null ? state.param != null : !param.equals(state.param))
 			return false;

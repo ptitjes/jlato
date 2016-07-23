@@ -162,10 +162,8 @@ public class SWildcardType extends SNode<SWildcardType> implements SType {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SWildcardType state = (SWildcardType) o;
 		if (!annotations.equals(state.annotations))
 			return false;

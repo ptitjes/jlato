@@ -123,10 +123,8 @@ public class SThisExpr extends SNode<SThisExpr> implements SExpr {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SThisExpr state = (SThisExpr) o;
 		if (!classExpr.equals(state.classExpr))
 			return false;

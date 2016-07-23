@@ -232,10 +232,8 @@ public class SEnumDecl extends SNode<SEnumDecl> implements STypeDecl {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SEnumDecl state = (SEnumDecl) o;
 		if (!modifiers.equals(state.modifiers))
 			return false;

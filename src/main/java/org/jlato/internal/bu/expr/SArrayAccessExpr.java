@@ -139,10 +139,8 @@ public class SArrayAccessExpr extends SNode<SArrayAccessExpr> implements SExpr {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SArrayAccessExpr state = (SArrayAccessExpr) o;
 		if (name == null ? state.name != null : !name.equals(state.name))
 			return false;

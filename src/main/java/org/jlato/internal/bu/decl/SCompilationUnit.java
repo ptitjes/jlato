@@ -161,10 +161,8 @@ public class SCompilationUnit extends SNode<SCompilationUnit> implements STree {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SCompilationUnit state = (SCompilationUnit) o;
 		if (packageDecl == null ? state.packageDecl != null : !packageDecl.equals(state.packageDecl))
 			return false;

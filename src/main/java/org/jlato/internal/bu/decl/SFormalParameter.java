@@ -194,10 +194,8 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SFormalParameter state = (SFormalParameter) o;
 		if (!modifiers.equals(state.modifiers))
 			return false;

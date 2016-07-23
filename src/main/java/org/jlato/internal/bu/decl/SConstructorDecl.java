@@ -220,10 +220,8 @@ public class SConstructorDecl extends SNode<SConstructorDecl> implements SMember
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SConstructorDecl state = (SConstructorDecl) o;
 		if (!modifiers.equals(state.modifiers))
 			return false;

@@ -172,10 +172,8 @@ public class SBinaryExpr extends SNode<SBinaryExpr> implements SExpr {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SBinaryExpr state = (SBinaryExpr) o;
 		if (left == null ? state.left != null : !left.equals(state.left))
 			return false;

@@ -172,10 +172,8 @@ public class SAssignExpr extends SNode<SAssignExpr> implements SExpr {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SAssignExpr state = (SAssignExpr) o;
 		if (target == null ? state.target != null : !target.equals(state.target))
 			return false;

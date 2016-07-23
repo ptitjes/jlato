@@ -123,10 +123,8 @@ public class SContinueStmt extends SNode<SContinueStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SContinueStmt state = (SContinueStmt) o;
 		if (!id.equals(state.id))
 			return false;

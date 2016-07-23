@@ -141,10 +141,8 @@ public class SCastExpr extends SNode<SCastExpr> implements SExpr {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SCastExpr state = (SCastExpr) o;
 		if (type == null ? state.type != null : !type.equals(state.type))
 			return false;

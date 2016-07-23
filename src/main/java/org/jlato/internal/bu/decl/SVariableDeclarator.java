@@ -142,10 +142,8 @@ public class SVariableDeclarator extends SNode<SVariableDeclarator> implements S
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SVariableDeclarator state = (SVariableDeclarator) o;
 		if (id == null ? state.id != null : !id.equals(state.id))
 			return false;

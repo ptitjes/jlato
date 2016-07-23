@@ -213,10 +213,8 @@ public class STryStmt extends SNode<STryStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		STryStmt state = (STryStmt) o;
 		if (!resources.equals(state.resources))
 			return false;

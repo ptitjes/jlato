@@ -162,10 +162,8 @@ public class STypeParameter extends SNode<STypeParameter> implements STree {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		STypeParameter state = (STypeParameter) o;
 		if (!annotations.equals(state.annotations))
 			return false;

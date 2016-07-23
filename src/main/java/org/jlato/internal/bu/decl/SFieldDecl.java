@@ -162,10 +162,8 @@ public class SFieldDecl extends SNode<SFieldDecl> implements SMemberDecl {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SFieldDecl state = (SFieldDecl) o;
 		if (!modifiers.equals(state.modifiers))
 			return false;

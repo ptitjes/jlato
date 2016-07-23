@@ -260,10 +260,8 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SMethodDecl state = (SMethodDecl) o;
 		if (!modifiers.equals(state.modifiers))
 			return false;

@@ -142,10 +142,8 @@ public class SArrayType extends SNode<SArrayType> implements SReferenceType {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SArrayType state = (SArrayType) o;
 		if (componentType == null ? state.componentType != null : !componentType.equals(state.componentType))
 			return false;

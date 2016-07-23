@@ -99,10 +99,8 @@ public class SVoidType extends SNode<SVoidType> implements SType {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		return true;
 	}
 

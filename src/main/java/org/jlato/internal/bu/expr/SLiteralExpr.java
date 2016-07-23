@@ -150,10 +150,8 @@ public class SLiteralExpr extends SNode<SLiteralExpr> implements SExpr {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SLiteralExpr state = (SLiteralExpr) o;
 		if (literalClass == null ? state.literalClass != null : !literalClass.equals(state.literalClass))
 			return false;

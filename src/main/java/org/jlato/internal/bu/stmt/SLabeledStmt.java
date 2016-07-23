@@ -141,10 +141,8 @@ public class SLabeledStmt extends SNode<SLabeledStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SLabeledStmt state = (SLabeledStmt) o;
 		if (label == null ? state.label != null : !label.equals(state.label))
 			return false;

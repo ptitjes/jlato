@@ -122,10 +122,8 @@ public class SMarkerAnnotationExpr extends SNode<SMarkerAnnotationExpr> implemen
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SMarkerAnnotationExpr state = (SMarkerAnnotationExpr) o;
 		if (name == null ? state.name != null : !name.equals(state.name))
 			return false;

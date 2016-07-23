@@ -143,10 +143,8 @@ public class SPackageDecl extends SNode<SPackageDecl> implements STree {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SPackageDecl state = (SPackageDecl) o;
 		if (!annotations.equals(state.annotations))
 			return false;

@@ -172,10 +172,8 @@ public class SImportDecl extends SNode<SImportDecl> implements STree {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SImportDecl state = (SImportDecl) o;
 		if (name == null ? state.name != null : !name.equals(state.name))
 			return false;

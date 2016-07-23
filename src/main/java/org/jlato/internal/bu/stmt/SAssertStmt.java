@@ -142,10 +142,8 @@ public class SAssertStmt extends SNode<SAssertStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SAssertStmt state = (SAssertStmt) o;
 		if (check == null ? state.check != null : !check.equals(state.check))
 			return false;

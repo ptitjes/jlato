@@ -123,10 +123,8 @@ public class SReturnStmt extends SNode<SReturnStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SReturnStmt state = (SReturnStmt) o;
 		if (!expr.equals(state.expr))
 			return false;

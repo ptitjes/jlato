@@ -182,10 +182,8 @@ public class SMethodInvocationExpr extends SNode<SMethodInvocationExpr> implemen
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SMethodInvocationExpr state = (SMethodInvocationExpr) o;
 		if (!scope.equals(state.scope))
 			return false;

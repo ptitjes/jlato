@@ -133,10 +133,8 @@ public class SModifier extends SNode<SModifier> implements SExtendedModifier {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SModifier state = (SModifier) o;
 		if (keyword == null ? state.keyword != null : !keyword.equals(state.keyword))
 			return false;

@@ -161,10 +161,8 @@ public class SForeachStmt extends SNode<SForeachStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SForeachStmt state = (SForeachStmt) o;
 		if (var == null ? state.var != null : !var.equals(state.var))
 			return false;

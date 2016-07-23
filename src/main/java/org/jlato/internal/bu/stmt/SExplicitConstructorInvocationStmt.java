@@ -194,10 +194,8 @@ public class SExplicitConstructorInvocationStmt extends SNode<SExplicitConstruct
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SExplicitConstructorInvocationStmt state = (SExplicitConstructorInvocationStmt) o;
 		if (!typeArgs.equals(state.typeArgs))
 			return false;

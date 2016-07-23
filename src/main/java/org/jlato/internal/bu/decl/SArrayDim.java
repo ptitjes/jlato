@@ -123,10 +123,8 @@ public class SArrayDim extends SNode<SArrayDim> implements STree {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SArrayDim state = (SArrayDim) o;
 		if (!annotations.equals(state.annotations))
 			return false;

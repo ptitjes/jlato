@@ -183,10 +183,8 @@ public class SArrayCreationExpr extends SNode<SArrayCreationExpr> implements SEx
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SArrayCreationExpr state = (SArrayCreationExpr) o;
 		if (type == null ? state.type != null : !type.equals(state.type))
 			return false;

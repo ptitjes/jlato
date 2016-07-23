@@ -143,10 +143,8 @@ public class SInitializerDecl extends SNode<SInitializerDecl> implements SMember
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SInitializerDecl state = (SInitializerDecl) o;
 		if (!modifiers.equals(state.modifiers))
 			return false;

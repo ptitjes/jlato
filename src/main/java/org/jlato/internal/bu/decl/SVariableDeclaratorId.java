@@ -143,10 +143,8 @@ public class SVariableDeclaratorId extends SNode<SVariableDeclaratorId> implemen
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SVariableDeclaratorId state = (SVariableDeclaratorId) o;
 		if (name == null ? state.name != null : !name.equals(state.name))
 			return false;

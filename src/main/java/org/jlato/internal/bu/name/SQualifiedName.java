@@ -142,10 +142,8 @@ public class SQualifiedName extends SNode<SQualifiedName> implements STree {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SQualifiedName state = (SQualifiedName) o;
 		if (!qualifier.equals(state.qualifier))
 			return false;

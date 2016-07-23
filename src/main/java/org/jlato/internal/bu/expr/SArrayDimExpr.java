@@ -142,10 +142,8 @@ public class SArrayDimExpr extends SNode<SArrayDimExpr> implements STree {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SArrayDimExpr state = (SArrayDimExpr) o;
 		if (!annotations.equals(state.annotations))
 			return false;

@@ -123,10 +123,8 @@ public class SBreakStmt extends SNode<SBreakStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SBreakStmt state = (SBreakStmt) o;
 		if (!id.equals(state.id))
 			return false;

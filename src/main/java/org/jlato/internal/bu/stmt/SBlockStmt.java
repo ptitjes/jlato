@@ -123,10 +123,8 @@ public class SBlockStmt extends SNode<SBlockStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SBlockStmt state = (SBlockStmt) o;
 		if (!stmts.equals(state.stmts))
 			return false;

@@ -123,10 +123,8 @@ public class SIntersectionType extends SNode<SIntersectionType> implements SType
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SIntersectionType state = (SIntersectionType) o;
 		if (!types.equals(state.types))
 			return false;

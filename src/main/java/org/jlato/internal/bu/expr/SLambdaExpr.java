@@ -177,10 +177,8 @@ public class SLambdaExpr extends SNode<SLambdaExpr> implements SExpr {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SLambdaExpr state = (SLambdaExpr) o;
 		if (!params.equals(state.params))
 			return false;

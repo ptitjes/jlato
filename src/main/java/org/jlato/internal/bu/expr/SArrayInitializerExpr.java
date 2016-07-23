@@ -155,10 +155,8 @@ public class SArrayInitializerExpr extends SNode<SArrayInitializerExpr> implemen
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SArrayInitializerExpr state = (SArrayInitializerExpr) o;
 		if (!values.equals(state.values))
 			return false;

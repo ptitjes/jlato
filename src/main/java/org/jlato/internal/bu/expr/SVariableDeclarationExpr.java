@@ -122,10 +122,8 @@ public class SVariableDeclarationExpr extends SNode<SVariableDeclarationExpr> im
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SVariableDeclarationExpr state = (SVariableDeclarationExpr) o;
 		if (declaration == null ? state.declaration != null : !declaration.equals(state.declaration))
 			return false;

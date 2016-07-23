@@ -183,10 +183,8 @@ public class SEnumConstantDecl extends SNode<SEnumConstantDecl> implements SMemb
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SEnumConstantDecl state = (SEnumConstantDecl) o;
 		if (!modifiers.equals(state.modifiers))
 			return false;

@@ -161,10 +161,8 @@ public class SIfStmt extends SNode<SIfStmt> implements SStmt {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		SIfStmt state = (SIfStmt) o;
 		if (condition == null ? state.condition != null : !condition.equals(state.condition))
 			return false;
