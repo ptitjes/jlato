@@ -2,10 +2,29 @@
 
 JLaTo is a Java Language Tools library.
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.jlato/jlato/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.jlato/jlato)
-[![Build Status](https://travis-ci.org/ptitjes/jlato.svg?branch=master)](https://travis-ci.org/ptitjes/jlato)
-[![Coverage Status](https://coveralls.io/repos/ptitjes/jlato/badge.svg?branch=master&service=github)](https://coveralls.io/github/ptitjes/jlato?branch=master)
-<a href="https://www.irccloud.com/invite?channel=%23jlato&amp;hostname=irc.freenode.net&amp;port=6697&amp;ssl=1" target="_blank"><img src="https://www.irccloud.com/invite-svg?channel=%23jlato&amp;hostname=irc.freenode.net&amp;port=6697&amp;ssl=1"  height="20"></a>
+[![Maven Central][shield-maven]][info-maven]
+[![JavaDoc][shield-javadoc]][info-javadoc]
+[![Build Status][shield-build]][info-build]
+[![Coverage Status][shield-coverage]][info-coverage]
+[![Issues][shield-issues]][info-issues]
+[![License][shield-license]][info-license]
+[![IRC Invite][shield-irc]][info-irc]
+
+[info-maven]: https://maven-badges.herokuapp.com/maven-central/org.jlato/jlato
+[info-javadoc]: http://javadoc.io/doc/org.jlato/jlato
+[info-build]: https://travis-ci.org/ptitjes/jlato
+[info-coverage]: https://coveralls.io/github/ptitjes/jlato?branch=master
+[info-issues]: https://github.com/ptitjes/jlato/issues
+[info-license]: COPYING.LESSER
+[info-irc]: irc://irc.freenode.net/#jlato
+
+[shield-maven]: https://img.shields.io/maven-central/v/org.jlato/jlato.svg
+[shield-javadoc]: https://img.shields.io/badge/javadoc-latest-orange.svg
+[shield-build]: https://img.shields.io/travis/ptitjes/jlato/master.svg
+[shield-coverage]: https://img.shields.io/coveralls/ptitjes/jlato/master.svg
+[shield-issues]: https://img.shields.io/github/issues-raw/ptitjes/jlato.svg
+[shield-license]: https://img.shields.io/badge/license-LGPL%203.0-blue.svg
+[shield-irc]: https://img.shields.io/badge/irc-%23jlato-red.svg
 
 ## Features
 
