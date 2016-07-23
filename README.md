@@ -49,7 +49,7 @@ In the long term, JLaTo also aims to provide:
 ## Installation
 
 Releases are distributed on Maven central:
-```
+```xml
 <dependency>
   <groupId>org.jlato</groupId>
   <artifactId>jlato</artifactId>
@@ -58,7 +58,7 @@ Releases are distributed on Maven central:
 ```
 
 You can also use [JitPack](https://jitpack.io/#ptitjes/jlato), if ever you require a build for a specific commit:
-```
+```xml
 <repositories>
   <repository>
     <id>jitpack.io</id>
@@ -66,7 +66,7 @@ You can also use [JitPack](https://jitpack.io/#ptitjes/jlato), if ever you requi
   </repository>
 </repositories>
 
-[...]
+<!-- ... -->
 
 <dependency>
   <groupId>com.github.ptitjes</groupId>
