@@ -4,7 +4,7 @@ JLaTo is a Java Language Tools library.
 
 [![Maven Central][shield-maven]][info-maven]
 [![JavaDoc][shield-javadoc]][info-javadoc]
-[![Doc][shield-doc][info-doc]
+[![Doc][shield-doc]][info-doc]
 [![Build Status][shield-build]][info-build]
 [![Coverage Status][shield-coverage]][info-coverage]
 [![Issues][shield-issues]][info-issues]
