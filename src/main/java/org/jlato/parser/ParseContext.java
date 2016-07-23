@@ -73,18 +73,22 @@ public abstract class ParseContext<T extends Tree> {
 		}
 	};
 
-	public final static ParseContext<MemberDecl> MemberDecl = new ParseContext<MemberDecl>() {
-		@Override
-		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
-			return wrapWithPrologAndEpilog(parser, parser.ClassOrInterfaceBodyDecl(TypeKind.Class));
-		}
-	};
+	public final static ParseContext<MemberDecl> MemberDecl(final TypeKind kind) {
+		return new ParseContext<MemberDecl>() {
+			@Override
+			protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
+				return wrapWithPrologAndEpilog(parser, parser.ClassOrInterfaceBodyDecl(kind));
+			}
+		};
+	}
 
-	public final static ParseContext<MemberDecl> Class_MemberDecl = MemberDecl;
+	public final static ParseContext<MemberDecl> MemberDecl = MemberDecl(TypeKind.Empty);
 
-	public final static ParseContext<MemberDecl> Interface_MemberDecl = MemberDecl;
+	public final static ParseContext<MemberDecl> Class_MemberDecl = MemberDecl(TypeKind.Class);
 
-	public final static ParseContext<MemberDecl> Enum_MemberDecl = MemberDecl;
+	public final static ParseContext<MemberDecl> Interface_MemberDecl = MemberDecl(TypeKind.Interface);
+
+	public final static ParseContext<MemberDecl> Enum_MemberDecl = MemberDecl(TypeKind.Enum);
 
 	public final static ParseContext<MemberDecl> Annotation_MemberDecl = new ParseContext<MemberDecl>() {
 		@Override
@@ -96,6 +100,7 @@ public abstract class ParseContext<T extends Tree> {
 	public final static ParseContext<MethodDecl> MethodDecl = new ParseContext<org.jlato.tree.decl.MethodDecl>() {
 		@Override
 		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
+			parser.run();
 			BUTree<SNodeList> modifiers = parser.Modifiers();
 			return wrapWithPrologAndEpilog(parser, parser.MethodDecl(modifiers));
 		}
@@ -104,6 +109,7 @@ public abstract class ParseContext<T extends Tree> {
 	public final static ParseContext<FieldDecl> FieldDecl = new ParseContext<org.jlato.tree.decl.FieldDecl>() {
 		@Override
 		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
+			parser.run();
 			BUTree<SNodeList> modifiers = parser.Modifiers();
 			return wrapWithPrologAndEpilog(parser, parser.FieldDecl(modifiers));
 		}
@@ -112,6 +118,7 @@ public abstract class ParseContext<T extends Tree> {
 	public final static ParseContext<AnnotationMemberDecl> AnnotationMemberDecl = new ParseContext<org.jlato.tree.decl.AnnotationMemberDecl>() {
 		@Override
 		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
+			parser.run();
 			BUTree<SNodeList> modifiers = parser.Modifiers();
 			return wrapWithPrologAndEpilog(parser, parser.AnnotationTypeMemberDecl(modifiers));
 		}

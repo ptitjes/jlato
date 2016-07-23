@@ -183,6 +183,18 @@ public class Printer {
 		new Print(writer, format, formattingSettings).print(tree);
 	}
 
+	/**
+	 * Prints the specified tree as a string.
+	 *
+	 * @param tree the tree to print.
+	 * @return the tree as a string.
+	 */
+	public String printString(Tree tree) {
+		StringWriter writer = new StringWriter();
+		print(tree, new PrintWriter(writer));
+		return writer.toString();
+	}
+
 	public void printAll(NodeMap<CompilationUnit> compilationUnits, File directory, String encoding) throws IOException {
 		for (String path : compilationUnits.keys()) {
 			final CompilationUnit cu = compilationUnits.get(path);
