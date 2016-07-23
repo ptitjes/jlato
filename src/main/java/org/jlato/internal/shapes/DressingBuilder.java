@@ -136,7 +136,7 @@ public class DressingBuilder<S extends STree> {
 				} else {
 					WTokenRun tokens = tokenIterator.next();
 
-					if (!(discriminator.state instanceof SVar)) {
+					if (!(discriminator instanceof BUTreeVar)) {
 						final boolean acceptsTrailing = lastDefinedShape.acceptsTrailingWhitespace();
 						final boolean acceptsLeading = shape.acceptsLeadingWhitespace();
 						if (acceptsTrailing && acceptsLeading) {

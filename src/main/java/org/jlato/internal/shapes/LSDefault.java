@@ -19,10 +19,7 @@
 
 package org.jlato.internal.shapes;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.SVar;
-import org.jlato.internal.bu.WRunRun;
-import org.jlato.internal.bu.WTokenRun;
+import org.jlato.internal.bu.*;
 
 /**
  * @author Didier Villevalois
@@ -38,7 +35,7 @@ public final class LSDefault extends LexicalShape {
 
 	@Override
 	public boolean isDefined(BUTree tree) {
-		if (tree.state instanceof SVar) return true;
+		if (tree instanceof BUTreeVar) return true;
 
 		final LexicalShape shape = shapeFor(tree);
 		return shape != null && shape.isDefined(tree);

@@ -19,49 +19,29 @@
 
 package org.jlato.internal.bu;
 
-import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.internal.td.TDLocation;
-import org.jlato.tree.*;
-
-import java.util.Collections;
+import com.github.andrewoma.dexx.collection.Vector;
 
 /**
  * @author Didier Villevalois
  */
-public class SVar implements STree {
+public class BUTreeVar<S extends STree> extends BUTree<S> {
+
+	public static <S extends STree> BUTreeVar<S> var(String name) {
+		return new BUTreeVar<S>(null, null, false, null, name);
+	}
+
+	public static <S extends STree> BUTreeVar<S> var(String name, BUTree<S> base) {
+		return new BUTreeVar<S>(base.state, base.dressing, base.hasProblems(), base.problems(), name);
+	}
 
 	public final String name;
 
-	public SVar(String name) {
+	protected BUTreeVar(S state, WDressing dressing, boolean hasProblems, Vector<BUProblem> problems, String name) {
+		super(state, dressing, hasProblems, problems);
 		this.name = name;
 	}
 
-	@Override
-	public Tree instantiate(TDLocation<?> location) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public LexicalShape shape() {
-		return null;
-	}
-
-	@Override
-	public Iterable<SProperty> allProperties() {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public STraversal firstChild() {
-		return null;
-	}
-
-	@Override
-	public STraversal lastChild() {
-		return null;
-	}
-
-	@Override
-	public void validate(BUTree<?> tree) {
+	protected BUTree<S> copy(S state, WDressing dressing, boolean hasProblems, Vector<BUProblem> problems) {
+		return new BUTreeVar<S>(state, dressing, hasProblems, problems, name);
 	}
 }

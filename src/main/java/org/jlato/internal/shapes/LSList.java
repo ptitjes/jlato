@@ -41,7 +41,7 @@ public final class LSList extends LexicalShape {
 
 	@Override
 	public boolean isDefined(BUTree tree) {
-		if (tree.state instanceof SVar) return true;
+		if (tree instanceof BUTreeVar) return true;
 
 		final SNodeList state = (SNodeList) tree.state;
 		final Vector<BUTree<?>> children = state.children;
@@ -54,7 +54,7 @@ public final class LSList extends LexicalShape {
 	public void dress(DressingBuilder<?> builder, BUTree<?> discriminator) {
 		builder.openRun();
 
-		if (discriminator.state instanceof SVar) {
+		if (discriminator instanceof BUTreeVar) {
 			builder.handleNext(before, discriminator);
 
 			builder.handleNext(shape, discriminator);

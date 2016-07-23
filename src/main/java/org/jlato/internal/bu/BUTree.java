@@ -38,11 +38,15 @@ public class BUTree<S extends STree> {
 		this(state, null, false, Vector.<BUProblem>empty());
 	}
 
-	public BUTree(S state, WDressing dressing, boolean hasProblems, Vector<BUProblem> problems) {
+	protected BUTree(S state, WDressing dressing, boolean hasProblems, Vector<BUProblem> problems) {
 		this.state = state;
 		this.dressing = dressing;
 		this.hasProblems = hasProblems;
 		this.problems = problems;
+	}
+
+	protected BUTree<S> copy(S state, WDressing dressing, boolean hasProblems, Vector<BUProblem> problems) {
+		return new BUTree<S>(state, dressing, hasProblems, problems);
 	}
 
 	public int width() {
@@ -50,11 +54,11 @@ public class BUTree<S extends STree> {
 	}
 
 	public BUTree<S> withState(S state) {
-		return new BUTree<S>(state, dressing, hasProblems, problems);
+		return copy(state, dressing, hasProblems, problems);
 	}
 
 	public BUTree<S> withDressing(WDressing dressing) {
-		return new BUTree<S>(state, dressing, hasProblems, problems);
+		return copy(state, dressing, hasProblems, problems);
 	}
 
 	public boolean hasProblems() {
@@ -66,11 +70,11 @@ public class BUTree<S extends STree> {
 	}
 
 	public BUTree<S> setProblems() {
-		return new BUTree<S>(state, dressing, true, problems);
+		return copy(state, dressing, true, problems);
 	}
 
 	public BUTree<S> withProblem(BUProblem problem) {
-		return problem == null ? this : new BUTree<S>(state, dressing, true, problems.append(problem));
+		return problem == null ? this : copy(state, dressing, true, problems.append(problem));
 	}
 
 	public BUTree<?> traverse(STraversal traversal) {

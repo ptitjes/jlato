@@ -73,7 +73,7 @@ public abstract class LSCondition {
 		return new LSCondition() {
 			@Override
 			public boolean test(BUTree tree) {
-				if (tree.state instanceof SVar) return false;
+				if (tree instanceof BUTreeVar) return false;
 
 				final SNodeList state = (SNodeList) tree.state;
 				final Vector<BUTree<?>> children = state.children;

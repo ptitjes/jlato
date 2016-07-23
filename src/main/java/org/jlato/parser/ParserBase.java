@@ -36,9 +36,7 @@ import org.jlato.internal.shapes.LexicalShape;
 
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.EmptyStackException;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Stack;
 
 import static org.jlato.parser.ParserImplConstants.*;
@@ -215,15 +213,14 @@ abstract class ParserBase {
 		return tree.withDressing(dressing);
 	}
 
-	// TODO This is really dirty and temporary until the parser parses STrees directly
-	protected <S extends STree> BUTree<S> makeVar() {
+	protected <S extends STree> BUTreeVar<S> makeVar() {
 		Token token = getToken(0);
 		pushWhitespace(token);
 
 		String image = token.image;
 		boolean nodeListVar = image.startsWith("..$");
 		String name = nodeListVar ? image.substring(3) : image.substring(1);
-		return (BUTree<S>) new BUTree<SVar>(new SVar(name));
+		return BUTreeVar.var(name);
 	}
 
 	// Interface with ParserImpl
