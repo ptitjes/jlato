@@ -46,12 +46,44 @@ In the long term, JLaTo also aims to provide:
 * Semantic analysis of abstract syntax trees
 * A add-on mechanism to enable syntactic and semantic extensions
 
+## Installation
+
+Releases are distributed on Maven central:
+```
+<dependency>
+  <groupId>org.jlato</groupId>
+  <artifactId>jlato</artifactId>
+  <version>0.0.5</version>
+</dependency>
+```
+
+You can also use [JitPack](https://jitpack.io/#ptitjes/jlato), if ever you require a build for a specific commit:
+```
+<repositories>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+  </repository>
+</repositories>
+
+[...]
+
+<dependency>
+  <groupId>com.github.ptitjes</groupId>
+  <artifactId>jlato</artifactId>
+  <version>master-SNAPSHOT</version> <!-- or a commit hash -->
+</dependency>
+```
+
+
 ## Documentation
 
 JLaTo is still in heavy development. Documentation will be gathered along the way in the [Documentation Directory](src/main/doc/).
 
 For now, we provide [basic usage instructions](src/main/doc/usage/getting-started.md).
 
+And you can find the latest javadoc on [javadoc.io][info-javadoc].
+
 ## License
 
-JLaTo is provided under the GNU Lesser General Public License. See the included [COPYING.LESSER](https://github.com/javaparser/javaparser/blob/master/COPYING.LESSER), [COPYING](https://github.com/javaparser/javaparser/blob/master/COPYING) files.
+JLaTo is provided under the GNU Lesser General Public License. See the included [COPYING.LESSER](COPYING.LESSER), [COPYING](COPYING) files.
