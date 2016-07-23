@@ -16,7 +16,7 @@ JLaTo is a Java Language Tools library.
 [info-coverage]: https://coveralls.io/github/ptitjes/jlato?branch=master
 [info-issues]: https://github.com/ptitjes/jlato/issues
 [info-license]: COPYING.LESSER
-[info-irc]: irc://irc.freenode.net/#jlato
+[info-irc]: https://webchat.freenode.net/?channels=jlato
 
 [shield-maven]: https://img.shields.io/maven-central/v/org.jlato/jlato.svg
 [shield-javadoc]: https://img.shields.io/badge/javadoc-latest-orange.svg
@@ -33,11 +33,11 @@ JLaTo is a Java Language Tools library.
 JLaTo currently provides:
 
 * Parsing of Java source files up to **Java 1.8** version (that runs with Java 1.6+)
-* An **immutable** abstract syntax tree with fluent mutators
-* Lexical preservation of whitespaces and comments
-* Formatting of new (and already formatted) abstract syntax trees with formatting settings
-* [Experimental] Matching/Filtering/Searching of abstract syntax trees with patterns
-* [Experimental] Quasi-quotes of Java snippets to ease the building of new abstract syntax trees and patterns
+* An **immutable** abstract syntax tree with **fluent mutators**
+* **Lexical preservation** of whitespaces and comments
+* **Formatting** of new (and already formatted) abstract syntax trees with **formatting settings**
+* [Experimental] **Matching/Filtering/Searching** of abstract syntax trees with patterns
+* [Experimental] **Quasi-quotes of Java snippets** to ease the building of new abstract syntax trees and patterns
 
 ### Roadmap
 
