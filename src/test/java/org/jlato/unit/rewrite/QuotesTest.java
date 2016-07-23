@@ -27,8 +27,12 @@ import org.jlato.rewrite.Pattern;
 import org.jlato.rewrite.Quotes;
 import org.jlato.rewrite.Substitution;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.Tree;
+import org.jlato.tree.decl.ImportDecl;
 import org.jlato.tree.decl.MethodDecl;
+import org.jlato.tree.decl.PackageDecl;
 import org.jlato.tree.expr.Expr;
+import org.jlato.tree.name.QualifiedName;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.unit.util.BaseTestFromFiles;
 import org.junit.Assert;
@@ -38,6 +42,7 @@ import org.junit.runners.JUnit4;
 
 import java.io.FileNotFoundException;
 
+import static org.jlato.parser.ParseContext.*;
 import static org.jlato.rewrite.Quotes.*;
 import static org.jlato.tree.Trees.*;
 
@@ -47,17 +52,59 @@ import static org.jlato.tree.Trees.*;
 @RunWith(JUnit4.class)
 public class QuotesTest extends BaseTestFromFiles {
 
+	private final Parser parser = new Parser();
+
+	@Test(expected = IllegalArgumentException.class)
+	public void invalidQuote() throws FileNotFoundException, ParseException {
+		Quotes.packageDecl("erroneous package decl");
+	}
+
+	@Test
+	public void packageDecls() throws FileNotFoundException, ParseException {
+		final Pattern<PackageDecl> pattern = Quotes.packageDecl("package org.jlato.tree.$p;");
+
+		Assert.assertTrue(parse(PackageDecl, "package org.jlato.tree.decl;").matches(pattern));
+		Assert.assertFalse(parse(PackageDecl, "package org.jlato.util;").matches(pattern));
+
+		Assert.assertNotNull(parse(PackageDecl, "package org.jlato.tree.decl;").match(pattern));
+		Assert.assertEquals(name("decl"), parse(PackageDecl, "package org.jlato.tree.decl;").match(pattern).get("p"));
+	}
+
+	@Test
+	public void importDecls() throws FileNotFoundException, ParseException {
+		final Pattern<ImportDecl> pattern = Quotes.importDecl("import org.jlato.tree.$c;");
+
+		Assert.assertTrue(parse(ImportDecl, "import org.jlato.tree.Tree;").matches(pattern));
+		Assert.assertFalse(parse(ImportDecl, "import org.jlato.util.Function1;").matches(pattern));
+
+		Assert.assertNotNull(parse(ImportDecl, "import org.jlato.tree.Tree;").match(pattern));
+		Assert.assertEquals(name("Tree"), parse(ImportDecl, "import org.jlato.tree.Tree;").match(pattern).get("c"));
+	}
+
+	@Test
+	public void qualifiedNames() throws FileNotFoundException, ParseException {
+		final Pattern<QualifiedName> pattern = Quotes.qualifiedName("org.jlato.$a.$b");
+
+		Assert.assertTrue(parse(QualifiedName, "org.jlato.tree.Tree").matches(pattern));
+		Assert.assertFalse(parse(QualifiedName, "java.util.Function1").matches(pattern));
+		Assert.assertFalse(parse(QualifiedName, "java.util.Function1").matches(pattern));
+
+		Assert.assertNotNull(parse(QualifiedName, "org.jlato.tree.Tree").match(pattern));
+		Assert.assertEquals(name("tree"), parse(QualifiedName, "org.jlato.tree.Tree").match(pattern).get("a"));
+		Assert.assertEquals(name("Tree"), parse(QualifiedName, "org.jlato.tree.Tree").match(pattern).get("b"));
+	}
+
 	@Test
 	public void methodCalls() throws FileNotFoundException, ParseException {
-		final Pattern<Expr> expr = Quotes.expr("$p.hashCode()");
+		final Pattern<Expr> pattern = Quotes.expr("$p.hashCode()");
 
-		Assert.assertTrue(parseExpr("o.hashCode()").matches(expr));
-		Assert.assertFalse(parseExpr("o.otherMethod()").matches(expr));
+		Assert.assertTrue(parse(Expression, "o.hashCode()").matches(pattern));
+		Assert.assertFalse(parse(Expression, "o.otherMethod()").matches(pattern));
 
-		Assert.assertNotNull(parseExpr("o.hashCode()").match(expr));
-		Assert.assertNull(parseExpr("o.otherMethod()").match(expr));
-		Assert.assertTrue(parseExpr("o.hashCode()").match(expr).binds("p"));
-		Assert.assertEquals(name("o"), parseExpr("o.hashCode()").match(expr).get("p"));
+		Assert.assertNotNull(parse(Expression, "o.hashCode()").match(pattern));
+		Assert.assertNull(parse(Expression, "o.otherMethod()").match(pattern));
+		Assert.assertTrue(parse(Expression, "o.hashCode()").match(pattern).binds("p"));
+		Assert.assertEquals(name("o"), parse(Expression, "o.hashCode()").match(pattern).get("p"));
 	}
 
 	@Test
@@ -90,7 +137,7 @@ public class QuotesTest extends BaseTestFromFiles {
 				Printer.printToString(decl));
 	}
 
-	private Expr parseExpr(String content) throws ParseException {
-		return new Parser().parse(ParseContext.Expression, content);
+	private <T extends Tree> T parse(ParseContext<T> context, String content) throws ParseException {
+		return parser.parse(context, content);
 	}
 }
