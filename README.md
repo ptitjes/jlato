@@ -4,6 +4,7 @@ JLaTo is a Java Language Tools library.
 
 [![Maven Central][shield-maven]][info-maven]
 [![JavaDoc][shield-javadoc]][info-javadoc]
+[![Doc][shield-doc][info-doc]
 [![Build Status][shield-build]][info-build]
 [![Coverage Status][shield-coverage]][info-coverage]
 [![Issues][shield-issues]][info-issues]
@@ -12,6 +13,7 @@ JLaTo is a Java Language Tools library.
 
 [info-maven]: https://maven-badges.herokuapp.com/maven-central/org.jlato/jlato
 [info-javadoc]: http://javadoc.io/doc/org.jlato/jlato
+[info-doc]: https://jlato.readthedocs.io/en/latest/?badge=latest
 [info-build]: https://travis-ci.org/ptitjes/jlato
 [info-coverage]: https://coveralls.io/github/ptitjes/jlato?branch=master
 [info-issues]: https://github.com/ptitjes/jlato/issues
@@ -20,6 +22,7 @@ JLaTo is a Java Language Tools library.
 
 [shield-maven]: https://img.shields.io/maven-central/v/org.jlato/jlato.svg
 [shield-javadoc]: https://img.shields.io/badge/javadoc-latest-orange.svg
+[shield-doc]: https://readthedocs.org/projects/docs/badge/?version=latest
 [shield-build]: https://img.shields.io/travis/ptitjes/jlato/master.svg
 [shield-coverage]: https://img.shields.io/coveralls/ptitjes/jlato/master.svg
 [shield-issues]: https://img.shields.io/github/issues-raw/ptitjes/jlato.svg

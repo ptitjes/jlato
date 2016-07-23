@@ -121,6 +121,9 @@ source_parsers = {
 
 source_suffix = ['.rst', '.md']
 
+highlight_language = 'java'
+
+
 # -- Options for HTML output ----------------------------------------------
 
 # on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
