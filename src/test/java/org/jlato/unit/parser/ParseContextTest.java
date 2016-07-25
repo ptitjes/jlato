@@ -38,9 +38,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import static org.jlato.parser.ParseContext.*;
-import static org.jlato.tree.Trees.listOf;
-import static org.jlato.tree.Trees.markerAnnotationExpr;
-import static org.jlato.tree.Trees.qualifiedName;
+import static org.jlato.tree.Trees.*;
 
 /**
  * @author Didier Villevalois
@@ -225,6 +223,17 @@ public class ParseContextTest {
 		Assert.assertEquals(
 				"return 0;",
 				parsePrint(Statement, "return 0;")
+		);
+	}
+
+	@Test
+	public void statements() throws ParseException {
+		Assert.assertEquals(
+				listOf(
+						returnStmt().withExpr(literalExpr(0)),
+						returnStmt().withExpr(literalExpr(1))
+				),
+				parser.parse(Statements, "return 0; return 1;")
 		);
 	}
 

@@ -264,6 +264,8 @@ abstract class ParserBase {
 
 	abstract BUTree<STypeParameter> TypeParameter() throws ParseException;
 
+	abstract BUTree<SNodeList> Statements() throws ParseException;
+
 	abstract BUTree<? extends SStmt> BlockStatement() throws ParseException;
 
 	abstract BUTree<? extends SExpr> Expression() throws ParseException;
