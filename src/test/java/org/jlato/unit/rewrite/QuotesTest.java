@@ -29,6 +29,7 @@ import org.jlato.rewrite.Substitution;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ImportDecl;
+import org.jlato.tree.decl.MemberDecl;
 import org.jlato.tree.decl.MethodDecl;
 import org.jlato.tree.decl.PackageDecl;
 import org.jlato.tree.expr.Expr;
@@ -79,6 +80,22 @@ public class QuotesTest extends BaseTestFromFiles {
 
 		Assert.assertNotNull(parse(ImportDecl, "import org.jlato.tree.Tree;").match(pattern));
 		Assert.assertEquals(name("Tree"), parse(ImportDecl, "import org.jlato.tree.Tree;").match(pattern).get("c"));
+	}
+
+	@Test
+	public void constructorDecl() throws FileNotFoundException, ParseException {
+		final Pattern<MemberDecl> pattern = Quotes.quote(ParseContext.Class_MemberDecl, "public Test() { super(); }");
+
+		Assert.assertFalse(parse(ParseContext.Class_MemberDecl, "public Test() { }").matches(pattern));
+		Assert.assertTrue(parse(ParseContext.Class_MemberDecl, "public Test() { super(); }").matches(pattern));
+	}
+
+	@Test
+	public void constructorDeclWithVar() throws FileNotFoundException, ParseException {
+		final Pattern<MemberDecl> pattern = Quotes.quote(ParseContext.Class_MemberDecl, "public Test() { ..$_ }");
+
+		Assert.assertTrue(parse(ParseContext.Class_MemberDecl, "public Test() { }").matches(pattern));
+		Assert.assertTrue(parse(ParseContext.Class_MemberDecl, "public Test() { super(); }").matches(pattern));
 	}
 
 	@Test
