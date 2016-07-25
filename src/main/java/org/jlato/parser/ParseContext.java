@@ -148,7 +148,7 @@ public abstract class ParseContext<T extends Tree> {
 	public final static ParseContext<NodeList<Stmt>> Statements = new ParseContext<NodeList<Stmt>>() {
 		@Override
 		protected BUTree<?> callProduction(ParserBase parser) throws ParseException {
-			return wrapWithPrologAndEpilog(parser, parser.Statements());
+			return parser.Statements();
 		}
 	};
 

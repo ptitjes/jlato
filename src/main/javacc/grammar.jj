@@ -1918,7 +1918,7 @@ BUTree<SNodeList> Statements():
       LOOKAHEAD({quotesMode}) ret = NodeListVar()
     )
   ]
-  { return ret; }
+  { return ensureNotNull(ret); }
 }
 
 BUTree<SInitializerDecl> InitializerDecl(BUTree<SNodeList> modifiers):

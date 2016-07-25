@@ -235,6 +235,10 @@ public class ParseContextTest {
 				),
 				parser.parse(Statements, "return 0; return 1;")
 		);
+		Assert.assertEquals(
+				Trees.emptyList(),
+				parser.parse(Statements, "")
+		);
 	}
 
 	@Test
