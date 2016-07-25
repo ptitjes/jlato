@@ -1608,7 +1608,8 @@ BUTree<? extends SMemberDecl> ClassOrInterfaceBodyDecl(TypeKind typeKind):
         problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
     }
     (
-      LOOKAHEAD( "{" )
+      // This look-ahead seems to be useless
+      // LOOKAHEAD( "{" )
       ret = InitializerDecl(modifiers)
       {
         if (typeKind == TypeKind.Interface)
