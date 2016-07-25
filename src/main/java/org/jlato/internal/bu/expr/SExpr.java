@@ -22,9 +22,11 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 public interface SExpr extends STree {
 
 	LexicalShape argumentsShape = list(true,
-			token(LToken.ParenthesisLeft),
+			token(LToken.ParenthesisLeft)
+					.withIndentationAfter(IndentationConstraint.indent(IndentationContext.Parameters)),
 			token(LToken.Comma).withSpacingAfter(space()),
 			token(LToken.ParenthesisRight)
+					.withIndentationBefore(IndentationConstraint.unIndent(IndentationContext.Parameters))
 	);
 
 	LexicalShape listShape = list(
