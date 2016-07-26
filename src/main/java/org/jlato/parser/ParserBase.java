@@ -437,23 +437,16 @@ abstract class ParserBase extends ParserInterface {
 	static class ByRef<T> {
 		public T value;
 
-		public ByRef() {
-		}
-
 		public ByRef(T value) {
 			this.value = value;
 		}
 	}
 
-	boolean isLambda(boolean readOpenParenthesis) {
+	boolean isLambda() {
 		for (int lookahead = 1; ; lookahead++) {
 			int kind = getToken(lookahead).kind;
 			switch (kind) {
 				case LPAREN:
-					if (!readOpenParenthesis) {
-						readOpenParenthesis = true;
-						break;
-					}
 					// ( after ( => Expr
 					return false;
 				case RPAREN:

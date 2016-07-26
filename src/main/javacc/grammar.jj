@@ -2752,7 +2752,7 @@ BUTree<? extends SExpr> PrimaryPrefix():
       LOOKAHEAD( Name() "," )
       params = InferredFormalParameterList() ")" "->" ret = LambdaBody(params, true)
     |
-      LOOKAHEAD({ isLambda(true) })
+      LOOKAHEAD({ isLambda() })
       params = FormalParameterList() ")" "->" ret = LambdaBody(params, true)
     |
       ret = Expression() ")"
