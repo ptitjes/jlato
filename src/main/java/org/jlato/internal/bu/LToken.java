@@ -220,6 +220,10 @@ public class LToken {
 		}
 	}
 
+	// The following methods are not used
+	// Keeping them in case they become needed when moving to new parser
+
+/*
 	public boolean isOperator() {
 		switch (kind) {
 			case ParserImplConstants.PLUS:
@@ -299,4 +303,5 @@ public class LToken {
 	public String toString() {
 		return string;
 	}
+*/
 }
