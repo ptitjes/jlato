@@ -839,7 +839,7 @@ public class TreesEqualsHashCodeTest {
 		Arbitrary arbitrary = new Arbitrary();
 		for (int i = 0; i < 10; i++) {
 			NodeList<FormalParameter> params = arbitrary.arbitraryListFormalParameter();
-			boolean hasParens = arbitrary.arbitraryBoolean();
+			boolean hasParens = !arbitrary.arbitraryBoolean();
 			NodeEither<Expr, BlockStmt> body = arbitrary.arbitraryEitherExprBlockStmt();
 			LambdaExpr expected = Trees.lambdaExpr().withParams(params).setParens(hasParens).withBody(body);
 			Assert.assertEquals(expected, expected);
