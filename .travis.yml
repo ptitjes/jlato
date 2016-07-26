@@ -10,4 +10,11 @@ jdk:
 after_success:
   - mvn clean test integration-test jacoco:report coveralls:report
 
+notifications:
+  irc:
+    channels:
+      - "chat.freenode.net#jlato"
+    use_notice: true
+    skip_join: true
+
 # http://lint.travis-ci.org/ validator
