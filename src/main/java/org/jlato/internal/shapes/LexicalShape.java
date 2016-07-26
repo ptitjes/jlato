@@ -108,10 +108,6 @@ public abstract class LexicalShape {
 		return token(token).withSpacing(space(), space());
 	}
 
-	public static LexicalShape keyword(LSToken.Provider tokenProvider) {
-		return token(tokenProvider).withSpacing(space(), space());
-	}
-
 	public static LexicalShape element() {
 		return element(defaultShape());
 	}
