@@ -189,9 +189,4 @@ public abstract class ParseContext<T extends Tree> {
 	};
 
 	protected abstract BUTree<?> callProduction(ParserInterface parser) throws ParseException;
-
-	private static <S extends STree> BUTree<S> wrapWithPrologAndEpilog(ParserBase parser, BUTree<S> tree) throws ParseException {
-		parser.Epilog();
-		return parser.dressWithPrologAndEpilog(tree);
-	}
 }
