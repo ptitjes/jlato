@@ -16,5 +16,8 @@ notifications:
       - "chat.freenode.net#jlato"
     use_notice: true
     skip_join: true
+    template:
+      - "\x0313%{repository_name}\x03/\x036%{branch}\x03 \x0314%{commit}\x03 \x0315%{author})\x03: \x02#%{build_number} %{message}\x02"
+      - "\x0315Build details:\x03 \x15\x032%{build_url}\x03\x15"
 
 # http://lint.travis-ci.org/ validator
