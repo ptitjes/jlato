@@ -33,9 +33,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 
 import static org.jlato.parser.ParseContext.*;
 import static org.jlato.tree.Trees.*;
@@ -79,6 +78,20 @@ public class ParseContextTest {
 						Modifier.Final
 				),
 				parser.parse(Modifiers, "@Override public final")
+		);
+	}
+
+	@Test
+	public void annotations() throws ParseException {
+		Assert.assertEquals(
+				listOf(
+						singleMemberAnnotationExpr(
+								Trees.qualifiedName("Target"),
+								fieldAccessExpr(Trees.name("ANNOTATION_TYPE"))
+										.withScope(Trees.name("ElementType"))
+						)
+				),
+				parser.parse(Annotations, "@Target(ElementType.ANNOTATION_TYPE)")
 		);
 	}
 
@@ -190,7 +203,7 @@ public class ParseContextTest {
 	public void annotationMemberDecl() throws ParseException {
 		Assert.assertEquals(
 				"int value() default 5;",
-				parsePrint(AnnotationMemberDecl, "int value() default 5;")
+				parsePrint(AnnotationElementDecl, "int value() default 5;")
 		);
 	}
 
@@ -206,7 +219,7 @@ public class ParseContextTest {
 	public void parameter() throws ParseException {
 		Assert.assertEquals(
 				"@NonNull String str",
-				parsePrint(Parameter, "@NonNull String str")
+				parsePrint(FormalParameter, "@NonNull String str")
 		);
 	}
 

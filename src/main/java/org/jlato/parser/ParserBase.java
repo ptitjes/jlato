@@ -44,33 +44,29 @@ import static org.jlato.parser.ParserImplConstants.*;
 /**
  * @author Didier Villevalois
  */
-abstract class ParserBase {
+abstract class ParserBase extends ParserInterface {
 
-	public static ParserImpl newInstance(InputStream in, String encoding, ParserConfiguration configuration) {
-		ParserImpl parser = new ParserImpl(in, encoding);
-		parser.configure(configuration);
-		parser.reset();
-		return parser;
+	static class JavaCCParserFactory implements Factory {
+		@Override
+		public ParserInterface newInstance(InputStream in, String encoding) {
+			ParserImpl parser = new ParserImpl(in, encoding);
+			parser.reset();
+			return parser;
+		}
+
+		@Override
+		public ParserInterface newInstance(Reader in) {
+			ParserImpl parser = new ParserImpl(in);
+			parser.reset();
+			return parser;
+		}
 	}
 
-	public static ParserImpl newInstance(Reader in, ParserConfiguration configuration) {
-		ParserImpl parser = new ParserImpl(in);
-		parser.configure(configuration);
-		parser.reset();
-		return parser;
-	}
-
-	protected void configure(ParserConfiguration configuration) {
-		this.configuration = configuration;
-	}
-
-	protected ParserConfiguration configuration;
-
-	protected boolean quotesMode = false;
 	private Stack<IndexedList<WTokenRun>> runStack = new Stack<IndexedList<WTokenRun>>();
 	private Token lastProcessedToken;
 
 	public ParserBase() {
+		reset();
 	}
 
 	// Interface with ParserImpl
@@ -278,13 +274,117 @@ abstract class ParserBase {
 
 	abstract BUTree<SName> Name() throws ParseException;
 
-	public enum TypeKind {
-		Empty,
-		Class,
-		Interface,
-		Enum,
-		AnnotationType,
-		// Keep last comma
+	@Override
+	BUTree<SCompilationUnit> parseCompilationUnit() throws ParseException {
+		return CompilationUnit();
+	}
+
+	@Override
+	BUTree<SPackageDecl> parsePackageDecl() throws ParseException {
+		return wrapWithPrologAndEpilog(PackageDecl());
+	}
+
+	@Override
+	BUTree<SImportDecl> parseImportDecl() throws ParseException {
+		return wrapWithPrologAndEpilog(ImportDecl());
+	}
+
+	@Override
+	BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException {
+		return wrapWithPrologAndEpilog(TypeDecl());
+	}
+
+	@Override
+	BUTree<? extends SMemberDecl> parseMemberDecl(ParserInterface.TypeKind kind) throws ParseException {
+		return wrapWithPrologAndEpilog(ClassOrInterfaceBodyDecl(kind));
+	}
+
+	@Override
+	BUTree<? extends SMemberDecl> parseAnnotationMemberDecl() throws ParseException {
+		return wrapWithPrologAndEpilog(AnnotationTypeBodyDecl());
+	}
+
+	@Override
+	BUTree<SNodeList> parseModifiers() throws ParseException {
+		return Modifiers();
+	}
+
+	@Override
+	BUTree<SNodeList> parseAnnotations() throws ParseException {
+		return Annotations();
+	}
+
+	@Override
+	BUTree<SMethodDecl> parseMethodDecl() throws ParseException {
+		run();
+		BUTree<SNodeList> modifiers = Modifiers();
+		return wrapWithPrologAndEpilog(MethodDecl(modifiers));
+	}
+
+	@Override
+	BUTree<SFieldDecl> parseFieldDecl() throws ParseException {
+		run();
+		BUTree<SNodeList> modifiers = Modifiers();
+		return wrapWithPrologAndEpilog(FieldDecl(modifiers));
+	}
+
+	@Override
+	BUTree<SAnnotationMemberDecl> parseAnnotationElementDecl() throws ParseException {
+		run();
+		BUTree<SNodeList> modifiers = Modifiers();
+		return wrapWithPrologAndEpilog(AnnotationTypeMemberDecl(modifiers));
+	}
+
+	@Override
+	BUTree<SEnumConstantDecl> parseEnumConstantDecl() throws ParseException {
+		return wrapWithPrologAndEpilog(EnumConstantDecl());
+	}
+
+	@Override
+	BUTree<SFormalParameter> parseFormalParameter() throws ParseException {
+		return wrapWithPrologAndEpilog(FormalParameter());
+	}
+
+	@Override
+	BUTree<STypeParameter> parseTypeParameter() throws ParseException {
+		return wrapWithPrologAndEpilog(TypeParameter());
+	}
+
+	@Override
+	BUTree<SNodeList> parseStatements() throws ParseException {
+		return Statements();
+	}
+
+	@Override
+	BUTree<? extends SStmt> parseStatement() throws ParseException {
+		return wrapWithPrologAndEpilog(BlockStatement());
+	}
+
+	@Override
+	BUTree<? extends SExpr> parseExpression() throws ParseException {
+		return wrapWithPrologAndEpilog(Expression());
+	}
+
+	@Override
+	BUTree<? extends SType> parseType() throws ParseException {
+		run();
+		final BUTree<SNodeList> annotations = Annotations();
+		return wrapWithPrologAndEpilog(Type(annotations));
+	}
+
+	@Override
+	BUTree<SQualifiedName> parseQualifiedName() throws ParseException {
+		return wrapWithPrologAndEpilog(QualifiedName());
+	}
+
+	@Override
+	BUTree<SName> parseName() throws ParseException {
+		return wrapWithPrologAndEpilog(Name());
+	}
+
+	private <S extends STree> BUTree<S> wrapWithPrologAndEpilog(BUTree<S> tree) throws ParseException {
+		Epilog();
+		return dressWithPrologAndEpilog(tree);
 	}
 
 	static class TokenBase {

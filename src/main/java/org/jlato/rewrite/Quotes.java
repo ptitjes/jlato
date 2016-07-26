@@ -63,7 +63,7 @@ public final class Quotes {
 	}
 
 	public static Pattern<FormalParameter> param(String string) {
-		return quote(ParseContext.Parameter, string);
+		return quote(ParseContext.FormalParameter, string);
 	}
 
 	public static Pattern<Stmt> stmt(String string) {
@@ -95,8 +95,7 @@ public final class Quotes {
 
 	public static <T extends Tree> Pattern<T> quote(ParseContext<T> context, String string) {
 		try {
-			BUTree<?> tree = parser.parse(context, string);
-			return new TreePattern<T>(tree);
+			return parser.parse(context, string);
 		} catch (ParseException e) {
 			throw new IllegalArgumentException("Can't parse quote: " + string, e);
 		}

@@ -20,6 +20,8 @@
 package org.jlato.parser;
 
 import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.patterns.TreePattern;
+import org.jlato.rewrite.Pattern;
 import org.jlato.tree.Tree;
 
 import java.io.Reader;
@@ -31,7 +33,7 @@ import java.io.StringReader;
 public class QuotesParser {
 
 	private final ParserConfiguration configuration;
-	private ParserImpl parserInstance = null;
+	private ParserInterface parserInstance = null;
 
 	public QuotesParser() {
 		this(ParserConfiguration.Default.preserveWhitespaces(true));
@@ -41,16 +43,21 @@ public class QuotesParser {
 		this.configuration = configuration;
 	}
 
+	private ParserInterface.Factory factory() {
+		return Parser.DefaultFactory;
+	}
+
 	private <T extends Tree> BUTree<?> parse(ParseContext<T> context, Reader reader) throws ParseException {
 		if (parserInstance == null) {
-			parserInstance = ParserBase.newInstance(reader, configuration);
+			parserInstance = factory().newInstance(reader);
+			parserInstance.configure(configuration);
 			parserInstance.quotesMode = true;
 		} else parserInstance.reset(reader);
 		return context.callProduction(parserInstance);
 	}
 
-	public <T extends Tree> BUTree<?> parse(ParseContext<T> context, String content) throws ParseException {
+	public <T extends Tree> Pattern<T> parse(ParseContext<T> context, String content) throws ParseException {
 		final StringReader reader = new StringReader(content);
-		return parse(context, reader);
+		return new TreePattern<T>(parse(context, reader));
 	}
 }

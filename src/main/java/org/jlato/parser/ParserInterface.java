@@ -52,6 +52,7 @@ abstract class ParserInterface {
 	}
 
 	protected ParserConfiguration configuration;
+	protected boolean quotesMode = false;
 
 	final void configure(ParserConfiguration configuration) {
 		this.configuration = configuration;
@@ -67,11 +68,11 @@ abstract class ParserInterface {
 
 	abstract BUTree<SImportDecl> parseImportDecl() throws ParseException;
 
-	abstract BUTree<STypeDecl> parseTypeDecl() throws ParseException;
+	abstract BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException;
 
-	abstract BUTree<SMemberDecl> parseMemberDecl(TypeKind kind) throws ParseException;
+	abstract BUTree<? extends SMemberDecl> parseMemberDecl(TypeKind kind) throws ParseException;
 
-	abstract BUTree<SMemberDecl> parseAnnotationMemberDecl() throws ParseException;
+	abstract BUTree<? extends SMemberDecl> parseAnnotationMemberDecl() throws ParseException;
 
 	abstract BUTree<SNodeList> parseModifiers() throws ParseException;
 
@@ -91,11 +92,11 @@ abstract class ParserInterface {
 
 	abstract BUTree<SNodeList> parseStatements() throws ParseException;
 
-	abstract BUTree<SStmt> parseStatement() throws ParseException;
+	abstract BUTree<? extends SStmt> parseStatement() throws ParseException;
 
-	abstract BUTree<SExpr> parseExpression() throws ParseException;
+	abstract BUTree<? extends SExpr> parseExpression() throws ParseException;
 
-	abstract BUTree<SType> parseType() throws ParseException;
+	abstract BUTree<? extends SType> parseType() throws ParseException;
 
 	abstract BUTree<SQualifiedName> parseQualifiedName() throws ParseException;
 

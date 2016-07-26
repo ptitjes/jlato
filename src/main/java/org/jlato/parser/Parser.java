@@ -20,7 +20,6 @@
 package org.jlato.parser;
 
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.td.coll.TDNodeMap;
 import org.jlato.tree.Tree;
 import org.jlato.tree.NodeMap;
 import org.jlato.tree.Trees;
@@ -37,7 +36,7 @@ import java.util.List;
 public class Parser {
 
 	private final ParserConfiguration configuration;
-	private ParserImpl parserInstance = null;
+	private ParserInterface parserInstance = null;
 
 	public Parser() {
 		this(ParserConfiguration.Default);
@@ -47,17 +46,32 @@ public class Parser {
 		this.configuration = configuration;
 	}
 
+	static final ParserInterface.Factory DefaultFactory = new ParserBase.JavaCCParserFactory();
+
+	private ParserInterface.Factory factory() {
+		return DefaultFactory;
+	}
+
 	public <T extends Tree> T parse(ParseContext<T> context, InputStream inputStream, String encoding) throws ParseException {
-		if (parserInstance == null) parserInstance = ParserImpl.newInstance(inputStream, encoding, configuration);
-		else parserInstance.reset(inputStream, encoding);
+		if (parserInstance == null) {
+			parserInstance = factory().newInstance(inputStream, encoding);
+			parserInstance.configure(configuration);
+		} else parserInstance.reset(inputStream, encoding);
 		BUTree<?> tree = context.callProduction(parserInstance);
-		return (T) tree.asTree();
+		return safeAsTree(tree);
 	}
 
 	public <T extends Tree> T parse(ParseContext<T> context, Reader reader) throws ParseException {
-		if (parserInstance == null) parserInstance = ParserImpl.newInstance(reader, configuration);
-		else parserInstance.reset(reader);
+		if (parserInstance == null) {
+			parserInstance = factory().newInstance(reader);
+			parserInstance.configure(configuration);
+		} else parserInstance.reset(reader);
 		BUTree<?> tree = context.callProduction(parserInstance);
+		return safeAsTree(tree);
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends Tree> T safeAsTree(BUTree<?> tree) {
 		return (T) tree.asTree();
 	}
 
