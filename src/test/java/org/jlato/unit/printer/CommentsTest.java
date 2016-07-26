@@ -87,6 +87,14 @@ public class CommentsTest {
 		Assert.assertEquals(
 				"{\n\t// leading1\n\treturn foo;\n\n\t// leading2\n\treturn foo;\n}",
 				Printer.printToString(stmt1, true));
+
+		BlockStmt stmt2 = blockStmt().withStmts(Trees.<Stmt>listOf(
+				stmt.insertNewLineAfter().insertTrailingComment("trailing1"),
+				stmt.insertTrailingComment("trailing2")
+		));
+		Assert.assertEquals(
+				"{\n\treturn foo; // trailing1\n\n\treturn foo; // trailing2\n}",
+				Printer.printToString(stmt2, true));
 	}
 
 	@Test
