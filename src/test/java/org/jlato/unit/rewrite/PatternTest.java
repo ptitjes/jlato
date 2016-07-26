@@ -57,6 +57,24 @@ public class PatternTest extends BaseTestFromFiles {
 	private final Parser parser = new Parser();
 
 	@Test
+	public void or() throws FileNotFoundException, ParseException {
+		final Pattern<org.jlato.tree.name.QualifiedName> pattern =
+				Quotes.qualifiedName("org.jlato.tree.$a").or(Quotes.qualifiedName("org.jlato.util.$a"));
+
+		Assert.assertTrue(parse(QualifiedName, "org.jlato.tree.Tree").matches(pattern));
+		Assert.assertTrue(parse(QualifiedName, "org.jlato.util.Function1").matches(pattern));
+		Assert.assertFalse(parse(QualifiedName, "org.jlato.pattern.Pattern").matches(pattern));
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void orCantBeBuilt() throws FileNotFoundException, ParseException {
+		final Pattern<org.jlato.tree.name.QualifiedName> pattern =
+				Quotes.qualifiedName("org.jlato.tree.$a").or(Quotes.qualifiedName("org.jlato.util.$a"));
+
+		pattern.build(Substitution.empty());
+	}
+
+	@Test
 	public void suchThat() throws FileNotFoundException, ParseException {
 		final Pattern<org.jlato.tree.name.QualifiedName> pattern1 = Quotes.qualifiedName("org.jlato.$a.$b");
 		final Pattern<QualifiedName> pattern2 = pattern1.suchThat(new Function1<QualifiedName, Boolean>() {
@@ -70,6 +88,19 @@ public class PatternTest extends BaseTestFromFiles {
 		Assert.assertTrue(parse(QualifiedName, "org.jlato.util.Function1").matches(pattern1));
 		Assert.assertTrue(parse(QualifiedName, "org.jlato.tree.Tree").matches(pattern2));
 		Assert.assertFalse(parse(QualifiedName, "org.jlato.util.Function1").matches(pattern2));
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void suchThatCantBeBuilt() throws FileNotFoundException, ParseException {
+		final Pattern<org.jlato.tree.name.QualifiedName> pattern1 = Quotes.qualifiedName("org.jlato.$a.$b");
+		final Pattern<QualifiedName> pattern2 = pattern1.suchThat(new Function1<QualifiedName, Boolean>() {
+			@Override
+			public Boolean apply(QualifiedName o) {
+				return o.toString().equals("org.jlato.tree.Tree");
+			}
+		});
+
+		pattern2.build(Substitution.empty());
 	}
 
 	@Test
@@ -86,6 +117,19 @@ public class PatternTest extends BaseTestFromFiles {
 		Assert.assertTrue(parse(QualifiedName, "org.jlato.util.Function1").matches(pattern1));
 		Assert.assertTrue(parse(QualifiedName, "org.jlato.tree.Tree").matches(pattern2));
 		Assert.assertFalse(parse(QualifiedName, "org.jlato.util.Function1").matches(pattern2));
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void suchThatVarCantBeBuilt() throws FileNotFoundException, ParseException {
+		final Pattern<org.jlato.tree.name.QualifiedName> pattern1 = Quotes.qualifiedName("org.jlato.$a.$b");
+		final Pattern<QualifiedName> pattern2 = pattern1.suchThat("a", new Function1<Name, Boolean>() {
+			@Override
+			public Boolean apply(Name o) {
+				return o.id().startsWith("t");
+			}
+		});
+
+		pattern2.build(Substitution.empty());
 	}
 
 	private <T extends Tree> T parse(ParseContext<T> context, String content) throws ParseException {

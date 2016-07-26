@@ -19,7 +19,6 @@
 
 package org.jlato.rewrite;
 
-import org.jlato.internal.patterns.DecoratedPattern;
 import org.jlato.util.Function1;
 
 /**
@@ -40,32 +39,47 @@ public abstract class Pattern<T> implements Matcher<T>, Builder<T> {
 	}
 
 	public Pattern<T> or(final Pattern<T> other) {
-		return new DecoratedPattern<T>(this) {
+		return new Pattern<T>() {
 			@Override
 			public Substitution match(Object object, Substitution substitution) {
-				Substitution match = super.match(object, substitution);
+				Substitution match = Pattern.this.match(object, substitution);
 				return match != null ? match : other.match(object, substitution);
+			}
+
+			@Override
+			public T build(Substitution substitution) {
+				throw new UnsupportedOperationException();
 			}
 		};
 	}
 
 	public Pattern<T> suchThat(final Function1<? super T, Boolean> predicate) {
-		return new DecoratedPattern<T>(this) {
+		return new Pattern<T>() {
 			@Override
 			@SuppressWarnings("unchecked")
 			public Substitution match(Object object, Substitution substitution) {
-				Substitution match = super.match(object, substitution);
+				Substitution match = Pattern.this.match(object, substitution);
 				return match != null && predicate.apply((T) object) ? match : null;
+			}
+
+			@Override
+			public T build(Substitution substitution) {
+				throw new UnsupportedOperationException();
 			}
 		};
 	}
 
 	public <U> Pattern<T> suchThat(final String var, final Function1<U, Boolean> predicate) {
-		return new DecoratedPattern<T>(this) {
+		return new Pattern<T>() {
 			@Override
 			public Substitution match(Object object, Substitution substitution) {
-				Substitution match = super.match(object, substitution);
+				Substitution match = Pattern.this.match(object, substitution);
 				return match != null && predicate.apply(match.<U>get(var)) ? match : null;
+			}
+
+			@Override
+			public T build(Substitution substitution) {
+				throw new UnsupportedOperationException();
 			}
 		};
 	}
