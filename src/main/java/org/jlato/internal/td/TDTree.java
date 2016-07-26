@@ -141,11 +141,6 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		return matcher.match(this, Substitution.empty()) != null;
 	}
 
-	public T match(Matcher<? extends T> matcher, MatchVisitor<T> visitor) {
-		Substitution match = matcher.match(this, Substitution.empty());
-		return match == null ? self() : visitor.visit(self(), match);
-	}
-
 	public <U extends Tree> Iterable<U> findAll(Matcher<U> matcher) {
 		return leftFindAll(matcher);
 	}

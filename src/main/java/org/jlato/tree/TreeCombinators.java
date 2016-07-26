@@ -33,8 +33,6 @@ public interface TreeCombinators<T extends Tree> extends Tree {
 
 	<U extends Tree> T rightForAll(Matcher<? extends U> matcher, MatchVisitor<U> visitor);
 
-	T match(Matcher<? extends T> matcher, MatchVisitor<T> visitor);
-
 	/**
 	 * Inserts a leading comment to this tree with the specified comment string.
 	 * This uses sensible defaults to chose between single-line or multi-line comment,
