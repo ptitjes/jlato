@@ -44,7 +44,7 @@ import static org.jlato.parser.ParserImplConstants.*;
 /**
  * @author Didier Villevalois
  */
-abstract class ParserBase extends ParserInterface {
+public abstract class ParserBase extends ParserInterface {
 
 	static class JavaCCParserFactory implements Factory {
 		@Override
@@ -434,7 +434,7 @@ abstract class ParserBase extends ParserInterface {
 
 	// Convenience class to get more data from a called production
 
-	static class ByRef<T> {
+	protected static class ByRef<T> {
 		public T value;
 
 		public ByRef(T value) {
