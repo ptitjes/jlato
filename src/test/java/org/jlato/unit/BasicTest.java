@@ -47,6 +47,15 @@ import static org.jlato.tree.Trees.*;
 public class BasicTest {
 
 	@Test
+	public void testMethodInvocation() throws ParseException {
+		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(false));
+		Assert.assertEquals(
+				methodInvocationExpr(name("method")).withArgs(Trees.<Expr>listOf(literalExpr("oh yeah"))),
+				parser.parse(ParseContext.Expression, "method(\"oh yeah\")")
+		);
+	}
+
+	@Test
 	public void testRunImportDecl() throws FileNotFoundException, ParseException {
 		final Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
 		final String content = "/*prolog*/ import /*before*/ org/*a*/./*b*/jlato/*c*/./*d*/tree/*e*/./*f*/Tree/*after*/; /*epilog*/";

@@ -275,110 +275,110 @@ public abstract class ParserBase extends ParserInterface {
 	abstract BUTree<SName> Name() throws ParseException;
 
 	@Override
-	BUTree<SCompilationUnit> parseCompilationUnit() throws ParseException {
+	protected BUTree<SCompilationUnit> parseCompilationUnit() throws ParseException {
 		return CompilationUnit();
 	}
 
 	@Override
-	BUTree<SPackageDecl> parsePackageDecl() throws ParseException {
+	protected BUTree<SPackageDecl> parsePackageDecl() throws ParseException {
 		return wrapWithPrologAndEpilog(PackageDecl());
 	}
 
 	@Override
-	BUTree<SImportDecl> parseImportDecl() throws ParseException {
+	protected BUTree<SImportDecl> parseImportDecl() throws ParseException {
 		return wrapWithPrologAndEpilog(ImportDecl());
 	}
 
 	@Override
-	BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException {
+	protected BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException {
 		return wrapWithPrologAndEpilog(TypeDecl());
 	}
 
 	@Override
-	BUTree<? extends SMemberDecl> parseMemberDecl(ParserInterface.TypeKind kind) throws ParseException {
+	protected BUTree<? extends SMemberDecl> parseMemberDecl(ParserInterface.TypeKind kind) throws ParseException {
 		return wrapWithPrologAndEpilog(ClassOrInterfaceBodyDecl(kind));
 	}
 
 	@Override
-	BUTree<? extends SMemberDecl> parseAnnotationMemberDecl() throws ParseException {
+	protected BUTree<? extends SMemberDecl> parseAnnotationMemberDecl() throws ParseException {
 		return wrapWithPrologAndEpilog(AnnotationTypeBodyDecl());
 	}
 
 	@Override
-	BUTree<SNodeList> parseModifiers() throws ParseException {
+	protected BUTree<SNodeList> parseModifiers() throws ParseException {
 		return Modifiers();
 	}
 
 	@Override
-	BUTree<SNodeList> parseAnnotations() throws ParseException {
+	protected BUTree<SNodeList> parseAnnotations() throws ParseException {
 		return Annotations();
 	}
 
 	@Override
-	BUTree<SMethodDecl> parseMethodDecl() throws ParseException {
+	protected BUTree<SMethodDecl> parseMethodDecl() throws ParseException {
 		run();
 		BUTree<SNodeList> modifiers = Modifiers();
 		return wrapWithPrologAndEpilog(MethodDecl(modifiers));
 	}
 
 	@Override
-	BUTree<SFieldDecl> parseFieldDecl() throws ParseException {
+	protected BUTree<SFieldDecl> parseFieldDecl() throws ParseException {
 		run();
 		BUTree<SNodeList> modifiers = Modifiers();
 		return wrapWithPrologAndEpilog(FieldDecl(modifiers));
 	}
 
 	@Override
-	BUTree<SAnnotationMemberDecl> parseAnnotationElementDecl() throws ParseException {
+	protected BUTree<SAnnotationMemberDecl> parseAnnotationElementDecl() throws ParseException {
 		run();
 		BUTree<SNodeList> modifiers = Modifiers();
 		return wrapWithPrologAndEpilog(AnnotationTypeMemberDecl(modifiers));
 	}
 
 	@Override
-	BUTree<SEnumConstantDecl> parseEnumConstantDecl() throws ParseException {
+	protected BUTree<SEnumConstantDecl> parseEnumConstantDecl() throws ParseException {
 		return wrapWithPrologAndEpilog(EnumConstantDecl());
 	}
 
 	@Override
-	BUTree<SFormalParameter> parseFormalParameter() throws ParseException {
+	protected BUTree<SFormalParameter> parseFormalParameter() throws ParseException {
 		return wrapWithPrologAndEpilog(FormalParameter());
 	}
 
 	@Override
-	BUTree<STypeParameter> parseTypeParameter() throws ParseException {
+	protected BUTree<STypeParameter> parseTypeParameter() throws ParseException {
 		return wrapWithPrologAndEpilog(TypeParameter());
 	}
 
 	@Override
-	BUTree<SNodeList> parseStatements() throws ParseException {
+	protected BUTree<SNodeList> parseStatements() throws ParseException {
 		return Statements();
 	}
 
 	@Override
-	BUTree<? extends SStmt> parseStatement() throws ParseException {
+	protected BUTree<? extends SStmt> parseStatement() throws ParseException {
 		return wrapWithPrologAndEpilog(BlockStatement());
 	}
 
 	@Override
-	BUTree<? extends SExpr> parseExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseExpression() throws ParseException {
 		return wrapWithPrologAndEpilog(Expression());
 	}
 
 	@Override
-	BUTree<? extends SType> parseType() throws ParseException {
+	protected BUTree<? extends SType> parseType() throws ParseException {
 		run();
 		final BUTree<SNodeList> annotations = Annotations();
 		return wrapWithPrologAndEpilog(Type(annotations));
 	}
 
 	@Override
-	BUTree<SQualifiedName> parseQualifiedName() throws ParseException {
+	protected BUTree<SQualifiedName> parseQualifiedName() throws ParseException {
 		return wrapWithPrologAndEpilog(QualifiedName());
 	}
 
 	@Override
-	BUTree<SName> parseName() throws ParseException {
+	protected BUTree<SName> parseName() throws ParseException {
 		return wrapWithPrologAndEpilog(Name());
 	}
 

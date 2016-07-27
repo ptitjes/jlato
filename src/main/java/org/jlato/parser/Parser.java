@@ -20,6 +20,7 @@
 package org.jlato.parser;
 
 import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.parser.ParserNewBase;
 import org.jlato.tree.Tree;
 import org.jlato.tree.NodeMap;
 import org.jlato.tree.Trees;
@@ -49,6 +50,7 @@ public class Parser {
 	static final ParserInterface.Factory DefaultFactory = new ParserBase.JavaCCParserFactory();
 
 	private ParserInterface.Factory factory() {
+		if (!configuration.preserveWhitespaces) return new ParserNewBase.ParserNewFactory();
 		return DefaultFactory;
 	}
 

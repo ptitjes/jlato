@@ -78,13 +78,13 @@ import org.jlato.tree.Problem.Severity;
 final class ParserImpl extends ParserBase {
 
 	@Override
-    void reset(InputStream inputStream, String encoding) {
+    protected void reset(InputStream inputStream, String encoding) {
         ReInit(inputStream, encoding);
         reset();
     }
 
 	@Override
-    void reset(Reader reader) {
+    protected void reset(Reader reader) {
         ReInit(reader);
         reset();
     }
