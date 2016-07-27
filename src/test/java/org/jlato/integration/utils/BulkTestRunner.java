@@ -83,6 +83,7 @@ public class BulkTestRunner extends Runner {
 			} catch (Throwable e) {
 				notifier.fireTestFailure(new Failure(description, e));
 			}
+			notifier.fireTestFinished(description);
 		}
 		notifier.fireTestFinished(rootDescription);
 	}
