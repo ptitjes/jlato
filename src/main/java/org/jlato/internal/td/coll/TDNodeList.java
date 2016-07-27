@@ -425,6 +425,16 @@ public class TDNodeList<T extends Tree> extends TDTree<SNodeList, NodeList<T>, N
 	}
 
 	@Override
+	public <U extends Tree> U foldRight(U z, Function2<T, U, U> f) {
+		// TODO Optimize ?
+		U result = z;
+		for (T t : this) {
+			result = f.apply(t, result);
+		}
+		return result;
+	}
+
+	@Override
 	public boolean exists(Function1<T, Boolean> p) {
 		for (T e: this) {
 			if (p.apply(e)) return true;

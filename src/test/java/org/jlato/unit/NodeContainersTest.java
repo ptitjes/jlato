@@ -32,6 +32,7 @@ import org.jlato.tree.expr.MethodInvocationExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.util.Function1;
+import org.jlato.util.Function2;
 import org.jlato.util.Mutation;
 import org.junit.Assert;
 import org.junit.Test;
@@ -327,6 +328,25 @@ public class NodeContainersTest {
 		Assert.assertEquals(indexedName("prefix", 0), list.get(0));
 		Assert.assertEquals(indexedName("prefix", 1), list.get(1));
 		Assert.assertEquals(indexedName("prefix", 2), list.get(2));
+	}
+
+	@Test
+	public void nodeListFold() {
+		NodeList<Name> list = listOf(indexedName(0), indexedName(1), indexedName(2));
+		Name foldLeft = list.foldLeft(name("zero"), new Function2<Name, Name, Name>() {
+			@Override
+			public Name apply(Name name, Name name2) {
+				return name(name.id() + " " + name2.id());
+			}
+		});
+		Name foldRight = list.foldRight(name("zero"), new Function2<Name, Name, Name>() {
+			@Override
+			public Name apply(Name name, Name name2) {
+				return name(name.id() + " " + name2.id());
+			}
+		});
+		Assert.assertEquals("zero name0 name1 name2", foldLeft.id());
+		Assert.assertEquals("name2 name1 name0 zero", foldRight.id());
 	}
 
 	@Test

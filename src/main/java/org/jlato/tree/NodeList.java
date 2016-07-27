@@ -72,6 +72,8 @@ public interface NodeList<T extends Tree> extends Tree, Iterable<T> {
 
 	<U extends Tree> U foldLeft(U z, Function2<U, T, U> f);
 
+	<U extends Tree> U foldRight(U z, Function2<T, U, U> f);
+
 	/**
 	 * Tests whether a predicate holds for some of the elements of this node list.
 	 *
