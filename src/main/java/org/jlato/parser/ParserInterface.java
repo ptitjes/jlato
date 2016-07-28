@@ -92,7 +92,7 @@ public abstract class ParserInterface {
 
 	protected abstract BUTree<SNodeList> parseStatements() throws ParseException;
 
-	protected abstract BUTree<? extends SStmt> parseStatement() throws ParseException;
+	protected abstract BUTree<? extends SStmt> parseBlockStatement() throws ParseException;
 
 	protected abstract BUTree<? extends SExpr> parseExpression() throws ParseException;
 

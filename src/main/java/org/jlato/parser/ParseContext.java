@@ -156,7 +156,7 @@ public abstract class ParseContext<T extends Tree> {
 	public final static ParseContext<Stmt> Statement = new ParseContext<Stmt>() {
 		@Override
 		protected BUTree<?> callProduction(ParserInterface parser) throws ParseException {
-			return parser.parseStatement();
+			return parser.parseBlockStatement();
 		}
 	};
 

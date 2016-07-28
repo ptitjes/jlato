@@ -356,7 +356,7 @@ public abstract class ParserBase extends ParserInterface {
 	}
 
 	@Override
-	protected BUTree<? extends SStmt> parseStatement() throws ParseException {
+	protected BUTree<? extends SStmt> parseBlockStatement() throws ParseException {
 		return wrapWithPrologAndEpilog(BlockStatement());
 	}
 
