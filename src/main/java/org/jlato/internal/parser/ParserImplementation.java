@@ -2811,7 +2811,7 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(1)
+			LookAhead(2)
 			Choice(
 				Sequence(
 					Terminal("PUBLIC")
@@ -2895,7 +2895,7 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(1)
+			LookAhead(2)
 			Choice(
 				Sequence(
 					Terminal("PUBLIC")
@@ -2983,7 +2983,7 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* Sequence(
 			ZeroOrMore(
-				LookAhead(1)
+				LookAhead(2)
 				Choice(
 					Sequence(
 						Terminal("PUBLIC")
@@ -13566,8 +13566,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			getToken(1).kind == GT && getToken(1).realKind == RSIGNEDSHIFT
-	)
 			Terminal("GT")
 			Terminal("GT")
 			Action({
@@ -13575,9 +13573,6 @@ public class ParserImplementation extends ParserNewBase {
 			})
 		) */
 	private int matchRSIGNEDSHIFT(int lookahead) {
-//		lookahead = getToken(1).kind == GT && getToken(1).realKind == RSIGNEDSHIFT ? lookahead : -1;
-//		if (lookahead == -1)
-//			return -1;
 		lookahead = match(lookahead, ParserImplConstants.GT);
 		if (lookahead == -1)
 			return -1;
@@ -13601,8 +13596,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			getToken(1).kind == GT && getToken(1).realKind == RUNSIGNEDSHIFT
-	)
 			Terminal("GT")
 			Terminal("GT")
 			Terminal("GT")
@@ -13611,9 +13604,6 @@ public class ParserImplementation extends ParserNewBase {
 			})
 		) */
 	private int matchRUNSIGNEDSHIFT(int lookahead) {
-//		lookahead = getToken(1).kind == GT && getToken(1).realKind == RUNSIGNEDSHIFT ? lookahead : -1;
-//		if (lookahead == -1)
-//			return -1;
 		lookahead = match(lookahead, ParserImplConstants.GT);
 		if (lookahead == -1)
 			return -1;
@@ -15159,8 +15149,10 @@ public class ParserImplementation extends ParserNewBase {
 	public void parseEpilog() throws ParseException {
 		if (match(0, ParserImplConstants.EOF) != -1) {
 			parse(ParserImplConstants.EOF);
-		} else {
+		} else if (match(0, ParserImplConstants.EOF) != -1) {
 			parse(ParserImplConstants.EOF);
+		} else {
+			throw new IllegalStateException();
 		}
 	}
 
@@ -15208,7 +15200,7 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseTypeDecls() throws ParseException {
 		BUTree<SNodeList> types = emptyList();
 		BUTree<? extends STypeDecl> typeDecl = null;
-		while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.SEMICOLON) != -1) {
+		while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.SEMICOLON) != -1) {
 			typeDecl = parseTypeDecl();
 			types = append(types, typeDecl);
 		}
@@ -15218,8 +15210,7 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseModifiers() throws ParseException {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
-		while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE) != -1
-				) {
+		while (matchModifiers1(0) != -1) {
 			if (match(0, ParserImplConstants.PUBLIC) != -1) {
 				parse(ParserImplConstants.PUBLIC);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
@@ -15256,19 +15247,151 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (match(0, ParserImplConstants.STRICTFP) != -1) {
 				parse(ParserImplConstants.STRICTFP);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-			} else {
+			} else if (match(0, ParserImplConstants.AT) != -1) {
 				ann = parseAnnotation();
 				modifiers = append(modifiers, ann);
+			} else {
+				throw new IllegalStateException();
 			}
 		}
 		return modifiers;
 	}
 
+	/* ZeroOrMore(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					Terminal("PUBLIC")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
+					})
+				)
+				Sequence(
+					Terminal("PROTECTED")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
+					})
+				)
+				Sequence(
+					Terminal("PRIVATE")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
+					})
+				)
+				Sequence(
+					Terminal("ABSTRACT")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
+					})
+				)
+				Sequence(
+					Terminal("_DEFAULT")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
+					})
+				)
+				Sequence(
+					Terminal("STATIC")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
+					})
+				)
+				Sequence(
+					Terminal("FINAL")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
+					})
+				)
+				Sequence(
+					Terminal("TRANSIENT")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
+					})
+				)
+				Sequence(
+					Terminal("VOLATILE")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
+					})
+				)
+				Sequence(
+					Terminal("SYNCHRONIZED")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
+					})
+				)
+				Sequence(
+					Terminal("NATIVE")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
+					})
+				)
+				Sequence(
+					Terminal("STRICTFP")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
+					})
+				)
+				Sequence(
+					NonTerminal(ann, Annotation)
+					Action({
+						modifiers = append(modifiers, ann);
+					})
+				)
+			)
+		) */
+	private int matchModifiers1(int lookahead) {
+		if (match(0, ParserImplConstants.VOLATILE) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.NATIVE) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.AT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PUBLIC) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.FINAL) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.PROTECTED) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.ABSTRACT) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants._DEFAULT) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.TRANSIENT) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.STRICTFP) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.STATIC) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.PRIVATE) != -1) {
+			return lookahead;
+		}
+		return -1;
+	}
+
 	public BUTree<SNodeList> parseModifiersNoDefault() throws ParseException {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
-		while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE) != -1
-				) {
+		while (matchModifiersNoDefault1(0) != -1) {
 			if (match(0, ParserImplConstants.PUBLIC) != -1) {
 				parse(ParserImplConstants.PUBLIC);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
@@ -15302,12 +15425,136 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (match(0, ParserImplConstants.STRICTFP) != -1) {
 				parse(ParserImplConstants.STRICTFP);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-			} else {
+			} else if (match(0, ParserImplConstants.AT) != -1) {
 				ann = parseAnnotation();
 				modifiers = append(modifiers, ann);
+			} else {
+				throw new IllegalStateException();
 			}
 		}
 		return modifiers;
+	}
+
+	/* ZeroOrMore(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					Terminal("PUBLIC")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
+					})
+				)
+				Sequence(
+					Terminal("PROTECTED")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
+					})
+				)
+				Sequence(
+					Terminal("PRIVATE")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
+					})
+				)
+				Sequence(
+					Terminal("ABSTRACT")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
+					})
+				)
+				Sequence(
+					Terminal("STATIC")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
+					})
+				)
+				Sequence(
+					Terminal("FINAL")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
+					})
+				)
+				Sequence(
+					Terminal("TRANSIENT")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
+					})
+				)
+				Sequence(
+					Terminal("VOLATILE")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
+					})
+				)
+				Sequence(
+					Terminal("SYNCHRONIZED")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
+					})
+				)
+				Sequence(
+					Terminal("NATIVE")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
+					})
+				)
+				Sequence(
+					Terminal("STRICTFP")
+					Action({
+						modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
+					})
+				)
+				Sequence(
+					NonTerminal(ann, Annotation)
+					Action({
+						modifiers = append(modifiers, ann);
+					})
+				)
+			)
+		) */
+	private int matchModifiersNoDefault1(int lookahead) {
+		if (match(0, ParserImplConstants.VOLATILE) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.NATIVE) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.AT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PUBLIC) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.FINAL) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.PROTECTED) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.ABSTRACT) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.TRANSIENT) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.STRICTFP) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.STATIC) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.PRIVATE) != -1) {
+			return lookahead;
+		}
+		return -1;
 	}
 
 	public BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException {
@@ -15317,15 +15564,19 @@ public class ParserImplementation extends ParserNewBase {
 		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
 			parse(ParserImplConstants.SEMICOLON);
 			ret = dress(SEmptyTypeDecl.make());
-		} else {
+		} else if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1) {
 			modifiers = parseModifiers();
 			if (match(0, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1) {
 				ret = parseClassOrInterfaceDecl(modifiers);
 			} else if (match(0, ParserImplConstants.ENUM) != -1) {
 				ret = parseEnumDecl(modifiers);
-			} else {
+			} else if (match(0, ParserImplConstants.AT) != -1) {
 				ret = parseAnnotationTypeDecl(modifiers);
+			} else {
+				throw new IllegalStateException();
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -15353,7 +15604,7 @@ public class ParserImplementation extends ParserNewBase {
 			if (match(0, ParserImplConstants.IMPLEMENTS) != -1) {
 				implementsClause = parseImplementsList(typeKind, problem);
 			}
-		} else {
+		} else if (match(0, ParserImplConstants.INTERFACE) != -1) {
 			parse(ParserImplConstants.INTERFACE);
 			typeKind = TypeKind.Interface;
 			name = parseName();
@@ -15363,6 +15614,8 @@ public class ParserImplementation extends ParserNewBase {
 			if (match(0, ParserImplConstants.EXTENDS) != -1) {
 				extendsClause = parseExtendsList();
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		members = parseClassOrInterfaceBody(typeKind);
 		if (typeKind == TypeKind.Interface)
@@ -15377,7 +15630,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
 		parse(ParserImplConstants.EXTENDS);
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
 			cit = parseAnnotatedQualifiedType();
 			ret = append(ret, cit);
 			while (match(0, ParserImplConstants.COMMA) != -1) {
@@ -15385,8 +15638,10 @@ public class ParserImplementation extends ParserNewBase {
 				cit = parseAnnotatedQualifiedType();
 				ret = append(ret, cit);
 			}
-		} else {
+		} else if (quotesMode) {
 			ret = parseNodeListVar();
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -15396,7 +15651,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
 		parse(ParserImplConstants.IMPLEMENTS);
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
 			cit = parseAnnotatedQualifiedType();
 			ret = append(ret, cit);
 			while (match(0, ParserImplConstants.COMMA) != -1) {
@@ -15407,8 +15662,10 @@ public class ParserImplementation extends ParserNewBase {
 			if (typeKind == TypeKind.Interface)
 				problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
 
-		} else {
+		} else if (quotesMode) {
 			ret = parseNodeListVar();
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -15427,19 +15684,19 @@ public class ParserImplementation extends ParserNewBase {
 			implementsClause = parseImplementsList(TypeKind.Enum, problem);
 		}
 		parse(ParserImplConstants.LBRACE);
-		if (match(0, ParserImplConstants.PUBLIC, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-			if (match(0, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.PUBLIC, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, ParserImplConstants.PUBLIC, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+			if (match(0, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.PUBLIC, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
 				entry = parseEnumConstantDecl();
 				constants = append(constants, entry);
-				while (match(0, ParserImplConstants.COMMA) != -1
-						&& match(1, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1
-						) {
+				while (matchEnumDecl1(0) != -1) {
 					parse(ParserImplConstants.COMMA);
 					entry = parseEnumConstantDecl();
 					constants = append(constants, entry);
 				}
-			} else {
+			} else if (quotesMode) {
 				constants = parseNodeListVar();
+			} else {
+				throw new IllegalStateException();
 			}
 		}
 		if (match(0, ParserImplConstants.COMMA) != -1) {
@@ -15452,6 +15709,65 @@ public class ParserImplementation extends ParserNewBase {
 		}
 		parse(ParserImplConstants.RBRACE);
 		return dress(SEnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))).withProblem(problem.value);
+	}
+
+	/* ZeroOrMore(
+			LookAhead(2)
+			Terminal("COMMA")
+			NonTerminal(entry, EnumConstantDecl)
+			Action({
+				constants = append(constants, entry);
+			})
+		) */
+	private int matchEnumDecl1(int lookahead) {
+		if (match(0, ParserImplConstants.COMMA) != -1) {
+			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants._DEFAULT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
 	}
 
 	public BUTree<SEnumConstantDecl> parseEnumConstantDecl() throws ParseException {
@@ -15485,15 +15801,17 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SMemberDecl> member;
 		parse(ParserImplConstants.LBRACE);
-		if (match(0, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SEMICOLON, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-			if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SEMICOLON) != -1) {
+		if (match(0, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.SEMICOLON, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+			if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.SEMICOLON) != -1) {
 				do {
 					member = parseAnnotationTypeBodyDecl();
 					ret = append(ret, member);
 				}
-				while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SEMICOLON) != -1);
-			} else {
+				while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.SEMICOLON) != -1);
+			} else if (quotesMode) {
 				ret = parseNodeListVar();
+			} else {
+				throw new IllegalStateException();
 			}
 		}
 		parse(ParserImplConstants.RBRACE);
@@ -15507,7 +15825,7 @@ public class ParserImplementation extends ParserNewBase {
 		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
 			parse(ParserImplConstants.SEMICOLON);
 			ret = dress(SEmptyTypeDecl.make());
-		} else {
+		} else if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.ENUM) != -1) {
 			modifiers = parseModifiers();
 			if (matchAnnotationTypeBodyDecl1(0) != -1) {
 				ret = parseAnnotationTypeMemberDecl(modifiers);
@@ -15517,9 +15835,13 @@ public class ParserImplementation extends ParserNewBase {
 				ret = parseEnumDecl(modifiers);
 			} else if (match(0, ParserImplConstants.AT) != -1) {
 				ret = parseAnnotationTypeDecl(modifiers);
-			} else {
+			} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT) != -1) {
 				ret = parseFieldDecl(modifiers);
+			} else {
+				throw new IllegalStateException();
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -15566,7 +15888,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<STypeParameter> tp;
 		parse(ParserImplConstants.LT);
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
 			tp = parseTypeParameter();
 			ret = append(ret, tp);
 			while (match(0, ParserImplConstants.COMMA) != -1) {
@@ -15574,8 +15896,10 @@ public class ParserImplementation extends ParserNewBase {
 				tp = parseTypeParameter();
 				ret = append(ret, tp);
 			}
-		} else {
+		} else if (quotesMode) {
 			ret = parseNodeListVar();
+		} else {
+			throw new IllegalStateException();
 		}
 		parse(ParserImplConstants.GT);
 		return ret;
@@ -15599,7 +15923,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
 		parse(ParserImplConstants.EXTENDS);
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
 			cit = parseAnnotatedQualifiedType();
 			ret = append(ret, cit);
 			while (match(0, ParserImplConstants.BIT_AND) != -1) {
@@ -15607,8 +15931,10 @@ public class ParserImplementation extends ParserNewBase {
 				cit = parseAnnotatedQualifiedType();
 				ret = append(ret, cit);
 			}
-		} else {
+		} else if (quotesMode) {
 			ret = parseNodeListVar();
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -15625,15 +15951,17 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseClassOrInterfaceBodyDecls(TypeKind typeKind) throws ParseException {
 		BUTree<? extends SMemberDecl> member;
 		BUTree<SNodeList> ret = emptyList();
-		if (match(0, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.SEMICOLON, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-			if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.LT, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.SEMICOLON) != -1) {
+		if (match(0, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.VOID, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.SEMICOLON, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+			if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.SEMICOLON) != -1) {
 				do {
 					member = parseClassOrInterfaceBodyDecl(typeKind);
 					ret = append(ret, member);
 				}
-				while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.LT, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.SEMICOLON) != -1);
-			} else {
+				while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.SEMICOLON) != -1);
+			} else if (quotesMode) {
 				ret = parseNodeListVar();
+			} else {
+				throw new IllegalStateException();
 			}
 		}
 		return ret;
@@ -15647,7 +15975,7 @@ public class ParserImplementation extends ParserNewBase {
 		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
 			parse(ParserImplConstants.SEMICOLON);
 			ret = dress(SEmptyMemberDecl.make());
-		} else {
+		} else if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR) != -1) {
 			modifiers = parseModifiers();
 			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface)
 				problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
@@ -15670,9 +15998,13 @@ public class ParserImplementation extends ParserNewBase {
 
 			} else if (matchClassOrInterfaceBodyDecl4(0) != -1) {
 				ret = parseFieldDecl(modifiers);
-			} else {
+			} else if (match(0, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID) != -1) {
 				ret = parseMethodDecl(modifiers);
+			} else {
+				throw new IllegalStateException();
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret.withProblem(problem);
 	}
@@ -15883,8 +16215,10 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		if (match(0, ParserImplConstants.LBRACE) != -1) {
 			ret = parseArrayInitializer();
-		} else {
+		} else if (match(0, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.LPAREN, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.NULL, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.PLUS, ParserImplConstants.MINUS) != -1) {
 			ret = parseExpression();
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -15895,12 +16229,10 @@ public class ParserImplementation extends ParserNewBase {
 		boolean trailingComma = false;
 		run();
 		parse(ParserImplConstants.LBRACE);
-		if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LBRACE) != -1) {
+		if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LT, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.THIS, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.LBRACE) != -1) {
 			val = parseVariableInitializer();
 			values = append(values, val);
-			while (match(0, ParserImplConstants.COMMA) != -1
-					&& match(1, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.LPAREN, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.LBRACE) != -1
-					) {
+			while (matchArrayInitializer1(0) != -1) {
 				parse(ParserImplConstants.COMMA);
 				val = parseVariableInitializer();
 				values = append(values, val);
@@ -15912,6 +16244,116 @@ public class ParserImplementation extends ParserNewBase {
 		}
 		parse(ParserImplConstants.RBRACE);
 		return dress(SArrayInitializerExpr.make(values, trailingComma));
+	}
+
+	/* ZeroOrMore(
+			LookAhead(2)
+			Terminal("COMMA")
+			NonTerminal(val, VariableInitializer)
+			Action({
+				values = append(values, val);
+			})
+		) */
+	private int matchArrayInitializer1(int lookahead) {
+		if (match(0, ParserImplConstants.COMMA) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
 	}
 
 	public BUTree<SMethodDecl> parseMethodDecl(BUTree<SNodeList> modifiers) throws ParseException {
@@ -15935,11 +16377,13 @@ public class ParserImplementation extends ParserNewBase {
 		}
 		if (match(0, ParserImplConstants.LBRACE) != -1) {
 			block = parseBlock();
-		} else {
+		} else if (match(0, ParserImplConstants.SEMICOLON) != -1) {
 			parse(ParserImplConstants.SEMICOLON);
 			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)))
 				problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
 
+		} else {
+			throw new IllegalStateException();
 		}
 		return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem);
 	}
@@ -15948,7 +16392,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
 		parse(ParserImplConstants.LPAREN);
-		if (match(0, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.ABSTRACT, ParserImplConstants._DEFAULT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT) != -1) {
+		if (match(0, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.ABSTRACT, ParserImplConstants._DEFAULT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT) != -1) {
 			ret = parseFormalParameterList();
 		}
 		parse(ParserImplConstants.RPAREN);
@@ -15958,7 +16402,7 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseFormalParameterList() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.PUBLIC, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+		if (match(0, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.PUBLIC, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 			par = parseFormalParameter();
 			ret = append(ret, par);
 			while (match(0, ParserImplConstants.COMMA) != -1) {
@@ -15966,8 +16410,10 @@ public class ParserImplementation extends ParserNewBase {
 				par = parseFormalParameter();
 				ret = append(ret, par);
 			}
-		} else {
+		} else if (quotesMode) {
 			ret = parseNodeListVar();
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -16021,25 +16467,25 @@ public class ParserImplementation extends ParserNewBase {
 		}
 		run();
 		parse(ParserImplConstants.LBRACE);
-		if (match(0, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.LPAREN, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.LT, ParserImplConstants.THIS, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.VOID, ParserImplConstants.LPAREN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.LT, ParserImplConstants.SUPER, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-			if (match(0, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.LPAREN, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.SWITCH, ParserImplConstants.IF, ParserImplConstants.WHILE, ParserImplConstants.DO, ParserImplConstants.FOR, ParserImplConstants.BREAK, ParserImplConstants.CONTINUE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.ASSERT, ParserImplConstants.LBRACE, ParserImplConstants.SEMICOLON, ParserImplConstants.RETURN, ParserImplConstants.THROW, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.TRY, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.LT, ParserImplConstants.SUPER, ParserImplConstants.LT, ParserImplConstants.THIS) != -1
-					&& match(1, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.DOT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.RPAREN, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.THIS, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.THIS, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.SUPER, ParserImplConstants.DOUBLECOLON, ParserImplConstants.DOT, ParserImplConstants.LT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.LT, ParserImplConstants.DOT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.DOT, ParserImplConstants.BOOLEAN, ParserImplConstants.LT, ParserImplConstants.DOT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.DOUBLECOLON, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.IDENTIFIER, ParserImplConstants.BOOLEAN, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.GT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.ARROW, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DECR, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.ASSERT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.VOID, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.THIS, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.SEMICOLON, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SEMICOLON, ParserImplConstants.COLON, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.VOID, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.LPAREN, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.WHILE, ParserImplConstants.DO, ParserImplConstants.SWITCH, ParserImplConstants.IF, ParserImplConstants.SEMICOLON, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.ASSERT, ParserImplConstants.LBRACE, ParserImplConstants.TRY, ParserImplConstants.THROW, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.CONTINUE, ParserImplConstants.RETURN, ParserImplConstants.FOR, ParserImplConstants.BREAK, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.RBRACE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.INCR, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SEMICOLON, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LBRACE, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.LT, ParserImplConstants.DOT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.DOUBLECOLON, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.DOT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.DOT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.IDENTIFIER, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.ARROW, ParserImplConstants.LPAREN, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.HOOK, ParserImplConstants.GT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.RPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.LPAREN, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.SUPER, ParserImplConstants.NULL, ParserImplConstants.THIS, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.LT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.DOUBLE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOT, ParserImplConstants.DOUBLECOLON, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.GT, ParserImplConstants.LPAREN, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.HOOK, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.GT, ParserImplConstants.LPAREN) != -1
-					) {
-				if (matchConstructorDecl1(0) != -1) {
+		if (match(0, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.LPAREN, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+			if (matchConstructorDecl1(0) != -1) {
+				if (matchConstructorDecl2(0) != -1) {
 					stmt = parseExplicitConstructorInvocation();
 					stmts = append(stmts, stmt);
+				} else if (matchConstructorDecl3(0) != -1) {
+					stmt = parseBlockStatement();
+					stmts = append(stmts, stmt);
 				} else {
+					throw new IllegalStateException();
+				}
+				while (matchConstructorDecl4(0) != -1) {
 					stmt = parseBlockStatement();
 					stmts = append(stmts, stmt);
 				}
-				while (match(0, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.SWITCH, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.ASSERT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.BOOLEAN, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1
-						&& match(1, ParserImplConstants.LPAREN, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.VOID, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.LPAREN, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.VOID, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SEMICOLON, ParserImplConstants.LPAREN, ParserImplConstants.LBRACE, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.LPAREN, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants._DEFAULT, ParserImplConstants.STATIC, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.RPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.ARROW, ParserImplConstants.LPAREN, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.HOOK, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.GT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.DOT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.DOUBLECOLON, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.LT, ParserImplConstants.DOT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.DOT, ParserImplConstants.LT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.DOUBLE, ParserImplConstants.DOT, ParserImplConstants.DOUBLECOLON, ParserImplConstants.SUPER, ParserImplConstants.LONG_LITERAL, ParserImplConstants.THIS, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.RETURN, ParserImplConstants.THROW, ParserImplConstants.BREAK, ParserImplConstants.CONTINUE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.TRY, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.VOID, ParserImplConstants.THIS, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.SWITCH, ParserImplConstants.LBRACE, ParserImplConstants.SEMICOLON, ParserImplConstants.DO, ParserImplConstants.FOR, ParserImplConstants.IF, ParserImplConstants.WHILE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.ASSERT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.SEMICOLON, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.SEMICOLON, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.VOID, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.COLON, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INCR, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NEW, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.VOID, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.PUBLIC, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.RBRACE, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.DOT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.IDENTIFIER, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.CHAR, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1
-						) {
-					stmt = parseBlockStatement();
-					stmts = append(stmts, stmt);
-				}
-			} else {
+			} else if (quotesMode) {
 				stmts = parseNodeListVar();
+			} else {
+				throw new IllegalStateException();
 			}
 		}
 		parse(ParserImplConstants.RBRACE);
@@ -16048,13 +16494,7383 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ExplicitConstructorInvocation)
+			LookAhead(2)
+			Choice(
+				Sequence(
+					LookAhead(
+						NonTerminal(ExplicitConstructorInvocation)
+					)
+					NonTerminal(stmt, ExplicitConstructorInvocation)
+					Action({
+						stmts = append(stmts, stmt);
+					})
+				)
+				Sequence(
+					LookAhead(2)
+					NonTerminal(stmt, BlockStatement)
+					Action({
+						stmts = append(stmts, stmt);
+					})
+				)
+			)
+			ZeroOrMore(
+				LookAhead(2)
+				NonTerminal(stmt, BlockStatement)
+				Action({
+					stmts = append(stmts, stmt);
+				})
+			)
 		) */
 	private int matchConstructorDecl1(int lookahead) {
+		if (match(0, ParserImplConstants.VOLATILE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NEW) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.THROW) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.HOOK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.GT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DO) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DO) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.WHILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CLASS) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STATIC) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DO) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.WHILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.BREAK) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.BYTE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.TRY) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.IF) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NULL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FOR) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants._DEFAULT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.TRUE) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FINAL) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DECR) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.AT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.THIS) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PUBLIC) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SWITCH) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.VOID) != -1) {
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.TRANSIENT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DO) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.WHILE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ARROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.COLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NATIVE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CHAR) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STRICTFP) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.ABSTRACT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.RETURN) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ARROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.COLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PROTECTED) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LONG) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SUPER) != -1) {
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.ASSERT) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SHORT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PRIVATE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CONTINUE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INCR) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.WHILE) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FALSE) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
+	/* Sequence(
+			NonTerminal(ExplicitConstructorInvocation)
+		) */
+	private int matchConstructorDecl2(int lookahead) {
 		lookahead = matchExplicitConstructorInvocation(lookahead);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
+	}
+
+	/* Sequence(
+			LookAhead(2)
+			NonTerminal(stmt, BlockStatement)
+			Action({
+				stmts = append(stmts, stmt);
+			})
+		) */
+	private int matchConstructorDecl3(int lookahead) {
+		if (match(0, ParserImplConstants.VOLATILE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NEW) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.THROW) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.HOOK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.GT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CLASS) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DO) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DO) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.WHILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STATIC) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.BREAK) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.BYTE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.TRY) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.IF) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NULL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FOR) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants._DEFAULT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.TRUE) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FINAL) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DECR) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.AT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PUBLIC) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.THIS) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SWITCH) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.VOID) != -1) {
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.TRANSIENT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DO) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.WHILE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.COLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ARROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NATIVE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CHAR) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STRICTFP) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.ABSTRACT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.RETURN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.COLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ARROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PROTECTED) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LONG) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SUPER) != -1) {
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.ASSERT) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PRIVATE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SHORT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CONTINUE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INCR) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.WHILE) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FALSE) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
+	/* ZeroOrMore(
+			LookAhead(2)
+			NonTerminal(stmt, BlockStatement)
+			Action({
+				stmts = append(stmts, stmt);
+			})
+		) */
+	private int matchConstructorDecl4(int lookahead) {
+		if (match(0, ParserImplConstants.VOLATILE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NEW) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.THROW) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.HOOK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.GT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CLASS) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DO) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DO) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.WHILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STATIC) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.BREAK) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.BYTE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.TRY) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.IF) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NULL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FOR) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants._DEFAULT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.TRUE) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FINAL) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DECR) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.AT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PUBLIC) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.THIS) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SWITCH) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.VOID) != -1) {
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.TRANSIENT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DO) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.WHILE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.COLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ARROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NATIVE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CHAR) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STRICTFP) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.ABSTRACT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.RETURN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.COLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ARROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PROTECTED) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LONG) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SUPER) != -1) {
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.ASSERT) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PRIVATE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SHORT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CONTINUE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INCR) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.WHILE) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FALSE) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
 	}
 
 	public BUTree<SExplicitConstructorInvocationStmt> parseExplicitConstructorInvocation() throws ParseException {
@@ -16071,7 +23887,7 @@ public class ParserImplementation extends ParserNewBase {
 			isThis = true;
 			args = parseArguments();
 			parse(ParserImplConstants.SEMICOLON);
-		} else {
+		} else if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE) != -1) {
 			if (matchExplicitConstructorInvocation4(0) != -1) {
 				expr = parsePrimaryExpressionWithoutSuperSuffix();
 				parse(ParserImplConstants.DOT);
@@ -16082,6 +23898,8 @@ public class ParserImplementation extends ParserNewBase {
 			parse(ParserImplConstants.SUPER);
 			args = parseArguments();
 			parse(ParserImplConstants.SEMICOLON);
+		} else {
+			throw new IllegalStateException();
 		}
 		return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args));
 	}
@@ -16144,20 +23962,2426 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseStatements() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<? extends SStmt> stmt;
-		if (match(0, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.ASSERT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.SWITCH, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.THIS, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.VOID, ParserImplConstants.DOUBLE, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED) != -1
-				&& match(1, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.DOT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.IDENTIFIER, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.CHAR, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NEW, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.LPAREN, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.COLON, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.THIS, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.VOID, ParserImplConstants.DOUBLE, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.TRY, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.SEMICOLON, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.RBRACE, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.ASSERT, ParserImplConstants.THIS, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SWITCH, ParserImplConstants.LBRACE, ParserImplConstants.SEMICOLON, ParserImplConstants.DO, ParserImplConstants.FOR, ParserImplConstants.IF, ParserImplConstants.WHILE, ParserImplConstants.RETURN, ParserImplConstants.THROW, ParserImplConstants.BREAK, ParserImplConstants.CONTINUE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.TRY, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.SEMICOLON, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.SEMICOLON, ParserImplConstants.LPAREN, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.LPAREN, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLECOLON, ParserImplConstants.DOT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.LT, ParserImplConstants.DOT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.DOUBLECOLON, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.LT, ParserImplConstants.DOT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.DOT, ParserImplConstants.ARROW, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.HOOK, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.GT, ParserImplConstants.LPAREN, ParserImplConstants.RPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants._DEFAULT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.BOOLEAN, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.LPAREN, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.VOID, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.LPAREN, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN) != -1
-				) {
-			if (match(0, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1) {
+		if (matchStatements1(0) != -1) {
+			if (match(0, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1) {
 				do {
 					stmt = parseBlockStatement();
 					ret = append(ret, stmt);
 				}
-				while (match(0, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1);
-			} else {
+				while (match(0, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1);
+			} else if (quotesMode) {
 				ret = parseNodeListVar();
+			} else {
+				throw new IllegalStateException();
 			}
 		}
 		return ensureNotNull(ret);
+	}
+
+	/* ZeroOrOne(
+			LookAhead(2)
+			Choice(
+				OneOrMore(
+					NonTerminal(stmt, BlockStatement)
+					Action({
+						ret = append(ret, stmt);
+					})
+				)
+				Sequence(
+					LookAhead(					quotesMode
+	)
+					NonTerminal(ret, NodeListVar)
+				)
+			)
+		) */
+	private int matchStatements1(int lookahead) {
+		if (match(0, ParserImplConstants.VOLATILE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NEW) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.THROW) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.HOOK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.GT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DO) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DO) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.WHILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CLASS) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STATIC) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.BREAK) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.BYTE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.TRY) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.IF) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NULL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants._DEFAULT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FOR) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.TRUE) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FINAL) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DECR) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.AT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.THIS) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PUBLIC) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SWITCH) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.VOID) != -1) {
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.TRANSIENT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DO) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.WHILE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.COLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ARROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NATIVE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CHAR) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.ABSTRACT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STRICTFP) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.RETURN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.COLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ARROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PROTECTED) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LONG) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SUPER) != -1) {
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.ASSERT) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.SHORT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PRIVATE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.CONTINUE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.INCR) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.WHILE) != -1) {
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.FALSE) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
 	}
 
 	public BUTree<SInitializerDecl> parseInitializerDecl(BUTree<SNodeList> modifiers) throws ParseException {
@@ -16177,13 +26401,15 @@ public class ParserImplementation extends ParserNewBase {
 				arrayDims = parseArrayDimsMandatory();
 				type = dress(SArrayType.make(primitiveType, arrayDims));
 			}
-		} else {
+		} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 			type = parseQualifiedType(annotations);
 			if (matchType2(0) != -1) {
 				lateRun();
 				arrayDims = parseArrayDimsMandatory();
 				type = dress(SArrayType.make(type, arrayDims));
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		return type == null ? primitiveType : type;
 	}
@@ -16225,13 +26451,15 @@ public class ParserImplementation extends ParserNewBase {
 			lateRun();
 			arrayDims = parseArrayDimsMandatory();
 			type = dress(SArrayType.make(primitiveType, arrayDims));
-		} else {
+		} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 			type = parseQualifiedType(annotations);
 			if (matchReferenceType1(0) != -1) {
 				lateRun();
 				arrayDims = parseArrayDimsMandatory();
 				type = dress(SArrayType.make(type, arrayDims));
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		return type;
 	}
@@ -16260,23 +26488,17 @@ public class ParserImplementation extends ParserNewBase {
 			annotations = emptyList();
 		}
 		name = parseName();
-		if (match(0, ParserImplConstants.LT) != -1
-				&& match(1, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK, ParserImplConstants.GT) != -1
-				) {
+		if (matchQualifiedType1(0) != -1) {
 			typeArgs = parseTypeArgumentsOrDiamond();
 		}
 		ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
-		while (match(0, ParserImplConstants.DOT) != -1
-				&& match(1, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1
-				) {
+		while (matchQualifiedType2(0) != -1) {
 			parse(ParserImplConstants.DOT);
 			scope = optionOf(ret);
 			lateRun();
 			annotations = parseAnnotations();
 			name = parseName();
-			if (match(0, ParserImplConstants.LT) != -1
-					&& match(1, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK, ParserImplConstants.GT) != -1
-					) {
+			if (matchQualifiedType3(0) != -1) {
 				typeArgs = parseTypeArgumentsOrDiamond();
 			}
 			ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
@@ -16284,11 +26506,149 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrOne(
+			LookAhead(2)
+			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+		) */
+	private int matchQualifiedType1(int lookahead) {
+		if (match(0, ParserImplConstants.LT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.HOOK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.GT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
+	/* ZeroOrMore(
+			LookAhead(2)
+			Terminal("DOT")
+			Action({
+				scope = optionOf(ret);
+			})
+			Action({
+				lateRun();
+			})
+			NonTerminal(annotations, Annotations)
+			NonTerminal(name, Name)
+			ZeroOrOne(
+				LookAhead(2)
+				NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+			)
+			Action({
+				ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
+			})
+		) */
+	private int matchQualifiedType2(int lookahead) {
+		if (match(0, ParserImplConstants.DOT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
+	/* ZeroOrOne(
+			LookAhead(2)
+			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+		) */
+	private int matchQualifiedType3(int lookahead) {
+		if (match(0, ParserImplConstants.LT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.HOOK) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.GT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<SNodeList> parseTypeArguments() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
 		parse(ParserImplConstants.LT);
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+		if (match(0, ParserImplConstants.AT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
 			ret = parseTypeArgumentList();
 		}
 		parse(ParserImplConstants.GT);
@@ -16299,7 +26659,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
 		parse(ParserImplConstants.LT);
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+		if (match(0, ParserImplConstants.AT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
 			ret = parseTypeArgumentList();
 		}
 		parse(ParserImplConstants.GT);
@@ -16309,7 +26669,7 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseTypeArgumentList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK) != -1) {
+		if (match(0, ParserImplConstants.AT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK) != -1) {
 			type = parseTypeArgument();
 			ret = append(ret, type);
 			while (match(0, ParserImplConstants.COMMA) != -1) {
@@ -16318,9 +26678,11 @@ public class ParserImplementation extends ParserNewBase {
 				ret = append(ret, type);
 			}
 			return ret;
-		} else {
+		} else if (quotesMode) {
 			parse(ParserImplConstants.NODE_LIST_VARIABLE);
 			return makeVar();
+		} else {
+			throw new IllegalStateException();
 		}
 	}
 
@@ -16331,8 +26693,10 @@ public class ParserImplementation extends ParserNewBase {
 		annotations = parseAnnotations();
 		if (match(0, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 			ret = parseReferenceType(annotations);
-		} else {
+		} else if (match(0, ParserImplConstants.HOOK) != -1) {
 			ret = parseWildcard(annotations);
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -16352,11 +26716,13 @@ public class ParserImplementation extends ParserNewBase {
 				run();
 				boundAnnotations = parseAnnotations();
 				ext = parseReferenceType(boundAnnotations);
-			} else {
+			} else if (match(0, ParserImplConstants.SUPER) != -1) {
 				parse(ParserImplConstants.SUPER);
 				run();
 				boundAnnotations = parseAnnotations();
 				sup = parseReferenceType(boundAnnotations);
+			} else {
+				throw new IllegalStateException();
 			}
 		}
 		return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup)));
@@ -16389,9 +26755,11 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.FLOAT) != -1) {
 			parse(ParserImplConstants.FLOAT);
 			primitive = Primitive.Float;
-		} else {
+		} else if (match(0, ParserImplConstants.DOUBLE) != -1) {
 			parse(ParserImplConstants.DOUBLE);
 			primitive = Primitive.Double;
+		} else {
+			throw new IllegalStateException();
 		}
 		return dress(SPrimitiveType.make(annotations, primitive));
 	}
@@ -16402,8 +26770,10 @@ public class ParserImplementation extends ParserNewBase {
 			run();
 			parse(ParserImplConstants.VOID);
 			ret = dress(SVoidType.make());
-		} else {
+		} else if (match(0, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 			ret = parseType(null);
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -16424,9 +26794,7 @@ public class ParserImplementation extends ParserNewBase {
 		run();
 		name = parseName();
 		ret = dress(SQualifiedName.make(qualifier, name));
-		while (match(0, ParserImplConstants.DOT) != -1
-				&& match(1, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1
-				) {
+		while (matchQualifiedName1(0) != -1) {
 			lateRun();
 			parse(ParserImplConstants.DOT);
 			qualifier = optionOf(ret);
@@ -16436,6 +26804,32 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrMore(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Terminal("DOT")
+			Action({
+				qualifier = optionOf(ret);
+			})
+			NonTerminal(name, Name)
+			Action({
+				ret = dress(SQualifiedName.make(qualifier, name));
+			})
+		) */
+	private int matchQualifiedName1(int lookahead) {
+		if (match(0, ParserImplConstants.DOT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<SName> parseName() throws ParseException {
 		Token id;
 		BUTree<SName> name;
@@ -16443,8 +26837,10 @@ public class ParserImplementation extends ParserNewBase {
 			run();
 			id = parse(ParserImplConstants.IDENTIFIER);
 			name = dress(SName.make(id.image));
-		} else {
+		} else if (quotesMode) {
 			name = parseNodeVar();
+		} else {
+			throw new IllegalStateException();
 		}
 		return name;
 	}
@@ -16479,16 +26875,16 @@ public class ParserImplementation extends ParserNewBase {
 			parse(ParserImplConstants.RPAREN);
 			parse(ParserImplConstants.ARROW);
 			ret = parseLambdaBody(params, true);
-		} else {
+		} else if (match(0, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
 			ret = parseConditionalExpression();
-			if (match(0, ParserImplConstants.ORASSIGN, ParserImplConstants.XORASSIGN, ParserImplConstants.ANDASSIGN, ParserImplConstants.RUNSIGNEDSHIFTASSIGN, ParserImplConstants.RSIGNEDSHIFTASSIGN, ParserImplConstants.LSHIFTASSIGN, ParserImplConstants.MINUSASSIGN, ParserImplConstants.PLUSASSIGN, ParserImplConstants.REMASSIGN, ParserImplConstants.SLASHASSIGN, ParserImplConstants.STARASSIGN, ParserImplConstants.ASSIGN) != -1
-					&& match(1, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LPAREN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.ORASSIGN, ParserImplConstants.XORASSIGN, ParserImplConstants.ANDASSIGN, ParserImplConstants.RUNSIGNEDSHIFTASSIGN, ParserImplConstants.RSIGNEDSHIFTASSIGN, ParserImplConstants.LSHIFTASSIGN, ParserImplConstants.MINUSASSIGN, ParserImplConstants.PLUSASSIGN, ParserImplConstants.REMASSIGN, ParserImplConstants.SLASHASSIGN, ParserImplConstants.STARASSIGN) != -1
-					) {
+			if (matchExpression5(0) != -1) {
 				lateRun();
 				op = parseAssignmentOperator();
 				value = parseExpression();
 				ret = dress(SAssignExpr.make(ret, op, value));
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -16565,16 +26961,1173 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* ZeroOrOne(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			NonTerminal(op, AssignmentOperator)
+			NonTerminal(value, Expression)
+			Action({
+				ret = dress(SAssignExpr.make(ret, op, value));
+			})
+		) */
+	private int matchExpression5(int lookahead) {
+		if (match(0, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<SLambdaExpr> parseLambdaBody(BUTree<SNodeList> parameters, boolean parenthesis) throws ParseException {
 		BUTree<SBlockStmt> block;
 		BUTree<? extends SExpr> expr;
 		BUTree<SLambdaExpr> ret;
-		if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
 			expr = parseExpression();
 			ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr)));
-		} else {
+		} else if (match(0, ParserImplConstants.LBRACE) != -1) {
 			block = parseBlock();
 			ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -16633,9 +28186,11 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.XORASSIGN) != -1) {
 			parse(ParserImplConstants.XORASSIGN);
 			ret = AssignOp.XOr;
-		} else {
+		} else if (match(0, ParserImplConstants.ORASSIGN) != -1) {
 			parse(ParserImplConstants.ORASSIGN);
 			ret = AssignOp.Or;
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -16645,9 +28200,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> left;
 		BUTree<? extends SExpr> right;
 		ret = parseConditionalOrExpression();
-		if (match(0, ParserImplConstants.HOOK) != -1
-				&& match(1, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LPAREN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1
-				) {
+		if (matchConditionalExpression1(0) != -1) {
 			lateRun();
 			parse(ParserImplConstants.HOOK);
 			left = parseExpression();
@@ -16658,13 +28211,123 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrOne(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Terminal("HOOK")
+			NonTerminal(left, Expression)
+			Terminal("COLON")
+			NonTerminal(right, ConditionalExpression)
+			Action({
+				ret = dress(SConditionalExpr.make(ret, left, right));
+			})
+		) */
+	private int matchConditionalExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.HOOK) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<? extends SExpr> parseConditionalOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseConditionalAndExpression();
-		while (match(0, ParserImplConstants.SC_OR) != -1
-				&& match(1, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.THIS, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1
-				) {
+		while (matchConditionalOrExpression1(0) != -1) {
 			lateRun();
 			parse(ParserImplConstants.SC_OR);
 			right = parseConditionalAndExpression();
@@ -16673,13 +28336,121 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrMore(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Terminal("SC_OR")
+			NonTerminal(right, ConditionalAndExpression)
+			Action({
+				ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right));
+			})
+		) */
+	private int matchConditionalOrExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.SC_OR) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<? extends SExpr> parseConditionalAndExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseInclusiveOrExpression();
-		while (match(0, ParserImplConstants.SC_AND) != -1
-				&& match(1, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.LPAREN, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.DOUBLE, ParserImplConstants.VOID, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN) != -1
-				) {
+		while (matchConditionalAndExpression1(0) != -1) {
 			lateRun();
 			parse(ParserImplConstants.SC_AND);
 			right = parseInclusiveOrExpression();
@@ -16688,13 +28459,121 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrMore(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Terminal("SC_AND")
+			NonTerminal(right, InclusiveOrExpression)
+			Action({
+				ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right));
+			})
+		) */
+	private int matchConditionalAndExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.SC_AND) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<? extends SExpr> parseInclusiveOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseExclusiveOrExpression();
-		while (match(0, ParserImplConstants.BIT_OR) != -1
-				&& match(1, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.LPAREN, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.LPAREN, ParserImplConstants.TILDE, ParserImplConstants.BANG) != -1
-				) {
+		while (matchInclusiveOrExpression1(0) != -1) {
 			lateRun();
 			parse(ParserImplConstants.BIT_OR);
 			right = parseExclusiveOrExpression();
@@ -16703,13 +28582,121 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrMore(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Terminal("BIT_OR")
+			NonTerminal(right, ExclusiveOrExpression)
+			Action({
+				ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right));
+			})
+		) */
+	private int matchInclusiveOrExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.BIT_OR) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<? extends SExpr> parseExclusiveOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseAndExpression();
-		while (match(0, ParserImplConstants.XOR) != -1
-				&& match(1, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1
-				) {
+		while (matchExclusiveOrExpression1(0) != -1) {
 			lateRun();
 			parse(ParserImplConstants.XOR);
 			right = parseAndExpression();
@@ -16718,13 +28705,121 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrMore(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Terminal("XOR")
+			NonTerminal(right, AndExpression)
+			Action({
+				ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right));
+			})
+		) */
+	private int matchExclusiveOrExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.XOR) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<? extends SExpr> parseAndExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseEqualityExpression();
-		while (match(0, ParserImplConstants.BIT_AND) != -1
-				&& match(1, ParserImplConstants.THIS, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.DOUBLE, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.DECR, ParserImplConstants.INCR) != -1
-				) {
+		while (matchAndExpression1(0) != -1) {
 			lateRun();
 			parse(ParserImplConstants.BIT_AND);
 			right = parseEqualityExpression();
@@ -16733,21 +28828,131 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrMore(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Terminal("BIT_AND")
+			NonTerminal(right, EqualityExpression)
+			Action({
+				ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right));
+			})
+		) */
+	private int matchAndExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.BIT_AND) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<? extends SExpr> parseEqualityExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
 		ret = parseInstanceOfExpression();
-		while (match(0, ParserImplConstants.NE, ParserImplConstants.EQ) != -1
-				&& match(1, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.VOID, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.NE) != -1
-				) {
+		while (matchEqualityExpression1(0) != -1) {
 			lateRun();
 			if (match(0, ParserImplConstants.EQ) != -1) {
 				parse(ParserImplConstants.EQ);
 				op = BinaryOp.Equal;
-			} else {
+			} else if (match(0, ParserImplConstants.NE) != -1) {
 				parse(ParserImplConstants.NE);
 				op = BinaryOp.NotEqual;
+			} else {
+				throw new IllegalStateException();
 			}
 			right = parseInstanceOfExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -16755,14 +28960,230 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrMore(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Choice(
+				Sequence(
+					Terminal("EQ")
+					Action({
+						op = BinaryOp.Equal;
+					})
+				)
+				Sequence(
+					Terminal("NE")
+					Action({
+						op = BinaryOp.NotEqual;
+					})
+				)
+			)
+			NonTerminal(right, InstanceOfExpression)
+			Action({
+				ret = dress(SBinaryExpr.make(ret, op, right));
+			})
+		) */
+	private int matchEqualityExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.NE) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.EQ) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<? extends SExpr> parseInstanceOfExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<SNodeList> annotations;
 		BUTree<? extends SType> type;
 		ret = parseRelationalExpression();
-		if (match(0, ParserImplConstants.INSTANCEOF) != -1
-				&& match(1, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG) != -1
-				) {
+		if (matchInstanceOfExpression1(0) != -1) {
 			lateRun();
 			parse(ParserImplConstants.INSTANCEOF);
 			run();
@@ -16773,14 +29194,66 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrOne(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Terminal("INSTANCEOF")
+			Action({
+				run();
+			})
+			NonTerminal(annotations, Annotations)
+			NonTerminal(type, Type)
+			Action({
+				ret = dress(SInstanceOfExpr.make(ret, type));
+			})
+		) */
+	private int matchInstanceOfExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.INSTANCEOF) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<? extends SExpr> parseRelationalExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
 		ret = parseShiftExpression();
-		while (match(0, ParserImplConstants.LE, ParserImplConstants.GT, ParserImplConstants.LT, ParserImplConstants.GE) != -1
-				&& match(1, ParserImplConstants.GE, ParserImplConstants.LE, ParserImplConstants.GT, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.LPAREN, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.VOID, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID) != -1
-				) {
+		while (matchRelationalExpression1(0) != -1) {
 			lateRun();
 			if (match(0, ParserImplConstants.LT) != -1) {
 				parse(ParserImplConstants.LT);
@@ -16791,9 +29264,11 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (match(0, ParserImplConstants.LE) != -1) {
 				parse(ParserImplConstants.LE);
 				op = BinaryOp.LessOrEqual;
-			} else {
+			} else if (match(0, ParserImplConstants.GE) != -1) {
 				parse(ParserImplConstants.GE);
 				op = BinaryOp.GreaterOrEqual;
+			} else {
+				throw new IllegalStateException();
 			}
 			right = parseShiftExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -16801,14 +29276,432 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrMore(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Choice(
+				Sequence(
+					Terminal("LT")
+					Action({
+						op = BinaryOp.Less;
+					})
+				)
+				Sequence(
+					Terminal("GT")
+					Action({
+						op = BinaryOp.Greater;
+					})
+				)
+				Sequence(
+					Terminal("LE")
+					Action({
+						op = BinaryOp.LessOrEqual;
+					})
+				)
+				Sequence(
+					Terminal("GE")
+					Action({
+						op = BinaryOp.GreaterOrEqual;
+					})
+				)
+			)
+			NonTerminal(right, ShiftExpression)
+			Action({
+				ret = dress(SBinaryExpr.make(ret, op, right));
+			})
+		) */
+	private int matchRelationalExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.LT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.GT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.GE) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<? extends SExpr> parseShiftExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
 		ret = parseAdditiveExpression();
-		while (match(0, ParserImplConstants.GT, ParserImplConstants.GT, ParserImplConstants.LSHIFT) != -1
-				&& match(1, ParserImplConstants.GT, ParserImplConstants.GT, ParserImplConstants.GT) != -1
-				) {
+		while (matchShiftExpression1(0) != -1) {
 			lateRun();
 			if (match(0, ParserImplConstants.LSHIFT) != -1) {
 				parse(ParserImplConstants.LSHIFT);
@@ -16816,9 +29709,11 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (match(0, ParserImplConstants.GT) != -1) {
 				parseRSIGNEDSHIFT();
 				op = BinaryOp.RightSignedShift;
-			} else {
+			} else if (match(0, ParserImplConstants.GT) != -1) {
 				parseRUNSIGNEDSHIFT();
 				op = BinaryOp.RightUnsignedShift;
+			} else {
+				throw new IllegalStateException();
 			}
 			right = parseAdditiveExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -16826,21 +29721,155 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrMore(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Choice(
+				Sequence(
+					Terminal("LSHIFT")
+					Action({
+						op = BinaryOp.LeftShift;
+					})
+				)
+				Sequence(
+					NonTerminal(RSIGNEDSHIFT)
+					Action({
+						op = BinaryOp.RightSignedShift;
+					})
+				)
+				Sequence(
+					NonTerminal(RUNSIGNEDSHIFT)
+					Action({
+						op = BinaryOp.RightUnsignedShift;
+					})
+				)
+			)
+			NonTerminal(right, AdditiveExpression)
+			Action({
+				ret = dress(SBinaryExpr.make(ret, op, right));
+			})
+		) */
+	private int matchShiftExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.LSHIFT) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.GT) != -1) {
+			if (match(1, ParserImplConstants.GT) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<? extends SExpr> parseAdditiveExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
 		ret = parseMultiplicativeExpression();
-		while (match(0, ParserImplConstants.MINUS, ParserImplConstants.PLUS) != -1
-				&& match(1, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.MINUS) != -1
-				) {
+		while (matchAdditiveExpression1(0) != -1) {
 			lateRun();
 			if (match(0, ParserImplConstants.PLUS) != -1) {
 				parse(ParserImplConstants.PLUS);
 				op = BinaryOp.Plus;
-			} else {
+			} else if (match(0, ParserImplConstants.MINUS) != -1) {
 				parse(ParserImplConstants.MINUS);
 				op = BinaryOp.Minus;
+			} else {
+				throw new IllegalStateException();
 			}
 			right = parseMultiplicativeExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -16848,14 +29877,230 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* ZeroOrMore(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Choice(
+				Sequence(
+					Terminal("PLUS")
+					Action({
+						op = BinaryOp.Plus;
+					})
+				)
+				Sequence(
+					Terminal("MINUS")
+					Action({
+						op = BinaryOp.Minus;
+					})
+				)
+			)
+			NonTerminal(right, MultiplicativeExpression)
+			Action({
+				ret = dress(SBinaryExpr.make(ret, op, right));
+			})
+		) */
+	private int matchAdditiveExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.PLUS) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.MINUS) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
 	public BUTree<? extends SExpr> parseMultiplicativeExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
 		ret = parseUnaryExpression();
-		while (match(0, ParserImplConstants.REM, ParserImplConstants.SLASH, ParserImplConstants.STAR) != -1
-				&& match(1, ParserImplConstants.LPAREN, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.LPAREN, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.REM, ParserImplConstants.SLASH) != -1
-				) {
+		while (matchMultiplicativeExpression1(0) != -1) {
 			lateRun();
 			if (match(0, ParserImplConstants.STAR) != -1) {
 				parse(ParserImplConstants.STAR);
@@ -16863,14 +30108,335 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (match(0, ParserImplConstants.SLASH) != -1) {
 				parse(ParserImplConstants.SLASH);
 				op = BinaryOp.Divide;
-			} else {
+			} else if (match(0, ParserImplConstants.REM) != -1) {
 				parse(ParserImplConstants.REM);
 				op = BinaryOp.Remainder;
+			} else {
+				throw new IllegalStateException();
 			}
 			right = parseUnaryExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
 		}
 		return ret;
+	}
+
+	/* ZeroOrMore(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Choice(
+				Sequence(
+					Terminal("STAR")
+					Action({
+						op = BinaryOp.Times;
+					})
+				)
+				Sequence(
+					Terminal("SLASH")
+					Action({
+						op = BinaryOp.Divide;
+					})
+				)
+				Sequence(
+					Terminal("REM")
+					Action({
+						op = BinaryOp.Remainder;
+					})
+				)
+			)
+			NonTerminal(right, UnaryExpression)
+			Action({
+				ret = dress(SBinaryExpr.make(ret, op, right));
+			})
+		) */
+	private int matchMultiplicativeExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.STAR) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.SLASH) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.REM) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
 	}
 
 	public BUTree<? extends SExpr> parseUnaryExpression() throws ParseException {
@@ -16883,14 +30449,18 @@ public class ParserImplementation extends ParserNewBase {
 			if (match(0, ParserImplConstants.PLUS) != -1) {
 				parse(ParserImplConstants.PLUS);
 				op = UnaryOp.Positive;
-			} else {
+			} else if (match(0, ParserImplConstants.MINUS) != -1) {
 				parse(ParserImplConstants.MINUS);
 				op = UnaryOp.Negative;
+			} else {
+				throw new IllegalStateException();
 			}
 			ret = parseUnaryExpression();
 			ret = dress(SUnaryExpr.make(op, ret));
-		} else {
+		} else if (match(0, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.NULL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN) != -1) {
 			ret = parseUnaryExpressionNotPlusMinus();
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -16902,9 +30472,11 @@ public class ParserImplementation extends ParserNewBase {
 		if (match(0, ParserImplConstants.INCR) != -1) {
 			parse(ParserImplConstants.INCR);
 			op = UnaryOp.PreIncrement;
-		} else {
+		} else if (match(0, ParserImplConstants.DECR) != -1) {
 			parse(ParserImplConstants.DECR);
 			op = UnaryOp.PreDecrement;
+		} else {
+			throw new IllegalStateException();
 		}
 		ret = parseUnaryExpression();
 		return dress(SUnaryExpr.make(op, ret));
@@ -16918,16 +30490,20 @@ public class ParserImplementation extends ParserNewBase {
 			if (match(0, ParserImplConstants.TILDE) != -1) {
 				parse(ParserImplConstants.TILDE);
 				op = UnaryOp.Inverse;
-			} else {
+			} else if (match(0, ParserImplConstants.BANG) != -1) {
 				parse(ParserImplConstants.BANG);
 				op = UnaryOp.Not;
+			} else {
+				throw new IllegalStateException();
 			}
 			ret = parseUnaryExpression();
 			ret = dress(SUnaryExpr.make(op, ret));
 		} else if (matchUnaryExpressionNotPlusMinus1(0) != -1) {
 			ret = parseCastExpression();
-		} else {
+		} else if (match(0, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL) != -1) {
 			ret = parsePostfixExpression();
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -16946,20 +30522,53 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
 		ret = parsePrimaryExpression();
-		if (match(0, ParserImplConstants.DECR, ParserImplConstants.INCR) != -1
-				&& match(1, ParserImplConstants.DECR) != -1
-				) {
+		if (matchPostfixExpression1(0) != -1) {
 			lateRun();
 			if (match(0, ParserImplConstants.INCR) != -1) {
 				parse(ParserImplConstants.INCR);
 				op = UnaryOp.PostIncrement;
-			} else {
+			} else if (match(0, ParserImplConstants.DECR) != -1) {
 				parse(ParserImplConstants.DECR);
 				op = UnaryOp.PostDecrement;
+			} else {
+				throw new IllegalStateException();
 			}
 			ret = dress(SUnaryExpr.make(op, ret));
 		}
 		return ret;
+	}
+
+	/* ZeroOrOne(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			Choice(
+				Sequence(
+					Terminal("INCR")
+					Action({
+						op = UnaryOp.PostIncrement;
+					})
+				)
+				Sequence(
+					Terminal("DECR")
+					Action({
+						op = UnaryOp.PostDecrement;
+					})
+				)
+			)
+			Action({
+				ret = dress(SUnaryExpr.make(op, ret));
+			})
+		) */
+	private int matchPostfixExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.INCR) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.DECR) != -1) {
+			return lookahead;
+		}
+		return -1;
 	}
 
 	public BUTree<? extends SExpr> parseCastExpression() throws ParseException {
@@ -16978,7 +30587,7 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.RPAREN);
 				ret = parseUnaryExpression();
 				ret = dress(SCastExpr.make(primitiveType, ret));
-			} else {
+			} else if (match(0, ParserImplConstants.AT, ParserImplConstants.LBRACKET) != -1) {
 				lateRun();
 				arrayDims = parseArrayDimsMandatory();
 				type = dress(SArrayType.make(primitiveType, arrayDims));
@@ -16986,8 +30595,10 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.RPAREN);
 				ret = parseUnaryExpressionNotPlusMinus();
 				ret = dress(SCastExpr.make(type, ret));
+			} else {
+				throw new IllegalStateException();
 			}
-		} else {
+		} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 			type = parseQualifiedType(annotations);
 			if (matchCastExpression1(0) != -1) {
 				lateRun();
@@ -16998,6 +30609,8 @@ public class ParserImplementation extends ParserNewBase {
 			parse(ParserImplConstants.RPAREN);
 			ret = parseUnaryExpressionNotPlusMinus();
 			ret = dress(SCastExpr.make(type, ret));
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -17072,9 +30685,11 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.FALSE) != -1) {
 			literal = parse(ParserImplConstants.FALSE);
 			ret = SLiteralExpr.make(Boolean.class, literal.image);
-		} else {
+		} else if (match(0, ParserImplConstants.NULL) != -1) {
 			literal = parse(ParserImplConstants.NULL);
 			ret = SLiteralExpr.make(Void.class, literal.image);
+		} else {
+			throw new IllegalStateException();
 		}
 		return dress(ret);
 	}
@@ -17082,13 +30697,151 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<? extends SExpr> parsePrimaryExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		ret = parsePrimaryPrefix();
-		while (match(0, ParserImplConstants.DOUBLECOLON, ParserImplConstants.DOT, ParserImplConstants.LBRACKET, ParserImplConstants.DOT) != -1
-				&& match(1, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SUPER, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.THIS, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1
-				) {
+		while (matchPrimaryExpression1(0) != -1) {
 			lateRun();
 			ret = parsePrimarySuffix(ret);
 		}
 		return ret;
+	}
+
+	/* ZeroOrMore(
+			LookAhead(2)
+			Action({
+				lateRun();
+			})
+			NonTerminal(ret, PrimarySuffix)
+		) */
+	private int matchPrimaryExpression1(int lookahead) {
+		if (match(0, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.DOT) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
 	}
 
 	public BUTree<? extends SExpr> parsePrimaryExpressionWithoutSuperSuffix() throws ParseException {
@@ -17131,12 +30884,16 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.DOT);
 				if (matchPrimaryPrefix1(0) != -1) {
 					ret = parseMethodInvocation(ret);
-				} else {
+				} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 					ret = parseFieldAccess(ret);
+				} else {
+					throw new IllegalStateException();
 				}
-			} else {
+			} else if (match(0, ParserImplConstants.DOUBLECOLON) != -1) {
 				lateRun();
 				ret = parseMethodReferenceSuffix(ret);
+			} else {
+				throw new IllegalStateException();
 			}
 		} else if (match(0, ParserImplConstants.NEW) != -1) {
 			ret = parseAllocationExpression(null);
@@ -17161,7 +30918,7 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.ARROW);
 				ret = parseLambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), false);
 			}
-		} else {
+		} else if (match(0, ParserImplConstants.LPAREN) != -1) {
 			run();
 			parse(ParserImplConstants.LPAREN);
 			if (match(0, ParserImplConstants.RPAREN) != -1) {
@@ -17183,11 +30940,15 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.RPAREN);
 				parse(ParserImplConstants.ARROW);
 				ret = parseLambdaBody(params, true);
-			} else {
+			} else if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
 				ret = parseExpression();
 				parse(ParserImplConstants.RPAREN);
 				ret = dress(SParenthesizedExpr.make(ret));
+			} else {
+				throw new IllegalStateException();
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -17340,18 +31101,138 @@ public class ParserImplementation extends ParserNewBase {
 
 	public BUTree<? extends SExpr> parsePrimarySuffix(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
-		if (match(0, ParserImplConstants.LBRACKET, ParserImplConstants.DOT) != -1
-				&& match(1, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.THIS, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NEW, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1
-				) {
+		if (matchPrimarySuffix1(0) != -1) {
 			ret = parsePrimarySuffixWithoutSuper(scope);
 		} else if (match(0, ParserImplConstants.DOT) != -1) {
 			parse(ParserImplConstants.DOT);
 			parse(ParserImplConstants.SUPER);
 			ret = dress(SSuperExpr.make(optionOf(scope)));
-		} else {
+		} else if (match(0, ParserImplConstants.DOUBLECOLON) != -1) {
 			ret = parseMethodReferenceSuffix(scope);
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
+	}
+
+	/* Sequence(
+			LookAhead(2)
+			NonTerminal(ret, PrimarySuffixWithoutSuper)
+		) */
+	private int matchPrimarySuffix1(int lookahead) {
+		if (match(0, ParserImplConstants.DOT) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
 	}
 
 	public BUTree<? extends SExpr> parsePrimarySuffixWithoutSuper(BUTree<? extends SExpr> scope) throws ParseException {
@@ -17366,14 +31247,18 @@ public class ParserImplementation extends ParserNewBase {
 				ret = parseAllocationExpression(scope);
 			} else if (matchPrimarySuffixWithoutSuper1(0) != -1) {
 				ret = parseMethodInvocation(scope);
-			} else {
+			} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 				ret = parseFieldAccess(scope);
+			} else {
+				throw new IllegalStateException();
 			}
-		} else {
+		} else if (match(0, ParserImplConstants.LBRACKET) != -1) {
 			parse(ParserImplConstants.LBRACKET);
 			ret = parseExpression();
 			parse(ParserImplConstants.RBRACKET);
 			ret = dress(SArrayAccessExpr.make(scope, ret));
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -17442,9 +31327,8 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
 		parse(ParserImplConstants.LPAREN);
-		if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-			if (match(0, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1
-					) {
+		if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LT, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.THIS, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+			if (matchArguments1(0) != -1) {
 				expr = parseExpression();
 				ret = append(ret, expr);
 				while (match(0, ParserImplConstants.COMMA) != -1) {
@@ -17452,12 +31336,125 @@ public class ParserImplementation extends ParserNewBase {
 					expr = parseExpression();
 					ret = append(ret, expr);
 				}
-			} else {
+			} else if (quotesMode) {
 				ret = parseNodeListVar();
+			} else {
+				throw new IllegalStateException();
 			}
 		}
 		parse(ParserImplConstants.RPAREN);
 		return ret;
+	}
+
+	/* Sequence(
+			LookAhead(1)
+			NonTerminal(expr, Expression)
+			Action({
+				ret = append(ret, expr);
+			})
+			ZeroOrMore(
+				Terminal("COMMA")
+				NonTerminal(expr, Expression)
+				Action({
+					ret = append(ret, expr);
+				})
+			)
+		) */
+	private int matchArguments1(int lookahead) {
+		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.NEW) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.FLOAT) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.LT) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.CHAR) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.INT) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.MINUS) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.BYTE) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.DOUBLE) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.LONG) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.SUPER) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.NULL) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.BANG) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.LPAREN) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.TRUE) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.LONG_LITERAL) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.BOOLEAN) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.DECR) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.SHORT) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.INCR) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.THIS) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.FALSE) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.STRING_LITERAL) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.TILDE) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.VOID) != -1) {
+			return lookahead;
+		}
+		if (match(0, ParserImplConstants.PLUS) != -1) {
+			return lookahead;
+		}
+		return -1;
 	}
 
 	public BUTree<? extends SExpr> parseMethodReferenceSuffix(BUTree<? extends SExpr> scope) throws ParseException {
@@ -17470,9 +31467,11 @@ public class ParserImplementation extends ParserNewBase {
 		}
 		if (match(0, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
 			name = parseName();
-		} else {
+		} else if (match(0, ParserImplConstants.NEW) != -1) {
 			parse(ParserImplConstants.NEW);
 			name = SName.make("new");
+		} else {
+			throw new IllegalStateException();
 		}
 		ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name));
 		return ret;
@@ -17496,17 +31495,21 @@ public class ParserImplementation extends ParserNewBase {
 		if (match(0, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN) != -1) {
 			type = parsePrimitiveType(annotations);
 			ret = parseArrayCreationExpr(type);
-		} else {
+		} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 			type = parseQualifiedType(annotations);
-			if (match(0, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.LBRACKET) != -1) {
+			if (match(0, ParserImplConstants.AT, ParserImplConstants.LBRACKET) != -1) {
 				ret = parseArrayCreationExpr(type);
-			} else {
+			} else if (match(0, ParserImplConstants.LPAREN) != -1) {
 				args = parseArguments();
 				if (matchAllocationExpression1(0) != -1) {
 					anonymousBody = parseClassOrInterfaceBody(TypeKind.Class);
 				}
 				ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody)));
+			} else {
+				throw new IllegalStateException();
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -17531,10 +31534,12 @@ public class ParserImplementation extends ParserNewBase {
 			arrayDimExprs = parseArrayDimExprsMandatory();
 			arrayDims = parseArrayDims();
 			return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none()));
-		} else {
+		} else if (match(0, ParserImplConstants.AT, ParserImplConstants.LBRACKET) != -1) {
 			arrayDims = parseArrayDimsMandatory();
 			initializer = parseArrayInitializer();
 			return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer)));
+		} else {
+			throw new IllegalStateException();
 		}
 	}
 
@@ -17630,9 +31635,7 @@ public class ParserImplementation extends ParserNewBase {
 
 	public BUTree<? extends SStmt> parseStatement() throws ParseException {
 		BUTree<? extends SStmt> ret;
-		if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1
-				&& match(1, ParserImplConstants.COLON, ParserImplConstants.NODE_VARIABLE) != -1
-				) {
+		if (matchStatement1(0) != -1) {
 			ret = parseLabeledStatement();
 		} else if (match(0, ParserImplConstants.ASSERT) != -1) {
 			ret = parseAssertStatement();
@@ -17640,7 +31643,7 @@ public class ParserImplementation extends ParserNewBase {
 			ret = parseBlock();
 		} else if (match(0, ParserImplConstants.SEMICOLON) != -1) {
 			ret = parseEmptyStatement();
-		} else if (match(0, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DECR, ParserImplConstants.INCR) != -1) {
+		} else if (match(0, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.DECR, ParserImplConstants.INCR) != -1) {
 			ret = parseStatementExpression();
 		} else if (match(0, ParserImplConstants.SWITCH) != -1) {
 			ret = parseSwitchStatement();
@@ -17662,10 +31665,30 @@ public class ParserImplementation extends ParserNewBase {
 			ret = parseThrowStatement();
 		} else if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
 			ret = parseSynchronizedStatement();
-		} else {
+		} else if (match(0, ParserImplConstants.TRY) != -1) {
 			ret = parseTryStatement();
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
+	}
+
+	/* Sequence(
+			LookAhead(2)
+			NonTerminal(ret, LabeledStatement)
+		) */
+	private int matchStatement1(int lookahead) {
+		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, ParserImplConstants.COLON) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, ParserImplConstants.COLON) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
 	}
 
 	public BUTree<SAssertStmt> parseAssertStatement() throws ParseException {
@@ -17717,8 +31740,10 @@ public class ParserImplementation extends ParserNewBase {
 			expr = parseVariableDeclExpression();
 			parse(ParserImplConstants.SEMICOLON);
 			ret = dress(SExpressionStmt.make(expr));
-		} else {
+		} else if (match(0, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT) != -1) {
 			ret = parseStatement();
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -17788,7 +31813,7 @@ public class ParserImplementation extends ParserNewBase {
 		run();
 		if (match(0, ParserImplConstants.DECR, ParserImplConstants.INCR) != -1) {
 			expr = parsePrefixExpression();
-		} else {
+		} else if (match(0, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL) != -1) {
 			expr = parsePrimaryExpression();
 			if (match(0, ParserImplConstants.INCR, ParserImplConstants.RUNSIGNEDSHIFTASSIGN, ParserImplConstants.ANDASSIGN, ParserImplConstants.XORASSIGN, ParserImplConstants.ORASSIGN, ParserImplConstants.PLUSASSIGN, ParserImplConstants.MINUSASSIGN, ParserImplConstants.LSHIFTASSIGN, ParserImplConstants.RSIGNEDSHIFTASSIGN, ParserImplConstants.ASSIGN, ParserImplConstants.STARASSIGN, ParserImplConstants.SLASHASSIGN, ParserImplConstants.REMASSIGN, ParserImplConstants.DECR) != -1) {
 				if (match(0, ParserImplConstants.INCR) != -1) {
@@ -17799,13 +31824,17 @@ public class ParserImplementation extends ParserNewBase {
 					lateRun();
 					parse(ParserImplConstants.DECR);
 					expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr));
-				} else {
+				} else if (match(0, ParserImplConstants.ORASSIGN, ParserImplConstants.XORASSIGN, ParserImplConstants.ANDASSIGN, ParserImplConstants.RUNSIGNEDSHIFTASSIGN, ParserImplConstants.RSIGNEDSHIFTASSIGN, ParserImplConstants.LSHIFTASSIGN, ParserImplConstants.MINUSASSIGN, ParserImplConstants.PLUSASSIGN, ParserImplConstants.REMASSIGN, ParserImplConstants.SLASHASSIGN, ParserImplConstants.STARASSIGN, ParserImplConstants.ASSIGN) != -1) {
 					lateRun();
 					op = parseAssignmentOperator();
 					value = parseExpression();
 					expr = dress(SAssignExpr.make(expr, op, value));
+				} else {
+					throw new IllegalStateException();
 				}
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		parse(ParserImplConstants.SEMICOLON);
 		return dress(SExpressionStmt.make(expr));
@@ -17836,8 +31865,10 @@ public class ParserImplementation extends ParserNewBase {
 		if (match(0, ParserImplConstants.CASE) != -1) {
 			parse(ParserImplConstants.CASE);
 			label = parseExpression();
-		} else {
+		} else if (match(0, ParserImplConstants._DEFAULT) != -1) {
 			parse(ParserImplConstants._DEFAULT);
+		} else {
+			throw new IllegalStateException();
 		}
 		parse(ParserImplConstants.COLON);
 		stmts = parseStatements();
@@ -17854,12 +31885,23 @@ public class ParserImplementation extends ParserNewBase {
 		condition = parseExpression();
 		parse(ParserImplConstants.RPAREN);
 		thenStmt = parseStatement();
-		if (match(0, ParserImplConstants.ELSE) != -1
-				) {
+		if (matchIfStatement1(0) != -1) {
 			parse(ParserImplConstants.ELSE);
 			elseStmt = parseStatement();
 		}
 		return dress(SIfStmt.make(condition, thenStmt, optionOf(elseStmt)));
+	}
+
+	/* ZeroOrOne(
+			LookAhead(1)
+			Terminal("ELSE")
+			NonTerminal(elseStmt, Statement)
+		) */
+	private int matchIfStatement1(int lookahead) {
+		if (match(0, ParserImplConstants.ELSE) != -1) {
+			return lookahead;
+		}
+		return -1;
 	}
 
 	public BUTree<SWhileStmt> parseWhileStatement() throws ParseException {
@@ -17901,18 +31943,20 @@ public class ParserImplementation extends ParserNewBase {
 			varExpr = parseVariableDeclExpression();
 			parse(ParserImplConstants.COLON);
 			expr = parseExpression();
-		} else {
-			if (match(0, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.PUBLIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE) != -1) {
+		} else if (match(0, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.DOUBLE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PUBLIC, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(0, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.AT, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.PUBLIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED) != -1) {
 				init = parseForInit();
 			}
 			parse(ParserImplConstants.SEMICOLON);
-			if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
 				expr = parseExpression();
 			}
 			parse(ParserImplConstants.SEMICOLON);
-			if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.VOID, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.LPAREN, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.LPAREN) != -1) {
+			if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.VOID, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.DECR, ParserImplConstants.INCR) != -1) {
 				update = parseForUpdate();
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		parse(ParserImplConstants.RPAREN);
 		body = parseStatement();
@@ -17944,8 +31988,10 @@ public class ParserImplementation extends ParserNewBase {
 			expr = parseVariableDeclExpression();
 			ret = emptyList();
 			ret = append(ret, expr);
-		} else {
+		} else if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
 			ret = parseExpressionList();
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -18013,7 +32059,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> expr = null;
 		run();
 		parse(ParserImplConstants.RETURN);
-		if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
 			expr = parseExpression();
 		}
 		parse(ParserImplConstants.SEMICOLON);
@@ -18059,7 +32105,7 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.FINALLY);
 				finallyBlock = parseBlock();
 			}
-		} else {
+		} else if (match(0, ParserImplConstants.LBRACE) != -1) {
 			tryBlock = parseBlock();
 			if (match(0, ParserImplConstants.CATCH) != -1) {
 				catchClauses = parseCatchClauses();
@@ -18067,10 +32113,14 @@ public class ParserImplementation extends ParserNewBase {
 					parse(ParserImplConstants.FINALLY);
 					finallyBlock = parseBlock();
 				}
-			} else {
+			} else if (match(0, ParserImplConstants.FINALLY) != -1) {
 				parse(ParserImplConstants.FINALLY);
 				finallyBlock = parseBlock();
+			} else {
+				throw new IllegalStateException();
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock)));
 	}
@@ -18135,21 +32185,111 @@ public class ParserImplementation extends ParserNewBase {
 		parse(ParserImplConstants.LPAREN);
 		var = parseVariableDeclExpression();
 		vars = append(vars, var);
-		while (match(0, ParserImplConstants.SEMICOLON) != -1
-				&& match(1, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1
-				) {
+		while (matchResourceSpecification1(0) != -1) {
 			parse(ParserImplConstants.SEMICOLON);
 			var = parseVariableDeclExpression();
 			vars = append(vars, var);
 		}
-		if (match(0, ParserImplConstants.SEMICOLON) != -1
-				&& match(1) != -1
-				) {
+		if (matchResourceSpecification2(0) != -1) {
 			parse(ParserImplConstants.SEMICOLON);
 			trailingSemiColon.value = true;
 		}
 		parse(ParserImplConstants.RPAREN);
 		return vars;
+	}
+
+	/* ZeroOrMore(
+			LookAhead(2)
+			Terminal("SEMICOLON")
+			NonTerminal(var, VariableDeclExpression)
+			Action({
+				vars = append(vars, var);
+			})
+		) */
+	private int matchResourceSpecification1(int lookahead) {
+		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
+	/* ZeroOrOne(
+			LookAhead(2)
+			Terminal("SEMICOLON")
+			Action({
+				trailingSemiColon.value = true;
+			})
+		) */
+	private int matchResourceSpecification2(int lookahead) {
+		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
+			return lookahead;
+		}
+		return -1;
 	}
 
 	public void parseRUNSIGNEDSHIFT() throws ParseException {
@@ -18168,7 +32308,7 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseAnnotations() throws ParseException {
 		BUTree<SNodeList> annotations = emptyList();
 		BUTree<? extends SAnnotationExpr> annotation;
-		while (match(0, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT) != -1) {
+		while (match(0, ParserImplConstants.AT) != -1) {
 			annotation = parseAnnotation();
 			annotations = append(annotations, annotation);
 		}
@@ -18181,8 +32321,10 @@ public class ParserImplementation extends ParserNewBase {
 			ret = parseNormalAnnotation();
 		} else if (matchAnnotation4(0) != -1) {
 			ret = parseSingleMemberAnnotation();
-		} else {
+		} else if (matchAnnotation5(0) != -1) {
 			ret = parseMarkerAnnotation();
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -18338,12 +32480,14 @@ public class ParserImplementation extends ParserNewBase {
 
 	public BUTree<? extends SExpr> parseMemberValue() throws ParseException {
 		BUTree<? extends SExpr> ret;
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT) != -1) {
+		if (match(0, ParserImplConstants.AT) != -1) {
 			ret = parseAnnotation();
 		} else if (match(0, ParserImplConstants.LBRACE) != -1) {
 			ret = parseMemberValueArrayInitializer();
-		} else {
+		} else if (match(0, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
 			ret = parseConditionalExpression();
+		} else {
+			throw new IllegalStateException();
 		}
 		return ret;
 	}
@@ -18354,12 +32498,10 @@ public class ParserImplementation extends ParserNewBase {
 		boolean trailingComma = false;
 		run();
 		parse(ParserImplConstants.LBRACE);
-		if (match(0, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.VOID, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.LBRACE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT) != -1) {
+		if (match(0, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.LBRACE, ParserImplConstants.AT) != -1) {
 			member = parseMemberValue();
 			ret = append(ret, member);
-			while (match(0, ParserImplConstants.COMMA) != -1
-					&& match(1, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.NEW, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LPAREN, ParserImplConstants.LBRACE, ParserImplConstants.AT, ParserImplConstants.AT, ParserImplConstants.AT) != -1
-					) {
+			while (matchMemberValueArrayInitializer1(0) != -1) {
 				parse(ParserImplConstants.COMMA);
 				member = parseMemberValue();
 				ret = append(ret, member);
@@ -18371,5 +32513,118 @@ public class ParserImplementation extends ParserNewBase {
 		}
 		parse(ParserImplConstants.RBRACE);
 		return dress(SArrayInitializerExpr.make(ret, trailingComma));
+	}
+
+	/* ZeroOrMore(
+			LookAhead(2)
+			Terminal("COMMA")
+			NonTerminal(member, MemberValue)
+			Action({
+				ret = append(ret, member);
+			})
+		) */
+	private int matchMemberValueArrayInitializer1(int lookahead) {
+		if (match(0, ParserImplConstants.COMMA) != -1) {
+			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.LBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, ParserImplConstants.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
 	}
 }
