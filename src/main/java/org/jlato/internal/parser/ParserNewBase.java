@@ -152,7 +152,7 @@ public abstract class ParserNewBase extends ParserInterface {
 	// Base parse methods
 
 	private LinkedList<Token> lookaheadTokens = new LinkedList<Token>();
-	private int matchLookahead;
+	protected int matchLookahead;
 
 	private void advance(int index) {
 		try {
@@ -207,15 +207,15 @@ public abstract class ParserNewBase extends ParserInterface {
 		return token;
 	}
 
-	protected boolean match(int tokenType) {
-		return getToken(matchLookahead++).kind == tokenType;
+	protected int match(int lookahead, int tokenType) {
+		return getToken(lookahead).kind == tokenType ? lookahead + 1 : -1;
 	}
 
-	protected boolean matchNext(int... tokenTypes) {
+	protected int match(int lookahead, int... tokenTypes) {
 		for (int tokenType : tokenTypes) {
-			if (getToken(matchLookahead).kind == tokenType) return true;
+			if (getToken(lookahead).kind == tokenType) return lookahead + 1;
 		}
-		return false;
+		return -1;
 	}
 
 	BUTree<SFormalParameter> makeFormalParameter(BUTree<SName> name) {
