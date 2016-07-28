@@ -2178,13 +2178,14 @@ BUTree<SQualifiedName> QualifiedName():
 
 BUTree<SName> Name():
 {
+    Token id;
     BUTree<SName> name;
 }
 {
   (
     { run(); }
-    <IDENTIFIER>
-    { name = dress(SName.make(token.image)); }
+    id = <IDENTIFIER>
+    { name = dress(SName.make(id.image)); }
   |
     LOOKAHEAD({quotesMode}) name = NodeVar()
   )
@@ -2641,28 +2642,29 @@ BUTree<? extends SType> ReferenceCastTypeRest(BUTree<? extends SType> type):
 
 BUTree<? extends SExpr> Literal():
 {
+    Token literal;
 	BUTree<? extends SExpr> ret;
 }
 {
   { run(); }
   (
-    <INTEGER_LITERAL>   { ret = SLiteralExpr.make(Integer.class, token.image); }
+    literal = <INTEGER_LITERAL>   { ret = SLiteralExpr.make(Integer.class, literal.image); }
   |
-    <LONG_LITERAL>      { ret = SLiteralExpr.make(Long.class, token.image); }
+    literal = <LONG_LITERAL>      { ret = SLiteralExpr.make(Long.class, literal.image); }
   |
-    <FLOAT_LITERAL>     { ret = SLiteralExpr.make(Float.class, token.image); }
+    literal = <FLOAT_LITERAL>     { ret = SLiteralExpr.make(Float.class, literal.image); }
   |
-    <DOUBLE_LITERAL>    { ret = SLiteralExpr.make(Double.class, token.image); }
+    literal = <DOUBLE_LITERAL>    { ret = SLiteralExpr.make(Double.class, literal.image); }
   |
-    <CHARACTER_LITERAL> { ret = SLiteralExpr.make(Character.class, token.image); }
+    literal = <CHARACTER_LITERAL> { ret = SLiteralExpr.make(Character.class, literal.image); }
   |
-    <STRING_LITERAL>    { ret = SLiteralExpr.make(String.class, token.image); }
+    literal = <STRING_LITERAL>    { ret = SLiteralExpr.make(String.class, literal.image); }
   |
-    "true"  { ret = SLiteralExpr.make(Boolean.class, token.image); }
+    literal = "true"  { ret = SLiteralExpr.make(Boolean.class, literal.image); }
   |
-    "false" { ret = SLiteralExpr.make(Boolean.class, token.image); }
+    literal = "false" { ret = SLiteralExpr.make(Boolean.class, literal.image); }
   |
-    "null"  { ret = SLiteralExpr.make(Void.class, token.image); }
+    literal = "null"  { ret = SLiteralExpr.make(Void.class, literal.image); }
   )
   { return dress(ret); }
 }
