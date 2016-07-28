@@ -271,15 +271,15 @@ public abstract class ParserNewBase extends ParserInterface {
 		}
 	}
 
-	boolean isLambda() {
-		for (int lookahead = 1; ; lookahead++) {
+	boolean isLambda(int initialLookahead) {
+		for (int lookahead = initialLookahead; ; lookahead++) {
 			int kind = getToken(lookahead).kind;
 			switch (kind) {
 				case LPAREN:
 					// ( after ( => Expr
 					return false;
 				case RPAREN:
-					if (lookahead == 1) return true;
+					if (lookahead == initialLookahead) return true;
 					else return getToken(lookahead + 1).kind == ARROW;
 			}
 		}
