@@ -44,8 +44,8 @@ import org.jlato.parser.*;
 
     private Token newToken(int type, String value) {
         Token token = Token.newToken(type, value);
-        token.beginLine = yyline;
-        token.beginColumn = yycolumn;
+        token.beginLine = yyline + 1;
+        token.beginColumn = yycolumn + 1;
         return token;
     }
 %}

@@ -72,10 +72,7 @@ public abstract class ChunkIntegrationTest<T extends Tree> implements BulkTestCl
 				try {
 					parse(source);
 				} catch (ParseException e) {
-					StringWriter trace = new StringWriter();
-					e.printStackTrace(new PrintWriter(trace));
-
-					Assert.assertEquals(failure, e.getMessage() + "\n" + trace.toString());
+					Assert.assertEquals(failure, e.getMessage());
 				}
 			} else {
 				throw new IllegalStateException("There should be either a normalized.txt or a failure.txt file");

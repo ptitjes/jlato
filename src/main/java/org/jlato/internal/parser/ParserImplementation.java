@@ -1,13 +1,10 @@
 package org.jlato.internal.parser;
 
-import org.jlato.internal.bu.BUProblem;
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.coll.SNodeList;
-import org.jlato.internal.bu.coll.SNodeOption;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.coll.*;
 import org.jlato.internal.bu.decl.*;
 import org.jlato.internal.bu.expr.*;
-import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.bu.name.SQualifiedName;
+import org.jlato.internal.bu.name.*;
 import org.jlato.internal.bu.stmt.*;
 import org.jlato.internal.bu.type.*;
 import org.jlato.parser.ParseException;
@@ -15152,7 +15149,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.EOF) != -1) {
 			parse(ParserImplConstants.EOF);
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.EOF);
 		}
 	}
 
@@ -15251,7 +15248,7 @@ public class ParserImplementation extends ParserNewBase {
 				ann = parseAnnotation();
 				modifiers = append(modifiers, ann);
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC);
 			}
 		}
 		return modifiers;
@@ -15429,7 +15426,7 @@ public class ParserImplementation extends ParserNewBase {
 				ann = parseAnnotation();
 				modifiers = append(modifiers, ann);
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC);
 			}
 		}
 		return modifiers;
@@ -15573,10 +15570,10 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (match(0, ParserImplConstants.AT) != -1) {
 				ret = parseAnnotationTypeDecl(modifiers);
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS);
 			}
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.SEMICOLON);
 		}
 		return ret;
 	}
@@ -15615,7 +15612,7 @@ public class ParserImplementation extends ParserNewBase {
 				extendsClause = parseExtendsList();
 			}
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.INTERFACE, ParserImplConstants.CLASS);
 		}
 		members = parseClassOrInterfaceBody(typeKind);
 		if (typeKind == TypeKind.Interface)
@@ -15641,7 +15638,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (quotesMode) {
 			ret = parseNodeListVar();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE);
 		}
 		return ret;
 	}
@@ -15665,7 +15662,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (quotesMode) {
 			ret = parseNodeListVar();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE);
 		}
 		return ret;
 	}
@@ -15696,7 +15693,7 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (quotesMode) {
 				constants = parseNodeListVar();
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.PUBLIC, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.ABSTRACT, ParserImplConstants._DEFAULT, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE);
 			}
 		}
 		if (match(0, ParserImplConstants.COMMA) != -1) {
@@ -15811,7 +15808,7 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants._DEFAULT, ParserImplConstants.STATIC, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.ENUM, ParserImplConstants.SEMICOLON);
 			}
 		}
 		parse(ParserImplConstants.RBRACE);
@@ -15838,10 +15835,10 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT) != -1) {
 				ret = parseFieldDecl(modifiers);
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS);
 			}
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.SEMICOLON);
 		}
 		return ret;
 	}
@@ -15899,7 +15896,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (quotesMode) {
 			ret = parseNodeListVar();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE);
 		}
 		parse(ParserImplConstants.GT);
 		return ret;
@@ -15934,7 +15931,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (quotesMode) {
 			ret = parseNodeListVar();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE);
 		}
 		return ret;
 	}
@@ -15961,7 +15958,7 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants._DEFAULT, ParserImplConstants.STATIC, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.ENUM, ParserImplConstants.LBRACE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.SEMICOLON);
 			}
 		}
 		return ret;
@@ -16001,10 +15998,10 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (match(0, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID) != -1) {
 				ret = parseMethodDecl(modifiers);
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.LBRACE);
 			}
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.LT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.LBRACE, ParserImplConstants.SEMICOLON);
 		}
 		return ret.withProblem(problem);
 	}
@@ -16218,7 +16215,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.LPAREN, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.NULL, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.PLUS, ParserImplConstants.MINUS) != -1) {
 			ret = parseExpression();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.LBRACE);
 		}
 		return ret;
 	}
@@ -16383,7 +16380,7 @@ public class ParserImplementation extends ParserNewBase {
 				problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
 
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE);
 		}
 		return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem);
 	}
@@ -16413,7 +16410,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (quotesMode) {
 			ret = parseNodeListVar();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.PUBLIC, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.ABSTRACT, ParserImplConstants._DEFAULT, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE);
 		}
 		return ret;
 	}
@@ -16476,7 +16473,7 @@ public class ParserImplementation extends ParserNewBase {
 					stmt = parseBlockStatement();
 					stmts = append(stmts, stmt);
 				} else {
-					throw new IllegalStateException();
+					throw produceParseException(ParserImplConstants.PUBLIC, ParserImplConstants.AT, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.TRY, ParserImplConstants.CONTINUE, ParserImplConstants.RETURN, ParserImplConstants.THROW, ParserImplConstants.WHILE, ParserImplConstants.DO, ParserImplConstants.FOR, ParserImplConstants.BREAK, ParserImplConstants.SEMICOLON, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SWITCH, ParserImplConstants.IF, ParserImplConstants.ASSERT, ParserImplConstants.LBRACE, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE);
 				}
 				while (matchConstructorDecl4(0) != -1) {
 					stmt = parseBlockStatement();
@@ -16485,7 +16482,7 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (quotesMode) {
 				stmts = parseNodeListVar();
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.LBRACE, ParserImplConstants.SEMICOLON, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.THIS, ParserImplConstants.VOID, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.SWITCH, ParserImplConstants.ASSERT, ParserImplConstants.BREAK, ParserImplConstants.CONTINUE, ParserImplConstants.RETURN, ParserImplConstants.THROW, ParserImplConstants.IF, ParserImplConstants.WHILE, ParserImplConstants.DO, ParserImplConstants.FOR, ParserImplConstants.TRY);
 			}
 		}
 		parse(ParserImplConstants.RBRACE);
@@ -23899,7 +23896,7 @@ public class ParserImplementation extends ParserNewBase {
 			args = parseArguments();
 			parse(ParserImplConstants.SEMICOLON);
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.VOID, ParserImplConstants.NEW);
 		}
 		return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args));
 	}
@@ -23972,7 +23969,7 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.TRY, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.SEMICOLON, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS);
 			}
 		}
 		return ensureNotNull(ret);
@@ -26409,7 +26406,7 @@ public class ParserImplementation extends ParserNewBase {
 				type = dress(SArrayType.make(type, arrayDims));
 			}
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN);
 		}
 		return type == null ? primitiveType : type;
 	}
@@ -26459,7 +26456,7 @@ public class ParserImplementation extends ParserNewBase {
 				type = dress(SArrayType.make(type, arrayDims));
 			}
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN);
 		}
 		return type;
 	}
@@ -26682,7 +26679,7 @@ public class ParserImplementation extends ParserNewBase {
 			parse(ParserImplConstants.NODE_LIST_VARIABLE);
 			return makeVar();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.HOOK);
 		}
 	}
 
@@ -26696,7 +26693,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.HOOK) != -1) {
 			ret = parseWildcard(annotations);
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.HOOK, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT);
 		}
 		return ret;
 	}
@@ -26722,7 +26719,7 @@ public class ParserImplementation extends ParserNewBase {
 				boundAnnotations = parseAnnotations();
 				sup = parseReferenceType(boundAnnotations);
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.SUPER, ParserImplConstants.EXTENDS);
 			}
 		}
 		return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup)));
@@ -26759,7 +26756,7 @@ public class ParserImplementation extends ParserNewBase {
 			parse(ParserImplConstants.DOUBLE);
 			primitive = Primitive.Double;
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN);
 		}
 		return dress(SPrimitiveType.make(annotations, primitive));
 	}
@@ -26773,7 +26770,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 			ret = parseType(null);
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.VOID);
 		}
 		return ret;
 	}
@@ -26840,7 +26837,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (quotesMode) {
 			name = parseNodeVar();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER);
 		}
 		return name;
 	}
@@ -26884,7 +26881,7 @@ public class ParserImplementation extends ParserNewBase {
 				ret = dress(SAssignExpr.make(ret, op, value));
 			}
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.VOID, ParserImplConstants.LPAREN, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.NEW, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.DECR, ParserImplConstants.INCR);
 		}
 		return ret;
 	}
@@ -28127,7 +28124,7 @@ public class ParserImplementation extends ParserNewBase {
 			block = parseBlock();
 			ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.LBRACE, ParserImplConstants.LPAREN, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.PLUS, ParserImplConstants.MINUS);
 		}
 		return ret;
 	}
@@ -28190,7 +28187,7 @@ public class ParserImplementation extends ParserNewBase {
 			parse(ParserImplConstants.ORASSIGN);
 			ret = AssignOp.Or;
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.ORASSIGN, ParserImplConstants.XORASSIGN, ParserImplConstants.ANDASSIGN, ParserImplConstants.RUNSIGNEDSHIFTASSIGN, ParserImplConstants.RSIGNEDSHIFTASSIGN, ParserImplConstants.LSHIFTASSIGN, ParserImplConstants.MINUSASSIGN, ParserImplConstants.PLUSASSIGN, ParserImplConstants.REMASSIGN, ParserImplConstants.SLASHASSIGN, ParserImplConstants.STARASSIGN, ParserImplConstants.ASSIGN);
 		}
 		return ret;
 	}
@@ -28952,7 +28949,7 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.NE);
 				op = BinaryOp.NotEqual;
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.NE, ParserImplConstants.EQ);
 			}
 			right = parseInstanceOfExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -29268,7 +29265,7 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.GE);
 				op = BinaryOp.GreaterOrEqual;
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.GE, ParserImplConstants.LE, ParserImplConstants.GT, ParserImplConstants.LT);
 			}
 			right = parseShiftExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -29713,7 +29710,7 @@ public class ParserImplementation extends ParserNewBase {
 				parseRUNSIGNEDSHIFT();
 				op = BinaryOp.RightUnsignedShift;
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.GT, ParserImplConstants.LSHIFT);
 			}
 			right = parseAdditiveExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -29869,7 +29866,7 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.MINUS);
 				op = BinaryOp.Minus;
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.MINUS, ParserImplConstants.PLUS);
 			}
 			right = parseMultiplicativeExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -30112,7 +30109,7 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.REM);
 				op = BinaryOp.Remainder;
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.REM, ParserImplConstants.SLASH, ParserImplConstants.STAR);
 			}
 			right = parseUnaryExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -30453,14 +30450,14 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.MINUS);
 				op = UnaryOp.Negative;
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.MINUS, ParserImplConstants.PLUS);
 			}
 			ret = parseUnaryExpression();
 			ret = dress(SUnaryExpr.make(op, ret));
 		} else if (match(0, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.NULL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN) != -1) {
 			ret = parseUnaryExpressionNotPlusMinus();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NEW, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.DECR, ParserImplConstants.INCR);
 		}
 		return ret;
 	}
@@ -30476,7 +30473,7 @@ public class ParserImplementation extends ParserNewBase {
 			parse(ParserImplConstants.DECR);
 			op = UnaryOp.PreDecrement;
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.DECR, ParserImplConstants.INCR);
 		}
 		ret = parseUnaryExpression();
 		return dress(SUnaryExpr.make(op, ret));
@@ -30494,7 +30491,7 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.BANG);
 				op = UnaryOp.Not;
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.BANG, ParserImplConstants.TILDE);
 			}
 			ret = parseUnaryExpression();
 			ret = dress(SUnaryExpr.make(op, ret));
@@ -30503,7 +30500,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL) != -1) {
 			ret = parsePostfixExpression();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.BANG, ParserImplConstants.TILDE);
 		}
 		return ret;
 	}
@@ -30531,7 +30528,7 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.DECR);
 				op = UnaryOp.PostDecrement;
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.DECR, ParserImplConstants.INCR);
 			}
 			ret = dress(SUnaryExpr.make(op, ret));
 		}
@@ -30596,7 +30593,7 @@ public class ParserImplementation extends ParserNewBase {
 				ret = parseUnaryExpressionNotPlusMinus();
 				ret = dress(SCastExpr.make(type, ret));
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.RPAREN);
 			}
 		} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 			type = parseQualifiedType(annotations);
@@ -30610,7 +30607,7 @@ public class ParserImplementation extends ParserNewBase {
 			ret = parseUnaryExpressionNotPlusMinus();
 			ret = dress(SCastExpr.make(type, ret));
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN);
 		}
 		return ret;
 	}
@@ -30689,7 +30686,7 @@ public class ParserImplementation extends ParserNewBase {
 			literal = parse(ParserImplConstants.NULL);
 			ret = SLiteralExpr.make(Void.class, literal.image);
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL);
 		}
 		return dress(ret);
 	}
@@ -30887,13 +30884,13 @@ public class ParserImplementation extends ParserNewBase {
 				} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 					ret = parseFieldAccess(ret);
 				} else {
-					throw new IllegalStateException();
+					throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT);
 				}
 			} else if (match(0, ParserImplConstants.DOUBLECOLON) != -1) {
 				lateRun();
 				ret = parseMethodReferenceSuffix(ret);
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.DOUBLECOLON, ParserImplConstants.DOT);
 			}
 		} else if (match(0, ParserImplConstants.NEW) != -1) {
 			ret = parseAllocationExpression(null);
@@ -30945,10 +30942,10 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.RPAREN);
 				ret = dress(SParenthesizedExpr.make(ret));
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NEW, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.RPAREN);
 			}
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL);
 		}
 		return ret;
 	}
@@ -31110,7 +31107,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.DOUBLECOLON) != -1) {
 			ret = parseMethodReferenceSuffix(scope);
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.DOUBLECOLON, ParserImplConstants.DOT, ParserImplConstants.LBRACKET);
 		}
 		return ret;
 	}
@@ -31250,7 +31247,7 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
 				ret = parseFieldAccess(scope);
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.THIS);
 			}
 		} else if (match(0, ParserImplConstants.LBRACKET) != -1) {
 			parse(ParserImplConstants.LBRACKET);
@@ -31258,7 +31255,7 @@ public class ParserImplementation extends ParserNewBase {
 			parse(ParserImplConstants.RBRACKET);
 			ret = dress(SArrayAccessExpr.make(scope, ret));
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.LBRACKET, ParserImplConstants.DOT);
 		}
 		return ret;
 	}
@@ -31339,7 +31336,7 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR);
 			}
 		}
 		parse(ParserImplConstants.RPAREN);
@@ -31471,7 +31468,7 @@ public class ParserImplementation extends ParserNewBase {
 			parse(ParserImplConstants.NEW);
 			name = SName.make("new");
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.NEW, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER);
 		}
 		ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name));
 		return ret;
@@ -31506,10 +31503,10 @@ public class ParserImplementation extends ParserNewBase {
 				}
 				ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody)));
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.LPAREN, ParserImplConstants.AT, ParserImplConstants.LBRACKET);
 			}
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN);
 		}
 		return ret;
 	}
@@ -31539,7 +31536,7 @@ public class ParserImplementation extends ParserNewBase {
 			initializer = parseArrayInitializer();
 			return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer)));
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.AT, ParserImplConstants.LBRACKET);
 		}
 	}
 
@@ -31668,7 +31665,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.TRY) != -1) {
 			ret = parseTryStatement();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT);
 		}
 		return ret;
 	}
@@ -31743,7 +31740,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT) != -1) {
 			ret = parseStatement();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.AT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.VOLATILE, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE);
 		}
 		return ret;
 	}
@@ -31830,11 +31827,11 @@ public class ParserImplementation extends ParserNewBase {
 					value = parseExpression();
 					expr = dress(SAssignExpr.make(expr, op, value));
 				} else {
-					throw new IllegalStateException();
+					throw produceParseException(ParserImplConstants.PLUSASSIGN, ParserImplConstants.MINUSASSIGN, ParserImplConstants.SLASHASSIGN, ParserImplConstants.REMASSIGN, ParserImplConstants.RUNSIGNEDSHIFTASSIGN, ParserImplConstants.ANDASSIGN, ParserImplConstants.LSHIFTASSIGN, ParserImplConstants.RSIGNEDSHIFTASSIGN, ParserImplConstants.XORASSIGN, ParserImplConstants.ORASSIGN, ParserImplConstants.ASSIGN, ParserImplConstants.STARASSIGN, ParserImplConstants.DECR, ParserImplConstants.INCR);
 				}
 			}
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.VOID, ParserImplConstants.DECR, ParserImplConstants.INCR);
 		}
 		parse(ParserImplConstants.SEMICOLON);
 		return dress(SExpressionStmt.make(expr));
@@ -31868,7 +31865,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants._DEFAULT) != -1) {
 			parse(ParserImplConstants._DEFAULT);
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants._DEFAULT, ParserImplConstants.CASE);
 		}
 		parse(ParserImplConstants.COLON);
 		stmts = parseStatements();
@@ -31956,7 +31953,7 @@ public class ParserImplementation extends ParserNewBase {
 				update = parseForUpdate();
 			}
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LT, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.SEMICOLON);
 		}
 		parse(ParserImplConstants.RPAREN);
 		body = parseStatement();
@@ -31991,7 +31988,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
 			ret = parseExpressionList();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.AT, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP);
 		}
 		return ret;
 	}
@@ -32117,10 +32114,10 @@ public class ParserImplementation extends ParserNewBase {
 				parse(ParserImplConstants.FINALLY);
 				finallyBlock = parseBlock();
 			} else {
-				throw new IllegalStateException();
+				throw produceParseException(ParserImplConstants.FINALLY, ParserImplConstants.CATCH);
 			}
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.LBRACE, ParserImplConstants.LPAREN);
 		}
 		return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock)));
 	}
@@ -32324,7 +32321,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (matchAnnotation5(0) != -1) {
 			ret = parseMarkerAnnotation();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.AT);
 		}
 		return ret;
 	}
@@ -32487,7 +32484,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (match(0, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
 			ret = parseConditionalExpression();
 		} else {
-			throw new IllegalStateException();
+			throw produceParseException(ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.LBRACE, ParserImplConstants.AT);
 		}
 		return ret;
 	}

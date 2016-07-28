@@ -231,7 +231,7 @@ public abstract class ParserNewBase extends ParserInterface {
 			String found = token.kind == ParserImplConstants.EOF ? "<EOF>" : token.image;
 			String expected = ParserImplConstants.tokenImage[tokenType];
 			throw new ParseException("Found " + found + " – Expected " + expected +
-					" (" + (token.beginLine + 1) + ":" + (token.beginColumn + 1) + ")");
+					" (" + token.beginLine + ":" + token.beginColumn + ")");
 		}
 		lookaheadTokens.remove(0);
 		return token;
@@ -246,6 +246,39 @@ public abstract class ParserNewBase extends ParserInterface {
 			if (getToken(lookahead).kind == tokenType) return lookahead + 1;
 		}
 		return -1;
+	}
+
+	protected ParseException produceParseException(int... expectedTokenTypes) {
+		String eol = System.getProperty("line.separator", "\n");
+		StringBuffer expected = new StringBuffer();
+		for (int i = 0; i < expectedTokenTypes.length; i++) {
+			expected.append(ParserImplConstants.tokenImage[expectedTokenTypes[i]]).append(' ');
+			expected.append("...");
+			expected.append(eol).append("    ");
+		}
+
+		String retval = "Encountered \"";
+		Token tok = getToken(0);
+
+		if (tok.kind == 0) {
+			retval += ParserImplConstants.tokenImage[0];
+		} else {
+			retval += " " + ParserImplConstants.tokenImage[tok.kind];
+			retval += " \"";
+			retval += add_escapes(tok.image);
+			retval += " \"";
+		}
+
+		retval += "\" at line " + tok.beginLine + ", column " + tok.beginColumn;
+		retval += "." + eol;
+		if (expectedTokenTypes.length == 1) {
+			retval += "Was expecting:" + eol + "    ";
+		} else {
+			retval += "Was expecting one of:" + eol + "    ";
+		}
+
+		retval += expected.toString();
+		return new ParseException(retval);
 	}
 
 	BUTree<SFormalParameter> makeFormalParameter(BUTree<SName> name) {
@@ -322,5 +355,49 @@ public abstract class ParserNewBase extends ParserInterface {
 
 	protected BUTree<SNodeEither> right(BUTree<?> element) {
 		return new BUTree<SNodeEither>(new SNodeEither(element, SNodeEither.EitherSide.Right));
+	}
+
+	static String add_escapes(String str) {
+		StringBuffer retval = new StringBuffer();
+		char ch;
+		for (int i = 0; i < str.length(); i++) {
+			switch (str.charAt(i)) {
+				case 0:
+					continue;
+				case '\b':
+					retval.append("\\b");
+					continue;
+				case '\t':
+					retval.append("\\t");
+					continue;
+				case '\n':
+					retval.append("\\n");
+					continue;
+				case '\f':
+					retval.append("\\f");
+					continue;
+				case '\r':
+					retval.append("\\r");
+					continue;
+				case '\"':
+					retval.append("\\\"");
+					continue;
+				case '\'':
+					retval.append("\\\'");
+					continue;
+				case '\\':
+					retval.append("\\\\");
+					continue;
+				default:
+					if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+						String s = "0000" + Integer.toString(ch, 16);
+						retval.append("\\u" + s.substring(s.length() - 4, s.length()));
+					} else {
+						retval.append(ch);
+					}
+					continue;
+			}
+		}
+		return retval.toString();
 	}
 }
