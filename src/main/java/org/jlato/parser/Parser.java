@@ -50,7 +50,9 @@ public class Parser {
 	static final ParserInterface.Factory DefaultFactory = new ParserBase.JavaCCParserFactory();
 
 	private ParserInterface.Factory factory() {
-		if (!configuration.preserveWhitespaces) return new ParserNewBase.ParserNewFactory();
+		if (!configuration.preserveWhitespaces) {
+			if (configuration.parser.equals("new")) return new ParserNewBase.ParserNewFactory();
+		}
 		return DefaultFactory;
 	}
 
