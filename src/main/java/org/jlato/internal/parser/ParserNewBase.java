@@ -230,7 +230,8 @@ public abstract class ParserNewBase extends ParserInterface {
 		if (token.kind != tokenType) {
 			String found = token.kind == ParserImplConstants.EOF ? "<EOF>" : token.image;
 			String expected = ParserImplConstants.tokenImage[tokenType];
-			throw new ParseException("Found " + found + " – Expected " + expected);
+			throw new ParseException("Found " + found + " – Expected " + expected +
+					" (" + (token.beginLine + 1) + ":" + (token.beginColumn + 1) + ")");
 		}
 		lookaheadTokens.remove(0);
 		return token;
