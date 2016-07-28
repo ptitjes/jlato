@@ -29,6 +29,9 @@ import org.jlato.tree.Tree;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * @author Didier Villevalois
  */
@@ -69,7 +72,10 @@ public abstract class ChunkIntegrationTest<T extends Tree> implements BulkTestCl
 				try {
 					parse(source);
 				} catch (ParseException e) {
-					Assert.assertEquals(failure, e.getMessage());
+					StringWriter trace = new StringWriter();
+					e.printStackTrace(new PrintWriter(trace));
+
+					Assert.assertEquals(failure, e.getMessage() + "\n" + trace.toString());
 				}
 			} else {
 				throw new IllegalStateException("There should be either a normalized.txt or a failure.txt file");

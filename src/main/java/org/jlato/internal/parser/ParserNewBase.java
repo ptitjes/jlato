@@ -19,9 +19,7 @@
 
 package org.jlato.internal.parser;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.BUTreeVar;
-import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeEither;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.coll.SNodeOption;
@@ -201,8 +199,11 @@ public abstract class ParserNewBase extends ParserInterface {
 
 	protected Token parse(int tokenType) throws ParseException {
 		Token token = getToken(0);
-		if (token.kind != tokenType)
-			throw new ParseException("Found " + token.image + " – Expected " + tokenType);
+		if (token.kind != tokenType) {
+			String found = token.kind == ParserImplConstants.EOF ? "<EOF>" : token.image;
+			String expected = ParserImplConstants.tokenImage[tokenType];
+			throw new ParseException("Found " + found + " – Expected " + expected);
+		}
 		lookaheadTokens.remove(0);
 		return token;
 	}
