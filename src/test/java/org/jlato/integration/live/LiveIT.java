@@ -29,6 +29,7 @@ import org.junit.runners.JUnit4;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -45,28 +46,28 @@ public class LiveIT {
 	@Test
 	public void parseJavaParser() throws IOException, ParseException {
 		Parser parser = new Parser();
-		parse("com.github.javaparser", "javaparser-core", "2.1.0", parser);
+		parse("com.github.javaparser", "javaparser-core", "2.5.1", parser, "UTF-8");
 	}
 
 	@Test
 	public void parsePreserveJavaParser() throws IOException, ParseException {
 		Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
-		parse("com.github.javaparser", "javaparser-core", "2.1.0", parser);
+		parse("com.github.javaparser", "javaparser-core", "2.5.1", parser, "UTF-8");
 	}
 
 	@Test
 	public void parseJavaSLang() throws IOException, ParseException {
 		Parser parser = new Parser();
-		parse("com.javaslang", "javaslang", "1.2.2", parser);
+		parse("com.javaslang", "javaslang", "1.2.2", parser, "UTF-8");
 	}
 
 	@Test
 	public void parsePreserveJavaSLang() throws IOException, ParseException {
 		Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
-		parse("com.javaslang", "javaslang", "1.2.2", parser);
+		parse("com.javaslang", "javaslang", "1.2.2", parser, "UTF-8");
 	}
 
-	private void parse(String group, String artifactId, String version, Parser parser) throws IOException, ParseException {
+	private void parse(String group, String artifactId, String version, Parser parser, String encoding) throws IOException, ParseException {
 		File file = makeLocalFile(artifactId, version);
 		JarFile jarFile = new JarFile(file);
 		Enumeration<JarEntry> entries = jarFile.entries();
@@ -75,12 +76,34 @@ public class LiveIT {
 			String name = jarEntry.getName();
 			if (name.endsWith(".java")) {
 				InputStream inputStream = jarFile.getInputStream(jarEntry);
-				parser.parse(inputStream, "UTF-8");
+				try {
+					parser.parse(inputStream, encoding);
+				} catch (ParseException e) {
+					e.printStackTrace();
+					System.out.flush();
+					System.out.println();
+					copyStreams(jarFile.getInputStream(jarEntry), System.out);
+					System.out.flush();
+					throw e;
+				}
 			}
 		}
 	}
 
 	private File makeLocalFile(String artifactId, String version) {
 		return new File("target/dependency/" + artifactId + "-" + version + "-sources.jar");
+	}
+
+	private static void copyStreams(InputStream is, OutputStream os) throws IOException {
+		try {
+			byte[] buffer = new byte[1024];
+			int length;
+			while ((length = is.read(buffer)) > 0) {
+				os.write(buffer, 0, length);
+			}
+		} finally {
+			is.close();
+			os.close();
+		}
 	}
 }
