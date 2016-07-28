@@ -1,10 +1,13 @@
 package org.jlato.internal.parser;
 
-import org.jlato.internal.bu.*;
-import org.jlato.internal.bu.coll.*;
+import org.jlato.internal.bu.BUProblem;
+import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.bu.coll.SNodeList;
+import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.decl.*;
 import org.jlato.internal.bu.expr.*;
-import org.jlato.internal.bu.name.*;
+import org.jlato.internal.bu.name.SName;
+import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.bu.stmt.*;
 import org.jlato.internal.bu.type.*;
 import org.jlato.parser.ParseException;
@@ -13565,36 +13568,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* Sequence(
 			Terminal("GT")
 			Terminal("GT")
-			Action({
-				popNewWhitespaces();
-			})
-		) */
-	private int matchRSIGNEDSHIFT(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.GT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, ParserImplConstants.GT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* Sequence(
-			NonTerminal(RSIGNEDSHIFT)
-			Action({
-				op = BinaryOp.RightSignedShift;
-			})
-		) */
-	private int matchShiftExpression_2_1_3_2(int lookahead) {
-		lookahead = matchRSIGNEDSHIFT(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* Sequence(
-			Terminal("GT")
-			Terminal("GT")
 			Terminal("GT")
 			Action({
 				popNewWhitespaces();
@@ -13614,13 +13587,45 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+			LookAhead(3)
 			NonTerminal(RUNSIGNEDSHIFT)
 			Action({
 				op = BinaryOp.RightUnsignedShift;
 			})
 		) */
-	private int matchShiftExpression_2_1_3_3(int lookahead) {
+	private int matchShiftExpression_2_1_3_2(int lookahead) {
 		lookahead = matchRUNSIGNEDSHIFT(lookahead);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* Sequence(
+			Terminal("GT")
+			Terminal("GT")
+			Action({
+				popNewWhitespaces();
+			})
+		) */
+	private int matchRSIGNEDSHIFT(int lookahead) {
+		lookahead = match(lookahead, ParserImplConstants.GT);
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, ParserImplConstants.GT);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* Sequence(
+			LookAhead(2)
+			NonTerminal(RSIGNEDSHIFT)
+			Action({
+				op = BinaryOp.RightSignedShift;
+			})
+		) */
+	private int matchShiftExpression_2_1_3_3(int lookahead) {
+		lookahead = matchRSIGNEDSHIFT(lookahead);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -13634,15 +13639,17 @@ public class ParserImplementation extends ParserNewBase {
 				})
 			)
 			Sequence(
-				NonTerminal(RSIGNEDSHIFT)
-				Action({
-					op = BinaryOp.RightSignedShift;
-				})
-			)
-			Sequence(
+				LookAhead(3)
 				NonTerminal(RUNSIGNEDSHIFT)
 				Action({
 					op = BinaryOp.RightUnsignedShift;
+				})
+			)
+			Sequence(
+				LookAhead(2)
+				NonTerminal(RSIGNEDSHIFT)
+				Action({
+					op = BinaryOp.RightSignedShift;
 				})
 			)
 		) */
@@ -13673,15 +13680,17 @@ public class ParserImplementation extends ParserNewBase {
 					})
 				)
 				Sequence(
-					NonTerminal(RSIGNEDSHIFT)
-					Action({
-						op = BinaryOp.RightSignedShift;
-					})
-				)
-				Sequence(
+					LookAhead(3)
 					NonTerminal(RUNSIGNEDSHIFT)
 					Action({
 						op = BinaryOp.RightUnsignedShift;
+					})
+				)
+				Sequence(
+					LookAhead(2)
+					NonTerminal(RSIGNEDSHIFT)
+					Action({
+						op = BinaryOp.RightSignedShift;
 					})
 				)
 			)
@@ -13713,15 +13722,17 @@ public class ParserImplementation extends ParserNewBase {
 					})
 				)
 				Sequence(
-					NonTerminal(RSIGNEDSHIFT)
-					Action({
-						op = BinaryOp.RightSignedShift;
-					})
-				)
-				Sequence(
+					LookAhead(3)
 					NonTerminal(RUNSIGNEDSHIFT)
 					Action({
 						op = BinaryOp.RightUnsignedShift;
+					})
+				)
+				Sequence(
+					LookAhead(2)
+					NonTerminal(RSIGNEDSHIFT)
+					Action({
+						op = BinaryOp.RightSignedShift;
 					})
 				)
 			)
@@ -13755,15 +13766,17 @@ public class ParserImplementation extends ParserNewBase {
 						})
 					)
 					Sequence(
-						NonTerminal(RSIGNEDSHIFT)
-						Action({
-							op = BinaryOp.RightSignedShift;
-						})
-					)
-					Sequence(
+						LookAhead(3)
 						NonTerminal(RUNSIGNEDSHIFT)
 						Action({
 							op = BinaryOp.RightUnsignedShift;
+						})
+					)
+					Sequence(
+						LookAhead(2)
+						NonTerminal(RSIGNEDSHIFT)
+						Action({
+							op = BinaryOp.RightSignedShift;
 						})
 					)
 				)
@@ -29703,12 +29716,12 @@ public class ParserImplementation extends ParserNewBase {
 			if (match(0, ParserImplConstants.LSHIFT) != -1) {
 				parse(ParserImplConstants.LSHIFT);
 				op = BinaryOp.LeftShift;
-			} else if (match(0, ParserImplConstants.GT) != -1) {
-				parseRSIGNEDSHIFT();
-				op = BinaryOp.RightSignedShift;
-			} else if (match(0, ParserImplConstants.GT) != -1) {
+			} else if (matchShiftExpression2(0) != -1) {
 				parseRUNSIGNEDSHIFT();
 				op = BinaryOp.RightUnsignedShift;
+			} else if (matchShiftExpression3(0) != -1) {
+				parseRSIGNEDSHIFT();
+				op = BinaryOp.RightSignedShift;
 			} else {
 				throw produceParseException(ParserImplConstants.GT, ParserImplConstants.LSHIFT);
 			}
@@ -29731,15 +29744,17 @@ public class ParserImplementation extends ParserNewBase {
 					})
 				)
 				Sequence(
-					NonTerminal(RSIGNEDSHIFT)
-					Action({
-						op = BinaryOp.RightSignedShift;
-					})
-				)
-				Sequence(
+					LookAhead(3)
 					NonTerminal(RUNSIGNEDSHIFT)
 					Action({
 						op = BinaryOp.RightUnsignedShift;
+					})
+				)
+				Sequence(
+					LookAhead(2)
+					NonTerminal(RSIGNEDSHIFT)
+					Action({
+						op = BinaryOp.RightSignedShift;
 					})
 				)
 			)
@@ -29844,6 +29859,40 @@ public class ParserImplementation extends ParserNewBase {
 				return lookahead;
 			}
 		}
+		if (match(0, ParserImplConstants.GT) != -1) {
+			if (match(1, ParserImplConstants.GT) != -1) {
+				return lookahead;
+			}
+		}
+		return -1;
+	}
+
+	/* Sequence(
+			LookAhead(3)
+			NonTerminal(RUNSIGNEDSHIFT)
+			Action({
+				op = BinaryOp.RightUnsignedShift;
+			})
+		) */
+	private int matchShiftExpression2(int lookahead) {
+		if (match(0, ParserImplConstants.GT) != -1) {
+			if (match(1, ParserImplConstants.GT) != -1) {
+				if (match(2, ParserImplConstants.GT) != -1) {
+					return lookahead;
+				}
+			}
+		}
+		return -1;
+	}
+
+	/* Sequence(
+			LookAhead(2)
+			NonTerminal(RSIGNEDSHIFT)
+			Action({
+				op = BinaryOp.RightSignedShift;
+			})
+		) */
+	private int matchShiftExpression3(int lookahead) {
 		if (match(0, ParserImplConstants.GT) != -1) {
 			if (match(1, ParserImplConstants.GT) != -1) {
 				return lookahead;
