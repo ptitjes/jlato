@@ -21,9 +21,11 @@ package org.jlato.internal.shapes;
 
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Builder;
+import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Stack;
 
 /**

@@ -78,6 +78,9 @@ public class LiveIT {
 				InputStream inputStream = jarFile.getInputStream(jarEntry);
 				try {
 					parser.parse(inputStream, encoding);
+				} catch (RuntimeException e) {
+					System.out.println(name);
+					throw e;
 				} catch (ParseException e) {
 					e.printStackTrace();
 					System.out.flush();

@@ -19,18 +19,28 @@
 
 package org.jlato.internal.parser;
 
+import com.github.andrewoma.dexx.collection.IndexedList;
+import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeEither;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.decl.*;
+import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.bu.name.SName;
+import org.jlato.internal.bu.name.SQualifiedName;
+import org.jlato.internal.bu.stmt.SStmt;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.bu.type.SUnknownType;
+import org.jlato.internal.shapes.DressingBuilder;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.parser.*;
+import org.jlato.parser.ParserInterface.TypeKind;
 
 import java.io.*;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Stack;
 
 import static org.jlato.parser.ParserImplConstants.ARROW;
 import static org.jlato.parser.ParserImplConstants.LPAREN;
@@ -39,34 +49,24 @@ import static org.jlato.parser.ParserImplConstants.RPAREN;
 /**
  * @author Didier Villevalois
  */
-public abstract class ParserNewBase extends ParserInterface {
-
-	public static class ParserNewFactory implements ParserInterface.Factory {
-		@Override
-		public ParserInterface newInstance(InputStream in, String encoding) {
-			ParserImplementation parser = new ParserImplementation();
-			parser.reset(in, encoding);
-			return parser;
-		}
-
-		@Override
-		public ParserInterface newInstance(Reader in) {
-			ParserImplementation parser = new ParserImplementation();
-			parser.reset(in);
-			return parser;
-		}
-	}
+public abstract class ParserNewBase {
 
 	private final Lexer lexer;
+	protected ParserConfiguration configuration;
+	protected boolean quotesMode = false;
 
 	public ParserNewBase() {
 		lexer = new Lexer();
 		lexer.setParser(this);
 	}
 
+	protected final void configure(ParserConfiguration configuration) {
+		this.configuration = configuration;
+	}
+
 	protected void reset(InputStream inputStream, String encoding) {
 		try {
-			lexer.yyreset(new InputStreamReader(inputStream, encoding));
+			reset(new InputStreamReader(inputStream, encoding));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Fix error management
 			throw new IllegalArgumentException(e);
@@ -77,75 +77,177 @@ public abstract class ParserNewBase extends ParserInterface {
 		lexer.yyreset(reader);
 		lookaheadTokens.clear();
 		matchLookahead = 0;
+
+		if (configuration.preserveWhitespaces) {
+			lastProcessedToken = -1;
+			runStack.clear();
+			runStack.push(Vector.<WTokenRun>empty());
+//			pushWhitespace(0);
+		}
 	}
 
 	// Parser interface
 
-	@Override
-	protected BUTree<? extends SMemberDecl> parseMemberDecl(TypeKind kind) throws ParseException {
-		return parseClassOrInterfaceBodyDecl(kind);
-	}
+	protected abstract BUTree<SCompilationUnit> parseCompilationUnit() throws ParseException;
 
-	@Override
-	protected BUTree<? extends SMemberDecl> parseAnnotationMemberDecl() throws ParseException {
-		return parseAnnotationTypeBodyDecl();
-	}
+	protected abstract BUTree<SPackageDecl> parsePackageDecl() throws ParseException;
 
-	@Override
-	protected BUTree<SMethodDecl> parseMethodDecl() throws ParseException {
-		run();
-		return parseMethodDecl(parseModifiers());
-	}
+	protected abstract BUTree<SImportDecl> parseImportDecl() throws ParseException;
 
-	@Override
-	protected BUTree<SFieldDecl> parseFieldDecl() throws ParseException {
-		run();
-		return parseFieldDecl(parseModifiers());
-	}
-
-	@Override
-	protected BUTree<SAnnotationMemberDecl> parseAnnotationElementDecl() throws ParseException {
-		run();
-		return parseAnnotationTypeMemberDecl(parseModifiers());
-	}
-
-	@Override
-	protected BUTree<? extends SType> parseType() throws ParseException {
-		run();
-		return parseType(parseAnnotations());
-	}
+	protected abstract BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException;
 
 	protected abstract BUTree<? extends SMemberDecl> parseClassOrInterfaceBodyDecl(TypeKind kind) throws ParseException;
 
 	protected abstract BUTree<? extends SMemberDecl> parseAnnotationTypeBodyDecl() throws ParseException;
 
-	protected abstract BUTree<SAnnotationMemberDecl> parseAnnotationTypeMemberDecl(BUTree<SNodeList> modifiers) throws ParseException;
+	protected abstract BUTree<SNodeList> parseModifiers() throws ParseException;
 
 	protected abstract BUTree<SMethodDecl> parseMethodDecl(BUTree<SNodeList> modifiers) throws ParseException;
 
 	protected abstract BUTree<SFieldDecl> parseFieldDecl(BUTree<SNodeList> modifiers) throws ParseException;
 
+	protected abstract BUTree<SAnnotationMemberDecl> parseAnnotationTypeMemberDecl(BUTree<SNodeList> modifiers) throws ParseException;
+
+	protected abstract BUTree<SEnumConstantDecl> parseEnumConstantDecl() throws ParseException;
+
+	protected abstract BUTree<SFormalParameter> parseFormalParameter() throws ParseException;
+
+	protected abstract BUTree<STypeParameter> parseTypeParameter() throws ParseException;
+
+	protected abstract BUTree<SNodeList> parseStatements() throws ParseException;
+
+	protected abstract BUTree<? extends SStmt> parseBlockStatement() throws ParseException;
+
+	protected abstract BUTree<? extends SExpr> parseExpression() throws ParseException;
+
+	protected abstract BUTree<SNodeList> parseAnnotations() throws ParseException;
+
 	protected abstract BUTree<? extends SType> parseType(BUTree<SNodeList> annotations) throws ParseException;
 
-	// Temporarily fake methods
+	protected abstract BUTree<SQualifiedName> parseQualifiedName() throws ParseException;
 
+	protected abstract BUTree<SName> parseName() throws ParseException;
+
+	protected abstract void parseEpilog() throws ParseException;
+
+	// Lexical preservation mechanism
+
+	private Stack<IndexedList<WTokenRun>> runStack = new Stack<IndexedList<WTokenRun>>();
+	private int lastProcessedToken;
 
 	protected void run() {
+		if (!configuration.preserveWhitespaces) return;
+
+		pushWhitespace(0);
+		runStack.push(Vector.<WTokenRun>empty());
 	}
 
 	protected void lateRun() {
+		if (!configuration.preserveWhitespaces) return;
+
+//		pushWhitespace(0);
+//		IndexedList<WTokenRun> tokenRuns = runStack.pop();
+//		WTokenRun tokenRun = tokenRuns.last();
+//		runStack.push(tokenRuns.take(tokenRuns.size() - 1));
+//		runStack.push(Vector.<WTokenRun>empty().append(tokenRun));
+		runStack.push(Vector.<WTokenRun>empty());
+		pushWhitespace(0);
 	}
 
-	protected void popNewWhitespaces() {
+	protected void popNewWhitespaces(int count) {
+		if (!configuration.preserveWhitespaces) return;
+
+		IndexedList<WTokenRun> tokenRuns = runStack.pop();
+		runStack.push(tokenRuns.take(tokenRuns.size() - count));
+	}
+
+	private void pushWhitespace(int upToToken) {
+		for (int i = lastProcessedToken + 1; i <= upToToken; i++) {
+			pushWhitespace(getToken(i).whitespace);
+		}
+		lastProcessedToken = upToToken;
+	}
+
+	private void pushWhitespace(WTokenRun whitespace) {
+		if (whitespace == null) return;
+
+		runStack.push(runStack.pop().append(whitespace));
+	}
+
+	private IndexedList<WTokenRun> popTokens() {
+		pushWhitespace(-1);
+		return runStack.pop();
 	}
 
 	protected <S extends STree> BUTree<S> dress(BUTree<S> tree) {
-		return doCollectProblems(tree);
+		return doCollectProblems(doDress(tree));
+	}
+
+	protected <S extends STree> BUTree<S> doDress(BUTree<S> tree) {
+		if (!configuration.preserveWhitespaces) return tree;
+
+		final IndexedList<WTokenRun> tokens = popTokens();
+
+		if (tree == null) return null;
+
+		final LexicalShape shape = tree.state.shape();
+		return doDress(tree, shape, tokens);
+	}
+
+	private <S extends STree> BUTree<S> doDress(BUTree<S> tree, LexicalShape shape,
+	                                            IndexedList<WTokenRun> tokens) {
+
+		final Iterator<WTokenRun> tokenIterator = tokens.iterator();
+		final BUTree<S> newTree;
+		if (shape != null) {
+			final DressingBuilder<S> builder = new DressingBuilder<S>(tree, tokenIterator);
+			try {
+				shape.dress(builder, tree);
+			} catch (RuntimeException e) {
+				System.out.println(getToken(0).beginLine + ":" + getToken(0).beginColumn);
+				throw e;
+			}
+			newTree = builder.build();
+		} else newTree = tree;
+
+		if (tokenIterator.hasNext()) {
+			// Flow up the remaining whitespace run for consumption by parent tree
+			final WTokenRun deferred = tokenIterator.next();
+			pushWhitespace(deferred);
+
+			// Only one whitespace run at most should flow up
+			if (tokenIterator.hasNext()) {
+				throw new IllegalStateException();
+			}
+		}
+
+		return newTree;
 	}
 
 	protected <S extends STree> BUTree<S> dressWithPrologAndEpilog(BUTree<S> tree) {
-		return tree;
+		if (!configuration.preserveWhitespaces) return tree;
+
+		assert runStack.size() == 1;
+		final IndexedList<WTokenRun> tokens = popTokens();
+		// TODO This assertion does not hold with com/github/javaparser/ast/comments/CommentsParser
+		// assert tokens.size() == 2;
+		final WTokenRun prolog = tokens.get(0);
+		final WTokenRun epilog = tokens.get(1);
+
+		WDressing dressing = tree.dressing;
+		if (dressing == null) dressing = new WDressing();
+
+		if (!prolog.elements.isEmpty()) dressing = dressing.withLeading(prolog);
+		if (!epilog.elements.isEmpty()) dressing = dressing.withTrailing(epilog);
+		return tree.withDressing(dressing);
 	}
+
+	protected <S extends STree> BUTree<S> wrapWithPrologAndEpilog(BUTree<S> tree) throws ParseException {
+		parseEpilog();
+		return dressWithPrologAndEpilog(tree);
+	}
+
+	// Problem propagation
 
 	// TODO This should be handled through BUTree.validate() ?
 	private <S extends STree> BUTree<S> doCollectProblems(BUTree<S> tree) {
@@ -194,22 +296,23 @@ public abstract class ParserNewBase extends ParserInterface {
 
 	private Token getNextToken() throws IOException {
 		Token token;
-		if (!configuration.preserveWhitespaces) {
-			do {
-				token = lexer.yylex();
-				switch (token.kind) {
-					case ParserImplConstants.MULTI_LINE_COMMENT:
-					case ParserImplConstants.SINGLE_LINE_COMMENT:
-					case ParserImplConstants.JAVA_DOC_COMMENT:
-					case ParserImplConstants.WHITESPACE:
-					case ParserImplConstants.NEWLINE:
-						break;
-					default:
-						return token;
-				}
-			} while (true);
-		}
-		throw new IllegalStateException();
+		WTokenRun.Builder builder = configuration.preserveWhitespaces ? new WTokenRun.Builder() : null;
+		do {
+			token = lexer.yylex();
+
+			switch (token.kind) {
+				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case ParserImplConstants.JAVA_DOC_COMMENT:
+				case ParserImplConstants.WHITESPACE:
+				case ParserImplConstants.NEWLINE:
+					if (configuration.preserveWhitespaces) builder.add(new WToken(token.kind, token.image));
+					break;
+				default:
+					if (configuration.preserveWhitespaces) token.whitespace = builder.build();
+					return token;
+			}
+		} while (true);
 	}
 
 	protected Token getToken(int index) {
@@ -217,15 +320,12 @@ public abstract class ParserNewBase extends ParserInterface {
 		return lookaheadTokens.get(index);
 	}
 
-	protected boolean backupLookahead(boolean match) {
-		try {
-			return match;
-		} finally {
-			matchLookahead = 0;
-		}
-	}
-
 	protected Token parse(int tokenType) throws ParseException {
+		if (configuration.preserveWhitespaces) {
+			pushWhitespace(0);
+			lastProcessedToken--;
+		}
+
 		Token token = getToken(0);
 		if (token.kind != tokenType) {
 			String found = token.kind == ParserImplConstants.EOF ? "<EOF>" : token.image;

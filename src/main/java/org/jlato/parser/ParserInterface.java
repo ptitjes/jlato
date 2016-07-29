@@ -27,14 +27,6 @@ import org.jlato.internal.bu.name.SName;
 import org.jlato.internal.bu.name.SQualifiedName;
 import org.jlato.internal.bu.stmt.SStmt;
 import org.jlato.internal.bu.type.SType;
-import org.jlato.tree.NodeList;
-import org.jlato.tree.decl.*;
-import org.jlato.tree.expr.AnnotationExpr;
-import org.jlato.tree.expr.Expr;
-import org.jlato.tree.name.Name;
-import org.jlato.tree.name.QualifiedName;
-import org.jlato.tree.stmt.Stmt;
-import org.jlato.tree.type.Type;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -46,16 +38,9 @@ public abstract class ParserInterface {
 
 	protected interface Factory {
 
-		ParserInterface newInstance(InputStream in, String encoding);
+		ParserInterface newInstance(InputStream in, String encoding, ParserConfiguration configuration, boolean quotesMode);
 
-		ParserInterface newInstance(Reader in);
-	}
-
-	protected ParserConfiguration configuration;
-	protected boolean quotesMode = false;
-
-	protected final void configure(ParserConfiguration configuration) {
-		this.configuration = configuration;
+		ParserInterface newInstance(Reader in, ParserConfiguration configuration, boolean quotesMode);
 	}
 
 	protected abstract void reset(InputStream inputStream, String encoding);

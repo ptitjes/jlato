@@ -1,0 +1,55 @@
+{
+  kind: BinaryExpr,
+  left: {
+    kind: BinaryExpr,
+    left: {
+      kind: BinaryExpr,
+      left: {
+        kind: Name,
+        id: a,
+      },
+      op: Times,
+      right: {
+        kind: Name,
+        id: b,
+      },
+    },
+    op: Plus,
+    right: {
+      kind: BinaryExpr,
+      left: {
+        kind: Name,
+        id: c,
+      },
+      op: Times,
+      right: {
+        kind: Name,
+        id: d,
+      },
+    },
+  },
+  op: Plus,
+  right: {
+    kind: BinaryExpr,
+    left: {
+      kind: ParenthesizedExpr,
+      inner: {
+        kind: BinaryExpr,
+        left: {
+          kind: Name,
+          id: e,
+        },
+        op: Minus,
+        right: {
+          kind: Name,
+          id: f,
+        },
+      },
+    },
+    op: Divide,
+    right: {
+      kind: Name,
+      id: g,
+    },
+  },
+}

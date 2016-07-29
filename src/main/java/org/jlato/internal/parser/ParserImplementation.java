@@ -1,24 +1,25 @@
 package org.jlato.internal.parser;
 
-import org.jlato.internal.bu.BUProblem;
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.coll.SNodeList;
-import org.jlato.internal.bu.coll.SNodeOption;
+import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.coll.*;
 import org.jlato.internal.bu.decl.*;
 import org.jlato.internal.bu.expr.*;
-import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.bu.name.SQualifiedName;
+import org.jlato.internal.bu.name.*;
 import org.jlato.internal.bu.stmt.*;
 import org.jlato.internal.bu.type.*;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.ParserImplConstants;
-import org.jlato.parser.Token;
+import org.jlato.parser.ParserInterface.TypeKind;
 import org.jlato.tree.Problem.Severity;
 import org.jlato.tree.decl.ModifierKeyword;
 import org.jlato.tree.expr.AssignOp;
 import org.jlato.tree.expr.BinaryOp;
 import org.jlato.tree.expr.UnaryOp;
 import org.jlato.tree.type.Primitive;
+
+import static org.jlato.parser.ParserImplConstants.GT;
+import static org.jlato.parser.ParserImplConstants.RSIGNEDSHIFT;
+import static org.jlato.parser.ParserImplConstants.RUNSIGNEDSHIFT;
 
 public class ParserImplementation extends ParserNewBase {
 
@@ -1424,12 +1425,12 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* Sequence(
 			LookAhead(2)
+			Action({
+				lateRun();
+			})
 			Terminal("DOT")
 			Action({
 				scope = optionOf(ret);
-			})
-			Action({
-				lateRun();
 			})
 			NonTerminal(annotations, Annotations)
 			NonTerminal(name, Name)
@@ -1459,12 +1460,12 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* ZeroOrMore(
 			LookAhead(2)
+			Action({
+				lateRun();
+			})
 			Terminal("DOT")
 			Action({
 				scope = optionOf(ret);
-			})
-			Action({
-				lateRun();
 			})
 			NonTerminal(annotations, Annotations)
 			NonTerminal(name, Name)
@@ -1503,12 +1504,12 @@ public class ParserImplementation extends ParserNewBase {
 			})
 			ZeroOrMore(
 				LookAhead(2)
+				Action({
+					lateRun();
+				})
 				Terminal("DOT")
 				Action({
 					scope = optionOf(ret);
-				})
-				Action({
-					lateRun();
 				})
 				NonTerminal(annotations, Annotations)
 				NonTerminal(name, Name)
@@ -13566,6 +13567,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+			LookAhead(			getToken(1).kind == GT && getToken(1).realKind == RUNSIGNEDSHIFT
+	)
 			Terminal("GT")
 			Terminal("GT")
 			Terminal("GT")
@@ -13574,6 +13577,9 @@ public class ParserImplementation extends ParserNewBase {
 			})
 		) */
 	private int matchRUNSIGNEDSHIFT(int lookahead) {
+		lookahead = getToken(1).kind == GT && getToken(1).realKind == RUNSIGNEDSHIFT ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
 		lookahead = match(lookahead, ParserImplConstants.GT);
 		if (lookahead == -1)
 			return -1;
@@ -13601,6 +13607,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+			LookAhead(			getToken(1).kind == GT && getToken(1).realKind == RSIGNEDSHIFT
+	)
 			Terminal("GT")
 			Terminal("GT")
 			Action({
@@ -13608,6 +13616,9 @@ public class ParserImplementation extends ParserNewBase {
 			})
 		) */
 	private int matchRSIGNEDSHIFT(int lookahead) {
+		lookahead = getToken(1).kind == GT && getToken(1).realKind == RSIGNEDSHIFT ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
 		lookahead = match(lookahead, ParserImplConstants.GT);
 		if (lookahead == -1)
 			return -1;
@@ -26503,9 +26514,9 @@ public class ParserImplementation extends ParserNewBase {
 		}
 		ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
 		while (matchQualifiedType2(0) != -1) {
+			lateRun();
 			parse(ParserImplConstants.DOT);
 			scope = optionOf(ret);
-			lateRun();
 			annotations = parseAnnotations();
 			name = parseName();
 			if (matchQualifiedType3(0) != -1) {
@@ -26570,12 +26581,12 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* ZeroOrMore(
 			LookAhead(2)
+			Action({
+				lateRun();
+			})
 			Terminal("DOT")
 			Action({
 				scope = optionOf(ret);
-			})
-			Action({
-				lateRun();
 			})
 			NonTerminal(annotations, Annotations)
 			NonTerminal(name, Name)
@@ -32342,13 +32353,13 @@ public class ParserImplementation extends ParserNewBase {
 		parse(ParserImplConstants.GT);
 		parse(ParserImplConstants.GT);
 		parse(ParserImplConstants.GT);
-		popNewWhitespaces();
+		popNewWhitespaces(2);
 	}
 
 	public void parseRSIGNEDSHIFT() throws ParseException {
 		parse(ParserImplConstants.GT);
 		parse(ParserImplConstants.GT);
-		popNewWhitespaces();
+		popNewWhitespaces(1);
 	}
 
 	public BUTree<SNodeList> parseAnnotations() throws ParseException {

@@ -20,6 +20,7 @@
 package org.jlato.parser;
 
 import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.parser.ParserNew;
 import org.jlato.internal.parser.ParserNewBase;
 import org.jlato.tree.Tree;
 import org.jlato.tree.NodeMap;
@@ -50,16 +51,13 @@ public class Parser {
 	static final ParserInterface.Factory DefaultFactory = new ParserBase.JavaCCParserFactory();
 
 	private ParserInterface.Factory factory() {
-		if (!configuration.preserveWhitespaces) {
-			if (configuration.parser.equals("new")) return new ParserNewBase.ParserNewFactory();
-		}
+		if (configuration.parser.equals("new")) return new ParserNew.ParserNewFactory();
 		return DefaultFactory;
 	}
 
 	public <T extends Tree> T parse(ParseContext<T> context, InputStream inputStream, String encoding) throws ParseException {
 		if (parserInstance == null) {
-			parserInstance = factory().newInstance(inputStream, encoding);
-			parserInstance.configure(configuration);
+			parserInstance = factory().newInstance(inputStream, encoding, configuration, false);
 		} else parserInstance.reset(inputStream, encoding);
 		BUTree<?> tree = context.callProduction(parserInstance);
 		return safeAsTree(tree);
@@ -67,8 +65,7 @@ public class Parser {
 
 	public <T extends Tree> T parse(ParseContext<T> context, Reader reader) throws ParseException {
 		if (parserInstance == null) {
-			parserInstance = factory().newInstance(reader);
-			parserInstance.configure(configuration);
+			parserInstance = factory().newInstance(reader, configuration, false);
 		} else parserInstance.reset(reader);
 		BUTree<?> tree = context.callProduction(parserInstance);
 		return safeAsTree(tree);

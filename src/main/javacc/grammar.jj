@@ -2020,9 +2020,9 @@ BUTree<SQualifiedType> QualifiedType(BUTree<SNodeList> annotations):
   { ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); }
   (
     LOOKAHEAD(2)
+    { lateRun(); }
     "." { scope = optionOf(ret); }
 
-    { lateRun(); }
     annotations = Annotations() name = Name()
     [ LOOKAHEAD(2) typeArgs = TypeArgumentsOrDiamond() ]
     { ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); }

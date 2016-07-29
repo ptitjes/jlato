@@ -49,9 +49,7 @@ public class QuotesParser {
 
 	private <T extends Tree> BUTree<?> parse(ParseContext<T> context, Reader reader) throws ParseException {
 		if (parserInstance == null) {
-			parserInstance = factory().newInstance(reader);
-			parserInstance.configure(configuration);
-			parserInstance.quotesMode = true;
+			parserInstance = factory().newInstance(reader, configuration, true);
 		} else parserInstance.reset(reader);
 		return context.callProduction(parserInstance);
 	}

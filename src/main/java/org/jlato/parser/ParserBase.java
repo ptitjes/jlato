@@ -48,15 +48,17 @@ public abstract class ParserBase extends ParserInterface {
 
 	static class JavaCCParserFactory implements Factory {
 		@Override
-		public ParserInterface newInstance(InputStream in, String encoding) {
+		public ParserInterface newInstance(InputStream in, String encoding, ParserConfiguration configuration, boolean quotesMode) {
 			ParserImpl parser = new ParserImpl(in, encoding);
+			parser.configure(configuration, quotesMode);
 			parser.reset();
 			return parser;
 		}
 
 		@Override
-		public ParserInterface newInstance(Reader in) {
+		public ParserInterface newInstance(Reader in, ParserConfiguration configuration, boolean quotesMode) {
 			ParserImpl parser = new ParserImpl(in);
+			parser.configure(configuration, quotesMode);
 			parser.reset();
 			return parser;
 		}
@@ -66,7 +68,14 @@ public abstract class ParserBase extends ParserInterface {
 	private Token lastProcessedToken;
 
 	public ParserBase() {
-		reset();
+	}
+
+	protected ParserConfiguration configuration;
+	protected boolean quotesMode = false;
+
+	protected final void configure(ParserConfiguration configuration, boolean quotesMode) {
+		this.configuration = configuration;
+		this.quotesMode = quotesMode;
 	}
 
 	// Interface with ParserImpl
@@ -104,8 +113,8 @@ public abstract class ParserBase extends ParserInterface {
 	}
 
 	private void pushWhitespace(Token upToToken) {
-		if (lastProcessedToken != upToToken &&
-				(upToToken.next == null || lastProcessedToken != upToToken.next)) {
+		if (lastProcessedToken != upToToken /*&&
+				(upToToken.next == null || lastProcessedToken != upToToken.next)*/) {
 			do {
 				lastProcessedToken = lastProcessedToken.next;
 				pushWhitespace(lastProcessedToken.whitespace);

@@ -7,10 +7,10 @@ public class RandoopTest0 extends TestCase {
 
   public void test1() throws Throwable {
 
-    if (debug) { System.out.println(); System.out.print("RandoopTest0.test1"); }
+    if (debug) { System/*0*/./*1*/out.println(); System.out.print("RandoopTest0.test1"); }
 
 
-    java.util.ArrayList var1 = com.google.common.collect.Lists.newArrayListWithExpectedSize(100);
+    java/*0*/./*1*/util.ArrayList var1 = com.google.common.collect.Lists.newArrayListWithExpectedSize(100);
     
     // Regression assertion (captures the current behavior of the code)
     assertNotNull(var1);

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jlato.parser;
+package org.jlato.internal.parser;
 
-import org.jlato.parser.*;
+import org.jlato.parser.ParserImplConstants;
 
 /**
  * A Java 1.8 lexer.
@@ -28,13 +28,13 @@ import org.jlato.parser.*;
 %%
 
 %{
-    private ParserInterface parser;
+    private ParserNewBase parser;
 
     public Lexer() {
         this((java.io.Reader)null);
     }
 
-    public void setParser(ParserInterface parser) {
+    public void setParser(ParserNewBase parser) {
         this.parser = parser;
     }
 
