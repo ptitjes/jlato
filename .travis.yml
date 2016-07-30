@@ -9,6 +9,7 @@ jdk:
 
 after_success:
   - mvn clean test integration-test jacoco:report coveralls:report
+  - bash <(curl -s https://codecov.io/bash)
 
 notifications:
   irc:
