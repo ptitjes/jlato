@@ -44,7 +44,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(id, NODE_LIST_VARIABLE)
 		action({ return makeVar(id); })
 	) */
-	public BUTree<SNodeList> parseNodeListVar() throws ParseException {
+	protected BUTree<SNodeList> parseNodeListVar() throws ParseException {
 		Token id;
 		id = parse(TokenType.NODE_LIST_VARIABLE);
 		return makeVar(id);
@@ -64,7 +64,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(id, NODE_VARIABLE)
 		action({ return makeVar(id); })
 	) */
-	public BUTree<SName> parseNodeVar() throws ParseException {
+	protected BUTree<SName> parseNodeVar() throws ParseException {
 		Token id;
 		id = parse(TokenType.NODE_VARIABLE);
 		return makeVar(id);
@@ -94,7 +94,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(Epilog)
 		action({ return dressWithPrologAndEpilog(compilationUnit); })
 	) */
-	public BUTree<SCompilationUnit> parseCompilationUnit() throws ParseException {
+	protected BUTree<SCompilationUnit> parseCompilationUnit() throws ParseException {
 		BUTree<SPackageDecl> packageDecl = null;
 		BUTree<SNodeList> imports;
 		BUTree<SNodeList> types;
@@ -124,7 +124,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(EOF)
 		terminal(EOF)
 	) */
-	public void parseEpilog() throws ParseException {
+	protected void parseEpilog() throws ParseException {
 		if (match(0, TokenType.EOF) != -1) {
 			parse(TokenType.EOF);
 		} else if (match(0, TokenType.EOF) != -1) {
@@ -142,7 +142,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 		action({ return dress(SPackageDecl.make(annotations, name)); })
 	) */
-	public BUTree<SPackageDecl> parsePackageDecl() throws ParseException {
+	protected BUTree<SPackageDecl> parsePackageDecl() throws ParseException {
 		BUTree<SNodeList> annotations = null;
 		BUTree<SQualifiedName> name;
 		run();
@@ -182,7 +182,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return imports; })
 	) */
-	public BUTree<SNodeList> parseImportDecls() throws ParseException {
+	protected BUTree<SNodeList> parseImportDecls() throws ParseException {
 		BUTree<SNodeList> imports = emptyList();
 		BUTree<SImportDecl> importDecl = null;
 		while (match(0, TokenType.IMPORT) != -1) {
@@ -208,7 +208,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 		action({ return dress(SImportDecl.make(name, isStatic, isAsterisk)); })
 	) */
-	public BUTree<SImportDecl> parseImportDecl() throws ParseException {
+	protected BUTree<SImportDecl> parseImportDecl() throws ParseException {
 		BUTree<SQualifiedName> name;
 		boolean isStatic = false;
 		boolean isAsterisk = false;
@@ -235,7 +235,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return types; })
 	) */
-	public BUTree<SNodeList> parseTypeDecls() throws ParseException {
+	protected BUTree<SNodeList> parseTypeDecls() throws ParseException {
 		BUTree<SNodeList> types = emptyList();
 		BUTree<? extends STypeDecl> typeDecl = null;
 		while (match(0, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.SEMICOLON) != -1) {
@@ -305,7 +305,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return modifiers; })
 	) */
-	public BUTree<SNodeList> parseModifiers() throws ParseException {
+	protected BUTree<SNodeList> parseModifiers() throws ParseException {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
 		while (matchModifiers_lookahead1(0) != -1) {
@@ -876,7 +876,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return modifiers; })
 	) */
-	public BUTree<SNodeList> parseModifiersNoDefault() throws ParseException {
+	protected BUTree<SNodeList> parseModifiersNoDefault() throws ParseException {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
 		while (matchModifiersNoDefault_lookahead1(0) != -1) {
@@ -1375,7 +1375,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException {
+	protected BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends STypeDecl> ret;
 		run();
@@ -1437,7 +1437,7 @@ public class ParserImplementation extends ParserNewBase {
 			}
 		})
 	) */
-	public BUTree<? extends STypeDecl> parseClassOrInterfaceDecl(BUTree<SNodeList> modifiers) throws ParseException {
+	protected BUTree<? extends STypeDecl> parseClassOrInterfaceDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		TypeKind typeKind;
 		BUTree<SName> name;
 		BUTree<SNodeList> typeParams = null;
@@ -1745,7 +1745,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseExtendsList() throws ParseException {
+	protected BUTree<SNodeList> parseExtendsList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
@@ -1897,7 +1897,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseImplementsList(TypeKind typeKind, ByRef<BUProblem> problem) throws ParseException {
+	protected BUTree<SNodeList> parseImplementsList(TypeKind typeKind, ByRef<BUProblem> problem) throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
@@ -2065,7 +2065,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 		action({ return dress(SEnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))).withProblem(problem.value); })
 	) */
-	public BUTree<? extends STypeDecl> parseEnumDecl(BUTree<SNodeList> modifiers) throws ParseException {
+	protected BUTree<? extends STypeDecl> parseEnumDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SName> name;
 		BUTree<SNodeList> implementsClause = emptyList();
 		BUTree<SEnumConstantDecl> entry;
@@ -2436,7 +2436,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return dress(SEnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody))); })
 	) */
-	public BUTree<SEnumConstantDecl> parseEnumConstantDecl() throws ParseException {
+	protected BUTree<SEnumConstantDecl> parseEnumConstantDecl() throws ParseException {
 		BUTree<SNodeList> modifiers = null;
 		BUTree<SName> name;
 		BUTree<SNodeList> args = null;
@@ -2528,7 +2528,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(members, AnnotationTypeBody)
 		action({ return dress(SAnnotationDecl.make(modifiers, name, members)); })
 	) */
-	public BUTree<SAnnotationDecl> parseAnnotationTypeDecl(BUTree<SNodeList> modifiers) throws ParseException {
+	protected BUTree<SAnnotationDecl> parseAnnotationTypeDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SName> name;
 		BUTree<SNodeList> members;
 		parse(TokenType.AT);
@@ -2577,7 +2577,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseAnnotationTypeBody() throws ParseException {
+	protected BUTree<SNodeList> parseAnnotationTypeBody() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SMemberDecl> member;
 		parse(TokenType.LBRACE);
@@ -2748,7 +2748,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SMemberDecl> parseAnnotationTypeBodyDecl() throws ParseException {
+	protected BUTree<? extends SMemberDecl> parseAnnotationTypeBodyDecl() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SMemberDecl> ret;
 		run();
@@ -2958,7 +2958,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 		action({ return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal)); })
 	) */
-	public BUTree<SAnnotationMemberDecl> parseAnnotationTypeMemberDecl(BUTree<SNodeList> modifiers) throws ParseException {
+	protected BUTree<SAnnotationMemberDecl> parseAnnotationTypeMemberDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<? extends SType> type;
 		BUTree<SName> name;
 		BUTree<SNodeList> dims;
@@ -3061,7 +3061,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GT)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseTypeParameters() throws ParseException {
+	protected BUTree<SNodeList> parseTypeParameters() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<STypeParameter> tp;
 		parse(TokenType.LT);
@@ -3204,7 +3204,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return dress(STypeParameter.make(annotations, name, ensureNotNull(typeBounds))); })
 	) */
-	public BUTree<STypeParameter> parseTypeParameter() throws ParseException {
+	protected BUTree<STypeParameter> parseTypeParameter() throws ParseException {
 		BUTree<SNodeList> annotations = null;
 		BUTree<SName> name;
 		BUTree<SNodeList> typeBounds = null;
@@ -3277,7 +3277,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseTypeBounds() throws ParseException {
+	protected BUTree<SNodeList> parseTypeBounds() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
@@ -3413,7 +3413,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseClassOrInterfaceBody(TypeKind typeKind) throws ParseException {
+	protected BUTree<SNodeList> parseClassOrInterfaceBody(TypeKind typeKind) throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SMemberDecl> member;
 		parse(TokenType.LBRACE);
@@ -3455,7 +3455,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseClassOrInterfaceBodyDecls(TypeKind typeKind) throws ParseException {
+	protected BUTree<SNodeList> parseClassOrInterfaceBodyDecls(TypeKind typeKind) throws ParseException {
 		BUTree<? extends SMemberDecl> member;
 		BUTree<SNodeList> ret = emptyList();
 		if (match(0, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.LBRACE, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.VOID, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.SEMICOLON, TokenType.NODE_LIST_VARIABLE) != -1) {
@@ -3646,7 +3646,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret.withProblem(problem); })
 	) */
-	public BUTree<? extends SMemberDecl> parseClassOrInterfaceBodyDecl(TypeKind typeKind) throws ParseException {
+	protected BUTree<? extends SMemberDecl> parseClassOrInterfaceBodyDecl(TypeKind typeKind) throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SMemberDecl> ret;
 		BUProblem problem = null;
@@ -4083,7 +4083,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 		action({ return dress(SFieldDecl.make(modifiers, type, variables)); })
 	) */
-	public BUTree<SFieldDecl> parseFieldDecl(BUTree<SNodeList> modifiers) throws ParseException {
+	protected BUTree<SFieldDecl> parseFieldDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> variables = emptyList();
 		BUTree<SVariableDeclarator> val;
@@ -4116,7 +4116,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(variables, VariableDeclarators)
 		action({ return dress(SLocalVariableDecl.make(modifiers, type, variables)); })
 	) */
-	public BUTree<SLocalVariableDecl> parseVariableDecl(BUTree<SNodeList> modifiers) throws ParseException {
+	protected BUTree<SLocalVariableDecl> parseVariableDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> variables = emptyList();
 		type = parseType(null);
@@ -4148,7 +4148,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return variables; })
 	) */
-	public BUTree<SNodeList> parseVariableDeclarators() throws ParseException {
+	protected BUTree<SNodeList> parseVariableDeclarators() throws ParseException {
 		BUTree<SNodeList> variables = emptyList();
 		BUTree<SVariableDeclarator> val;
 		val = parseVariableDeclarator();
@@ -4216,7 +4216,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return dress(SVariableDeclarator.make(id, init)); })
 	) */
-	public BUTree<SVariableDeclarator> parseVariableDeclarator() throws ParseException {
+	protected BUTree<SVariableDeclarator> parseVariableDeclarator() throws ParseException {
 		BUTree<SVariableDeclaratorId> id;
 		BUTree<SNodeOption> init = none();
 		BUTree<? extends SExpr> initExpr = null;
@@ -4279,7 +4279,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(arrayDims, ArrayDims)
 		action({ return dress(SVariableDeclaratorId.make(name, arrayDims)); })
 	) */
-	public BUTree<SVariableDeclaratorId> parseVariableDeclaratorId() throws ParseException {
+	protected BUTree<SVariableDeclaratorId> parseVariableDeclaratorId() throws ParseException {
 		BUTree<SName> name;
 		BUTree<SNodeList> arrayDims;
 		run();
@@ -4317,7 +4317,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return arrayDims; })
 	) */
-	public BUTree<SNodeList> parseArrayDims() throws ParseException {
+	protected BUTree<SNodeList> parseArrayDims() throws ParseException {
 		BUTree<SNodeList> arrayDims = emptyList();
 		BUTree<SNodeList> annotations;
 		while (matchArrayDims_lookahead1(0) != -1) {
@@ -4417,7 +4417,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseVariableInitializer() throws ParseException {
+	protected BUTree<? extends SExpr> parseVariableInitializer() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		if (match(0, TokenType.LBRACE) != -1) {
 			ret = parseArrayInitializer();
@@ -4477,7 +4477,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 		action({ return dress(SArrayInitializerExpr.make(values, trailingComma)); })
 	) */
-	public BUTree<SArrayInitializerExpr> parseArrayInitializer() throws ParseException {
+	protected BUTree<SArrayInitializerExpr> parseArrayInitializer() throws ParseException {
 		BUTree<SNodeList> values = emptyList();
 		BUTree<? extends SExpr> val;
 		boolean trailingComma = false;
@@ -4745,7 +4745,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem); })
 	) */
-	public BUTree<SMethodDecl> parseMethodDecl(BUTree<SNodeList> modifiers) throws ParseException {
+	protected BUTree<SMethodDecl> parseMethodDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SNodeList> typeParameters = null;
 		BUTree<? extends SType> type;
 		BUTree<SName> name;
@@ -4896,7 +4896,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 		action({ return ensureNotNull(ret); })
 	) */
-	public BUTree<SNodeList> parseFormalParameters() throws ParseException {
+	protected BUTree<SNodeList> parseFormalParameters() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
 		parse(TokenType.LPAREN);
@@ -4966,7 +4966,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseFormalParameterList() throws ParseException {
+	protected BUTree<SNodeList> parseFormalParameterList() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
 		if (match(0, TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.PUBLIC, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
@@ -5101,7 +5101,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(id, VariableDeclaratorId)
 		action({ return dress(SFormalParameter.make(modifiers, type, isVarArg, id)); })
 	) */
-	public BUTree<SFormalParameter> parseFormalParameter() throws ParseException {
+	protected BUTree<SFormalParameter> parseFormalParameter() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SType> type;
 		boolean isVarArg = false;
@@ -5173,7 +5173,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseThrowsClause() throws ParseException {
+	protected BUTree<SNodeList> parseThrowsClause() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		parse(TokenType.THROWS);
@@ -5281,7 +5281,7 @@ public class ParserImplementation extends ParserNewBase {
 		action({ block = dress(SBlockStmt.make(stmts)); })
 		action({ return dress(SConstructorDecl.make(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block)); })
 	) */
-	public BUTree<SConstructorDecl> parseConstructorDecl(BUTree<SNodeList> modifiers) throws ParseException {
+	protected BUTree<SConstructorDecl> parseConstructorDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SNodeList> typeParameters = null;
 		BUTree<SName> name;
 		BUTree<SNodeList> parameters;
@@ -13055,7 +13055,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args)); })
 	) */
-	public BUTree<SExplicitConstructorInvocationStmt> parseExplicitConstructorInvocation() throws ParseException {
+	protected BUTree<SExplicitConstructorInvocationStmt> parseExplicitConstructorInvocation() throws ParseException {
 		boolean isThis = false;
 		BUTree<SNodeList> args;
 		BUTree<? extends SExpr> expr = null;
@@ -13385,7 +13385,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ensureNotNull(ret); })
 	) */
-	public BUTree<SNodeList> parseStatements() throws ParseException {
+	protected BUTree<SNodeList> parseStatements() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<? extends SStmt> stmt;
 		if (matchStatements_lookahead1(0) != -1) {
@@ -15928,7 +15928,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(block, Block)
 		action({ return dress(SInitializerDecl.make(modifiers, block)); })
 	) */
-	public BUTree<SInitializerDecl> parseInitializerDecl(BUTree<SNodeList> modifiers) throws ParseException {
+	protected BUTree<SInitializerDecl> parseInitializerDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SBlockStmt> block;
 		block = parseBlock();
 		return dress(SInitializerDecl.make(modifiers, block));
@@ -15973,7 +15973,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return type == null ? primitiveType : type; })
 	) */
-	public BUTree<? extends SType> parseType(BUTree<SNodeList> annotations) throws ParseException {
+	protected BUTree<? extends SType> parseType(BUTree<SNodeList> annotations) throws ParseException {
 		BUTree<? extends SType> primitiveType = null;
 		BUTree<? extends SReferenceType> type = null;
 		BUTree<SNodeList> arrayDims;
@@ -16210,7 +16210,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return type; })
 	) */
-	public BUTree<? extends SReferenceType> parseReferenceType(BUTree<SNodeList> annotations) throws ParseException {
+	protected BUTree<? extends SReferenceType> parseReferenceType(BUTree<SNodeList> annotations) throws ParseException {
 		BUTree<? extends SType> primitiveType;
 		BUTree<? extends SReferenceType> type;
 		BUTree<SNodeList> arrayDims;
@@ -16389,7 +16389,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SQualifiedType> parseQualifiedType(BUTree<SNodeList> annotations) throws ParseException {
+	protected BUTree<SQualifiedType> parseQualifiedType(BUTree<SNodeList> annotations) throws ParseException {
 		BUTree<SNodeOption> scope = none();
 		BUTree<SQualifiedType> ret;
 		BUTree<SName> name;
@@ -16676,7 +16676,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GT)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseTypeArguments() throws ParseException {
+	protected BUTree<SNodeList> parseTypeArguments() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
 		parse(TokenType.LT);
@@ -16736,7 +16736,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GT)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseTypeArgumentsOrDiamond() throws ParseException {
+	protected BUTree<SNodeList> parseTypeArgumentsOrDiamond() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
 		parse(TokenType.LT);
@@ -16805,7 +16805,7 @@ public class ParserImplementation extends ParserNewBase {
 			action({ return makeVar(id); })
 		)
 	) */
-	public BUTree<SNodeList> parseTypeArgumentList() throws ParseException {
+	protected BUTree<SNodeList> parseTypeArgumentList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
 		Token id;
@@ -16918,7 +16918,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SType> parseTypeArgument() throws ParseException {
+	protected BUTree<? extends SType> parseTypeArgument() throws ParseException {
 		BUTree<? extends SType> ret;
 		BUTree<SNodeList> annotations = null;
 		run();
@@ -16991,7 +16991,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup))); })
 	) */
-	public BUTree<SWildcardType> parseWildcard(BUTree<SNodeList> annotations) throws ParseException {
+	protected BUTree<SWildcardType> parseWildcard(BUTree<SNodeList> annotations) throws ParseException {
 		BUTree<? extends SReferenceType> ext = null;
 		BUTree<? extends SReferenceType> sup = null;
 		BUTree<SNodeList> boundAnnotations = null;
@@ -17190,7 +17190,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return dress(SPrimitiveType.make(annotations, primitive)); })
 	) */
-	public BUTree<SPrimitiveType> parsePrimitiveType(BUTree<SNodeList> annotations) throws ParseException {
+	protected BUTree<SPrimitiveType> parsePrimitiveType(BUTree<SNodeList> annotations) throws ParseException {
 		Primitive primitive;
 		if (annotations == null) {
 			run();
@@ -17407,7 +17407,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SType> parseResultType() throws ParseException {
+	protected BUTree<? extends SType> parseResultType() throws ParseException {
 		BUTree<? extends SType> ret;
 		if (match(0, TokenType.VOID) != -1) {
 			run();
@@ -17469,7 +17469,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ret, QualifiedType)
 		action({ return ret; })
 	) */
-	public BUTree<SQualifiedType> parseAnnotatedQualifiedType() throws ParseException {
+	protected BUTree<SQualifiedType> parseAnnotatedQualifiedType() throws ParseException {
 		BUTree<SNodeList> annotations;
 		BUTree<SQualifiedType> ret;
 		run();
@@ -17506,7 +17506,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SQualifiedName> parseQualifiedName() throws ParseException {
+	protected BUTree<SQualifiedName> parseQualifiedName() throws ParseException {
 		BUTree<SNodeOption> qualifier = none();
 		BUTree<SQualifiedName> ret = null;
 		BUTree<SName> name;
@@ -17602,7 +17602,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return name; })
 	) */
-	public BUTree<SName> parseName() throws ParseException {
+	protected BUTree<SName> parseName() throws ParseException {
 		Token id;
 		BUTree<SName> name;
 		if (match(0, TokenType.IDENTIFIER) != -1) {
@@ -17743,7 +17743,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		AssignOp op;
 		BUTree<? extends SExpr> value;
@@ -19318,7 +19318,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SLambdaExpr> parseLambdaBody(BUTree<SNodeList> parameters, boolean parenthesis) throws ParseException {
+	protected BUTree<SLambdaExpr> parseLambdaBody(BUTree<SNodeList> parameters, boolean parenthesis) throws ParseException {
 		BUTree<SBlockStmt> block;
 		BUTree<? extends SExpr> expr;
 		BUTree<SLambdaExpr> ret;
@@ -19400,7 +19400,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseInferredFormalParameterList() throws ParseException {
+	protected BUTree<SNodeList> parseInferredFormalParameterList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SFormalParameter> param;
 		param = parseInferredFormalParameter();
@@ -19462,7 +19462,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(name, Name)
 		action({ return makeFormalParameter(name); })
 	) */
-	public BUTree<SFormalParameter> parseInferredFormalParameter() throws ParseException {
+	protected BUTree<SFormalParameter> parseInferredFormalParameter() throws ParseException {
 		BUTree<SName> name;
 		name = parseName();
 		return makeFormalParameter(name);
@@ -19531,7 +19531,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public AssignOp parseAssignmentOperator() throws ParseException {
+	protected AssignOp parseAssignmentOperator() throws ParseException {
 		AssignOp ret;
 		if (match(0, TokenType.ASSIGN) != -1) {
 			parse(TokenType.ASSIGN);
@@ -19834,7 +19834,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseConditionalExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseConditionalExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> left;
 		BUTree<? extends SExpr> right;
@@ -20025,7 +20025,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseConditionalOrExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseConditionalOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseConditionalAndExpression();
@@ -20201,7 +20201,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseConditionalAndExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseConditionalAndExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseInclusiveOrExpression();
@@ -20377,7 +20377,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseInclusiveOrExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseInclusiveOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseExclusiveOrExpression();
@@ -20553,7 +20553,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseExclusiveOrExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseExclusiveOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseAndExpression();
@@ -20729,7 +20729,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseAndExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseAndExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseEqualityExpression();
@@ -20914,7 +20914,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseEqualityExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseEqualityExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
@@ -21263,7 +21263,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseInstanceOfExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseInstanceOfExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<SNodeList> annotations;
 		BUTree<? extends SType> type;
@@ -21404,7 +21404,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseRelationalExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseRelationalExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
@@ -22018,7 +22018,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseShiftExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseShiftExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
@@ -22355,7 +22355,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseAdditiveExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseAdditiveExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
@@ -22715,7 +22715,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseMultiplicativeExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseMultiplicativeExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
@@ -23199,7 +23199,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseUnaryExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseUnaryExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
 		if (match(0, TokenType.DECR, TokenType.INCR) != -1) {
@@ -23353,7 +23353,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ret, UnaryExpression)
 		action({ return dress(SUnaryExpr.make(op, ret)); })
 	) */
-	public BUTree<? extends SExpr> parsePrefixExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parsePrefixExpression() throws ParseException {
 		UnaryOp op;
 		BUTree<? extends SExpr> ret;
 		run();
@@ -23457,7 +23457,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseUnaryExpressionNotPlusMinus() throws ParseException {
+	protected BUTree<? extends SExpr> parseUnaryExpressionNotPlusMinus() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
 		if (match(0, TokenType.BANG, TokenType.TILDE) != -1) {
@@ -23648,7 +23648,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parsePostfixExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parsePostfixExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
 		ret = parsePrimaryExpression();
@@ -23833,7 +23833,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseCastExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseCastExpression() throws ParseException {
 		BUTree<SNodeList> annotations = null;
 		BUTree<? extends SType> primitiveType;
 		BUTree<? extends SType> type;
@@ -24142,7 +24142,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return type; })
 	) */
-	public BUTree<? extends SType> parseReferenceCastTypeRest(BUTree<? extends SType> type) throws ParseException {
+	protected BUTree<? extends SType> parseReferenceCastTypeRest(BUTree<? extends SType> type) throws ParseException {
 		BUTree<SNodeList> types = emptyList();
 		BUTree<SNodeList> annotations = null;
 		if (matchReferenceCastTypeRest_lookahead1(0) != -1) {
@@ -24301,7 +24301,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return dress(ret); })
 	) */
-	public BUTree<? extends SExpr> parseLiteral() throws ParseException {
+	protected BUTree<? extends SExpr> parseLiteral() throws ParseException {
 		Token literal;
 		BUTree<? extends SExpr> ret;
 		run();
@@ -24536,7 +24536,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parsePrimaryExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parsePrimaryExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		ret = parsePrimaryPrefix();
 		while (matchPrimaryExpression_lookahead1(0) != -1) {
@@ -24736,7 +24736,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parsePrimaryExpressionWithoutSuperSuffix() throws ParseException {
+	protected BUTree<? extends SExpr> parsePrimaryExpressionWithoutSuperSuffix() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		ret = parsePrimaryPrefix();
 		while (matchPrimaryExpressionWithoutSuperSuffix_lookahead1(0) != -1) {
@@ -24929,7 +24929,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parsePrimaryPrefix() throws ParseException {
+	protected BUTree<? extends SExpr> parsePrimaryPrefix() throws ParseException {
 		BUTree<? extends SExpr> ret = null;
 		BUTree<SNodeList> typeArgs = null;
 		BUTree<SNodeList> params;
@@ -25912,7 +25912,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parsePrimarySuffix(BUTree<? extends SExpr> scope) throws ParseException {
+	protected BUTree<? extends SExpr> parsePrimarySuffix(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
 		if (matchPrimarySuffix_lookahead1(0) != -1) {
 			ret = parsePrimarySuffixWithoutSuper(scope);
@@ -26150,7 +26150,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parsePrimarySuffixWithoutSuper(BUTree<? extends SExpr> scope) throws ParseException {
+	protected BUTree<? extends SExpr> parsePrimarySuffixWithoutSuper(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<SName> name;
 		if (match(0, TokenType.DOT) != -1) {
@@ -26406,7 +26406,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(name, Name)
 		action({ return dress(SFieldAccessExpr.make(optionOf(scope), name)); })
 	) */
-	public BUTree<? extends SExpr> parseFieldAccess(BUTree<? extends SExpr> scope) throws ParseException {
+	protected BUTree<? extends SExpr> parseFieldAccess(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<SName> name;
 		name = parseName();
 		return dress(SFieldAccessExpr.make(optionOf(scope), name));
@@ -26430,7 +26430,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(args, Arguments)
 		action({ return dress(SMethodInvocationExpr.make(optionOf(scope), ensureNotNull(typeArgs), name, args)); })
 	) */
-	public BUTree<? extends SExpr> parseMethodInvocation(BUTree<? extends SExpr> scope) throws ParseException {
+	protected BUTree<? extends SExpr> parseMethodInvocation(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<SNodeList> typeArgs = null;
 		BUTree<SName> name;
 		BUTree<SNodeList> args = null;
@@ -26507,7 +26507,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseArguments() throws ParseException {
+	protected BUTree<SNodeList> parseArguments() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
 		parse(TokenType.LPAREN);
@@ -26815,7 +26815,7 @@ public class ParserImplementation extends ParserNewBase {
 		action({ ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name)); })
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseMethodReferenceSuffix(BUTree<? extends SExpr> scope) throws ParseException {
+	protected BUTree<? extends SExpr> parseMethodReferenceSuffix(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<SNodeList> typeArgs = null;
 		BUTree<SName> name;
 		BUTree<? extends SExpr> ret;
@@ -26942,7 +26942,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseAllocationExpression(BUTree<? extends SExpr> scope) throws ParseException {
+	protected BUTree<? extends SExpr> parseAllocationExpression(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> typeArgs = null;
@@ -27212,7 +27212,7 @@ public class ParserImplementation extends ParserNewBase {
 			action({ return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer))); })
 		)
 	) */
-	public BUTree<? extends SExpr> parseArrayCreationExpr(BUTree<? extends SType> componentType) throws ParseException {
+	protected BUTree<? extends SExpr> parseArrayCreationExpr(BUTree<? extends SType> componentType) throws ParseException {
 		BUTree<? extends SExpr> expr;
 		BUTree<SNodeList> arrayDimExprs = emptyList();
 		BUTree<SNodeList> arrayDims = emptyList();
@@ -27331,7 +27331,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return arrayDimExprs; })
 	) */
-	public BUTree<SNodeList> parseArrayDimExprsMandatory() throws ParseException {
+	protected BUTree<SNodeList> parseArrayDimExprsMandatory() throws ParseException {
 		BUTree<SNodeList> arrayDimExprs = emptyList();
 		BUTree<SNodeList> annotations;
 		BUTree<? extends SExpr> expr;
@@ -27456,7 +27456,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return arrayDims; })
 	) */
-	public BUTree<SNodeList> parseArrayDimsMandatory() throws ParseException {
+	protected BUTree<SNodeList> parseArrayDimsMandatory() throws ParseException {
 		BUTree<SNodeList> arrayDims = emptyList();
 		BUTree<SNodeList> annotations;
 		do {
@@ -27575,7 +27575,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SStmt> parseStatement() throws ParseException {
+	protected BUTree<? extends SStmt> parseStatement() throws ParseException {
 		BUTree<? extends SStmt> ret;
 		if (matchStatement_lookahead1(0) != -1) {
 			ret = parseLabeledStatement();
@@ -27759,7 +27759,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 		action({ return dress(SAssertStmt.make(check, optionOf(msg))); })
 	) */
-	public BUTree<SAssertStmt> parseAssertStatement() throws ParseException {
+	protected BUTree<SAssertStmt> parseAssertStatement() throws ParseException {
 		BUTree<? extends SExpr> check;
 		BUTree<? extends SExpr> msg = null;
 		run();
@@ -27831,7 +27831,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(stmt, Statement)
 		action({ return dress(SLabeledStmt.make(label, stmt)); })
 	) */
-	public BUTree<SLabeledStmt> parseLabeledStatement() throws ParseException {
+	protected BUTree<SLabeledStmt> parseLabeledStatement() throws ParseException {
 		BUTree<SName> label;
 		BUTree<? extends SStmt> stmt;
 		run();
@@ -27866,7 +27866,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 		action({ return dress(SBlockStmt.make(ensureNotNull(stmts))); })
 	) */
-	public BUTree<SBlockStmt> parseBlock() throws ParseException {
+	protected BUTree<SBlockStmt> parseBlock() throws ParseException {
 		BUTree<SNodeList> stmts;
 		run();
 		parse(TokenType.LBRACE);
@@ -27922,7 +27922,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SStmt> parseBlockStatement() throws ParseException {
+	protected BUTree<? extends SStmt> parseBlockStatement() throws ParseException {
 		BUTree<? extends SStmt> ret;
 		BUTree<? extends SExpr> expr;
 		BUTree<? extends STypeDecl> typeDecl;
@@ -28098,7 +28098,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(variableDecl, VariableDecl)
 		action({ return dress(SVariableDeclarationExpr.make(variableDecl)); })
 	) */
-	public BUTree<SVariableDeclarationExpr> parseVariableDeclExpression() throws ParseException {
+	protected BUTree<SVariableDeclarationExpr> parseVariableDeclExpression() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<SLocalVariableDecl> variableDecl;
 		run();
@@ -28127,7 +28127,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 		action({ return dress(SEmptyStmt.make()); })
 	) */
-	public BUTree<SEmptyStmt> parseEmptyStatement() throws ParseException {
+	protected BUTree<SEmptyStmt> parseEmptyStatement() throws ParseException {
 		run();
 		parse(TokenType.SEMICOLON);
 		return dress(SEmptyStmt.make());
@@ -28174,7 +28174,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 		action({ return dress(SExpressionStmt.make(expr)); })
 	) */
-	public BUTree<SExpressionStmt> parseStatementExpression() throws ParseException {
+	protected BUTree<SExpressionStmt> parseStatementExpression() throws ParseException {
 		BUTree<? extends SExpr> expr;
 		AssignOp op;
 		BUTree<? extends SExpr> value;
@@ -28416,7 +28416,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 		action({ return dress(SSwitchStmt.make(selector, entries)); })
 	) */
-	public BUTree<SSwitchStmt> parseSwitchStatement() throws ParseException {
+	protected BUTree<SSwitchStmt> parseSwitchStatement() throws ParseException {
 		BUTree<? extends SExpr> selector;
 		BUTree<SSwitchCase> entry;
 		BUTree<SNodeList> entries = emptyList();
@@ -28506,7 +28506,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(stmts, Statements)
 		action({ return dress(SSwitchCase.make(optionOf(label), ensureNotNull(stmts))); })
 	) */
-	public BUTree<SSwitchCase> parseSwitchEntry() throws ParseException {
+	protected BUTree<SSwitchCase> parseSwitchEntry() throws ParseException {
 		BUTree<? extends SExpr> label = null;
 		BUTree<SNodeList> stmts;
 		run();
@@ -28593,7 +28593,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return dress(SIfStmt.make(condition, thenStmt, optionOf(elseStmt))); })
 	) */
-	public BUTree<SIfStmt> parseIfStatement() throws ParseException {
+	protected BUTree<SIfStmt> parseIfStatement() throws ParseException {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> thenStmt;
 		BUTree<? extends SStmt> elseStmt = null;
@@ -28693,7 +28693,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(body, Statement)
 		action({ return dress(SWhileStmt.make(condition, body)); })
 	) */
-	public BUTree<SWhileStmt> parseWhileStatement() throws ParseException {
+	protected BUTree<SWhileStmt> parseWhileStatement() throws ParseException {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> body;
 		run();
@@ -28742,7 +28742,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 		action({ return dress(SDoStmt.make(body, condition)); })
 	) */
-	public BUTree<SDoStmt> parseDoStatement() throws ParseException {
+	protected BUTree<SDoStmt> parseDoStatement() throws ParseException {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> body;
 		run();
@@ -28827,7 +28827,7 @@ public class ParserImplementation extends ParserNewBase {
 				return dress(SForStmt.make(init, expr, update, body));
 		})
 	) */
-	public BUTree<? extends SStmt> parseForStatement() throws ParseException {
+	protected BUTree<? extends SStmt> parseForStatement() throws ParseException {
 		BUTree<SVariableDeclarationExpr> varExpr = null;
 		BUTree<? extends SExpr> expr = null;
 		BUTree<SNodeList> init = null;
@@ -29097,7 +29097,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseForInit() throws ParseException {
+	protected BUTree<SNodeList> parseForInit() throws ParseException {
 		BUTree<SNodeList> ret;
 		BUTree<? extends SExpr> expr;
 		if (matchForInit_lookahead1(0) != -1) {
@@ -29197,7 +29197,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseExpressionList() throws ParseException {
+	protected BUTree<SNodeList> parseExpressionList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
 		expr = parseExpression();
@@ -29259,7 +29259,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ret, ExpressionList)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseForUpdate() throws ParseException {
+	protected BUTree<SNodeList> parseForUpdate() throws ParseException {
 		BUTree<SNodeList> ret;
 		ret = parseExpressionList();
 		return ret;
@@ -29284,7 +29284,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 		action({ return dress(SBreakStmt.make(optionOf(id))); })
 	) */
-	public BUTree<SBreakStmt> parseBreakStatement() throws ParseException {
+	protected BUTree<SBreakStmt> parseBreakStatement() throws ParseException {
 		BUTree<SName> id = null;
 		run();
 		parse(TokenType.BREAK);
@@ -29345,7 +29345,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 		action({ return dress(SContinueStmt.make(optionOf(id))); })
 	) */
-	public BUTree<SContinueStmt> parseContinueStatement() throws ParseException {
+	protected BUTree<SContinueStmt> parseContinueStatement() throws ParseException {
 		BUTree<SName> id = null;
 		run();
 		parse(TokenType.CONTINUE);
@@ -29406,7 +29406,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 		action({ return dress(SReturnStmt.make(optionOf(expr))); })
 	) */
-	public BUTree<SReturnStmt> parseReturnStatement() throws ParseException {
+	protected BUTree<SReturnStmt> parseReturnStatement() throws ParseException {
 		BUTree<? extends SExpr> expr = null;
 		run();
 		parse(TokenType.RETURN);
@@ -29465,7 +29465,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 		action({ return dress(SThrowStmt.make(expr)); })
 	) */
-	public BUTree<SThrowStmt> parseThrowStatement() throws ParseException {
+	protected BUTree<SThrowStmt> parseThrowStatement() throws ParseException {
 		BUTree<? extends SExpr> expr;
 		run();
 		parse(TokenType.THROW);
@@ -29501,7 +29501,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(block, Block)
 		action({ return dress(SSynchronizedStmt.make(expr, block)); })
 	) */
-	public BUTree<SSynchronizedStmt> parseSynchronizedStatement() throws ParseException {
+	protected BUTree<SSynchronizedStmt> parseSynchronizedStatement() throws ParseException {
 		BUTree<? extends SExpr> expr;
 		BUTree<SBlockStmt> block;
 		run();
@@ -29573,7 +29573,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock))); })
 	) */
-	public BUTree<STryStmt> parseTryStatement() throws ParseException {
+	protected BUTree<STryStmt> parseTryStatement() throws ParseException {
 		BUTree<SNodeList> resources = null;
 		ByRef<Boolean> trailingSemiColon = new ByRef<Boolean>(false);
 		BUTree<SBlockStmt> tryBlock;
@@ -29881,7 +29881,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return catchClauses; })
 	) */
-	public BUTree<SNodeList> parseCatchClauses() throws ParseException {
+	protected BUTree<SNodeList> parseCatchClauses() throws ParseException {
 		BUTree<SNodeList> catchClauses = emptyList();
 		BUTree<SCatchClause> catchClause;
 		do {
@@ -29937,7 +29937,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(catchBlock, Block)
 		action({ return dress(SCatchClause.make(param, catchBlock)); })
 	) */
-	public BUTree<SCatchClause> parseCatchClause() throws ParseException {
+	protected BUTree<SCatchClause> parseCatchClause() throws ParseException {
 		BUTree<SFormalParameter> param;
 		BUTree<SBlockStmt> catchBlock;
 		run();
@@ -29995,7 +29995,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(exceptId, VariableDeclaratorId)
 		action({ return dress(SFormalParameter.make(modifiers, exceptType, false, exceptId)); })
 	) */
-	public BUTree<SFormalParameter> parseCatchFormalParameter() throws ParseException {
+	protected BUTree<SFormalParameter> parseCatchFormalParameter() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SType> exceptType;
 		BUTree<SNodeList> exceptTypes = emptyList();
@@ -30138,7 +30138,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 		action({ return vars; })
 	) */
-	public BUTree<SNodeList> parseResourceSpecification(ByRef<Boolean> trailingSemiColon) throws ParseException {
+	protected BUTree<SNodeList> parseResourceSpecification(ByRef<Boolean> trailingSemiColon) throws ParseException {
 		BUTree<SNodeList> vars = emptyList();
 		BUTree<SVariableDeclarationExpr> var;
 		parse(TokenType.LPAREN);
@@ -30338,7 +30338,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GT)
 		action({ popNewWhitespaces(2); })
 	) */
-	public void parseRUNSIGNEDSHIFT() throws ParseException {
+	protected void parseRUNSIGNEDSHIFT() throws ParseException {
 		parse(TokenType.GT);
 		parse(TokenType.GT);
 		parse(TokenType.GT);
@@ -30373,7 +30373,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GT)
 		action({ popNewWhitespaces(1); })
 	) */
-	public void parseRSIGNEDSHIFT() throws ParseException {
+	protected void parseRSIGNEDSHIFT() throws ParseException {
 		parse(TokenType.GT);
 		parse(TokenType.GT);
 		popNewWhitespaces(1);
@@ -30404,7 +30404,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return annotations; })
 	) */
-	public BUTree<SNodeList> parseAnnotations() throws ParseException {
+	protected BUTree<SNodeList> parseAnnotations() throws ParseException {
 		BUTree<SNodeList> annotations = emptyList();
 		BUTree<? extends SAnnotationExpr> annotation;
 		while (match(0, TokenType.AT) != -1) {
@@ -30484,7 +30484,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SAnnotationExpr> parseAnnotation() throws ParseException {
+	protected BUTree<? extends SAnnotationExpr> parseAnnotation() throws ParseException {
 		BUTree<? extends SAnnotationExpr> ret;
 		if (matchAnnotation_lookahead1(0) != -1) {
 			ret = parseNormalAnnotation();
@@ -30739,7 +30739,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 		action({ return dress(SNormalAnnotationExpr.make(name, ensureNotNull(pairs))); })
 	) */
-	public BUTree<SNormalAnnotationExpr> parseNormalAnnotation() throws ParseException {
+	protected BUTree<SNormalAnnotationExpr> parseNormalAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
 		BUTree<SNodeList> pairs = null;
 		run();
@@ -30808,7 +30808,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(name, QualifiedName)
 		action({ return dress(SMarkerAnnotationExpr.make(name)); })
 	) */
-	public BUTree<SMarkerAnnotationExpr> parseMarkerAnnotation() throws ParseException {
+	protected BUTree<SMarkerAnnotationExpr> parseMarkerAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
 		run();
 		parse(TokenType.AT);
@@ -30839,7 +30839,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 		action({ return dress(SSingleMemberAnnotationExpr.make(name, memberVal)); })
 	) */
-	public BUTree<SSingleMemberAnnotationExpr> parseSingleMemberAnnotation() throws ParseException {
+	protected BUTree<SSingleMemberAnnotationExpr> parseSingleMemberAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
 		BUTree<? extends SExpr> memberVal;
 		run();
@@ -30887,7 +30887,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<SNodeList> parseMemberValuePairs() throws ParseException {
+	protected BUTree<SNodeList> parseMemberValuePairs() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SMemberValuePair> pair;
 		pair = parseMemberValuePair();
@@ -30952,7 +30952,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(value, MemberValue)
 		action({ return dress(SMemberValuePair.make(name, value)); })
 	) */
-	public BUTree<SMemberValuePair> parseMemberValuePair() throws ParseException {
+	protected BUTree<SMemberValuePair> parseMemberValuePair() throws ParseException {
 		BUTree<SName> name;
 		BUTree<? extends SExpr> value;
 		run();
@@ -30988,7 +30988,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		action({ return ret; })
 	) */
-	public BUTree<? extends SExpr> parseMemberValue() throws ParseException {
+	protected BUTree<? extends SExpr> parseMemberValue() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		if (match(0, TokenType.AT) != -1) {
 			ret = parseAnnotation();
@@ -31055,7 +31055,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 		action({ return dress(SArrayInitializerExpr.make(ret, trailingComma)); })
 	) */
-	public BUTree<? extends SExpr> parseMemberValueArrayInitializer() throws ParseException {
+	protected BUTree<? extends SExpr> parseMemberValueArrayInitializer() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> member;
 		boolean trailingComma = false;
