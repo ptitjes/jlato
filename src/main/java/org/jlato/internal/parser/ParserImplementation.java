@@ -21,18 +21,43 @@ import static org.jlato.parser.ParserImplConstants.GT;
 import static org.jlato.parser.ParserImplConstants.RSIGNEDSHIFT;
 import static org.jlato.parser.ParserImplConstants.RUNSIGNEDSHIFT;
 
+/**
+ * Internal implementation of the Java parser as a recursive descent parser.
+ */
 public class ParserImplementation extends ParserNewBase {
 
+	/* Sequence(
+		Terminal("NODE_LIST_VARIABLE")
+		Action({ return makeVar(); })
+	) */
 	public BUTree<SNodeList> parseNodeListVar() throws ParseException {
 		parse(ParserImplConstants.NODE_LIST_VARIABLE);
 		return makeVar();
 	}
 
+	/* Sequence(
+		Terminal("NODE_VARIABLE")
+		Action({ return makeVar(); })
+	) */
 	public BUTree<SName> parseNodeVar() throws ParseException {
 		parse(ParserImplConstants.NODE_VARIABLE);
 		return makeVar();
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		ZeroOrOne(
+			LookAhead(
+				NonTerminal(PackageDecl)
+			)
+			NonTerminal(packageDecl, PackageDecl)
+		)
+		NonTerminal(imports, ImportDecls)
+		NonTerminal(types, TypeDecls)
+		Action({ compilationUnit = dress(SCompilationUnit.make(packageDecl, imports, types)); })
+		NonTerminal(Epilog)
+		Action({ return dressWithPrologAndEpilog(compilationUnit); })
+	) */
 	public BUTree<SCompilationUnit> parseCompilationUnit() throws ParseException {
 		BUTree<SPackageDecl> packageDecl = null;
 		BUTree<SNodeList> imports;
@@ -50,14 +75,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal(id, "IDENTIFIER")
-			Action({
-				name = dress(SName.make(id.image));
-			})
-		) */
+		Terminal(id, "IDENTIFIER")
+	) */
 	private int matchName_1_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.IDENTIFIER);
 		if (lookahead == -1)
@@ -66,11 +85,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("NODE_VARIABLE")
-			Action({
-				return makeVar();
-			})
-		) */
+		Terminal("NODE_VARIABLE")
+	) */
 	private int matchNodeVar(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.NODE_VARIABLE);
 		if (lookahead == -1)
@@ -79,10 +95,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			NonTerminal(name, NodeVar)
-		) */
+		LookAhead({ quotesMode })
+		NonTerminal(name, NodeVar)
+	) */
 	private int matchName_1_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -94,21 +109,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Action({
-					run();
-				})
-				Terminal(id, "IDENTIFIER")
-				Action({
-					name = dress(SName.make(id.image));
-				})
-			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				NonTerminal(name, NodeVar)
-			)
-		) */
+		Sequence(
+			Terminal(id, "IDENTIFIER")
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			NonTerminal(name, NodeVar)
+		)
+	) */
 	private int matchName_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchName_1_1(lookahead);
@@ -121,26 +129,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					Action({
-						run();
-					})
-					Terminal(id, "IDENTIFIER")
-					Action({
-						name = dress(SName.make(id.image));
-					})
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(name, NodeVar)
-				)
+		Choice(
+			Sequence(
+				Terminal(id, "IDENTIFIER")
 			)
-			Action({
-				return name;
-			})
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(name, NodeVar)
+			)
+		)
+	) */
 	private int matchName(int lookahead) {
 		lookahead = matchName_1(lookahead);
 		if (lookahead == -1)
@@ -149,19 +147,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("DOT")
-			Action({
-				qualifier = optionOf(ret);
-			})
-			NonTerminal(name, Name)
-			Action({
-				ret = dress(SQualifiedName.make(qualifier, name));
-			})
-		) */
+		LookAhead(2)
+		Terminal("DOT")
+		NonTerminal(name, Name)
+	) */
 	private int matchQualifiedName_4_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.DOT);
 		if (lookahead == -1)
@@ -173,19 +162,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("DOT")
-			Action({
-				qualifier = optionOf(ret);
-			})
-			NonTerminal(name, Name)
-			Action({
-				ret = dress(SQualifiedName.make(qualifier, name));
-			})
-		) */
+		LookAhead(2)
+		Terminal("DOT")
+		NonTerminal(name, Name)
+	) */
 	private int matchQualifiedName_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchQualifiedName_4_1(lookahead);
@@ -197,31 +177,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
+		NonTerminal(name, Name)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("DOT")
 			NonTerminal(name, Name)
-			Action({
-				ret = dress(SQualifiedName.make(qualifier, name));
-			})
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Terminal("DOT")
-				Action({
-					qualifier = optionOf(ret);
-				})
-				NonTerminal(name, Name)
-				Action({
-					ret = dress(SQualifiedName.make(qualifier, name));
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchQualifiedName(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -233,13 +195,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Terminal("COMMA")
-			NonTerminal(member, MemberValue)
-			Action({
-				ret = append(ret, member);
-			})
-		) */
+		LookAhead(2)
+		Terminal("COMMA")
+		NonTerminal(member, MemberValue)
+	) */
 	private int matchMemberValueArrayInitializer_3_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -251,13 +210,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Terminal("COMMA")
-			NonTerminal(member, MemberValue)
-			Action({
-				ret = append(ret, member);
-			})
-		) */
+		LookAhead(2)
+		Terminal("COMMA")
+		NonTerminal(member, MemberValue)
+	) */
 	private int matchMemberValueArrayInitializer_3_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchMemberValueArrayInitializer_3_1_3_1(lookahead);
@@ -269,19 +225,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(member, MemberValue)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("COMMA")
 			NonTerminal(member, MemberValue)
-			Action({
-				ret = append(ret, member);
-			})
-			ZeroOrMore(
-				LookAhead(2)
-				Terminal("COMMA")
-				NonTerminal(member, MemberValue)
-				Action({
-					ret = append(ret, member);
-				})
-			)
-		) */
+		)
+	) */
 	private int matchMemberValueArrayInitializer_3_1(int lookahead) {
 		lookahead = matchMemberValue(lookahead);
 		if (lookahead == -1)
@@ -293,19 +243,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
+		NonTerminal(member, MemberValue)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("COMMA")
 			NonTerminal(member, MemberValue)
-			Action({
-				ret = append(ret, member);
-			})
-			ZeroOrMore(
-				LookAhead(2)
-				Terminal("COMMA")
-				NonTerminal(member, MemberValue)
-				Action({
-					ret = append(ret, member);
-				})
-			)
-		) */
+		)
+	) */
 	private int matchMemberValueArrayInitializer_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchMemberValueArrayInitializer_3_1(lookahead);
@@ -315,11 +259,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			Action({
-				trailingComma = true;
-			})
-		) */
+		Terminal("COMMA")
+	) */
 	private int matchMemberValueArrayInitializer_4_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -328,11 +269,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Terminal("COMMA")
-			Action({
-				trailingComma = true;
-			})
-		) */
+		Terminal("COMMA")
+	) */
 	private int matchMemberValueArrayInitializer_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchMemberValueArrayInitializer_4_1(lookahead);
@@ -342,35 +280,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("LBRACE")
-			ZeroOrOne(
-				NonTerminal(member, MemberValue)
-				Action({
-					ret = append(ret, member);
-				})
-				ZeroOrMore(
-					LookAhead(2)
-					Terminal("COMMA")
-					NonTerminal(member, MemberValue)
-					Action({
-						ret = append(ret, member);
-					})
-				)
-			)
-			ZeroOrOne(
+		Terminal("LBRACE")
+		ZeroOrOne(
+			NonTerminal(member, MemberValue)
+			ZeroOrMore(
+				LookAhead(2)
 				Terminal("COMMA")
-				Action({
-					trailingComma = true;
-				})
+				NonTerminal(member, MemberValue)
 			)
-			Terminal("RBRACE")
-			Action({
-				return dress(SArrayInitializerExpr.make(ret, trailingComma));
-			})
-		) */
+		)
+		ZeroOrOne(
+			Terminal("COMMA")
+		)
+		Terminal("RBRACE")
+	) */
 	private int matchMemberValueArrayInitializer(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LBRACE);
 		if (lookahead == -1)
@@ -388,11 +311,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("INCR")
-			Action({
-				op = UnaryOp.PreIncrement;
-			})
-		) */
+		Terminal("INCR")
+	) */
 	private int matchPrefixExpression_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.INCR);
 		if (lookahead == -1)
@@ -401,11 +321,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("DECR")
-			Action({
-				op = UnaryOp.PreDecrement;
-			})
-		) */
+		Terminal("DECR")
+	) */
 	private int matchPrefixExpression_2_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.DECR);
 		if (lookahead == -1)
@@ -414,19 +331,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("INCR")
-				Action({
-					op = UnaryOp.PreIncrement;
-				})
-			)
-			Sequence(
-				Terminal("DECR")
-				Action({
-					op = UnaryOp.PreDecrement;
-				})
-			)
-		) */
+		Sequence(
+			Terminal("INCR")
+		)
+		Sequence(
+			Terminal("DECR")
+		)
+	) */
 	private int matchPrefixExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrefixExpression_2_1(lookahead);
@@ -439,28 +350,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Choice(
-				Sequence(
-					Terminal("INCR")
-					Action({
-						op = UnaryOp.PreIncrement;
-					})
-				)
-				Sequence(
-					Terminal("DECR")
-					Action({
-						op = UnaryOp.PreDecrement;
-					})
-				)
+		Choice(
+			Sequence(
+				Terminal("INCR")
 			)
-			NonTerminal(ret, UnaryExpression)
-			Action({
-				return dress(SUnaryExpr.make(op, ret));
-			})
-		) */
+			Sequence(
+				Terminal("DECR")
+			)
+		)
+		NonTerminal(ret, UnaryExpression)
+	) */
 	private int matchPrefixExpression(int lookahead) {
 		lookahead = matchPrefixExpression_2(lookahead);
 		if (lookahead == -1)
@@ -472,11 +371,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("PLUS")
-			Action({
-				op = UnaryOp.Positive;
-			})
-		) */
+		Terminal("PLUS")
+	) */
 	private int matchUnaryExpression_1_2_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.PLUS);
 		if (lookahead == -1)
@@ -485,11 +381,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("MINUS")
-			Action({
-				op = UnaryOp.Negative;
-			})
-		) */
+		Terminal("MINUS")
+	) */
 	private int matchUnaryExpression_1_2_2_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.MINUS);
 		if (lookahead == -1)
@@ -498,19 +391,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("PLUS")
-				Action({
-					op = UnaryOp.Positive;
-				})
-			)
-			Sequence(
-				Terminal("MINUS")
-				Action({
-					op = UnaryOp.Negative;
-				})
-			)
-		) */
+		Sequence(
+			Terminal("PLUS")
+		)
+		Sequence(
+			Terminal("MINUS")
+		)
+	) */
 	private int matchUnaryExpression_1_2_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchUnaryExpression_1_2_2_1(lookahead);
@@ -523,28 +410,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Choice(
-				Sequence(
-					Terminal("PLUS")
-					Action({
-						op = UnaryOp.Positive;
-					})
-				)
-				Sequence(
-					Terminal("MINUS")
-					Action({
-						op = UnaryOp.Negative;
-					})
-				)
+		Choice(
+			Sequence(
+				Terminal("PLUS")
 			)
-			NonTerminal(ret, UnaryExpression)
-			Action({
-				ret = dress(SUnaryExpr.make(op, ret));
-			})
-		) */
+			Sequence(
+				Terminal("MINUS")
+			)
+		)
+		NonTerminal(ret, UnaryExpression)
+	) */
 	private int matchUnaryExpression_1_2(int lookahead) {
 		lookahead = matchUnaryExpression_1_2_2(lookahead);
 		if (lookahead == -1)
@@ -556,11 +431,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("TILDE")
-			Action({
-				op = UnaryOp.Inverse;
-			})
-		) */
+		Terminal("TILDE")
+	) */
 	private int matchUnaryExpressionNotPlusMinus_1_1_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.TILDE);
 		if (lookahead == -1)
@@ -569,11 +441,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("BANG")
-			Action({
-				op = UnaryOp.Not;
-			})
-		) */
+		Terminal("BANG")
+	) */
 	private int matchUnaryExpressionNotPlusMinus_1_1_2_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.BANG);
 		if (lookahead == -1)
@@ -582,19 +451,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("TILDE")
-				Action({
-					op = UnaryOp.Inverse;
-				})
-			)
-			Sequence(
-				Terminal("BANG")
-				Action({
-					op = UnaryOp.Not;
-				})
-			)
-		) */
+		Sequence(
+			Terminal("TILDE")
+		)
+		Sequence(
+			Terminal("BANG")
+		)
+	) */
 	private int matchUnaryExpressionNotPlusMinus_1_1_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchUnaryExpressionNotPlusMinus_1_1_2_1(lookahead);
@@ -607,28 +470,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Choice(
-				Sequence(
-					Terminal("TILDE")
-					Action({
-						op = UnaryOp.Inverse;
-					})
-				)
-				Sequence(
-					Terminal("BANG")
-					Action({
-						op = UnaryOp.Not;
-					})
-				)
+		Choice(
+			Sequence(
+				Terminal("TILDE")
 			)
-			NonTerminal(ret, UnaryExpression)
-			Action({
-				ret = dress(SUnaryExpr.make(op, ret));
-			})
-		) */
+			Sequence(
+				Terminal("BANG")
+			)
+		)
+		NonTerminal(ret, UnaryExpression)
+	) */
 	private int matchUnaryExpressionNotPlusMinus_1_1(int lookahead) {
 		lookahead = matchUnaryExpressionNotPlusMinus_1_1_2(lookahead);
 		if (lookahead == -1)
@@ -640,11 +491,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("BOOLEAN")
-			Action({
-				primitive = Primitive.Boolean;
-			})
-		) */
+		Terminal("BOOLEAN")
+	) */
 	private int matchPrimitiveType_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.BOOLEAN);
 		if (lookahead == -1)
@@ -653,11 +501,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("CHAR")
-			Action({
-				primitive = Primitive.Char;
-			})
-		) */
+		Terminal("CHAR")
+	) */
 	private int matchPrimitiveType_2_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.CHAR);
 		if (lookahead == -1)
@@ -666,11 +511,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("BYTE")
-			Action({
-				primitive = Primitive.Byte;
-			})
-		) */
+		Terminal("BYTE")
+	) */
 	private int matchPrimitiveType_2_3(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.BYTE);
 		if (lookahead == -1)
@@ -679,11 +521,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("SHORT")
-			Action({
-				primitive = Primitive.Short;
-			})
-		) */
+		Terminal("SHORT")
+	) */
 	private int matchPrimitiveType_2_4(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SHORT);
 		if (lookahead == -1)
@@ -692,11 +531,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("INT")
-			Action({
-				primitive = Primitive.Int;
-			})
-		) */
+		Terminal("INT")
+	) */
 	private int matchPrimitiveType_2_5(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.INT);
 		if (lookahead == -1)
@@ -705,11 +541,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LONG")
-			Action({
-				primitive = Primitive.Long;
-			})
-		) */
+		Terminal("LONG")
+	) */
 	private int matchPrimitiveType_2_6(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LONG);
 		if (lookahead == -1)
@@ -718,11 +551,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("FLOAT")
-			Action({
-				primitive = Primitive.Float;
-			})
-		) */
+		Terminal("FLOAT")
+	) */
 	private int matchPrimitiveType_2_7(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.FLOAT);
 		if (lookahead == -1)
@@ -731,11 +561,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("DOUBLE")
-			Action({
-				primitive = Primitive.Double;
-			})
-		) */
+		Terminal("DOUBLE")
+	) */
 	private int matchPrimitiveType_2_8(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.DOUBLE);
 		if (lookahead == -1)
@@ -744,55 +571,31 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("BOOLEAN")
-				Action({
-					primitive = Primitive.Boolean;
-				})
-			)
-			Sequence(
-				Terminal("CHAR")
-				Action({
-					primitive = Primitive.Char;
-				})
-			)
-			Sequence(
-				Terminal("BYTE")
-				Action({
-					primitive = Primitive.Byte;
-				})
-			)
-			Sequence(
-				Terminal("SHORT")
-				Action({
-					primitive = Primitive.Short;
-				})
-			)
-			Sequence(
-				Terminal("INT")
-				Action({
-					primitive = Primitive.Int;
-				})
-			)
-			Sequence(
-				Terminal("LONG")
-				Action({
-					primitive = Primitive.Long;
-				})
-			)
-			Sequence(
-				Terminal("FLOAT")
-				Action({
-					primitive = Primitive.Float;
-				})
-			)
-			Sequence(
-				Terminal("DOUBLE")
-				Action({
-					primitive = Primitive.Double;
-				})
-			)
-		) */
+		Sequence(
+			Terminal("BOOLEAN")
+		)
+		Sequence(
+			Terminal("CHAR")
+		)
+		Sequence(
+			Terminal("BYTE")
+		)
+		Sequence(
+			Terminal("SHORT")
+		)
+		Sequence(
+			Terminal("INT")
+		)
+		Sequence(
+			Terminal("LONG")
+		)
+		Sequence(
+			Terminal("FLOAT")
+		)
+		Sequence(
+			Terminal("DOUBLE")
+		)
+	) */
 	private int matchPrimitiveType_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrimitiveType_2_1(lookahead);
@@ -823,66 +626,33 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				if (annotations == null) {
-		run();
-		annotations = emptyList();
-	}
-			})
-			Choice(
-				Sequence(
-					Terminal("BOOLEAN")
-					Action({
-						primitive = Primitive.Boolean;
-					})
-				)
-				Sequence(
-					Terminal("CHAR")
-					Action({
-						primitive = Primitive.Char;
-					})
-				)
-				Sequence(
-					Terminal("BYTE")
-					Action({
-						primitive = Primitive.Byte;
-					})
-				)
-				Sequence(
-					Terminal("SHORT")
-					Action({
-						primitive = Primitive.Short;
-					})
-				)
-				Sequence(
-					Terminal("INT")
-					Action({
-						primitive = Primitive.Int;
-					})
-				)
-				Sequence(
-					Terminal("LONG")
-					Action({
-						primitive = Primitive.Long;
-					})
-				)
-				Sequence(
-					Terminal("FLOAT")
-					Action({
-						primitive = Primitive.Float;
-					})
-				)
-				Sequence(
-					Terminal("DOUBLE")
-					Action({
-						primitive = Primitive.Double;
-					})
-				)
+		Choice(
+			Sequence(
+				Terminal("BOOLEAN")
 			)
-			Action({
-				return dress(SPrimitiveType.make(annotations, primitive));
-			})
-		) */
+			Sequence(
+				Terminal("CHAR")
+			)
+			Sequence(
+				Terminal("BYTE")
+			)
+			Sequence(
+				Terminal("SHORT")
+			)
+			Sequence(
+				Terminal("INT")
+			)
+			Sequence(
+				Terminal("LONG")
+			)
+			Sequence(
+				Terminal("FLOAT")
+			)
+			Sequence(
+				Terminal("DOUBLE")
+			)
+		)
+	) */
 	private int matchPrimitiveType(int lookahead) {
 		lookahead = matchPrimitiveType_2(lookahead);
 		if (lookahead == -1)
@@ -891,12 +661,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("RPAREN")
-			NonTerminal(ret, UnaryExpression)
-			Action({
-				ret = dress(SCastExpr.make(primitiveType, ret));
-			})
-		) */
+		Terminal("RPAREN")
+		NonTerminal(ret, UnaryExpression)
+	) */
 	private int matchCastExpression_5_1_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.RPAREN);
 		if (lookahead == -1)
@@ -908,21 +675,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-				Terminal("RBRACKET")
-			)
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
+		LookAhead(
+			NonTerminal(Annotations)
 			Terminal("LBRACKET")
 			Terminal("RBRACKET")
-			Action({
-				arrayDims = append(arrayDims, dress(SArrayDim.make(annotations)));
-			})
-		) */
+		)
+		NonTerminal(annotations, Annotations)
+		Terminal("LBRACKET")
+		Terminal("RBRACKET")
+	) */
 	private int matchArrayDimsMandatory_1_1(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -937,21 +698,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* OneOrMore(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-				Terminal("RBRACKET")
-			)
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
+		LookAhead(
+			NonTerminal(Annotations)
 			Terminal("LBRACKET")
 			Terminal("RBRACKET")
-			Action({
-				arrayDims = append(arrayDims, dress(SArrayDim.make(annotations)));
-			})
-		) */
+		)
+		NonTerminal(annotations, Annotations)
+		Terminal("LBRACKET")
+		Terminal("RBRACKET")
+	) */
 	private int matchArrayDimsMandatory_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchArrayDimsMandatory_1_1(lookahead);
@@ -965,26 +720,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			OneOrMore(
-				LookAhead(
-					NonTerminal(Annotations)
-					Terminal("LBRACKET")
-					Terminal("RBRACKET")
-				)
-				Action({
-					run();
-				})
-				NonTerminal(annotations, Annotations)
+		OneOrMore(
+			LookAhead(
+				NonTerminal(Annotations)
 				Terminal("LBRACKET")
 				Terminal("RBRACKET")
-				Action({
-					arrayDims = append(arrayDims, dress(SArrayDim.make(annotations)));
-				})
 			)
-			Action({
-				return arrayDims;
-			})
-		) */
+			NonTerminal(annotations, Annotations)
+			Terminal("LBRACKET")
+			Terminal("RBRACKET")
+		)
+	) */
 	private int matchArrayDimsMandatory(int lookahead) {
 		lookahead = matchArrayDimsMandatory_1(lookahead);
 		if (lookahead == -1)
@@ -993,15 +739,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(primitiveType, PrimitiveType)
-			Action({
-				lateRun();
-			})
-			NonTerminal(arrayDims, ArrayDimsMandatory)
-			Action({
-				type = dress(SArrayType.make(primitiveType, arrayDims));
-			})
-		) */
+		NonTerminal(primitiveType, PrimitiveType)
+		NonTerminal(arrayDims, ArrayDimsMandatory)
+	) */
 	private int matchReferenceType_1_1(int lookahead) {
 		lookahead = matchPrimitiveType(lookahead);
 		if (lookahead == -1)
@@ -1013,13 +753,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("EXTENDS")
-			Action({
-				run();
-			})
-			NonTerminal(boundAnnotations, Annotations)
-			NonTerminal(ext, ReferenceType)
-		) */
+		Terminal("EXTENDS")
+		NonTerminal(boundAnnotations, Annotations)
+		NonTerminal(ext, ReferenceType)
+	) */
 	private int matchWildcard_3_1_1_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.EXTENDS);
 		if (lookahead == -1)
@@ -1034,13 +771,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("SUPER")
-			Action({
-				run();
-			})
-			NonTerminal(boundAnnotations, Annotations)
-			NonTerminal(sup, ReferenceType)
-		) */
+		Terminal("SUPER")
+		NonTerminal(boundAnnotations, Annotations)
+		NonTerminal(sup, ReferenceType)
+	) */
 	private int matchWildcard_3_1_1_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SUPER);
 		if (lookahead == -1)
@@ -1055,23 +789,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("EXTENDS")
-				Action({
-					run();
-				})
-				NonTerminal(boundAnnotations, Annotations)
-				NonTerminal(ext, ReferenceType)
-			)
-			Sequence(
-				Terminal("SUPER")
-				Action({
-					run();
-				})
-				NonTerminal(boundAnnotations, Annotations)
-				NonTerminal(sup, ReferenceType)
-			)
-		) */
+		Sequence(
+			Terminal("EXTENDS")
+			NonTerminal(boundAnnotations, Annotations)
+			NonTerminal(ext, ReferenceType)
+		)
+		Sequence(
+			Terminal("SUPER")
+			NonTerminal(boundAnnotations, Annotations)
+			NonTerminal(sup, ReferenceType)
+		)
+	) */
 	private int matchWildcard_3_1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchWildcard_3_1_1_1(lookahead);
@@ -1084,25 +812,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					Terminal("EXTENDS")
-					Action({
-						run();
-					})
-					NonTerminal(boundAnnotations, Annotations)
-					NonTerminal(ext, ReferenceType)
-				)
-				Sequence(
-					Terminal("SUPER")
-					Action({
-						run();
-					})
-					NonTerminal(boundAnnotations, Annotations)
-					NonTerminal(sup, ReferenceType)
-				)
+		Choice(
+			Sequence(
+				Terminal("EXTENDS")
+				NonTerminal(boundAnnotations, Annotations)
+				NonTerminal(ext, ReferenceType)
 			)
-		) */
+			Sequence(
+				Terminal("SUPER")
+				NonTerminal(boundAnnotations, Annotations)
+				NonTerminal(sup, ReferenceType)
+			)
+		)
+	) */
 	private int matchWildcard_3_1(int lookahead) {
 		lookahead = matchWildcard_3_1_1(lookahead);
 		if (lookahead == -1)
@@ -1111,25 +833,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Choice(
-				Sequence(
-					Terminal("EXTENDS")
-					Action({
-						run();
-					})
-					NonTerminal(boundAnnotations, Annotations)
-					NonTerminal(ext, ReferenceType)
-				)
-				Sequence(
-					Terminal("SUPER")
-					Action({
-						run();
-					})
-					NonTerminal(boundAnnotations, Annotations)
-					NonTerminal(sup, ReferenceType)
-				)
+		Choice(
+			Sequence(
+				Terminal("EXTENDS")
+				NonTerminal(boundAnnotations, Annotations)
+				NonTerminal(ext, ReferenceType)
 			)
-		) */
+			Sequence(
+				Terminal("SUPER")
+				NonTerminal(boundAnnotations, Annotations)
+				NonTerminal(sup, ReferenceType)
+			)
+		)
+	) */
 	private int matchWildcard_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchWildcard_3_1(lookahead);
@@ -1139,37 +855,22 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				if (annotations == null) {
-		run();
-		annotations = emptyList();
-	}
-			})
-			Terminal("HOOK")
-			ZeroOrOne(
-				Choice(
-					Sequence(
-						Terminal("EXTENDS")
-						Action({
-							run();
-						})
-						NonTerminal(boundAnnotations, Annotations)
-						NonTerminal(ext, ReferenceType)
-					)
-					Sequence(
-						Terminal("SUPER")
-						Action({
-							run();
-						})
-						NonTerminal(boundAnnotations, Annotations)
-						NonTerminal(sup, ReferenceType)
-					)
+		Terminal("HOOK")
+		ZeroOrOne(
+			Choice(
+				Sequence(
+					Terminal("EXTENDS")
+					NonTerminal(boundAnnotations, Annotations)
+					NonTerminal(ext, ReferenceType)
+				)
+				Sequence(
+					Terminal("SUPER")
+					NonTerminal(boundAnnotations, Annotations)
+					NonTerminal(sup, ReferenceType)
 				)
 			)
-			Action({
-				return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup)));
-			})
-		) */
+		)
+	) */
 	private int matchWildcard(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.HOOK);
 		if (lookahead == -1)
@@ -1181,9 +882,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			NonTerminal(ret, ReferenceType)
-			NonTerminal(ret, Wildcard)
-		) */
+		NonTerminal(ret, ReferenceType)
+		NonTerminal(ret, Wildcard)
+	) */
 	private int matchTypeArgument_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchReferenceType(lookahead);
@@ -1196,18 +897,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
-			Choice(
-				NonTerminal(ret, ReferenceType)
-				NonTerminal(ret, Wildcard)
-			)
-			Action({
-				return ret;
-			})
-		) */
+		NonTerminal(annotations, Annotations)
+		Choice(
+			NonTerminal(ret, ReferenceType)
+			NonTerminal(ret, Wildcard)
+		)
+	) */
 	private int matchTypeArgument(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -1219,12 +914,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			NonTerminal(type, TypeArgument)
-			Action({
-				ret = append(ret, type);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(type, TypeArgument)
+	) */
 	private int matchTypeArgumentList_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -1236,12 +928,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("COMMA")
-			NonTerminal(type, TypeArgument)
-			Action({
-				ret = append(ret, type);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(type, TypeArgument)
+	) */
 	private int matchTypeArgumentList_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTypeArgumentList_1_3_1(lookahead);
@@ -1253,21 +942,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(type, TypeArgument)
+		ZeroOrMore(
+			Terminal("COMMA")
 			NonTerminal(type, TypeArgument)
-			Action({
-				ret = append(ret, type);
-			})
-			ZeroOrMore(
-				Terminal("COMMA")
-				NonTerminal(type, TypeArgument)
-				Action({
-					ret = append(ret, type);
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchTypeArgumentList_1(int lookahead) {
 		lookahead = matchTypeArgument(lookahead);
 		if (lookahead == -1)
@@ -1279,13 +959,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			Terminal("NODE_LIST_VARIABLE")
-			Action({
-				return makeVar();
-			})
-		) */
+		LookAhead({ quotesMode })
+		Terminal("NODE_LIST_VARIABLE")
+	) */
 	private int matchTypeArgumentList_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -1297,31 +973,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
+		Sequence(
+			NonTerminal(type, TypeArgument)
+			ZeroOrMore(
+				Terminal("COMMA")
 				NonTerminal(type, TypeArgument)
-				Action({
-					ret = append(ret, type);
-				})
-				ZeroOrMore(
-					Terminal("COMMA")
-					NonTerminal(type, TypeArgument)
-					Action({
-						ret = append(ret, type);
-					})
-				)
-				Action({
-					return ret;
-				})
 			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				Terminal("NODE_LIST_VARIABLE")
-				Action({
-					return makeVar();
-				})
-			)
-		) */
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			Terminal("NODE_LIST_VARIABLE")
+		)
+	) */
 	private int matchTypeArgumentList(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTypeArgumentList_1(lookahead);
@@ -1334,8 +997,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, TypeArgumentList)
-		) */
+		NonTerminal(ret, TypeArgumentList)
+	) */
 	private int matchTypeArgumentsOrDiamond_2_1(int lookahead) {
 		lookahead = matchTypeArgumentList(lookahead);
 		if (lookahead == -1)
@@ -1344,8 +1007,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(ret, TypeArgumentList)
-		) */
+		NonTerminal(ret, TypeArgumentList)
+	) */
 	private int matchTypeArgumentsOrDiamond_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTypeArgumentsOrDiamond_2_1(lookahead);
@@ -1355,15 +1018,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LT")
-			ZeroOrOne(
-				NonTerminal(ret, TypeArgumentList)
-			)
-			Terminal("GT")
-			Action({
-				return ret;
-			})
-		) */
+		Terminal("LT")
+		ZeroOrOne(
+			NonTerminal(ret, TypeArgumentList)
+		)
+		Terminal("GT")
+	) */
 	private int matchTypeArgumentsOrDiamond(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LT);
 		if (lookahead == -1)
@@ -1378,9 +1038,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
-		) */
+		LookAhead(2)
+		NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+	) */
 	private int matchQualifiedType_3_1(int lookahead) {
 		lookahead = matchTypeArgumentsOrDiamond(lookahead);
 		if (lookahead == -1)
@@ -1389,9 +1049,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
-		) */
+		LookAhead(2)
+		NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+	) */
 	private int matchQualifiedType_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchQualifiedType_3_1(lookahead);
@@ -1401,9 +1061,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
-		) */
+		LookAhead(2)
+		NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+	) */
 	private int matchQualifiedType_5_1_7_1(int lookahead) {
 		lookahead = matchTypeArgumentsOrDiamond(lookahead);
 		if (lookahead == -1)
@@ -1412,9 +1072,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
-		) */
+		LookAhead(2)
+		NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+	) */
 	private int matchQualifiedType_5_1_7(int lookahead) {
 		int newLookahead;
 		newLookahead = matchQualifiedType_5_1_7_1(lookahead);
@@ -1424,24 +1084,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		LookAhead(2)
+		Terminal("DOT")
+		NonTerminal(annotations, Annotations)
+		NonTerminal(name, Name)
+		ZeroOrOne(
 			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("DOT")
-			Action({
-				scope = optionOf(ret);
-			})
-			NonTerminal(annotations, Annotations)
-			NonTerminal(name, Name)
-			ZeroOrOne(
-				LookAhead(2)
-				NonTerminal(typeArgs, TypeArgumentsOrDiamond)
-			)
-			Action({
-				ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
-			})
-		) */
+			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+		)
+	) */
 	private int matchQualifiedType_5_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.DOT);
 		if (lookahead == -1)
@@ -1459,24 +1110,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
+		LookAhead(2)
+		Terminal("DOT")
+		NonTerminal(annotations, Annotations)
+		NonTerminal(name, Name)
+		ZeroOrOne(
 			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("DOT")
-			Action({
-				scope = optionOf(ret);
-			})
-			NonTerminal(annotations, Annotations)
-			NonTerminal(name, Name)
-			ZeroOrOne(
-				LookAhead(2)
-				NonTerminal(typeArgs, TypeArgumentsOrDiamond)
-			)
-			Action({
-				ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
-			})
-		) */
+			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+		)
+	) */
 	private int matchQualifiedType_5(int lookahead) {
 		int newLookahead;
 		newLookahead = matchQualifiedType_5_1(lookahead);
@@ -1488,43 +1130,22 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				if (annotations == null) {
-		run();
-		annotations = emptyList();
-	}
-			})
+		NonTerminal(name, Name)
+		ZeroOrOne(
+			LookAhead(2)
+			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+		)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("DOT")
+			NonTerminal(annotations, Annotations)
 			NonTerminal(name, Name)
 			ZeroOrOne(
 				LookAhead(2)
 				NonTerminal(typeArgs, TypeArgumentsOrDiamond)
 			)
-			Action({
-				ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
-			})
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Terminal("DOT")
-				Action({
-					scope = optionOf(ret);
-				})
-				NonTerminal(annotations, Annotations)
-				NonTerminal(name, Name)
-				ZeroOrOne(
-					LookAhead(2)
-					NonTerminal(typeArgs, TypeArgumentsOrDiamond)
-				)
-				Action({
-					ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchQualifiedType(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -1539,18 +1160,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-			)
-			Action({
-				lateRun();
-			})
-			NonTerminal(arrayDims, ArrayDimsMandatory)
-			Action({
-				type = dress(SArrayType.make(type, arrayDims));
-			})
-		) */
+		LookAhead(
+			NonTerminal(Annotations)
+			Terminal("LBRACKET")
+		)
+		NonTerminal(arrayDims, ArrayDimsMandatory)
+	) */
 	private int matchReferenceType_1_2_2_1(int lookahead) {
 		lookahead = matchArrayDimsMandatory(lookahead);
 		if (lookahead == -1)
@@ -1559,18 +1174,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-			)
-			Action({
-				lateRun();
-			})
-			NonTerminal(arrayDims, ArrayDimsMandatory)
-			Action({
-				type = dress(SArrayType.make(type, arrayDims));
-			})
-		) */
+		LookAhead(
+			NonTerminal(Annotations)
+			Terminal("LBRACKET")
+		)
+		NonTerminal(arrayDims, ArrayDimsMandatory)
+	) */
 	private int matchReferenceType_1_2_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchReferenceType_1_2_2_1(lookahead);
@@ -1580,21 +1189,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(type, QualifiedType)
-			ZeroOrOne(
-				LookAhead(
-					NonTerminal(Annotations)
-					Terminal("LBRACKET")
-				)
-				Action({
-					lateRun();
-				})
-				NonTerminal(arrayDims, ArrayDimsMandatory)
-				Action({
-					type = dress(SArrayType.make(type, arrayDims));
-				})
+		NonTerminal(type, QualifiedType)
+		ZeroOrOne(
+			LookAhead(
+				NonTerminal(Annotations)
+				Terminal("LBRACKET")
 			)
-		) */
+			NonTerminal(arrayDims, ArrayDimsMandatory)
+		)
+	) */
 	private int matchReferenceType_1_2(int lookahead) {
 		lookahead = matchQualifiedType(lookahead);
 		if (lookahead == -1)
@@ -1606,33 +1209,21 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				NonTerminal(primitiveType, PrimitiveType)
-				Action({
-					lateRun();
-				})
-				NonTerminal(arrayDims, ArrayDimsMandatory)
-				Action({
-					type = dress(SArrayType.make(primitiveType, arrayDims));
-				})
-			)
-			Sequence(
-				NonTerminal(type, QualifiedType)
-				ZeroOrOne(
-					LookAhead(
-						NonTerminal(Annotations)
-						Terminal("LBRACKET")
-					)
-					Action({
-						lateRun();
-					})
-					NonTerminal(arrayDims, ArrayDimsMandatory)
-					Action({
-						type = dress(SArrayType.make(type, arrayDims));
-					})
+		Sequence(
+			NonTerminal(primitiveType, PrimitiveType)
+			NonTerminal(arrayDims, ArrayDimsMandatory)
+		)
+		Sequence(
+			NonTerminal(type, QualifiedType)
+			ZeroOrOne(
+				LookAhead(
+					NonTerminal(Annotations)
+					Terminal("LBRACKET")
 				)
+				NonTerminal(arrayDims, ArrayDimsMandatory)
 			)
-		) */
+		)
+	) */
 	private int matchReferenceType_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchReferenceType_1_1(lookahead);
@@ -1645,38 +1236,23 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					NonTerminal(primitiveType, PrimitiveType)
-					Action({
-						lateRun();
-					})
-					NonTerminal(arrayDims, ArrayDimsMandatory)
-					Action({
-						type = dress(SArrayType.make(primitiveType, arrayDims));
-					})
-				)
-				Sequence(
-					NonTerminal(type, QualifiedType)
-					ZeroOrOne(
-						LookAhead(
-							NonTerminal(Annotations)
-							Terminal("LBRACKET")
-						)
-						Action({
-							lateRun();
-						})
-						NonTerminal(arrayDims, ArrayDimsMandatory)
-						Action({
-							type = dress(SArrayType.make(type, arrayDims));
-						})
+		Choice(
+			Sequence(
+				NonTerminal(primitiveType, PrimitiveType)
+				NonTerminal(arrayDims, ArrayDimsMandatory)
+			)
+			Sequence(
+				NonTerminal(type, QualifiedType)
+				ZeroOrOne(
+					LookAhead(
+						NonTerminal(Annotations)
+						Terminal("LBRACKET")
 					)
+					NonTerminal(arrayDims, ArrayDimsMandatory)
 				)
 			)
-			Action({
-				return type;
-			})
-		) */
+		)
+	) */
 	private int matchReferenceType(int lookahead) {
 		lookahead = matchReferenceType_1(lookahead);
 		if (lookahead == -1)
@@ -1685,16 +1261,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("BIT_AND")
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
-			NonTerminal(type, ReferenceType)
-			Action({
-				types = append(types, type);
-			})
-		) */
+		Terminal("BIT_AND")
+		NonTerminal(annotations, Annotations)
+		NonTerminal(type, ReferenceType)
+	) */
 	private int matchReferenceCastTypeRest_1_1_4_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.BIT_AND);
 		if (lookahead == -1)
@@ -1709,16 +1279,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* OneOrMore(
-			Terminal("BIT_AND")
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
-			NonTerminal(type, ReferenceType)
-			Action({
-				types = append(types, type);
-			})
-		) */
+		Terminal("BIT_AND")
+		NonTerminal(annotations, Annotations)
+		NonTerminal(type, ReferenceType)
+	) */
 	private int matchReferenceCastTypeRest_1_1_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchReferenceCastTypeRest_1_1_4_1(lookahead);
@@ -1732,30 +1296,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				Terminal("BIT_AND")
-			)
-			Action({
-				types = append(types, type);
-			})
-			Action({
-				lateRun();
-			})
-			OneOrMore(
-				Terminal("BIT_AND")
-				Action({
-					run();
-				})
-				NonTerminal(annotations, Annotations)
-				NonTerminal(type, ReferenceType)
-				Action({
-					types = append(types, type);
-				})
-			)
-			Action({
-				type = dress(SIntersectionType.make(types));
-			})
-		) */
+		LookAhead(
+			Terminal("BIT_AND")
+		)
+		OneOrMore(
+			Terminal("BIT_AND")
+			NonTerminal(annotations, Annotations)
+			NonTerminal(type, ReferenceType)
+		)
+	) */
 	private int matchReferenceCastTypeRest_1_1(int lookahead) {
 		lookahead = matchReferenceCastTypeRest_1_1_4(lookahead);
 		if (lookahead == -1)
@@ -1764,30 +1313,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(
-				Terminal("BIT_AND")
-			)
-			Action({
-				types = append(types, type);
-			})
-			Action({
-				lateRun();
-			})
-			OneOrMore(
-				Terminal("BIT_AND")
-				Action({
-					run();
-				})
-				NonTerminal(annotations, Annotations)
-				NonTerminal(type, ReferenceType)
-				Action({
-					types = append(types, type);
-				})
-			)
-			Action({
-				type = dress(SIntersectionType.make(types));
-			})
-		) */
+		LookAhead(
+			Terminal("BIT_AND")
+		)
+		OneOrMore(
+			Terminal("BIT_AND")
+			NonTerminal(annotations, Annotations)
+			NonTerminal(type, ReferenceType)
+		)
+	) */
 	private int matchReferenceCastTypeRest_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchReferenceCastTypeRest_1_1(lookahead);
@@ -1797,35 +1331,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				LookAhead(
-					Terminal("BIT_AND")
-				)
-				Action({
-					types = append(types, type);
-				})
-				Action({
-					lateRun();
-				})
-				OneOrMore(
-					Terminal("BIT_AND")
-					Action({
-						run();
-					})
-					NonTerminal(annotations, Annotations)
-					NonTerminal(type, ReferenceType)
-					Action({
-						types = append(types, type);
-					})
-				)
-				Action({
-					type = dress(SIntersectionType.make(types));
-				})
+		ZeroOrOne(
+			LookAhead(
+				Terminal("BIT_AND")
 			)
-			Action({
-				return type;
-			})
-		) */
+			OneOrMore(
+				Terminal("BIT_AND")
+				NonTerminal(annotations, Annotations)
+				NonTerminal(type, ReferenceType)
+			)
+		)
+	) */
 	private int matchReferenceCastTypeRest(int lookahead) {
 		lookahead = matchReferenceCastTypeRest_1(lookahead);
 		if (lookahead == -1)
@@ -1834,20 +1350,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				lateRun();
-			})
-			NonTerminal(arrayDims, ArrayDimsMandatory)
-			Action({
-				type = dress(SArrayType.make(primitiveType, arrayDims));
-			})
-			NonTerminal(type, ReferenceCastTypeRest)
-			Terminal("RPAREN")
-			NonTerminal(ret, UnaryExpressionNotPlusMinus)
-			Action({
-				ret = dress(SCastExpr.make(type, ret));
-			})
-		) */
+		NonTerminal(arrayDims, ArrayDimsMandatory)
+		NonTerminal(type, ReferenceCastTypeRest)
+		Terminal("RPAREN")
+		NonTerminal(ret, UnaryExpressionNotPlusMinus)
+	) */
 	private int matchCastExpression_5_1_2_2(int lookahead) {
 		lookahead = matchArrayDimsMandatory(lookahead);
 		if (lookahead == -1)
@@ -1865,29 +1372,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("RPAREN")
-				NonTerminal(ret, UnaryExpression)
-				Action({
-					ret = dress(SCastExpr.make(primitiveType, ret));
-				})
-			)
-			Sequence(
-				Action({
-					lateRun();
-				})
-				NonTerminal(arrayDims, ArrayDimsMandatory)
-				Action({
-					type = dress(SArrayType.make(primitiveType, arrayDims));
-				})
-				NonTerminal(type, ReferenceCastTypeRest)
-				Terminal("RPAREN")
-				NonTerminal(ret, UnaryExpressionNotPlusMinus)
-				Action({
-					ret = dress(SCastExpr.make(type, ret));
-				})
-			)
-		) */
+		Sequence(
+			Terminal("RPAREN")
+			NonTerminal(ret, UnaryExpression)
+		)
+		Sequence(
+			NonTerminal(arrayDims, ArrayDimsMandatory)
+			NonTerminal(type, ReferenceCastTypeRest)
+			Terminal("RPAREN")
+			NonTerminal(ret, UnaryExpressionNotPlusMinus)
+		)
+	) */
 	private int matchCastExpression_5_1_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchCastExpression_5_1_2_1(lookahead);
@@ -1900,32 +1395,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(primitiveType, PrimitiveType)
-			Choice(
-				Sequence(
-					Terminal("RPAREN")
-					NonTerminal(ret, UnaryExpression)
-					Action({
-						ret = dress(SCastExpr.make(primitiveType, ret));
-					})
-				)
-				Sequence(
-					Action({
-						lateRun();
-					})
-					NonTerminal(arrayDims, ArrayDimsMandatory)
-					Action({
-						type = dress(SArrayType.make(primitiveType, arrayDims));
-					})
-					NonTerminal(type, ReferenceCastTypeRest)
-					Terminal("RPAREN")
-					NonTerminal(ret, UnaryExpressionNotPlusMinus)
-					Action({
-						ret = dress(SCastExpr.make(type, ret));
-					})
-				)
+		NonTerminal(primitiveType, PrimitiveType)
+		Choice(
+			Sequence(
+				Terminal("RPAREN")
+				NonTerminal(ret, UnaryExpression)
 			)
-		) */
+			Sequence(
+				NonTerminal(arrayDims, ArrayDimsMandatory)
+				NonTerminal(type, ReferenceCastTypeRest)
+				Terminal("RPAREN")
+				NonTerminal(ret, UnaryExpressionNotPlusMinus)
+			)
+		)
+	) */
 	private int matchCastExpression_5_1(int lookahead) {
 		lookahead = matchPrimitiveType(lookahead);
 		if (lookahead == -1)
@@ -1937,18 +1420,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-			)
-			Action({
-				lateRun();
-			})
-			NonTerminal(arrayDims, ArrayDimsMandatory)
-			Action({
-				type = dress(SArrayType.make(type, arrayDims));
-			})
-		) */
+		LookAhead(
+			NonTerminal(Annotations)
+			Terminal("LBRACKET")
+		)
+		NonTerminal(arrayDims, ArrayDimsMandatory)
+	) */
 	private int matchCastExpression_5_2_2_1(int lookahead) {
 		lookahead = matchArrayDimsMandatory(lookahead);
 		if (lookahead == -1)
@@ -1957,18 +1434,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-			)
-			Action({
-				lateRun();
-			})
-			NonTerminal(arrayDims, ArrayDimsMandatory)
-			Action({
-				type = dress(SArrayType.make(type, arrayDims));
-			})
-		) */
+		LookAhead(
+			NonTerminal(Annotations)
+			Terminal("LBRACKET")
+		)
+		NonTerminal(arrayDims, ArrayDimsMandatory)
+	) */
 	private int matchCastExpression_5_2_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchCastExpression_5_2_2_1(lookahead);
@@ -1978,27 +1449,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(type, QualifiedType)
-			ZeroOrOne(
-				LookAhead(
-					NonTerminal(Annotations)
-					Terminal("LBRACKET")
-				)
-				Action({
-					lateRun();
-				})
-				NonTerminal(arrayDims, ArrayDimsMandatory)
-				Action({
-					type = dress(SArrayType.make(type, arrayDims));
-				})
+		NonTerminal(type, QualifiedType)
+		ZeroOrOne(
+			LookAhead(
+				NonTerminal(Annotations)
+				Terminal("LBRACKET")
 			)
-			NonTerminal(type, ReferenceCastTypeRest)
-			Terminal("RPAREN")
-			NonTerminal(ret, UnaryExpressionNotPlusMinus)
-			Action({
-				ret = dress(SCastExpr.make(type, ret));
-			})
-		) */
+			NonTerminal(arrayDims, ArrayDimsMandatory)
+		)
+		NonTerminal(type, ReferenceCastTypeRest)
+		Terminal("RPAREN")
+		NonTerminal(ret, UnaryExpressionNotPlusMinus)
+	) */
 	private int matchCastExpression_5_2(int lookahead) {
 		lookahead = matchQualifiedType(lookahead);
 		if (lookahead == -1)
@@ -2019,56 +1481,35 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				NonTerminal(primitiveType, PrimitiveType)
-				Choice(
-					Sequence(
-						Terminal("RPAREN")
-						NonTerminal(ret, UnaryExpression)
-						Action({
-							ret = dress(SCastExpr.make(primitiveType, ret));
-						})
-					)
-					Sequence(
-						Action({
-							lateRun();
-						})
-						NonTerminal(arrayDims, ArrayDimsMandatory)
-						Action({
-							type = dress(SArrayType.make(primitiveType, arrayDims));
-						})
-						NonTerminal(type, ReferenceCastTypeRest)
-						Terminal("RPAREN")
-						NonTerminal(ret, UnaryExpressionNotPlusMinus)
-						Action({
-							ret = dress(SCastExpr.make(type, ret));
-						})
-					)
+		Sequence(
+			NonTerminal(primitiveType, PrimitiveType)
+			Choice(
+				Sequence(
+					Terminal("RPAREN")
+					NonTerminal(ret, UnaryExpression)
 				)
-			)
-			Sequence(
-				NonTerminal(type, QualifiedType)
-				ZeroOrOne(
-					LookAhead(
-						NonTerminal(Annotations)
-						Terminal("LBRACKET")
-					)
-					Action({
-						lateRun();
-					})
+				Sequence(
 					NonTerminal(arrayDims, ArrayDimsMandatory)
-					Action({
-						type = dress(SArrayType.make(type, arrayDims));
-					})
+					NonTerminal(type, ReferenceCastTypeRest)
+					Terminal("RPAREN")
+					NonTerminal(ret, UnaryExpressionNotPlusMinus)
 				)
-				NonTerminal(type, ReferenceCastTypeRest)
-				Terminal("RPAREN")
-				NonTerminal(ret, UnaryExpressionNotPlusMinus)
-				Action({
-					ret = dress(SCastExpr.make(type, ret));
-				})
 			)
-		) */
+		)
+		Sequence(
+			NonTerminal(type, QualifiedType)
+			ZeroOrOne(
+				LookAhead(
+					NonTerminal(Annotations)
+					Terminal("LBRACKET")
+				)
+				NonTerminal(arrayDims, ArrayDimsMandatory)
+			)
+			NonTerminal(type, ReferenceCastTypeRest)
+			Terminal("RPAREN")
+			NonTerminal(ret, UnaryExpressionNotPlusMinus)
+		)
+	) */
 	private int matchCastExpression_5(int lookahead) {
 		int newLookahead;
 		newLookahead = matchCastExpression_5_1(lookahead);
@@ -2081,69 +1522,39 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("LPAREN")
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
-			Choice(
-				Sequence(
-					NonTerminal(primitiveType, PrimitiveType)
-					Choice(
-						Sequence(
-							Terminal("RPAREN")
-							NonTerminal(ret, UnaryExpression)
-							Action({
-								ret = dress(SCastExpr.make(primitiveType, ret));
-							})
-						)
-						Sequence(
-							Action({
-								lateRun();
-							})
-							NonTerminal(arrayDims, ArrayDimsMandatory)
-							Action({
-								type = dress(SArrayType.make(primitiveType, arrayDims));
-							})
-							NonTerminal(type, ReferenceCastTypeRest)
-							Terminal("RPAREN")
-							NonTerminal(ret, UnaryExpressionNotPlusMinus)
-							Action({
-								ret = dress(SCastExpr.make(type, ret));
-							})
-						)
+		Terminal("LPAREN")
+		NonTerminal(annotations, Annotations)
+		Choice(
+			Sequence(
+				NonTerminal(primitiveType, PrimitiveType)
+				Choice(
+					Sequence(
+						Terminal("RPAREN")
+						NonTerminal(ret, UnaryExpression)
 					)
-				)
-				Sequence(
-					NonTerminal(type, QualifiedType)
-					ZeroOrOne(
-						LookAhead(
-							NonTerminal(Annotations)
-							Terminal("LBRACKET")
-						)
-						Action({
-							lateRun();
-						})
+					Sequence(
 						NonTerminal(arrayDims, ArrayDimsMandatory)
-						Action({
-							type = dress(SArrayType.make(type, arrayDims));
-						})
+						NonTerminal(type, ReferenceCastTypeRest)
+						Terminal("RPAREN")
+						NonTerminal(ret, UnaryExpressionNotPlusMinus)
 					)
-					NonTerminal(type, ReferenceCastTypeRest)
-					Terminal("RPAREN")
-					NonTerminal(ret, UnaryExpressionNotPlusMinus)
-					Action({
-						ret = dress(SCastExpr.make(type, ret));
-					})
 				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			Sequence(
+				NonTerminal(type, QualifiedType)
+				ZeroOrOne(
+					LookAhead(
+						NonTerminal(Annotations)
+						Terminal("LBRACKET")
+					)
+					NonTerminal(arrayDims, ArrayDimsMandatory)
+				)
+				NonTerminal(type, ReferenceCastTypeRest)
+				Terminal("RPAREN")
+				NonTerminal(ret, UnaryExpressionNotPlusMinus)
+			)
+		)
+	) */
 	private int matchCastExpression(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LPAREN);
 		if (lookahead == -1)
@@ -2158,11 +1569,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(CastExpression)
-			)
-			NonTerminal(ret, CastExpression)
-		) */
+		LookAhead(
+			NonTerminal(CastExpression)
+		)
+		NonTerminal(ret, CastExpression)
+	) */
 	private int matchUnaryExpressionNotPlusMinus_1_2(int lookahead) {
 		lookahead = matchCastExpression(lookahead);
 		if (lookahead == -1)
@@ -2171,11 +1582,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal(literal, "INTEGER_LITERAL")
-			Action({
-				ret = SLiteralExpr.make(Integer.class, literal.image);
-			})
-		) */
+		Terminal(literal, "INTEGER_LITERAL")
+	) */
 	private int matchLiteral_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.INTEGER_LITERAL);
 		if (lookahead == -1)
@@ -2184,11 +1592,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal(literal, "LONG_LITERAL")
-			Action({
-				ret = SLiteralExpr.make(Long.class, literal.image);
-			})
-		) */
+		Terminal(literal, "LONG_LITERAL")
+	) */
 	private int matchLiteral_2_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LONG_LITERAL);
 		if (lookahead == -1)
@@ -2197,11 +1602,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal(literal, "FLOAT_LITERAL")
-			Action({
-				ret = SLiteralExpr.make(Float.class, literal.image);
-			})
-		) */
+		Terminal(literal, "FLOAT_LITERAL")
+	) */
 	private int matchLiteral_2_3(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.FLOAT_LITERAL);
 		if (lookahead == -1)
@@ -2210,11 +1612,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal(literal, "DOUBLE_LITERAL")
-			Action({
-				ret = SLiteralExpr.make(Double.class, literal.image);
-			})
-		) */
+		Terminal(literal, "DOUBLE_LITERAL")
+	) */
 	private int matchLiteral_2_4(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.DOUBLE_LITERAL);
 		if (lookahead == -1)
@@ -2223,11 +1622,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal(literal, "CHARACTER_LITERAL")
-			Action({
-				ret = SLiteralExpr.make(Character.class, literal.image);
-			})
-		) */
+		Terminal(literal, "CHARACTER_LITERAL")
+	) */
 	private int matchLiteral_2_5(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.CHARACTER_LITERAL);
 		if (lookahead == -1)
@@ -2236,11 +1632,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal(literal, "STRING_LITERAL")
-			Action({
-				ret = SLiteralExpr.make(String.class, literal.image);
-			})
-		) */
+		Terminal(literal, "STRING_LITERAL")
+	) */
 	private int matchLiteral_2_6(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.STRING_LITERAL);
 		if (lookahead == -1)
@@ -2249,11 +1642,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal(literal, "TRUE")
-			Action({
-				ret = SLiteralExpr.make(Boolean.class, literal.image);
-			})
-		) */
+		Terminal(literal, "TRUE")
+	) */
 	private int matchLiteral_2_7(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.TRUE);
 		if (lookahead == -1)
@@ -2262,11 +1652,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal(literal, "FALSE")
-			Action({
-				ret = SLiteralExpr.make(Boolean.class, literal.image);
-			})
-		) */
+		Terminal(literal, "FALSE")
+	) */
 	private int matchLiteral_2_8(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.FALSE);
 		if (lookahead == -1)
@@ -2275,11 +1662,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal(literal, "NULL")
-			Action({
-				ret = SLiteralExpr.make(Void.class, literal.image);
-			})
-		) */
+		Terminal(literal, "NULL")
+	) */
 	private int matchLiteral_2_9(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.NULL);
 		if (lookahead == -1)
@@ -2288,61 +1672,34 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal(literal, "INTEGER_LITERAL")
-				Action({
-					ret = SLiteralExpr.make(Integer.class, literal.image);
-				})
-			)
-			Sequence(
-				Terminal(literal, "LONG_LITERAL")
-				Action({
-					ret = SLiteralExpr.make(Long.class, literal.image);
-				})
-			)
-			Sequence(
-				Terminal(literal, "FLOAT_LITERAL")
-				Action({
-					ret = SLiteralExpr.make(Float.class, literal.image);
-				})
-			)
-			Sequence(
-				Terminal(literal, "DOUBLE_LITERAL")
-				Action({
-					ret = SLiteralExpr.make(Double.class, literal.image);
-				})
-			)
-			Sequence(
-				Terminal(literal, "CHARACTER_LITERAL")
-				Action({
-					ret = SLiteralExpr.make(Character.class, literal.image);
-				})
-			)
-			Sequence(
-				Terminal(literal, "STRING_LITERAL")
-				Action({
-					ret = SLiteralExpr.make(String.class, literal.image);
-				})
-			)
-			Sequence(
-				Terminal(literal, "TRUE")
-				Action({
-					ret = SLiteralExpr.make(Boolean.class, literal.image);
-				})
-			)
-			Sequence(
-				Terminal(literal, "FALSE")
-				Action({
-					ret = SLiteralExpr.make(Boolean.class, literal.image);
-				})
-			)
-			Sequence(
-				Terminal(literal, "NULL")
-				Action({
-					ret = SLiteralExpr.make(Void.class, literal.image);
-				})
-			)
-		) */
+		Sequence(
+			Terminal(literal, "INTEGER_LITERAL")
+		)
+		Sequence(
+			Terminal(literal, "LONG_LITERAL")
+		)
+		Sequence(
+			Terminal(literal, "FLOAT_LITERAL")
+		)
+		Sequence(
+			Terminal(literal, "DOUBLE_LITERAL")
+		)
+		Sequence(
+			Terminal(literal, "CHARACTER_LITERAL")
+		)
+		Sequence(
+			Terminal(literal, "STRING_LITERAL")
+		)
+		Sequence(
+			Terminal(literal, "TRUE")
+		)
+		Sequence(
+			Terminal(literal, "FALSE")
+		)
+		Sequence(
+			Terminal(literal, "NULL")
+		)
+	) */
 	private int matchLiteral_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchLiteral_2_1(lookahead);
@@ -2376,69 +1733,36 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Choice(
-				Sequence(
-					Terminal(literal, "INTEGER_LITERAL")
-					Action({
-						ret = SLiteralExpr.make(Integer.class, literal.image);
-					})
-				)
-				Sequence(
-					Terminal(literal, "LONG_LITERAL")
-					Action({
-						ret = SLiteralExpr.make(Long.class, literal.image);
-					})
-				)
-				Sequence(
-					Terminal(literal, "FLOAT_LITERAL")
-					Action({
-						ret = SLiteralExpr.make(Float.class, literal.image);
-					})
-				)
-				Sequence(
-					Terminal(literal, "DOUBLE_LITERAL")
-					Action({
-						ret = SLiteralExpr.make(Double.class, literal.image);
-					})
-				)
-				Sequence(
-					Terminal(literal, "CHARACTER_LITERAL")
-					Action({
-						ret = SLiteralExpr.make(Character.class, literal.image);
-					})
-				)
-				Sequence(
-					Terminal(literal, "STRING_LITERAL")
-					Action({
-						ret = SLiteralExpr.make(String.class, literal.image);
-					})
-				)
-				Sequence(
-					Terminal(literal, "TRUE")
-					Action({
-						ret = SLiteralExpr.make(Boolean.class, literal.image);
-					})
-				)
-				Sequence(
-					Terminal(literal, "FALSE")
-					Action({
-						ret = SLiteralExpr.make(Boolean.class, literal.image);
-					})
-				)
-				Sequence(
-					Terminal(literal, "NULL")
-					Action({
-						ret = SLiteralExpr.make(Void.class, literal.image);
-					})
-				)
+		Choice(
+			Sequence(
+				Terminal(literal, "INTEGER_LITERAL")
 			)
-			Action({
-				return dress(ret);
-			})
-		) */
+			Sequence(
+				Terminal(literal, "LONG_LITERAL")
+			)
+			Sequence(
+				Terminal(literal, "FLOAT_LITERAL")
+			)
+			Sequence(
+				Terminal(literal, "DOUBLE_LITERAL")
+			)
+			Sequence(
+				Terminal(literal, "CHARACTER_LITERAL")
+			)
+			Sequence(
+				Terminal(literal, "STRING_LITERAL")
+			)
+			Sequence(
+				Terminal(literal, "TRUE")
+			)
+			Sequence(
+				Terminal(literal, "FALSE")
+			)
+			Sequence(
+				Terminal(literal, "NULL")
+			)
+		)
+	) */
 	private int matchLiteral(int lookahead) {
 		lookahead = matchLiteral_2(lookahead);
 		if (lookahead == -1)
@@ -2447,14 +1771,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("THIS")
-			Action({
-				ret = dress(SThisExpr.make(none()));
-			})
-		) */
+		Terminal("THIS")
+	) */
 	private int matchPrimaryPrefix_1_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.THIS);
 		if (lookahead == -1)
@@ -2463,8 +1781,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, TypeArgumentList)
-		) */
+		NonTerminal(ret, TypeArgumentList)
+	) */
 	private int matchTypeArguments_2_1(int lookahead) {
 		lookahead = matchTypeArgumentList(lookahead);
 		if (lookahead == -1)
@@ -2473,8 +1791,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(ret, TypeArgumentList)
-		) */
+		NonTerminal(ret, TypeArgumentList)
+	) */
 	private int matchTypeArguments_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTypeArguments_2_1(lookahead);
@@ -2484,15 +1802,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LT")
-			ZeroOrOne(
-				NonTerminal(ret, TypeArgumentList)
-			)
-			Terminal("GT")
-			Action({
-				return ret;
-			})
-		) */
+		Terminal("LT")
+		ZeroOrOne(
+			NonTerminal(ret, TypeArgumentList)
+		)
+		Terminal("GT")
+	) */
 	private int matchTypeArguments(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LT);
 		if (lookahead == -1)
@@ -2507,8 +1822,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(typeArgs, TypeArguments)
-		) */
+		NonTerminal(typeArgs, TypeArguments)
+	) */
 	private int matchMethodInvocation_1_1(int lookahead) {
 		lookahead = matchTypeArguments(lookahead);
 		if (lookahead == -1)
@@ -2517,8 +1832,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(typeArgs, TypeArguments)
-		) */
+		NonTerminal(typeArgs, TypeArguments)
+	) */
 	private int matchMethodInvocation_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchMethodInvocation_1_1(lookahead);
@@ -2528,11 +1843,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(expr, Expression)
-			Action({
-				ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr)));
-			})
-		) */
+		NonTerminal(expr, Expression)
+	) */
 	private int matchLambdaBody_1_1(int lookahead) {
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
@@ -2541,11 +1853,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("PUBLIC")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-			})
-		) */
+		Terminal("PUBLIC")
+	) */
 	private int matchModifiersNoDefault_1_1_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.PUBLIC);
 		if (lookahead == -1)
@@ -2554,11 +1863,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("PROTECTED")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-			})
-		) */
+		Terminal("PROTECTED")
+	) */
 	private int matchModifiersNoDefault_1_1_2_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.PROTECTED);
 		if (lookahead == -1)
@@ -2567,11 +1873,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("PRIVATE")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-			})
-		) */
+		Terminal("PRIVATE")
+	) */
 	private int matchModifiersNoDefault_1_1_2_3(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.PRIVATE);
 		if (lookahead == -1)
@@ -2580,11 +1883,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("ABSTRACT")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-			})
-		) */
+		Terminal("ABSTRACT")
+	) */
 	private int matchModifiersNoDefault_1_1_2_4(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.ABSTRACT);
 		if (lookahead == -1)
@@ -2593,11 +1893,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("STATIC")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-			})
-		) */
+		Terminal("STATIC")
+	) */
 	private int matchModifiersNoDefault_1_1_2_5(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.STATIC);
 		if (lookahead == -1)
@@ -2606,11 +1903,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("FINAL")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-			})
-		) */
+		Terminal("FINAL")
+	) */
 	private int matchModifiersNoDefault_1_1_2_6(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.FINAL);
 		if (lookahead == -1)
@@ -2619,11 +1913,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("TRANSIENT")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-			})
-		) */
+		Terminal("TRANSIENT")
+	) */
 	private int matchModifiersNoDefault_1_1_2_7(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.TRANSIENT);
 		if (lookahead == -1)
@@ -2632,11 +1923,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("VOLATILE")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-			})
-		) */
+		Terminal("VOLATILE")
+	) */
 	private int matchModifiersNoDefault_1_1_2_8(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.VOLATILE);
 		if (lookahead == -1)
@@ -2645,11 +1933,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("SYNCHRONIZED")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-			})
-		) */
+		Terminal("SYNCHRONIZED")
+	) */
 	private int matchModifiersNoDefault_1_1_2_9(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SYNCHRONIZED);
 		if (lookahead == -1)
@@ -2658,11 +1943,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("NATIVE")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-			})
-		) */
+		Terminal("NATIVE")
+	) */
 	private int matchModifiersNoDefault_1_1_2_10(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.NATIVE);
 		if (lookahead == -1)
@@ -2671,11 +1953,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("STRICTFP")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-			})
-		) */
+		Terminal("STRICTFP")
+	) */
 	private int matchModifiersNoDefault_1_1_2_11(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.STRICTFP);
 		if (lookahead == -1)
@@ -2684,11 +1963,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ann, Annotation)
-			Action({
-				modifiers = append(modifiers, ann);
-			})
-		) */
+		NonTerminal(ann, Annotation)
+	) */
 	private int matchModifiersNoDefault_1_1_2_12(int lookahead) {
 		lookahead = matchAnnotation(lookahead);
 		if (lookahead == -1)
@@ -2697,79 +1973,43 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("PUBLIC")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-				})
-			)
-			Sequence(
-				Terminal("PROTECTED")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-				})
-			)
-			Sequence(
-				Terminal("PRIVATE")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-				})
-			)
-			Sequence(
-				Terminal("ABSTRACT")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-				})
-			)
-			Sequence(
-				Terminal("STATIC")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-				})
-			)
-			Sequence(
-				Terminal("FINAL")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-				})
-			)
-			Sequence(
-				Terminal("TRANSIENT")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-				})
-			)
-			Sequence(
-				Terminal("VOLATILE")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-				})
-			)
-			Sequence(
-				Terminal("SYNCHRONIZED")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-				})
-			)
-			Sequence(
-				Terminal("NATIVE")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-				})
-			)
-			Sequence(
-				Terminal("STRICTFP")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-				})
-			)
-			Sequence(
-				NonTerminal(ann, Annotation)
-				Action({
-					modifiers = append(modifiers, ann);
-				})
-			)
-		) */
+		Sequence(
+			Terminal("PUBLIC")
+		)
+		Sequence(
+			Terminal("PROTECTED")
+		)
+		Sequence(
+			Terminal("PRIVATE")
+		)
+		Sequence(
+			Terminal("ABSTRACT")
+		)
+		Sequence(
+			Terminal("STATIC")
+		)
+		Sequence(
+			Terminal("FINAL")
+		)
+		Sequence(
+			Terminal("TRANSIENT")
+		)
+		Sequence(
+			Terminal("VOLATILE")
+		)
+		Sequence(
+			Terminal("SYNCHRONIZED")
+		)
+		Sequence(
+			Terminal("NATIVE")
+		)
+		Sequence(
+			Terminal("STRICTFP")
+		)
+		Sequence(
+			NonTerminal(ann, Annotation)
+		)
+	) */
 	private int matchModifiersNoDefault_1_1_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchModifiersNoDefault_1_1_2_1(lookahead);
@@ -2812,82 +2052,46 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Choice(
-				Sequence(
-					Terminal("PUBLIC")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-					})
-				)
-				Sequence(
-					Terminal("PROTECTED")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-					})
-				)
-				Sequence(
-					Terminal("PRIVATE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-					})
-				)
-				Sequence(
-					Terminal("ABSTRACT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-					})
-				)
-				Sequence(
-					Terminal("STATIC")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-					})
-				)
-				Sequence(
-					Terminal("FINAL")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-					})
-				)
-				Sequence(
-					Terminal("TRANSIENT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-					})
-				)
-				Sequence(
-					Terminal("VOLATILE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-					})
-				)
-				Sequence(
-					Terminal("SYNCHRONIZED")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-					})
-				)
-				Sequence(
-					Terminal("NATIVE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-					})
-				)
-				Sequence(
-					Terminal("STRICTFP")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-					})
-				)
-				Sequence(
-					NonTerminal(ann, Annotation)
-					Action({
-						modifiers = append(modifiers, ann);
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("PUBLIC")
 			)
-		) */
+			Sequence(
+				Terminal("PROTECTED")
+			)
+			Sequence(
+				Terminal("PRIVATE")
+			)
+			Sequence(
+				Terminal("ABSTRACT")
+			)
+			Sequence(
+				Terminal("STATIC")
+			)
+			Sequence(
+				Terminal("FINAL")
+			)
+			Sequence(
+				Terminal("TRANSIENT")
+			)
+			Sequence(
+				Terminal("VOLATILE")
+			)
+			Sequence(
+				Terminal("SYNCHRONIZED")
+			)
+			Sequence(
+				Terminal("NATIVE")
+			)
+			Sequence(
+				Terminal("STRICTFP")
+			)
+			Sequence(
+				NonTerminal(ann, Annotation)
+			)
+		)
+	) */
 	private int matchModifiersNoDefault_1_1(int lookahead) {
 		lookahead = matchModifiersNoDefault_1_1_2(lookahead);
 		if (lookahead == -1)
@@ -2896,82 +2100,46 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Choice(
-				Sequence(
-					Terminal("PUBLIC")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-					})
-				)
-				Sequence(
-					Terminal("PROTECTED")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-					})
-				)
-				Sequence(
-					Terminal("PRIVATE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-					})
-				)
-				Sequence(
-					Terminal("ABSTRACT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-					})
-				)
-				Sequence(
-					Terminal("STATIC")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-					})
-				)
-				Sequence(
-					Terminal("FINAL")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-					})
-				)
-				Sequence(
-					Terminal("TRANSIENT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-					})
-				)
-				Sequence(
-					Terminal("VOLATILE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-					})
-				)
-				Sequence(
-					Terminal("SYNCHRONIZED")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-					})
-				)
-				Sequence(
-					Terminal("NATIVE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-					})
-				)
-				Sequence(
-					Terminal("STRICTFP")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-					})
-				)
-				Sequence(
-					NonTerminal(ann, Annotation)
-					Action({
-						modifiers = append(modifiers, ann);
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("PUBLIC")
 			)
-		) */
+			Sequence(
+				Terminal("PROTECTED")
+			)
+			Sequence(
+				Terminal("PRIVATE")
+			)
+			Sequence(
+				Terminal("ABSTRACT")
+			)
+			Sequence(
+				Terminal("STATIC")
+			)
+			Sequence(
+				Terminal("FINAL")
+			)
+			Sequence(
+				Terminal("TRANSIENT")
+			)
+			Sequence(
+				Terminal("VOLATILE")
+			)
+			Sequence(
+				Terminal("SYNCHRONIZED")
+			)
+			Sequence(
+				Terminal("NATIVE")
+			)
+			Sequence(
+				Terminal("STRICTFP")
+			)
+			Sequence(
+				NonTerminal(ann, Annotation)
+			)
+		)
+	) */
 	private int matchModifiersNoDefault_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchModifiersNoDefault_1_1(lookahead);
@@ -2983,87 +2151,48 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrMore(
-				LookAhead(2)
-				Choice(
-					Sequence(
-						Terminal("PUBLIC")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-						})
-					)
-					Sequence(
-						Terminal("PROTECTED")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-						})
-					)
-					Sequence(
-						Terminal("PRIVATE")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-						})
-					)
-					Sequence(
-						Terminal("ABSTRACT")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-						})
-					)
-					Sequence(
-						Terminal("STATIC")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-						})
-					)
-					Sequence(
-						Terminal("FINAL")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-						})
-					)
-					Sequence(
-						Terminal("TRANSIENT")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-						})
-					)
-					Sequence(
-						Terminal("VOLATILE")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-						})
-					)
-					Sequence(
-						Terminal("SYNCHRONIZED")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-						})
-					)
-					Sequence(
-						Terminal("NATIVE")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-						})
-					)
-					Sequence(
-						Terminal("STRICTFP")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-						})
-					)
-					Sequence(
-						NonTerminal(ann, Annotation)
-						Action({
-							modifiers = append(modifiers, ann);
-						})
-					)
+		ZeroOrMore(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					Terminal("PUBLIC")
+				)
+				Sequence(
+					Terminal("PROTECTED")
+				)
+				Sequence(
+					Terminal("PRIVATE")
+				)
+				Sequence(
+					Terminal("ABSTRACT")
+				)
+				Sequence(
+					Terminal("STATIC")
+				)
+				Sequence(
+					Terminal("FINAL")
+				)
+				Sequence(
+					Terminal("TRANSIENT")
+				)
+				Sequence(
+					Terminal("VOLATILE")
+				)
+				Sequence(
+					Terminal("SYNCHRONIZED")
+				)
+				Sequence(
+					Terminal("NATIVE")
+				)
+				Sequence(
+					Terminal("STRICTFP")
+				)
+				Sequence(
+					NonTerminal(ann, Annotation)
 				)
 			)
-			Action({
-				return modifiers;
-			})
-		) */
+		)
+	) */
 	private int matchModifiersNoDefault(int lookahead) {
 		lookahead = matchModifiersNoDefault_1(lookahead);
 		if (lookahead == -1)
@@ -3072,15 +2201,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
-			NonTerminal(ret, QualifiedType)
-			Action({
-				return ret;
-			})
-		) */
+		NonTerminal(annotations, Annotations)
+		NonTerminal(ret, QualifiedType)
+	) */
 	private int matchAnnotatedQualifiedType(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -3092,12 +2215,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("BIT_AND")
-			NonTerminal(cit, AnnotatedQualifiedType)
-			Action({
-				ret = append(ret, cit);
-			})
-		) */
+		Terminal("BIT_AND")
+		NonTerminal(cit, AnnotatedQualifiedType)
+	) */
 	private int matchTypeBounds_2_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.BIT_AND);
 		if (lookahead == -1)
@@ -3109,12 +2229,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("BIT_AND")
-			NonTerminal(cit, AnnotatedQualifiedType)
-			Action({
-				ret = append(ret, cit);
-			})
-		) */
+		Terminal("BIT_AND")
+		NonTerminal(cit, AnnotatedQualifiedType)
+	) */
 	private int matchTypeBounds_2_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTypeBounds_2_1_3_1(lookahead);
@@ -3126,18 +2243,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(cit, AnnotatedQualifiedType)
+		ZeroOrMore(
+			Terminal("BIT_AND")
 			NonTerminal(cit, AnnotatedQualifiedType)
-			Action({
-				ret = append(ret, cit);
-			})
-			ZeroOrMore(
-				Terminal("BIT_AND")
-				NonTerminal(cit, AnnotatedQualifiedType)
-				Action({
-					ret = append(ret, cit);
-				})
-			)
-		) */
+		)
+	) */
 	private int matchTypeBounds_2_1(int lookahead) {
 		lookahead = matchAnnotatedQualifiedType(lookahead);
 		if (lookahead == -1)
@@ -3149,11 +2260,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("NODE_LIST_VARIABLE")
-			Action({
-				return makeVar();
-			})
-		) */
+		Terminal("NODE_LIST_VARIABLE")
+	) */
 	private int matchNodeListVar(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.NODE_LIST_VARIABLE);
 		if (lookahead == -1)
@@ -3162,10 +2270,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			NonTerminal(ret, NodeListVar)
-		) */
+		LookAhead({ quotesMode })
+		NonTerminal(ret, NodeListVar)
+	) */
 	private int matchTypeBounds_2_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -3177,25 +2284,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
+		Sequence(
+			NonTerminal(cit, AnnotatedQualifiedType)
+			ZeroOrMore(
+				Terminal("BIT_AND")
 				NonTerminal(cit, AnnotatedQualifiedType)
-				Action({
-					ret = append(ret, cit);
-				})
-				ZeroOrMore(
-					Terminal("BIT_AND")
-					NonTerminal(cit, AnnotatedQualifiedType)
-					Action({
-						ret = append(ret, cit);
-					})
-				)
 			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				NonTerminal(ret, NodeListVar)
-			)
-		) */
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			NonTerminal(ret, NodeListVar)
+		)
+	) */
 	private int matchTypeBounds_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTypeBounds_2_1(lookahead);
@@ -3208,31 +2308,21 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("EXTENDS")
-			Choice(
-				Sequence(
+		Terminal("EXTENDS")
+		Choice(
+			Sequence(
+				NonTerminal(cit, AnnotatedQualifiedType)
+				ZeroOrMore(
+					Terminal("BIT_AND")
 					NonTerminal(cit, AnnotatedQualifiedType)
-					Action({
-						ret = append(ret, cit);
-					})
-					ZeroOrMore(
-						Terminal("BIT_AND")
-						NonTerminal(cit, AnnotatedQualifiedType)
-						Action({
-							ret = append(ret, cit);
-						})
-					)
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
 				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchTypeBounds(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.EXTENDS);
 		if (lookahead == -1)
@@ -3244,8 +2334,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(typeBounds, TypeBounds)
-		) */
+		NonTerminal(typeBounds, TypeBounds)
+	) */
 	private int matchTypeParameter_4_1(int lookahead) {
 		lookahead = matchTypeBounds(lookahead);
 		if (lookahead == -1)
@@ -3254,8 +2344,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(typeBounds, TypeBounds)
-		) */
+		NonTerminal(typeBounds, TypeBounds)
+	) */
 	private int matchTypeParameter_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTypeParameter_4_1(lookahead);
@@ -3265,18 +2355,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
-			NonTerminal(name, Name)
-			ZeroOrOne(
-				NonTerminal(typeBounds, TypeBounds)
-			)
-			Action({
-				return dress(STypeParameter.make(annotations, name, ensureNotNull(typeBounds)));
-			})
-		) */
+		NonTerminal(annotations, Annotations)
+		NonTerminal(name, Name)
+		ZeroOrOne(
+			NonTerminal(typeBounds, TypeBounds)
+		)
+	) */
 	private int matchTypeParameter(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -3291,12 +2375,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			NonTerminal(tp, TypeParameter)
-			Action({
-				ret = append(ret, tp);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(tp, TypeParameter)
+	) */
 	private int matchTypeParameters_2_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -3308,12 +2389,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("COMMA")
-			NonTerminal(tp, TypeParameter)
-			Action({
-				ret = append(ret, tp);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(tp, TypeParameter)
+	) */
 	private int matchTypeParameters_2_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTypeParameters_2_1_3_1(lookahead);
@@ -3325,18 +2403,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(tp, TypeParameter)
+		ZeroOrMore(
+			Terminal("COMMA")
 			NonTerminal(tp, TypeParameter)
-			Action({
-				ret = append(ret, tp);
-			})
-			ZeroOrMore(
-				Terminal("COMMA")
-				NonTerminal(tp, TypeParameter)
-				Action({
-					ret = append(ret, tp);
-				})
-			)
-		) */
+		)
+	) */
 	private int matchTypeParameters_2_1(int lookahead) {
 		lookahead = matchTypeParameter(lookahead);
 		if (lookahead == -1)
@@ -3348,10 +2420,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			NonTerminal(ret, NodeListVar)
-		) */
+		LookAhead({ quotesMode })
+		NonTerminal(ret, NodeListVar)
+	) */
 	private int matchTypeParameters_2_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -3363,25 +2434,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
+		Sequence(
+			NonTerminal(tp, TypeParameter)
+			ZeroOrMore(
+				Terminal("COMMA")
 				NonTerminal(tp, TypeParameter)
-				Action({
-					ret = append(ret, tp);
-				})
-				ZeroOrMore(
-					Terminal("COMMA")
-					NonTerminal(tp, TypeParameter)
-					Action({
-						ret = append(ret, tp);
-					})
-				)
 			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				NonTerminal(ret, NodeListVar)
-			)
-		) */
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			NonTerminal(ret, NodeListVar)
+		)
+	) */
 	private int matchTypeParameters_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTypeParameters_2_1(lookahead);
@@ -3394,32 +2458,22 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LT")
-			Choice(
-				Sequence(
+		Terminal("LT")
+		Choice(
+			Sequence(
+				NonTerminal(tp, TypeParameter)
+				ZeroOrMore(
+					Terminal("COMMA")
 					NonTerminal(tp, TypeParameter)
-					Action({
-						ret = append(ret, tp);
-					})
-					ZeroOrMore(
-						Terminal("COMMA")
-						NonTerminal(tp, TypeParameter)
-						Action({
-							ret = append(ret, tp);
-						})
-					)
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
 				)
 			)
-			Terminal("GT")
-			Action({
-				return ret;
-			})
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+		Terminal("GT")
+	) */
 	private int matchTypeParameters(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LT);
 		if (lookahead == -1)
@@ -3434,8 +2488,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(typeParams, TypeParameters)
-		) */
+		NonTerminal(typeParams, TypeParameters)
+	) */
 	private int matchClassOrInterfaceDecl_1_1_4_1(int lookahead) {
 		lookahead = matchTypeParameters(lookahead);
 		if (lookahead == -1)
@@ -3444,8 +2498,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(typeParams, TypeParameters)
-		) */
+		NonTerminal(typeParams, TypeParameters)
+	) */
 	private int matchClassOrInterfaceDecl_1_1_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchClassOrInterfaceDecl_1_1_4_1(lookahead);
@@ -3455,9 +2509,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("EXTENDS")
-			NonTerminal(superClassType, AnnotatedQualifiedType)
-		) */
+		Terminal("EXTENDS")
+		NonTerminal(superClassType, AnnotatedQualifiedType)
+	) */
 	private int matchClassOrInterfaceDecl_1_1_5_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.EXTENDS);
 		if (lookahead == -1)
@@ -3469,9 +2523,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Terminal("EXTENDS")
-			NonTerminal(superClassType, AnnotatedQualifiedType)
-		) */
+		Terminal("EXTENDS")
+		NonTerminal(superClassType, AnnotatedQualifiedType)
+	) */
 	private int matchClassOrInterfaceDecl_1_1_5(int lookahead) {
 		int newLookahead;
 		newLookahead = matchClassOrInterfaceDecl_1_1_5_1(lookahead);
@@ -3481,12 +2535,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			NonTerminal(cit, AnnotatedQualifiedType)
-			Action({
-				ret = append(ret, cit);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(cit, AnnotatedQualifiedType)
+	) */
 	private int matchImplementsList_2_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -3498,12 +2549,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("COMMA")
-			NonTerminal(cit, AnnotatedQualifiedType)
-			Action({
-				ret = append(ret, cit);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(cit, AnnotatedQualifiedType)
+	) */
 	private int matchImplementsList_2_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchImplementsList_2_1_3_1(lookahead);
@@ -3515,22 +2563,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(cit, AnnotatedQualifiedType)
+		ZeroOrMore(
+			Terminal("COMMA")
 			NonTerminal(cit, AnnotatedQualifiedType)
-			Action({
-				ret = append(ret, cit);
-			})
-			ZeroOrMore(
-				Terminal("COMMA")
-				NonTerminal(cit, AnnotatedQualifiedType)
-				Action({
-					ret = append(ret, cit);
-				})
-			)
-			Action({
-				if (typeKind == TypeKind.Interface) problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
-
-			})
-		) */
+		)
+	) */
 	private int matchImplementsList_2_1(int lookahead) {
 		lookahead = matchAnnotatedQualifiedType(lookahead);
 		if (lookahead == -1)
@@ -3542,10 +2580,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			NonTerminal(ret, NodeListVar)
-		) */
+		LookAhead({ quotesMode })
+		NonTerminal(ret, NodeListVar)
+	) */
 	private int matchImplementsList_2_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -3557,29 +2594,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
+		Sequence(
+			NonTerminal(cit, AnnotatedQualifiedType)
+			ZeroOrMore(
+				Terminal("COMMA")
 				NonTerminal(cit, AnnotatedQualifiedType)
-				Action({
-					ret = append(ret, cit);
-				})
-				ZeroOrMore(
-					Terminal("COMMA")
-					NonTerminal(cit, AnnotatedQualifiedType)
-					Action({
-						ret = append(ret, cit);
-					})
-				)
-				Action({
-					if (typeKind == TypeKind.Interface) problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
-
-				})
 			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				NonTerminal(ret, NodeListVar)
-			)
-		) */
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			NonTerminal(ret, NodeListVar)
+		)
+	) */
 	private int matchImplementsList_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchImplementsList_2_1(lookahead);
@@ -3592,35 +2618,21 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("IMPLEMENTS")
-			Choice(
-				Sequence(
+		Terminal("IMPLEMENTS")
+		Choice(
+			Sequence(
+				NonTerminal(cit, AnnotatedQualifiedType)
+				ZeroOrMore(
+					Terminal("COMMA")
 					NonTerminal(cit, AnnotatedQualifiedType)
-					Action({
-						ret = append(ret, cit);
-					})
-					ZeroOrMore(
-						Terminal("COMMA")
-						NonTerminal(cit, AnnotatedQualifiedType)
-						Action({
-							ret = append(ret, cit);
-						})
-					)
-					Action({
-						if (typeKind == TypeKind.Interface) problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
-
-					})
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
 				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchImplementsList(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.IMPLEMENTS);
 		if (lookahead == -1)
@@ -3632,8 +2644,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(implementsClause, ImplementsList)
-		) */
+		NonTerminal(implementsClause, ImplementsList)
+	) */
 	private int matchClassOrInterfaceDecl_1_1_6_1(int lookahead) {
 		lookahead = matchImplementsList(lookahead);
 		if (lookahead == -1)
@@ -3642,8 +2654,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(implementsClause, ImplementsList)
-		) */
+		NonTerminal(implementsClause, ImplementsList)
+	) */
 	private int matchClassOrInterfaceDecl_1_1_6(int lookahead) {
 		int newLookahead;
 		newLookahead = matchClassOrInterfaceDecl_1_1_6_1(lookahead);
@@ -3653,22 +2665,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("CLASS")
-			Action({
-				typeKind = TypeKind.Class;
-			})
-			NonTerminal(name, Name)
-			ZeroOrOne(
-				NonTerminal(typeParams, TypeParameters)
-			)
-			ZeroOrOne(
-				Terminal("EXTENDS")
-				NonTerminal(superClassType, AnnotatedQualifiedType)
-			)
-			ZeroOrOne(
-				NonTerminal(implementsClause, ImplementsList)
-			)
-		) */
+		Terminal("CLASS")
+		NonTerminal(name, Name)
+		ZeroOrOne(
+			NonTerminal(typeParams, TypeParameters)
+		)
+		ZeroOrOne(
+			Terminal("EXTENDS")
+			NonTerminal(superClassType, AnnotatedQualifiedType)
+		)
+		ZeroOrOne(
+			NonTerminal(implementsClause, ImplementsList)
+		)
+	) */
 	private int matchClassOrInterfaceDecl_1_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.CLASS);
 		if (lookahead == -1)
@@ -3689,8 +2698,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(typeParams, TypeParameters)
-		) */
+		NonTerminal(typeParams, TypeParameters)
+	) */
 	private int matchClassOrInterfaceDecl_1_2_4_1(int lookahead) {
 		lookahead = matchTypeParameters(lookahead);
 		if (lookahead == -1)
@@ -3699,8 +2708,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(typeParams, TypeParameters)
-		) */
+		NonTerminal(typeParams, TypeParameters)
+	) */
 	private int matchClassOrInterfaceDecl_1_2_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchClassOrInterfaceDecl_1_2_4_1(lookahead);
@@ -3710,12 +2719,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			NonTerminal(cit, AnnotatedQualifiedType)
-			Action({
-				ret = append(ret, cit);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(cit, AnnotatedQualifiedType)
+	) */
 	private int matchExtendsList_2_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -3727,12 +2733,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("COMMA")
-			NonTerminal(cit, AnnotatedQualifiedType)
-			Action({
-				ret = append(ret, cit);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(cit, AnnotatedQualifiedType)
+	) */
 	private int matchExtendsList_2_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchExtendsList_2_1_3_1(lookahead);
@@ -3744,18 +2747,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(cit, AnnotatedQualifiedType)
+		ZeroOrMore(
+			Terminal("COMMA")
 			NonTerminal(cit, AnnotatedQualifiedType)
-			Action({
-				ret = append(ret, cit);
-			})
-			ZeroOrMore(
-				Terminal("COMMA")
-				NonTerminal(cit, AnnotatedQualifiedType)
-				Action({
-					ret = append(ret, cit);
-				})
-			)
-		) */
+		)
+	) */
 	private int matchExtendsList_2_1(int lookahead) {
 		lookahead = matchAnnotatedQualifiedType(lookahead);
 		if (lookahead == -1)
@@ -3767,10 +2764,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			NonTerminal(ret, NodeListVar)
-		) */
+		LookAhead({ quotesMode })
+		NonTerminal(ret, NodeListVar)
+	) */
 	private int matchExtendsList_2_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -3782,25 +2778,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
+		Sequence(
+			NonTerminal(cit, AnnotatedQualifiedType)
+			ZeroOrMore(
+				Terminal("COMMA")
 				NonTerminal(cit, AnnotatedQualifiedType)
-				Action({
-					ret = append(ret, cit);
-				})
-				ZeroOrMore(
-					Terminal("COMMA")
-					NonTerminal(cit, AnnotatedQualifiedType)
-					Action({
-						ret = append(ret, cit);
-					})
-				)
 			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				NonTerminal(ret, NodeListVar)
-			)
-		) */
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			NonTerminal(ret, NodeListVar)
+		)
+	) */
 	private int matchExtendsList_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchExtendsList_2_1(lookahead);
@@ -3813,31 +2802,21 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("EXTENDS")
-			Choice(
-				Sequence(
+		Terminal("EXTENDS")
+		Choice(
+			Sequence(
+				NonTerminal(cit, AnnotatedQualifiedType)
+				ZeroOrMore(
+					Terminal("COMMA")
 					NonTerminal(cit, AnnotatedQualifiedType)
-					Action({
-						ret = append(ret, cit);
-					})
-					ZeroOrMore(
-						Terminal("COMMA")
-						NonTerminal(cit, AnnotatedQualifiedType)
-						Action({
-							ret = append(ret, cit);
-						})
-					)
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
 				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchExtendsList(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.EXTENDS);
 		if (lookahead == -1)
@@ -3849,8 +2828,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(extendsClause, ExtendsList)
-		) */
+		NonTerminal(extendsClause, ExtendsList)
+	) */
 	private int matchClassOrInterfaceDecl_1_2_5_1(int lookahead) {
 		lookahead = matchExtendsList(lookahead);
 		if (lookahead == -1)
@@ -3859,8 +2838,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(extendsClause, ExtendsList)
-		) */
+		NonTerminal(extendsClause, ExtendsList)
+	) */
 	private int matchClassOrInterfaceDecl_1_2_5(int lookahead) {
 		int newLookahead;
 		newLookahead = matchClassOrInterfaceDecl_1_2_5_1(lookahead);
@@ -3870,18 +2849,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("INTERFACE")
-			Action({
-				typeKind = TypeKind.Interface;
-			})
-			NonTerminal(name, Name)
-			ZeroOrOne(
-				NonTerminal(typeParams, TypeParameters)
-			)
-			ZeroOrOne(
-				NonTerminal(extendsClause, ExtendsList)
-			)
-		) */
+		Terminal("INTERFACE")
+		NonTerminal(name, Name)
+		ZeroOrOne(
+			NonTerminal(typeParams, TypeParameters)
+		)
+		ZeroOrOne(
+			NonTerminal(extendsClause, ExtendsList)
+		)
+	) */
 	private int matchClassOrInterfaceDecl_1_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.INTERFACE);
 		if (lookahead == -1)
@@ -3899,37 +2875,31 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("CLASS")
-				Action({
-					typeKind = TypeKind.Class;
-				})
-				NonTerminal(name, Name)
-				ZeroOrOne(
-					NonTerminal(typeParams, TypeParameters)
-				)
-				ZeroOrOne(
-					Terminal("EXTENDS")
-					NonTerminal(superClassType, AnnotatedQualifiedType)
-				)
-				ZeroOrOne(
-					NonTerminal(implementsClause, ImplementsList)
-				)
+		Sequence(
+			Terminal("CLASS")
+			NonTerminal(name, Name)
+			ZeroOrOne(
+				NonTerminal(typeParams, TypeParameters)
 			)
-			Sequence(
-				Terminal("INTERFACE")
-				Action({
-					typeKind = TypeKind.Interface;
-				})
-				NonTerminal(name, Name)
-				ZeroOrOne(
-					NonTerminal(typeParams, TypeParameters)
-				)
-				ZeroOrOne(
-					NonTerminal(extendsClause, ExtendsList)
-				)
+			ZeroOrOne(
+				Terminal("EXTENDS")
+				NonTerminal(superClassType, AnnotatedQualifiedType)
 			)
-		) */
+			ZeroOrOne(
+				NonTerminal(implementsClause, ImplementsList)
+			)
+		)
+		Sequence(
+			Terminal("INTERFACE")
+			NonTerminal(name, Name)
+			ZeroOrOne(
+				NonTerminal(typeParams, TypeParameters)
+			)
+			ZeroOrOne(
+				NonTerminal(extendsClause, ExtendsList)
+			)
+		)
+	) */
 	private int matchClassOrInterfaceDecl_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchClassOrInterfaceDecl_1_1(lookahead);
@@ -3942,11 +2912,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("SEMICOLON")
-			Action({
-				ret = dress(SEmptyMemberDecl.make());
-			})
-		) */
+		Terminal("SEMICOLON")
+	) */
 	private int matchClassOrInterfaceBodyDecl_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
 		if (lookahead == -1)
@@ -3955,11 +2922,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("PUBLIC")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-			})
-		) */
+		Terminal("PUBLIC")
+	) */
 	private int matchModifiers_1_1_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.PUBLIC);
 		if (lookahead == -1)
@@ -3968,11 +2932,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("PROTECTED")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-			})
-		) */
+		Terminal("PROTECTED")
+	) */
 	private int matchModifiers_1_1_2_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.PROTECTED);
 		if (lookahead == -1)
@@ -3981,11 +2942,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("PRIVATE")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-			})
-		) */
+		Terminal("PRIVATE")
+	) */
 	private int matchModifiers_1_1_2_3(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.PRIVATE);
 		if (lookahead == -1)
@@ -3994,11 +2952,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("ABSTRACT")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-			})
-		) */
+		Terminal("ABSTRACT")
+	) */
 	private int matchModifiers_1_1_2_4(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.ABSTRACT);
 		if (lookahead == -1)
@@ -4007,11 +2962,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("_DEFAULT")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
-			})
-		) */
+		Terminal("_DEFAULT")
+	) */
 	private int matchModifiers_1_1_2_5(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants._DEFAULT);
 		if (lookahead == -1)
@@ -4020,11 +2972,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("STATIC")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-			})
-		) */
+		Terminal("STATIC")
+	) */
 	private int matchModifiers_1_1_2_6(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.STATIC);
 		if (lookahead == -1)
@@ -4033,11 +2982,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("FINAL")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-			})
-		) */
+		Terminal("FINAL")
+	) */
 	private int matchModifiers_1_1_2_7(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.FINAL);
 		if (lookahead == -1)
@@ -4046,11 +2992,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("TRANSIENT")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-			})
-		) */
+		Terminal("TRANSIENT")
+	) */
 	private int matchModifiers_1_1_2_8(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.TRANSIENT);
 		if (lookahead == -1)
@@ -4059,11 +3002,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("VOLATILE")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-			})
-		) */
+		Terminal("VOLATILE")
+	) */
 	private int matchModifiers_1_1_2_9(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.VOLATILE);
 		if (lookahead == -1)
@@ -4072,11 +3012,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("SYNCHRONIZED")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-			})
-		) */
+		Terminal("SYNCHRONIZED")
+	) */
 	private int matchModifiers_1_1_2_10(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SYNCHRONIZED);
 		if (lookahead == -1)
@@ -4085,11 +3022,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("NATIVE")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-			})
-		) */
+		Terminal("NATIVE")
+	) */
 	private int matchModifiers_1_1_2_11(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.NATIVE);
 		if (lookahead == -1)
@@ -4098,11 +3032,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("STRICTFP")
-			Action({
-				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-			})
-		) */
+		Terminal("STRICTFP")
+	) */
 	private int matchModifiers_1_1_2_12(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.STRICTFP);
 		if (lookahead == -1)
@@ -4111,11 +3042,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ann, Annotation)
-			Action({
-				modifiers = append(modifiers, ann);
-			})
-		) */
+		NonTerminal(ann, Annotation)
+	) */
 	private int matchModifiers_1_1_2_13(int lookahead) {
 		lookahead = matchAnnotation(lookahead);
 		if (lookahead == -1)
@@ -4124,85 +3052,46 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("PUBLIC")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-				})
-			)
-			Sequence(
-				Terminal("PROTECTED")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-				})
-			)
-			Sequence(
-				Terminal("PRIVATE")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-				})
-			)
-			Sequence(
-				Terminal("ABSTRACT")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-				})
-			)
-			Sequence(
-				Terminal("_DEFAULT")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
-				})
-			)
-			Sequence(
-				Terminal("STATIC")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-				})
-			)
-			Sequence(
-				Terminal("FINAL")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-				})
-			)
-			Sequence(
-				Terminal("TRANSIENT")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-				})
-			)
-			Sequence(
-				Terminal("VOLATILE")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-				})
-			)
-			Sequence(
-				Terminal("SYNCHRONIZED")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-				})
-			)
-			Sequence(
-				Terminal("NATIVE")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-				})
-			)
-			Sequence(
-				Terminal("STRICTFP")
-				Action({
-					modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-				})
-			)
-			Sequence(
-				NonTerminal(ann, Annotation)
-				Action({
-					modifiers = append(modifiers, ann);
-				})
-			)
-		) */
+		Sequence(
+			Terminal("PUBLIC")
+		)
+		Sequence(
+			Terminal("PROTECTED")
+		)
+		Sequence(
+			Terminal("PRIVATE")
+		)
+		Sequence(
+			Terminal("ABSTRACT")
+		)
+		Sequence(
+			Terminal("_DEFAULT")
+		)
+		Sequence(
+			Terminal("STATIC")
+		)
+		Sequence(
+			Terminal("FINAL")
+		)
+		Sequence(
+			Terminal("TRANSIENT")
+		)
+		Sequence(
+			Terminal("VOLATILE")
+		)
+		Sequence(
+			Terminal("SYNCHRONIZED")
+		)
+		Sequence(
+			Terminal("NATIVE")
+		)
+		Sequence(
+			Terminal("STRICTFP")
+		)
+		Sequence(
+			NonTerminal(ann, Annotation)
+		)
+	) */
 	private int matchModifiers_1_1_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchModifiers_1_1_2_1(lookahead);
@@ -4248,88 +3137,49 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Choice(
-				Sequence(
-					Terminal("PUBLIC")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-					})
-				)
-				Sequence(
-					Terminal("PROTECTED")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-					})
-				)
-				Sequence(
-					Terminal("PRIVATE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-					})
-				)
-				Sequence(
-					Terminal("ABSTRACT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-					})
-				)
-				Sequence(
-					Terminal("_DEFAULT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
-					})
-				)
-				Sequence(
-					Terminal("STATIC")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-					})
-				)
-				Sequence(
-					Terminal("FINAL")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-					})
-				)
-				Sequence(
-					Terminal("TRANSIENT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-					})
-				)
-				Sequence(
-					Terminal("VOLATILE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-					})
-				)
-				Sequence(
-					Terminal("SYNCHRONIZED")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-					})
-				)
-				Sequence(
-					Terminal("NATIVE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-					})
-				)
-				Sequence(
-					Terminal("STRICTFP")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-					})
-				)
-				Sequence(
-					NonTerminal(ann, Annotation)
-					Action({
-						modifiers = append(modifiers, ann);
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("PUBLIC")
 			)
-		) */
+			Sequence(
+				Terminal("PROTECTED")
+			)
+			Sequence(
+				Terminal("PRIVATE")
+			)
+			Sequence(
+				Terminal("ABSTRACT")
+			)
+			Sequence(
+				Terminal("_DEFAULT")
+			)
+			Sequence(
+				Terminal("STATIC")
+			)
+			Sequence(
+				Terminal("FINAL")
+			)
+			Sequence(
+				Terminal("TRANSIENT")
+			)
+			Sequence(
+				Terminal("VOLATILE")
+			)
+			Sequence(
+				Terminal("SYNCHRONIZED")
+			)
+			Sequence(
+				Terminal("NATIVE")
+			)
+			Sequence(
+				Terminal("STRICTFP")
+			)
+			Sequence(
+				NonTerminal(ann, Annotation)
+			)
+		)
+	) */
 	private int matchModifiers_1_1(int lookahead) {
 		lookahead = matchModifiers_1_1_2(lookahead);
 		if (lookahead == -1)
@@ -4338,88 +3188,49 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Choice(
-				Sequence(
-					Terminal("PUBLIC")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-					})
-				)
-				Sequence(
-					Terminal("PROTECTED")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-					})
-				)
-				Sequence(
-					Terminal("PRIVATE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-					})
-				)
-				Sequence(
-					Terminal("ABSTRACT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-					})
-				)
-				Sequence(
-					Terminal("_DEFAULT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
-					})
-				)
-				Sequence(
-					Terminal("STATIC")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-					})
-				)
-				Sequence(
-					Terminal("FINAL")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-					})
-				)
-				Sequence(
-					Terminal("TRANSIENT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-					})
-				)
-				Sequence(
-					Terminal("VOLATILE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-					})
-				)
-				Sequence(
-					Terminal("SYNCHRONIZED")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-					})
-				)
-				Sequence(
-					Terminal("NATIVE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-					})
-				)
-				Sequence(
-					Terminal("STRICTFP")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-					})
-				)
-				Sequence(
-					NonTerminal(ann, Annotation)
-					Action({
-						modifiers = append(modifiers, ann);
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("PUBLIC")
 			)
-		) */
+			Sequence(
+				Terminal("PROTECTED")
+			)
+			Sequence(
+				Terminal("PRIVATE")
+			)
+			Sequence(
+				Terminal("ABSTRACT")
+			)
+			Sequence(
+				Terminal("_DEFAULT")
+			)
+			Sequence(
+				Terminal("STATIC")
+			)
+			Sequence(
+				Terminal("FINAL")
+			)
+			Sequence(
+				Terminal("TRANSIENT")
+			)
+			Sequence(
+				Terminal("VOLATILE")
+			)
+			Sequence(
+				Terminal("SYNCHRONIZED")
+			)
+			Sequence(
+				Terminal("NATIVE")
+			)
+			Sequence(
+				Terminal("STRICTFP")
+			)
+			Sequence(
+				NonTerminal(ann, Annotation)
+			)
+		)
+	) */
 	private int matchModifiers_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchModifiers_1_1(lookahead);
@@ -4431,93 +3242,51 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrMore(
-				LookAhead(2)
-				Choice(
-					Sequence(
-						Terminal("PUBLIC")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-						})
-					)
-					Sequence(
-						Terminal("PROTECTED")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-						})
-					)
-					Sequence(
-						Terminal("PRIVATE")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-						})
-					)
-					Sequence(
-						Terminal("ABSTRACT")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-						})
-					)
-					Sequence(
-						Terminal("_DEFAULT")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
-						})
-					)
-					Sequence(
-						Terminal("STATIC")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-						})
-					)
-					Sequence(
-						Terminal("FINAL")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-						})
-					)
-					Sequence(
-						Terminal("TRANSIENT")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-						})
-					)
-					Sequence(
-						Terminal("VOLATILE")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-						})
-					)
-					Sequence(
-						Terminal("SYNCHRONIZED")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-						})
-					)
-					Sequence(
-						Terminal("NATIVE")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-						})
-					)
-					Sequence(
-						Terminal("STRICTFP")
-						Action({
-							modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-						})
-					)
-					Sequence(
-						NonTerminal(ann, Annotation)
-						Action({
-							modifiers = append(modifiers, ann);
-						})
-					)
+		ZeroOrMore(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					Terminal("PUBLIC")
+				)
+				Sequence(
+					Terminal("PROTECTED")
+				)
+				Sequence(
+					Terminal("PRIVATE")
+				)
+				Sequence(
+					Terminal("ABSTRACT")
+				)
+				Sequence(
+					Terminal("_DEFAULT")
+				)
+				Sequence(
+					Terminal("STATIC")
+				)
+				Sequence(
+					Terminal("FINAL")
+				)
+				Sequence(
+					Terminal("TRANSIENT")
+				)
+				Sequence(
+					Terminal("VOLATILE")
+				)
+				Sequence(
+					Terminal("SYNCHRONIZED")
+				)
+				Sequence(
+					Terminal("NATIVE")
+				)
+				Sequence(
+					Terminal("STRICTFP")
+				)
+				Sequence(
+					NonTerminal(ann, Annotation)
 				)
 			)
-			Action({
-				return modifiers;
-			})
-		) */
+		)
+	) */
 	private int matchModifiers(int lookahead) {
 		lookahead = matchModifiers_1(lookahead);
 		if (lookahead == -1)
@@ -4526,11 +3295,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(block, Block)
-			Action({
-				return dress(SInitializerDecl.make(modifiers, block));
-			})
-		) */
+		NonTerminal(block, Block)
+	) */
 	private int matchInitializerDecl(int lookahead) {
 		lookahead = matchBlock(lookahead);
 		if (lookahead == -1)
@@ -4539,12 +3305,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, InitializerDecl)
-			Action({
-				if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
-
-			})
-		) */
+		NonTerminal(ret, InitializerDecl)
+	) */
 	private int matchClassOrInterfaceBodyDecl_2_2_3_1(int lookahead) {
 		lookahead = matchInitializerDecl(lookahead);
 		if (lookahead == -1)
@@ -4553,8 +3315,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(implementsClause, ImplementsList)
-		) */
+		NonTerminal(implementsClause, ImplementsList)
+	) */
 	private int matchEnumDecl_3_1(int lookahead) {
 		lookahead = matchImplementsList(lookahead);
 		if (lookahead == -1)
@@ -4563,8 +3325,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(implementsClause, ImplementsList)
-		) */
+		NonTerminal(implementsClause, ImplementsList)
+	) */
 	private int matchEnumDecl_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchEnumDecl_3_1(lookahead);
@@ -4574,8 +3336,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(args, Arguments)
-		) */
+		NonTerminal(args, Arguments)
+	) */
 	private int matchEnumConstantDecl_4_1(int lookahead) {
 		lookahead = matchArguments(lookahead);
 		if (lookahead == -1)
@@ -4584,8 +3346,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(args, Arguments)
-		) */
+		NonTerminal(args, Arguments)
+	) */
 	private int matchEnumConstantDecl_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchEnumConstantDecl_4_1(lookahead);
@@ -4595,8 +3357,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(classBody, ClassOrInterfaceBody)
-		) */
+		NonTerminal(classBody, ClassOrInterfaceBody)
+	) */
 	private int matchEnumConstantDecl_5_1(int lookahead) {
 		lookahead = matchClassOrInterfaceBody(lookahead);
 		if (lookahead == -1)
@@ -4605,8 +3367,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(classBody, ClassOrInterfaceBody)
-		) */
+		NonTerminal(classBody, ClassOrInterfaceBody)
+	) */
 	private int matchEnumConstantDecl_5(int lookahead) {
 		int newLookahead;
 		newLookahead = matchEnumConstantDecl_5_1(lookahead);
@@ -4616,21 +3378,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			NonTerminal(modifiers, Modifiers)
-			NonTerminal(name, Name)
-			ZeroOrOne(
-				NonTerminal(args, Arguments)
-			)
-			ZeroOrOne(
-				NonTerminal(classBody, ClassOrInterfaceBody)
-			)
-			Action({
-				return dress(SEnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody)));
-			})
-		) */
+		NonTerminal(modifiers, Modifiers)
+		NonTerminal(name, Name)
+		ZeroOrOne(
+			NonTerminal(args, Arguments)
+		)
+		ZeroOrOne(
+			NonTerminal(classBody, ClassOrInterfaceBody)
+		)
+	) */
 	private int matchEnumConstantDecl(int lookahead) {
 		lookahead = matchModifiers(lookahead);
 		if (lookahead == -1)
@@ -4648,13 +3404,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Terminal("COMMA")
-			NonTerminal(entry, EnumConstantDecl)
-			Action({
-				constants = append(constants, entry);
-			})
-		) */
+		LookAhead(2)
+		Terminal("COMMA")
+		NonTerminal(entry, EnumConstantDecl)
+	) */
 	private int matchEnumDecl_5_1_1_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -4666,13 +3419,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Terminal("COMMA")
-			NonTerminal(entry, EnumConstantDecl)
-			Action({
-				constants = append(constants, entry);
-			})
-		) */
+		LookAhead(2)
+		Terminal("COMMA")
+		NonTerminal(entry, EnumConstantDecl)
+	) */
 	private int matchEnumDecl_5_1_1_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchEnumDecl_5_1_1_1_3_1(lookahead);
@@ -4684,19 +3434,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(entry, EnumConstantDecl)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("COMMA")
 			NonTerminal(entry, EnumConstantDecl)
-			Action({
-				constants = append(constants, entry);
-			})
-			ZeroOrMore(
-				LookAhead(2)
-				Terminal("COMMA")
-				NonTerminal(entry, EnumConstantDecl)
-				Action({
-					constants = append(constants, entry);
-				})
-			)
-		) */
+		)
+	) */
 	private int matchEnumDecl_5_1_1_1(int lookahead) {
 		lookahead = matchEnumConstantDecl(lookahead);
 		if (lookahead == -1)
@@ -4708,10 +3452,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			NonTerminal(constants, NodeListVar)
-		) */
+		LookAhead({ quotesMode })
+		NonTerminal(constants, NodeListVar)
+	) */
 	private int matchEnumDecl_5_1_1_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -4723,26 +3466,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
+		Sequence(
+			NonTerminal(entry, EnumConstantDecl)
+			ZeroOrMore(
+				LookAhead(2)
+				Terminal("COMMA")
 				NonTerminal(entry, EnumConstantDecl)
-				Action({
-					constants = append(constants, entry);
-				})
-				ZeroOrMore(
-					LookAhead(2)
-					Terminal("COMMA")
-					NonTerminal(entry, EnumConstantDecl)
-					Action({
-						constants = append(constants, entry);
-					})
-				)
 			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				NonTerminal(constants, NodeListVar)
-			)
-		) */
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			NonTerminal(constants, NodeListVar)
+		)
+	) */
 	private int matchEnumDecl_5_1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchEnumDecl_5_1_1_1(lookahead);
@@ -4755,28 +3491,21 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
+		Choice(
+			Sequence(
+				NonTerminal(entry, EnumConstantDecl)
+				ZeroOrMore(
+					LookAhead(2)
+					Terminal("COMMA")
 					NonTerminal(entry, EnumConstantDecl)
-					Action({
-						constants = append(constants, entry);
-					})
-					ZeroOrMore(
-						LookAhead(2)
-						Terminal("COMMA")
-						NonTerminal(entry, EnumConstantDecl)
-						Action({
-							constants = append(constants, entry);
-						})
-					)
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(constants, NodeListVar)
 				)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(constants, NodeListVar)
+			)
+		)
+	) */
 	private int matchEnumDecl_5_1(int lookahead) {
 		lookahead = matchEnumDecl_5_1_1(lookahead);
 		if (lookahead == -1)
@@ -4785,28 +3514,21 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Choice(
-				Sequence(
+		Choice(
+			Sequence(
+				NonTerminal(entry, EnumConstantDecl)
+				ZeroOrMore(
+					LookAhead(2)
+					Terminal("COMMA")
 					NonTerminal(entry, EnumConstantDecl)
-					Action({
-						constants = append(constants, entry);
-					})
-					ZeroOrMore(
-						LookAhead(2)
-						Terminal("COMMA")
-						NonTerminal(entry, EnumConstantDecl)
-						Action({
-							constants = append(constants, entry);
-						})
-					)
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(constants, NodeListVar)
 				)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(constants, NodeListVar)
+			)
+		)
+	) */
 	private int matchEnumDecl_5(int lookahead) {
 		int newLookahead;
 		newLookahead = matchEnumDecl_5_1(lookahead);
@@ -4816,11 +3538,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			Action({
-				trailingComma = true;
-			})
-		) */
+		Terminal("COMMA")
+	) */
 	private int matchEnumDecl_6_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -4829,11 +3548,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Terminal("COMMA")
-			Action({
-				trailingComma = true;
-			})
-		) */
+		Terminal("COMMA")
+	) */
 	private int matchEnumDecl_6(int lookahead) {
 		int newLookahead;
 		newLookahead = matchEnumDecl_6_1(lookahead);
@@ -4843,9 +3559,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("SEMICOLON")
-			NonTerminal(members, ClassOrInterfaceBodyDecls)
-		) */
+		Terminal("SEMICOLON")
+		NonTerminal(members, ClassOrInterfaceBodyDecls)
+	) */
 	private int matchEnumDecl_7_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
 		if (lookahead == -1)
@@ -4857,9 +3573,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Terminal("SEMICOLON")
-			NonTerminal(members, ClassOrInterfaceBodyDecls)
-		) */
+		Terminal("SEMICOLON")
+		NonTerminal(members, ClassOrInterfaceBodyDecls)
+	) */
 	private int matchEnumDecl_7(int lookahead) {
 		int newLookahead;
 		newLookahead = matchEnumDecl_7_1(lookahead);
@@ -4869,50 +3585,37 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("ENUM")
-			NonTerminal(name, Name)
-			ZeroOrOne(
-				NonTerminal(implementsClause, ImplementsList)
-			)
-			Terminal("LBRACE")
-			ZeroOrOne(
-				Choice(
-					Sequence(
+		Terminal("ENUM")
+		NonTerminal(name, Name)
+		ZeroOrOne(
+			NonTerminal(implementsClause, ImplementsList)
+		)
+		Terminal("LBRACE")
+		ZeroOrOne(
+			Choice(
+				Sequence(
+					NonTerminal(entry, EnumConstantDecl)
+					ZeroOrMore(
+						LookAhead(2)
+						Terminal("COMMA")
 						NonTerminal(entry, EnumConstantDecl)
-						Action({
-							constants = append(constants, entry);
-						})
-						ZeroOrMore(
-							LookAhead(2)
-							Terminal("COMMA")
-							NonTerminal(entry, EnumConstantDecl)
-							Action({
-								constants = append(constants, entry);
-							})
-						)
-					)
-					Sequence(
-						LookAhead(						quotesMode
-	)
-						NonTerminal(constants, NodeListVar)
 					)
 				)
+				Sequence(
+					LookAhead({ quotesMode })
+					NonTerminal(constants, NodeListVar)
+				)
 			)
-			ZeroOrOne(
-				Terminal("COMMA")
-				Action({
-					trailingComma = true;
-				})
-			)
-			ZeroOrOne(
-				Terminal("SEMICOLON")
-				NonTerminal(members, ClassOrInterfaceBodyDecls)
-			)
-			Terminal("RBRACE")
-			Action({
-				return dress(SEnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))).withProblem(problem.value);
-			})
-		) */
+		)
+		ZeroOrOne(
+			Terminal("COMMA")
+		)
+		ZeroOrOne(
+			Terminal("SEMICOLON")
+			NonTerminal(members, ClassOrInterfaceBodyDecls)
+		)
+		Terminal("RBRACE")
+	) */
 	private int matchEnumDecl(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.ENUM);
 		if (lookahead == -1)
@@ -4942,11 +3645,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("SEMICOLON")
-			Action({
-				ret = dress(SEmptyTypeDecl.make());
-			})
-		) */
+		Terminal("SEMICOLON")
+	) */
 	private int matchAnnotationTypeBodyDecl_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
 		if (lookahead == -1)
@@ -4955,18 +3655,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-			)
-			Action({
-				lateRun();
-			})
-			NonTerminal(arrayDims, ArrayDimsMandatory)
-			Action({
-				type = dress(SArrayType.make(primitiveType, arrayDims));
-			})
-		) */
+		LookAhead(
+			NonTerminal(Annotations)
+			Terminal("LBRACKET")
+		)
+		NonTerminal(arrayDims, ArrayDimsMandatory)
+	) */
 	private int matchType_1_1_2_1(int lookahead) {
 		lookahead = matchArrayDimsMandatory(lookahead);
 		if (lookahead == -1)
@@ -4975,18 +3669,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-			)
-			Action({
-				lateRun();
-			})
-			NonTerminal(arrayDims, ArrayDimsMandatory)
-			Action({
-				type = dress(SArrayType.make(primitiveType, arrayDims));
-			})
-		) */
+		LookAhead(
+			NonTerminal(Annotations)
+			Terminal("LBRACKET")
+		)
+		NonTerminal(arrayDims, ArrayDimsMandatory)
+	) */
 	private int matchType_1_1_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchType_1_1_2_1(lookahead);
@@ -4996,21 +3684,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(primitiveType, PrimitiveType)
-			ZeroOrOne(
-				LookAhead(
-					NonTerminal(Annotations)
-					Terminal("LBRACKET")
-				)
-				Action({
-					lateRun();
-				})
-				NonTerminal(arrayDims, ArrayDimsMandatory)
-				Action({
-					type = dress(SArrayType.make(primitiveType, arrayDims));
-				})
+		NonTerminal(primitiveType, PrimitiveType)
+		ZeroOrOne(
+			LookAhead(
+				NonTerminal(Annotations)
+				Terminal("LBRACKET")
 			)
-		) */
+			NonTerminal(arrayDims, ArrayDimsMandatory)
+		)
+	) */
 	private int matchType_1_1(int lookahead) {
 		lookahead = matchPrimitiveType(lookahead);
 		if (lookahead == -1)
@@ -5022,18 +3704,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-			)
-			Action({
-				lateRun();
-			})
-			NonTerminal(arrayDims, ArrayDimsMandatory)
-			Action({
-				type = dress(SArrayType.make(type, arrayDims));
-			})
-		) */
+		LookAhead(
+			NonTerminal(Annotations)
+			Terminal("LBRACKET")
+		)
+		NonTerminal(arrayDims, ArrayDimsMandatory)
+	) */
 	private int matchType_1_2_2_1(int lookahead) {
 		lookahead = matchArrayDimsMandatory(lookahead);
 		if (lookahead == -1)
@@ -5042,18 +3718,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-			)
-			Action({
-				lateRun();
-			})
-			NonTerminal(arrayDims, ArrayDimsMandatory)
-			Action({
-				type = dress(SArrayType.make(type, arrayDims));
-			})
-		) */
+		LookAhead(
+			NonTerminal(Annotations)
+			Terminal("LBRACKET")
+		)
+		NonTerminal(arrayDims, ArrayDimsMandatory)
+	) */
 	private int matchType_1_2_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchType_1_2_2_1(lookahead);
@@ -5063,21 +3733,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(type, QualifiedType)
-			ZeroOrOne(
-				LookAhead(
-					NonTerminal(Annotations)
-					Terminal("LBRACKET")
-				)
-				Action({
-					lateRun();
-				})
-				NonTerminal(arrayDims, ArrayDimsMandatory)
-				Action({
-					type = dress(SArrayType.make(type, arrayDims));
-				})
+		NonTerminal(type, QualifiedType)
+		ZeroOrOne(
+			LookAhead(
+				NonTerminal(Annotations)
+				Terminal("LBRACKET")
 			)
-		) */
+			NonTerminal(arrayDims, ArrayDimsMandatory)
+		)
+	) */
 	private int matchType_1_2(int lookahead) {
 		lookahead = matchQualifiedType(lookahead);
 		if (lookahead == -1)
@@ -5089,39 +3753,27 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				NonTerminal(primitiveType, PrimitiveType)
-				ZeroOrOne(
-					LookAhead(
-						NonTerminal(Annotations)
-						Terminal("LBRACKET")
-					)
-					Action({
-						lateRun();
-					})
-					NonTerminal(arrayDims, ArrayDimsMandatory)
-					Action({
-						type = dress(SArrayType.make(primitiveType, arrayDims));
-					})
+		Sequence(
+			NonTerminal(primitiveType, PrimitiveType)
+			ZeroOrOne(
+				LookAhead(
+					NonTerminal(Annotations)
+					Terminal("LBRACKET")
 				)
+				NonTerminal(arrayDims, ArrayDimsMandatory)
 			)
-			Sequence(
-				NonTerminal(type, QualifiedType)
-				ZeroOrOne(
-					LookAhead(
-						NonTerminal(Annotations)
-						Terminal("LBRACKET")
-					)
-					Action({
-						lateRun();
-					})
-					NonTerminal(arrayDims, ArrayDimsMandatory)
-					Action({
-						type = dress(SArrayType.make(type, arrayDims));
-					})
+		)
+		Sequence(
+			NonTerminal(type, QualifiedType)
+			ZeroOrOne(
+				LookAhead(
+					NonTerminal(Annotations)
+					Terminal("LBRACKET")
 				)
+				NonTerminal(arrayDims, ArrayDimsMandatory)
 			)
-		) */
+		)
+	) */
 	private int matchType_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchType_1_1(lookahead);
@@ -5134,44 +3786,29 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					NonTerminal(primitiveType, PrimitiveType)
-					ZeroOrOne(
-						LookAhead(
-							NonTerminal(Annotations)
-							Terminal("LBRACKET")
-						)
-						Action({
-							lateRun();
-						})
-						NonTerminal(arrayDims, ArrayDimsMandatory)
-						Action({
-							type = dress(SArrayType.make(primitiveType, arrayDims));
-						})
+		Choice(
+			Sequence(
+				NonTerminal(primitiveType, PrimitiveType)
+				ZeroOrOne(
+					LookAhead(
+						NonTerminal(Annotations)
+						Terminal("LBRACKET")
 					)
-				)
-				Sequence(
-					NonTerminal(type, QualifiedType)
-					ZeroOrOne(
-						LookAhead(
-							NonTerminal(Annotations)
-							Terminal("LBRACKET")
-						)
-						Action({
-							lateRun();
-						})
-						NonTerminal(arrayDims, ArrayDimsMandatory)
-						Action({
-							type = dress(SArrayType.make(type, arrayDims));
-						})
-					)
+					NonTerminal(arrayDims, ArrayDimsMandatory)
 				)
 			)
-			Action({
-				return type == null ? primitiveType : type;
-			})
-		) */
+			Sequence(
+				NonTerminal(type, QualifiedType)
+				ZeroOrOne(
+					LookAhead(
+						NonTerminal(Annotations)
+						Terminal("LBRACKET")
+					)
+					NonTerminal(arrayDims, ArrayDimsMandatory)
+				)
+			)
+		)
+	) */
 	private int matchType(int lookahead) {
 		lookahead = matchType_1(lookahead);
 		if (lookahead == -1)
@@ -5180,21 +3817,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-				Terminal("RBRACKET")
-			)
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
+		LookAhead(
+			NonTerminal(Annotations)
 			Terminal("LBRACKET")
 			Terminal("RBRACKET")
-			Action({
-				arrayDims = append(arrayDims, dress(SArrayDim.make(annotations)));
-			})
-		) */
+		)
+		NonTerminal(annotations, Annotations)
+		Terminal("LBRACKET")
+		Terminal("RBRACKET")
+	) */
 	private int matchArrayDims_1_1(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -5209,21 +3840,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-				Terminal("RBRACKET")
-			)
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
+		LookAhead(
+			NonTerminal(Annotations)
 			Terminal("LBRACKET")
 			Terminal("RBRACKET")
-			Action({
-				arrayDims = append(arrayDims, dress(SArrayDim.make(annotations)));
-			})
-		) */
+		)
+		NonTerminal(annotations, Annotations)
+		Terminal("LBRACKET")
+		Terminal("RBRACKET")
+	) */
 	private int matchArrayDims_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchArrayDims_1_1(lookahead);
@@ -5235,26 +3860,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrMore(
-				LookAhead(
-					NonTerminal(Annotations)
-					Terminal("LBRACKET")
-					Terminal("RBRACKET")
-				)
-				Action({
-					run();
-				})
-				NonTerminal(annotations, Annotations)
+		ZeroOrMore(
+			LookAhead(
+				NonTerminal(Annotations)
 				Terminal("LBRACKET")
 				Terminal("RBRACKET")
-				Action({
-					arrayDims = append(arrayDims, dress(SArrayDim.make(annotations)));
-				})
 			)
-			Action({
-				return arrayDims;
-			})
-		) */
+			NonTerminal(annotations, Annotations)
+			Terminal("LBRACKET")
+			Terminal("RBRACKET")
+		)
+	) */
 	private int matchArrayDims(int lookahead) {
 		lookahead = matchArrayDims_1(lookahead);
 		if (lookahead == -1)
@@ -5263,12 +3879,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("_DEFAULT")
-			NonTerminal(val, MemberValue)
-			Action({
-				defaultVal = optionOf(val);
-			})
-		) */
+		Terminal("_DEFAULT")
+		NonTerminal(val, MemberValue)
+	) */
 	private int matchAnnotationTypeMemberDecl_6_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants._DEFAULT);
 		if (lookahead == -1)
@@ -5280,12 +3893,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Terminal("_DEFAULT")
-			NonTerminal(val, MemberValue)
-			Action({
-				defaultVal = optionOf(val);
-			})
-		) */
+		Terminal("_DEFAULT")
+		NonTerminal(val, MemberValue)
+	) */
 	private int matchAnnotationTypeMemberDecl_6(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAnnotationTypeMemberDecl_6_1(lookahead);
@@ -5295,23 +3905,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(type, Type)
-			NonTerminal(name, Name)
-			Terminal("LPAREN")
-			Terminal("RPAREN")
-			NonTerminal(dims, ArrayDims)
-			ZeroOrOne(
-				Terminal("_DEFAULT")
-				NonTerminal(val, MemberValue)
-				Action({
-					defaultVal = optionOf(val);
-				})
-			)
-			Terminal("SEMICOLON")
-			Action({
-				return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal));
-			})
-		) */
+		NonTerminal(type, Type)
+		NonTerminal(name, Name)
+		Terminal("LPAREN")
+		Terminal("RPAREN")
+		NonTerminal(dims, ArrayDims)
+		ZeroOrOne(
+			Terminal("_DEFAULT")
+			NonTerminal(val, MemberValue)
+		)
+		Terminal("SEMICOLON")
+	) */
 	private int matchAnnotationTypeMemberDecl(int lookahead) {
 		lookahead = matchType(lookahead);
 		if (lookahead == -1)
@@ -5338,13 +3942,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Type)
-				NonTerminal(Name)
-				Terminal("LPAREN")
-			)
-			NonTerminal(ret, AnnotationTypeMemberDecl)
-		) */
+		LookAhead(
+			NonTerminal(Type)
+			NonTerminal(Name)
+			Terminal("LPAREN")
+		)
+		NonTerminal(ret, AnnotationTypeMemberDecl)
+	) */
 	private int matchAnnotationTypeBodyDecl_2_2_2_1(int lookahead) {
 		lookahead = matchAnnotationTypeMemberDecl(lookahead);
 		if (lookahead == -1)
@@ -5353,15 +3957,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			NonTerminal(name, Name)
-			NonTerminal(arrayDims, ArrayDims)
-			Action({
-				return dress(SVariableDeclaratorId.make(name, arrayDims));
-			})
-		) */
+		NonTerminal(name, Name)
+		NonTerminal(arrayDims, ArrayDims)
+	) */
 	private int matchVariableDeclaratorId(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -5373,13 +3971,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Terminal("COMMA")
-			NonTerminal(val, VariableInitializer)
-			Action({
-				values = append(values, val);
-			})
-		) */
+		LookAhead(2)
+		Terminal("COMMA")
+		NonTerminal(val, VariableInitializer)
+	) */
 	private int matchArrayInitializer_3_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -5391,13 +3986,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Terminal("COMMA")
-			NonTerminal(val, VariableInitializer)
-			Action({
-				values = append(values, val);
-			})
-		) */
+		LookAhead(2)
+		Terminal("COMMA")
+		NonTerminal(val, VariableInitializer)
+	) */
 	private int matchArrayInitializer_3_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchArrayInitializer_3_1_3_1(lookahead);
@@ -5409,19 +4001,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(val, VariableInitializer)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("COMMA")
 			NonTerminal(val, VariableInitializer)
-			Action({
-				values = append(values, val);
-			})
-			ZeroOrMore(
-				LookAhead(2)
-				Terminal("COMMA")
-				NonTerminal(val, VariableInitializer)
-				Action({
-					values = append(values, val);
-				})
-			)
-		) */
+		)
+	) */
 	private int matchArrayInitializer_3_1(int lookahead) {
 		lookahead = matchVariableInitializer(lookahead);
 		if (lookahead == -1)
@@ -5433,19 +4019,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
+		NonTerminal(val, VariableInitializer)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("COMMA")
 			NonTerminal(val, VariableInitializer)
-			Action({
-				values = append(values, val);
-			})
-			ZeroOrMore(
-				LookAhead(2)
-				Terminal("COMMA")
-				NonTerminal(val, VariableInitializer)
-				Action({
-					values = append(values, val);
-				})
-			)
-		) */
+		)
+	) */
 	private int matchArrayInitializer_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchArrayInitializer_3_1(lookahead);
@@ -5455,11 +4035,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			Action({
-				trailingComma = true;
-			})
-		) */
+		Terminal("COMMA")
+	) */
 	private int matchArrayInitializer_4_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -5468,11 +4045,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Terminal("COMMA")
-			Action({
-				trailingComma = true;
-			})
-		) */
+		Terminal("COMMA")
+	) */
 	private int matchArrayInitializer_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchArrayInitializer_4_1(lookahead);
@@ -5482,35 +4056,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("LBRACE")
-			ZeroOrOne(
-				NonTerminal(val, VariableInitializer)
-				Action({
-					values = append(values, val);
-				})
-				ZeroOrMore(
-					LookAhead(2)
-					Terminal("COMMA")
-					NonTerminal(val, VariableInitializer)
-					Action({
-						values = append(values, val);
-					})
-				)
-			)
-			ZeroOrOne(
+		Terminal("LBRACE")
+		ZeroOrOne(
+			NonTerminal(val, VariableInitializer)
+			ZeroOrMore(
+				LookAhead(2)
 				Terminal("COMMA")
-				Action({
-					trailingComma = true;
-				})
+				NonTerminal(val, VariableInitializer)
 			)
-			Terminal("RBRACE")
-			Action({
-				return dress(SArrayInitializerExpr.make(values, trailingComma));
-			})
-		) */
+		)
+		ZeroOrOne(
+			Terminal("COMMA")
+		)
+		Terminal("RBRACE")
+	) */
 	private int matchArrayInitializer(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LBRACE);
 		if (lookahead == -1)
@@ -5528,9 +4087,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			NonTerminal(ret, ArrayInitializer)
-			NonTerminal(ret, Expression)
-		) */
+		NonTerminal(ret, ArrayInitializer)
+		NonTerminal(ret, Expression)
+	) */
 	private int matchVariableInitializer_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchArrayInitializer(lookahead);
@@ -5543,14 +4102,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				NonTerminal(ret, ArrayInitializer)
-				NonTerminal(ret, Expression)
-			)
-			Action({
-				return ret;
-			})
-		) */
+		Choice(
+			NonTerminal(ret, ArrayInitializer)
+			NonTerminal(ret, Expression)
+		)
+	) */
 	private int matchVariableInitializer(int lookahead) {
 		lookahead = matchVariableInitializer_1(lookahead);
 		if (lookahead == -1)
@@ -5559,12 +4115,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("ASSIGN")
-			NonTerminal(initExpr, VariableInitializer)
-			Action({
-				init = optionOf(initExpr);
-			})
-		) */
+		Terminal("ASSIGN")
+		NonTerminal(initExpr, VariableInitializer)
+	) */
 	private int matchVariableDeclarator_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.ASSIGN);
 		if (lookahead == -1)
@@ -5576,12 +4129,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Terminal("ASSIGN")
-			NonTerminal(initExpr, VariableInitializer)
-			Action({
-				init = optionOf(initExpr);
-			})
-		) */
+		Terminal("ASSIGN")
+		NonTerminal(initExpr, VariableInitializer)
+	) */
 	private int matchVariableDeclarator_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchVariableDeclarator_3_1(lookahead);
@@ -5591,21 +4141,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			NonTerminal(id, VariableDeclaratorId)
-			ZeroOrOne(
-				Terminal("ASSIGN")
-				NonTerminal(initExpr, VariableInitializer)
-				Action({
-					init = optionOf(initExpr);
-				})
-			)
-			Action({
-				return dress(SVariableDeclarator.make(id, init));
-			})
-		) */
+		NonTerminal(id, VariableDeclaratorId)
+		ZeroOrOne(
+			Terminal("ASSIGN")
+			NonTerminal(initExpr, VariableInitializer)
+		)
+	) */
 	private int matchVariableDeclarator(int lookahead) {
 		lookahead = matchVariableDeclaratorId(lookahead);
 		if (lookahead == -1)
@@ -5617,12 +4158,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			NonTerminal(val, VariableDeclarator)
-			Action({
-				variables = append(variables, val);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(val, VariableDeclarator)
+	) */
 	private int matchVariableDeclarators_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -5634,12 +4172,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("COMMA")
-			NonTerminal(val, VariableDeclarator)
-			Action({
-				variables = append(variables, val);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(val, VariableDeclarator)
+	) */
 	private int matchVariableDeclarators_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchVariableDeclarators_3_1(lookahead);
@@ -5651,21 +4186,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(val, VariableDeclarator)
+		ZeroOrMore(
+			Terminal("COMMA")
 			NonTerminal(val, VariableDeclarator)
-			Action({
-				variables = append(variables, val);
-			})
-			ZeroOrMore(
-				Terminal("COMMA")
-				NonTerminal(val, VariableDeclarator)
-				Action({
-					variables = append(variables, val);
-				})
-			)
-			Action({
-				return variables;
-			})
-		) */
+		)
+	) */
 	private int matchVariableDeclarators(int lookahead) {
 		lookahead = matchVariableDeclarator(lookahead);
 		if (lookahead == -1)
@@ -5677,13 +4203,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(type, Type)
-			NonTerminal(variables, VariableDeclarators)
-			Terminal("SEMICOLON")
-			Action({
-				return dress(SFieldDecl.make(modifiers, type, variables));
-			})
-		) */
+		NonTerminal(type, Type)
+		NonTerminal(variables, VariableDeclarators)
+		Terminal("SEMICOLON")
+	) */
 	private int matchFieldDecl(int lookahead) {
 		lookahead = matchType(lookahead);
 		if (lookahead == -1)
@@ -5698,19 +4221,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				LookAhead(
-					NonTerminal(Type)
-					NonTerminal(Name)
-					Terminal("LPAREN")
-				)
-				NonTerminal(ret, AnnotationTypeMemberDecl)
+		Sequence(
+			LookAhead(
+				NonTerminal(Type)
+				NonTerminal(Name)
+				Terminal("LPAREN")
 			)
-			NonTerminal(ret, ClassOrInterfaceDecl)
-			NonTerminal(ret, EnumDecl)
-			NonTerminal(ret, AnnotationTypeDecl)
-			NonTerminal(ret, FieldDecl)
-		) */
+			NonTerminal(ret, AnnotationTypeMemberDecl)
+		)
+		NonTerminal(ret, ClassOrInterfaceDecl)
+		NonTerminal(ret, EnumDecl)
+		NonTerminal(ret, AnnotationTypeDecl)
+		NonTerminal(ret, FieldDecl)
+	) */
 	private int matchAnnotationTypeBodyDecl_2_2_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAnnotationTypeBodyDecl_2_2_2_1(lookahead);
@@ -5732,6 +4255,37 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(modifiers, Modifiers)
+		Choice(
+			Sequence(
+				LookAhead(
+					NonTerminal(Type)
+					NonTerminal(Name)
+					Terminal("LPAREN")
+				)
+				NonTerminal(ret, AnnotationTypeMemberDecl)
+			)
+			NonTerminal(ret, ClassOrInterfaceDecl)
+			NonTerminal(ret, EnumDecl)
+			NonTerminal(ret, AnnotationTypeDecl)
+			NonTerminal(ret, FieldDecl)
+		)
+	) */
+	private int matchAnnotationTypeBodyDecl_2_2(int lookahead) {
+		lookahead = matchModifiers(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = matchAnnotationTypeBodyDecl_2_2_2(lookahead);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* Choice(
+		Sequence(
+			Terminal("SEMICOLON")
+		)
+		Sequence(
 			NonTerminal(modifiers, Modifiers)
 			Choice(
 				Sequence(
@@ -5747,23 +4301,23 @@ public class ParserImplementation extends ParserNewBase {
 				NonTerminal(ret, AnnotationTypeDecl)
 				NonTerminal(ret, FieldDecl)
 			)
-		) */
-	private int matchAnnotationTypeBodyDecl_2_2(int lookahead) {
-		lookahead = matchModifiers(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAnnotationTypeBodyDecl_2_2_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
+		)
+	) */
+	private int matchAnnotationTypeBodyDecl_2(int lookahead) {
+		int newLookahead;
+		newLookahead = matchAnnotationTypeBodyDecl_2_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchAnnotationTypeBodyDecl_2_2(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
 	}
 
-	/* Choice(
+	/* Sequence(
+		Choice(
 			Sequence(
 				Terminal("SEMICOLON")
-				Action({
-					ret = dress(SEmptyTypeDecl.make());
-				})
 			)
 			Sequence(
 				NonTerminal(modifiers, Modifiers)
@@ -5782,51 +4336,8 @@ public class ParserImplementation extends ParserNewBase {
 					NonTerminal(ret, FieldDecl)
 				)
 			)
-		) */
-	private int matchAnnotationTypeBodyDecl_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAnnotationTypeBodyDecl_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAnnotationTypeBodyDecl_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* Sequence(
-			Action({
-				run();
-			})
-			Choice(
-				Sequence(
-					Terminal("SEMICOLON")
-					Action({
-						ret = dress(SEmptyTypeDecl.make());
-					})
-				)
-				Sequence(
-					NonTerminal(modifiers, Modifiers)
-					Choice(
-						Sequence(
-							LookAhead(
-								NonTerminal(Type)
-								NonTerminal(Name)
-								Terminal("LPAREN")
-							)
-							NonTerminal(ret, AnnotationTypeMemberDecl)
-						)
-						NonTerminal(ret, ClassOrInterfaceDecl)
-						NonTerminal(ret, EnumDecl)
-						NonTerminal(ret, AnnotationTypeDecl)
-						NonTerminal(ret, FieldDecl)
-					)
-				)
-			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchAnnotationTypeBodyDecl(int lookahead) {
 		lookahead = matchAnnotationTypeBodyDecl_2(lookahead);
 		if (lookahead == -1)
@@ -5835,11 +4346,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(member, AnnotationTypeBodyDecl)
-			Action({
-				ret = append(ret, member);
-			})
-		) */
+		NonTerminal(member, AnnotationTypeBodyDecl)
+	) */
 	private int matchAnnotationTypeBody_2_1_1_1_1(int lookahead) {
 		lookahead = matchAnnotationTypeBodyDecl(lookahead);
 		if (lookahead == -1)
@@ -5848,11 +4356,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* OneOrMore(
-			NonTerminal(member, AnnotationTypeBodyDecl)
-			Action({
-				ret = append(ret, member);
-			})
-		) */
+		NonTerminal(member, AnnotationTypeBodyDecl)
+	) */
 	private int matchAnnotationTypeBody_2_1_1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAnnotationTypeBody_2_1_1_1_1(lookahead);
@@ -5866,10 +4371,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			NonTerminal(ret, NodeListVar)
-		) */
+		LookAhead({ quotesMode })
+		NonTerminal(ret, NodeListVar)
+	) */
 	private int matchAnnotationTypeBody_2_1_1_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -5881,18 +4385,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			OneOrMore(
-				NonTerminal(member, AnnotationTypeBodyDecl)
-				Action({
-					ret = append(ret, member);
-				})
-			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				NonTerminal(ret, NodeListVar)
-			)
-		) */
+		OneOrMore(
+			NonTerminal(member, AnnotationTypeBodyDecl)
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			NonTerminal(ret, NodeListVar)
+		)
+	) */
 	private int matchAnnotationTypeBody_2_1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAnnotationTypeBody_2_1_1_1(lookahead);
@@ -5905,20 +4405,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				OneOrMore(
-					NonTerminal(member, AnnotationTypeBodyDecl)
-					Action({
-						ret = append(ret, member);
-					})
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
-				)
+		Choice(
+			OneOrMore(
+				NonTerminal(member, AnnotationTypeBodyDecl)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchAnnotationTypeBody_2_1(int lookahead) {
 		lookahead = matchAnnotationTypeBody_2_1_1(lookahead);
 		if (lookahead == -1)
@@ -5927,20 +4423,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Choice(
-				OneOrMore(
-					NonTerminal(member, AnnotationTypeBodyDecl)
-					Action({
-						ret = append(ret, member);
-					})
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
-				)
+		Choice(
+			OneOrMore(
+				NonTerminal(member, AnnotationTypeBodyDecl)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchAnnotationTypeBody_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAnnotationTypeBody_2_1(lookahead);
@@ -5950,27 +4442,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LBRACE")
-			ZeroOrOne(
-				Choice(
-					OneOrMore(
-						NonTerminal(member, AnnotationTypeBodyDecl)
-						Action({
-							ret = append(ret, member);
-						})
-					)
-					Sequence(
-						LookAhead(						quotesMode
-	)
-						NonTerminal(ret, NodeListVar)
-					)
+		Terminal("LBRACE")
+		ZeroOrOne(
+			Choice(
+				OneOrMore(
+					NonTerminal(member, AnnotationTypeBodyDecl)
+				)
+				Sequence(
+					LookAhead({ quotesMode })
+					NonTerminal(ret, NodeListVar)
 				)
 			)
-			Terminal("RBRACE")
-			Action({
-				return ret;
-			})
-		) */
+		)
+		Terminal("RBRACE")
+	) */
 	private int matchAnnotationTypeBody(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LBRACE);
 		if (lookahead == -1)
@@ -5985,14 +4470,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("AT")
-			Terminal("INTERFACE")
-			NonTerminal(name, Name)
-			NonTerminal(members, AnnotationTypeBody)
-			Action({
-				return dress(SAnnotationDecl.make(modifiers, name, members));
-			})
-		) */
+		Terminal("AT")
+		Terminal("INTERFACE")
+		NonTerminal(name, Name)
+		NonTerminal(members, AnnotationTypeBody)
+	) */
 	private int matchAnnotationTypeDecl(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.AT);
 		if (lookahead == -1)
@@ -6010,8 +4492,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(typeParameters, TypeParameters)
-		) */
+		NonTerminal(typeParameters, TypeParameters)
+	) */
 	private int matchConstructorDecl_1_1(int lookahead) {
 		lookahead = matchTypeParameters(lookahead);
 		if (lookahead == -1)
@@ -6020,8 +4502,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(typeParameters, TypeParameters)
-		) */
+		NonTerminal(typeParameters, TypeParameters)
+	) */
 	private int matchConstructorDecl_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchConstructorDecl_1_1(lookahead);
@@ -6031,11 +4513,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("ELLIPSIS")
-			Action({
-				isVarArg = true;
-			})
-		) */
+		Terminal("ELLIPSIS")
+	) */
 	private int matchFormalParameter_4_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.ELLIPSIS);
 		if (lookahead == -1)
@@ -6044,11 +4523,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Terminal("ELLIPSIS")
-			Action({
-				isVarArg = true;
-			})
-		) */
+		Terminal("ELLIPSIS")
+	) */
 	private int matchFormalParameter_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchFormalParameter_4_1(lookahead);
@@ -6058,22 +4534,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			NonTerminal(modifiers, Modifiers)
-			NonTerminal(type, Type)
-			ZeroOrOne(
-				Terminal("ELLIPSIS")
-				Action({
-					isVarArg = true;
-				})
-			)
-			NonTerminal(id, VariableDeclaratorId)
-			Action({
-				return dress(SFormalParameter.make(modifiers, type, isVarArg, id));
-			})
-		) */
+		NonTerminal(modifiers, Modifiers)
+		NonTerminal(type, Type)
+		ZeroOrOne(
+			Terminal("ELLIPSIS")
+		)
+		NonTerminal(id, VariableDeclaratorId)
+	) */
 	private int matchFormalParameter(int lookahead) {
 		lookahead = matchModifiers(lookahead);
 		if (lookahead == -1)
@@ -6091,12 +4558,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			NonTerminal(par, FormalParameter)
-			Action({
-				ret = append(ret, par);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(par, FormalParameter)
+	) */
 	private int matchFormalParameterList_1_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -6108,12 +4572,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("COMMA")
-			NonTerminal(par, FormalParameter)
-			Action({
-				ret = append(ret, par);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(par, FormalParameter)
+	) */
 	private int matchFormalParameterList_1_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchFormalParameterList_1_1_3_1(lookahead);
@@ -6125,18 +4586,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(par, FormalParameter)
+		ZeroOrMore(
+			Terminal("COMMA")
 			NonTerminal(par, FormalParameter)
-			Action({
-				ret = append(ret, par);
-			})
-			ZeroOrMore(
-				Terminal("COMMA")
-				NonTerminal(par, FormalParameter)
-				Action({
-					ret = append(ret, par);
-				})
-			)
-		) */
+		)
+	) */
 	private int matchFormalParameterList_1_1(int lookahead) {
 		lookahead = matchFormalParameter(lookahead);
 		if (lookahead == -1)
@@ -6148,10 +4603,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			NonTerminal(ret, NodeListVar)
-		) */
+		LookAhead({ quotesMode })
+		NonTerminal(ret, NodeListVar)
+	) */
 	private int matchFormalParameterList_1_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -6163,25 +4617,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
+		Sequence(
+			NonTerminal(par, FormalParameter)
+			ZeroOrMore(
+				Terminal("COMMA")
 				NonTerminal(par, FormalParameter)
-				Action({
-					ret = append(ret, par);
-				})
-				ZeroOrMore(
-					Terminal("COMMA")
-					NonTerminal(par, FormalParameter)
-					Action({
-						ret = append(ret, par);
-					})
-				)
 			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				NonTerminal(ret, NodeListVar)
-			)
-		) */
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			NonTerminal(ret, NodeListVar)
+		)
+	) */
 	private int matchFormalParameterList_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchFormalParameterList_1_1(lookahead);
@@ -6194,30 +4641,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
+		Choice(
+			Sequence(
+				NonTerminal(par, FormalParameter)
+				ZeroOrMore(
+					Terminal("COMMA")
 					NonTerminal(par, FormalParameter)
-					Action({
-						ret = append(ret, par);
-					})
-					ZeroOrMore(
-						Terminal("COMMA")
-						NonTerminal(par, FormalParameter)
-						Action({
-							ret = append(ret, par);
-						})
-					)
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
 				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchFormalParameterList(int lookahead) {
 		lookahead = matchFormalParameterList_1(lookahead);
 		if (lookahead == -1)
@@ -6226,8 +4663,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, FormalParameterList)
-		) */
+		NonTerminal(ret, FormalParameterList)
+	) */
 	private int matchFormalParameters_2_1(int lookahead) {
 		lookahead = matchFormalParameterList(lookahead);
 		if (lookahead == -1)
@@ -6236,8 +4673,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(ret, FormalParameterList)
-		) */
+		NonTerminal(ret, FormalParameterList)
+	) */
 	private int matchFormalParameters_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchFormalParameters_2_1(lookahead);
@@ -6247,15 +4684,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LPAREN")
-			ZeroOrOne(
-				NonTerminal(ret, FormalParameterList)
-			)
-			Terminal("RPAREN")
-			Action({
-				return ensureNotNull(ret);
-			})
-		) */
+		Terminal("LPAREN")
+		ZeroOrOne(
+			NonTerminal(ret, FormalParameterList)
+		)
+		Terminal("RPAREN")
+	) */
 	private int matchFormalParameters(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LPAREN);
 		if (lookahead == -1)
@@ -6270,12 +4704,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			NonTerminal(cit, AnnotatedQualifiedType)
-			Action({
-				ret = append(ret, cit);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(cit, AnnotatedQualifiedType)
+	) */
 	private int matchThrowsClause_4_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -6287,12 +4718,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("COMMA")
-			NonTerminal(cit, AnnotatedQualifiedType)
-			Action({
-				ret = append(ret, cit);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(cit, AnnotatedQualifiedType)
+	) */
 	private int matchThrowsClause_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchThrowsClause_4_1(lookahead);
@@ -6304,22 +4732,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("THROWS")
+		Terminal("THROWS")
+		NonTerminal(cit, AnnotatedQualifiedType)
+		ZeroOrMore(
+			Terminal("COMMA")
 			NonTerminal(cit, AnnotatedQualifiedType)
-			Action({
-				ret = append(ret, cit);
-			})
-			ZeroOrMore(
-				Terminal("COMMA")
-				NonTerminal(cit, AnnotatedQualifiedType)
-				Action({
-					ret = append(ret, cit);
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchThrowsClause(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.THROWS);
 		if (lookahead == -1)
@@ -6334,8 +4753,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(throwsClause, ThrowsClause)
-		) */
+		NonTerminal(throwsClause, ThrowsClause)
+	) */
 	private int matchConstructorDecl_4_1(int lookahead) {
 		lookahead = matchThrowsClause(lookahead);
 		if (lookahead == -1)
@@ -6344,8 +4763,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(throwsClause, ThrowsClause)
-		) */
+		NonTerminal(throwsClause, ThrowsClause)
+	) */
 	private int matchConstructorDecl_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchConstructorDecl_4_1(lookahead);
@@ -6355,8 +4774,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(typeArgs, TypeArguments)
-		) */
+		NonTerminal(typeArgs, TypeArguments)
+	) */
 	private int matchExplicitConstructorInvocation_2_1_2_1(int lookahead) {
 		lookahead = matchTypeArguments(lookahead);
 		if (lookahead == -1)
@@ -6365,8 +4784,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(typeArgs, TypeArguments)
-		) */
+		NonTerminal(typeArgs, TypeArguments)
+	) */
 	private int matchExplicitConstructorInvocation_2_1_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchExplicitConstructorInvocation_2_1_2_1(lookahead);
@@ -6376,23 +4795,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				ZeroOrOne(
-					NonTerminal(TypeArguments)
-				)
-				Terminal("THIS")
-				Terminal("LPAREN")
-			)
+		LookAhead(
 			ZeroOrOne(
-				NonTerminal(typeArgs, TypeArguments)
+				NonTerminal(TypeArguments)
 			)
 			Terminal("THIS")
-			Action({
-				isThis = true;
-			})
-			NonTerminal(args, Arguments)
-			Terminal("SEMICOLON")
-		) */
+			Terminal("LPAREN")
+		)
+		ZeroOrOne(
+			NonTerminal(typeArgs, TypeArguments)
+		)
+		Terminal("THIS")
+		NonTerminal(args, Arguments)
+		Terminal("SEMICOLON")
+	) */
 	private int matchExplicitConstructorInvocation_2_1(int lookahead) {
 		lookahead = matchExplicitConstructorInvocation_2_1_2(lookahead);
 		if (lookahead == -1)
@@ -6410,11 +4826,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("THIS")
-			Action({
-				ret = dress(SThisExpr.make(optionOf(scope)));
-			})
-		) */
+		Terminal("THIS")
+	) */
 	private int matchPrimarySuffixWithoutSuper_1_1_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.THIS);
 		if (lookahead == -1)
@@ -6423,8 +4836,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(typeArgs, TypeArguments)
-		) */
+		NonTerminal(typeArgs, TypeArguments)
+	) */
 	private int matchAllocationExpression_3_1(int lookahead) {
 		lookahead = matchTypeArguments(lookahead);
 		if (lookahead == -1)
@@ -6433,8 +4846,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(typeArgs, TypeArguments)
-		) */
+		NonTerminal(typeArgs, TypeArguments)
+	) */
 	private int matchAllocationExpression_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAllocationExpression_3_1(lookahead);
@@ -6444,23 +4857,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-				NonTerminal(Expression)
-				Terminal("RBRACKET")
-			)
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
+		LookAhead(
+			NonTerminal(Annotations)
 			Terminal("LBRACKET")
-			NonTerminal(expr, Expression)
+			NonTerminal(Expression)
 			Terminal("RBRACKET")
-			Action({
-				arrayDimExprs = append(arrayDimExprs, dress(SArrayDimExpr.make(annotations, expr)));
-			})
-		) */
+		)
+		NonTerminal(annotations, Annotations)
+		Terminal("LBRACKET")
+		NonTerminal(expr, Expression)
+		Terminal("RBRACKET")
+	) */
 	private int matchArrayDimExprsMandatory_1_1(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -6478,23 +4885,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* OneOrMore(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-				NonTerminal(Expression)
-				Terminal("RBRACKET")
-			)
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
+		LookAhead(
+			NonTerminal(Annotations)
 			Terminal("LBRACKET")
-			NonTerminal(expr, Expression)
+			NonTerminal(Expression)
 			Terminal("RBRACKET")
-			Action({
-				arrayDimExprs = append(arrayDimExprs, dress(SArrayDimExpr.make(annotations, expr)));
-			})
-		) */
+		)
+		NonTerminal(annotations, Annotations)
+		Terminal("LBRACKET")
+		NonTerminal(expr, Expression)
+		Terminal("RBRACKET")
+	) */
 	private int matchArrayDimExprsMandatory_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchArrayDimExprsMandatory_1_1(lookahead);
@@ -6508,28 +4909,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			OneOrMore(
-				LookAhead(
-					NonTerminal(Annotations)
-					Terminal("LBRACKET")
-					NonTerminal(Expression)
-					Terminal("RBRACKET")
-				)
-				Action({
-					run();
-				})
-				NonTerminal(annotations, Annotations)
+		OneOrMore(
+			LookAhead(
+				NonTerminal(Annotations)
 				Terminal("LBRACKET")
-				NonTerminal(expr, Expression)
+				NonTerminal(Expression)
 				Terminal("RBRACKET")
-				Action({
-					arrayDimExprs = append(arrayDimExprs, dress(SArrayDimExpr.make(annotations, expr)));
-				})
 			)
-			Action({
-				return arrayDimExprs;
-			})
-		) */
+			NonTerminal(annotations, Annotations)
+			Terminal("LBRACKET")
+			NonTerminal(expr, Expression)
+			Terminal("RBRACKET")
+		)
+	) */
 	private int matchArrayDimExprsMandatory(int lookahead) {
 		lookahead = matchArrayDimExprsMandatory_1(lookahead);
 		if (lookahead == -1)
@@ -6538,18 +4930,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Annotations)
-				Terminal("LBRACKET")
-				NonTerminal(Expression)
-				Terminal("RBRACKET")
-			)
-			NonTerminal(arrayDimExprs, ArrayDimExprsMandatory)
-			NonTerminal(arrayDims, ArrayDims)
-			Action({
-				return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none()));
-			})
-		) */
+		LookAhead(
+			NonTerminal(Annotations)
+			Terminal("LBRACKET")
+			NonTerminal(Expression)
+			Terminal("RBRACKET")
+		)
+		NonTerminal(arrayDimExprs, ArrayDimExprsMandatory)
+		NonTerminal(arrayDims, ArrayDims)
+	) */
 	private int matchArrayCreationExpr_1(int lookahead) {
 		lookahead = matchArrayDimExprsMandatory(lookahead);
 		if (lookahead == -1)
@@ -6561,12 +4950,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(arrayDims, ArrayDimsMandatory)
-			NonTerminal(initializer, ArrayInitializer)
-			Action({
-				return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer)));
-			})
-		) */
+		NonTerminal(arrayDims, ArrayDimsMandatory)
+		NonTerminal(initializer, ArrayInitializer)
+	) */
 	private int matchArrayCreationExpr_2(int lookahead) {
 		lookahead = matchArrayDimsMandatory(lookahead);
 		if (lookahead == -1)
@@ -6578,27 +4964,21 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				LookAhead(
-					NonTerminal(Annotations)
-					Terminal("LBRACKET")
-					NonTerminal(Expression)
-					Terminal("RBRACKET")
-				)
-				NonTerminal(arrayDimExprs, ArrayDimExprsMandatory)
-				NonTerminal(arrayDims, ArrayDims)
-				Action({
-					return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none()));
-				})
+		Sequence(
+			LookAhead(
+				NonTerminal(Annotations)
+				Terminal("LBRACKET")
+				NonTerminal(Expression)
+				Terminal("RBRACKET")
 			)
-			Sequence(
-				NonTerminal(arrayDims, ArrayDimsMandatory)
-				NonTerminal(initializer, ArrayInitializer)
-				Action({
-					return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer)));
-				})
-			)
-		) */
+			NonTerminal(arrayDimExprs, ArrayDimExprsMandatory)
+			NonTerminal(arrayDims, ArrayDims)
+		)
+		Sequence(
+			NonTerminal(arrayDims, ArrayDimsMandatory)
+			NonTerminal(initializer, ArrayInitializer)
+		)
+	) */
 	private int matchArrayCreationExpr(int lookahead) {
 		int newLookahead;
 		newLookahead = matchArrayCreationExpr_1(lookahead);
@@ -6611,9 +4991,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(type, PrimitiveType)
-			NonTerminal(ret, ArrayCreationExpr)
-		) */
+		NonTerminal(type, PrimitiveType)
+		NonTerminal(ret, ArrayCreationExpr)
+	) */
 	private int matchAllocationExpression_6_1(int lookahead) {
 		lookahead = matchPrimitiveType(lookahead);
 		if (lookahead == -1)
@@ -6625,11 +5005,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				Terminal("LBRACE")
-			)
-			NonTerminal(anonymousBody, ClassOrInterfaceBody)
-		) */
+		LookAhead(
+			Terminal("LBRACE")
+		)
+		NonTerminal(anonymousBody, ClassOrInterfaceBody)
+	) */
 	private int matchAllocationExpression_6_2_2_2_2_1(int lookahead) {
 		lookahead = matchClassOrInterfaceBody(lookahead);
 		if (lookahead == -1)
@@ -6638,11 +5018,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(
-				Terminal("LBRACE")
-			)
-			NonTerminal(anonymousBody, ClassOrInterfaceBody)
-		) */
+		LookAhead(
+			Terminal("LBRACE")
+		)
+		NonTerminal(anonymousBody, ClassOrInterfaceBody)
+	) */
 	private int matchAllocationExpression_6_2_2_2_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAllocationExpression_6_2_2_2_2_1(lookahead);
@@ -6652,17 +5032,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(args, Arguments)
-			ZeroOrOne(
-				LookAhead(
-					Terminal("LBRACE")
-				)
-				NonTerminal(anonymousBody, ClassOrInterfaceBody)
+		NonTerminal(args, Arguments)
+		ZeroOrOne(
+			LookAhead(
+				Terminal("LBRACE")
 			)
-			Action({
-				ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody)));
-			})
-		) */
+			NonTerminal(anonymousBody, ClassOrInterfaceBody)
+		)
+	) */
 	private int matchAllocationExpression_6_2_2_2(int lookahead) {
 		lookahead = matchArguments(lookahead);
 		if (lookahead == -1)
@@ -6674,20 +5051,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			NonTerminal(ret, ArrayCreationExpr)
-			Sequence(
-				NonTerminal(args, Arguments)
-				ZeroOrOne(
-					LookAhead(
-						Terminal("LBRACE")
-					)
-					NonTerminal(anonymousBody, ClassOrInterfaceBody)
+		NonTerminal(ret, ArrayCreationExpr)
+		Sequence(
+			NonTerminal(args, Arguments)
+			ZeroOrOne(
+				LookAhead(
+					Terminal("LBRACE")
 				)
-				Action({
-					ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody)));
-				})
+				NonTerminal(anonymousBody, ClassOrInterfaceBody)
 			)
-		) */
+		)
+	) */
 	private int matchAllocationExpression_6_2_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchArrayCreationExpr(lookahead);
@@ -6700,23 +5074,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(type, QualifiedType)
-			Choice(
-				NonTerminal(ret, ArrayCreationExpr)
-				Sequence(
-					NonTerminal(args, Arguments)
-					ZeroOrOne(
-						LookAhead(
-							Terminal("LBRACE")
-						)
-						NonTerminal(anonymousBody, ClassOrInterfaceBody)
+		NonTerminal(type, QualifiedType)
+		Choice(
+			NonTerminal(ret, ArrayCreationExpr)
+			Sequence(
+				NonTerminal(args, Arguments)
+				ZeroOrOne(
+					LookAhead(
+						Terminal("LBRACE")
 					)
-					Action({
-						ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody)));
-					})
+					NonTerminal(anonymousBody, ClassOrInterfaceBody)
 				)
 			)
-		) */
+		)
+	) */
 	private int matchAllocationExpression_6_2(int lookahead) {
 		lookahead = matchQualifiedType(lookahead);
 		if (lookahead == -1)
@@ -6728,6 +5099,44 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
+		Sequence(
+			NonTerminal(type, PrimitiveType)
+			NonTerminal(ret, ArrayCreationExpr)
+		)
+		Sequence(
+			NonTerminal(type, QualifiedType)
+			Choice(
+				NonTerminal(ret, ArrayCreationExpr)
+				Sequence(
+					NonTerminal(args, Arguments)
+					ZeroOrOne(
+						LookAhead(
+							Terminal("LBRACE")
+						)
+						NonTerminal(anonymousBody, ClassOrInterfaceBody)
+					)
+				)
+			)
+		)
+	) */
+	private int matchAllocationExpression_6(int lookahead) {
+		int newLookahead;
+		newLookahead = matchAllocationExpression_6_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchAllocationExpression_6_2(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
+	}
+
+	/* Sequence(
+		Terminal("NEW")
+		ZeroOrOne(
+			NonTerminal(typeArgs, TypeArguments)
+		)
+		NonTerminal(annotations, Annotations)
+		Choice(
 			Sequence(
 				NonTerminal(type, PrimitiveType)
 				NonTerminal(ret, ArrayCreationExpr)
@@ -6744,65 +5153,11 @@ public class ParserImplementation extends ParserNewBase {
 							)
 							NonTerminal(anonymousBody, ClassOrInterfaceBody)
 						)
-						Action({
-							ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody)));
-						})
 					)
 				)
 			)
-		) */
-	private int matchAllocationExpression_6(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAllocationExpression_6_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAllocationExpression_6_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* Sequence(
-			Action({
-				if (scope == null) run();
-
-			})
-			Terminal("NEW")
-			ZeroOrOne(
-				NonTerminal(typeArgs, TypeArguments)
-			)
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
-			Choice(
-				Sequence(
-					NonTerminal(type, PrimitiveType)
-					NonTerminal(ret, ArrayCreationExpr)
-				)
-				Sequence(
-					NonTerminal(type, QualifiedType)
-					Choice(
-						NonTerminal(ret, ArrayCreationExpr)
-						Sequence(
-							NonTerminal(args, Arguments)
-							ZeroOrOne(
-								LookAhead(
-									Terminal("LBRACE")
-								)
-								NonTerminal(anonymousBody, ClassOrInterfaceBody)
-							)
-							Action({
-								ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody)));
-							})
-						)
-					)
-				)
-			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchAllocationExpression(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.NEW);
 		if (lookahead == -1)
@@ -6820,15 +5175,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				ZeroOrOne(
-					NonTerminal(TypeArguments)
-				)
-				NonTerminal(Name)
-				Terminal("LPAREN")
+		LookAhead(
+			ZeroOrOne(
+				NonTerminal(TypeArguments)
 			)
-			NonTerminal(ret, MethodInvocation)
-		) */
+			NonTerminal(Name)
+			Terminal("LPAREN")
+		)
+		NonTerminal(ret, MethodInvocation)
+	) */
 	private int matchPrimarySuffixWithoutSuper_1_1_2_3(int lookahead) {
 		lookahead = matchMethodInvocation(lookahead);
 		if (lookahead == -1)
@@ -6837,11 +5192,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(name, Name)
-			Action({
-				return dress(SFieldAccessExpr.make(optionOf(scope), name));
-			})
-		) */
+		NonTerminal(name, Name)
+	) */
 	private int matchFieldAccess(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -6850,25 +5202,22 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("THIS")
-				Action({
-					ret = dress(SThisExpr.make(optionOf(scope)));
-				})
-			)
-			NonTerminal(ret, AllocationExpression)
-			Sequence(
-				LookAhead(
-					ZeroOrOne(
-						NonTerminal(TypeArguments)
-					)
-					NonTerminal(Name)
-					Terminal("LPAREN")
+		Sequence(
+			Terminal("THIS")
+		)
+		NonTerminal(ret, AllocationExpression)
+		Sequence(
+			LookAhead(
+				ZeroOrOne(
+					NonTerminal(TypeArguments)
 				)
-				NonTerminal(ret, MethodInvocation)
+				NonTerminal(Name)
+				Terminal("LPAREN")
 			)
-			NonTerminal(ret, FieldAccess)
-		) */
+			NonTerminal(ret, MethodInvocation)
+		)
+		NonTerminal(ret, FieldAccess)
+	) */
 	private int matchPrimarySuffixWithoutSuper_1_1_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrimarySuffixWithoutSuper_1_1_2_1(lookahead);
@@ -6887,28 +5236,25 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("DOT")
-			Choice(
-				Sequence(
-					Terminal("THIS")
-					Action({
-						ret = dress(SThisExpr.make(optionOf(scope)));
-					})
-				)
-				NonTerminal(ret, AllocationExpression)
-				Sequence(
-					LookAhead(
-						ZeroOrOne(
-							NonTerminal(TypeArguments)
-						)
-						NonTerminal(Name)
-						Terminal("LPAREN")
-					)
-					NonTerminal(ret, MethodInvocation)
-				)
-				NonTerminal(ret, FieldAccess)
+		Terminal("DOT")
+		Choice(
+			Sequence(
+				Terminal("THIS")
 			)
-		) */
+			NonTerminal(ret, AllocationExpression)
+			Sequence(
+				LookAhead(
+					ZeroOrOne(
+						NonTerminal(TypeArguments)
+					)
+					NonTerminal(Name)
+					Terminal("LPAREN")
+				)
+				NonTerminal(ret, MethodInvocation)
+			)
+			NonTerminal(ret, FieldAccess)
+		)
+	) */
 	private int matchPrimarySuffixWithoutSuper_1_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.DOT);
 		if (lookahead == -1)
@@ -6920,13 +5266,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LBRACKET")
-			NonTerminal(ret, Expression)
-			Terminal("RBRACKET")
-			Action({
-				ret = dress(SArrayAccessExpr.make(scope, ret));
-			})
-		) */
+		Terminal("LBRACKET")
+		NonTerminal(ret, Expression)
+		Terminal("RBRACKET")
+	) */
 	private int matchPrimarySuffixWithoutSuper_1_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
 		if (lookahead == -1)
@@ -6941,14 +5284,50 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
+		Sequence(
+			Terminal("DOT")
+			Choice(
+				Sequence(
+					Terminal("THIS")
+				)
+				NonTerminal(ret, AllocationExpression)
+				Sequence(
+					LookAhead(
+						ZeroOrOne(
+							NonTerminal(TypeArguments)
+						)
+						NonTerminal(Name)
+						Terminal("LPAREN")
+					)
+					NonTerminal(ret, MethodInvocation)
+				)
+				NonTerminal(ret, FieldAccess)
+			)
+		)
+		Sequence(
+			Terminal("LBRACKET")
+			NonTerminal(ret, Expression)
+			Terminal("RBRACKET")
+		)
+	) */
+	private int matchPrimarySuffixWithoutSuper_1(int lookahead) {
+		int newLookahead;
+		newLookahead = matchPrimarySuffixWithoutSuper_1_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchPrimarySuffixWithoutSuper_1_2(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
+	}
+
+	/* Sequence(
+		Choice(
 			Sequence(
 				Terminal("DOT")
 				Choice(
 					Sequence(
 						Terminal("THIS")
-						Action({
-							ret = dress(SThisExpr.make(optionOf(scope)));
-						})
 					)
 					NonTerminal(ret, AllocationExpression)
 					Sequence(
@@ -6968,60 +5347,9 @@ public class ParserImplementation extends ParserNewBase {
 				Terminal("LBRACKET")
 				NonTerminal(ret, Expression)
 				Terminal("RBRACKET")
-				Action({
-					ret = dress(SArrayAccessExpr.make(scope, ret));
-				})
 			)
-		) */
-	private int matchPrimarySuffixWithoutSuper_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimarySuffixWithoutSuper_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimarySuffixWithoutSuper_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* Sequence(
-			Choice(
-				Sequence(
-					Terminal("DOT")
-					Choice(
-						Sequence(
-							Terminal("THIS")
-							Action({
-								ret = dress(SThisExpr.make(optionOf(scope)));
-							})
-						)
-						NonTerminal(ret, AllocationExpression)
-						Sequence(
-							LookAhead(
-								ZeroOrOne(
-									NonTerminal(TypeArguments)
-								)
-								NonTerminal(Name)
-								Terminal("LPAREN")
-							)
-							NonTerminal(ret, MethodInvocation)
-						)
-						NonTerminal(ret, FieldAccess)
-					)
-				)
-				Sequence(
-					Terminal("LBRACKET")
-					NonTerminal(ret, Expression)
-					Terminal("RBRACKET")
-					Action({
-						ret = dress(SArrayAccessExpr.make(scope, ret));
-					})
-				)
-			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchPrimarySuffixWithoutSuper(int lookahead) {
 		lookahead = matchPrimarySuffixWithoutSuper_1(lookahead);
 		if (lookahead == -1)
@@ -7030,14 +5358,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(PrimarySuffixWithoutSuper)
-			)
-			Action({
-				lateRun();
-			})
-			NonTerminal(ret, PrimarySuffixWithoutSuper)
-		) */
+		LookAhead(
+			NonTerminal(PrimarySuffixWithoutSuper)
+		)
+		NonTerminal(ret, PrimarySuffixWithoutSuper)
+	) */
 	private int matchPrimaryExpressionWithoutSuperSuffix_2_1(int lookahead) {
 		lookahead = matchPrimarySuffixWithoutSuper(lookahead);
 		if (lookahead == -1)
@@ -7046,14 +5371,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(
-				NonTerminal(PrimarySuffixWithoutSuper)
-			)
-			Action({
-				lateRun();
-			})
-			NonTerminal(ret, PrimarySuffixWithoutSuper)
-		) */
+		LookAhead(
+			NonTerminal(PrimarySuffixWithoutSuper)
+		)
+		NonTerminal(ret, PrimarySuffixWithoutSuper)
+	) */
 	private int matchPrimaryExpressionWithoutSuperSuffix_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrimaryExpressionWithoutSuperSuffix_2_1(lookahead);
@@ -7065,20 +5387,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, PrimaryPrefix)
-			ZeroOrMore(
-				LookAhead(
-					NonTerminal(PrimarySuffixWithoutSuper)
-				)
-				Action({
-					lateRun();
-				})
-				NonTerminal(ret, PrimarySuffixWithoutSuper)
+		NonTerminal(ret, PrimaryPrefix)
+		ZeroOrMore(
+			LookAhead(
+				NonTerminal(PrimarySuffixWithoutSuper)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			NonTerminal(ret, PrimarySuffixWithoutSuper)
+		)
+	) */
 	private int matchPrimaryExpressionWithoutSuperSuffix(int lookahead) {
 		lookahead = matchPrimaryPrefix(lookahead);
 		if (lookahead == -1)
@@ -7090,13 +5406,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(PrimaryExpressionWithoutSuperSuffix)
-				Terminal("DOT")
-			)
-			NonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
+		LookAhead(
+			NonTerminal(PrimaryExpressionWithoutSuperSuffix)
 			Terminal("DOT")
-		) */
+		)
+		NonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
+		Terminal("DOT")
+	) */
 	private int matchExplicitConstructorInvocation_2_2_1_1(int lookahead) {
 		lookahead = matchPrimaryExpressionWithoutSuperSuffix(lookahead);
 		if (lookahead == -1)
@@ -7108,13 +5424,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(
-				NonTerminal(PrimaryExpressionWithoutSuperSuffix)
-				Terminal("DOT")
-			)
-			NonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
+		LookAhead(
+			NonTerminal(PrimaryExpressionWithoutSuperSuffix)
 			Terminal("DOT")
-		) */
+		)
+		NonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
+		Terminal("DOT")
+	) */
 	private int matchExplicitConstructorInvocation_2_2_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchExplicitConstructorInvocation_2_2_1_1(lookahead);
@@ -7124,8 +5440,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(typeArgs, TypeArguments)
-		) */
+		NonTerminal(typeArgs, TypeArguments)
+	) */
 	private int matchExplicitConstructorInvocation_2_2_2_1(int lookahead) {
 		lookahead = matchTypeArguments(lookahead);
 		if (lookahead == -1)
@@ -7134,8 +5450,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(typeArgs, TypeArguments)
-		) */
+		NonTerminal(typeArgs, TypeArguments)
+	) */
 	private int matchExplicitConstructorInvocation_2_2_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchExplicitConstructorInvocation_2_2_2_1(lookahead);
@@ -7145,21 +5461,21 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				LookAhead(
-					NonTerminal(PrimaryExpressionWithoutSuperSuffix)
-					Terminal("DOT")
-				)
-				NonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
+		ZeroOrOne(
+			LookAhead(
+				NonTerminal(PrimaryExpressionWithoutSuperSuffix)
 				Terminal("DOT")
 			)
-			ZeroOrOne(
-				NonTerminal(typeArgs, TypeArguments)
-			)
-			Terminal("SUPER")
-			NonTerminal(args, Arguments)
-			Terminal("SEMICOLON")
-		) */
+			NonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
+			Terminal("DOT")
+		)
+		ZeroOrOne(
+			NonTerminal(typeArgs, TypeArguments)
+		)
+		Terminal("SUPER")
+		NonTerminal(args, Arguments)
+		Terminal("SEMICOLON")
+	) */
 	private int matchExplicitConstructorInvocation_2_2(int lookahead) {
 		lookahead = matchExplicitConstructorInvocation_2_2_1(lookahead);
 		if (lookahead == -1)
@@ -7180,6 +5496,51 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
+		Sequence(
+			LookAhead(
+				ZeroOrOne(
+					NonTerminal(TypeArguments)
+				)
+				Terminal("THIS")
+				Terminal("LPAREN")
+			)
+			ZeroOrOne(
+				NonTerminal(typeArgs, TypeArguments)
+			)
+			Terminal("THIS")
+			NonTerminal(args, Arguments)
+			Terminal("SEMICOLON")
+		)
+		Sequence(
+			ZeroOrOne(
+				LookAhead(
+					NonTerminal(PrimaryExpressionWithoutSuperSuffix)
+					Terminal("DOT")
+				)
+				NonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
+				Terminal("DOT")
+			)
+			ZeroOrOne(
+				NonTerminal(typeArgs, TypeArguments)
+			)
+			Terminal("SUPER")
+			NonTerminal(args, Arguments)
+			Terminal("SEMICOLON")
+		)
+	) */
+	private int matchExplicitConstructorInvocation_2(int lookahead) {
+		int newLookahead;
+		newLookahead = matchExplicitConstructorInvocation_2_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchExplicitConstructorInvocation_2_2(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
+	}
+
+	/* Sequence(
+		Choice(
 			Sequence(
 				LookAhead(
 					ZeroOrOne(
@@ -7192,9 +5553,6 @@ public class ParserImplementation extends ParserNewBase {
 					NonTerminal(typeArgs, TypeArguments)
 				)
 				Terminal("THIS")
-				Action({
-					isThis = true;
-				})
 				NonTerminal(args, Arguments)
 				Terminal("SEMICOLON")
 			)
@@ -7214,62 +5572,8 @@ public class ParserImplementation extends ParserNewBase {
 				NonTerminal(args, Arguments)
 				Terminal("SEMICOLON")
 			)
-		) */
-	private int matchExplicitConstructorInvocation_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExplicitConstructorInvocation_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchExplicitConstructorInvocation_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* Sequence(
-			Action({
-				run();
-			})
-			Choice(
-				Sequence(
-					LookAhead(
-						ZeroOrOne(
-							NonTerminal(TypeArguments)
-						)
-						Terminal("THIS")
-						Terminal("LPAREN")
-					)
-					ZeroOrOne(
-						NonTerminal(typeArgs, TypeArguments)
-					)
-					Terminal("THIS")
-					Action({
-						isThis = true;
-					})
-					NonTerminal(args, Arguments)
-					Terminal("SEMICOLON")
-				)
-				Sequence(
-					ZeroOrOne(
-						LookAhead(
-							NonTerminal(PrimaryExpressionWithoutSuperSuffix)
-							Terminal("DOT")
-						)
-						NonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
-						Terminal("DOT")
-					)
-					ZeroOrOne(
-						NonTerminal(typeArgs, TypeArguments)
-					)
-					Terminal("SUPER")
-					NonTerminal(args, Arguments)
-					Terminal("SEMICOLON")
-				)
-			)
-			Action({
-				return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args));
-			})
-		) */
+		)
+	) */
 	private int matchExplicitConstructorInvocation(int lookahead) {
 		lookahead = matchExplicitConstructorInvocation_2(lookahead);
 		if (lookahead == -1)
@@ -7278,14 +5582,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(ExplicitConstructorInvocation)
-			)
-			NonTerminal(stmt, ExplicitConstructorInvocation)
-			Action({
-				stmts = append(stmts, stmt);
-			})
-		) */
+		LookAhead(
+			NonTerminal(ExplicitConstructorInvocation)
+		)
+		NonTerminal(stmt, ExplicitConstructorInvocation)
+	) */
 	private int matchConstructorDecl_7_1_1_1_2_1(int lookahead) {
 		lookahead = matchExplicitConstructorInvocation(lookahead);
 		if (lookahead == -1)
@@ -7294,12 +5595,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			NonTerminal(stmt, BlockStatement)
-			Action({
-				stmts = append(stmts, stmt);
-			})
-		) */
+		LookAhead(2)
+		NonTerminal(stmt, BlockStatement)
+	) */
 	private int matchConstructorDecl_7_1_1_1_2_2(int lookahead) {
 		lookahead = matchBlockStatement(lookahead);
 		if (lookahead == -1)
@@ -7308,23 +5606,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				LookAhead(
-					NonTerminal(ExplicitConstructorInvocation)
-				)
-				NonTerminal(stmt, ExplicitConstructorInvocation)
-				Action({
-					stmts = append(stmts, stmt);
-				})
+		Sequence(
+			LookAhead(
+				NonTerminal(ExplicitConstructorInvocation)
 			)
-			Sequence(
-				LookAhead(2)
-				NonTerminal(stmt, BlockStatement)
-				Action({
-					stmts = append(stmts, stmt);
-				})
-			)
-		) */
+			NonTerminal(stmt, ExplicitConstructorInvocation)
+		)
+		Sequence(
+			LookAhead(2)
+			NonTerminal(stmt, BlockStatement)
+		)
+	) */
 	private int matchConstructorDecl_7_1_1_1_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchConstructorDecl_7_1_1_1_2_1(lookahead);
@@ -7337,12 +5629,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			NonTerminal(stmt, BlockStatement)
-			Action({
-				stmts = append(stmts, stmt);
-			})
-		) */
+		LookAhead(2)
+		NonTerminal(stmt, BlockStatement)
+	) */
 	private int matchConstructorDecl_7_1_1_1_3_1(int lookahead) {
 		lookahead = matchBlockStatement(lookahead);
 		if (lookahead == -1)
@@ -7351,12 +5640,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			NonTerminal(stmt, BlockStatement)
-			Action({
-				stmts = append(stmts, stmt);
-			})
-		) */
+		LookAhead(2)
+		NonTerminal(stmt, BlockStatement)
+	) */
 	private int matchConstructorDecl_7_1_1_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchConstructorDecl_7_1_1_1_3_1(lookahead);
@@ -7368,33 +5654,24 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Choice(
-				Sequence(
-					LookAhead(
-						NonTerminal(ExplicitConstructorInvocation)
-					)
-					NonTerminal(stmt, ExplicitConstructorInvocation)
-					Action({
-						stmts = append(stmts, stmt);
-					})
+		LookAhead(2)
+		Choice(
+			Sequence(
+				LookAhead(
+					NonTerminal(ExplicitConstructorInvocation)
 				)
-				Sequence(
-					LookAhead(2)
-					NonTerminal(stmt, BlockStatement)
-					Action({
-						stmts = append(stmts, stmt);
-					})
-				)
+				NonTerminal(stmt, ExplicitConstructorInvocation)
 			)
-			ZeroOrMore(
+			Sequence(
 				LookAhead(2)
 				NonTerminal(stmt, BlockStatement)
-				Action({
-					stmts = append(stmts, stmt);
-				})
 			)
-		) */
+		)
+		ZeroOrMore(
+			LookAhead(2)
+			NonTerminal(stmt, BlockStatement)
+		)
+	) */
 	private int matchConstructorDecl_7_1_1_1(int lookahead) {
 		lookahead = matchConstructorDecl_7_1_1_1_2(lookahead);
 		if (lookahead == -1)
@@ -7406,10 +5683,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			NonTerminal(stmts, NodeListVar)
-		) */
+		LookAhead({ quotesMode })
+		NonTerminal(stmts, NodeListVar)
+	) */
 	private int matchConstructorDecl_7_1_1_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -7421,40 +5697,30 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				LookAhead(2)
-				Choice(
-					Sequence(
-						LookAhead(
-							NonTerminal(ExplicitConstructorInvocation)
-						)
-						NonTerminal(stmt, ExplicitConstructorInvocation)
-						Action({
-							stmts = append(stmts, stmt);
-						})
+		Sequence(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					LookAhead(
+						NonTerminal(ExplicitConstructorInvocation)
 					)
-					Sequence(
-						LookAhead(2)
-						NonTerminal(stmt, BlockStatement)
-						Action({
-							stmts = append(stmts, stmt);
-						})
-					)
+					NonTerminal(stmt, ExplicitConstructorInvocation)
 				)
-				ZeroOrMore(
+				Sequence(
 					LookAhead(2)
 					NonTerminal(stmt, BlockStatement)
-					Action({
-						stmts = append(stmts, stmt);
-					})
 				)
 			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				NonTerminal(stmts, NodeListVar)
+			ZeroOrMore(
+				LookAhead(2)
+				NonTerminal(stmt, BlockStatement)
 			)
-		) */
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			NonTerminal(stmts, NodeListVar)
+		)
+	) */
 	private int matchConstructorDecl_7_1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchConstructorDecl_7_1_1_1(lookahead);
@@ -7467,42 +5733,32 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					LookAhead(2)
-					Choice(
-						Sequence(
-							LookAhead(
-								NonTerminal(ExplicitConstructorInvocation)
-							)
-							NonTerminal(stmt, ExplicitConstructorInvocation)
-							Action({
-								stmts = append(stmts, stmt);
-							})
+		Choice(
+			Sequence(
+				LookAhead(2)
+				Choice(
+					Sequence(
+						LookAhead(
+							NonTerminal(ExplicitConstructorInvocation)
 						)
-						Sequence(
-							LookAhead(2)
-							NonTerminal(stmt, BlockStatement)
-							Action({
-								stmts = append(stmts, stmt);
-							})
-						)
+						NonTerminal(stmt, ExplicitConstructorInvocation)
 					)
-					ZeroOrMore(
+					Sequence(
 						LookAhead(2)
 						NonTerminal(stmt, BlockStatement)
-						Action({
-							stmts = append(stmts, stmt);
-						})
 					)
 				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(stmts, NodeListVar)
+				ZeroOrMore(
+					LookAhead(2)
+					NonTerminal(stmt, BlockStatement)
 				)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(stmts, NodeListVar)
+			)
+		)
+	) */
 	private int matchConstructorDecl_7_1(int lookahead) {
 		lookahead = matchConstructorDecl_7_1_1(lookahead);
 		if (lookahead == -1)
@@ -7511,42 +5767,32 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Choice(
-				Sequence(
-					LookAhead(2)
-					Choice(
-						Sequence(
-							LookAhead(
-								NonTerminal(ExplicitConstructorInvocation)
-							)
-							NonTerminal(stmt, ExplicitConstructorInvocation)
-							Action({
-								stmts = append(stmts, stmt);
-							})
+		Choice(
+			Sequence(
+				LookAhead(2)
+				Choice(
+					Sequence(
+						LookAhead(
+							NonTerminal(ExplicitConstructorInvocation)
 						)
-						Sequence(
-							LookAhead(2)
-							NonTerminal(stmt, BlockStatement)
-							Action({
-								stmts = append(stmts, stmt);
-							})
-						)
+						NonTerminal(stmt, ExplicitConstructorInvocation)
 					)
-					ZeroOrMore(
+					Sequence(
 						LookAhead(2)
 						NonTerminal(stmt, BlockStatement)
-						Action({
-							stmts = append(stmts, stmt);
-						})
 					)
 				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(stmts, NodeListVar)
+				ZeroOrMore(
+					LookAhead(2)
+					NonTerminal(stmt, BlockStatement)
 				)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(stmts, NodeListVar)
+			)
+		)
+	) */
 	private int matchConstructorDecl_7(int lookahead) {
 		int newLookahead;
 		newLookahead = matchConstructorDecl_7_1(lookahead);
@@ -7556,63 +5802,44 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				NonTerminal(typeParameters, TypeParameters)
-			)
-			NonTerminal(name, Name)
-			NonTerminal(parameters, FormalParameters)
-			ZeroOrOne(
-				NonTerminal(throwsClause, ThrowsClause)
-			)
-			Action({
-				run();
-			})
-			Terminal("LBRACE")
-			ZeroOrOne(
-				Choice(
-					Sequence(
-						LookAhead(2)
-						Choice(
-							Sequence(
-								LookAhead(
-									NonTerminal(ExplicitConstructorInvocation)
-								)
-								NonTerminal(stmt, ExplicitConstructorInvocation)
-								Action({
-									stmts = append(stmts, stmt);
-								})
+		ZeroOrOne(
+			NonTerminal(typeParameters, TypeParameters)
+		)
+		NonTerminal(name, Name)
+		NonTerminal(parameters, FormalParameters)
+		ZeroOrOne(
+			NonTerminal(throwsClause, ThrowsClause)
+		)
+		Terminal("LBRACE")
+		ZeroOrOne(
+			Choice(
+				Sequence(
+					LookAhead(2)
+					Choice(
+						Sequence(
+							LookAhead(
+								NonTerminal(ExplicitConstructorInvocation)
 							)
-							Sequence(
-								LookAhead(2)
-								NonTerminal(stmt, BlockStatement)
-								Action({
-									stmts = append(stmts, stmt);
-								})
-							)
+							NonTerminal(stmt, ExplicitConstructorInvocation)
 						)
-						ZeroOrMore(
+						Sequence(
 							LookAhead(2)
 							NonTerminal(stmt, BlockStatement)
-							Action({
-								stmts = append(stmts, stmt);
-							})
 						)
 					)
-					Sequence(
-						LookAhead(						quotesMode
-	)
-						NonTerminal(stmts, NodeListVar)
+					ZeroOrMore(
+						LookAhead(2)
+						NonTerminal(stmt, BlockStatement)
 					)
 				)
+				Sequence(
+					LookAhead({ quotesMode })
+					NonTerminal(stmts, NodeListVar)
+				)
 			)
-			Terminal("RBRACE")
-			Action({
-				block = dress(SBlockStmt.make(stmts));
-			})
-			Action({
-				return dress(SConstructorDecl.make(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block));
-			})
-		) */
+		)
+		Terminal("RBRACE")
+	) */
 	private int matchConstructorDecl(int lookahead) {
 		lookahead = matchConstructorDecl_1(lookahead);
 		if (lookahead == -1)
@@ -7639,19 +5866,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				ZeroOrOne(
-					NonTerminal(TypeParameters)
-				)
-				NonTerminal(Name)
-				Terminal("LPAREN")
+		LookAhead(
+			ZeroOrOne(
+				NonTerminal(TypeParameters)
 			)
-			NonTerminal(ret, ConstructorDecl)
-			Action({
-				if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
-
-			})
-		) */
+			NonTerminal(Name)
+			Terminal("LPAREN")
+		)
+		NonTerminal(ret, ConstructorDecl)
+	) */
 	private int matchClassOrInterfaceBodyDecl_2_2_3_5(int lookahead) {
 		lookahead = matchConstructorDecl(lookahead);
 		if (lookahead == -1)
@@ -7660,21 +5883,21 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Type)
-				NonTerminal(Name)
-				ZeroOrMore(
-					Terminal("LBRACKET")
-					Terminal("RBRACKET")
-				)
-				Choice(
-					Terminal("COMMA")
-					Terminal("ASSIGN")
-					Terminal("SEMICOLON")
-				)
+		LookAhead(
+			NonTerminal(Type)
+			NonTerminal(Name)
+			ZeroOrMore(
+				Terminal("LBRACKET")
+				Terminal("RBRACKET")
 			)
-			NonTerminal(ret, FieldDecl)
-		) */
+			Choice(
+				Terminal("COMMA")
+				Terminal("ASSIGN")
+				Terminal("SEMICOLON")
+			)
+		)
+		NonTerminal(ret, FieldDecl)
+	) */
 	private int matchClassOrInterfaceBodyDecl_2_2_3_6(int lookahead) {
 		lookahead = matchFieldDecl(lookahead);
 		if (lookahead == -1)
@@ -7683,8 +5906,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(typeParameters, TypeParameters)
-		) */
+		NonTerminal(typeParameters, TypeParameters)
+	) */
 	private int matchMethodDecl_1_1(int lookahead) {
 		lookahead = matchTypeParameters(lookahead);
 		if (lookahead == -1)
@@ -7693,8 +5916,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(typeParameters, TypeParameters)
-		) */
+		NonTerminal(typeParameters, TypeParameters)
+	) */
 	private int matchMethodDecl_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchMethodDecl_1_1(lookahead);
@@ -7704,14 +5927,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("VOID")
-			Action({
-				ret = dress(SVoidType.make());
-			})
-		) */
+		Terminal("VOID")
+	) */
 	private int matchResultType_1_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.VOID);
 		if (lookahead == -1)
@@ -7720,17 +5937,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Action({
-					run();
-				})
-				Terminal("VOID")
-				Action({
-					ret = dress(SVoidType.make());
-				})
-			)
-			NonTerminal(ret, Type)
-		) */
+		Sequence(
+			Terminal("VOID")
+		)
+		NonTerminal(ret, Type)
+	) */
 	private int matchResultType_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchResultType_1_1(lookahead);
@@ -7743,22 +5954,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					Action({
-						run();
-					})
-					Terminal("VOID")
-					Action({
-						ret = dress(SVoidType.make());
-					})
-				)
-				NonTerminal(ret, Type)
+		Choice(
+			Sequence(
+				Terminal("VOID")
 			)
-			Action({
-				return ret;
-			})
-		) */
+			NonTerminal(ret, Type)
+		)
+	) */
 	private int matchResultType(int lookahead) {
 		lookahead = matchResultType_1(lookahead);
 		if (lookahead == -1)
@@ -7767,8 +5969,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(throwsClause, ThrowsClause)
-		) */
+		NonTerminal(throwsClause, ThrowsClause)
+	) */
 	private int matchMethodDecl_6_1(int lookahead) {
 		lookahead = matchThrowsClause(lookahead);
 		if (lookahead == -1)
@@ -7777,8 +5979,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(throwsClause, ThrowsClause)
-		) */
+		NonTerminal(throwsClause, ThrowsClause)
+	) */
 	private int matchMethodDecl_6(int lookahead) {
 		int newLookahead;
 		newLookahead = matchMethodDecl_6_1(lookahead);
@@ -7788,12 +5990,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("SEMICOLON")
-			Action({
-				if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
-
-			})
-		) */
+		Terminal("SEMICOLON")
+	) */
 	private int matchMethodDecl_7_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
 		if (lookahead == -1)
@@ -7802,15 +6000,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			NonTerminal(block, Block)
-			Sequence(
-				Terminal("SEMICOLON")
-				Action({
-					if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
-
-				})
-			)
-		) */
+		NonTerminal(block, Block)
+		Sequence(
+			Terminal("SEMICOLON")
+		)
+	) */
 	private int matchMethodDecl_7(int lookahead) {
 		int newLookahead;
 		newLookahead = matchBlock(lookahead);
@@ -7823,30 +6017,23 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				NonTerminal(typeParameters, TypeParameters)
+		ZeroOrOne(
+			NonTerminal(typeParameters, TypeParameters)
+		)
+		NonTerminal(type, ResultType)
+		NonTerminal(name, Name)
+		NonTerminal(parameters, FormalParameters)
+		NonTerminal(arrayDims, ArrayDims)
+		ZeroOrOne(
+			NonTerminal(throwsClause, ThrowsClause)
+		)
+		Choice(
+			NonTerminal(block, Block)
+			Sequence(
+				Terminal("SEMICOLON")
 			)
-			NonTerminal(type, ResultType)
-			NonTerminal(name, Name)
-			NonTerminal(parameters, FormalParameters)
-			NonTerminal(arrayDims, ArrayDims)
-			ZeroOrOne(
-				NonTerminal(throwsClause, ThrowsClause)
-			)
-			Choice(
-				NonTerminal(block, Block)
-				Sequence(
-					Terminal("SEMICOLON")
-					Action({
-						if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
-
-					})
-				)
-			)
-			Action({
-				return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem);
-			})
-		) */
+		)
+	) */
 	private int matchMethodDecl(int lookahead) {
 		lookahead = matchMethodDecl_1(lookahead);
 		if (lookahead == -1)
@@ -7873,48 +6060,40 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				NonTerminal(ret, InitializerDecl)
-				Action({
-					if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
-
-				})
-			)
-			NonTerminal(ret, ClassOrInterfaceDecl)
-			NonTerminal(ret, EnumDecl)
-			NonTerminal(ret, AnnotationTypeDecl)
-			Sequence(
-				LookAhead(
-					ZeroOrOne(
-						NonTerminal(TypeParameters)
-					)
-					NonTerminal(Name)
-					Terminal("LPAREN")
+		Sequence(
+			NonTerminal(ret, InitializerDecl)
+		)
+		NonTerminal(ret, ClassOrInterfaceDecl)
+		NonTerminal(ret, EnumDecl)
+		NonTerminal(ret, AnnotationTypeDecl)
+		Sequence(
+			LookAhead(
+				ZeroOrOne(
+					NonTerminal(TypeParameters)
 				)
-				NonTerminal(ret, ConstructorDecl)
-				Action({
-					if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
-
-				})
+				NonTerminal(Name)
+				Terminal("LPAREN")
 			)
-			Sequence(
-				LookAhead(
-					NonTerminal(Type)
-					NonTerminal(Name)
-					ZeroOrMore(
-						Terminal("LBRACKET")
-						Terminal("RBRACKET")
-					)
-					Choice(
-						Terminal("COMMA")
-						Terminal("ASSIGN")
-						Terminal("SEMICOLON")
-					)
+			NonTerminal(ret, ConstructorDecl)
+		)
+		Sequence(
+			LookAhead(
+				NonTerminal(Type)
+				NonTerminal(Name)
+				ZeroOrMore(
+					Terminal("LBRACKET")
+					Terminal("RBRACKET")
 				)
-				NonTerminal(ret, FieldDecl)
+				Choice(
+					Terminal("COMMA")
+					Terminal("ASSIGN")
+					Terminal("SEMICOLON")
+				)
 			)
-			NonTerminal(ret, MethodDecl)
-		) */
+			NonTerminal(ret, FieldDecl)
+		)
+		NonTerminal(ret, MethodDecl)
+	) */
 	private int matchClassOrInterfaceBodyDecl_2_2_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchClassOrInterfaceBodyDecl_2_2_3_1(lookahead);
@@ -7942,18 +6121,62 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(modifiers, Modifiers)
-			Action({
-				if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface) problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
+		NonTerminal(modifiers, Modifiers)
+		Choice(
+			Sequence(
+				NonTerminal(ret, InitializerDecl)
+			)
+			NonTerminal(ret, ClassOrInterfaceDecl)
+			NonTerminal(ret, EnumDecl)
+			NonTerminal(ret, AnnotationTypeDecl)
+			Sequence(
+				LookAhead(
+					ZeroOrOne(
+						NonTerminal(TypeParameters)
+					)
+					NonTerminal(Name)
+					Terminal("LPAREN")
+				)
+				NonTerminal(ret, ConstructorDecl)
+			)
+			Sequence(
+				LookAhead(
+					NonTerminal(Type)
+					NonTerminal(Name)
+					ZeroOrMore(
+						Terminal("LBRACKET")
+						Terminal("RBRACKET")
+					)
+					Choice(
+						Terminal("COMMA")
+						Terminal("ASSIGN")
+						Terminal("SEMICOLON")
+					)
+				)
+				NonTerminal(ret, FieldDecl)
+			)
+			NonTerminal(ret, MethodDecl)
+		)
+	) */
+	private int matchClassOrInterfaceBodyDecl_2_2(int lookahead) {
+		lookahead = matchModifiers(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = matchClassOrInterfaceBodyDecl_2_2_3(lookahead);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
 
-			})
+	/* Choice(
+		Sequence(
+			Terminal("SEMICOLON")
+		)
+		Sequence(
+			NonTerminal(modifiers, Modifiers)
 			Choice(
 				Sequence(
 					NonTerminal(ret, InitializerDecl)
-					Action({
-						if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
-
-					})
 				)
 				NonTerminal(ret, ClassOrInterfaceDecl)
 				NonTerminal(ret, EnumDecl)
@@ -7967,10 +6190,6 @@ public class ParserImplementation extends ParserNewBase {
 						Terminal("LPAREN")
 					)
 					NonTerminal(ret, ConstructorDecl)
-					Action({
-						if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
-
-					})
 				)
 				Sequence(
 					LookAhead(
@@ -7990,37 +6209,29 @@ public class ParserImplementation extends ParserNewBase {
 				)
 				NonTerminal(ret, MethodDecl)
 			)
-		) */
-	private int matchClassOrInterfaceBodyDecl_2_2(int lookahead) {
-		lookahead = matchModifiers(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchClassOrInterfaceBodyDecl_2_2_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
+		)
+	) */
+	private int matchClassOrInterfaceBodyDecl_2(int lookahead) {
+		int newLookahead;
+		newLookahead = matchClassOrInterfaceBodyDecl_2_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchClassOrInterfaceBodyDecl_2_2(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
 	}
 
-	/* Choice(
+	/* Sequence(
+		Choice(
 			Sequence(
 				Terminal("SEMICOLON")
-				Action({
-					ret = dress(SEmptyMemberDecl.make());
-				})
 			)
 			Sequence(
 				NonTerminal(modifiers, Modifiers)
-				Action({
-					if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface) problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
-
-				})
 				Choice(
 					Sequence(
 						NonTerminal(ret, InitializerDecl)
-						Action({
-							if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
-
-						})
 					)
 					NonTerminal(ret, ClassOrInterfaceDecl)
 					NonTerminal(ret, EnumDecl)
@@ -8034,10 +6245,6 @@ public class ParserImplementation extends ParserNewBase {
 							Terminal("LPAREN")
 						)
 						NonTerminal(ret, ConstructorDecl)
-						Action({
-							if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
-
-						})
 					)
 					Sequence(
 						LookAhead(
@@ -8058,84 +6265,8 @@ public class ParserImplementation extends ParserNewBase {
 					NonTerminal(ret, MethodDecl)
 				)
 			)
-		) */
-	private int matchClassOrInterfaceBodyDecl_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecl_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchClassOrInterfaceBodyDecl_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* Sequence(
-			Action({
-				run();
-			})
-			Choice(
-				Sequence(
-					Terminal("SEMICOLON")
-					Action({
-						ret = dress(SEmptyMemberDecl.make());
-					})
-				)
-				Sequence(
-					NonTerminal(modifiers, Modifiers)
-					Action({
-						if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface) problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
-
-					})
-					Choice(
-						Sequence(
-							NonTerminal(ret, InitializerDecl)
-							Action({
-								if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
-
-							})
-						)
-						NonTerminal(ret, ClassOrInterfaceDecl)
-						NonTerminal(ret, EnumDecl)
-						NonTerminal(ret, AnnotationTypeDecl)
-						Sequence(
-							LookAhead(
-								ZeroOrOne(
-									NonTerminal(TypeParameters)
-								)
-								NonTerminal(Name)
-								Terminal("LPAREN")
-							)
-							NonTerminal(ret, ConstructorDecl)
-							Action({
-								if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
-
-							})
-						)
-						Sequence(
-							LookAhead(
-								NonTerminal(Type)
-								NonTerminal(Name)
-								ZeroOrMore(
-									Terminal("LBRACKET")
-									Terminal("RBRACKET")
-								)
-								Choice(
-									Terminal("COMMA")
-									Terminal("ASSIGN")
-									Terminal("SEMICOLON")
-								)
-							)
-							NonTerminal(ret, FieldDecl)
-						)
-						NonTerminal(ret, MethodDecl)
-					)
-				)
-			)
-			Action({
-				return ret.withProblem(problem);
-			})
-		) */
+		)
+	) */
 	private int matchClassOrInterfaceBodyDecl(int lookahead) {
 		lookahead = matchClassOrInterfaceBodyDecl_2(lookahead);
 		if (lookahead == -1)
@@ -8144,11 +6275,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(member, ClassOrInterfaceBodyDecl)
-			Action({
-				ret = append(ret, member);
-			})
-		) */
+		NonTerminal(member, ClassOrInterfaceBodyDecl)
+	) */
 	private int matchClassOrInterfaceBodyDecls_1_1_1_1_1(int lookahead) {
 		lookahead = matchClassOrInterfaceBodyDecl(lookahead);
 		if (lookahead == -1)
@@ -8157,11 +6285,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* OneOrMore(
-			NonTerminal(member, ClassOrInterfaceBodyDecl)
-			Action({
-				ret = append(ret, member);
-			})
-		) */
+		NonTerminal(member, ClassOrInterfaceBodyDecl)
+	) */
 	private int matchClassOrInterfaceBodyDecls_1_1_1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchClassOrInterfaceBodyDecls_1_1_1_1_1(lookahead);
@@ -8175,10 +6300,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			NonTerminal(ret, NodeListVar)
-		) */
+		LookAhead({ quotesMode })
+		NonTerminal(ret, NodeListVar)
+	) */
 	private int matchClassOrInterfaceBodyDecls_1_1_1_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -8190,18 +6314,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			OneOrMore(
-				NonTerminal(member, ClassOrInterfaceBodyDecl)
-				Action({
-					ret = append(ret, member);
-				})
-			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				NonTerminal(ret, NodeListVar)
-			)
-		) */
+		OneOrMore(
+			NonTerminal(member, ClassOrInterfaceBodyDecl)
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			NonTerminal(ret, NodeListVar)
+		)
+	) */
 	private int matchClassOrInterfaceBodyDecls_1_1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchClassOrInterfaceBodyDecls_1_1_1_1(lookahead);
@@ -8214,20 +6334,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				OneOrMore(
-					NonTerminal(member, ClassOrInterfaceBodyDecl)
-					Action({
-						ret = append(ret, member);
-					})
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
-				)
+		Choice(
+			OneOrMore(
+				NonTerminal(member, ClassOrInterfaceBodyDecl)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchClassOrInterfaceBodyDecls_1_1(int lookahead) {
 		lookahead = matchClassOrInterfaceBodyDecls_1_1_1(lookahead);
 		if (lookahead == -1)
@@ -8236,20 +6352,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Choice(
-				OneOrMore(
-					NonTerminal(member, ClassOrInterfaceBodyDecl)
-					Action({
-						ret = append(ret, member);
-					})
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
-				)
+		Choice(
+			OneOrMore(
+				NonTerminal(member, ClassOrInterfaceBodyDecl)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchClassOrInterfaceBodyDecls_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchClassOrInterfaceBodyDecls_1_1(lookahead);
@@ -8259,25 +6371,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				Choice(
-					OneOrMore(
-						NonTerminal(member, ClassOrInterfaceBodyDecl)
-						Action({
-							ret = append(ret, member);
-						})
-					)
-					Sequence(
-						LookAhead(						quotesMode
-	)
-						NonTerminal(ret, NodeListVar)
-					)
+		ZeroOrOne(
+			Choice(
+				OneOrMore(
+					NonTerminal(member, ClassOrInterfaceBodyDecl)
+				)
+				Sequence(
+					LookAhead({ quotesMode })
+					NonTerminal(ret, NodeListVar)
 				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchClassOrInterfaceBodyDecls(int lookahead) {
 		lookahead = matchClassOrInterfaceBodyDecls_1(lookahead);
 		if (lookahead == -1)
@@ -8286,13 +6391,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LBRACE")
-			NonTerminal(ret, ClassOrInterfaceBodyDecls)
-			Terminal("RBRACE")
-			Action({
-				return ret;
-			})
-		) */
+		Terminal("LBRACE")
+		NonTerminal(ret, ClassOrInterfaceBodyDecls)
+		Terminal("RBRACE")
+	) */
 	private int matchClassOrInterfaceBody(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LBRACE);
 		if (lookahead == -1)
@@ -8307,47 +6409,34 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					Terminal("CLASS")
-					Action({
-						typeKind = TypeKind.Class;
-					})
-					NonTerminal(name, Name)
-					ZeroOrOne(
-						NonTerminal(typeParams, TypeParameters)
-					)
-					ZeroOrOne(
-						Terminal("EXTENDS")
-						NonTerminal(superClassType, AnnotatedQualifiedType)
-					)
-					ZeroOrOne(
-						NonTerminal(implementsClause, ImplementsList)
-					)
+		Choice(
+			Sequence(
+				Terminal("CLASS")
+				NonTerminal(name, Name)
+				ZeroOrOne(
+					NonTerminal(typeParams, TypeParameters)
 				)
-				Sequence(
-					Terminal("INTERFACE")
-					Action({
-						typeKind = TypeKind.Interface;
-					})
-					NonTerminal(name, Name)
-					ZeroOrOne(
-						NonTerminal(typeParams, TypeParameters)
-					)
-					ZeroOrOne(
-						NonTerminal(extendsClause, ExtendsList)
-					)
+				ZeroOrOne(
+					Terminal("EXTENDS")
+					NonTerminal(superClassType, AnnotatedQualifiedType)
+				)
+				ZeroOrOne(
+					NonTerminal(implementsClause, ImplementsList)
 				)
 			)
-			NonTerminal(members, ClassOrInterfaceBody)
-			Action({
-				if (typeKind == TypeKind.Interface)
-		return dress(SInterfaceDecl.make(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members)).withProblem(problem.value);
-	else {
-		return dress(SClassDecl.make(modifiers, name, ensureNotNull(typeParams), optionOf(superClassType), ensureNotNull(implementsClause), members));
-	}
-			})
-		) */
+			Sequence(
+				Terminal("INTERFACE")
+				NonTerminal(name, Name)
+				ZeroOrOne(
+					NonTerminal(typeParams, TypeParameters)
+				)
+				ZeroOrOne(
+					NonTerminal(extendsClause, ExtendsList)
+				)
+			)
+		)
+		NonTerminal(members, ClassOrInterfaceBody)
+	) */
 	private int matchClassOrInterfaceDecl(int lookahead) {
 		lookahead = matchClassOrInterfaceDecl_1(lookahead);
 		if (lookahead == -1)
@@ -8359,25 +6448,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(ModifiersNoDefault)
-				Choice(
-					Terminal("CLASS")
-					Terminal("INTERFACE")
-				)
+		LookAhead(
+			NonTerminal(ModifiersNoDefault)
+			Choice(
+				Terminal("CLASS")
+				Terminal("INTERFACE")
 			)
-			Action({
-				run();
-			})
-			Action({
-				run();
-			})
-			NonTerminal(modifiers, ModifiersNoDefault)
-			NonTerminal(typeDecl, ClassOrInterfaceDecl)
-			Action({
-				ret = dress(STypeDeclarationStmt.make(typeDecl));
-			})
-		) */
+		)
+		NonTerminal(modifiers, ModifiersNoDefault)
+		NonTerminal(typeDecl, ClassOrInterfaceDecl)
+	) */
 	private int matchBlockStatement_1_1(int lookahead) {
 		lookahead = matchModifiersNoDefault(lookahead);
 		if (lookahead == -1)
@@ -8389,12 +6469,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(type, Type)
-			NonTerminal(variables, VariableDeclarators)
-			Action({
-				return dress(SLocalVariableDecl.make(modifiers, type, variables));
-			})
-		) */
+		NonTerminal(type, Type)
+		NonTerminal(variables, VariableDeclarators)
+	) */
 	private int matchVariableDecl(int lookahead) {
 		lookahead = matchType(lookahead);
 		if (lookahead == -1)
@@ -8406,18 +6483,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Action({
-				run();
-			})
-			NonTerminal(modifiers, ModifiersNoDefault)
-			NonTerminal(variableDecl, VariableDecl)
-			Action({
-				return dress(SVariableDeclarationExpr.make(variableDecl));
-			})
-		) */
+		NonTerminal(modifiers, ModifiersNoDefault)
+		NonTerminal(variableDecl, VariableDecl)
+	) */
 	private int matchVariableDeclExpression(int lookahead) {
 		lookahead = matchModifiersNoDefault(lookahead);
 		if (lookahead == -1)
@@ -8429,18 +6497,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(VariableDeclExpression)
-			)
-			Action({
-				run();
-			})
-			NonTerminal(expr, VariableDeclExpression)
-			Terminal("SEMICOLON")
-			Action({
-				ret = dress(SExpressionStmt.make(expr));
-			})
-		) */
+		LookAhead(
+			NonTerminal(VariableDeclExpression)
+		)
+		NonTerminal(expr, VariableDeclExpression)
+		Terminal("SEMICOLON")
+	) */
 	private int matchBlockStatement_1_2(int lookahead) {
 		lookahead = matchVariableDeclExpression(lookahead);
 		if (lookahead == -1)
@@ -8452,16 +6514,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			NonTerminal(label, Name)
-			Terminal("COLON")
-			NonTerminal(stmt, Statement)
-			Action({
-				return dress(SLabeledStmt.make(label, stmt));
-			})
-		) */
+		NonTerminal(label, Name)
+		Terminal("COLON")
+		NonTerminal(stmt, Statement)
+	) */
 	private int matchLabeledStatement(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -8476,9 +6532,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			NonTerminal(ret, LabeledStatement)
-		) */
+		LookAhead(2)
+		NonTerminal(ret, LabeledStatement)
+	) */
 	private int matchStatement_1_1(int lookahead) {
 		lookahead = matchLabeledStatement(lookahead);
 		if (lookahead == -1)
@@ -8487,9 +6543,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COLON")
-			NonTerminal(msg, Expression)
-		) */
+		Terminal("COLON")
+		NonTerminal(msg, Expression)
+	) */
 	private int matchAssertStatement_4_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COLON);
 		if (lookahead == -1)
@@ -8501,9 +6557,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Terminal("COLON")
-			NonTerminal(msg, Expression)
-		) */
+		Terminal("COLON")
+		NonTerminal(msg, Expression)
+	) */
 	private int matchAssertStatement_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAssertStatement_4_1(lookahead);
@@ -8513,20 +6569,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("ASSERT")
-			NonTerminal(check, Expression)
-			ZeroOrOne(
-				Terminal("COLON")
-				NonTerminal(msg, Expression)
-			)
-			Terminal("SEMICOLON")
-			Action({
-				return dress(SAssertStmt.make(check, optionOf(msg)));
-			})
-		) */
+		Terminal("ASSERT")
+		NonTerminal(check, Expression)
+		ZeroOrOne(
+			Terminal("COLON")
+			NonTerminal(msg, Expression)
+		)
+		Terminal("SEMICOLON")
+	) */
 	private int matchAssertStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.ASSERT);
 		if (lookahead == -1)
@@ -8544,14 +6594,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("SEMICOLON")
-			Action({
-				return dress(SEmptyStmt.make());
-			})
-		) */
+		Terminal("SEMICOLON")
+	) */
 	private int matchEmptyStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
 		if (lookahead == -1)
@@ -8560,14 +6604,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				lateRun();
-			})
-			Terminal("INCR")
-			Action({
-				expr = dress(SUnaryExpr.make(UnaryOp.PostIncrement, expr));
-			})
-		) */
+		Terminal("INCR")
+	) */
 	private int matchStatementExpression_2_2_2_1_1_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.INCR);
 		if (lookahead == -1)
@@ -8576,14 +6614,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				lateRun();
-			})
-			Terminal("DECR")
-			Action({
-				expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr));
-			})
-		) */
+		Terminal("DECR")
+	) */
 	private int matchStatementExpression_2_2_2_1_1_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.DECR);
 		if (lookahead == -1)
@@ -8592,11 +6624,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("ASSIGN")
-			Action({
-				ret = AssignOp.Normal;
-			})
-		) */
+		Terminal("ASSIGN")
+	) */
 	private int matchAssignmentOperator_1_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.ASSIGN);
 		if (lookahead == -1)
@@ -8605,11 +6634,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("STARASSIGN")
-			Action({
-				ret = AssignOp.Times;
-			})
-		) */
+		Terminal("STARASSIGN")
+	) */
 	private int matchAssignmentOperator_1_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.STARASSIGN);
 		if (lookahead == -1)
@@ -8618,11 +6644,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("SLASHASSIGN")
-			Action({
-				ret = AssignOp.Divide;
-			})
-		) */
+		Terminal("SLASHASSIGN")
+	) */
 	private int matchAssignmentOperator_1_3(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SLASHASSIGN);
 		if (lookahead == -1)
@@ -8631,11 +6654,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("REMASSIGN")
-			Action({
-				ret = AssignOp.Remainder;
-			})
-		) */
+		Terminal("REMASSIGN")
+	) */
 	private int matchAssignmentOperator_1_4(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.REMASSIGN);
 		if (lookahead == -1)
@@ -8644,11 +6664,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("PLUSASSIGN")
-			Action({
-				ret = AssignOp.Plus;
-			})
-		) */
+		Terminal("PLUSASSIGN")
+	) */
 	private int matchAssignmentOperator_1_5(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.PLUSASSIGN);
 		if (lookahead == -1)
@@ -8657,11 +6674,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("MINUSASSIGN")
-			Action({
-				ret = AssignOp.Minus;
-			})
-		) */
+		Terminal("MINUSASSIGN")
+	) */
 	private int matchAssignmentOperator_1_6(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.MINUSASSIGN);
 		if (lookahead == -1)
@@ -8670,11 +6684,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LSHIFTASSIGN")
-			Action({
-				ret = AssignOp.LeftShift;
-			})
-		) */
+		Terminal("LSHIFTASSIGN")
+	) */
 	private int matchAssignmentOperator_1_7(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LSHIFTASSIGN);
 		if (lookahead == -1)
@@ -8683,11 +6694,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("RSIGNEDSHIFTASSIGN")
-			Action({
-				ret = AssignOp.RightSignedShift;
-			})
-		) */
+		Terminal("RSIGNEDSHIFTASSIGN")
+	) */
 	private int matchAssignmentOperator_1_8(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.RSIGNEDSHIFTASSIGN);
 		if (lookahead == -1)
@@ -8696,11 +6704,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("RUNSIGNEDSHIFTASSIGN")
-			Action({
-				ret = AssignOp.RightUnsignedShift;
-			})
-		) */
+		Terminal("RUNSIGNEDSHIFTASSIGN")
+	) */
 	private int matchAssignmentOperator_1_9(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.RUNSIGNEDSHIFTASSIGN);
 		if (lookahead == -1)
@@ -8709,11 +6714,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("ANDASSIGN")
-			Action({
-				ret = AssignOp.And;
-			})
-		) */
+		Terminal("ANDASSIGN")
+	) */
 	private int matchAssignmentOperator_1_10(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.ANDASSIGN);
 		if (lookahead == -1)
@@ -8722,11 +6724,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("XORASSIGN")
-			Action({
-				ret = AssignOp.XOr;
-			})
-		) */
+		Terminal("XORASSIGN")
+	) */
 	private int matchAssignmentOperator_1_11(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.XORASSIGN);
 		if (lookahead == -1)
@@ -8735,11 +6734,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("ORASSIGN")
-			Action({
-				ret = AssignOp.Or;
-			})
-		) */
+		Terminal("ORASSIGN")
+	) */
 	private int matchAssignmentOperator_1_12(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.ORASSIGN);
 		if (lookahead == -1)
@@ -8748,79 +6744,43 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("ASSIGN")
-				Action({
-					ret = AssignOp.Normal;
-				})
-			)
-			Sequence(
-				Terminal("STARASSIGN")
-				Action({
-					ret = AssignOp.Times;
-				})
-			)
-			Sequence(
-				Terminal("SLASHASSIGN")
-				Action({
-					ret = AssignOp.Divide;
-				})
-			)
-			Sequence(
-				Terminal("REMASSIGN")
-				Action({
-					ret = AssignOp.Remainder;
-				})
-			)
-			Sequence(
-				Terminal("PLUSASSIGN")
-				Action({
-					ret = AssignOp.Plus;
-				})
-			)
-			Sequence(
-				Terminal("MINUSASSIGN")
-				Action({
-					ret = AssignOp.Minus;
-				})
-			)
-			Sequence(
-				Terminal("LSHIFTASSIGN")
-				Action({
-					ret = AssignOp.LeftShift;
-				})
-			)
-			Sequence(
-				Terminal("RSIGNEDSHIFTASSIGN")
-				Action({
-					ret = AssignOp.RightSignedShift;
-				})
-			)
-			Sequence(
-				Terminal("RUNSIGNEDSHIFTASSIGN")
-				Action({
-					ret = AssignOp.RightUnsignedShift;
-				})
-			)
-			Sequence(
-				Terminal("ANDASSIGN")
-				Action({
-					ret = AssignOp.And;
-				})
-			)
-			Sequence(
-				Terminal("XORASSIGN")
-				Action({
-					ret = AssignOp.XOr;
-				})
-			)
-			Sequence(
-				Terminal("ORASSIGN")
-				Action({
-					ret = AssignOp.Or;
-				})
-			)
-		) */
+		Sequence(
+			Terminal("ASSIGN")
+		)
+		Sequence(
+			Terminal("STARASSIGN")
+		)
+		Sequence(
+			Terminal("SLASHASSIGN")
+		)
+		Sequence(
+			Terminal("REMASSIGN")
+		)
+		Sequence(
+			Terminal("PLUSASSIGN")
+		)
+		Sequence(
+			Terminal("MINUSASSIGN")
+		)
+		Sequence(
+			Terminal("LSHIFTASSIGN")
+		)
+		Sequence(
+			Terminal("RSIGNEDSHIFTASSIGN")
+		)
+		Sequence(
+			Terminal("RUNSIGNEDSHIFTASSIGN")
+		)
+		Sequence(
+			Terminal("ANDASSIGN")
+		)
+		Sequence(
+			Terminal("XORASSIGN")
+		)
+		Sequence(
+			Terminal("ORASSIGN")
+		)
+	) */
 	private int matchAssignmentOperator_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAssignmentOperator_1_1(lookahead);
@@ -8863,84 +6823,45 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					Terminal("ASSIGN")
-					Action({
-						ret = AssignOp.Normal;
-					})
-				)
-				Sequence(
-					Terminal("STARASSIGN")
-					Action({
-						ret = AssignOp.Times;
-					})
-				)
-				Sequence(
-					Terminal("SLASHASSIGN")
-					Action({
-						ret = AssignOp.Divide;
-					})
-				)
-				Sequence(
-					Terminal("REMASSIGN")
-					Action({
-						ret = AssignOp.Remainder;
-					})
-				)
-				Sequence(
-					Terminal("PLUSASSIGN")
-					Action({
-						ret = AssignOp.Plus;
-					})
-				)
-				Sequence(
-					Terminal("MINUSASSIGN")
-					Action({
-						ret = AssignOp.Minus;
-					})
-				)
-				Sequence(
-					Terminal("LSHIFTASSIGN")
-					Action({
-						ret = AssignOp.LeftShift;
-					})
-				)
-				Sequence(
-					Terminal("RSIGNEDSHIFTASSIGN")
-					Action({
-						ret = AssignOp.RightSignedShift;
-					})
-				)
-				Sequence(
-					Terminal("RUNSIGNEDSHIFTASSIGN")
-					Action({
-						ret = AssignOp.RightUnsignedShift;
-					})
-				)
-				Sequence(
-					Terminal("ANDASSIGN")
-					Action({
-						ret = AssignOp.And;
-					})
-				)
-				Sequence(
-					Terminal("XORASSIGN")
-					Action({
-						ret = AssignOp.XOr;
-					})
-				)
-				Sequence(
-					Terminal("ORASSIGN")
-					Action({
-						ret = AssignOp.Or;
-					})
-				)
+		Choice(
+			Sequence(
+				Terminal("ASSIGN")
 			)
-			Action({
-				return ret;
-			})
-		) */
+			Sequence(
+				Terminal("STARASSIGN")
+			)
+			Sequence(
+				Terminal("SLASHASSIGN")
+			)
+			Sequence(
+				Terminal("REMASSIGN")
+			)
+			Sequence(
+				Terminal("PLUSASSIGN")
+			)
+			Sequence(
+				Terminal("MINUSASSIGN")
+			)
+			Sequence(
+				Terminal("LSHIFTASSIGN")
+			)
+			Sequence(
+				Terminal("RSIGNEDSHIFTASSIGN")
+			)
+			Sequence(
+				Terminal("RUNSIGNEDSHIFTASSIGN")
+			)
+			Sequence(
+				Terminal("ANDASSIGN")
+			)
+			Sequence(
+				Terminal("XORASSIGN")
+			)
+			Sequence(
+				Terminal("ORASSIGN")
+			)
+		)
+	) */
 	private int matchAssignmentOperator(int lookahead) {
 		lookahead = matchAssignmentOperator_1(lookahead);
 		if (lookahead == -1)
@@ -8949,15 +6870,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				lateRun();
-			})
-			NonTerminal(op, AssignmentOperator)
-			NonTerminal(value, Expression)
-			Action({
-				expr = dress(SAssignExpr.make(expr, op, value));
-			})
-		) */
+		NonTerminal(op, AssignmentOperator)
+		NonTerminal(value, Expression)
+	) */
 	private int matchStatementExpression_2_2_2_1_1_3(int lookahead) {
 		lookahead = matchAssignmentOperator(lookahead);
 		if (lookahead == -1)
@@ -8969,35 +6884,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Action({
-					lateRun();
-				})
-				Terminal("INCR")
-				Action({
-					expr = dress(SUnaryExpr.make(UnaryOp.PostIncrement, expr));
-				})
-			)
-			Sequence(
-				Action({
-					lateRun();
-				})
-				Terminal("DECR")
-				Action({
-					expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr));
-				})
-			)
-			Sequence(
-				Action({
-					lateRun();
-				})
-				NonTerminal(op, AssignmentOperator)
-				NonTerminal(value, Expression)
-				Action({
-					expr = dress(SAssignExpr.make(expr, op, value));
-				})
-			)
-		) */
+		Sequence(
+			Terminal("INCR")
+		)
+		Sequence(
+			Terminal("DECR")
+		)
+		Sequence(
+			NonTerminal(op, AssignmentOperator)
+			NonTerminal(value, Expression)
+		)
+	) */
 	private int matchStatementExpression_2_2_2_1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchStatementExpression_2_2_2_1_1_1(lookahead);
@@ -9013,37 +6910,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					Action({
-						lateRun();
-					})
-					Terminal("INCR")
-					Action({
-						expr = dress(SUnaryExpr.make(UnaryOp.PostIncrement, expr));
-					})
-				)
-				Sequence(
-					Action({
-						lateRun();
-					})
-					Terminal("DECR")
-					Action({
-						expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr));
-					})
-				)
-				Sequence(
-					Action({
-						lateRun();
-					})
-					NonTerminal(op, AssignmentOperator)
-					NonTerminal(value, Expression)
-					Action({
-						expr = dress(SAssignExpr.make(expr, op, value));
-					})
-				)
+		Choice(
+			Sequence(
+				Terminal("INCR")
 			)
-		) */
+			Sequence(
+				Terminal("DECR")
+			)
+			Sequence(
+				NonTerminal(op, AssignmentOperator)
+				NonTerminal(value, Expression)
+			)
+		)
+	) */
 	private int matchStatementExpression_2_2_2_1(int lookahead) {
 		lookahead = matchStatementExpression_2_2_2_1_1(lookahead);
 		if (lookahead == -1)
@@ -9052,37 +6931,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Choice(
-				Sequence(
-					Action({
-						lateRun();
-					})
-					Terminal("INCR")
-					Action({
-						expr = dress(SUnaryExpr.make(UnaryOp.PostIncrement, expr));
-					})
-				)
-				Sequence(
-					Action({
-						lateRun();
-					})
-					Terminal("DECR")
-					Action({
-						expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr));
-					})
-				)
-				Sequence(
-					Action({
-						lateRun();
-					})
-					NonTerminal(op, AssignmentOperator)
-					NonTerminal(value, Expression)
-					Action({
-						expr = dress(SAssignExpr.make(expr, op, value));
-					})
-				)
+		Choice(
+			Sequence(
+				Terminal("INCR")
 			)
-		) */
+			Sequence(
+				Terminal("DECR")
+			)
+			Sequence(
+				NonTerminal(op, AssignmentOperator)
+				NonTerminal(value, Expression)
+			)
+		)
+	) */
 	private int matchStatementExpression_2_2_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchStatementExpression_2_2_2_1(lookahead);
@@ -9092,40 +6953,22 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(expr, PrimaryExpression)
-			ZeroOrOne(
-				Choice(
-					Sequence(
-						Action({
-							lateRun();
-						})
-						Terminal("INCR")
-						Action({
-							expr = dress(SUnaryExpr.make(UnaryOp.PostIncrement, expr));
-						})
-					)
-					Sequence(
-						Action({
-							lateRun();
-						})
-						Terminal("DECR")
-						Action({
-							expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr));
-						})
-					)
-					Sequence(
-						Action({
-							lateRun();
-						})
-						NonTerminal(op, AssignmentOperator)
-						NonTerminal(value, Expression)
-						Action({
-							expr = dress(SAssignExpr.make(expr, op, value));
-						})
-					)
+		NonTerminal(expr, PrimaryExpression)
+		ZeroOrOne(
+			Choice(
+				Sequence(
+					Terminal("INCR")
+				)
+				Sequence(
+					Terminal("DECR")
+				)
+				Sequence(
+					NonTerminal(op, AssignmentOperator)
+					NonTerminal(value, Expression)
 				)
 			)
-		) */
+		)
+	) */
 	private int matchStatementExpression_2_2(int lookahead) {
 		lookahead = matchPrimaryExpression(lookahead);
 		if (lookahead == -1)
@@ -9137,43 +6980,25 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			NonTerminal(expr, PrefixExpression)
-			Sequence(
-				NonTerminal(expr, PrimaryExpression)
-				ZeroOrOne(
-					Choice(
-						Sequence(
-							Action({
-								lateRun();
-							})
-							Terminal("INCR")
-							Action({
-								expr = dress(SUnaryExpr.make(UnaryOp.PostIncrement, expr));
-							})
-						)
-						Sequence(
-							Action({
-								lateRun();
-							})
-							Terminal("DECR")
-							Action({
-								expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr));
-							})
-						)
-						Sequence(
-							Action({
-								lateRun();
-							})
-							NonTerminal(op, AssignmentOperator)
-							NonTerminal(value, Expression)
-							Action({
-								expr = dress(SAssignExpr.make(expr, op, value));
-							})
-						)
+		NonTerminal(expr, PrefixExpression)
+		Sequence(
+			NonTerminal(expr, PrimaryExpression)
+			ZeroOrOne(
+				Choice(
+					Sequence(
+						Terminal("INCR")
+					)
+					Sequence(
+						Terminal("DECR")
+					)
+					Sequence(
+						NonTerminal(op, AssignmentOperator)
+						NonTerminal(value, Expression)
 					)
 				)
 			)
-		) */
+		)
+	) */
 	private int matchStatementExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrefixExpression(lookahead);
@@ -9186,52 +7011,28 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Choice(
-				NonTerminal(expr, PrefixExpression)
-				Sequence(
-					NonTerminal(expr, PrimaryExpression)
-					ZeroOrOne(
-						Choice(
-							Sequence(
-								Action({
-									lateRun();
-								})
-								Terminal("INCR")
-								Action({
-									expr = dress(SUnaryExpr.make(UnaryOp.PostIncrement, expr));
-								})
-							)
-							Sequence(
-								Action({
-									lateRun();
-								})
-								Terminal("DECR")
-								Action({
-									expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr));
-								})
-							)
-							Sequence(
-								Action({
-									lateRun();
-								})
-								NonTerminal(op, AssignmentOperator)
-								NonTerminal(value, Expression)
-								Action({
-									expr = dress(SAssignExpr.make(expr, op, value));
-								})
-							)
+		Choice(
+			NonTerminal(expr, PrefixExpression)
+			Sequence(
+				NonTerminal(expr, PrimaryExpression)
+				ZeroOrOne(
+					Choice(
+						Sequence(
+							Terminal("INCR")
+						)
+						Sequence(
+							Terminal("DECR")
+						)
+						Sequence(
+							NonTerminal(op, AssignmentOperator)
+							NonTerminal(value, Expression)
 						)
 					)
 				)
 			)
-			Terminal("SEMICOLON")
-			Action({
-				return dress(SExpressionStmt.make(expr));
-			})
-		) */
+		)
+		Terminal("SEMICOLON")
+	) */
 	private int matchStatementExpression(int lookahead) {
 		lookahead = matchStatementExpression_2(lookahead);
 		if (lookahead == -1)
@@ -9243,9 +7044,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("CASE")
-			NonTerminal(label, Expression)
-		) */
+		Terminal("CASE")
+		NonTerminal(label, Expression)
+	) */
 	private int matchSwitchEntry_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.CASE);
 		if (lookahead == -1)
@@ -9257,12 +7058,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("CASE")
-				NonTerminal(label, Expression)
-			)
-			Terminal("_DEFAULT")
-		) */
+		Sequence(
+			Terminal("CASE")
+			NonTerminal(label, Expression)
+		)
+		Terminal("_DEFAULT")
+	) */
 	private int matchSwitchEntry_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchSwitchEntry_2_1(lookahead);
@@ -9275,22 +7076,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Choice(
-				Sequence(
-					Terminal("CASE")
-					NonTerminal(label, Expression)
-				)
-				Terminal("_DEFAULT")
+		Choice(
+			Sequence(
+				Terminal("CASE")
+				NonTerminal(label, Expression)
 			)
-			Terminal("COLON")
-			NonTerminal(stmts, Statements)
-			Action({
-				return dress(SSwitchCase.make(optionOf(label), ensureNotNull(stmts)));
-			})
-		) */
+			Terminal("_DEFAULT")
+		)
+		Terminal("COLON")
+		NonTerminal(stmts, Statements)
+	) */
 	private int matchSwitchEntry(int lookahead) {
 		lookahead = matchSwitchEntry_2(lookahead);
 		if (lookahead == -1)
@@ -9305,11 +7100,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(entry, SwitchEntry)
-			Action({
-				entries = append(entries, entry);
-			})
-		) */
+		NonTerminal(entry, SwitchEntry)
+	) */
 	private int matchSwitchStatement_7_1(int lookahead) {
 		lookahead = matchSwitchEntry(lookahead);
 		if (lookahead == -1)
@@ -9318,11 +7110,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			NonTerminal(entry, SwitchEntry)
-			Action({
-				entries = append(entries, entry);
-			})
-		) */
+		NonTerminal(entry, SwitchEntry)
+	) */
 	private int matchSwitchStatement_7(int lookahead) {
 		int newLookahead;
 		newLookahead = matchSwitchStatement_7_1(lookahead);
@@ -9334,25 +7123,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("SWITCH")
-			Terminal("LPAREN")
-			NonTerminal(selector, Expression)
-			Terminal("RPAREN")
-			Terminal("LBRACE")
-			ZeroOrMore(
-				NonTerminal(entry, SwitchEntry)
-				Action({
-					entries = append(entries, entry);
-				})
-			)
-			Terminal("RBRACE")
-			Action({
-				return dress(SSwitchStmt.make(selector, entries));
-			})
-		) */
+		Terminal("SWITCH")
+		Terminal("LPAREN")
+		NonTerminal(selector, Expression)
+		Terminal("RPAREN")
+		Terminal("LBRACE")
+		ZeroOrMore(
+			NonTerminal(entry, SwitchEntry)
+		)
+		Terminal("RBRACE")
+	) */
 	private int matchSwitchStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SWITCH);
 		if (lookahead == -1)
@@ -9379,10 +7159,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(1)
-			Terminal("ELSE")
-			NonTerminal(elseStmt, Statement)
-		) */
+		LookAhead(1)
+		Terminal("ELSE")
+		NonTerminal(elseStmt, Statement)
+	) */
 	private int matchIfStatement_7_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.ELSE);
 		if (lookahead == -1)
@@ -9394,10 +7174,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(1)
-			Terminal("ELSE")
-			NonTerminal(elseStmt, Statement)
-		) */
+		LookAhead(1)
+		Terminal("ELSE")
+		NonTerminal(elseStmt, Statement)
+	) */
 	private int matchIfStatement_7(int lookahead) {
 		int newLookahead;
 		newLookahead = matchIfStatement_7_1(lookahead);
@@ -9407,23 +7187,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("IF")
-			Terminal("LPAREN")
-			NonTerminal(condition, Expression)
-			Terminal("RPAREN")
-			NonTerminal(thenStmt, Statement)
-			ZeroOrOne(
-				LookAhead(1)
-				Terminal("ELSE")
-				NonTerminal(elseStmt, Statement)
-			)
-			Action({
-				return dress(SIfStmt.make(condition, thenStmt, optionOf(elseStmt)));
-			})
-		) */
+		Terminal("IF")
+		Terminal("LPAREN")
+		NonTerminal(condition, Expression)
+		Terminal("RPAREN")
+		NonTerminal(thenStmt, Statement)
+		ZeroOrOne(
+			LookAhead(1)
+			Terminal("ELSE")
+			NonTerminal(elseStmt, Statement)
+		)
+	) */
 	private int matchIfStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.IF);
 		if (lookahead == -1)
@@ -9447,18 +7221,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("WHILE")
-			Terminal("LPAREN")
-			NonTerminal(condition, Expression)
-			Terminal("RPAREN")
-			NonTerminal(body, Statement)
-			Action({
-				return dress(SWhileStmt.make(condition, body));
-			})
-		) */
+		Terminal("WHILE")
+		Terminal("LPAREN")
+		NonTerminal(condition, Expression)
+		Terminal("RPAREN")
+		NonTerminal(body, Statement)
+	) */
 	private int matchWhileStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.WHILE);
 		if (lookahead == -1)
@@ -9479,20 +7247,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("DO")
-			NonTerminal(body, Statement)
-			Terminal("WHILE")
-			Terminal("LPAREN")
-			NonTerminal(condition, Expression)
-			Terminal("RPAREN")
-			Terminal("SEMICOLON")
-			Action({
-				return dress(SDoStmt.make(body, condition));
-			})
-		) */
+		Terminal("DO")
+		NonTerminal(body, Statement)
+		Terminal("WHILE")
+		Terminal("LPAREN")
+		NonTerminal(condition, Expression)
+		Terminal("RPAREN")
+		Terminal("SEMICOLON")
+	) */
 	private int matchDoStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.DO);
 		if (lookahead == -1)
@@ -9519,14 +7281,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(VariableDeclExpression)
-				Terminal("COLON")
-			)
-			NonTerminal(varExpr, VariableDeclExpression)
+		LookAhead(
+			NonTerminal(VariableDeclExpression)
 			Terminal("COLON")
-			NonTerminal(expr, Expression)
-		) */
+		)
+		NonTerminal(varExpr, VariableDeclExpression)
+		Terminal("COLON")
+		NonTerminal(expr, Expression)
+	) */
 	private int matchForStatement_4_1(int lookahead) {
 		lookahead = matchVariableDeclExpression(lookahead);
 		if (lookahead == -1)
@@ -9541,17 +7303,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Modifiers)
-				NonTerminal(Type)
-				NonTerminal(Name)
-			)
-			NonTerminal(expr, VariableDeclExpression)
-			Action({
-				ret = emptyList();
-				ret = append(ret, expr);
-			})
-		) */
+		LookAhead(
+			NonTerminal(Modifiers)
+			NonTerminal(Type)
+			NonTerminal(Name)
+		)
+		NonTerminal(expr, VariableDeclExpression)
+	) */
 	private int matchForInit_1_1(int lookahead) {
 		lookahead = matchVariableDeclExpression(lookahead);
 		if (lookahead == -1)
@@ -9560,12 +7318,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			NonTerminal(expr, Expression)
-			Action({
-				ret = append(ret, expr);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(expr, Expression)
+	) */
 	private int matchExpressionList_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -9577,12 +7332,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("COMMA")
-			NonTerminal(expr, Expression)
-			Action({
-				ret = append(ret, expr);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(expr, Expression)
+	) */
 	private int matchExpressionList_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchExpressionList_3_1(lookahead);
@@ -9594,21 +7346,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(expr, Expression)
+		ZeroOrMore(
+			Terminal("COMMA")
 			NonTerminal(expr, Expression)
-			Action({
-				ret = append(ret, expr);
-			})
-			ZeroOrMore(
-				Terminal("COMMA")
-				NonTerminal(expr, Expression)
-				Action({
-					ret = append(ret, expr);
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchExpressionList(int lookahead) {
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
@@ -9620,20 +7363,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				LookAhead(
-					NonTerminal(Modifiers)
-					NonTerminal(Type)
-					NonTerminal(Name)
-				)
-				NonTerminal(expr, VariableDeclExpression)
-				Action({
-					ret = emptyList();
-					ret = append(ret, expr);
-				})
+		Sequence(
+			LookAhead(
+				NonTerminal(Modifiers)
+				NonTerminal(Type)
+				NonTerminal(Name)
 			)
-			NonTerminal(ret, ExpressionList)
-		) */
+			NonTerminal(expr, VariableDeclExpression)
+		)
+		NonTerminal(ret, ExpressionList)
+	) */
 	private int matchForInit_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchForInit_1_1(lookahead);
@@ -9646,25 +7385,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					LookAhead(
-						NonTerminal(Modifiers)
-						NonTerminal(Type)
-						NonTerminal(Name)
-					)
-					NonTerminal(expr, VariableDeclExpression)
-					Action({
-						ret = emptyList();
-						ret = append(ret, expr);
-					})
+		Choice(
+			Sequence(
+				LookAhead(
+					NonTerminal(Modifiers)
+					NonTerminal(Type)
+					NonTerminal(Name)
 				)
-				NonTerminal(ret, ExpressionList)
+				NonTerminal(expr, VariableDeclExpression)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			NonTerminal(ret, ExpressionList)
+		)
+	) */
 	private int matchForInit(int lookahead) {
 		lookahead = matchForInit_1(lookahead);
 		if (lookahead == -1)
@@ -9673,8 +7405,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(init, ForInit)
-		) */
+		NonTerminal(init, ForInit)
+	) */
 	private int matchForStatement_4_2_1_1(int lookahead) {
 		lookahead = matchForInit(lookahead);
 		if (lookahead == -1)
@@ -9683,8 +7415,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(init, ForInit)
-		) */
+		NonTerminal(init, ForInit)
+	) */
 	private int matchForStatement_4_2_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchForStatement_4_2_1_1(lookahead);
@@ -9694,8 +7426,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(expr, Expression)
-		) */
+		NonTerminal(expr, Expression)
+	) */
 	private int matchForStatement_4_2_3_1(int lookahead) {
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
@@ -9704,8 +7436,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(expr, Expression)
-		) */
+		NonTerminal(expr, Expression)
+	) */
 	private int matchForStatement_4_2_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchForStatement_4_2_3_1(lookahead);
@@ -9715,11 +7447,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, ExpressionList)
-			Action({
-				return ret;
-			})
-		) */
+		NonTerminal(ret, ExpressionList)
+	) */
 	private int matchForUpdate(int lookahead) {
 		lookahead = matchExpressionList(lookahead);
 		if (lookahead == -1)
@@ -9728,8 +7457,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(update, ForUpdate)
-		) */
+		NonTerminal(update, ForUpdate)
+	) */
 	private int matchForStatement_4_2_5_1(int lookahead) {
 		lookahead = matchForUpdate(lookahead);
 		if (lookahead == -1)
@@ -9738,8 +7467,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(update, ForUpdate)
-		) */
+		NonTerminal(update, ForUpdate)
+	) */
 	private int matchForStatement_4_2_5(int lookahead) {
 		int newLookahead;
 		newLookahead = matchForStatement_4_2_5_1(lookahead);
@@ -9749,18 +7478,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				NonTerminal(init, ForInit)
-			)
-			Terminal("SEMICOLON")
-			ZeroOrOne(
-				NonTerminal(expr, Expression)
-			)
-			Terminal("SEMICOLON")
-			ZeroOrOne(
-				NonTerminal(update, ForUpdate)
-			)
-		) */
+		ZeroOrOne(
+			NonTerminal(init, ForInit)
+		)
+		Terminal("SEMICOLON")
+		ZeroOrOne(
+			NonTerminal(expr, Expression)
+		)
+		Terminal("SEMICOLON")
+		ZeroOrOne(
+			NonTerminal(update, ForUpdate)
+		)
+	) */
 	private int matchForStatement_4_2(int lookahead) {
 		lookahead = matchForStatement_4_2_1(lookahead);
 		if (lookahead == -1)
@@ -9781,6 +7510,44 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
+		Sequence(
+			LookAhead(
+				NonTerminal(VariableDeclExpression)
+				Terminal("COLON")
+			)
+			NonTerminal(varExpr, VariableDeclExpression)
+			Terminal("COLON")
+			NonTerminal(expr, Expression)
+		)
+		Sequence(
+			ZeroOrOne(
+				NonTerminal(init, ForInit)
+			)
+			Terminal("SEMICOLON")
+			ZeroOrOne(
+				NonTerminal(expr, Expression)
+			)
+			Terminal("SEMICOLON")
+			ZeroOrOne(
+				NonTerminal(update, ForUpdate)
+			)
+		)
+	) */
+	private int matchForStatement_4(int lookahead) {
+		int newLookahead;
+		newLookahead = matchForStatement_4_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchForStatement_4_2(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
+	}
+
+	/* Sequence(
+		Terminal("FOR")
+		Terminal("LPAREN")
+		Choice(
 			Sequence(
 				LookAhead(
 					NonTerminal(VariableDeclExpression)
@@ -9803,58 +7570,10 @@ public class ParserImplementation extends ParserNewBase {
 					NonTerminal(update, ForUpdate)
 				)
 			)
-		) */
-	private int matchForStatement_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchForStatement_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchForStatement_4_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("FOR")
-			Terminal("LPAREN")
-			Choice(
-				Sequence(
-					LookAhead(
-						NonTerminal(VariableDeclExpression)
-						Terminal("COLON")
-					)
-					NonTerminal(varExpr, VariableDeclExpression)
-					Terminal("COLON")
-					NonTerminal(expr, Expression)
-				)
-				Sequence(
-					ZeroOrOne(
-						NonTerminal(init, ForInit)
-					)
-					Terminal("SEMICOLON")
-					ZeroOrOne(
-						NonTerminal(expr, Expression)
-					)
-					Terminal("SEMICOLON")
-					ZeroOrOne(
-						NonTerminal(update, ForUpdate)
-					)
-				)
-			)
-			Terminal("RPAREN")
-			NonTerminal(body, Statement)
-			Action({
-				if (varExpr != null)
-		return dress(SForeachStmt.make(varExpr, expr, body));
-	else
-		return dress(SForStmt.make(init, expr, update, body));
-
-			})
-		) */
+		)
+		Terminal("RPAREN")
+		NonTerminal(body, Statement)
+	) */
 	private int matchForStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.FOR);
 		if (lookahead == -1)
@@ -9875,8 +7594,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(id, Name)
-		) */
+		NonTerminal(id, Name)
+	) */
 	private int matchBreakStatement_3_1(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -9885,8 +7604,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(id, Name)
-		) */
+		NonTerminal(id, Name)
+	) */
 	private int matchBreakStatement_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchBreakStatement_3_1(lookahead);
@@ -9896,18 +7615,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("BREAK")
-			ZeroOrOne(
-				NonTerminal(id, Name)
-			)
-			Terminal("SEMICOLON")
-			Action({
-				return dress(SBreakStmt.make(optionOf(id)));
-			})
-		) */
+		Terminal("BREAK")
+		ZeroOrOne(
+			NonTerminal(id, Name)
+		)
+		Terminal("SEMICOLON")
+	) */
 	private int matchBreakStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.BREAK);
 		if (lookahead == -1)
@@ -9922,8 +7635,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(id, Name)
-		) */
+		NonTerminal(id, Name)
+	) */
 	private int matchContinueStatement_3_1(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -9932,8 +7645,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(id, Name)
-		) */
+		NonTerminal(id, Name)
+	) */
 	private int matchContinueStatement_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchContinueStatement_3_1(lookahead);
@@ -9943,18 +7656,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("CONTINUE")
-			ZeroOrOne(
-				NonTerminal(id, Name)
-			)
-			Terminal("SEMICOLON")
-			Action({
-				return dress(SContinueStmt.make(optionOf(id)));
-			})
-		) */
+		Terminal("CONTINUE")
+		ZeroOrOne(
+			NonTerminal(id, Name)
+		)
+		Terminal("SEMICOLON")
+	) */
 	private int matchContinueStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.CONTINUE);
 		if (lookahead == -1)
@@ -9969,8 +7676,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(expr, Expression)
-		) */
+		NonTerminal(expr, Expression)
+	) */
 	private int matchReturnStatement_3_1(int lookahead) {
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
@@ -9979,8 +7686,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(expr, Expression)
-		) */
+		NonTerminal(expr, Expression)
+	) */
 	private int matchReturnStatement_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchReturnStatement_3_1(lookahead);
@@ -9990,18 +7697,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("RETURN")
-			ZeroOrOne(
-				NonTerminal(expr, Expression)
-			)
-			Terminal("SEMICOLON")
-			Action({
-				return dress(SReturnStmt.make(optionOf(expr)));
-			})
-		) */
+		Terminal("RETURN")
+		ZeroOrOne(
+			NonTerminal(expr, Expression)
+		)
+		Terminal("SEMICOLON")
+	) */
 	private int matchReturnStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.RETURN);
 		if (lookahead == -1)
@@ -10016,16 +7717,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("THROW")
-			NonTerminal(expr, Expression)
-			Terminal("SEMICOLON")
-			Action({
-				return dress(SThrowStmt.make(expr));
-			})
-		) */
+		Terminal("THROW")
+		NonTerminal(expr, Expression)
+		Terminal("SEMICOLON")
+	) */
 	private int matchThrowStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.THROW);
 		if (lookahead == -1)
@@ -10040,18 +7735,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("SYNCHRONIZED")
-			Terminal("LPAREN")
-			NonTerminal(expr, Expression)
-			Terminal("RPAREN")
-			NonTerminal(block, Block)
-			Action({
-				return dress(SSynchronizedStmt.make(expr, block));
-			})
-		) */
+		Terminal("SYNCHRONIZED")
+		Terminal("LPAREN")
+		NonTerminal(expr, Expression)
+		Terminal("RPAREN")
+		NonTerminal(block, Block)
+	) */
 	private int matchSynchronizedStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SYNCHRONIZED);
 		if (lookahead == -1)
@@ -10072,13 +7761,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Terminal("SEMICOLON")
-			NonTerminal(var, VariableDeclExpression)
-			Action({
-				vars = append(vars, var);
-			})
-		) */
+		LookAhead(2)
+		Terminal("SEMICOLON")
+		NonTerminal(var, VariableDeclExpression)
+	) */
 	private int matchResourceSpecification_4_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
 		if (lookahead == -1)
@@ -10090,13 +7776,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Terminal("SEMICOLON")
-			NonTerminal(var, VariableDeclExpression)
-			Action({
-				vars = append(vars, var);
-			})
-		) */
+		LookAhead(2)
+		Terminal("SEMICOLON")
+		NonTerminal(var, VariableDeclExpression)
+	) */
 	private int matchResourceSpecification_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchResourceSpecification_4_1(lookahead);
@@ -10108,12 +7791,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Terminal("SEMICOLON")
-			Action({
-				trailingSemiColon.value = true;
-			})
-		) */
+		LookAhead(2)
+		Terminal("SEMICOLON")
+	) */
 	private int matchResourceSpecification_5_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
 		if (lookahead == -1)
@@ -10122,12 +7802,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			Terminal("SEMICOLON")
-			Action({
-				trailingSemiColon.value = true;
-			})
-		) */
+		LookAhead(2)
+		Terminal("SEMICOLON")
+	) */
 	private int matchResourceSpecification_5(int lookahead) {
 		int newLookahead;
 		newLookahead = matchResourceSpecification_5_1(lookahead);
@@ -10137,31 +7814,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LPAREN")
+		Terminal("LPAREN")
+		NonTerminal(var, VariableDeclExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("SEMICOLON")
 			NonTerminal(var, VariableDeclExpression)
-			Action({
-				vars = append(vars, var);
-			})
-			ZeroOrMore(
-				LookAhead(2)
-				Terminal("SEMICOLON")
-				NonTerminal(var, VariableDeclExpression)
-				Action({
-					vars = append(vars, var);
-				})
-			)
-			ZeroOrOne(
-				LookAhead(2)
-				Terminal("SEMICOLON")
-				Action({
-					trailingSemiColon.value = true;
-				})
-			)
-			Terminal("RPAREN")
-			Action({
-				return vars;
-			})
-		) */
+		)
+		ZeroOrOne(
+			LookAhead(2)
+			Terminal("SEMICOLON")
+		)
+		Terminal("RPAREN")
+	) */
 	private int matchResourceSpecification(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LPAREN);
 		if (lookahead == -1)
@@ -10182,12 +7847,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("BIT_OR")
-			NonTerminal(exceptType, AnnotatedQualifiedType)
-			Action({
-				exceptTypes = append(exceptTypes, exceptType);
-			})
-		) */
+		Terminal("BIT_OR")
+		NonTerminal(exceptType, AnnotatedQualifiedType)
+	) */
 	private int matchCatchFormalParameter_5_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.BIT_OR);
 		if (lookahead == -1)
@@ -10199,12 +7861,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* OneOrMore(
-			Terminal("BIT_OR")
-			NonTerminal(exceptType, AnnotatedQualifiedType)
-			Action({
-				exceptTypes = append(exceptTypes, exceptType);
-			})
-		) */
+		Terminal("BIT_OR")
+		NonTerminal(exceptType, AnnotatedQualifiedType)
+	) */
 	private int matchCatchFormalParameter_5_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchCatchFormalParameter_5_1_3_1(lookahead);
@@ -10218,23 +7877,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				Terminal("BIT_OR")
-			)
-			Action({
-				lateRun();
-			})
-			OneOrMore(
-				Terminal("BIT_OR")
-				NonTerminal(exceptType, AnnotatedQualifiedType)
-				Action({
-					exceptTypes = append(exceptTypes, exceptType);
-				})
-			)
-			Action({
-				exceptType = dress(SUnionType.make(exceptTypes));
-			})
-		) */
+		LookAhead(
+			Terminal("BIT_OR")
+		)
+		OneOrMore(
+			Terminal("BIT_OR")
+			NonTerminal(exceptType, AnnotatedQualifiedType)
+		)
+	) */
 	private int matchCatchFormalParameter_5_1(int lookahead) {
 		lookahead = matchCatchFormalParameter_5_1_3(lookahead);
 		if (lookahead == -1)
@@ -10243,23 +7893,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(
-				Terminal("BIT_OR")
-			)
-			Action({
-				lateRun();
-			})
-			OneOrMore(
-				Terminal("BIT_OR")
-				NonTerminal(exceptType, AnnotatedQualifiedType)
-				Action({
-					exceptTypes = append(exceptTypes, exceptType);
-				})
-			)
-			Action({
-				exceptType = dress(SUnionType.make(exceptTypes));
-			})
-		) */
+		LookAhead(
+			Terminal("BIT_OR")
+		)
+		OneOrMore(
+			Terminal("BIT_OR")
+			NonTerminal(exceptType, AnnotatedQualifiedType)
+		)
+	) */
 	private int matchCatchFormalParameter_5(int lookahead) {
 		int newLookahead;
 		newLookahead = matchCatchFormalParameter_5_1(lookahead);
@@ -10269,37 +7910,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			NonTerminal(modifiers, Modifiers)
-			NonTerminal(exceptType, QualifiedType)
-			Action({
-				exceptTypes = append(exceptTypes, exceptType);
-			})
-			ZeroOrOne(
-				LookAhead(
-					Terminal("BIT_OR")
-				)
-				Action({
-					lateRun();
-				})
-				OneOrMore(
-					Terminal("BIT_OR")
-					NonTerminal(exceptType, AnnotatedQualifiedType)
-					Action({
-						exceptTypes = append(exceptTypes, exceptType);
-					})
-				)
-				Action({
-					exceptType = dress(SUnionType.make(exceptTypes));
-				})
+		NonTerminal(modifiers, Modifiers)
+		NonTerminal(exceptType, QualifiedType)
+		ZeroOrOne(
+			LookAhead(
+				Terminal("BIT_OR")
 			)
-			NonTerminal(exceptId, VariableDeclaratorId)
-			Action({
-				return dress(SFormalParameter.make(modifiers, exceptType, false, exceptId));
-			})
-		) */
+			OneOrMore(
+				Terminal("BIT_OR")
+				NonTerminal(exceptType, AnnotatedQualifiedType)
+			)
+		)
+		NonTerminal(exceptId, VariableDeclaratorId)
+	) */
 	private int matchCatchFormalParameter(int lookahead) {
 		lookahead = matchModifiers(lookahead);
 		if (lookahead == -1)
@@ -10317,18 +7940,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("CATCH")
-			Terminal("LPAREN")
-			NonTerminal(param, CatchFormalParameter)
-			Terminal("RPAREN")
-			NonTerminal(catchBlock, Block)
-			Action({
-				return dress(SCatchClause.make(param, catchBlock));
-			})
-		) */
+		Terminal("CATCH")
+		Terminal("LPAREN")
+		NonTerminal(param, CatchFormalParameter)
+		Terminal("RPAREN")
+		NonTerminal(catchBlock, Block)
+	) */
 	private int matchCatchClause(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.CATCH);
 		if (lookahead == -1)
@@ -10349,11 +7966,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(catchClause, CatchClause)
-			Action({
-				catchClauses = append(catchClauses, catchClause);
-			})
-		) */
+		NonTerminal(catchClause, CatchClause)
+	) */
 	private int matchCatchClauses_1_1(int lookahead) {
 		lookahead = matchCatchClause(lookahead);
 		if (lookahead == -1)
@@ -10362,11 +7976,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* OneOrMore(
-			NonTerminal(catchClause, CatchClause)
-			Action({
-				catchClauses = append(catchClauses, catchClause);
-			})
-		) */
+		NonTerminal(catchClause, CatchClause)
+	) */
 	private int matchCatchClauses_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchCatchClauses_1_1(lookahead);
@@ -10380,16 +7991,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			OneOrMore(
-				NonTerminal(catchClause, CatchClause)
-				Action({
-					catchClauses = append(catchClauses, catchClause);
-				})
-			)
-			Action({
-				return catchClauses;
-			})
-		) */
+		OneOrMore(
+			NonTerminal(catchClause, CatchClause)
+		)
+	) */
 	private int matchCatchClauses(int lookahead) {
 		lookahead = matchCatchClauses_1(lookahead);
 		if (lookahead == -1)
@@ -10398,8 +8003,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(catchClauses, CatchClauses)
-		) */
+		NonTerminal(catchClauses, CatchClauses)
+	) */
 	private int matchTryStatement_3_1_3_1(int lookahead) {
 		lookahead = matchCatchClauses(lookahead);
 		if (lookahead == -1)
@@ -10408,8 +8013,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(catchClauses, CatchClauses)
-		) */
+		NonTerminal(catchClauses, CatchClauses)
+	) */
 	private int matchTryStatement_3_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTryStatement_3_1_3_1(lookahead);
@@ -10419,9 +8024,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("FINALLY")
-			NonTerminal(finallyBlock, Block)
-		) */
+		Terminal("FINALLY")
+		NonTerminal(finallyBlock, Block)
+	) */
 	private int matchTryStatement_3_1_4_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.FINALLY);
 		if (lookahead == -1)
@@ -10433,9 +8038,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Terminal("FINALLY")
-			NonTerminal(finallyBlock, Block)
-		) */
+		Terminal("FINALLY")
+		NonTerminal(finallyBlock, Block)
+	) */
 	private int matchTryStatement_3_1_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTryStatement_3_1_4_1(lookahead);
@@ -10445,16 +8050,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(resources, ResourceSpecification)
-			NonTerminal(tryBlock, Block)
-			ZeroOrOne(
-				NonTerminal(catchClauses, CatchClauses)
-			)
-			ZeroOrOne(
-				Terminal("FINALLY")
-				NonTerminal(finallyBlock, Block)
-			)
-		) */
+		NonTerminal(resources, ResourceSpecification)
+		NonTerminal(tryBlock, Block)
+		ZeroOrOne(
+			NonTerminal(catchClauses, CatchClauses)
+		)
+		ZeroOrOne(
+			Terminal("FINALLY")
+			NonTerminal(finallyBlock, Block)
+		)
+	) */
 	private int matchTryStatement_3_1(int lookahead) {
 		lookahead = matchResourceSpecification(lookahead);
 		if (lookahead == -1)
@@ -10472,9 +8077,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("FINALLY")
-			NonTerminal(finallyBlock, Block)
-		) */
+		Terminal("FINALLY")
+		NonTerminal(finallyBlock, Block)
+	) */
 	private int matchTryStatement_3_2_2_1_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.FINALLY);
 		if (lookahead == -1)
@@ -10486,9 +8091,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Terminal("FINALLY")
-			NonTerminal(finallyBlock, Block)
-		) */
+		Terminal("FINALLY")
+		NonTerminal(finallyBlock, Block)
+	) */
 	private int matchTryStatement_3_2_2_1_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTryStatement_3_2_2_1_2_1(lookahead);
@@ -10498,12 +8103,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(catchClauses, CatchClauses)
-			ZeroOrOne(
-				Terminal("FINALLY")
-				NonTerminal(finallyBlock, Block)
-			)
-		) */
+		NonTerminal(catchClauses, CatchClauses)
+		ZeroOrOne(
+			Terminal("FINALLY")
+			NonTerminal(finallyBlock, Block)
+		)
+	) */
 	private int matchTryStatement_3_2_2_1(int lookahead) {
 		lookahead = matchCatchClauses(lookahead);
 		if (lookahead == -1)
@@ -10515,9 +8120,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("FINALLY")
-			NonTerminal(finallyBlock, Block)
-		) */
+		Terminal("FINALLY")
+		NonTerminal(finallyBlock, Block)
+	) */
 	private int matchTryStatement_3_2_2_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.FINALLY);
 		if (lookahead == -1)
@@ -10529,18 +8134,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				NonTerminal(catchClauses, CatchClauses)
-				ZeroOrOne(
-					Terminal("FINALLY")
-					NonTerminal(finallyBlock, Block)
-				)
-			)
-			Sequence(
+		Sequence(
+			NonTerminal(catchClauses, CatchClauses)
+			ZeroOrOne(
 				Terminal("FINALLY")
 				NonTerminal(finallyBlock, Block)
 			)
-		) */
+		)
+		Sequence(
+			Terminal("FINALLY")
+			NonTerminal(finallyBlock, Block)
+		)
+	) */
 	private int matchTryStatement_3_2_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchTryStatement_3_2_2_1(lookahead);
@@ -10553,6 +8158,44 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(tryBlock, Block)
+		Choice(
+			Sequence(
+				NonTerminal(catchClauses, CatchClauses)
+				ZeroOrOne(
+					Terminal("FINALLY")
+					NonTerminal(finallyBlock, Block)
+				)
+			)
+			Sequence(
+				Terminal("FINALLY")
+				NonTerminal(finallyBlock, Block)
+			)
+		)
+	) */
+	private int matchTryStatement_3_2(int lookahead) {
+		lookahead = matchBlock(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = matchTryStatement_3_2_2(lookahead);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* Choice(
+		Sequence(
+			NonTerminal(resources, ResourceSpecification)
+			NonTerminal(tryBlock, Block)
+			ZeroOrOne(
+				NonTerminal(catchClauses, CatchClauses)
+			)
+			ZeroOrOne(
+				Terminal("FINALLY")
+				NonTerminal(finallyBlock, Block)
+			)
+		)
+		Sequence(
 			NonTerminal(tryBlock, Block)
 			Choice(
 				Sequence(
@@ -10567,18 +8210,22 @@ public class ParserImplementation extends ParserNewBase {
 					NonTerminal(finallyBlock, Block)
 				)
 			)
-		) */
-	private int matchTryStatement_3_2(int lookahead) {
-		lookahead = matchBlock(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchTryStatement_3_2_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
+		)
+	) */
+	private int matchTryStatement_3(int lookahead) {
+		int newLookahead;
+		newLookahead = matchTryStatement_3_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchTryStatement_3_2(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
 	}
 
-	/* Choice(
+	/* Sequence(
+		Terminal("TRY")
+		Choice(
 			Sequence(
 				NonTerminal(resources, ResourceSpecification)
 				NonTerminal(tryBlock, Block)
@@ -10606,56 +8253,8 @@ public class ParserImplementation extends ParserNewBase {
 					)
 				)
 			)
-		) */
-	private int matchTryStatement_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchTryStatement_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchTryStatement_3_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("TRY")
-			Choice(
-				Sequence(
-					NonTerminal(resources, ResourceSpecification)
-					NonTerminal(tryBlock, Block)
-					ZeroOrOne(
-						NonTerminal(catchClauses, CatchClauses)
-					)
-					ZeroOrOne(
-						Terminal("FINALLY")
-						NonTerminal(finallyBlock, Block)
-					)
-				)
-				Sequence(
-					NonTerminal(tryBlock, Block)
-					Choice(
-						Sequence(
-							NonTerminal(catchClauses, CatchClauses)
-							ZeroOrOne(
-								Terminal("FINALLY")
-								NonTerminal(finallyBlock, Block)
-							)
-						)
-						Sequence(
-							Terminal("FINALLY")
-							NonTerminal(finallyBlock, Block)
-						)
-					)
-				)
-			)
-			Action({
-				return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock)));
-			})
-		) */
+		)
+	) */
 	private int matchTryStatement(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.TRY);
 		if (lookahead == -1)
@@ -10667,26 +8266,26 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				LookAhead(2)
-				NonTerminal(ret, LabeledStatement)
-			)
-			NonTerminal(ret, AssertStatement)
-			NonTerminal(ret, Block)
-			NonTerminal(ret, EmptyStatement)
-			NonTerminal(ret, StatementExpression)
-			NonTerminal(ret, SwitchStatement)
-			NonTerminal(ret, IfStatement)
-			NonTerminal(ret, WhileStatement)
-			NonTerminal(ret, DoStatement)
-			NonTerminal(ret, ForStatement)
-			NonTerminal(ret, BreakStatement)
-			NonTerminal(ret, ContinueStatement)
-			NonTerminal(ret, ReturnStatement)
-			NonTerminal(ret, ThrowStatement)
-			NonTerminal(ret, SynchronizedStatement)
-			NonTerminal(ret, TryStatement)
-		) */
+		Sequence(
+			LookAhead(2)
+			NonTerminal(ret, LabeledStatement)
+		)
+		NonTerminal(ret, AssertStatement)
+		NonTerminal(ret, Block)
+		NonTerminal(ret, EmptyStatement)
+		NonTerminal(ret, StatementExpression)
+		NonTerminal(ret, SwitchStatement)
+		NonTerminal(ret, IfStatement)
+		NonTerminal(ret, WhileStatement)
+		NonTerminal(ret, DoStatement)
+		NonTerminal(ret, ForStatement)
+		NonTerminal(ret, BreakStatement)
+		NonTerminal(ret, ContinueStatement)
+		NonTerminal(ret, ReturnStatement)
+		NonTerminal(ret, ThrowStatement)
+		NonTerminal(ret, SynchronizedStatement)
+		NonTerminal(ret, TryStatement)
+	) */
 	private int matchStatement_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchStatement_1_1(lookahead);
@@ -10741,31 +8340,28 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					LookAhead(2)
-					NonTerminal(ret, LabeledStatement)
-				)
-				NonTerminal(ret, AssertStatement)
-				NonTerminal(ret, Block)
-				NonTerminal(ret, EmptyStatement)
-				NonTerminal(ret, StatementExpression)
-				NonTerminal(ret, SwitchStatement)
-				NonTerminal(ret, IfStatement)
-				NonTerminal(ret, WhileStatement)
-				NonTerminal(ret, DoStatement)
-				NonTerminal(ret, ForStatement)
-				NonTerminal(ret, BreakStatement)
-				NonTerminal(ret, ContinueStatement)
-				NonTerminal(ret, ReturnStatement)
-				NonTerminal(ret, ThrowStatement)
-				NonTerminal(ret, SynchronizedStatement)
-				NonTerminal(ret, TryStatement)
+		Choice(
+			Sequence(
+				LookAhead(2)
+				NonTerminal(ret, LabeledStatement)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			NonTerminal(ret, AssertStatement)
+			NonTerminal(ret, Block)
+			NonTerminal(ret, EmptyStatement)
+			NonTerminal(ret, StatementExpression)
+			NonTerminal(ret, SwitchStatement)
+			NonTerminal(ret, IfStatement)
+			NonTerminal(ret, WhileStatement)
+			NonTerminal(ret, DoStatement)
+			NonTerminal(ret, ForStatement)
+			NonTerminal(ret, BreakStatement)
+			NonTerminal(ret, ContinueStatement)
+			NonTerminal(ret, ReturnStatement)
+			NonTerminal(ret, ThrowStatement)
+			NonTerminal(ret, SynchronizedStatement)
+			NonTerminal(ret, TryStatement)
+		)
+	) */
 	private int matchStatement(int lookahead) {
 		lookahead = matchStatement_1(lookahead);
 		if (lookahead == -1)
@@ -10774,41 +8370,26 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				LookAhead(
-					NonTerminal(ModifiersNoDefault)
-					Choice(
-						Terminal("CLASS")
-						Terminal("INTERFACE")
-					)
+		Sequence(
+			LookAhead(
+				NonTerminal(ModifiersNoDefault)
+				Choice(
+					Terminal("CLASS")
+					Terminal("INTERFACE")
 				)
-				Action({
-					run();
-				})
-				Action({
-					run();
-				})
-				NonTerminal(modifiers, ModifiersNoDefault)
-				NonTerminal(typeDecl, ClassOrInterfaceDecl)
-				Action({
-					ret = dress(STypeDeclarationStmt.make(typeDecl));
-				})
 			)
-			Sequence(
-				LookAhead(
-					NonTerminal(VariableDeclExpression)
-				)
-				Action({
-					run();
-				})
-				NonTerminal(expr, VariableDeclExpression)
-				Terminal("SEMICOLON")
-				Action({
-					ret = dress(SExpressionStmt.make(expr));
-				})
+			NonTerminal(modifiers, ModifiersNoDefault)
+			NonTerminal(typeDecl, ClassOrInterfaceDecl)
+		)
+		Sequence(
+			LookAhead(
+				NonTerminal(VariableDeclExpression)
 			)
-			NonTerminal(ret, Statement)
-		) */
+			NonTerminal(expr, VariableDeclExpression)
+			Terminal("SEMICOLON")
+		)
+		NonTerminal(ret, Statement)
+	) */
 	private int matchBlockStatement_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchBlockStatement_1_1(lookahead);
@@ -10824,46 +8405,28 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					LookAhead(
-						NonTerminal(ModifiersNoDefault)
-						Choice(
-							Terminal("CLASS")
-							Terminal("INTERFACE")
-						)
+		Choice(
+			Sequence(
+				LookAhead(
+					NonTerminal(ModifiersNoDefault)
+					Choice(
+						Terminal("CLASS")
+						Terminal("INTERFACE")
 					)
-					Action({
-						run();
-					})
-					Action({
-						run();
-					})
-					NonTerminal(modifiers, ModifiersNoDefault)
-					NonTerminal(typeDecl, ClassOrInterfaceDecl)
-					Action({
-						ret = dress(STypeDeclarationStmt.make(typeDecl));
-					})
 				)
-				Sequence(
-					LookAhead(
-						NonTerminal(VariableDeclExpression)
-					)
-					Action({
-						run();
-					})
-					NonTerminal(expr, VariableDeclExpression)
-					Terminal("SEMICOLON")
-					Action({
-						ret = dress(SExpressionStmt.make(expr));
-					})
-				)
-				NonTerminal(ret, Statement)
+				NonTerminal(modifiers, ModifiersNoDefault)
+				NonTerminal(typeDecl, ClassOrInterfaceDecl)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			Sequence(
+				LookAhead(
+					NonTerminal(VariableDeclExpression)
+				)
+				NonTerminal(expr, VariableDeclExpression)
+				Terminal("SEMICOLON")
+			)
+			NonTerminal(ret, Statement)
+		)
+	) */
 	private int matchBlockStatement(int lookahead) {
 		lookahead = matchBlockStatement_1(lookahead);
 		if (lookahead == -1)
@@ -10872,11 +8435,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(stmt, BlockStatement)
-			Action({
-				ret = append(ret, stmt);
-			})
-		) */
+		NonTerminal(stmt, BlockStatement)
+	) */
 	private int matchStatements_1_1_2_1_1(int lookahead) {
 		lookahead = matchBlockStatement(lookahead);
 		if (lookahead == -1)
@@ -10885,11 +8445,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* OneOrMore(
-			NonTerminal(stmt, BlockStatement)
-			Action({
-				ret = append(ret, stmt);
-			})
-		) */
+		NonTerminal(stmt, BlockStatement)
+	) */
 	private int matchStatements_1_1_2_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchStatements_1_1_2_1_1(lookahead);
@@ -10903,10 +8460,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			NonTerminal(ret, NodeListVar)
-		) */
+		LookAhead({ quotesMode })
+		NonTerminal(ret, NodeListVar)
+	) */
 	private int matchStatements_1_1_2_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -10918,18 +8474,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			OneOrMore(
-				NonTerminal(stmt, BlockStatement)
-				Action({
-					ret = append(ret, stmt);
-				})
-			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				NonTerminal(ret, NodeListVar)
-			)
-		) */
+		OneOrMore(
+			NonTerminal(stmt, BlockStatement)
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			NonTerminal(ret, NodeListVar)
+		)
+	) */
 	private int matchStatements_1_1_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchStatements_1_1_2_1(lookahead);
@@ -10942,21 +8494,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Choice(
-				OneOrMore(
-					NonTerminal(stmt, BlockStatement)
-					Action({
-						ret = append(ret, stmt);
-					})
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
-				)
+		LookAhead(2)
+		Choice(
+			OneOrMore(
+				NonTerminal(stmt, BlockStatement)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchStatements_1_1(int lookahead) {
 		lookahead = matchStatements_1_1_2(lookahead);
 		if (lookahead == -1)
@@ -10965,21 +8513,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			Choice(
-				OneOrMore(
-					NonTerminal(stmt, BlockStatement)
-					Action({
-						ret = append(ret, stmt);
-					})
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
-				)
+		LookAhead(2)
+		Choice(
+			OneOrMore(
+				NonTerminal(stmt, BlockStatement)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchStatements_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchStatements_1_1(lookahead);
@@ -10989,26 +8533,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				LookAhead(2)
-				Choice(
-					OneOrMore(
-						NonTerminal(stmt, BlockStatement)
-						Action({
-							ret = append(ret, stmt);
-						})
-					)
-					Sequence(
-						LookAhead(						quotesMode
-	)
-						NonTerminal(ret, NodeListVar)
-					)
+		ZeroOrOne(
+			LookAhead(2)
+			Choice(
+				OneOrMore(
+					NonTerminal(stmt, BlockStatement)
+				)
+				Sequence(
+					LookAhead({ quotesMode })
+					NonTerminal(ret, NodeListVar)
 				)
 			)
-			Action({
-				return ensureNotNull(ret);
-			})
-		) */
+		)
+	) */
 	private int matchStatements(int lookahead) {
 		lookahead = matchStatements_1(lookahead);
 		if (lookahead == -1)
@@ -11017,16 +8554,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("LBRACE")
-			NonTerminal(stmts, Statements)
-			Terminal("RBRACE")
-			Action({
-				return dress(SBlockStmt.make(ensureNotNull(stmts)));
-			})
-		) */
+		Terminal("LBRACE")
+		NonTerminal(stmts, Statements)
+		Terminal("RBRACE")
+	) */
 	private int matchBlock(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LBRACE);
 		if (lookahead == -1)
@@ -11041,11 +8572,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(block, Block)
-			Action({
-				ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
-			})
-		) */
+		NonTerminal(block, Block)
+	) */
 	private int matchLambdaBody_1_2(int lookahead) {
 		lookahead = matchBlock(lookahead);
 		if (lookahead == -1)
@@ -11054,19 +8582,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				NonTerminal(expr, Expression)
-				Action({
-					ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr)));
-				})
-			)
-			Sequence(
-				NonTerminal(block, Block)
-				Action({
-					ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
-				})
-			)
-		) */
+		Sequence(
+			NonTerminal(expr, Expression)
+		)
+		Sequence(
+			NonTerminal(block, Block)
+		)
+	) */
 	private int matchLambdaBody_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchLambdaBody_1_1(lookahead);
@@ -11079,24 +8601,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					NonTerminal(expr, Expression)
-					Action({
-						ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr)));
-					})
-				)
-				Sequence(
-					NonTerminal(block, Block)
-					Action({
-						ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
-					})
-				)
+		Choice(
+			Sequence(
+				NonTerminal(expr, Expression)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			Sequence(
+				NonTerminal(block, Block)
+			)
+		)
+	) */
 	private int matchLambdaBody(int lookahead) {
 		lookahead = matchLambdaBody_1(lookahead);
 		if (lookahead == -1)
@@ -11105,17 +8618,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Name)
-				Terminal("ARROW")
-			)
-			Action({
-				run();
-			})
-			NonTerminal(ret, Name)
+		LookAhead(
+			NonTerminal(Name)
 			Terminal("ARROW")
-			NonTerminal(ret, LambdaBody)
-		) */
+		)
+		NonTerminal(ret, Name)
+		Terminal("ARROW")
+		NonTerminal(ret, LambdaBody)
+	) */
 	private int matchExpression_1_1(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -11130,19 +8640,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				Terminal("LPAREN")
-				Terminal("RPAREN")
-				Terminal("ARROW")
-			)
-			Action({
-				run();
-			})
+		LookAhead(
 			Terminal("LPAREN")
 			Terminal("RPAREN")
 			Terminal("ARROW")
-			NonTerminal(ret, LambdaBody)
-		) */
+		)
+		Terminal("LPAREN")
+		Terminal("RPAREN")
+		Terminal("ARROW")
+		NonTerminal(ret, LambdaBody)
+	) */
 	private int matchExpression_1_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LPAREN);
 		if (lookahead == -1)
@@ -11160,21 +8667,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				Terminal("LPAREN")
-				NonTerminal(Name)
-				Terminal("RPAREN")
-				Terminal("ARROW")
-			)
-			Action({
-				run();
-			})
+		LookAhead(
 			Terminal("LPAREN")
-			NonTerminal(ret, Name)
+			NonTerminal(Name)
 			Terminal("RPAREN")
 			Terminal("ARROW")
-			NonTerminal(ret, LambdaBody)
-		) */
+		)
+		Terminal("LPAREN")
+		NonTerminal(ret, Name)
+		Terminal("RPAREN")
+		Terminal("ARROW")
+		NonTerminal(ret, LambdaBody)
+	) */
 	private int matchExpression_1_3(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LPAREN);
 		if (lookahead == -1)
@@ -11195,11 +8699,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(name, Name)
-			Action({
-				return makeFormalParameter(name);
-			})
-		) */
+		NonTerminal(name, Name)
+	) */
 	private int matchInferredFormalParameter(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -11208,12 +8709,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			NonTerminal(param, InferredFormalParameter)
-			Action({
-				ret = append(ret, param);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(param, InferredFormalParameter)
+	) */
 	private int matchInferredFormalParameterList_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -11225,12 +8723,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("COMMA")
-			NonTerminal(param, InferredFormalParameter)
-			Action({
-				ret = append(ret, param);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(param, InferredFormalParameter)
+	) */
 	private int matchInferredFormalParameterList_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchInferredFormalParameterList_3_1(lookahead);
@@ -11242,21 +8737,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(param, InferredFormalParameter)
+		ZeroOrMore(
+			Terminal("COMMA")
 			NonTerminal(param, InferredFormalParameter)
-			Action({
-				ret = append(ret, param);
-			})
-			ZeroOrMore(
-				Terminal("COMMA")
-				NonTerminal(param, InferredFormalParameter)
-				Action({
-					ret = append(ret, param);
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchInferredFormalParameterList(int lookahead) {
 		lookahead = matchInferredFormalParameter(lookahead);
 		if (lookahead == -1)
@@ -11268,20 +8754,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				Terminal("LPAREN")
-				NonTerminal(Name)
-				Terminal("COMMA")
-			)
-			Action({
-				run();
-			})
+		LookAhead(
 			Terminal("LPAREN")
-			NonTerminal(params, InferredFormalParameterList)
-			Terminal("RPAREN")
-			Terminal("ARROW")
-			NonTerminal(ret, LambdaBody)
-		) */
+			NonTerminal(Name)
+			Terminal("COMMA")
+		)
+		Terminal("LPAREN")
+		NonTerminal(params, InferredFormalParameterList)
+		Terminal("RPAREN")
+		Terminal("ARROW")
+		NonTerminal(ret, LambdaBody)
+	) */
 	private int matchExpression_1_4(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LPAREN);
 		if (lookahead == -1)
@@ -11302,16 +8785,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			NonTerminal(op, AssignmentOperator)
-			NonTerminal(value, Expression)
-			Action({
-				ret = dress(SAssignExpr.make(ret, op, value));
-			})
-		) */
+		LookAhead(2)
+		NonTerminal(op, AssignmentOperator)
+		NonTerminal(value, Expression)
+	) */
 	private int matchExpression_1_5_2_1(int lookahead) {
 		lookahead = matchAssignmentOperator(lookahead);
 		if (lookahead == -1)
@@ -11323,16 +8800,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			NonTerminal(op, AssignmentOperator)
-			NonTerminal(value, Expression)
-			Action({
-				ret = dress(SAssignExpr.make(ret, op, value));
-			})
-		) */
+		LookAhead(2)
+		NonTerminal(op, AssignmentOperator)
+		NonTerminal(value, Expression)
+	) */
 	private int matchExpression_1_5_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchExpression_1_5_2_1(lookahead);
@@ -11342,19 +8813,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, ConditionalExpression)
-			ZeroOrOne(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				NonTerminal(op, AssignmentOperator)
-				NonTerminal(value, Expression)
-				Action({
-					ret = dress(SAssignExpr.make(ret, op, value));
-				})
-			)
-		) */
+		NonTerminal(ret, ConditionalExpression)
+		ZeroOrOne(
+			LookAhead(2)
+			NonTerminal(op, AssignmentOperator)
+			NonTerminal(value, Expression)
+		)
+	) */
 	private int matchExpression_1_5(int lookahead) {
 		lookahead = matchConditionalExpression(lookahead);
 		if (lookahead == -1)
@@ -11366,78 +8831,60 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				LookAhead(
-					NonTerminal(Name)
-					Terminal("ARROW")
-				)
-				Action({
-					run();
-				})
-				NonTerminal(ret, Name)
+		Sequence(
+			LookAhead(
+				NonTerminal(Name)
 				Terminal("ARROW")
-				NonTerminal(ret, LambdaBody)
 			)
-			Sequence(
-				LookAhead(
-					Terminal("LPAREN")
-					Terminal("RPAREN")
-					Terminal("ARROW")
-				)
-				Action({
-					run();
-				})
+			NonTerminal(ret, Name)
+			Terminal("ARROW")
+			NonTerminal(ret, LambdaBody)
+		)
+		Sequence(
+			LookAhead(
 				Terminal("LPAREN")
 				Terminal("RPAREN")
 				Terminal("ARROW")
-				NonTerminal(ret, LambdaBody)
 			)
-			Sequence(
-				LookAhead(
-					Terminal("LPAREN")
-					NonTerminal(Name)
-					Terminal("RPAREN")
-					Terminal("ARROW")
-				)
-				Action({
-					run();
-				})
+			Terminal("LPAREN")
+			Terminal("RPAREN")
+			Terminal("ARROW")
+			NonTerminal(ret, LambdaBody)
+		)
+		Sequence(
+			LookAhead(
 				Terminal("LPAREN")
-				NonTerminal(ret, Name)
+				NonTerminal(Name)
 				Terminal("RPAREN")
 				Terminal("ARROW")
-				NonTerminal(ret, LambdaBody)
 			)
-			Sequence(
-				LookAhead(
-					Terminal("LPAREN")
-					NonTerminal(Name)
-					Terminal("COMMA")
-				)
-				Action({
-					run();
-				})
+			Terminal("LPAREN")
+			NonTerminal(ret, Name)
+			Terminal("RPAREN")
+			Terminal("ARROW")
+			NonTerminal(ret, LambdaBody)
+		)
+		Sequence(
+			LookAhead(
 				Terminal("LPAREN")
-				NonTerminal(params, InferredFormalParameterList)
-				Terminal("RPAREN")
-				Terminal("ARROW")
-				NonTerminal(ret, LambdaBody)
+				NonTerminal(Name)
+				Terminal("COMMA")
 			)
-			Sequence(
-				NonTerminal(ret, ConditionalExpression)
-				ZeroOrOne(
-					LookAhead(2)
-					Action({
-						lateRun();
-					})
-					NonTerminal(op, AssignmentOperator)
-					NonTerminal(value, Expression)
-					Action({
-						ret = dress(SAssignExpr.make(ret, op, value));
-					})
-				)
+			Terminal("LPAREN")
+			NonTerminal(params, InferredFormalParameterList)
+			Terminal("RPAREN")
+			Terminal("ARROW")
+			NonTerminal(ret, LambdaBody)
+		)
+		Sequence(
+			NonTerminal(ret, ConditionalExpression)
+			ZeroOrOne(
+				LookAhead(2)
+				NonTerminal(op, AssignmentOperator)
+				NonTerminal(value, Expression)
 			)
-		) */
+		)
+	) */
 	private int matchExpression_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchExpression_1_1(lookahead);
@@ -11459,83 +8906,62 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					LookAhead(
-						NonTerminal(Name)
-						Terminal("ARROW")
-					)
-					Action({
-						run();
-					})
-					NonTerminal(ret, Name)
+		Choice(
+			Sequence(
+				LookAhead(
+					NonTerminal(Name)
 					Terminal("ARROW")
-					NonTerminal(ret, LambdaBody)
 				)
-				Sequence(
-					LookAhead(
-						Terminal("LPAREN")
-						Terminal("RPAREN")
-						Terminal("ARROW")
-					)
-					Action({
-						run();
-					})
+				NonTerminal(ret, Name)
+				Terminal("ARROW")
+				NonTerminal(ret, LambdaBody)
+			)
+			Sequence(
+				LookAhead(
 					Terminal("LPAREN")
 					Terminal("RPAREN")
 					Terminal("ARROW")
-					NonTerminal(ret, LambdaBody)
 				)
-				Sequence(
-					LookAhead(
-						Terminal("LPAREN")
-						NonTerminal(Name)
-						Terminal("RPAREN")
-						Terminal("ARROW")
-					)
-					Action({
-						run();
-					})
+				Terminal("LPAREN")
+				Terminal("RPAREN")
+				Terminal("ARROW")
+				NonTerminal(ret, LambdaBody)
+			)
+			Sequence(
+				LookAhead(
 					Terminal("LPAREN")
-					NonTerminal(ret, Name)
+					NonTerminal(Name)
 					Terminal("RPAREN")
 					Terminal("ARROW")
-					NonTerminal(ret, LambdaBody)
 				)
-				Sequence(
-					LookAhead(
-						Terminal("LPAREN")
-						NonTerminal(Name)
-						Terminal("COMMA")
-					)
-					Action({
-						run();
-					})
+				Terminal("LPAREN")
+				NonTerminal(ret, Name)
+				Terminal("RPAREN")
+				Terminal("ARROW")
+				NonTerminal(ret, LambdaBody)
+			)
+			Sequence(
+				LookAhead(
 					Terminal("LPAREN")
-					NonTerminal(params, InferredFormalParameterList)
-					Terminal("RPAREN")
-					Terminal("ARROW")
-					NonTerminal(ret, LambdaBody)
+					NonTerminal(Name)
+					Terminal("COMMA")
 				)
-				Sequence(
-					NonTerminal(ret, ConditionalExpression)
-					ZeroOrOne(
-						LookAhead(2)
-						Action({
-							lateRun();
-						})
-						NonTerminal(op, AssignmentOperator)
-						NonTerminal(value, Expression)
-						Action({
-							ret = dress(SAssignExpr.make(ret, op, value));
-						})
-					)
+				Terminal("LPAREN")
+				NonTerminal(params, InferredFormalParameterList)
+				Terminal("RPAREN")
+				Terminal("ARROW")
+				NonTerminal(ret, LambdaBody)
+			)
+			Sequence(
+				NonTerminal(ret, ConditionalExpression)
+				ZeroOrOne(
+					LookAhead(2)
+					NonTerminal(op, AssignmentOperator)
+					NonTerminal(value, Expression)
 				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchExpression(int lookahead) {
 		lookahead = matchExpression_1(lookahead);
 		if (lookahead == -1)
@@ -11544,12 +8970,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			NonTerminal(expr, Expression)
-			Action({
-				ret = append(ret, expr);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(expr, Expression)
+	) */
 	private int matchArguments_2_1_1_1_4_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -11561,12 +8984,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("COMMA")
-			NonTerminal(expr, Expression)
-			Action({
-				ret = append(ret, expr);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(expr, Expression)
+	) */
 	private int matchArguments_2_1_1_1_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchArguments_2_1_1_1_4_1(lookahead);
@@ -11578,19 +8998,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(1)
+		LookAhead(1)
+		NonTerminal(expr, Expression)
+		ZeroOrMore(
+			Terminal("COMMA")
 			NonTerminal(expr, Expression)
-			Action({
-				ret = append(ret, expr);
-			})
-			ZeroOrMore(
-				Terminal("COMMA")
-				NonTerminal(expr, Expression)
-				Action({
-					ret = append(ret, expr);
-				})
-			)
-		) */
+		)
+	) */
 	private int matchArguments_2_1_1_1(int lookahead) {
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
@@ -11602,10 +9016,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			quotesMode
-	)
-			NonTerminal(ret, NodeListVar)
-		) */
+		LookAhead({ quotesMode })
+		NonTerminal(ret, NodeListVar)
+	) */
 	private int matchArguments_2_1_1_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
@@ -11617,26 +9030,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				LookAhead(1)
+		Sequence(
+			LookAhead(1)
+			NonTerminal(expr, Expression)
+			ZeroOrMore(
+				Terminal("COMMA")
 				NonTerminal(expr, Expression)
-				Action({
-					ret = append(ret, expr);
-				})
-				ZeroOrMore(
-					Terminal("COMMA")
-					NonTerminal(expr, Expression)
-					Action({
-						ret = append(ret, expr);
-					})
-				)
 			)
-			Sequence(
-				LookAhead(				quotesMode
-	)
-				NonTerminal(ret, NodeListVar)
-			)
-		) */
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			NonTerminal(ret, NodeListVar)
+		)
+	) */
 	private int matchArguments_2_1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchArguments_2_1_1_1(lookahead);
@@ -11649,28 +9055,21 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					LookAhead(1)
+		Choice(
+			Sequence(
+				LookAhead(1)
+				NonTerminal(expr, Expression)
+				ZeroOrMore(
+					Terminal("COMMA")
 					NonTerminal(expr, Expression)
-					Action({
-						ret = append(ret, expr);
-					})
-					ZeroOrMore(
-						Terminal("COMMA")
-						NonTerminal(expr, Expression)
-						Action({
-							ret = append(ret, expr);
-						})
-					)
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
 				)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchArguments_2_1(int lookahead) {
 		lookahead = matchArguments_2_1_1(lookahead);
 		if (lookahead == -1)
@@ -11679,28 +9078,21 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Choice(
-				Sequence(
-					LookAhead(1)
+		Choice(
+			Sequence(
+				LookAhead(1)
+				NonTerminal(expr, Expression)
+				ZeroOrMore(
+					Terminal("COMMA")
 					NonTerminal(expr, Expression)
-					Action({
-						ret = append(ret, expr);
-					})
-					ZeroOrMore(
-						Terminal("COMMA")
-						NonTerminal(expr, Expression)
-						Action({
-							ret = append(ret, expr);
-						})
-					)
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
 				)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchArguments_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchArguments_2_1(lookahead);
@@ -11710,35 +9102,25 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LPAREN")
-			ZeroOrOne(
-				Choice(
-					Sequence(
-						LookAhead(1)
+		Terminal("LPAREN")
+		ZeroOrOne(
+			Choice(
+				Sequence(
+					LookAhead(1)
+					NonTerminal(expr, Expression)
+					ZeroOrMore(
+						Terminal("COMMA")
 						NonTerminal(expr, Expression)
-						Action({
-							ret = append(ret, expr);
-						})
-						ZeroOrMore(
-							Terminal("COMMA")
-							NonTerminal(expr, Expression)
-							Action({
-								ret = append(ret, expr);
-							})
-						)
-					)
-					Sequence(
-						LookAhead(						quotesMode
-	)
-						NonTerminal(ret, NodeListVar)
 					)
 				)
+				Sequence(
+					LookAhead({ quotesMode })
+					NonTerminal(ret, NodeListVar)
+				)
 			)
-			Terminal("RPAREN")
-			Action({
-				return ret;
-			})
-		) */
+		)
+		Terminal("RPAREN")
+	) */
 	private int matchArguments(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LPAREN);
 		if (lookahead == -1)
@@ -11753,15 +9135,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				NonTerminal(typeArgs, TypeArguments)
-			)
-			NonTerminal(name, Name)
-			NonTerminal(args, Arguments)
-			Action({
-				return dress(SMethodInvocationExpr.make(optionOf(scope), ensureNotNull(typeArgs), name, args));
-			})
-		) */
+		ZeroOrOne(
+			NonTerminal(typeArgs, TypeArguments)
+		)
+		NonTerminal(name, Name)
+		NonTerminal(args, Arguments)
+	) */
 	private int matchMethodInvocation(int lookahead) {
 		lookahead = matchMethodInvocation_1(lookahead);
 		if (lookahead == -1)
@@ -11776,15 +9155,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				ZeroOrOne(
-					NonTerminal(TypeArguments)
-				)
-				NonTerminal(Name)
-				Terminal("LPAREN")
+		LookAhead(
+			ZeroOrOne(
+				NonTerminal(TypeArguments)
 			)
-			NonTerminal(ret, MethodInvocation)
-		) */
+			NonTerminal(Name)
+			Terminal("LPAREN")
+		)
+		NonTerminal(ret, MethodInvocation)
+	) */
 	private int matchPrimaryPrefix_1_3_4_1_3_1(int lookahead) {
 		lookahead = matchMethodInvocation(lookahead);
 		if (lookahead == -1)
@@ -11793,18 +9172,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				LookAhead(
-					ZeroOrOne(
-						NonTerminal(TypeArguments)
-					)
-					NonTerminal(Name)
-					Terminal("LPAREN")
+		Sequence(
+			LookAhead(
+				ZeroOrOne(
+					NonTerminal(TypeArguments)
 				)
-				NonTerminal(ret, MethodInvocation)
+				NonTerminal(Name)
+				Terminal("LPAREN")
 			)
-			NonTerminal(ret, FieldAccess)
-		) */
+			NonTerminal(ret, MethodInvocation)
+		)
+		NonTerminal(ret, FieldAccess)
+	) */
 	private int matchPrimaryPrefix_1_3_4_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrimaryPrefix_1_3_4_1_3_1(lookahead);
@@ -11817,24 +9196,21 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				lateRun();
-			})
-			Terminal("DOT")
-			Choice(
-				Sequence(
-					LookAhead(
-						ZeroOrOne(
-							NonTerminal(TypeArguments)
-						)
-						NonTerminal(Name)
-						Terminal("LPAREN")
+		Terminal("DOT")
+		Choice(
+			Sequence(
+				LookAhead(
+					ZeroOrOne(
+						NonTerminal(TypeArguments)
 					)
-					NonTerminal(ret, MethodInvocation)
+					NonTerminal(Name)
+					Terminal("LPAREN")
 				)
-				NonTerminal(ret, FieldAccess)
+				NonTerminal(ret, MethodInvocation)
 			)
-		) */
+			NonTerminal(ret, FieldAccess)
+		)
+	) */
 	private int matchPrimaryPrefix_1_3_4_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.DOT);
 		if (lookahead == -1)
@@ -11846,8 +9222,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(typeArgs, TypeArguments)
-		) */
+		NonTerminal(typeArgs, TypeArguments)
+	) */
 	private int matchMethodReferenceSuffix_2_1(int lookahead) {
 		lookahead = matchTypeArguments(lookahead);
 		if (lookahead == -1)
@@ -11856,8 +9232,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(typeArgs, TypeArguments)
-		) */
+		NonTerminal(typeArgs, TypeArguments)
+	) */
 	private int matchMethodReferenceSuffix_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchMethodReferenceSuffix_2_1(lookahead);
@@ -11867,11 +9243,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("NEW")
-			Action({
-				name = SName.make("new");
-			})
-		) */
+		Terminal("NEW")
+	) */
 	private int matchMethodReferenceSuffix_3_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.NEW);
 		if (lookahead == -1)
@@ -11880,14 +9253,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			NonTerminal(name, Name)
-			Sequence(
-				Terminal("NEW")
-				Action({
-					name = SName.make("new");
-				})
-			)
-		) */
+		NonTerminal(name, Name)
+		Sequence(
+			Terminal("NEW")
+		)
+	) */
 	private int matchMethodReferenceSuffix_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchName(lookahead);
@@ -11900,26 +9270,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("DOUBLECOLON")
-			ZeroOrOne(
-				NonTerminal(typeArgs, TypeArguments)
+		Terminal("DOUBLECOLON")
+		ZeroOrOne(
+			NonTerminal(typeArgs, TypeArguments)
+		)
+		Choice(
+			NonTerminal(name, Name)
+			Sequence(
+				Terminal("NEW")
 			)
-			Choice(
-				NonTerminal(name, Name)
-				Sequence(
-					Terminal("NEW")
-					Action({
-						name = SName.make("new");
-					})
-				)
-			)
-			Action({
-				ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name));
-			})
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchMethodReferenceSuffix(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.DOUBLECOLON);
 		if (lookahead == -1)
@@ -11934,11 +9295,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				lateRun();
-			})
-			NonTerminal(ret, MethodReferenceSuffix)
-		) */
+		NonTerminal(ret, MethodReferenceSuffix)
+	) */
 	private int matchPrimaryPrefix_1_3_4_2(int lookahead) {
 		lookahead = matchMethodReferenceSuffix(lookahead);
 		if (lookahead == -1)
@@ -11947,10 +9305,41 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
+		Sequence(
+			Terminal("DOT")
+			Choice(
+				Sequence(
+					LookAhead(
+						ZeroOrOne(
+							NonTerminal(TypeArguments)
+						)
+						NonTerminal(Name)
+						Terminal("LPAREN")
+					)
+					NonTerminal(ret, MethodInvocation)
+				)
+				NonTerminal(ret, FieldAccess)
+			)
+		)
+		Sequence(
+			NonTerminal(ret, MethodReferenceSuffix)
+		)
+	) */
+	private int matchPrimaryPrefix_1_3_4(int lookahead) {
+		int newLookahead;
+		newLookahead = matchPrimaryPrefix_1_3_4_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchPrimaryPrefix_1_3_4_2(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
+	}
+
+	/* Sequence(
+		Terminal("SUPER")
+		Choice(
 			Sequence(
-				Action({
-					lateRun();
-				})
 				Terminal("DOT")
 				Choice(
 					Sequence(
@@ -11967,59 +9356,10 @@ public class ParserImplementation extends ParserNewBase {
 				)
 			)
 			Sequence(
-				Action({
-					lateRun();
-				})
 				NonTerminal(ret, MethodReferenceSuffix)
 			)
-		) */
-	private int matchPrimaryPrefix_1_3_4(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimaryPrefix_1_3_4_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_3_4_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("SUPER")
-			Action({
-				ret = dress(SSuperExpr.make(none()));
-			})
-			Choice(
-				Sequence(
-					Action({
-						lateRun();
-					})
-					Terminal("DOT")
-					Choice(
-						Sequence(
-							LookAhead(
-								ZeroOrOne(
-									NonTerminal(TypeArguments)
-								)
-								NonTerminal(Name)
-								Terminal("LPAREN")
-							)
-							NonTerminal(ret, MethodInvocation)
-						)
-						NonTerminal(ret, FieldAccess)
-					)
-				)
-				Sequence(
-					Action({
-						lateRun();
-					})
-					NonTerminal(ret, MethodReferenceSuffix)
-				)
-			)
-		) */
+		)
+	) */
 	private int matchPrimaryPrefix_1_3(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SUPER);
 		if (lookahead == -1)
@@ -12031,21 +9371,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(ResultType)
-				Terminal("DOT")
-				Terminal("CLASS")
-			)
-			Action({
-				run();
-			})
-			NonTerminal(type, ResultType)
+		LookAhead(
+			NonTerminal(ResultType)
 			Terminal("DOT")
 			Terminal("CLASS")
-			Action({
-				ret = dress(SClassExpr.make(type));
-			})
-		) */
+		)
+		NonTerminal(type, ResultType)
+		Terminal("DOT")
+		Terminal("CLASS")
+	) */
 	private int matchPrimaryPrefix_1_5(int lookahead) {
 		lookahead = matchResultType(lookahead);
 		if (lookahead == -1)
@@ -12060,19 +9394,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(ResultType)
-				Terminal("DOUBLECOLON")
-			)
-			Action({
-				run();
-			})
-			NonTerminal(type, ResultType)
-			Action({
-				ret = STypeExpr.make(type);
-			})
-			NonTerminal(ret, MethodReferenceSuffix)
-		) */
+		LookAhead(
+			NonTerminal(ResultType)
+			Terminal("DOUBLECOLON")
+		)
+		NonTerminal(type, ResultType)
+		NonTerminal(ret, MethodReferenceSuffix)
+	) */
 	private int matchPrimaryPrefix_1_6(int lookahead) {
 		lookahead = matchResultType(lookahead);
 		if (lookahead == -1)
@@ -12084,18 +9412,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				ZeroOrOne(
-					NonTerminal(TypeArguments)
-				)
-				NonTerminal(Name)
-				Terminal("LPAREN")
+		LookAhead(
+			ZeroOrOne(
+				NonTerminal(TypeArguments)
 			)
-			Action({
-				run();
-			})
-			NonTerminal(ret, MethodInvocation)
-		) */
+			NonTerminal(Name)
+			Terminal("LPAREN")
+		)
+		NonTerminal(ret, MethodInvocation)
+	) */
 	private int matchPrimaryPrefix_1_7(int lookahead) {
 		lookahead = matchMethodInvocation(lookahead);
 		if (lookahead == -1)
@@ -12104,12 +9429,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				lateRun();
-			})
-			Terminal("ARROW")
-			NonTerminal(ret, LambdaBody)
-		) */
+		Terminal("ARROW")
+		NonTerminal(ret, LambdaBody)
+	) */
 	private int matchPrimaryPrefix_1_8_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.ARROW);
 		if (lookahead == -1)
@@ -12121,12 +9443,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			Action({
-				lateRun();
-			})
-			Terminal("ARROW")
-			NonTerminal(ret, LambdaBody)
-		) */
+		Terminal("ARROW")
+		NonTerminal(ret, LambdaBody)
+	) */
 	private int matchPrimaryPrefix_1_8_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrimaryPrefix_1_8_2_1(lookahead);
@@ -12136,15 +9455,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, Name)
-			ZeroOrOne(
-				Action({
-					lateRun();
-				})
-				Terminal("ARROW")
-				NonTerminal(ret, LambdaBody)
-			)
-		) */
+		NonTerminal(ret, Name)
+		ZeroOrOne(
+			Terminal("ARROW")
+			NonTerminal(ret, LambdaBody)
+		)
+	) */
 	private int matchPrimaryPrefix_1_8(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -12156,10 +9472,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("RPAREN")
-			Terminal("ARROW")
-			NonTerminal(ret, LambdaBody)
-		) */
+		Terminal("RPAREN")
+		Terminal("ARROW")
+		NonTerminal(ret, LambdaBody)
+	) */
 	private int matchPrimaryPrefix_1_9_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.RPAREN);
 		if (lookahead == -1)
@@ -12174,16 +9490,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Name)
-				Terminal("RPAREN")
-				Terminal("ARROW")
-			)
-			NonTerminal(ret, Name)
+		LookAhead(
+			NonTerminal(Name)
 			Terminal("RPAREN")
 			Terminal("ARROW")
-			NonTerminal(ret, LambdaBody)
-		) */
+		)
+		NonTerminal(ret, Name)
+		Terminal("RPAREN")
+		Terminal("ARROW")
+		NonTerminal(ret, LambdaBody)
+	) */
 	private int matchPrimaryPrefix_1_9_3_2(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -12201,15 +9517,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				NonTerminal(Name)
-				Terminal("COMMA")
-			)
-			NonTerminal(params, InferredFormalParameterList)
-			Terminal("RPAREN")
-			Terminal("ARROW")
-			NonTerminal(ret, LambdaBody)
-		) */
+		LookAhead(
+			NonTerminal(Name)
+			Terminal("COMMA")
+		)
+		NonTerminal(params, InferredFormalParameterList)
+		Terminal("RPAREN")
+		Terminal("ARROW")
+		NonTerminal(ret, LambdaBody)
+	) */
 	private int matchPrimaryPrefix_1_9_3_3(int lookahead) {
 		lookahead = matchInferredFormalParameterList(lookahead);
 		if (lookahead == -1)
@@ -12227,13 +9543,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			isLambda()
-	)
-			NonTerminal(params, FormalParameterList)
-			Terminal("RPAREN")
-			Terminal("ARROW")
-			NonTerminal(ret, LambdaBody)
-		) */
+		LookAhead({ isLambda() })
+		NonTerminal(params, FormalParameterList)
+		Terminal("RPAREN")
+		Terminal("ARROW")
+		NonTerminal(ret, LambdaBody)
+	) */
 	private int matchPrimaryPrefix_1_9_3_4(int lookahead) {
 		lookahead = isLambda(lookahead) ? lookahead : -1;
 		if (lookahead == -1)
@@ -12254,12 +9569,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, Expression)
-			Terminal("RPAREN")
-			Action({
-				ret = dress(SParenthesizedExpr.make(ret));
-			})
-		) */
+		NonTerminal(ret, Expression)
+		Terminal("RPAREN")
+	) */
 	private int matchPrimaryPrefix_1_9_3_5(int lookahead) {
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
@@ -12271,6 +9583,67 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
+		Sequence(
+			Terminal("RPAREN")
+			Terminal("ARROW")
+			NonTerminal(ret, LambdaBody)
+		)
+		Sequence(
+			LookAhead(
+				NonTerminal(Name)
+				Terminal("RPAREN")
+				Terminal("ARROW")
+			)
+			NonTerminal(ret, Name)
+			Terminal("RPAREN")
+			Terminal("ARROW")
+			NonTerminal(ret, LambdaBody)
+		)
+		Sequence(
+			LookAhead(
+				NonTerminal(Name)
+				Terminal("COMMA")
+			)
+			NonTerminal(params, InferredFormalParameterList)
+			Terminal("RPAREN")
+			Terminal("ARROW")
+			NonTerminal(ret, LambdaBody)
+		)
+		Sequence(
+			LookAhead({ isLambda() })
+			NonTerminal(params, FormalParameterList)
+			Terminal("RPAREN")
+			Terminal("ARROW")
+			NonTerminal(ret, LambdaBody)
+		)
+		Sequence(
+			NonTerminal(ret, Expression)
+			Terminal("RPAREN")
+		)
+	) */
+	private int matchPrimaryPrefix_1_9_3(int lookahead) {
+		int newLookahead;
+		newLookahead = matchPrimaryPrefix_1_9_3_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchPrimaryPrefix_1_9_3_2(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchPrimaryPrefix_1_9_3_3(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchPrimaryPrefix_1_9_3_4(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchPrimaryPrefix_1_9_3_5(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
+	}
+
+	/* Sequence(
+		Terminal("LPAREN")
+		Choice(
 			Sequence(
 				Terminal("RPAREN")
 				Terminal("ARROW")
@@ -12298,8 +9671,7 @@ public class ParserImplementation extends ParserNewBase {
 				NonTerminal(ret, LambdaBody)
 			)
 			Sequence(
-				LookAhead(				isLambda()
-	)
+				LookAhead({ isLambda() })
 				NonTerminal(params, FormalParameterList)
 				Terminal("RPAREN")
 				Terminal("ARROW")
@@ -12308,35 +9680,85 @@ public class ParserImplementation extends ParserNewBase {
 			Sequence(
 				NonTerminal(ret, Expression)
 				Terminal("RPAREN")
-				Action({
-					ret = dress(SParenthesizedExpr.make(ret));
-				})
 			)
-		) */
-	private int matchPrimaryPrefix_1_9_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchPrimaryPrefix_1_9_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_9_3_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_9_3_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_9_3_4(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchPrimaryPrefix_1_9_3_5(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
+		)
+	) */
+	private int matchPrimaryPrefix_1_9(int lookahead) {
+		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		if (lookahead == -1)
+			return -1;
+		lookahead = matchPrimaryPrefix_1_9_3(lookahead);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
 	}
 
-	/* Sequence(
-			Action({
-				run();
-			})
+	/* Choice(
+		NonTerminal(ret, Literal)
+		Sequence(
+			Terminal("THIS")
+		)
+		Sequence(
+			Terminal("SUPER")
+			Choice(
+				Sequence(
+					Terminal("DOT")
+					Choice(
+						Sequence(
+							LookAhead(
+								ZeroOrOne(
+									NonTerminal(TypeArguments)
+								)
+								NonTerminal(Name)
+								Terminal("LPAREN")
+							)
+							NonTerminal(ret, MethodInvocation)
+						)
+						NonTerminal(ret, FieldAccess)
+					)
+				)
+				Sequence(
+					NonTerminal(ret, MethodReferenceSuffix)
+				)
+			)
+		)
+		NonTerminal(ret, AllocationExpression)
+		Sequence(
+			LookAhead(
+				NonTerminal(ResultType)
+				Terminal("DOT")
+				Terminal("CLASS")
+			)
+			NonTerminal(type, ResultType)
+			Terminal("DOT")
+			Terminal("CLASS")
+		)
+		Sequence(
+			LookAhead(
+				NonTerminal(ResultType)
+				Terminal("DOUBLECOLON")
+			)
+			NonTerminal(type, ResultType)
+			NonTerminal(ret, MethodReferenceSuffix)
+		)
+		Sequence(
+			LookAhead(
+				ZeroOrOne(
+					NonTerminal(TypeArguments)
+				)
+				NonTerminal(Name)
+				Terminal("LPAREN")
+			)
+			NonTerminal(ret, MethodInvocation)
+		)
+		Sequence(
+			NonTerminal(ret, Name)
+			ZeroOrOne(
+				Terminal("ARROW")
+				NonTerminal(ret, LambdaBody)
+			)
+		)
+		Sequence(
 			Terminal("LPAREN")
 			Choice(
 				Sequence(
@@ -12366,8 +9788,7 @@ public class ParserImplementation extends ParserNewBase {
 					NonTerminal(ret, LambdaBody)
 				)
 				Sequence(
-					LookAhead(					isLambda()
-	)
+					LookAhead({ isLambda() })
 					NonTerminal(params, FormalParameterList)
 					Terminal("RPAREN")
 					Terminal("ARROW")
@@ -12376,173 +9797,10 @@ public class ParserImplementation extends ParserNewBase {
 				Sequence(
 					NonTerminal(ret, Expression)
 					Terminal("RPAREN")
-					Action({
-						ret = dress(SParenthesizedExpr.make(ret));
-					})
 				)
 			)
-		) */
-	private int matchPrimaryPrefix_1_9(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchPrimaryPrefix_1_9_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* Choice(
-			NonTerminal(ret, Literal)
-			Sequence(
-				Action({
-					run();
-				})
-				Terminal("THIS")
-				Action({
-					ret = dress(SThisExpr.make(none()));
-				})
-			)
-			Sequence(
-				Action({
-					run();
-				})
-				Terminal("SUPER")
-				Action({
-					ret = dress(SSuperExpr.make(none()));
-				})
-				Choice(
-					Sequence(
-						Action({
-							lateRun();
-						})
-						Terminal("DOT")
-						Choice(
-							Sequence(
-								LookAhead(
-									ZeroOrOne(
-										NonTerminal(TypeArguments)
-									)
-									NonTerminal(Name)
-									Terminal("LPAREN")
-								)
-								NonTerminal(ret, MethodInvocation)
-							)
-							NonTerminal(ret, FieldAccess)
-						)
-					)
-					Sequence(
-						Action({
-							lateRun();
-						})
-						NonTerminal(ret, MethodReferenceSuffix)
-					)
-				)
-			)
-			NonTerminal(ret, AllocationExpression)
-			Sequence(
-				LookAhead(
-					NonTerminal(ResultType)
-					Terminal("DOT")
-					Terminal("CLASS")
-				)
-				Action({
-					run();
-				})
-				NonTerminal(type, ResultType)
-				Terminal("DOT")
-				Terminal("CLASS")
-				Action({
-					ret = dress(SClassExpr.make(type));
-				})
-			)
-			Sequence(
-				LookAhead(
-					NonTerminal(ResultType)
-					Terminal("DOUBLECOLON")
-				)
-				Action({
-					run();
-				})
-				NonTerminal(type, ResultType)
-				Action({
-					ret = STypeExpr.make(type);
-				})
-				NonTerminal(ret, MethodReferenceSuffix)
-			)
-			Sequence(
-				LookAhead(
-					ZeroOrOne(
-						NonTerminal(TypeArguments)
-					)
-					NonTerminal(Name)
-					Terminal("LPAREN")
-				)
-				Action({
-					run();
-				})
-				NonTerminal(ret, MethodInvocation)
-			)
-			Sequence(
-				NonTerminal(ret, Name)
-				ZeroOrOne(
-					Action({
-						lateRun();
-					})
-					Terminal("ARROW")
-					NonTerminal(ret, LambdaBody)
-				)
-			)
-			Sequence(
-				Action({
-					run();
-				})
-				Terminal("LPAREN")
-				Choice(
-					Sequence(
-						Terminal("RPAREN")
-						Terminal("ARROW")
-						NonTerminal(ret, LambdaBody)
-					)
-					Sequence(
-						LookAhead(
-							NonTerminal(Name)
-							Terminal("RPAREN")
-							Terminal("ARROW")
-						)
-						NonTerminal(ret, Name)
-						Terminal("RPAREN")
-						Terminal("ARROW")
-						NonTerminal(ret, LambdaBody)
-					)
-					Sequence(
-						LookAhead(
-							NonTerminal(Name)
-							Terminal("COMMA")
-						)
-						NonTerminal(params, InferredFormalParameterList)
-						Terminal("RPAREN")
-						Terminal("ARROW")
-						NonTerminal(ret, LambdaBody)
-					)
-					Sequence(
-						LookAhead(						isLambda()
-	)
-						NonTerminal(params, FormalParameterList)
-						Terminal("RPAREN")
-						Terminal("ARROW")
-						NonTerminal(ret, LambdaBody)
-					)
-					Sequence(
-						NonTerminal(ret, Expression)
-						Terminal("RPAREN")
-						Action({
-							ret = dress(SParenthesizedExpr.make(ret));
-						})
-					)
-				)
-			)
-		) */
+		)
+	) */
 	private int matchPrimaryPrefix_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchLiteral(lookahead);
@@ -12576,161 +9834,115 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				NonTerminal(ret, Literal)
-				Sequence(
-					Action({
-						run();
-					})
-					Terminal("THIS")
-					Action({
-						ret = dress(SThisExpr.make(none()));
-					})
-				)
-				Sequence(
-					Action({
-						run();
-					})
-					Terminal("SUPER")
-					Action({
-						ret = dress(SSuperExpr.make(none()));
-					})
-					Choice(
-						Sequence(
-							Action({
-								lateRun();
-							})
-							Terminal("DOT")
-							Choice(
-								Sequence(
-									LookAhead(
-										ZeroOrOne(
-											NonTerminal(TypeArguments)
-										)
-										NonTerminal(Name)
-										Terminal("LPAREN")
-									)
-									NonTerminal(ret, MethodInvocation)
-								)
-								NonTerminal(ret, FieldAccess)
-							)
-						)
-						Sequence(
-							Action({
-								lateRun();
-							})
-							NonTerminal(ret, MethodReferenceSuffix)
-						)
-					)
-				)
-				NonTerminal(ret, AllocationExpression)
-				Sequence(
-					LookAhead(
-						NonTerminal(ResultType)
+		Choice(
+			NonTerminal(ret, Literal)
+			Sequence(
+				Terminal("THIS")
+			)
+			Sequence(
+				Terminal("SUPER")
+				Choice(
+					Sequence(
 						Terminal("DOT")
-						Terminal("CLASS")
-					)
-					Action({
-						run();
-					})
-					NonTerminal(type, ResultType)
-					Terminal("DOT")
-					Terminal("CLASS")
-					Action({
-						ret = dress(SClassExpr.make(type));
-					})
-				)
-				Sequence(
-					LookAhead(
-						NonTerminal(ResultType)
-						Terminal("DOUBLECOLON")
-					)
-					Action({
-						run();
-					})
-					NonTerminal(type, ResultType)
-					Action({
-						ret = STypeExpr.make(type);
-					})
-					NonTerminal(ret, MethodReferenceSuffix)
-				)
-				Sequence(
-					LookAhead(
-						ZeroOrOne(
-							NonTerminal(TypeArguments)
-						)
-						NonTerminal(Name)
-						Terminal("LPAREN")
-					)
-					Action({
-						run();
-					})
-					NonTerminal(ret, MethodInvocation)
-				)
-				Sequence(
-					NonTerminal(ret, Name)
-					ZeroOrOne(
-						Action({
-							lateRun();
-						})
-						Terminal("ARROW")
-						NonTerminal(ret, LambdaBody)
-					)
-				)
-				Sequence(
-					Action({
-						run();
-					})
-					Terminal("LPAREN")
-					Choice(
-						Sequence(
-							Terminal("RPAREN")
-							Terminal("ARROW")
-							NonTerminal(ret, LambdaBody)
-						)
-						Sequence(
-							LookAhead(
-								NonTerminal(Name)
-								Terminal("RPAREN")
-								Terminal("ARROW")
+						Choice(
+							Sequence(
+								LookAhead(
+									ZeroOrOne(
+										NonTerminal(TypeArguments)
+									)
+									NonTerminal(Name)
+									Terminal("LPAREN")
+								)
+								NonTerminal(ret, MethodInvocation)
 							)
-							NonTerminal(ret, Name)
-							Terminal("RPAREN")
-							Terminal("ARROW")
-							NonTerminal(ret, LambdaBody)
+							NonTerminal(ret, FieldAccess)
 						)
-						Sequence(
-							LookAhead(
-								NonTerminal(Name)
-								Terminal("COMMA")
-							)
-							NonTerminal(params, InferredFormalParameterList)
-							Terminal("RPAREN")
-							Terminal("ARROW")
-							NonTerminal(ret, LambdaBody)
-						)
-						Sequence(
-							LookAhead(							isLambda()
-	)
-							NonTerminal(params, FormalParameterList)
-							Terminal("RPAREN")
-							Terminal("ARROW")
-							NonTerminal(ret, LambdaBody)
-						)
-						Sequence(
-							NonTerminal(ret, Expression)
-							Terminal("RPAREN")
-							Action({
-								ret = dress(SParenthesizedExpr.make(ret));
-							})
-						)
+					)
+					Sequence(
+						NonTerminal(ret, MethodReferenceSuffix)
 					)
 				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			NonTerminal(ret, AllocationExpression)
+			Sequence(
+				LookAhead(
+					NonTerminal(ResultType)
+					Terminal("DOT")
+					Terminal("CLASS")
+				)
+				NonTerminal(type, ResultType)
+				Terminal("DOT")
+				Terminal("CLASS")
+			)
+			Sequence(
+				LookAhead(
+					NonTerminal(ResultType)
+					Terminal("DOUBLECOLON")
+				)
+				NonTerminal(type, ResultType)
+				NonTerminal(ret, MethodReferenceSuffix)
+			)
+			Sequence(
+				LookAhead(
+					ZeroOrOne(
+						NonTerminal(TypeArguments)
+					)
+					NonTerminal(Name)
+					Terminal("LPAREN")
+				)
+				NonTerminal(ret, MethodInvocation)
+			)
+			Sequence(
+				NonTerminal(ret, Name)
+				ZeroOrOne(
+					Terminal("ARROW")
+					NonTerminal(ret, LambdaBody)
+				)
+			)
+			Sequence(
+				Terminal("LPAREN")
+				Choice(
+					Sequence(
+						Terminal("RPAREN")
+						Terminal("ARROW")
+						NonTerminal(ret, LambdaBody)
+					)
+					Sequence(
+						LookAhead(
+							NonTerminal(Name)
+							Terminal("RPAREN")
+							Terminal("ARROW")
+						)
+						NonTerminal(ret, Name)
+						Terminal("RPAREN")
+						Terminal("ARROW")
+						NonTerminal(ret, LambdaBody)
+					)
+					Sequence(
+						LookAhead(
+							NonTerminal(Name)
+							Terminal("COMMA")
+						)
+						NonTerminal(params, InferredFormalParameterList)
+						Terminal("RPAREN")
+						Terminal("ARROW")
+						NonTerminal(ret, LambdaBody)
+					)
+					Sequence(
+						LookAhead({ isLambda() })
+						NonTerminal(params, FormalParameterList)
+						Terminal("RPAREN")
+						Terminal("ARROW")
+						NonTerminal(ret, LambdaBody)
+					)
+					Sequence(
+						NonTerminal(ret, Expression)
+						Terminal("RPAREN")
+					)
+				)
+			)
+		)
+	) */
 	private int matchPrimaryPrefix(int lookahead) {
 		lookahead = matchPrimaryPrefix_1(lookahead);
 		if (lookahead == -1)
@@ -12739,9 +9951,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			NonTerminal(ret, PrimarySuffixWithoutSuper)
-		) */
+		LookAhead(2)
+		NonTerminal(ret, PrimarySuffixWithoutSuper)
+	) */
 	private int matchPrimarySuffix_1_1(int lookahead) {
 		lookahead = matchPrimarySuffixWithoutSuper(lookahead);
 		if (lookahead == -1)
@@ -12750,12 +9962,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("DOT")
-			Terminal("SUPER")
-			Action({
-				ret = dress(SSuperExpr.make(optionOf(scope)));
-			})
-		) */
+		Terminal("DOT")
+		Terminal("SUPER")
+	) */
 	private int matchPrimarySuffix_1_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.DOT);
 		if (lookahead == -1)
@@ -12767,19 +9976,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				LookAhead(2)
-				NonTerminal(ret, PrimarySuffixWithoutSuper)
-			)
-			Sequence(
-				Terminal("DOT")
-				Terminal("SUPER")
-				Action({
-					ret = dress(SSuperExpr.make(optionOf(scope)));
-				})
-			)
-			NonTerminal(ret, MethodReferenceSuffix)
-		) */
+		Sequence(
+			LookAhead(2)
+			NonTerminal(ret, PrimarySuffixWithoutSuper)
+		)
+		Sequence(
+			Terminal("DOT")
+			Terminal("SUPER")
+		)
+		NonTerminal(ret, MethodReferenceSuffix)
+	) */
 	private int matchPrimarySuffix_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrimarySuffix_1_1(lookahead);
@@ -12795,24 +10001,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					LookAhead(2)
-					NonTerminal(ret, PrimarySuffixWithoutSuper)
-				)
-				Sequence(
-					Terminal("DOT")
-					Terminal("SUPER")
-					Action({
-						ret = dress(SSuperExpr.make(optionOf(scope)));
-					})
-				)
-				NonTerminal(ret, MethodReferenceSuffix)
+		Choice(
+			Sequence(
+				LookAhead(2)
+				NonTerminal(ret, PrimarySuffixWithoutSuper)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			Sequence(
+				Terminal("DOT")
+				Terminal("SUPER")
+			)
+			NonTerminal(ret, MethodReferenceSuffix)
+		)
+	) */
 	private int matchPrimarySuffix(int lookahead) {
 		lookahead = matchPrimarySuffix_1(lookahead);
 		if (lookahead == -1)
@@ -12821,12 +10021,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			NonTerminal(ret, PrimarySuffix)
-		) */
+		LookAhead(2)
+		NonTerminal(ret, PrimarySuffix)
+	) */
 	private int matchPrimaryExpression_2_1(int lookahead) {
 		lookahead = matchPrimarySuffix(lookahead);
 		if (lookahead == -1)
@@ -12835,12 +10032,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			NonTerminal(ret, PrimarySuffix)
-		) */
+		LookAhead(2)
+		NonTerminal(ret, PrimarySuffix)
+	) */
 	private int matchPrimaryExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrimaryExpression_2_1(lookahead);
@@ -12852,18 +10046,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, PrimaryPrefix)
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				NonTerminal(ret, PrimarySuffix)
-			)
-			Action({
-				return ret;
-			})
-		) */
+		NonTerminal(ret, PrimaryPrefix)
+		ZeroOrMore(
+			LookAhead(2)
+			NonTerminal(ret, PrimarySuffix)
+		)
+	) */
 	private int matchPrimaryExpression(int lookahead) {
 		lookahead = matchPrimaryPrefix(lookahead);
 		if (lookahead == -1)
@@ -12875,11 +10063,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("INCR")
-			Action({
-				op = UnaryOp.PostIncrement;
-			})
-		) */
+		Terminal("INCR")
+	) */
 	private int matchPostfixExpression_2_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.INCR);
 		if (lookahead == -1)
@@ -12888,11 +10073,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("DECR")
-			Action({
-				op = UnaryOp.PostDecrement;
-			})
-		) */
+		Terminal("DECR")
+	) */
 	private int matchPostfixExpression_2_1_3_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.DECR);
 		if (lookahead == -1)
@@ -12901,19 +10083,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("INCR")
-				Action({
-					op = UnaryOp.PostIncrement;
-				})
-			)
-			Sequence(
-				Terminal("DECR")
-				Action({
-					op = UnaryOp.PostDecrement;
-				})
-			)
-		) */
+		Sequence(
+			Terminal("INCR")
+		)
+		Sequence(
+			Terminal("DECR")
+		)
+	) */
 	private int matchPostfixExpression_2_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPostfixExpression_2_1_3_1(lookahead);
@@ -12926,28 +10102,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("INCR")
-					Action({
-						op = UnaryOp.PostIncrement;
-					})
-				)
-				Sequence(
-					Terminal("DECR")
-					Action({
-						op = UnaryOp.PostDecrement;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("INCR")
 			)
-			Action({
-				ret = dress(SUnaryExpr.make(op, ret));
-			})
-		) */
+			Sequence(
+				Terminal("DECR")
+			)
+		)
+	) */
 	private int matchPostfixExpression_2_1(int lookahead) {
 		lookahead = matchPostfixExpression_2_1_3(lookahead);
 		if (lookahead == -1)
@@ -12956,28 +10120,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("INCR")
-					Action({
-						op = UnaryOp.PostIncrement;
-					})
-				)
-				Sequence(
-					Terminal("DECR")
-					Action({
-						op = UnaryOp.PostDecrement;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("INCR")
 			)
-			Action({
-				ret = dress(SUnaryExpr.make(op, ret));
-			})
-		) */
+			Sequence(
+				Terminal("DECR")
+			)
+		)
+	) */
 	private int matchPostfixExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPostfixExpression_2_1(lookahead);
@@ -12987,34 +10139,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, PrimaryExpression)
-			ZeroOrOne(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Choice(
-					Sequence(
-						Terminal("INCR")
-						Action({
-							op = UnaryOp.PostIncrement;
-						})
-					)
-					Sequence(
-						Terminal("DECR")
-						Action({
-							op = UnaryOp.PostDecrement;
-						})
-					)
+		NonTerminal(ret, PrimaryExpression)
+		ZeroOrOne(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					Terminal("INCR")
 				)
-				Action({
-					ret = dress(SUnaryExpr.make(op, ret));
-				})
+				Sequence(
+					Terminal("DECR")
+				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchPostfixExpression(int lookahead) {
 		lookahead = matchPrimaryExpression(lookahead);
 		if (lookahead == -1)
@@ -13026,37 +10163,25 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Action({
-					run();
-				})
-				Choice(
-					Sequence(
-						Terminal("TILDE")
-						Action({
-							op = UnaryOp.Inverse;
-						})
-					)
-					Sequence(
-						Terminal("BANG")
-						Action({
-							op = UnaryOp.Not;
-						})
-					)
+		Sequence(
+			Choice(
+				Sequence(
+					Terminal("TILDE")
 				)
-				NonTerminal(ret, UnaryExpression)
-				Action({
-					ret = dress(SUnaryExpr.make(op, ret));
-				})
-			)
-			Sequence(
-				LookAhead(
-					NonTerminal(CastExpression)
+				Sequence(
+					Terminal("BANG")
 				)
-				NonTerminal(ret, CastExpression)
 			)
-			NonTerminal(ret, PostfixExpression)
-		) */
+			NonTerminal(ret, UnaryExpression)
+		)
+		Sequence(
+			LookAhead(
+				NonTerminal(CastExpression)
+			)
+			NonTerminal(ret, CastExpression)
+		)
+		NonTerminal(ret, PostfixExpression)
+	) */
 	private int matchUnaryExpressionNotPlusMinus_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchUnaryExpressionNotPlusMinus_1_1(lookahead);
@@ -13072,42 +10197,27 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				Sequence(
-					Action({
-						run();
-					})
-					Choice(
-						Sequence(
-							Terminal("TILDE")
-							Action({
-								op = UnaryOp.Inverse;
-							})
-						)
-						Sequence(
-							Terminal("BANG")
-							Action({
-								op = UnaryOp.Not;
-							})
-						)
+		Choice(
+			Sequence(
+				Choice(
+					Sequence(
+						Terminal("TILDE")
 					)
-					NonTerminal(ret, UnaryExpression)
-					Action({
-						ret = dress(SUnaryExpr.make(op, ret));
-					})
-				)
-				Sequence(
-					LookAhead(
-						NonTerminal(CastExpression)
+					Sequence(
+						Terminal("BANG")
 					)
-					NonTerminal(ret, CastExpression)
 				)
-				NonTerminal(ret, PostfixExpression)
+				NonTerminal(ret, UnaryExpression)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			Sequence(
+				LookAhead(
+					NonTerminal(CastExpression)
+				)
+				NonTerminal(ret, CastExpression)
+			)
+			NonTerminal(ret, PostfixExpression)
+		)
+	) */
 	private int matchUnaryExpressionNotPlusMinus(int lookahead) {
 		lookahead = matchUnaryExpressionNotPlusMinus_1(lookahead);
 		if (lookahead == -1)
@@ -13116,32 +10226,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			NonTerminal(ret, PrefixExpression)
-			Sequence(
-				Action({
-					run();
-				})
-				Choice(
-					Sequence(
-						Terminal("PLUS")
-						Action({
-							op = UnaryOp.Positive;
-						})
-					)
-					Sequence(
-						Terminal("MINUS")
-						Action({
-							op = UnaryOp.Negative;
-						})
-					)
+		NonTerminal(ret, PrefixExpression)
+		Sequence(
+			Choice(
+				Sequence(
+					Terminal("PLUS")
 				)
-				NonTerminal(ret, UnaryExpression)
-				Action({
-					ret = dress(SUnaryExpr.make(op, ret));
-				})
+				Sequence(
+					Terminal("MINUS")
+				)
 			)
-			NonTerminal(ret, UnaryExpressionNotPlusMinus)
-		) */
+			NonTerminal(ret, UnaryExpression)
+		)
+		NonTerminal(ret, UnaryExpressionNotPlusMinus)
+	) */
 	private int matchUnaryExpression_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrefixExpression(lookahead);
@@ -13157,37 +10255,22 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				NonTerminal(ret, PrefixExpression)
-				Sequence(
-					Action({
-						run();
-					})
-					Choice(
-						Sequence(
-							Terminal("PLUS")
-							Action({
-								op = UnaryOp.Positive;
-							})
-						)
-						Sequence(
-							Terminal("MINUS")
-							Action({
-								op = UnaryOp.Negative;
-							})
-						)
+		Choice(
+			NonTerminal(ret, PrefixExpression)
+			Sequence(
+				Choice(
+					Sequence(
+						Terminal("PLUS")
 					)
-					NonTerminal(ret, UnaryExpression)
-					Action({
-						ret = dress(SUnaryExpr.make(op, ret));
-					})
+					Sequence(
+						Terminal("MINUS")
+					)
 				)
-				NonTerminal(ret, UnaryExpressionNotPlusMinus)
+				NonTerminal(ret, UnaryExpression)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			NonTerminal(ret, UnaryExpressionNotPlusMinus)
+		)
+	) */
 	private int matchUnaryExpression(int lookahead) {
 		lookahead = matchUnaryExpression_1(lookahead);
 		if (lookahead == -1)
@@ -13196,11 +10279,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("STAR")
-			Action({
-				op = BinaryOp.Times;
-			})
-		) */
+		Terminal("STAR")
+	) */
 	private int matchMultiplicativeExpression_2_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.STAR);
 		if (lookahead == -1)
@@ -13209,11 +10289,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("SLASH")
-			Action({
-				op = BinaryOp.Divide;
-			})
-		) */
+		Terminal("SLASH")
+	) */
 	private int matchMultiplicativeExpression_2_1_3_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SLASH);
 		if (lookahead == -1)
@@ -13222,11 +10299,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("REM")
-			Action({
-				op = BinaryOp.Remainder;
-			})
-		) */
+		Terminal("REM")
+	) */
 	private int matchMultiplicativeExpression_2_1_3_3(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.REM);
 		if (lookahead == -1)
@@ -13235,25 +10309,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("STAR")
-				Action({
-					op = BinaryOp.Times;
-				})
-			)
-			Sequence(
-				Terminal("SLASH")
-				Action({
-					op = BinaryOp.Divide;
-				})
-			)
-			Sequence(
-				Terminal("REM")
-				Action({
-					op = BinaryOp.Remainder;
-				})
-			)
-		) */
+		Sequence(
+			Terminal("STAR")
+		)
+		Sequence(
+			Terminal("SLASH")
+		)
+		Sequence(
+			Terminal("REM")
+		)
+	) */
 	private int matchMultiplicativeExpression_2_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchMultiplicativeExpression_2_1_3_1(lookahead);
@@ -13269,35 +10334,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("STAR")
-					Action({
-						op = BinaryOp.Times;
-					})
-				)
-				Sequence(
-					Terminal("SLASH")
-					Action({
-						op = BinaryOp.Divide;
-					})
-				)
-				Sequence(
-					Terminal("REM")
-					Action({
-						op = BinaryOp.Remainder;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("STAR")
 			)
-			NonTerminal(right, UnaryExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				Terminal("SLASH")
+			)
+			Sequence(
+				Terminal("REM")
+			)
+		)
+		NonTerminal(right, UnaryExpression)
+	) */
 	private int matchMultiplicativeExpression_2_1(int lookahead) {
 		lookahead = matchMultiplicativeExpression_2_1_3(lookahead);
 		if (lookahead == -1)
@@ -13309,35 +10359,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("STAR")
-					Action({
-						op = BinaryOp.Times;
-					})
-				)
-				Sequence(
-					Terminal("SLASH")
-					Action({
-						op = BinaryOp.Divide;
-					})
-				)
-				Sequence(
-					Terminal("REM")
-					Action({
-						op = BinaryOp.Remainder;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("STAR")
 			)
-			NonTerminal(right, UnaryExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				Terminal("SLASH")
+			)
+			Sequence(
+				Terminal("REM")
+			)
+		)
+		NonTerminal(right, UnaryExpression)
+	) */
 	private int matchMultiplicativeExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchMultiplicativeExpression_2_1(lookahead);
@@ -13349,41 +10384,23 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, UnaryExpression)
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Choice(
-					Sequence(
-						Terminal("STAR")
-						Action({
-							op = BinaryOp.Times;
-						})
-					)
-					Sequence(
-						Terminal("SLASH")
-						Action({
-							op = BinaryOp.Divide;
-						})
-					)
-					Sequence(
-						Terminal("REM")
-						Action({
-							op = BinaryOp.Remainder;
-						})
-					)
+		NonTerminal(ret, UnaryExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					Terminal("STAR")
 				)
-				NonTerminal(right, UnaryExpression)
-				Action({
-					ret = dress(SBinaryExpr.make(ret, op, right));
-				})
+				Sequence(
+					Terminal("SLASH")
+				)
+				Sequence(
+					Terminal("REM")
+				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			NonTerminal(right, UnaryExpression)
+		)
+	) */
 	private int matchMultiplicativeExpression(int lookahead) {
 		lookahead = matchUnaryExpression(lookahead);
 		if (lookahead == -1)
@@ -13395,11 +10412,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("PLUS")
-			Action({
-				op = BinaryOp.Plus;
-			})
-		) */
+		Terminal("PLUS")
+	) */
 	private int matchAdditiveExpression_2_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.PLUS);
 		if (lookahead == -1)
@@ -13408,11 +10422,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("MINUS")
-			Action({
-				op = BinaryOp.Minus;
-			})
-		) */
+		Terminal("MINUS")
+	) */
 	private int matchAdditiveExpression_2_1_3_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.MINUS);
 		if (lookahead == -1)
@@ -13421,19 +10432,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("PLUS")
-				Action({
-					op = BinaryOp.Plus;
-				})
-			)
-			Sequence(
-				Terminal("MINUS")
-				Action({
-					op = BinaryOp.Minus;
-				})
-			)
-		) */
+		Sequence(
+			Terminal("PLUS")
+		)
+		Sequence(
+			Terminal("MINUS")
+		)
+	) */
 	private int matchAdditiveExpression_2_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAdditiveExpression_2_1_3_1(lookahead);
@@ -13446,29 +10451,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("PLUS")
-					Action({
-						op = BinaryOp.Plus;
-					})
-				)
-				Sequence(
-					Terminal("MINUS")
-					Action({
-						op = BinaryOp.Minus;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("PLUS")
 			)
-			NonTerminal(right, MultiplicativeExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				Terminal("MINUS")
+			)
+		)
+		NonTerminal(right, MultiplicativeExpression)
+	) */
 	private int matchAdditiveExpression_2_1(int lookahead) {
 		lookahead = matchAdditiveExpression_2_1_3(lookahead);
 		if (lookahead == -1)
@@ -13480,29 +10473,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("PLUS")
-					Action({
-						op = BinaryOp.Plus;
-					})
-				)
-				Sequence(
-					Terminal("MINUS")
-					Action({
-						op = BinaryOp.Minus;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("PLUS")
 			)
-			NonTerminal(right, MultiplicativeExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				Terminal("MINUS")
+			)
+		)
+		NonTerminal(right, MultiplicativeExpression)
+	) */
 	private int matchAdditiveExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAdditiveExpression_2_1(lookahead);
@@ -13514,35 +10495,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, MultiplicativeExpression)
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Choice(
-					Sequence(
-						Terminal("PLUS")
-						Action({
-							op = BinaryOp.Plus;
-						})
-					)
-					Sequence(
-						Terminal("MINUS")
-						Action({
-							op = BinaryOp.Minus;
-						})
-					)
+		NonTerminal(ret, MultiplicativeExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					Terminal("PLUS")
 				)
-				NonTerminal(right, MultiplicativeExpression)
-				Action({
-					ret = dress(SBinaryExpr.make(ret, op, right));
-				})
+				Sequence(
+					Terminal("MINUS")
+				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			NonTerminal(right, MultiplicativeExpression)
+		)
+	) */
 	private int matchAdditiveExpression(int lookahead) {
 		lookahead = matchMultiplicativeExpression(lookahead);
 		if (lookahead == -1)
@@ -13554,11 +10520,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LSHIFT")
-			Action({
-				op = BinaryOp.LeftShift;
-			})
-		) */
+		Terminal("LSHIFT")
+	) */
 	private int matchShiftExpression_2_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LSHIFT);
 		if (lookahead == -1)
@@ -13567,15 +10530,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			getToken(1).kind == GT && getToken(1).realKind == RUNSIGNEDSHIFT
-	)
-			Terminal("GT")
-			Terminal("GT")
-			Terminal("GT")
-			Action({
-				popNewWhitespaces();
-			})
-		) */
+		LookAhead({ getToken(1).kind == GT && getToken(1).realKind == RUNSIGNEDSHIFT })
+		Terminal("GT")
+		Terminal("GT")
+		Terminal("GT")
+	) */
 	private int matchRUNSIGNEDSHIFT(int lookahead) {
 		lookahead = getToken(1).kind == GT && getToken(1).realKind == RUNSIGNEDSHIFT ? lookahead : -1;
 		if (lookahead == -1)
@@ -13593,12 +10552,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(3)
-			NonTerminal(RUNSIGNEDSHIFT)
-			Action({
-				op = BinaryOp.RightUnsignedShift;
-			})
-		) */
+		LookAhead(3)
+		NonTerminal(RUNSIGNEDSHIFT)
+	) */
 	private int matchShiftExpression_2_1_3_2(int lookahead) {
 		lookahead = matchRUNSIGNEDSHIFT(lookahead);
 		if (lookahead == -1)
@@ -13607,14 +10563,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(			getToken(1).kind == GT && getToken(1).realKind == RSIGNEDSHIFT
-	)
-			Terminal("GT")
-			Terminal("GT")
-			Action({
-				popNewWhitespaces();
-			})
-		) */
+		LookAhead({ getToken(1).kind == GT && getToken(1).realKind == RSIGNEDSHIFT })
+		Terminal("GT")
+		Terminal("GT")
+	) */
 	private int matchRSIGNEDSHIFT(int lookahead) {
 		lookahead = getToken(1).kind == GT && getToken(1).realKind == RSIGNEDSHIFT ? lookahead : -1;
 		if (lookahead == -1)
@@ -13629,12 +10581,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			NonTerminal(RSIGNEDSHIFT)
-			Action({
-				op = BinaryOp.RightSignedShift;
-			})
-		) */
+		LookAhead(2)
+		NonTerminal(RSIGNEDSHIFT)
+	) */
 	private int matchShiftExpression_2_1_3_3(int lookahead) {
 		lookahead = matchRSIGNEDSHIFT(lookahead);
 		if (lookahead == -1)
@@ -13643,27 +10592,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("LSHIFT")
-				Action({
-					op = BinaryOp.LeftShift;
-				})
-			)
-			Sequence(
-				LookAhead(3)
-				NonTerminal(RUNSIGNEDSHIFT)
-				Action({
-					op = BinaryOp.RightUnsignedShift;
-				})
-			)
-			Sequence(
-				LookAhead(2)
-				NonTerminal(RSIGNEDSHIFT)
-				Action({
-					op = BinaryOp.RightSignedShift;
-				})
-			)
-		) */
+		Sequence(
+			Terminal("LSHIFT")
+		)
+		Sequence(
+			LookAhead(3)
+			NonTerminal(RUNSIGNEDSHIFT)
+		)
+		Sequence(
+			LookAhead(2)
+			NonTerminal(RSIGNEDSHIFT)
+		)
+	) */
 	private int matchShiftExpression_2_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchShiftExpression_2_1_3_1(lookahead);
@@ -13679,37 +10619,22 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("LSHIFT")
-					Action({
-						op = BinaryOp.LeftShift;
-					})
-				)
-				Sequence(
-					LookAhead(3)
-					NonTerminal(RUNSIGNEDSHIFT)
-					Action({
-						op = BinaryOp.RightUnsignedShift;
-					})
-				)
-				Sequence(
-					LookAhead(2)
-					NonTerminal(RSIGNEDSHIFT)
-					Action({
-						op = BinaryOp.RightSignedShift;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("LSHIFT")
 			)
-			NonTerminal(right, AdditiveExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				LookAhead(3)
+				NonTerminal(RUNSIGNEDSHIFT)
+			)
+			Sequence(
+				LookAhead(2)
+				NonTerminal(RSIGNEDSHIFT)
+			)
+		)
+		NonTerminal(right, AdditiveExpression)
+	) */
 	private int matchShiftExpression_2_1(int lookahead) {
 		lookahead = matchShiftExpression_2_1_3(lookahead);
 		if (lookahead == -1)
@@ -13721,37 +10646,22 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("LSHIFT")
-					Action({
-						op = BinaryOp.LeftShift;
-					})
-				)
-				Sequence(
-					LookAhead(3)
-					NonTerminal(RUNSIGNEDSHIFT)
-					Action({
-						op = BinaryOp.RightUnsignedShift;
-					})
-				)
-				Sequence(
-					LookAhead(2)
-					NonTerminal(RSIGNEDSHIFT)
-					Action({
-						op = BinaryOp.RightSignedShift;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("LSHIFT")
 			)
-			NonTerminal(right, AdditiveExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				LookAhead(3)
+				NonTerminal(RUNSIGNEDSHIFT)
+			)
+			Sequence(
+				LookAhead(2)
+				NonTerminal(RSIGNEDSHIFT)
+			)
+		)
+		NonTerminal(right, AdditiveExpression)
+	) */
 	private int matchShiftExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchShiftExpression_2_1(lookahead);
@@ -13763,43 +10673,25 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, AdditiveExpression)
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Choice(
-					Sequence(
-						Terminal("LSHIFT")
-						Action({
-							op = BinaryOp.LeftShift;
-						})
-					)
-					Sequence(
-						LookAhead(3)
-						NonTerminal(RUNSIGNEDSHIFT)
-						Action({
-							op = BinaryOp.RightUnsignedShift;
-						})
-					)
-					Sequence(
-						LookAhead(2)
-						NonTerminal(RSIGNEDSHIFT)
-						Action({
-							op = BinaryOp.RightSignedShift;
-						})
-					)
+		NonTerminal(ret, AdditiveExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					Terminal("LSHIFT")
 				)
-				NonTerminal(right, AdditiveExpression)
-				Action({
-					ret = dress(SBinaryExpr.make(ret, op, right));
-				})
+				Sequence(
+					LookAhead(3)
+					NonTerminal(RUNSIGNEDSHIFT)
+				)
+				Sequence(
+					LookAhead(2)
+					NonTerminal(RSIGNEDSHIFT)
+				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			NonTerminal(right, AdditiveExpression)
+		)
+	) */
 	private int matchShiftExpression(int lookahead) {
 		lookahead = matchAdditiveExpression(lookahead);
 		if (lookahead == -1)
@@ -13811,11 +10703,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LT")
-			Action({
-				op = BinaryOp.Less;
-			})
-		) */
+		Terminal("LT")
+	) */
 	private int matchRelationalExpression_2_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LT);
 		if (lookahead == -1)
@@ -13824,11 +10713,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("GT")
-			Action({
-				op = BinaryOp.Greater;
-			})
-		) */
+		Terminal("GT")
+	) */
 	private int matchRelationalExpression_2_1_3_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.GT);
 		if (lookahead == -1)
@@ -13837,11 +10723,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LE")
-			Action({
-				op = BinaryOp.LessOrEqual;
-			})
-		) */
+		Terminal("LE")
+	) */
 	private int matchRelationalExpression_2_1_3_3(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LE);
 		if (lookahead == -1)
@@ -13850,11 +10733,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("GE")
-			Action({
-				op = BinaryOp.GreaterOrEqual;
-			})
-		) */
+		Terminal("GE")
+	) */
 	private int matchRelationalExpression_2_1_3_4(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.GE);
 		if (lookahead == -1)
@@ -13863,31 +10743,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("LT")
-				Action({
-					op = BinaryOp.Less;
-				})
-			)
-			Sequence(
-				Terminal("GT")
-				Action({
-					op = BinaryOp.Greater;
-				})
-			)
-			Sequence(
-				Terminal("LE")
-				Action({
-					op = BinaryOp.LessOrEqual;
-				})
-			)
-			Sequence(
-				Terminal("GE")
-				Action({
-					op = BinaryOp.GreaterOrEqual;
-				})
-			)
-		) */
+		Sequence(
+			Terminal("LT")
+		)
+		Sequence(
+			Terminal("GT")
+		)
+		Sequence(
+			Terminal("LE")
+		)
+		Sequence(
+			Terminal("GE")
+		)
+	) */
 	private int matchRelationalExpression_2_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchRelationalExpression_2_1_3_1(lookahead);
@@ -13906,41 +10774,23 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("LT")
-					Action({
-						op = BinaryOp.Less;
-					})
-				)
-				Sequence(
-					Terminal("GT")
-					Action({
-						op = BinaryOp.Greater;
-					})
-				)
-				Sequence(
-					Terminal("LE")
-					Action({
-						op = BinaryOp.LessOrEqual;
-					})
-				)
-				Sequence(
-					Terminal("GE")
-					Action({
-						op = BinaryOp.GreaterOrEqual;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("LT")
 			)
-			NonTerminal(right, ShiftExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				Terminal("GT")
+			)
+			Sequence(
+				Terminal("LE")
+			)
+			Sequence(
+				Terminal("GE")
+			)
+		)
+		NonTerminal(right, ShiftExpression)
+	) */
 	private int matchRelationalExpression_2_1(int lookahead) {
 		lookahead = matchRelationalExpression_2_1_3(lookahead);
 		if (lookahead == -1)
@@ -13952,41 +10802,23 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("LT")
-					Action({
-						op = BinaryOp.Less;
-					})
-				)
-				Sequence(
-					Terminal("GT")
-					Action({
-						op = BinaryOp.Greater;
-					})
-				)
-				Sequence(
-					Terminal("LE")
-					Action({
-						op = BinaryOp.LessOrEqual;
-					})
-				)
-				Sequence(
-					Terminal("GE")
-					Action({
-						op = BinaryOp.GreaterOrEqual;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("LT")
 			)
-			NonTerminal(right, ShiftExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				Terminal("GT")
+			)
+			Sequence(
+				Terminal("LE")
+			)
+			Sequence(
+				Terminal("GE")
+			)
+		)
+		NonTerminal(right, ShiftExpression)
+	) */
 	private int matchRelationalExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchRelationalExpression_2_1(lookahead);
@@ -13998,47 +10830,26 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, ShiftExpression)
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Choice(
-					Sequence(
-						Terminal("LT")
-						Action({
-							op = BinaryOp.Less;
-						})
-					)
-					Sequence(
-						Terminal("GT")
-						Action({
-							op = BinaryOp.Greater;
-						})
-					)
-					Sequence(
-						Terminal("LE")
-						Action({
-							op = BinaryOp.LessOrEqual;
-						})
-					)
-					Sequence(
-						Terminal("GE")
-						Action({
-							op = BinaryOp.GreaterOrEqual;
-						})
-					)
+		NonTerminal(ret, ShiftExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					Terminal("LT")
 				)
-				NonTerminal(right, ShiftExpression)
-				Action({
-					ret = dress(SBinaryExpr.make(ret, op, right));
-				})
+				Sequence(
+					Terminal("GT")
+				)
+				Sequence(
+					Terminal("LE")
+				)
+				Sequence(
+					Terminal("GE")
+				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			NonTerminal(right, ShiftExpression)
+		)
+	) */
 	private int matchRelationalExpression(int lookahead) {
 		lookahead = matchShiftExpression(lookahead);
 		if (lookahead == -1)
@@ -14050,20 +10861,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("INSTANCEOF")
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
-			NonTerminal(type, Type)
-			Action({
-				ret = dress(SInstanceOfExpr.make(ret, type));
-			})
-		) */
+		LookAhead(2)
+		Terminal("INSTANCEOF")
+		NonTerminal(annotations, Annotations)
+		NonTerminal(type, Type)
+	) */
 	private int matchInstanceOfExpression_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.INSTANCEOF);
 		if (lookahead == -1)
@@ -14078,20 +10880,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("INSTANCEOF")
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
-			NonTerminal(type, Type)
-			Action({
-				ret = dress(SInstanceOfExpr.make(ret, type));
-			})
-		) */
+		LookAhead(2)
+		Terminal("INSTANCEOF")
+		NonTerminal(annotations, Annotations)
+		NonTerminal(type, Type)
+	) */
 	private int matchInstanceOfExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchInstanceOfExpression_2_1(lookahead);
@@ -14101,26 +10894,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, RelationalExpression)
-			ZeroOrOne(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Terminal("INSTANCEOF")
-				Action({
-					run();
-				})
-				NonTerminal(annotations, Annotations)
-				NonTerminal(type, Type)
-				Action({
-					ret = dress(SInstanceOfExpr.make(ret, type));
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		NonTerminal(ret, RelationalExpression)
+		ZeroOrOne(
+			LookAhead(2)
+			Terminal("INSTANCEOF")
+			NonTerminal(annotations, Annotations)
+			NonTerminal(type, Type)
+		)
+	) */
 	private int matchInstanceOfExpression(int lookahead) {
 		lookahead = matchRelationalExpression(lookahead);
 		if (lookahead == -1)
@@ -14132,11 +10913,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("EQ")
-			Action({
-				op = BinaryOp.Equal;
-			})
-		) */
+		Terminal("EQ")
+	) */
 	private int matchEqualityExpression_2_1_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.EQ);
 		if (lookahead == -1)
@@ -14145,11 +10923,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("NE")
-			Action({
-				op = BinaryOp.NotEqual;
-			})
-		) */
+		Terminal("NE")
+	) */
 	private int matchEqualityExpression_2_1_3_2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.NE);
 		if (lookahead == -1)
@@ -14158,19 +10933,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				Terminal("EQ")
-				Action({
-					op = BinaryOp.Equal;
-				})
-			)
-			Sequence(
-				Terminal("NE")
-				Action({
-					op = BinaryOp.NotEqual;
-				})
-			)
-		) */
+		Sequence(
+			Terminal("EQ")
+		)
+		Sequence(
+			Terminal("NE")
+		)
+	) */
 	private int matchEqualityExpression_2_1_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchEqualityExpression_2_1_3_1(lookahead);
@@ -14183,29 +10952,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("EQ")
-					Action({
-						op = BinaryOp.Equal;
-					})
-				)
-				Sequence(
-					Terminal("NE")
-					Action({
-						op = BinaryOp.NotEqual;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("EQ")
 			)
-			NonTerminal(right, InstanceOfExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				Terminal("NE")
+			)
+		)
+		NonTerminal(right, InstanceOfExpression)
+	) */
 	private int matchEqualityExpression_2_1(int lookahead) {
 		lookahead = matchEqualityExpression_2_1_3(lookahead);
 		if (lookahead == -1)
@@ -14217,29 +10974,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("EQ")
-					Action({
-						op = BinaryOp.Equal;
-					})
-				)
-				Sequence(
-					Terminal("NE")
-					Action({
-						op = BinaryOp.NotEqual;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("EQ")
 			)
-			NonTerminal(right, InstanceOfExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				Terminal("NE")
+			)
+		)
+		NonTerminal(right, InstanceOfExpression)
+	) */
 	private int matchEqualityExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchEqualityExpression_2_1(lookahead);
@@ -14251,35 +10996,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, InstanceOfExpression)
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Choice(
-					Sequence(
-						Terminal("EQ")
-						Action({
-							op = BinaryOp.Equal;
-						})
-					)
-					Sequence(
-						Terminal("NE")
-						Action({
-							op = BinaryOp.NotEqual;
-						})
-					)
+		NonTerminal(ret, InstanceOfExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					Terminal("EQ")
 				)
-				NonTerminal(right, InstanceOfExpression)
-				Action({
-					ret = dress(SBinaryExpr.make(ret, op, right));
-				})
+				Sequence(
+					Terminal("NE")
+				)
 			)
-			Action({
-				return ret;
-			})
-		) */
+			NonTerminal(right, InstanceOfExpression)
+		)
+	) */
 	private int matchEqualityExpression(int lookahead) {
 		lookahead = matchInstanceOfExpression(lookahead);
 		if (lookahead == -1)
@@ -14291,16 +11021,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("BIT_AND")
-			NonTerminal(right, EqualityExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("BIT_AND")
+		NonTerminal(right, EqualityExpression)
+	) */
 	private int matchAndExpression_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.BIT_AND);
 		if (lookahead == -1)
@@ -14312,16 +11036,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("BIT_AND")
-			NonTerminal(right, EqualityExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("BIT_AND")
+		NonTerminal(right, EqualityExpression)
+	) */
 	private int matchAndExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAndExpression_2_1(lookahead);
@@ -14333,22 +11051,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, EqualityExpression)
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Terminal("BIT_AND")
-				NonTerminal(right, EqualityExpression)
-				Action({
-					ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right));
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		NonTerminal(ret, EqualityExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("BIT_AND")
+			NonTerminal(right, EqualityExpression)
+		)
+	) */
 	private int matchAndExpression(int lookahead) {
 		lookahead = matchEqualityExpression(lookahead);
 		if (lookahead == -1)
@@ -14360,16 +11069,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("XOR")
-			NonTerminal(right, AndExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("XOR")
+		NonTerminal(right, AndExpression)
+	) */
 	private int matchExclusiveOrExpression_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.XOR);
 		if (lookahead == -1)
@@ -14381,16 +11084,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("XOR")
-			NonTerminal(right, AndExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("XOR")
+		NonTerminal(right, AndExpression)
+	) */
 	private int matchExclusiveOrExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchExclusiveOrExpression_2_1(lookahead);
@@ -14402,22 +11099,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, AndExpression)
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Terminal("XOR")
-				NonTerminal(right, AndExpression)
-				Action({
-					ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right));
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		NonTerminal(ret, AndExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("XOR")
+			NonTerminal(right, AndExpression)
+		)
+	) */
 	private int matchExclusiveOrExpression(int lookahead) {
 		lookahead = matchAndExpression(lookahead);
 		if (lookahead == -1)
@@ -14429,16 +11117,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("BIT_OR")
-			NonTerminal(right, ExclusiveOrExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("BIT_OR")
+		NonTerminal(right, ExclusiveOrExpression)
+	) */
 	private int matchInclusiveOrExpression_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.BIT_OR);
 		if (lookahead == -1)
@@ -14450,16 +11132,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("BIT_OR")
-			NonTerminal(right, ExclusiveOrExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("BIT_OR")
+		NonTerminal(right, ExclusiveOrExpression)
+	) */
 	private int matchInclusiveOrExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchInclusiveOrExpression_2_1(lookahead);
@@ -14471,22 +11147,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, ExclusiveOrExpression)
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Terminal("BIT_OR")
-				NonTerminal(right, ExclusiveOrExpression)
-				Action({
-					ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right));
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		NonTerminal(ret, ExclusiveOrExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("BIT_OR")
+			NonTerminal(right, ExclusiveOrExpression)
+		)
+	) */
 	private int matchInclusiveOrExpression(int lookahead) {
 		lookahead = matchExclusiveOrExpression(lookahead);
 		if (lookahead == -1)
@@ -14498,16 +11165,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("SC_AND")
-			NonTerminal(right, InclusiveOrExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("SC_AND")
+		NonTerminal(right, InclusiveOrExpression)
+	) */
 	private int matchConditionalAndExpression_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SC_AND);
 		if (lookahead == -1)
@@ -14519,16 +11180,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("SC_AND")
-			NonTerminal(right, InclusiveOrExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("SC_AND")
+		NonTerminal(right, InclusiveOrExpression)
+	) */
 	private int matchConditionalAndExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchConditionalAndExpression_2_1(lookahead);
@@ -14540,22 +11195,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, InclusiveOrExpression)
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Terminal("SC_AND")
-				NonTerminal(right, InclusiveOrExpression)
-				Action({
-					ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right));
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		NonTerminal(ret, InclusiveOrExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("SC_AND")
+			NonTerminal(right, InclusiveOrExpression)
+		)
+	) */
 	private int matchConditionalAndExpression(int lookahead) {
 		lookahead = matchInclusiveOrExpression(lookahead);
 		if (lookahead == -1)
@@ -14567,16 +11213,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("SC_OR")
-			NonTerminal(right, ConditionalAndExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("SC_OR")
+		NonTerminal(right, ConditionalAndExpression)
+	) */
 	private int matchConditionalOrExpression_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.SC_OR);
 		if (lookahead == -1)
@@ -14588,16 +11228,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("SC_OR")
-			NonTerminal(right, ConditionalAndExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("SC_OR")
+		NonTerminal(right, ConditionalAndExpression)
+	) */
 	private int matchConditionalOrExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchConditionalOrExpression_2_1(lookahead);
@@ -14609,22 +11243,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, ConditionalAndExpression)
-			ZeroOrMore(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Terminal("SC_OR")
-				NonTerminal(right, ConditionalAndExpression)
-				Action({
-					ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right));
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		NonTerminal(ret, ConditionalAndExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("SC_OR")
+			NonTerminal(right, ConditionalAndExpression)
+		)
+	) */
 	private int matchConditionalOrExpression(int lookahead) {
 		lookahead = matchConditionalAndExpression(lookahead);
 		if (lookahead == -1)
@@ -14636,18 +11261,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("HOOK")
-			NonTerminal(left, Expression)
-			Terminal("COLON")
-			NonTerminal(right, ConditionalExpression)
-			Action({
-				ret = dress(SConditionalExpr.make(ret, left, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("HOOK")
+		NonTerminal(left, Expression)
+		Terminal("COLON")
+		NonTerminal(right, ConditionalExpression)
+	) */
 	private int matchConditionalExpression_2_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.HOOK);
 		if (lookahead == -1)
@@ -14665,18 +11284,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("HOOK")
-			NonTerminal(left, Expression)
-			Terminal("COLON")
-			NonTerminal(right, ConditionalExpression)
-			Action({
-				ret = dress(SConditionalExpr.make(ret, left, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("HOOK")
+		NonTerminal(left, Expression)
+		Terminal("COLON")
+		NonTerminal(right, ConditionalExpression)
+	) */
 	private int matchConditionalExpression_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchConditionalExpression_2_1(lookahead);
@@ -14686,24 +11299,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ret, ConditionalOrExpression)
-			ZeroOrOne(
-				LookAhead(2)
-				Action({
-					lateRun();
-				})
-				Terminal("HOOK")
-				NonTerminal(left, Expression)
-				Terminal("COLON")
-				NonTerminal(right, ConditionalExpression)
-				Action({
-					ret = dress(SConditionalExpr.make(ret, left, right));
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		NonTerminal(ret, ConditionalOrExpression)
+		ZeroOrOne(
+			LookAhead(2)
+			Terminal("HOOK")
+			NonTerminal(left, Expression)
+			Terminal("COLON")
+			NonTerminal(right, ConditionalExpression)
+		)
+	) */
 	private int matchConditionalExpression(int lookahead) {
 		lookahead = matchConditionalOrExpression(lookahead);
 		if (lookahead == -1)
@@ -14715,10 +11319,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			NonTerminal(ret, Annotation)
-			NonTerminal(ret, MemberValueArrayInitializer)
-			NonTerminal(ret, ConditionalExpression)
-		) */
+		NonTerminal(ret, Annotation)
+		NonTerminal(ret, MemberValueArrayInitializer)
+		NonTerminal(ret, ConditionalExpression)
+	) */
 	private int matchMemberValue_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAnnotation(lookahead);
@@ -14734,15 +11338,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Choice(
-				NonTerminal(ret, Annotation)
-				NonTerminal(ret, MemberValueArrayInitializer)
-				NonTerminal(ret, ConditionalExpression)
-			)
-			Action({
-				return ret;
-			})
-		) */
+		Choice(
+			NonTerminal(ret, Annotation)
+			NonTerminal(ret, MemberValueArrayInitializer)
+			NonTerminal(ret, ConditionalExpression)
+		)
+	) */
 	private int matchMemberValue(int lookahead) {
 		lookahead = matchMemberValue_1(lookahead);
 		if (lookahead == -1)
@@ -14751,16 +11352,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			NonTerminal(name, Name)
-			Terminal("ASSIGN")
-			NonTerminal(value, MemberValue)
-			Action({
-				return dress(SMemberValuePair.make(name, value));
-			})
-		) */
+		NonTerminal(name, Name)
+		Terminal("ASSIGN")
+		NonTerminal(value, MemberValue)
+	) */
 	private int matchMemberValuePair(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -14775,12 +11370,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("COMMA")
-			NonTerminal(pair, MemberValuePair)
-			Action({
-				ret = append(ret, pair);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(pair, MemberValuePair)
+	) */
 	private int matchMemberValuePairs_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.COMMA);
 		if (lookahead == -1)
@@ -14792,12 +11384,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("COMMA")
-			NonTerminal(pair, MemberValuePair)
-			Action({
-				ret = append(ret, pair);
-			})
-		) */
+		Terminal("COMMA")
+		NonTerminal(pair, MemberValuePair)
+	) */
 	private int matchMemberValuePairs_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchMemberValuePairs_3_1(lookahead);
@@ -14809,21 +11398,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
+		NonTerminal(pair, MemberValuePair)
+		ZeroOrMore(
+			Terminal("COMMA")
 			NonTerminal(pair, MemberValuePair)
-			Action({
-				ret = append(ret, pair);
-			})
-			ZeroOrMore(
-				Terminal("COMMA")
-				NonTerminal(pair, MemberValuePair)
-				Action({
-					ret = append(ret, pair);
-				})
-			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchMemberValuePairs(int lookahead) {
 		lookahead = matchMemberValuePair(lookahead);
 		if (lookahead == -1)
@@ -14835,8 +11415,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(pairs, MemberValuePairs)
-		) */
+		NonTerminal(pairs, MemberValuePairs)
+	) */
 	private int matchNormalAnnotation_5_1(int lookahead) {
 		lookahead = matchMemberValuePairs(lookahead);
 		if (lookahead == -1)
@@ -14845,8 +11425,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(pairs, MemberValuePairs)
-		) */
+		NonTerminal(pairs, MemberValuePairs)
+	) */
 	private int matchNormalAnnotation_5(int lookahead) {
 		int newLookahead;
 		newLookahead = matchNormalAnnotation_5_1(lookahead);
@@ -14856,20 +11436,14 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("AT")
-			NonTerminal(name, QualifiedName)
-			Terminal("LPAREN")
-			ZeroOrOne(
-				NonTerminal(pairs, MemberValuePairs)
-			)
-			Terminal("RPAREN")
-			Action({
-				return dress(SNormalAnnotationExpr.make(name, ensureNotNull(pairs)));
-			})
-		) */
+		Terminal("AT")
+		NonTerminal(name, QualifiedName)
+		Terminal("LPAREN")
+		ZeroOrOne(
+			NonTerminal(pairs, MemberValuePairs)
+		)
+		Terminal("RPAREN")
+	) */
 	private int matchNormalAnnotation(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.AT);
 		if (lookahead == -1)
@@ -14890,20 +11464,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				Terminal("AT")
-				NonTerminal(QualifiedName)
-				Terminal("LPAREN")
-				Choice(
-					Sequence(
-						NonTerminal(Name)
-						Terminal("ASSIGN")
-					)
-					Terminal("RPAREN")
+		LookAhead(
+			Terminal("AT")
+			NonTerminal(QualifiedName)
+			Terminal("LPAREN")
+			Choice(
+				Sequence(
+					NonTerminal(Name)
+					Terminal("ASSIGN")
 				)
+				Terminal("RPAREN")
 			)
-			NonTerminal(ret, NormalAnnotation)
-		) */
+		)
+		NonTerminal(ret, NormalAnnotation)
+	) */
 	private int matchAnnotation_1_1(int lookahead) {
 		lookahead = matchNormalAnnotation(lookahead);
 		if (lookahead == -1)
@@ -14912,18 +11486,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("AT")
-			NonTerminal(name, QualifiedName)
-			Terminal("LPAREN")
-			NonTerminal(memberVal, MemberValue)
-			Terminal("RPAREN")
-			Action({
-				return dress(SSingleMemberAnnotationExpr.make(name, memberVal));
-			})
-		) */
+		Terminal("AT")
+		NonTerminal(name, QualifiedName)
+		Terminal("LPAREN")
+		NonTerminal(memberVal, MemberValue)
+		Terminal("RPAREN")
+	) */
 	private int matchSingleMemberAnnotation(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.AT);
 		if (lookahead == -1)
@@ -14944,13 +11512,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				Terminal("AT")
-				NonTerminal(QualifiedName)
-				Terminal("LPAREN")
-			)
-			NonTerminal(ret, SingleMemberAnnotation)
-		) */
+		LookAhead(
+			Terminal("AT")
+			NonTerminal(QualifiedName)
+			Terminal("LPAREN")
+		)
+		NonTerminal(ret, SingleMemberAnnotation)
+	) */
 	private int matchAnnotation_1_2(int lookahead) {
 		lookahead = matchSingleMemberAnnotation(lookahead);
 		if (lookahead == -1)
@@ -14959,15 +11527,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			Terminal("AT")
-			NonTerminal(name, QualifiedName)
-			Action({
-				return dress(SMarkerAnnotationExpr.make(name));
-			})
-		) */
+		Terminal("AT")
+		NonTerminal(name, QualifiedName)
+	) */
 	private int matchMarkerAnnotation(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.AT);
 		if (lookahead == -1)
@@ -14979,12 +11541,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(
-				Terminal("AT")
-				NonTerminal(QualifiedName)
-			)
-			NonTerminal(ret, MarkerAnnotation)
-		) */
+		LookAhead(
+			Terminal("AT")
+			NonTerminal(QualifiedName)
+		)
+		NonTerminal(ret, MarkerAnnotation)
+	) */
 	private int matchAnnotation_1_3(int lookahead) {
 		lookahead = matchMarkerAnnotation(lookahead);
 		if (lookahead == -1)
@@ -14993,6 +11555,53 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
+		Sequence(
+			LookAhead(
+				Terminal("AT")
+				NonTerminal(QualifiedName)
+				Terminal("LPAREN")
+				Choice(
+					Sequence(
+						NonTerminal(Name)
+						Terminal("ASSIGN")
+					)
+					Terminal("RPAREN")
+				)
+			)
+			NonTerminal(ret, NormalAnnotation)
+		)
+		Sequence(
+			LookAhead(
+				Terminal("AT")
+				NonTerminal(QualifiedName)
+				Terminal("LPAREN")
+			)
+			NonTerminal(ret, SingleMemberAnnotation)
+		)
+		Sequence(
+			LookAhead(
+				Terminal("AT")
+				NonTerminal(QualifiedName)
+			)
+			NonTerminal(ret, MarkerAnnotation)
+		)
+	) */
+	private int matchAnnotation_1(int lookahead) {
+		int newLookahead;
+		newLookahead = matchAnnotation_1_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchAnnotation_1_2(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchAnnotation_1_3(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
+	}
+
+	/* Sequence(
+		Choice(
 			Sequence(
 				LookAhead(
 					Terminal("AT")
@@ -15023,58 +11632,8 @@ public class ParserImplementation extends ParserNewBase {
 				)
 				NonTerminal(ret, MarkerAnnotation)
 			)
-		) */
-	private int matchAnnotation_1(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAnnotation_1_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAnnotation_1_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAnnotation_1_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* Sequence(
-			Choice(
-				Sequence(
-					LookAhead(
-						Terminal("AT")
-						NonTerminal(QualifiedName)
-						Terminal("LPAREN")
-						Choice(
-							Sequence(
-								NonTerminal(Name)
-								Terminal("ASSIGN")
-							)
-							Terminal("RPAREN")
-						)
-					)
-					NonTerminal(ret, NormalAnnotation)
-				)
-				Sequence(
-					LookAhead(
-						Terminal("AT")
-						NonTerminal(QualifiedName)
-						Terminal("LPAREN")
-					)
-					NonTerminal(ret, SingleMemberAnnotation)
-				)
-				Sequence(
-					LookAhead(
-						Terminal("AT")
-						NonTerminal(QualifiedName)
-					)
-					NonTerminal(ret, MarkerAnnotation)
-				)
-			)
-			Action({
-				return ret;
-			})
-		) */
+		)
+	) */
 	private int matchAnnotation(int lookahead) {
 		lookahead = matchAnnotation_1(lookahead);
 		if (lookahead == -1)
@@ -15083,11 +11642,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(annotation, Annotation)
-			Action({
-				annotations = append(annotations, annotation);
-			})
-		) */
+		NonTerminal(annotation, Annotation)
+	) */
 	private int matchAnnotations_1_1(int lookahead) {
 		lookahead = matchAnnotation(lookahead);
 		if (lookahead == -1)
@@ -15096,11 +11652,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			NonTerminal(annotation, Annotation)
-			Action({
-				annotations = append(annotations, annotation);
-			})
-		) */
+		NonTerminal(annotation, Annotation)
+	) */
 	private int matchAnnotations_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAnnotations_1_1(lookahead);
@@ -15112,16 +11665,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrMore(
-				NonTerminal(annotation, Annotation)
-				Action({
-					annotations = append(annotations, annotation);
-				})
-			)
-			Action({
-				return annotations;
-			})
-		) */
+		ZeroOrMore(
+			NonTerminal(annotation, Annotation)
+		)
+	) */
 	private int matchAnnotations(int lookahead) {
 		lookahead = matchAnnotations_1(lookahead);
 		if (lookahead == -1)
@@ -15130,17 +11677,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
-			Terminal("PACKAGE")
-			NonTerminal(name, QualifiedName)
-			Terminal("SEMICOLON")
-			Action({
-				return dress(SPackageDecl.make(annotations, name));
-			})
-		) */
+		NonTerminal(annotations, Annotations)
+		Terminal("PACKAGE")
+		NonTerminal(name, QualifiedName)
+		Terminal("SEMICOLON")
+	) */
 	private int matchPackageDecl(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -15158,8 +11699,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(PackageDecl)
-		) */
+		NonTerminal(PackageDecl)
+	) */
 	private int matchCompilationUnit1(int lookahead) {
 		lookahead = matchPackageDecl(lookahead);
 		if (lookahead == -1)
@@ -15167,6 +11708,10 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Choice(
+		Terminal("EOF")
+		Terminal("EOF")
+	) */
 	public void parseEpilog() throws ParseException {
 		if (match(0, ParserImplConstants.EOF) != -1) {
 			parse(ParserImplConstants.EOF);
@@ -15177,6 +11722,14 @@ public class ParserImplementation extends ParserNewBase {
 		}
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		NonTerminal(annotations, Annotations)
+		Terminal("PACKAGE")
+		NonTerminal(name, QualifiedName)
+		Terminal("SEMICOLON")
+		Action({ return dress(SPackageDecl.make(annotations, name)); })
+	) */
 	public BUTree<SPackageDecl> parsePackageDecl() throws ParseException {
 		BUTree<SNodeList> annotations = null;
 		BUTree<SQualifiedName> name;
@@ -15188,6 +11741,13 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SPackageDecl.make(annotations, name));
 	}
 
+	/* Sequence(
+		ZeroOrMore(
+			NonTerminal(importDecl, ImportDecl)
+			Action({ imports = append(imports, importDecl); })
+		)
+		Action({ return imports; })
+	) */
 	public BUTree<SNodeList> parseImportDecls() throws ParseException {
 		BUTree<SNodeList> imports = emptyList();
 		BUTree<SImportDecl> importDecl = null;
@@ -15198,6 +11758,22 @@ public class ParserImplementation extends ParserNewBase {
 		return imports;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("IMPORT")
+		ZeroOrOne(
+			Terminal("STATIC")
+			Action({ isStatic = true; })
+		)
+		NonTerminal(name, QualifiedName)
+		ZeroOrOne(
+			Terminal("DOT")
+			Terminal("STAR")
+			Action({ isAsterisk = true; })
+		)
+		Terminal("SEMICOLON")
+		Action({ return dress(SImportDecl.make(name, isStatic, isAsterisk)); })
+	) */
 	public BUTree<SImportDecl> parseImportDecl() throws ParseException {
 		BUTree<SQualifiedName> name;
 		boolean isStatic = false;
@@ -15218,6 +11794,13 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SImportDecl.make(name, isStatic, isAsterisk));
 	}
 
+	/* Sequence(
+		ZeroOrMore(
+			NonTerminal(typeDecl, TypeDecl)
+			Action({ types = append(types, typeDecl); })
+		)
+		Action({ return types; })
+	) */
 	public BUTree<SNodeList> parseTypeDecls() throws ParseException {
 		BUTree<SNodeList> types = emptyList();
 		BUTree<? extends STypeDecl> typeDecl = null;
@@ -15228,6 +11811,66 @@ public class ParserImplementation extends ParserNewBase {
 		return types;
 	}
 
+	/* Sequence(
+		ZeroOrMore(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					Terminal("PUBLIC")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public)); })
+				)
+				Sequence(
+					Terminal("PROTECTED")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected)); })
+				)
+				Sequence(
+					Terminal("PRIVATE")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private)); })
+				)
+				Sequence(
+					Terminal("ABSTRACT")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract)); })
+				)
+				Sequence(
+					Terminal("_DEFAULT")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default)); })
+				)
+				Sequence(
+					Terminal("STATIC")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static)); })
+				)
+				Sequence(
+					Terminal("FINAL")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final)); })
+				)
+				Sequence(
+					Terminal("TRANSIENT")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient)); })
+				)
+				Sequence(
+					Terminal("VOLATILE")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile)); })
+				)
+				Sequence(
+					Terminal("SYNCHRONIZED")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized)); })
+				)
+				Sequence(
+					Terminal("NATIVE")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native)); })
+				)
+				Sequence(
+					Terminal("STRICTFP")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP)); })
+				)
+				Sequence(
+					NonTerminal(ann, Annotation)
+					Action({ modifiers = append(modifiers, ann); })
+				)
+			)
+		)
+		Action({ return modifiers; })
+	) */
 	public BUTree<SNodeList> parseModifiers() throws ParseException {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
@@ -15279,88 +11922,49 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Choice(
-				Sequence(
-					Terminal("PUBLIC")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-					})
-				)
-				Sequence(
-					Terminal("PROTECTED")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-					})
-				)
-				Sequence(
-					Terminal("PRIVATE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-					})
-				)
-				Sequence(
-					Terminal("ABSTRACT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-					})
-				)
-				Sequence(
-					Terminal("_DEFAULT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
-					})
-				)
-				Sequence(
-					Terminal("STATIC")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-					})
-				)
-				Sequence(
-					Terminal("FINAL")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-					})
-				)
-				Sequence(
-					Terminal("TRANSIENT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-					})
-				)
-				Sequence(
-					Terminal("VOLATILE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-					})
-				)
-				Sequence(
-					Terminal("SYNCHRONIZED")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-					})
-				)
-				Sequence(
-					Terminal("NATIVE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-					})
-				)
-				Sequence(
-					Terminal("STRICTFP")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-					})
-				)
-				Sequence(
-					NonTerminal(ann, Annotation)
-					Action({
-						modifiers = append(modifiers, ann);
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("PUBLIC")
 			)
-		) */
+			Sequence(
+				Terminal("PROTECTED")
+			)
+			Sequence(
+				Terminal("PRIVATE")
+			)
+			Sequence(
+				Terminal("ABSTRACT")
+			)
+			Sequence(
+				Terminal("_DEFAULT")
+			)
+			Sequence(
+				Terminal("STATIC")
+			)
+			Sequence(
+				Terminal("FINAL")
+			)
+			Sequence(
+				Terminal("TRANSIENT")
+			)
+			Sequence(
+				Terminal("VOLATILE")
+			)
+			Sequence(
+				Terminal("SYNCHRONIZED")
+			)
+			Sequence(
+				Terminal("NATIVE")
+			)
+			Sequence(
+				Terminal("STRICTFP")
+			)
+			Sequence(
+				NonTerminal(ann, Annotation)
+			)
+		)
+	) */
 	private int matchModifiers1(int lookahead) {
 		if (match(0, ParserImplConstants.VOLATILE) != -1) {
 			return lookahead;
@@ -15409,6 +12013,62 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		ZeroOrMore(
+			LookAhead(2)
+			Choice(
+				Sequence(
+					Terminal("PUBLIC")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public)); })
+				)
+				Sequence(
+					Terminal("PROTECTED")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected)); })
+				)
+				Sequence(
+					Terminal("PRIVATE")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private)); })
+				)
+				Sequence(
+					Terminal("ABSTRACT")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract)); })
+				)
+				Sequence(
+					Terminal("STATIC")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static)); })
+				)
+				Sequence(
+					Terminal("FINAL")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final)); })
+				)
+				Sequence(
+					Terminal("TRANSIENT")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient)); })
+				)
+				Sequence(
+					Terminal("VOLATILE")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile)); })
+				)
+				Sequence(
+					Terminal("SYNCHRONIZED")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized)); })
+				)
+				Sequence(
+					Terminal("NATIVE")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native)); })
+				)
+				Sequence(
+					Terminal("STRICTFP")
+					Action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP)); })
+				)
+				Sequence(
+					NonTerminal(ann, Annotation)
+					Action({ modifiers = append(modifiers, ann); })
+				)
+			)
+		)
+		Action({ return modifiers; })
+	) */
 	public BUTree<SNodeList> parseModifiersNoDefault() throws ParseException {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
@@ -15457,82 +12117,46 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Choice(
-				Sequence(
-					Terminal("PUBLIC")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-					})
-				)
-				Sequence(
-					Terminal("PROTECTED")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-					})
-				)
-				Sequence(
-					Terminal("PRIVATE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-					})
-				)
-				Sequence(
-					Terminal("ABSTRACT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-					})
-				)
-				Sequence(
-					Terminal("STATIC")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-					})
-				)
-				Sequence(
-					Terminal("FINAL")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-					})
-				)
-				Sequence(
-					Terminal("TRANSIENT")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-					})
-				)
-				Sequence(
-					Terminal("VOLATILE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-					})
-				)
-				Sequence(
-					Terminal("SYNCHRONIZED")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-					})
-				)
-				Sequence(
-					Terminal("NATIVE")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-					})
-				)
-				Sequence(
-					Terminal("STRICTFP")
-					Action({
-						modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-					})
-				)
-				Sequence(
-					NonTerminal(ann, Annotation)
-					Action({
-						modifiers = append(modifiers, ann);
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("PUBLIC")
 			)
-		) */
+			Sequence(
+				Terminal("PROTECTED")
+			)
+			Sequence(
+				Terminal("PRIVATE")
+			)
+			Sequence(
+				Terminal("ABSTRACT")
+			)
+			Sequence(
+				Terminal("STATIC")
+			)
+			Sequence(
+				Terminal("FINAL")
+			)
+			Sequence(
+				Terminal("TRANSIENT")
+			)
+			Sequence(
+				Terminal("VOLATILE")
+			)
+			Sequence(
+				Terminal("SYNCHRONIZED")
+			)
+			Sequence(
+				Terminal("NATIVE")
+			)
+			Sequence(
+				Terminal("STRICTFP")
+			)
+			Sequence(
+				NonTerminal(ann, Annotation)
+			)
+		)
+	) */
 	private int matchModifiersNoDefault1(int lookahead) {
 		if (match(0, ParserImplConstants.VOLATILE) != -1) {
 			return lookahead;
@@ -15578,6 +12202,24 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Choice(
+			Sequence(
+				Terminal("SEMICOLON")
+				Action({ ret = dress(SEmptyTypeDecl.make()); })
+			)
+			Sequence(
+				NonTerminal(modifiers, Modifiers)
+				Choice(
+					NonTerminal(ret, ClassOrInterfaceDecl)
+					NonTerminal(ret, EnumDecl)
+					NonTerminal(ret, AnnotationTypeDecl)
+				)
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends STypeDecl> ret;
@@ -15602,6 +12244,44 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				Terminal("CLASS")
+				Action({ typeKind = TypeKind.Class; })
+				NonTerminal(name, Name)
+				ZeroOrOne(
+					NonTerminal(typeParams, TypeParameters)
+				)
+				ZeroOrOne(
+					Terminal("EXTENDS")
+					NonTerminal(superClassType, AnnotatedQualifiedType)
+				)
+				ZeroOrOne(
+					NonTerminal(implementsClause, ImplementsList)
+				)
+			)
+			Sequence(
+				Terminal("INTERFACE")
+				Action({ typeKind = TypeKind.Interface; })
+				NonTerminal(name, Name)
+				ZeroOrOne(
+					NonTerminal(typeParams, TypeParameters)
+				)
+				ZeroOrOne(
+					NonTerminal(extendsClause, ExtendsList)
+				)
+			)
+		)
+		NonTerminal(members, ClassOrInterfaceBody)
+		Action({
+			if (typeKind == TypeKind.Interface)
+		return dress(SInterfaceDecl.make(modifiers, name, ensureNotNull(typeParams), ensureNotNull(extendsClause), members)).withProblem(problem.value);
+	else {
+		return dress(SClassDecl.make(modifiers, name, ensureNotNull(typeParams), optionOf(superClassType), ensureNotNull(implementsClause), members));
+	}
+		})
+	) */
 	public BUTree<? extends STypeDecl> parseClassOrInterfaceDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		TypeKind typeKind;
 		BUTree<SName> name;
@@ -15646,6 +12326,25 @@ public class ParserImplementation extends ParserNewBase {
 		}
 	}
 
+	/* Sequence(
+		Terminal("EXTENDS")
+		Choice(
+			Sequence(
+				NonTerminal(cit, AnnotatedQualifiedType)
+				Action({ ret = append(ret, cit); })
+				ZeroOrMore(
+					Terminal("COMMA")
+					NonTerminal(cit, AnnotatedQualifiedType)
+					Action({ ret = append(ret, cit); })
+				)
+			)
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseExtendsList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
@@ -15667,6 +12366,29 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Terminal("IMPLEMENTS")
+		Choice(
+			Sequence(
+				NonTerminal(cit, AnnotatedQualifiedType)
+				Action({ ret = append(ret, cit); })
+				ZeroOrMore(
+					Terminal("COMMA")
+					NonTerminal(cit, AnnotatedQualifiedType)
+					Action({ ret = append(ret, cit); })
+				)
+				Action({
+					if (typeKind == TypeKind.Interface) problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
+	
+				})
+			)
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseImplementsList(TypeKind typeKind, ByRef<BUProblem> problem) throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
@@ -15680,8 +12402,7 @@ public class ParserImplementation extends ParserNewBase {
 				cit = parseAnnotatedQualifiedType();
 				ret = append(ret, cit);
 			}
-			if (typeKind == TypeKind.Interface)
-				problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
+			if (typeKind == TypeKind.Interface) problem.value = new BUProblem(Severity.ERROR, "An interface cannot implement other interfaces");
 
 		} else if (quotesMode) {
 			ret = parseNodeListVar();
@@ -15691,6 +12412,42 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Terminal("ENUM")
+		NonTerminal(name, Name)
+		ZeroOrOne(
+			NonTerminal(implementsClause, ImplementsList)
+		)
+		Terminal("LBRACE")
+		ZeroOrOne(
+			Choice(
+				Sequence(
+					NonTerminal(entry, EnumConstantDecl)
+					Action({ constants = append(constants, entry); })
+					ZeroOrMore(
+						LookAhead(2)
+						Terminal("COMMA")
+						NonTerminal(entry, EnumConstantDecl)
+						Action({ constants = append(constants, entry); })
+					)
+				)
+				Sequence(
+					LookAhead({ quotesMode })
+					NonTerminal(constants, NodeListVar)
+				)
+			)
+		)
+		ZeroOrOne(
+			Terminal("COMMA")
+			Action({ trailingComma = true; })
+		)
+		ZeroOrOne(
+			Terminal("SEMICOLON")
+			NonTerminal(members, ClassOrInterfaceBodyDecls)
+		)
+		Terminal("RBRACE")
+		Action({ return dress(SEnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))).withProblem(problem.value); })
+	) */
 	public BUTree<? extends STypeDecl> parseEnumDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SName> name;
 		BUTree<SNodeList> implementsClause = emptyList();
@@ -15733,13 +12490,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Terminal("COMMA")
-			NonTerminal(entry, EnumConstantDecl)
-			Action({
-				constants = append(constants, entry);
-			})
-		) */
+		LookAhead(2)
+		Terminal("COMMA")
+		NonTerminal(entry, EnumConstantDecl)
+	) */
 	private int matchEnumDecl1(int lookahead) {
 		if (match(0, ParserImplConstants.COMMA) != -1) {
 			if (match(1, ParserImplConstants.VOLATILE) != -1) {
@@ -15791,6 +12545,18 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		NonTerminal(modifiers, Modifiers)
+		NonTerminal(name, Name)
+		ZeroOrOne(
+			NonTerminal(args, Arguments)
+		)
+		ZeroOrOne(
+			NonTerminal(classBody, ClassOrInterfaceBody)
+		)
+		Action({ return dress(SEnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody))); })
+	) */
 	public BUTree<SEnumConstantDecl> parseEnumConstantDecl() throws ParseException {
 		BUTree<SNodeList> modifiers = null;
 		BUTree<SName> name;
@@ -15808,6 +12574,13 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SEnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody)));
 	}
 
+	/* Sequence(
+		Terminal("AT")
+		Terminal("INTERFACE")
+		NonTerminal(name, Name)
+		NonTerminal(members, AnnotationTypeBody)
+		Action({ return dress(SAnnotationDecl.make(modifiers, name, members)); })
+	) */
 	public BUTree<SAnnotationDecl> parseAnnotationTypeDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SName> name;
 		BUTree<SNodeList> members;
@@ -15818,6 +12591,23 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SAnnotationDecl.make(modifiers, name, members));
 	}
 
+	/* Sequence(
+		Terminal("LBRACE")
+		ZeroOrOne(
+			Choice(
+				OneOrMore(
+					NonTerminal(member, AnnotationTypeBodyDecl)
+					Action({ ret = append(ret, member); })
+				)
+				Sequence(
+					LookAhead({ quotesMode })
+					NonTerminal(ret, NodeListVar)
+				)
+			)
+		)
+		Terminal("RBRACE")
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseAnnotationTypeBody() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SMemberDecl> member;
@@ -15827,8 +12617,7 @@ public class ParserImplementation extends ParserNewBase {
 				do {
 					member = parseAnnotationTypeBodyDecl();
 					ret = append(ret, member);
-				}
-				while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.SEMICOLON) != -1);
+				} while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.SEMICOLON) != -1);
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
@@ -15839,6 +12628,33 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Choice(
+			Sequence(
+				Terminal("SEMICOLON")
+				Action({ ret = dress(SEmptyTypeDecl.make()); })
+			)
+			Sequence(
+				NonTerminal(modifiers, Modifiers)
+				Choice(
+					Sequence(
+						LookAhead(
+							NonTerminal(Type)
+							NonTerminal(Name)
+							Terminal("LPAREN")
+						)
+						NonTerminal(ret, AnnotationTypeMemberDecl)
+					)
+					NonTerminal(ret, ClassOrInterfaceDecl)
+					NonTerminal(ret, EnumDecl)
+					NonTerminal(ret, AnnotationTypeDecl)
+					NonTerminal(ret, FieldDecl)
+				)
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SMemberDecl> parseAnnotationTypeBodyDecl() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SMemberDecl> ret;
@@ -15868,10 +12684,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Type)
-			NonTerminal(Name)
-			Terminal("LPAREN")
-		) */
+		NonTerminal(Type)
+		NonTerminal(Name)
+		Terminal("LPAREN")
+	) */
 	private int matchAnnotationTypeBodyDecl1(int lookahead) {
 		lookahead = matchType(lookahead);
 		if (lookahead == -1)
@@ -15885,6 +12701,20 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		NonTerminal(type, Type)
+		NonTerminal(name, Name)
+		Terminal("LPAREN")
+		Terminal("RPAREN")
+		NonTerminal(dims, ArrayDims)
+		ZeroOrOne(
+			Terminal("_DEFAULT")
+			NonTerminal(val, MemberValue)
+			Action({ defaultVal = optionOf(val); })
+		)
+		Terminal("SEMICOLON")
+		Action({ return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal)); })
+	) */
 	public BUTree<SAnnotationMemberDecl> parseAnnotationTypeMemberDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<? extends SType> type;
 		BUTree<SName> name;
@@ -15905,6 +12735,26 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal));
 	}
 
+	/* Sequence(
+		Terminal("LT")
+		Choice(
+			Sequence(
+				NonTerminal(tp, TypeParameter)
+				Action({ ret = append(ret, tp); })
+				ZeroOrMore(
+					Terminal("COMMA")
+					NonTerminal(tp, TypeParameter)
+					Action({ ret = append(ret, tp); })
+				)
+			)
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+		Terminal("GT")
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseTypeParameters() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<STypeParameter> tp;
@@ -15926,6 +12776,15 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		NonTerminal(annotations, Annotations)
+		NonTerminal(name, Name)
+		ZeroOrOne(
+			NonTerminal(typeBounds, TypeBounds)
+		)
+		Action({ return dress(STypeParameter.make(annotations, name, ensureNotNull(typeBounds))); })
+	) */
 	public BUTree<STypeParameter> parseTypeParameter() throws ParseException {
 		BUTree<SNodeList> annotations = null;
 		BUTree<SName> name;
@@ -15939,6 +12798,25 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(STypeParameter.make(annotations, name, ensureNotNull(typeBounds)));
 	}
 
+	/* Sequence(
+		Terminal("EXTENDS")
+		Choice(
+			Sequence(
+				NonTerminal(cit, AnnotatedQualifiedType)
+				Action({ ret = append(ret, cit); })
+				ZeroOrMore(
+					Terminal("BIT_AND")
+					NonTerminal(cit, AnnotatedQualifiedType)
+					Action({ ret = append(ret, cit); })
+				)
+			)
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseTypeBounds() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
@@ -15960,6 +12838,12 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Terminal("LBRACE")
+		NonTerminal(ret, ClassOrInterfaceBodyDecls)
+		Terminal("RBRACE")
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseClassOrInterfaceBody(TypeKind typeKind) throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SMemberDecl> member;
@@ -15969,6 +12853,21 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		ZeroOrOne(
+			Choice(
+				OneOrMore(
+					NonTerminal(member, ClassOrInterfaceBodyDecl)
+					Action({ ret = append(ret, member); })
+				)
+				Sequence(
+					LookAhead({ quotesMode })
+					NonTerminal(ret, NodeListVar)
+				)
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseClassOrInterfaceBodyDecls(TypeKind typeKind) throws ParseException {
 		BUTree<? extends SMemberDecl> member;
 		BUTree<SNodeList> ret = emptyList();
@@ -15977,8 +12876,7 @@ public class ParserImplementation extends ParserNewBase {
 				do {
 					member = parseClassOrInterfaceBodyDecl(typeKind);
 					ret = append(ret, member);
-				}
-				while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.SEMICOLON) != -1);
+				} while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.SEMICOLON) != -1);
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
@@ -15988,6 +12886,66 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Choice(
+			Sequence(
+				Terminal("SEMICOLON")
+				Action({ ret = dress(SEmptyMemberDecl.make()); })
+			)
+			Sequence(
+				NonTerminal(modifiers, Modifiers)
+				Action({
+					if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface) problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
+	
+				})
+				Choice(
+					Sequence(
+						NonTerminal(ret, InitializerDecl)
+						Action({
+							if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
+	
+						})
+					)
+					NonTerminal(ret, ClassOrInterfaceDecl)
+					NonTerminal(ret, EnumDecl)
+					NonTerminal(ret, AnnotationTypeDecl)
+					Sequence(
+						LookAhead(
+							ZeroOrOne(
+								NonTerminal(TypeParameters)
+							)
+							NonTerminal(Name)
+							Terminal("LPAREN")
+						)
+						NonTerminal(ret, ConstructorDecl)
+						Action({
+							if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
+	
+						})
+					)
+					Sequence(
+						LookAhead(
+							NonTerminal(Type)
+							NonTerminal(Name)
+							ZeroOrMore(
+								Terminal("LBRACKET")
+								Terminal("RBRACKET")
+							)
+							Choice(
+								Terminal("COMMA")
+								Terminal("ASSIGN")
+								Terminal("SEMICOLON")
+							)
+						)
+						NonTerminal(ret, FieldDecl)
+					)
+					NonTerminal(ret, MethodDecl)
+				)
+			)
+		)
+		Action({ return ret.withProblem(problem); })
+	) */
 	public BUTree<? extends SMemberDecl> parseClassOrInterfaceBodyDecl(TypeKind typeKind) throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SMemberDecl> ret;
@@ -15998,13 +12956,11 @@ public class ParserImplementation extends ParserNewBase {
 			ret = dress(SEmptyMemberDecl.make());
 		} else if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR) != -1) {
 			modifiers = parseModifiers();
-			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface)
-				problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
+			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface) problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
 
 			if (match(0, ParserImplConstants.LBRACE) != -1) {
 				ret = parseInitializerDecl(modifiers);
-				if (typeKind == TypeKind.Interface)
-					ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
+				if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
 
 			} else if (match(0, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1) {
 				ret = parseClassOrInterfaceDecl(modifiers);
@@ -16014,8 +12970,7 @@ public class ParserImplementation extends ParserNewBase {
 				ret = parseAnnotationTypeDecl(modifiers);
 			} else if (matchClassOrInterfaceBodyDecl1(0) != -1) {
 				ret = parseConstructorDecl(modifiers);
-				if (typeKind == TypeKind.Interface)
-					ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
+				if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
 
 			} else if (matchClassOrInterfaceBodyDecl4(0) != -1) {
 				ret = parseFieldDecl(modifiers);
@@ -16031,8 +12986,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(TypeParameters)
-		) */
+		NonTerminal(TypeParameters)
+	) */
 	private int matchClassOrInterfaceBodyDecl1_1_1(int lookahead) {
 		lookahead = matchTypeParameters(lookahead);
 		if (lookahead == -1)
@@ -16041,8 +12996,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(TypeParameters)
-		) */
+		NonTerminal(TypeParameters)
+	) */
 	private int matchClassOrInterfaceBodyDecl1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchClassOrInterfaceBodyDecl1_1_1(lookahead);
@@ -16052,12 +13007,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				NonTerminal(TypeParameters)
-			)
-			NonTerminal(Name)
-			Terminal("LPAREN")
-		) */
+		ZeroOrOne(
+			NonTerminal(TypeParameters)
+		)
+		NonTerminal(Name)
+		Terminal("LPAREN")
+	) */
 	private int matchClassOrInterfaceBodyDecl1(int lookahead) {
 		lookahead = matchClassOrInterfaceBodyDecl1_1(lookahead);
 		if (lookahead == -1)
@@ -16072,9 +13027,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LBRACKET")
-			Terminal("RBRACKET")
-		) */
+		Terminal("LBRACKET")
+		Terminal("RBRACKET")
+	) */
 	private int matchClassOrInterfaceBodyDecl4_3_1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
 		if (lookahead == -1)
@@ -16086,9 +13041,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			Terminal("LBRACKET")
-			Terminal("RBRACKET")
-		) */
+		Terminal("LBRACKET")
+		Terminal("RBRACKET")
+	) */
 	private int matchClassOrInterfaceBodyDecl4_3(int lookahead) {
 		int newLookahead;
 		newLookahead = matchClassOrInterfaceBodyDecl4_3_1(lookahead);
@@ -16100,10 +13055,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Terminal("COMMA")
-			Terminal("ASSIGN")
-			Terminal("SEMICOLON")
-		) */
+		Terminal("COMMA")
+		Terminal("ASSIGN")
+		Terminal("SEMICOLON")
+	) */
 	private int matchClassOrInterfaceBodyDecl4_4(int lookahead) {
 		int newLookahead;
 		newLookahead = match(lookahead, ParserImplConstants.COMMA);
@@ -16119,18 +13074,18 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Type)
-			NonTerminal(Name)
-			ZeroOrMore(
-				Terminal("LBRACKET")
-				Terminal("RBRACKET")
-			)
-			Choice(
-				Terminal("COMMA")
-				Terminal("ASSIGN")
-				Terminal("SEMICOLON")
-			)
-		) */
+		NonTerminal(Type)
+		NonTerminal(Name)
+		ZeroOrMore(
+			Terminal("LBRACKET")
+			Terminal("RBRACKET")
+		)
+		Choice(
+			Terminal("COMMA")
+			Terminal("ASSIGN")
+			Terminal("SEMICOLON")
+		)
+	) */
 	private int matchClassOrInterfaceBodyDecl4(int lookahead) {
 		lookahead = matchType(lookahead);
 		if (lookahead == -1)
@@ -16147,6 +13102,12 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		NonTerminal(type, Type)
+		NonTerminal(variables, VariableDeclarators)
+		Terminal("SEMICOLON")
+		Action({ return dress(SFieldDecl.make(modifiers, type, variables)); })
+	) */
 	public BUTree<SFieldDecl> parseFieldDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> variables = emptyList();
@@ -16157,6 +13118,11 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SFieldDecl.make(modifiers, type, variables));
 	}
 
+	/* Sequence(
+		NonTerminal(type, Type)
+		NonTerminal(variables, VariableDeclarators)
+		Action({ return dress(SLocalVariableDecl.make(modifiers, type, variables)); })
+	) */
 	public BUTree<SLocalVariableDecl> parseVariableDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> variables = emptyList();
@@ -16165,6 +13131,16 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SLocalVariableDecl.make(modifiers, type, variables));
 	}
 
+	/* Sequence(
+		NonTerminal(val, VariableDeclarator)
+		Action({ variables = append(variables, val); })
+		ZeroOrMore(
+			Terminal("COMMA")
+			NonTerminal(val, VariableDeclarator)
+			Action({ variables = append(variables, val); })
+		)
+		Action({ return variables; })
+	) */
 	public BUTree<SNodeList> parseVariableDeclarators() throws ParseException {
 		BUTree<SNodeList> variables = emptyList();
 		BUTree<SVariableDeclarator> val;
@@ -16178,6 +13154,16 @@ public class ParserImplementation extends ParserNewBase {
 		return variables;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		NonTerminal(id, VariableDeclaratorId)
+		ZeroOrOne(
+			Terminal("ASSIGN")
+			NonTerminal(initExpr, VariableInitializer)
+			Action({ init = optionOf(initExpr); })
+		)
+		Action({ return dress(SVariableDeclarator.make(id, init)); })
+	) */
 	public BUTree<SVariableDeclarator> parseVariableDeclarator() throws ParseException {
 		BUTree<SVariableDeclaratorId> id;
 		BUTree<SNodeOption> init = none();
@@ -16192,6 +13178,12 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SVariableDeclarator.make(id, init));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		NonTerminal(name, Name)
+		NonTerminal(arrayDims, ArrayDims)
+		Action({ return dress(SVariableDeclaratorId.make(name, arrayDims)); })
+	) */
 	public BUTree<SVariableDeclaratorId> parseVariableDeclaratorId() throws ParseException {
 		BUTree<SName> name;
 		BUTree<SNodeList> arrayDims;
@@ -16201,6 +13193,21 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SVariableDeclaratorId.make(name, arrayDims));
 	}
 
+	/* Sequence(
+		ZeroOrMore(
+			LookAhead(
+				NonTerminal(Annotations)
+				Terminal("LBRACKET")
+				Terminal("RBRACKET")
+			)
+			Action({ run(); })
+			NonTerminal(annotations, Annotations)
+			Terminal("LBRACKET")
+			Terminal("RBRACKET")
+			Action({ arrayDims = append(arrayDims, dress(SArrayDim.make(annotations))); })
+		)
+		Action({ return arrayDims; })
+	) */
 	public BUTree<SNodeList> parseArrayDims() throws ParseException {
 		BUTree<SNodeList> arrayDims = emptyList();
 		BUTree<SNodeList> annotations;
@@ -16215,10 +13222,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Annotations)
-			Terminal("LBRACKET")
-			Terminal("RBRACKET")
-		) */
+		NonTerminal(Annotations)
+		Terminal("LBRACKET")
+		Terminal("RBRACKET")
+	) */
 	private int matchArrayDims1(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -16232,6 +13239,13 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		Choice(
+			NonTerminal(ret, ArrayInitializer)
+			NonTerminal(ret, Expression)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseVariableInitializer() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		if (match(0, ParserImplConstants.LBRACE) != -1) {
@@ -16244,6 +13258,26 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("LBRACE")
+		ZeroOrOne(
+			NonTerminal(val, VariableInitializer)
+			Action({ values = append(values, val); })
+			ZeroOrMore(
+				LookAhead(2)
+				Terminal("COMMA")
+				NonTerminal(val, VariableInitializer)
+				Action({ values = append(values, val); })
+			)
+		)
+		ZeroOrOne(
+			Terminal("COMMA")
+			Action({ trailingComma = true; })
+		)
+		Terminal("RBRACE")
+		Action({ return dress(SArrayInitializerExpr.make(values, trailingComma)); })
+	) */
 	public BUTree<SArrayInitializerExpr> parseArrayInitializer() throws ParseException {
 		BUTree<SNodeList> values = emptyList();
 		BUTree<? extends SExpr> val;
@@ -16268,13 +13302,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Terminal("COMMA")
-			NonTerminal(val, VariableInitializer)
-			Action({
-				values = append(values, val);
-			})
-		) */
+		LookAhead(2)
+		Terminal("COMMA")
+		NonTerminal(val, VariableInitializer)
+	) */
 	private int matchArrayInitializer1(int lookahead) {
 		if (match(0, ParserImplConstants.COMMA) != -1) {
 			if (match(1, ParserImplConstants.NEW) != -1) {
@@ -16377,6 +13408,29 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		ZeroOrOne(
+			NonTerminal(typeParameters, TypeParameters)
+		)
+		NonTerminal(type, ResultType)
+		NonTerminal(name, Name)
+		NonTerminal(parameters, FormalParameters)
+		NonTerminal(arrayDims, ArrayDims)
+		ZeroOrOne(
+			NonTerminal(throwsClause, ThrowsClause)
+		)
+		Choice(
+			NonTerminal(block, Block)
+			Sequence(
+				Terminal("SEMICOLON")
+				Action({
+					if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
+	
+				})
+			)
+		)
+		Action({ return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem); })
+	) */
 	public BUTree<SMethodDecl> parseMethodDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SNodeList> typeParameters = null;
 		BUTree<? extends SType> type;
@@ -16400,8 +13454,7 @@ public class ParserImplementation extends ParserNewBase {
 			block = parseBlock();
 		} else if (match(0, ParserImplConstants.SEMICOLON) != -1) {
 			parse(ParserImplConstants.SEMICOLON);
-			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)))
-				problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
+			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
 
 		} else {
 			throw produceParseException(ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE);
@@ -16409,6 +13462,14 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem);
 	}
 
+	/* Sequence(
+		Terminal("LPAREN")
+		ZeroOrOne(
+			NonTerminal(ret, FormalParameterList)
+		)
+		Terminal("RPAREN")
+		Action({ return ensureNotNull(ret); })
+	) */
 	public BUTree<SNodeList> parseFormalParameters() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
@@ -16420,6 +13481,24 @@ public class ParserImplementation extends ParserNewBase {
 		return ensureNotNull(ret);
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				NonTerminal(par, FormalParameter)
+				Action({ ret = append(ret, par); })
+				ZeroOrMore(
+					Terminal("COMMA")
+					NonTerminal(par, FormalParameter)
+					Action({ ret = append(ret, par); })
+				)
+			)
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseFormalParameterList() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
@@ -16439,6 +13518,17 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		NonTerminal(modifiers, Modifiers)
+		NonTerminal(type, Type)
+		ZeroOrOne(
+			Terminal("ELLIPSIS")
+			Action({ isVarArg = true; })
+		)
+		NonTerminal(id, VariableDeclaratorId)
+		Action({ return dress(SFormalParameter.make(modifiers, type, isVarArg, id)); })
+	) */
 	public BUTree<SFormalParameter> parseFormalParameter() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SType> type;
@@ -16455,6 +13545,17 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SFormalParameter.make(modifiers, type, isVarArg, id));
 	}
 
+	/* Sequence(
+		Terminal("THROWS")
+		NonTerminal(cit, AnnotatedQualifiedType)
+		Action({ ret = append(ret, cit); })
+		ZeroOrMore(
+			Terminal("COMMA")
+			NonTerminal(cit, AnnotatedQualifiedType)
+			Action({ ret = append(ret, cit); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseThrowsClause() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
@@ -16469,6 +13570,51 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		ZeroOrOne(
+			NonTerminal(typeParameters, TypeParameters)
+		)
+		NonTerminal(name, Name)
+		NonTerminal(parameters, FormalParameters)
+		ZeroOrOne(
+			NonTerminal(throwsClause, ThrowsClause)
+		)
+		Action({ run(); })
+		Terminal("LBRACE")
+		ZeroOrOne(
+			Choice(
+				Sequence(
+					LookAhead(2)
+					Choice(
+						Sequence(
+							LookAhead(
+								NonTerminal(ExplicitConstructorInvocation)
+							)
+							NonTerminal(stmt, ExplicitConstructorInvocation)
+							Action({ stmts = append(stmts, stmt); })
+						)
+						Sequence(
+							LookAhead(2)
+							NonTerminal(stmt, BlockStatement)
+							Action({ stmts = append(stmts, stmt); })
+						)
+					)
+					ZeroOrMore(
+						LookAhead(2)
+						NonTerminal(stmt, BlockStatement)
+						Action({ stmts = append(stmts, stmt); })
+					)
+				)
+				Sequence(
+					LookAhead({ quotesMode })
+					NonTerminal(stmts, NodeListVar)
+				)
+			)
+		)
+		Terminal("RBRACE")
+		Action({ block = dress(SBlockStmt.make(stmts)); })
+		Action({ return dress(SConstructorDecl.make(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block)); })
+	) */
 	public BUTree<SConstructorDecl> parseConstructorDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SNodeList> typeParameters = null;
 		BUTree<SName> name;
@@ -16515,33 +13661,24 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			Choice(
-				Sequence(
-					LookAhead(
-						NonTerminal(ExplicitConstructorInvocation)
-					)
-					NonTerminal(stmt, ExplicitConstructorInvocation)
-					Action({
-						stmts = append(stmts, stmt);
-					})
+		LookAhead(2)
+		Choice(
+			Sequence(
+				LookAhead(
+					NonTerminal(ExplicitConstructorInvocation)
 				)
-				Sequence(
-					LookAhead(2)
-					NonTerminal(stmt, BlockStatement)
-					Action({
-						stmts = append(stmts, stmt);
-					})
-				)
+				NonTerminal(stmt, ExplicitConstructorInvocation)
 			)
-			ZeroOrMore(
+			Sequence(
 				LookAhead(2)
 				NonTerminal(stmt, BlockStatement)
-				Action({
-					stmts = append(stmts, stmt);
-				})
 			)
-		) */
+		)
+		ZeroOrMore(
+			LookAhead(2)
+			NonTerminal(stmt, BlockStatement)
+		)
+	) */
 	private int matchConstructorDecl1(int lookahead) {
 		if (match(0, ParserImplConstants.VOLATILE) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -19097,8 +16234,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ExplicitConstructorInvocation)
-		) */
+		NonTerminal(ExplicitConstructorInvocation)
+	) */
 	private int matchConstructorDecl2(int lookahead) {
 		lookahead = matchExplicitConstructorInvocation(lookahead);
 		if (lookahead == -1)
@@ -19107,12 +16244,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			NonTerminal(stmt, BlockStatement)
-			Action({
-				stmts = append(stmts, stmt);
-			})
-		) */
+		LookAhead(2)
+		NonTerminal(stmt, BlockStatement)
+	) */
 	private int matchConstructorDecl3(int lookahead) {
 		if (match(0, ParserImplConstants.VOLATILE) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -21501,12 +18635,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			NonTerminal(stmt, BlockStatement)
-			Action({
-				stmts = append(stmts, stmt);
-			})
-		) */
+		LookAhead(2)
+		NonTerminal(stmt, BlockStatement)
+	) */
 	private int matchConstructorDecl4(int lookahead) {
 		if (match(0, ParserImplConstants.VOLATILE) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -23894,6 +21025,44 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Choice(
+			Sequence(
+				LookAhead(
+					ZeroOrOne(
+						NonTerminal(TypeArguments)
+					)
+					Terminal("THIS")
+					Terminal("LPAREN")
+				)
+				ZeroOrOne(
+					NonTerminal(typeArgs, TypeArguments)
+				)
+				Terminal("THIS")
+				Action({ isThis = true; })
+				NonTerminal(args, Arguments)
+				Terminal("SEMICOLON")
+			)
+			Sequence(
+				ZeroOrOne(
+					LookAhead(
+						NonTerminal(PrimaryExpressionWithoutSuperSuffix)
+						Terminal("DOT")
+					)
+					NonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
+					Terminal("DOT")
+				)
+				ZeroOrOne(
+					NonTerminal(typeArgs, TypeArguments)
+				)
+				Terminal("SUPER")
+				NonTerminal(args, Arguments)
+				Terminal("SEMICOLON")
+			)
+		)
+		Action({ return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args)); })
+	) */
 	public BUTree<SExplicitConstructorInvocationStmt> parseExplicitConstructorInvocation() throws ParseException {
 		boolean isThis = false;
 		BUTree<SNodeList> args;
@@ -23926,8 +21095,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(TypeArguments)
-		) */
+		NonTerminal(TypeArguments)
+	) */
 	private int matchExplicitConstructorInvocation1_1_1(int lookahead) {
 		lookahead = matchTypeArguments(lookahead);
 		if (lookahead == -1)
@@ -23936,8 +21105,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(TypeArguments)
-		) */
+		NonTerminal(TypeArguments)
+	) */
 	private int matchExplicitConstructorInvocation1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchExplicitConstructorInvocation1_1_1(lookahead);
@@ -23947,12 +21116,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				NonTerminal(TypeArguments)
-			)
-			Terminal("THIS")
-			Terminal("LPAREN")
-		) */
+		ZeroOrOne(
+			NonTerminal(TypeArguments)
+		)
+		Terminal("THIS")
+		Terminal("LPAREN")
+	) */
 	private int matchExplicitConstructorInvocation1(int lookahead) {
 		lookahead = matchExplicitConstructorInvocation1_1(lookahead);
 		if (lookahead == -1)
@@ -23967,9 +21136,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(PrimaryExpressionWithoutSuperSuffix)
-			Terminal("DOT")
-		) */
+		NonTerminal(PrimaryExpressionWithoutSuperSuffix)
+		Terminal("DOT")
+	) */
 	private int matchExplicitConstructorInvocation4(int lookahead) {
 		lookahead = matchPrimaryExpressionWithoutSuperSuffix(lookahead);
 		if (lookahead == -1)
@@ -23980,6 +21149,22 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		ZeroOrOne(
+			LookAhead(2)
+			Choice(
+				OneOrMore(
+					NonTerminal(stmt, BlockStatement)
+					Action({ ret = append(ret, stmt); })
+				)
+				Sequence(
+					LookAhead({ quotesMode })
+					NonTerminal(ret, NodeListVar)
+				)
+			)
+		)
+		Action({ return ensureNotNull(ret); })
+	) */
 	public BUTree<SNodeList> parseStatements() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<? extends SStmt> stmt;
@@ -23988,8 +21173,7 @@ public class ParserImplementation extends ParserNewBase {
 				do {
 					stmt = parseBlockStatement();
 					ret = append(ret, stmt);
-				}
-				while (match(0, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1);
+				} while (match(0, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1);
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
@@ -24000,21 +21184,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			Choice(
-				OneOrMore(
-					NonTerminal(stmt, BlockStatement)
-					Action({
-						ret = append(ret, stmt);
-					})
-				)
-				Sequence(
-					LookAhead(					quotesMode
-	)
-					NonTerminal(ret, NodeListVar)
-				)
+		LookAhead(2)
+		Choice(
+			OneOrMore(
+				NonTerminal(stmt, BlockStatement)
 			)
-		) */
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(ret, NodeListVar)
+			)
+		)
+	) */
 	private int matchStatements1(int lookahead) {
 		if (match(0, ParserImplConstants.VOLATILE) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -26405,12 +23585,45 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(block, Block)
+		Action({ return dress(SInitializerDecl.make(modifiers, block)); })
+	) */
 	public BUTree<SInitializerDecl> parseInitializerDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SBlockStmt> block;
 		block = parseBlock();
 		return dress(SInitializerDecl.make(modifiers, block));
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				NonTerminal(primitiveType, PrimitiveType)
+				ZeroOrOne(
+					LookAhead(
+						NonTerminal(Annotations)
+						Terminal("LBRACKET")
+					)
+					Action({ lateRun(); })
+					NonTerminal(arrayDims, ArrayDimsMandatory)
+					Action({ type = dress(SArrayType.make(primitiveType, arrayDims)); })
+				)
+			)
+			Sequence(
+				NonTerminal(type, QualifiedType)
+				ZeroOrOne(
+					LookAhead(
+						NonTerminal(Annotations)
+						Terminal("LBRACKET")
+					)
+					Action({ lateRun(); })
+					NonTerminal(arrayDims, ArrayDimsMandatory)
+					Action({ type = dress(SArrayType.make(type, arrayDims)); })
+				)
+			)
+		)
+		Action({ return type == null ? primitiveType : type; })
+	) */
 	public BUTree<? extends SType> parseType(BUTree<SNodeList> annotations) throws ParseException {
 		BUTree<? extends SType> primitiveType = null;
 		BUTree<? extends SReferenceType> type = null;
@@ -26436,9 +23649,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Annotations)
-			Terminal("LBRACKET")
-		) */
+		NonTerminal(Annotations)
+		Terminal("LBRACKET")
+	) */
 	private int matchType1(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -26450,9 +23663,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Annotations)
-			Terminal("LBRACKET")
-		) */
+		NonTerminal(Annotations)
+		Terminal("LBRACKET")
+	) */
 	private int matchType2(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -26463,6 +23676,29 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				NonTerminal(primitiveType, PrimitiveType)
+				Action({ lateRun(); })
+				NonTerminal(arrayDims, ArrayDimsMandatory)
+				Action({ type = dress(SArrayType.make(primitiveType, arrayDims)); })
+			)
+			Sequence(
+				NonTerminal(type, QualifiedType)
+				ZeroOrOne(
+					LookAhead(
+						NonTerminal(Annotations)
+						Terminal("LBRACKET")
+					)
+					Action({ lateRun(); })
+					NonTerminal(arrayDims, ArrayDimsMandatory)
+					Action({ type = dress(SArrayType.make(type, arrayDims)); })
+				)
+			)
+		)
+		Action({ return type; })
+	) */
 	public BUTree<? extends SReferenceType> parseReferenceType(BUTree<SNodeList> annotations) throws ParseException {
 		BUTree<? extends SType> primitiveType;
 		BUTree<? extends SReferenceType> type;
@@ -26486,9 +23722,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Annotations)
-			Terminal("LBRACKET")
-		) */
+		NonTerminal(Annotations)
+		Terminal("LBRACKET")
+	) */
 	private int matchReferenceType1(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -26499,6 +23735,34 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		Action({
+			if (annotations == null) {
+		run();
+		annotations = emptyList();
+	}
+		})
+		NonTerminal(name, Name)
+		ZeroOrOne(
+			LookAhead(2)
+			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+		)
+		Action({ ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); })
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Terminal("DOT")
+			Action({ scope = optionOf(ret); })
+			NonTerminal(annotations, Annotations)
+			NonTerminal(name, Name)
+			ZeroOrOne(
+				LookAhead(2)
+				NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+			)
+			Action({ ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SQualifiedType> parseQualifiedType(BUTree<SNodeList> annotations) throws ParseException {
 		BUTree<SNodeOption> scope = none();
 		BUTree<SQualifiedType> ret;
@@ -26528,9 +23792,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
-		) */
+		LookAhead(2)
+		NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+	) */
 	private int matchQualifiedType1(int lookahead) {
 		if (match(0, ParserImplConstants.LT) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -26580,24 +23844,15 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
+		LookAhead(2)
+		Terminal("DOT")
+		NonTerminal(annotations, Annotations)
+		NonTerminal(name, Name)
+		ZeroOrOne(
 			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("DOT")
-			Action({
-				scope = optionOf(ret);
-			})
-			NonTerminal(annotations, Annotations)
-			NonTerminal(name, Name)
-			ZeroOrOne(
-				LookAhead(2)
-				NonTerminal(typeArgs, TypeArgumentsOrDiamond)
-			)
-			Action({
-				ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
-			})
-		) */
+			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+		)
+	) */
 	private int matchQualifiedType2(int lookahead) {
 		if (match(0, ParserImplConstants.DOT) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -26614,9 +23869,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			NonTerminal(typeArgs, TypeArgumentsOrDiamond)
-		) */
+		LookAhead(2)
+		NonTerminal(typeArgs, TypeArgumentsOrDiamond)
+	) */
 	private int matchQualifiedType3(int lookahead) {
 		if (match(0, ParserImplConstants.LT) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -26665,6 +23920,14 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		Terminal("LT")
+		ZeroOrOne(
+			NonTerminal(ret, TypeArgumentList)
+		)
+		Terminal("GT")
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseTypeArguments() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
@@ -26676,6 +23939,14 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Terminal("LT")
+		ZeroOrOne(
+			NonTerminal(ret, TypeArgumentList)
+		)
+		Terminal("GT")
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseTypeArgumentsOrDiamond() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
@@ -26687,6 +23958,23 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Choice(
+		Sequence(
+			NonTerminal(type, TypeArgument)
+			Action({ ret = append(ret, type); })
+			ZeroOrMore(
+				Terminal("COMMA")
+				NonTerminal(type, TypeArgument)
+				Action({ ret = append(ret, type); })
+			)
+			Action({ return ret; })
+		)
+		Sequence(
+			LookAhead({ quotesMode })
+			Terminal("NODE_LIST_VARIABLE")
+			Action({ return makeVar(); })
+		)
+	) */
 	public BUTree<SNodeList> parseTypeArgumentList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
@@ -26707,6 +23995,15 @@ public class ParserImplementation extends ParserNewBase {
 		}
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		NonTerminal(annotations, Annotations)
+		Choice(
+			NonTerminal(ret, ReferenceType)
+			NonTerminal(ret, Wildcard)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SType> parseTypeArgument() throws ParseException {
 		BUTree<? extends SType> ret;
 		BUTree<SNodeList> annotations = null;
@@ -26722,6 +24019,32 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Action({
+			if (annotations == null) {
+		run();
+		annotations = emptyList();
+	}
+		})
+		Terminal("HOOK")
+		ZeroOrOne(
+			Choice(
+				Sequence(
+					Terminal("EXTENDS")
+					Action({ run(); })
+					NonTerminal(boundAnnotations, Annotations)
+					NonTerminal(ext, ReferenceType)
+				)
+				Sequence(
+					Terminal("SUPER")
+					Action({ run(); })
+					NonTerminal(boundAnnotations, Annotations)
+					NonTerminal(sup, ReferenceType)
+				)
+			)
+		)
+		Action({ return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup))); })
+	) */
 	public BUTree<SWildcardType> parseWildcard(BUTree<SNodeList> annotations) throws ParseException {
 		BUTree<? extends SReferenceType> ext = null;
 		BUTree<? extends SReferenceType> sup = null;
@@ -26749,6 +24072,49 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup)));
 	}
 
+	/* Sequence(
+		Action({
+			if (annotations == null) {
+		run();
+		annotations = emptyList();
+	}
+		})
+		Choice(
+			Sequence(
+				Terminal("BOOLEAN")
+				Action({ primitive = Primitive.Boolean; })
+			)
+			Sequence(
+				Terminal("CHAR")
+				Action({ primitive = Primitive.Char; })
+			)
+			Sequence(
+				Terminal("BYTE")
+				Action({ primitive = Primitive.Byte; })
+			)
+			Sequence(
+				Terminal("SHORT")
+				Action({ primitive = Primitive.Short; })
+			)
+			Sequence(
+				Terminal("INT")
+				Action({ primitive = Primitive.Int; })
+			)
+			Sequence(
+				Terminal("LONG")
+				Action({ primitive = Primitive.Long; })
+			)
+			Sequence(
+				Terminal("FLOAT")
+				Action({ primitive = Primitive.Float; })
+			)
+			Sequence(
+				Terminal("DOUBLE")
+				Action({ primitive = Primitive.Double; })
+			)
+		)
+		Action({ return dress(SPrimitiveType.make(annotations, primitive)); })
+	) */
 	public BUTree<SPrimitiveType> parsePrimitiveType(BUTree<SNodeList> annotations) throws ParseException {
 		Primitive primitive;
 		if (annotations == null) {
@@ -26785,6 +24151,17 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SPrimitiveType.make(annotations, primitive));
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				Action({ run(); })
+				Terminal("VOID")
+				Action({ ret = dress(SVoidType.make()); })
+			)
+			NonTerminal(ret, Type)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SType> parseResultType() throws ParseException {
 		BUTree<? extends SType> ret;
 		if (match(0, ParserImplConstants.VOID) != -1) {
@@ -26799,6 +24176,12 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		NonTerminal(annotations, Annotations)
+		NonTerminal(ret, QualifiedType)
+		Action({ return ret; })
+	) */
 	public BUTree<SQualifiedType> parseAnnotatedQualifiedType() throws ParseException {
 		BUTree<SNodeList> annotations;
 		BUTree<SQualifiedType> ret;
@@ -26808,6 +24191,20 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		NonTerminal(name, Name)
+		Action({ ret = dress(SQualifiedName.make(qualifier, name)); })
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Terminal("DOT")
+			Action({ qualifier = optionOf(ret); })
+			NonTerminal(name, Name)
+			Action({ ret = dress(SQualifiedName.make(qualifier, name)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SQualifiedName> parseQualifiedName() throws ParseException {
 		BUTree<SNodeOption> qualifier = none();
 		BUTree<SQualifiedName> ret = null;
@@ -26826,19 +24223,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("DOT")
-			Action({
-				qualifier = optionOf(ret);
-			})
-			NonTerminal(name, Name)
-			Action({
-				ret = dress(SQualifiedName.make(qualifier, name));
-			})
-		) */
+		LookAhead(2)
+		Terminal("DOT")
+		NonTerminal(name, Name)
+	) */
 	private int matchQualifiedName1(int lookahead) {
 		if (match(0, ParserImplConstants.DOT) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -26851,6 +24239,20 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				Action({ run(); })
+				Terminal(id, "IDENTIFIER")
+				Action({ name = dress(SName.make(id.image)); })
+			)
+			Sequence(
+				LookAhead({ quotesMode })
+				NonTerminal(name, NodeVar)
+			)
+		)
+		Action({ return name; })
+	) */
 	public BUTree<SName> parseName() throws ParseException {
 		Token id;
 		BUTree<SName> name;
@@ -26866,6 +24268,70 @@ public class ParserImplementation extends ParserNewBase {
 		return name;
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				LookAhead(
+					NonTerminal(Name)
+					Terminal("ARROW")
+				)
+				Action({ run(); })
+				NonTerminal(ret, Name)
+				Terminal("ARROW")
+				NonTerminal(ret, LambdaBody)
+			)
+			Sequence(
+				LookAhead(
+					Terminal("LPAREN")
+					Terminal("RPAREN")
+					Terminal("ARROW")
+				)
+				Action({ run(); })
+				Terminal("LPAREN")
+				Terminal("RPAREN")
+				Terminal("ARROW")
+				NonTerminal(ret, LambdaBody)
+			)
+			Sequence(
+				LookAhead(
+					Terminal("LPAREN")
+					NonTerminal(Name)
+					Terminal("RPAREN")
+					Terminal("ARROW")
+				)
+				Action({ run(); })
+				Terminal("LPAREN")
+				NonTerminal(ret, Name)
+				Terminal("RPAREN")
+				Terminal("ARROW")
+				NonTerminal(ret, LambdaBody)
+			)
+			Sequence(
+				LookAhead(
+					Terminal("LPAREN")
+					NonTerminal(Name)
+					Terminal("COMMA")
+				)
+				Action({ run(); })
+				Terminal("LPAREN")
+				NonTerminal(params, InferredFormalParameterList)
+				Terminal("RPAREN")
+				Terminal("ARROW")
+				NonTerminal(ret, LambdaBody)
+			)
+			Sequence(
+				NonTerminal(ret, ConditionalExpression)
+				ZeroOrOne(
+					LookAhead(2)
+					Action({ lateRun(); })
+					NonTerminal(op, AssignmentOperator)
+					NonTerminal(value, Expression)
+					Action({ ret = dress(SAssignExpr.make(ret, op, value)); })
+				)
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		AssignOp op;
@@ -26911,9 +24377,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Name)
-			Terminal("ARROW")
-		) */
+		NonTerminal(Name)
+		Terminal("ARROW")
+	) */
 	private int matchExpression1(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -26925,10 +24391,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LPAREN")
-			Terminal("RPAREN")
-			Terminal("ARROW")
-		) */
+		Terminal("LPAREN")
+		Terminal("RPAREN")
+		Terminal("ARROW")
+	) */
 	private int matchExpression2(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LPAREN);
 		if (lookahead == -1)
@@ -26943,11 +24409,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LPAREN")
-			NonTerminal(Name)
-			Terminal("RPAREN")
-			Terminal("ARROW")
-		) */
+		Terminal("LPAREN")
+		NonTerminal(Name)
+		Terminal("RPAREN")
+		Terminal("ARROW")
+	) */
 	private int matchExpression3(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LPAREN);
 		if (lookahead == -1)
@@ -26965,10 +24431,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LPAREN")
-			NonTerminal(Name)
-			Terminal("COMMA")
-		) */
+		Terminal("LPAREN")
+		NonTerminal(Name)
+		Terminal("COMMA")
+	) */
 	private int matchExpression4(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LPAREN);
 		if (lookahead == -1)
@@ -26983,16 +24449,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			NonTerminal(op, AssignmentOperator)
-			NonTerminal(value, Expression)
-			Action({
-				ret = dress(SAssignExpr.make(ret, op, value));
-			})
-		) */
+		LookAhead(2)
+		NonTerminal(op, AssignmentOperator)
+		NonTerminal(value, Expression)
+	) */
 	private int matchExpression5(int lookahead) {
 		if (match(0, ParserImplConstants.ANDASSIGN) != -1) {
 			if (match(1, ParserImplConstants.NEW) != -1) {
@@ -28137,6 +25597,19 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				NonTerminal(expr, Expression)
+				Action({ ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr))); })
+			)
+			Sequence(
+				NonTerminal(block, Block)
+				Action({ ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block))); })
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SLambdaExpr> parseLambdaBody(BUTree<SNodeList> parameters, boolean parenthesis) throws ParseException {
 		BUTree<SBlockStmt> block;
 		BUTree<? extends SExpr> expr;
@@ -28153,6 +25626,16 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		NonTerminal(param, InferredFormalParameter)
+		Action({ ret = append(ret, param); })
+		ZeroOrMore(
+			Terminal("COMMA")
+			NonTerminal(param, InferredFormalParameter)
+			Action({ ret = append(ret, param); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseInferredFormalParameterList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SFormalParameter> param;
@@ -28166,12 +25649,69 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		NonTerminal(name, Name)
+		Action({ return makeFormalParameter(name); })
+	) */
 	public BUTree<SFormalParameter> parseInferredFormalParameter() throws ParseException {
 		BUTree<SName> name;
 		name = parseName();
 		return makeFormalParameter(name);
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				Terminal("ASSIGN")
+				Action({ ret = AssignOp.Normal; })
+			)
+			Sequence(
+				Terminal("STARASSIGN")
+				Action({ ret = AssignOp.Times; })
+			)
+			Sequence(
+				Terminal("SLASHASSIGN")
+				Action({ ret = AssignOp.Divide; })
+			)
+			Sequence(
+				Terminal("REMASSIGN")
+				Action({ ret = AssignOp.Remainder; })
+			)
+			Sequence(
+				Terminal("PLUSASSIGN")
+				Action({ ret = AssignOp.Plus; })
+			)
+			Sequence(
+				Terminal("MINUSASSIGN")
+				Action({ ret = AssignOp.Minus; })
+			)
+			Sequence(
+				Terminal("LSHIFTASSIGN")
+				Action({ ret = AssignOp.LeftShift; })
+			)
+			Sequence(
+				Terminal("RSIGNEDSHIFTASSIGN")
+				Action({ ret = AssignOp.RightSignedShift; })
+			)
+			Sequence(
+				Terminal("RUNSIGNEDSHIFTASSIGN")
+				Action({ ret = AssignOp.RightUnsignedShift; })
+			)
+			Sequence(
+				Terminal("ANDASSIGN")
+				Action({ ret = AssignOp.And; })
+			)
+			Sequence(
+				Terminal("XORASSIGN")
+				Action({ ret = AssignOp.XOr; })
+			)
+			Sequence(
+				Terminal("ORASSIGN")
+				Action({ ret = AssignOp.Or; })
+			)
+		)
+		Action({ return ret; })
+	) */
 	public AssignOp parseAssignmentOperator() throws ParseException {
 		AssignOp ret;
 		if (match(0, ParserImplConstants.ASSIGN) != -1) {
@@ -28216,6 +25756,19 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, ConditionalOrExpression)
+		ZeroOrOne(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Terminal("HOOK")
+			NonTerminal(left, Expression)
+			Terminal("COLON")
+			NonTerminal(right, ConditionalExpression)
+			Action({ ret = dress(SConditionalExpr.make(ret, left, right)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseConditionalExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> left;
@@ -28233,18 +25786,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("HOOK")
-			NonTerminal(left, Expression)
-			Terminal("COLON")
-			NonTerminal(right, ConditionalExpression)
-			Action({
-				ret = dress(SConditionalExpr.make(ret, left, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("HOOK")
+		NonTerminal(left, Expression)
+		Terminal("COLON")
+		NonTerminal(right, ConditionalExpression)
+	) */
 	private int matchConditionalExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.HOOK) != -1) {
 			if (match(1, ParserImplConstants.NEW) != -1) {
@@ -28344,6 +25891,17 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, ConditionalAndExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Terminal("SC_OR")
+			NonTerminal(right, ConditionalAndExpression)
+			Action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseConditionalOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
@@ -28358,16 +25916,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("SC_OR")
-			NonTerminal(right, ConditionalAndExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("SC_OR")
+		NonTerminal(right, ConditionalAndExpression)
+	) */
 	private int matchConditionalOrExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.SC_OR) != -1) {
 			if (match(1, ParserImplConstants.NEW) != -1) {
@@ -28467,6 +26019,17 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, InclusiveOrExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Terminal("SC_AND")
+			NonTerminal(right, InclusiveOrExpression)
+			Action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseConditionalAndExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
@@ -28481,16 +26044,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("SC_AND")
-			NonTerminal(right, InclusiveOrExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("SC_AND")
+		NonTerminal(right, InclusiveOrExpression)
+	) */
 	private int matchConditionalAndExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.SC_AND) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -28590,6 +26147,17 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, ExclusiveOrExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Terminal("BIT_OR")
+			NonTerminal(right, ExclusiveOrExpression)
+			Action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseInclusiveOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
@@ -28604,16 +26172,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("BIT_OR")
-			NonTerminal(right, ExclusiveOrExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("BIT_OR")
+		NonTerminal(right, ExclusiveOrExpression)
+	) */
 	private int matchInclusiveOrExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.BIT_OR) != -1) {
 			if (match(1, ParserImplConstants.NEW) != -1) {
@@ -28713,6 +26275,17 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, AndExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Terminal("XOR")
+			NonTerminal(right, AndExpression)
+			Action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseExclusiveOrExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
@@ -28727,16 +26300,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("XOR")
-			NonTerminal(right, AndExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("XOR")
+		NonTerminal(right, AndExpression)
+	) */
 	private int matchExclusiveOrExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.XOR) != -1) {
 			if (match(1, ParserImplConstants.NEW) != -1) {
@@ -28836,6 +26403,17 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, EqualityExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Terminal("BIT_AND")
+			NonTerminal(right, EqualityExpression)
+			Action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseAndExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
@@ -28850,16 +26428,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("BIT_AND")
-			NonTerminal(right, EqualityExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right));
-			})
-		) */
+		LookAhead(2)
+		Terminal("BIT_AND")
+		NonTerminal(right, EqualityExpression)
+	) */
 	private int matchAndExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.BIT_AND) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -28959,6 +26531,26 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, InstanceOfExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Choice(
+				Sequence(
+					Terminal("EQ")
+					Action({ op = BinaryOp.Equal; })
+				)
+				Sequence(
+					Terminal("NE")
+					Action({ op = BinaryOp.NotEqual; })
+				)
+			)
+			NonTerminal(right, InstanceOfExpression)
+			Action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseEqualityExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
@@ -28982,29 +26574,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("EQ")
-					Action({
-						op = BinaryOp.Equal;
-					})
-				)
-				Sequence(
-					Terminal("NE")
-					Action({
-						op = BinaryOp.NotEqual;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("EQ")
 			)
-			NonTerminal(right, InstanceOfExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				Terminal("NE")
+			)
+		)
+		NonTerminal(right, InstanceOfExpression)
+	) */
 	private int matchEqualityExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.NE) != -1) {
 			if (match(1, ParserImplConstants.NEW) != -1) {
@@ -29199,6 +26779,19 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, RelationalExpression)
+		ZeroOrOne(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Terminal("INSTANCEOF")
+			Action({ run(); })
+			NonTerminal(annotations, Annotations)
+			NonTerminal(type, Type)
+			Action({ ret = dress(SInstanceOfExpr.make(ret, type)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseInstanceOfExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<SNodeList> annotations;
@@ -29216,20 +26809,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Terminal("INSTANCEOF")
-			Action({
-				run();
-			})
-			NonTerminal(annotations, Annotations)
-			NonTerminal(type, Type)
-			Action({
-				ret = dress(SInstanceOfExpr.make(ret, type));
-			})
-		) */
+		LookAhead(2)
+		Terminal("INSTANCEOF")
+		NonTerminal(annotations, Annotations)
+		NonTerminal(type, Type)
+	) */
 	private int matchInstanceOfExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.INSTANCEOF) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -29269,6 +26853,34 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, ShiftExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Choice(
+				Sequence(
+					Terminal("LT")
+					Action({ op = BinaryOp.Less; })
+				)
+				Sequence(
+					Terminal("GT")
+					Action({ op = BinaryOp.Greater; })
+				)
+				Sequence(
+					Terminal("LE")
+					Action({ op = BinaryOp.LessOrEqual; })
+				)
+				Sequence(
+					Terminal("GE")
+					Action({ op = BinaryOp.GreaterOrEqual; })
+				)
+			)
+			NonTerminal(right, ShiftExpression)
+			Action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseRelationalExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
@@ -29298,41 +26910,23 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("LT")
-					Action({
-						op = BinaryOp.Less;
-					})
-				)
-				Sequence(
-					Terminal("GT")
-					Action({
-						op = BinaryOp.Greater;
-					})
-				)
-				Sequence(
-					Terminal("LE")
-					Action({
-						op = BinaryOp.LessOrEqual;
-					})
-				)
-				Sequence(
-					Terminal("GE")
-					Action({
-						op = BinaryOp.GreaterOrEqual;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("LT")
 			)
-			NonTerminal(right, ShiftExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				Terminal("GT")
+			)
+			Sequence(
+				Terminal("LE")
+			)
+			Sequence(
+				Terminal("GE")
+			)
+		)
+		NonTerminal(right, ShiftExpression)
+	) */
 	private int matchRelationalExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.LT) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -29717,6 +27311,32 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, AdditiveExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Choice(
+				Sequence(
+					Terminal("LSHIFT")
+					Action({ op = BinaryOp.LeftShift; })
+				)
+				Sequence(
+					LookAhead(3)
+					NonTerminal(RUNSIGNEDSHIFT)
+					Action({ op = BinaryOp.RightUnsignedShift; })
+				)
+				Sequence(
+					LookAhead(2)
+					NonTerminal(RSIGNEDSHIFT)
+					Action({ op = BinaryOp.RightSignedShift; })
+				)
+			)
+			NonTerminal(right, AdditiveExpression)
+			Action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseShiftExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
@@ -29743,37 +27363,22 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("LSHIFT")
-					Action({
-						op = BinaryOp.LeftShift;
-					})
-				)
-				Sequence(
-					LookAhead(3)
-					NonTerminal(RUNSIGNEDSHIFT)
-					Action({
-						op = BinaryOp.RightUnsignedShift;
-					})
-				)
-				Sequence(
-					LookAhead(2)
-					NonTerminal(RSIGNEDSHIFT)
-					Action({
-						op = BinaryOp.RightSignedShift;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("LSHIFT")
 			)
-			NonTerminal(right, AdditiveExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				LookAhead(3)
+				NonTerminal(RUNSIGNEDSHIFT)
+			)
+			Sequence(
+				LookAhead(2)
+				NonTerminal(RSIGNEDSHIFT)
+			)
+		)
+		NonTerminal(right, AdditiveExpression)
+	) */
 	private int matchShiftExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.LSHIFT) != -1) {
 			if (match(1, ParserImplConstants.NEW) != -1) {
@@ -29879,12 +27484,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(3)
-			NonTerminal(RUNSIGNEDSHIFT)
-			Action({
-				op = BinaryOp.RightUnsignedShift;
-			})
-		) */
+		LookAhead(3)
+		NonTerminal(RUNSIGNEDSHIFT)
+	) */
 	private int matchShiftExpression2(int lookahead) {
 		if (match(0, ParserImplConstants.GT) != -1) {
 			if (match(1, ParserImplConstants.GT) != -1) {
@@ -29897,12 +27499,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			NonTerminal(RSIGNEDSHIFT)
-			Action({
-				op = BinaryOp.RightSignedShift;
-			})
-		) */
+		LookAhead(2)
+		NonTerminal(RSIGNEDSHIFT)
+	) */
 	private int matchShiftExpression3(int lookahead) {
 		if (match(0, ParserImplConstants.GT) != -1) {
 			if (match(1, ParserImplConstants.GT) != -1) {
@@ -29912,6 +27511,26 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, MultiplicativeExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Choice(
+				Sequence(
+					Terminal("PLUS")
+					Action({ op = BinaryOp.Plus; })
+				)
+				Sequence(
+					Terminal("MINUS")
+					Action({ op = BinaryOp.Minus; })
+				)
+			)
+			NonTerminal(right, MultiplicativeExpression)
+			Action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseAdditiveExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
@@ -29935,29 +27554,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("PLUS")
-					Action({
-						op = BinaryOp.Plus;
-					})
-				)
-				Sequence(
-					Terminal("MINUS")
-					Action({
-						op = BinaryOp.Minus;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("PLUS")
 			)
-			NonTerminal(right, MultiplicativeExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				Terminal("MINUS")
+			)
+		)
+		NonTerminal(right, MultiplicativeExpression)
+	) */
 	private int matchAdditiveExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.PLUS) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -30152,6 +27759,30 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, UnaryExpression)
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Choice(
+				Sequence(
+					Terminal("STAR")
+					Action({ op = BinaryOp.Times; })
+				)
+				Sequence(
+					Terminal("SLASH")
+					Action({ op = BinaryOp.Divide; })
+				)
+				Sequence(
+					Terminal("REM")
+					Action({ op = BinaryOp.Remainder; })
+				)
+			)
+			NonTerminal(right, UnaryExpression)
+			Action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseMultiplicativeExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
@@ -30178,35 +27809,20 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("STAR")
-					Action({
-						op = BinaryOp.Times;
-					})
-				)
-				Sequence(
-					Terminal("SLASH")
-					Action({
-						op = BinaryOp.Divide;
-					})
-				)
-				Sequence(
-					Terminal("REM")
-					Action({
-						op = BinaryOp.Remainder;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("STAR")
 			)
-			NonTerminal(right, UnaryExpression)
-			Action({
-				ret = dress(SBinaryExpr.make(ret, op, right));
-			})
-		) */
+			Sequence(
+				Terminal("SLASH")
+			)
+			Sequence(
+				Terminal("REM")
+			)
+		)
+		NonTerminal(right, UnaryExpression)
+	) */
 	private int matchMultiplicativeExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.STAR) != -1) {
 			if (match(1, ParserImplConstants.NEW) != -1) {
@@ -30496,6 +28112,28 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		Choice(
+			NonTerminal(ret, PrefixExpression)
+			Sequence(
+				Action({ run(); })
+				Choice(
+					Sequence(
+						Terminal("PLUS")
+						Action({ op = UnaryOp.Positive; })
+					)
+					Sequence(
+						Terminal("MINUS")
+						Action({ op = UnaryOp.Negative; })
+					)
+				)
+				NonTerminal(ret, UnaryExpression)
+				Action({ ret = dress(SUnaryExpr.make(op, ret)); })
+			)
+			NonTerminal(ret, UnaryExpressionNotPlusMinus)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseUnaryExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
@@ -30522,6 +28160,21 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Choice(
+			Sequence(
+				Terminal("INCR")
+				Action({ op = UnaryOp.PreIncrement; })
+			)
+			Sequence(
+				Terminal("DECR")
+				Action({ op = UnaryOp.PreDecrement; })
+			)
+		)
+		NonTerminal(ret, UnaryExpression)
+		Action({ return dress(SUnaryExpr.make(op, ret)); })
+	) */
 	public BUTree<? extends SExpr> parsePrefixExpression() throws ParseException {
 		UnaryOp op;
 		BUTree<? extends SExpr> ret;
@@ -30539,6 +28192,33 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SUnaryExpr.make(op, ret));
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				Action({ run(); })
+				Choice(
+					Sequence(
+						Terminal("TILDE")
+						Action({ op = UnaryOp.Inverse; })
+					)
+					Sequence(
+						Terminal("BANG")
+						Action({ op = UnaryOp.Not; })
+					)
+				)
+				NonTerminal(ret, UnaryExpression)
+				Action({ ret = dress(SUnaryExpr.make(op, ret)); })
+			)
+			Sequence(
+				LookAhead(
+					NonTerminal(CastExpression)
+				)
+				NonTerminal(ret, CastExpression)
+			)
+			NonTerminal(ret, PostfixExpression)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseUnaryExpressionNotPlusMinus() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
@@ -30566,8 +28246,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(CastExpression)
-		) */
+		NonTerminal(CastExpression)
+	) */
 	private int matchUnaryExpressionNotPlusMinus1(int lookahead) {
 		lookahead = matchCastExpression(lookahead);
 		if (lookahead == -1)
@@ -30575,6 +28255,25 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, PrimaryExpression)
+		ZeroOrOne(
+			LookAhead(2)
+			Action({ lateRun(); })
+			Choice(
+				Sequence(
+					Terminal("INCR")
+					Action({ op = UnaryOp.PostIncrement; })
+				)
+				Sequence(
+					Terminal("DECR")
+					Action({ op = UnaryOp.PostDecrement; })
+				)
+			)
+			Action({ ret = dress(SUnaryExpr.make(op, ret)); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parsePostfixExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
@@ -30596,28 +28295,16 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			Choice(
-				Sequence(
-					Terminal("INCR")
-					Action({
-						op = UnaryOp.PostIncrement;
-					})
-				)
-				Sequence(
-					Terminal("DECR")
-					Action({
-						op = UnaryOp.PostDecrement;
-					})
-				)
+		LookAhead(2)
+		Choice(
+			Sequence(
+				Terminal("INCR")
 			)
-			Action({
-				ret = dress(SUnaryExpr.make(op, ret));
-			})
-		) */
+			Sequence(
+				Terminal("DECR")
+			)
+		)
+	) */
 	private int matchPostfixExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.INCR) != -1) {
 			return lookahead;
@@ -30628,6 +28315,50 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("LPAREN")
+		Action({ run(); })
+		NonTerminal(annotations, Annotations)
+		Choice(
+			Sequence(
+				NonTerminal(primitiveType, PrimitiveType)
+				Choice(
+					Sequence(
+						Terminal("RPAREN")
+						NonTerminal(ret, UnaryExpression)
+						Action({ ret = dress(SCastExpr.make(primitiveType, ret)); })
+					)
+					Sequence(
+						Action({ lateRun(); })
+						NonTerminal(arrayDims, ArrayDimsMandatory)
+						Action({ type = dress(SArrayType.make(primitiveType, arrayDims)); })
+						NonTerminal(type, ReferenceCastTypeRest)
+						Terminal("RPAREN")
+						NonTerminal(ret, UnaryExpressionNotPlusMinus)
+						Action({ ret = dress(SCastExpr.make(type, ret)); })
+					)
+				)
+			)
+			Sequence(
+				NonTerminal(type, QualifiedType)
+				ZeroOrOne(
+					LookAhead(
+						NonTerminal(Annotations)
+						Terminal("LBRACKET")
+					)
+					Action({ lateRun(); })
+					NonTerminal(arrayDims, ArrayDimsMandatory)
+					Action({ type = dress(SArrayType.make(type, arrayDims)); })
+				)
+				NonTerminal(type, ReferenceCastTypeRest)
+				Terminal("RPAREN")
+				NonTerminal(ret, UnaryExpressionNotPlusMinus)
+				Action({ ret = dress(SCastExpr.make(type, ret)); })
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseCastExpression() throws ParseException {
 		BUTree<SNodeList> annotations = null;
 		BUTree<? extends SType> primitiveType;
@@ -30673,9 +28404,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Annotations)
-			Terminal("LBRACKET")
-		) */
+		NonTerminal(Annotations)
+		Terminal("LBRACKET")
+	) */
 	private int matchCastExpression1(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -30686,6 +28417,24 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		ZeroOrOne(
+			LookAhead(
+				Terminal("BIT_AND")
+			)
+			Action({ types = append(types, type); })
+			Action({ lateRun(); })
+			OneOrMore(
+				Terminal("BIT_AND")
+				Action({ run(); })
+				NonTerminal(annotations, Annotations)
+				NonTerminal(type, ReferenceType)
+				Action({ types = append(types, type); })
+			)
+			Action({ type = dress(SIntersectionType.make(types)); })
+		)
+		Action({ return type; })
+	) */
 	public BUTree<? extends SType> parseReferenceCastTypeRest(BUTree<? extends SType> type) throws ParseException {
 		BUTree<SNodeList> types = emptyList();
 		BUTree<SNodeList> annotations = null;
@@ -30705,8 +28454,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("BIT_AND")
-		) */
+		Terminal("BIT_AND")
+	) */
 	private int matchReferenceCastTypeRest1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.BIT_AND);
 		if (lookahead == -1)
@@ -30714,6 +28463,48 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Choice(
+			Sequence(
+				Terminal(literal, "INTEGER_LITERAL")
+				Action({ ret = SLiteralExpr.make(Integer.class, literal.image); })
+			)
+			Sequence(
+				Terminal(literal, "LONG_LITERAL")
+				Action({ ret = SLiteralExpr.make(Long.class, literal.image); })
+			)
+			Sequence(
+				Terminal(literal, "FLOAT_LITERAL")
+				Action({ ret = SLiteralExpr.make(Float.class, literal.image); })
+			)
+			Sequence(
+				Terminal(literal, "DOUBLE_LITERAL")
+				Action({ ret = SLiteralExpr.make(Double.class, literal.image); })
+			)
+			Sequence(
+				Terminal(literal, "CHARACTER_LITERAL")
+				Action({ ret = SLiteralExpr.make(Character.class, literal.image); })
+			)
+			Sequence(
+				Terminal(literal, "STRING_LITERAL")
+				Action({ ret = SLiteralExpr.make(String.class, literal.image); })
+			)
+			Sequence(
+				Terminal(literal, "TRUE")
+				Action({ ret = SLiteralExpr.make(Boolean.class, literal.image); })
+			)
+			Sequence(
+				Terminal(literal, "FALSE")
+				Action({ ret = SLiteralExpr.make(Boolean.class, literal.image); })
+			)
+			Sequence(
+				Terminal(literal, "NULL")
+				Action({ ret = SLiteralExpr.make(Void.class, literal.image); })
+			)
+		)
+		Action({ return dress(ret); })
+	) */
 	public BUTree<? extends SExpr> parseLiteral() throws ParseException {
 		Token literal;
 		BUTree<? extends SExpr> ret;
@@ -30751,6 +28542,15 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(ret);
 	}
 
+	/* Sequence(
+		NonTerminal(ret, PrimaryPrefix)
+		ZeroOrMore(
+			LookAhead(2)
+			Action({ lateRun(); })
+			NonTerminal(ret, PrimarySuffix)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parsePrimaryExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		ret = parsePrimaryPrefix();
@@ -30762,12 +28562,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Action({
-				lateRun();
-			})
-			NonTerminal(ret, PrimarySuffix)
-		) */
+		LookAhead(2)
+		NonTerminal(ret, PrimarySuffix)
+	) */
 	private int matchPrimaryExpression1(int lookahead) {
 		if (match(0, ParserImplConstants.DOUBLECOLON) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
@@ -30901,6 +28698,17 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, PrimaryPrefix)
+		ZeroOrMore(
+			LookAhead(
+				NonTerminal(PrimarySuffixWithoutSuper)
+			)
+			Action({ lateRun(); })
+			NonTerminal(ret, PrimarySuffixWithoutSuper)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parsePrimaryExpressionWithoutSuperSuffix() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		ret = parsePrimaryPrefix();
@@ -30912,8 +28720,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(PrimarySuffixWithoutSuper)
-		) */
+		NonTerminal(PrimarySuffixWithoutSuper)
+	) */
 	private int matchPrimaryExpressionWithoutSuperSuffix1(int lookahead) {
 		lookahead = matchPrimarySuffixWithoutSuper(lookahead);
 		if (lookahead == -1)
@@ -30921,6 +28729,131 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		Choice(
+			NonTerminal(ret, Literal)
+			Sequence(
+				Action({ run(); })
+				Terminal("THIS")
+				Action({ ret = dress(SThisExpr.make(none())); })
+			)
+			Sequence(
+				Action({ run(); })
+				Terminal("SUPER")
+				Action({ ret = dress(SSuperExpr.make(none())); })
+				Choice(
+					Sequence(
+						Action({ lateRun(); })
+						Terminal("DOT")
+						Choice(
+							Sequence(
+								LookAhead(
+									ZeroOrOne(
+										NonTerminal(TypeArguments)
+									)
+									NonTerminal(Name)
+									Terminal("LPAREN")
+								)
+								NonTerminal(ret, MethodInvocation)
+							)
+							NonTerminal(ret, FieldAccess)
+						)
+					)
+					Sequence(
+						Action({ lateRun(); })
+						NonTerminal(ret, MethodReferenceSuffix)
+					)
+				)
+			)
+			NonTerminal(ret, AllocationExpression)
+			Sequence(
+				LookAhead(
+					NonTerminal(ResultType)
+					Terminal("DOT")
+					Terminal("CLASS")
+				)
+				Action({ run(); })
+				NonTerminal(type, ResultType)
+				Terminal("DOT")
+				Terminal("CLASS")
+				Action({ ret = dress(SClassExpr.make(type)); })
+			)
+			Sequence(
+				LookAhead(
+					NonTerminal(ResultType)
+					Terminal("DOUBLECOLON")
+				)
+				Action({ run(); })
+				NonTerminal(type, ResultType)
+				Action({ ret = STypeExpr.make(type); })
+				NonTerminal(ret, MethodReferenceSuffix)
+			)
+			Sequence(
+				LookAhead(
+					ZeroOrOne(
+						NonTerminal(TypeArguments)
+					)
+					NonTerminal(Name)
+					Terminal("LPAREN")
+				)
+				Action({ run(); })
+				NonTerminal(ret, MethodInvocation)
+			)
+			Sequence(
+				NonTerminal(ret, Name)
+				ZeroOrOne(
+					Action({ lateRun(); })
+					Terminal("ARROW")
+					NonTerminal(ret, LambdaBody)
+				)
+			)
+			Sequence(
+				Action({ run(); })
+				Terminal("LPAREN")
+				Choice(
+					Sequence(
+						Terminal("RPAREN")
+						Terminal("ARROW")
+						NonTerminal(ret, LambdaBody)
+					)
+					Sequence(
+						LookAhead(
+							NonTerminal(Name)
+							Terminal("RPAREN")
+							Terminal("ARROW")
+						)
+						NonTerminal(ret, Name)
+						Terminal("RPAREN")
+						Terminal("ARROW")
+						NonTerminal(ret, LambdaBody)
+					)
+					Sequence(
+						LookAhead(
+							NonTerminal(Name)
+							Terminal("COMMA")
+						)
+						NonTerminal(params, InferredFormalParameterList)
+						Terminal("RPAREN")
+						Terminal("ARROW")
+						NonTerminal(ret, LambdaBody)
+					)
+					Sequence(
+						LookAhead({ isLambda() })
+						NonTerminal(params, FormalParameterList)
+						Terminal("RPAREN")
+						Terminal("ARROW")
+						NonTerminal(ret, LambdaBody)
+					)
+					Sequence(
+						NonTerminal(ret, Expression)
+						Terminal("RPAREN")
+						Action({ ret = dress(SParenthesizedExpr.make(ret)); })
+					)
+				)
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parsePrimaryPrefix() throws ParseException {
 		BUTree<? extends SExpr> ret = null;
 		BUTree<SNodeList> typeArgs = null;
@@ -31011,8 +28944,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(TypeArguments)
-		) */
+		NonTerminal(TypeArguments)
+	) */
 	private int matchPrimaryPrefix1_1_1(int lookahead) {
 		lookahead = matchTypeArguments(lookahead);
 		if (lookahead == -1)
@@ -31021,8 +28954,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(TypeArguments)
-		) */
+		NonTerminal(TypeArguments)
+	) */
 	private int matchPrimaryPrefix1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrimaryPrefix1_1_1(lookahead);
@@ -31032,12 +28965,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				NonTerminal(TypeArguments)
-			)
-			NonTerminal(Name)
-			Terminal("LPAREN")
-		) */
+		ZeroOrOne(
+			NonTerminal(TypeArguments)
+		)
+		NonTerminal(Name)
+		Terminal("LPAREN")
+	) */
 	private int matchPrimaryPrefix1(int lookahead) {
 		lookahead = matchPrimaryPrefix1_1(lookahead);
 		if (lookahead == -1)
@@ -31052,10 +28985,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ResultType)
-			Terminal("DOT")
-			Terminal("CLASS")
-		) */
+		NonTerminal(ResultType)
+		Terminal("DOT")
+		Terminal("CLASS")
+	) */
 	private int matchPrimaryPrefix4(int lookahead) {
 		lookahead = matchResultType(lookahead);
 		if (lookahead == -1)
@@ -31070,9 +29003,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ResultType)
-			Terminal("DOUBLECOLON")
-		) */
+		NonTerminal(ResultType)
+		Terminal("DOUBLECOLON")
+	) */
 	private int matchPrimaryPrefix5(int lookahead) {
 		lookahead = matchResultType(lookahead);
 		if (lookahead == -1)
@@ -31084,8 +29017,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(TypeArguments)
-		) */
+		NonTerminal(TypeArguments)
+	) */
 	private int matchPrimaryPrefix6_1_1(int lookahead) {
 		lookahead = matchTypeArguments(lookahead);
 		if (lookahead == -1)
@@ -31094,8 +29027,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(TypeArguments)
-		) */
+		NonTerminal(TypeArguments)
+	) */
 	private int matchPrimaryPrefix6_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrimaryPrefix6_1_1(lookahead);
@@ -31105,12 +29038,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				NonTerminal(TypeArguments)
-			)
-			NonTerminal(Name)
-			Terminal("LPAREN")
-		) */
+		ZeroOrOne(
+			NonTerminal(TypeArguments)
+		)
+		NonTerminal(Name)
+		Terminal("LPAREN")
+	) */
 	private int matchPrimaryPrefix6(int lookahead) {
 		lookahead = matchPrimaryPrefix6_1(lookahead);
 		if (lookahead == -1)
@@ -31125,10 +29058,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Name)
-			Terminal("RPAREN")
-			Terminal("ARROW")
-		) */
+		NonTerminal(Name)
+		Terminal("RPAREN")
+		Terminal("ARROW")
+	) */
 	private int matchPrimaryPrefix9(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -31143,9 +29076,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Name)
-			Terminal("COMMA")
-		) */
+		NonTerminal(Name)
+		Terminal("COMMA")
+	) */
 	private int matchPrimaryPrefix10(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -31156,6 +29089,21 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				LookAhead(2)
+				NonTerminal(ret, PrimarySuffixWithoutSuper)
+			)
+			Sequence(
+				Terminal("DOT")
+				Terminal("SUPER")
+				Action({ ret = dress(SSuperExpr.make(optionOf(scope))); })
+			)
+			NonTerminal(ret, MethodReferenceSuffix)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parsePrimarySuffix(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
 		if (matchPrimarySuffix1(0) != -1) {
@@ -31173,9 +29121,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			NonTerminal(ret, PrimarySuffixWithoutSuper)
-		) */
+		LookAhead(2)
+		NonTerminal(ret, PrimarySuffixWithoutSuper)
+	) */
 	private int matchPrimarySuffix1(int lookahead) {
 		if (match(0, ParserImplConstants.DOT) != -1) {
 			if (match(1, ParserImplConstants.NEW) != -1) {
@@ -31292,6 +29240,38 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				Terminal("DOT")
+				Choice(
+					Sequence(
+						Terminal("THIS")
+						Action({ ret = dress(SThisExpr.make(optionOf(scope))); })
+					)
+					NonTerminal(ret, AllocationExpression)
+					Sequence(
+						LookAhead(
+							ZeroOrOne(
+								NonTerminal(TypeArguments)
+							)
+							NonTerminal(Name)
+							Terminal("LPAREN")
+						)
+						NonTerminal(ret, MethodInvocation)
+					)
+					NonTerminal(ret, FieldAccess)
+				)
+			)
+			Sequence(
+				Terminal("LBRACKET")
+				NonTerminal(ret, Expression)
+				Terminal("RBRACKET")
+				Action({ ret = dress(SArrayAccessExpr.make(scope, ret)); })
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parsePrimarySuffixWithoutSuper(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<SName> name;
@@ -31321,8 +29301,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(TypeArguments)
-		) */
+		NonTerminal(TypeArguments)
+	) */
 	private int matchPrimarySuffixWithoutSuper1_1_1(int lookahead) {
 		lookahead = matchTypeArguments(lookahead);
 		if (lookahead == -1)
@@ -31331,8 +29311,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			NonTerminal(TypeArguments)
-		) */
+		NonTerminal(TypeArguments)
+	) */
 	private int matchPrimarySuffixWithoutSuper1_1(int lookahead) {
 		int newLookahead;
 		newLookahead = matchPrimarySuffixWithoutSuper1_1_1(lookahead);
@@ -31342,12 +29322,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			ZeroOrOne(
-				NonTerminal(TypeArguments)
-			)
-			NonTerminal(Name)
-			Terminal("LPAREN")
-		) */
+		ZeroOrOne(
+			NonTerminal(TypeArguments)
+		)
+		NonTerminal(Name)
+		Terminal("LPAREN")
+	) */
 	private int matchPrimarySuffixWithoutSuper1(int lookahead) {
 		lookahead = matchPrimarySuffixWithoutSuper1_1(lookahead);
 		if (lookahead == -1)
@@ -31361,12 +29341,24 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		NonTerminal(name, Name)
+		Action({ return dress(SFieldAccessExpr.make(optionOf(scope), name)); })
+	) */
 	public BUTree<? extends SExpr> parseFieldAccess(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<SName> name;
 		name = parseName();
 		return dress(SFieldAccessExpr.make(optionOf(scope), name));
 	}
 
+	/* Sequence(
+		ZeroOrOne(
+			NonTerminal(typeArgs, TypeArguments)
+		)
+		NonTerminal(name, Name)
+		NonTerminal(args, Arguments)
+		Action({ return dress(SMethodInvocationExpr.make(optionOf(scope), ensureNotNull(typeArgs), name, args)); })
+	) */
 	public BUTree<? extends SExpr> parseMethodInvocation(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<SNodeList> typeArgs = null;
 		BUTree<SName> name;
@@ -31380,6 +29372,29 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SMethodInvocationExpr.make(optionOf(scope), ensureNotNull(typeArgs), name, args));
 	}
 
+	/* Sequence(
+		Terminal("LPAREN")
+		ZeroOrOne(
+			Choice(
+				Sequence(
+					LookAhead(1)
+					NonTerminal(expr, Expression)
+					Action({ ret = append(ret, expr); })
+					ZeroOrMore(
+						Terminal("COMMA")
+						NonTerminal(expr, Expression)
+						Action({ ret = append(ret, expr); })
+					)
+				)
+				Sequence(
+					LookAhead({ quotesMode })
+					NonTerminal(ret, NodeListVar)
+				)
+			)
+		)
+		Terminal("RPAREN")
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseArguments() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
@@ -31404,19 +29419,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(1)
+		LookAhead(1)
+		NonTerminal(expr, Expression)
+		ZeroOrMore(
+			Terminal("COMMA")
 			NonTerminal(expr, Expression)
-			Action({
-				ret = append(ret, expr);
-			})
-			ZeroOrMore(
-				Terminal("COMMA")
-				NonTerminal(expr, Expression)
-				Action({
-					ret = append(ret, expr);
-				})
-			)
-		) */
+		)
+	) */
 	private int matchArguments1(int lookahead) {
 		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
 			return lookahead;
@@ -31514,6 +29523,21 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		Terminal("DOUBLECOLON")
+		ZeroOrOne(
+			NonTerminal(typeArgs, TypeArguments)
+		)
+		Choice(
+			NonTerminal(name, Name)
+			Sequence(
+				Terminal("NEW")
+				Action({ name = SName.make("new"); })
+			)
+		)
+		Action({ ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name)); })
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseMethodReferenceSuffix(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<SNodeList> typeArgs = null;
 		BUTree<SName> name;
@@ -31534,6 +29558,41 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Action({
+			if (scope == null) run();
+	
+		})
+		Terminal("NEW")
+		ZeroOrOne(
+			NonTerminal(typeArgs, TypeArguments)
+		)
+		Action({ run(); })
+		NonTerminal(annotations, Annotations)
+		Choice(
+			Sequence(
+				NonTerminal(type, PrimitiveType)
+				NonTerminal(ret, ArrayCreationExpr)
+			)
+			Sequence(
+				NonTerminal(type, QualifiedType)
+				Choice(
+					NonTerminal(ret, ArrayCreationExpr)
+					Sequence(
+						NonTerminal(args, Arguments)
+						ZeroOrOne(
+							LookAhead(
+								Terminal("LBRACE")
+							)
+							NonTerminal(anonymousBody, ClassOrInterfaceBody)
+						)
+						Action({ ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody))); })
+					)
+				)
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseAllocationExpression(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SType> type;
@@ -31572,8 +29631,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("LBRACE")
-		) */
+		Terminal("LBRACE")
+	) */
 	private int matchAllocationExpression1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.LBRACE);
 		if (lookahead == -1)
@@ -31581,6 +29640,24 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Choice(
+		Sequence(
+			LookAhead(
+				NonTerminal(Annotations)
+				Terminal("LBRACKET")
+				NonTerminal(Expression)
+				Terminal("RBRACKET")
+			)
+			NonTerminal(arrayDimExprs, ArrayDimExprsMandatory)
+			NonTerminal(arrayDims, ArrayDims)
+			Action({ return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none())); })
+		)
+		Sequence(
+			NonTerminal(arrayDims, ArrayDimsMandatory)
+			NonTerminal(initializer, ArrayInitializer)
+			Action({ return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer))); })
+		)
+	) */
 	public BUTree<? extends SExpr> parseArrayCreationExpr(BUTree<? extends SType> componentType) throws ParseException {
 		BUTree<? extends SExpr> expr;
 		BUTree<SNodeList> arrayDimExprs = emptyList();
@@ -31601,11 +29678,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Annotations)
-			Terminal("LBRACKET")
-			NonTerminal(Expression)
-			Terminal("RBRACKET")
-		) */
+		NonTerminal(Annotations)
+		Terminal("LBRACKET")
+		NonTerminal(Expression)
+		Terminal("RBRACKET")
+	) */
 	private int matchArrayCreationExpr1(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -31622,6 +29699,23 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		OneOrMore(
+			LookAhead(
+				NonTerminal(Annotations)
+				Terminal("LBRACKET")
+				NonTerminal(Expression)
+				Terminal("RBRACKET")
+			)
+			Action({ run(); })
+			NonTerminal(annotations, Annotations)
+			Terminal("LBRACKET")
+			NonTerminal(expr, Expression)
+			Terminal("RBRACKET")
+			Action({ arrayDimExprs = append(arrayDimExprs, dress(SArrayDimExpr.make(annotations, expr))); })
+		)
+		Action({ return arrayDimExprs; })
+	) */
 	public BUTree<SNodeList> parseArrayDimExprsMandatory() throws ParseException {
 		BUTree<SNodeList> arrayDimExprs = emptyList();
 		BUTree<SNodeList> annotations;
@@ -31638,11 +29732,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Annotations)
-			Terminal("LBRACKET")
-			NonTerminal(Expression)
-			Terminal("RBRACKET")
-		) */
+		NonTerminal(Annotations)
+		Terminal("LBRACKET")
+		NonTerminal(Expression)
+		Terminal("RBRACKET")
+	) */
 	private int matchArrayDimExprsMandatory1(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -31659,6 +29753,21 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		OneOrMore(
+			LookAhead(
+				NonTerminal(Annotations)
+				Terminal("LBRACKET")
+				Terminal("RBRACKET")
+			)
+			Action({ run(); })
+			NonTerminal(annotations, Annotations)
+			Terminal("LBRACKET")
+			Terminal("RBRACKET")
+			Action({ arrayDims = append(arrayDims, dress(SArrayDim.make(annotations))); })
+		)
+		Action({ return arrayDims; })
+	) */
 	public BUTree<SNodeList> parseArrayDimsMandatory() throws ParseException {
 		BUTree<SNodeList> arrayDims = emptyList();
 		BUTree<SNodeList> annotations;
@@ -31673,10 +29782,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Annotations)
-			Terminal("LBRACKET")
-			Terminal("RBRACKET")
-		) */
+		NonTerminal(Annotations)
+		Terminal("LBRACKET")
+		Terminal("RBRACKET")
+	) */
 	private int matchArrayDimsMandatory1(int lookahead) {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
@@ -31690,6 +29799,30 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				LookAhead(2)
+				NonTerminal(ret, LabeledStatement)
+			)
+			NonTerminal(ret, AssertStatement)
+			NonTerminal(ret, Block)
+			NonTerminal(ret, EmptyStatement)
+			NonTerminal(ret, StatementExpression)
+			NonTerminal(ret, SwitchStatement)
+			NonTerminal(ret, IfStatement)
+			NonTerminal(ret, WhileStatement)
+			NonTerminal(ret, DoStatement)
+			NonTerminal(ret, ForStatement)
+			NonTerminal(ret, BreakStatement)
+			NonTerminal(ret, ContinueStatement)
+			NonTerminal(ret, ReturnStatement)
+			NonTerminal(ret, ThrowStatement)
+			NonTerminal(ret, SynchronizedStatement)
+			NonTerminal(ret, TryStatement)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SStmt> parseStatement() throws ParseException {
 		BUTree<? extends SStmt> ret;
 		if (matchStatement1(0) != -1) {
@@ -31731,9 +29864,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			LookAhead(2)
-			NonTerminal(ret, LabeledStatement)
-		) */
+		LookAhead(2)
+		NonTerminal(ret, LabeledStatement)
+	) */
 	private int matchStatement1(int lookahead) {
 		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
 			if (match(1, ParserImplConstants.COLON) != -1) {
@@ -31748,6 +29881,17 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("ASSERT")
+		NonTerminal(check, Expression)
+		ZeroOrOne(
+			Terminal("COLON")
+			NonTerminal(msg, Expression)
+		)
+		Terminal("SEMICOLON")
+		Action({ return dress(SAssertStmt.make(check, optionOf(msg))); })
+	) */
 	public BUTree<SAssertStmt> parseAssertStatement() throws ParseException {
 		BUTree<? extends SExpr> check;
 		BUTree<? extends SExpr> msg = null;
@@ -31762,6 +29906,13 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SAssertStmt.make(check, optionOf(msg)));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		NonTerminal(label, Name)
+		Terminal("COLON")
+		NonTerminal(stmt, Statement)
+		Action({ return dress(SLabeledStmt.make(label, stmt)); })
+	) */
 	public BUTree<SLabeledStmt> parseLabeledStatement() throws ParseException {
 		BUTree<SName> label;
 		BUTree<? extends SStmt> stmt;
@@ -31772,6 +29923,13 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SLabeledStmt.make(label, stmt));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("LBRACE")
+		NonTerminal(stmts, Statements)
+		Terminal("RBRACE")
+		Action({ return dress(SBlockStmt.make(ensureNotNull(stmts))); })
+	) */
 	public BUTree<SBlockStmt> parseBlock() throws ParseException {
 		BUTree<SNodeList> stmts;
 		run();
@@ -31781,6 +29939,35 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SBlockStmt.make(ensureNotNull(stmts)));
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				LookAhead(
+					NonTerminal(ModifiersNoDefault)
+					Choice(
+						Terminal("CLASS")
+						Terminal("INTERFACE")
+					)
+				)
+				Action({ run(); })
+				Action({ run(); })
+				NonTerminal(modifiers, ModifiersNoDefault)
+				NonTerminal(typeDecl, ClassOrInterfaceDecl)
+				Action({ ret = dress(STypeDeclarationStmt.make(typeDecl)); })
+			)
+			Sequence(
+				LookAhead(
+					NonTerminal(VariableDeclExpression)
+				)
+				Action({ run(); })
+				NonTerminal(expr, VariableDeclExpression)
+				Terminal("SEMICOLON")
+				Action({ ret = dress(SExpressionStmt.make(expr)); })
+			)
+			NonTerminal(ret, Statement)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SStmt> parseBlockStatement() throws ParseException {
 		BUTree<? extends SStmt> ret;
 		BUTree<? extends SExpr> expr;
@@ -31806,9 +29993,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Terminal("CLASS")
-			Terminal("INTERFACE")
-		) */
+		Terminal("CLASS")
+		Terminal("INTERFACE")
+	) */
 	private int matchBlockStatement1_2(int lookahead) {
 		int newLookahead;
 		newLookahead = match(lookahead, ParserImplConstants.CLASS);
@@ -31821,12 +30008,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(ModifiersNoDefault)
-			Choice(
-				Terminal("CLASS")
-				Terminal("INTERFACE")
-			)
-		) */
+		NonTerminal(ModifiersNoDefault)
+		Choice(
+			Terminal("CLASS")
+			Terminal("INTERFACE")
+		)
+	) */
 	private int matchBlockStatement1(int lookahead) {
 		lookahead = matchModifiersNoDefault(lookahead);
 		if (lookahead == -1)
@@ -31838,8 +30025,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(VariableDeclExpression)
-		) */
+		NonTerminal(VariableDeclExpression)
+	) */
 	private int matchBlockStatement3(int lookahead) {
 		lookahead = matchVariableDeclExpression(lookahead);
 		if (lookahead == -1)
@@ -31847,6 +30034,13 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Action({ run(); })
+		NonTerminal(modifiers, ModifiersNoDefault)
+		NonTerminal(variableDecl, VariableDecl)
+		Action({ return dress(SVariableDeclarationExpr.make(variableDecl)); })
+	) */
 	public BUTree<SVariableDeclarationExpr> parseVariableDeclExpression() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<SLocalVariableDecl> variableDecl;
@@ -31857,12 +30051,48 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SVariableDeclarationExpr.make(variableDecl));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("SEMICOLON")
+		Action({ return dress(SEmptyStmt.make()); })
+	) */
 	public BUTree<SEmptyStmt> parseEmptyStatement() throws ParseException {
 		run();
 		parse(ParserImplConstants.SEMICOLON);
 		return dress(SEmptyStmt.make());
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Choice(
+			NonTerminal(expr, PrefixExpression)
+			Sequence(
+				NonTerminal(expr, PrimaryExpression)
+				ZeroOrOne(
+					Choice(
+						Sequence(
+							Action({ lateRun(); })
+							Terminal("INCR")
+							Action({ expr = dress(SUnaryExpr.make(UnaryOp.PostIncrement, expr)); })
+						)
+						Sequence(
+							Action({ lateRun(); })
+							Terminal("DECR")
+							Action({ expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr)); })
+						)
+						Sequence(
+							Action({ lateRun(); })
+							NonTerminal(op, AssignmentOperator)
+							NonTerminal(value, Expression)
+							Action({ expr = dress(SAssignExpr.make(expr, op, value)); })
+						)
+					)
+				)
+			)
+		)
+		Terminal("SEMICOLON")
+		Action({ return dress(SExpressionStmt.make(expr)); })
+	) */
 	public BUTree<SExpressionStmt> parseStatementExpression() throws ParseException {
 		BUTree<? extends SExpr> expr;
 		AssignOp op;
@@ -31897,6 +30127,20 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SExpressionStmt.make(expr));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("SWITCH")
+		Terminal("LPAREN")
+		NonTerminal(selector, Expression)
+		Terminal("RPAREN")
+		Terminal("LBRACE")
+		ZeroOrMore(
+			NonTerminal(entry, SwitchEntry)
+			Action({ entries = append(entries, entry); })
+		)
+		Terminal("RBRACE")
+		Action({ return dress(SSwitchStmt.make(selector, entries)); })
+	) */
 	public BUTree<SSwitchStmt> parseSwitchStatement() throws ParseException {
 		BUTree<? extends SExpr> selector;
 		BUTree<SSwitchCase> entry;
@@ -31915,6 +30159,19 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SSwitchStmt.make(selector, entries));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Choice(
+			Sequence(
+				Terminal("CASE")
+				NonTerminal(label, Expression)
+			)
+			Terminal("_DEFAULT")
+		)
+		Terminal("COLON")
+		NonTerminal(stmts, Statements)
+		Action({ return dress(SSwitchCase.make(optionOf(label), ensureNotNull(stmts))); })
+	) */
 	public BUTree<SSwitchCase> parseSwitchEntry() throws ParseException {
 		BUTree<? extends SExpr> label = null;
 		BUTree<SNodeList> stmts;
@@ -31932,6 +30189,20 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SSwitchCase.make(optionOf(label), ensureNotNull(stmts)));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("IF")
+		Terminal("LPAREN")
+		NonTerminal(condition, Expression)
+		Terminal("RPAREN")
+		NonTerminal(thenStmt, Statement)
+		ZeroOrOne(
+			LookAhead(1)
+			Terminal("ELSE")
+			NonTerminal(elseStmt, Statement)
+		)
+		Action({ return dress(SIfStmt.make(condition, thenStmt, optionOf(elseStmt))); })
+	) */
 	public BUTree<SIfStmt> parseIfStatement() throws ParseException {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> thenStmt;
@@ -31950,10 +30221,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(1)
-			Terminal("ELSE")
-			NonTerminal(elseStmt, Statement)
-		) */
+		LookAhead(1)
+		Terminal("ELSE")
+		NonTerminal(elseStmt, Statement)
+	) */
 	private int matchIfStatement1(int lookahead) {
 		if (match(0, ParserImplConstants.ELSE) != -1) {
 			return lookahead;
@@ -31961,6 +30232,15 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("WHILE")
+		Terminal("LPAREN")
+		NonTerminal(condition, Expression)
+		Terminal("RPAREN")
+		NonTerminal(body, Statement)
+		Action({ return dress(SWhileStmt.make(condition, body)); })
+	) */
 	public BUTree<SWhileStmt> parseWhileStatement() throws ParseException {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> body;
@@ -31973,6 +30253,17 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SWhileStmt.make(condition, body));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("DO")
+		NonTerminal(body, Statement)
+		Terminal("WHILE")
+		Terminal("LPAREN")
+		NonTerminal(condition, Expression)
+		Terminal("RPAREN")
+		Terminal("SEMICOLON")
+		Action({ return dress(SDoStmt.make(body, condition)); })
+	) */
 	public BUTree<SDoStmt> parseDoStatement() throws ParseException {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> body;
@@ -31987,6 +30278,44 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SDoStmt.make(body, condition));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("FOR")
+		Terminal("LPAREN")
+		Choice(
+			Sequence(
+				LookAhead(
+					NonTerminal(VariableDeclExpression)
+					Terminal("COLON")
+				)
+				NonTerminal(varExpr, VariableDeclExpression)
+				Terminal("COLON")
+				NonTerminal(expr, Expression)
+			)
+			Sequence(
+				ZeroOrOne(
+					NonTerminal(init, ForInit)
+				)
+				Terminal("SEMICOLON")
+				ZeroOrOne(
+					NonTerminal(expr, Expression)
+				)
+				Terminal("SEMICOLON")
+				ZeroOrOne(
+					NonTerminal(update, ForUpdate)
+				)
+			)
+		)
+		Terminal("RPAREN")
+		NonTerminal(body, Statement)
+		Action({
+			if (varExpr != null)
+		return dress(SForeachStmt.make(varExpr, expr, body));
+	else
+		return dress(SForStmt.make(init, expr, update, body));
+	
+		})
+	) */
 	public BUTree<? extends SStmt> parseForStatement() throws ParseException {
 		BUTree<SVariableDeclarationExpr> varExpr = null;
 		BUTree<? extends SExpr> expr = null;
@@ -32025,9 +30354,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(VariableDeclExpression)
-			Terminal("COLON")
-		) */
+		NonTerminal(VariableDeclExpression)
+		Terminal("COLON")
+	) */
 	private int matchForStatement1(int lookahead) {
 		lookahead = matchVariableDeclExpression(lookahead);
 		if (lookahead == -1)
@@ -32038,6 +30367,24 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				LookAhead(
+					NonTerminal(Modifiers)
+					NonTerminal(Type)
+					NonTerminal(Name)
+				)
+				NonTerminal(expr, VariableDeclExpression)
+				Action({
+					ret = emptyList();
+					ret = append(ret, expr);
+				})
+			)
+			NonTerminal(ret, ExpressionList)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseForInit() throws ParseException {
 		BUTree<SNodeList> ret;
 		BUTree<? extends SExpr> expr;
@@ -32054,10 +30401,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Modifiers)
-			NonTerminal(Type)
-			NonTerminal(Name)
-		) */
+		NonTerminal(Modifiers)
+		NonTerminal(Type)
+		NonTerminal(Name)
+	) */
 	private int matchForInit1(int lookahead) {
 		lookahead = matchModifiers(lookahead);
 		if (lookahead == -1)
@@ -32071,6 +30418,16 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		NonTerminal(expr, Expression)
+		Action({ ret = append(ret, expr); })
+		ZeroOrMore(
+			Terminal("COMMA")
+			NonTerminal(expr, Expression)
+			Action({ ret = append(ret, expr); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseExpressionList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
@@ -32084,12 +30441,25 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		NonTerminal(ret, ExpressionList)
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseForUpdate() throws ParseException {
 		BUTree<SNodeList> ret;
 		ret = parseExpressionList();
 		return ret;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("BREAK")
+		ZeroOrOne(
+			NonTerminal(id, Name)
+		)
+		Terminal("SEMICOLON")
+		Action({ return dress(SBreakStmt.make(optionOf(id))); })
+	) */
 	public BUTree<SBreakStmt> parseBreakStatement() throws ParseException {
 		BUTree<SName> id = null;
 		run();
@@ -32101,6 +30471,15 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SBreakStmt.make(optionOf(id)));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("CONTINUE")
+		ZeroOrOne(
+			NonTerminal(id, Name)
+		)
+		Terminal("SEMICOLON")
+		Action({ return dress(SContinueStmt.make(optionOf(id))); })
+	) */
 	public BUTree<SContinueStmt> parseContinueStatement() throws ParseException {
 		BUTree<SName> id = null;
 		run();
@@ -32112,6 +30491,15 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SContinueStmt.make(optionOf(id)));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("RETURN")
+		ZeroOrOne(
+			NonTerminal(expr, Expression)
+		)
+		Terminal("SEMICOLON")
+		Action({ return dress(SReturnStmt.make(optionOf(expr))); })
+	) */
 	public BUTree<SReturnStmt> parseReturnStatement() throws ParseException {
 		BUTree<? extends SExpr> expr = null;
 		run();
@@ -32123,6 +30511,13 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SReturnStmt.make(optionOf(expr)));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("THROW")
+		NonTerminal(expr, Expression)
+		Terminal("SEMICOLON")
+		Action({ return dress(SThrowStmt.make(expr)); })
+	) */
 	public BUTree<SThrowStmt> parseThrowStatement() throws ParseException {
 		BUTree<? extends SExpr> expr;
 		run();
@@ -32132,6 +30527,15 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SThrowStmt.make(expr));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("SYNCHRONIZED")
+		Terminal("LPAREN")
+		NonTerminal(expr, Expression)
+		Terminal("RPAREN")
+		NonTerminal(block, Block)
+		Action({ return dress(SSynchronizedStmt.make(expr, block)); })
+	) */
 	public BUTree<SSynchronizedStmt> parseSynchronizedStatement() throws ParseException {
 		BUTree<? extends SExpr> expr;
 		BUTree<SBlockStmt> block;
@@ -32144,6 +30548,40 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SSynchronizedStmt.make(expr, block));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("TRY")
+		Choice(
+			Sequence(
+				NonTerminal(resources, ResourceSpecification)
+				NonTerminal(tryBlock, Block)
+				ZeroOrOne(
+					NonTerminal(catchClauses, CatchClauses)
+				)
+				ZeroOrOne(
+					Terminal("FINALLY")
+					NonTerminal(finallyBlock, Block)
+				)
+			)
+			Sequence(
+				NonTerminal(tryBlock, Block)
+				Choice(
+					Sequence(
+						NonTerminal(catchClauses, CatchClauses)
+						ZeroOrOne(
+							Terminal("FINALLY")
+							NonTerminal(finallyBlock, Block)
+						)
+					)
+					Sequence(
+						Terminal("FINALLY")
+						NonTerminal(finallyBlock, Block)
+					)
+				)
+			)
+		)
+		Action({ return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock))); })
+	) */
 	public BUTree<STryStmt> parseTryStatement() throws ParseException {
 		BUTree<SNodeList> resources = null;
 		ByRef<Boolean> trailingSemiColon = new ByRef<Boolean>(false);
@@ -32182,6 +30620,13 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock)));
 	}
 
+	/* Sequence(
+		OneOrMore(
+			NonTerminal(catchClause, CatchClause)
+			Action({ catchClauses = append(catchClauses, catchClause); })
+		)
+		Action({ return catchClauses; })
+	) */
 	public BUTree<SNodeList> parseCatchClauses() throws ParseException {
 		BUTree<SNodeList> catchClauses = emptyList();
 		BUTree<SCatchClause> catchClause;
@@ -32192,6 +30637,15 @@ public class ParserImplementation extends ParserNewBase {
 		return catchClauses;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("CATCH")
+		Terminal("LPAREN")
+		NonTerminal(param, CatchFormalParameter)
+		Terminal("RPAREN")
+		NonTerminal(catchBlock, Block)
+		Action({ return dress(SCatchClause.make(param, catchBlock)); })
+	) */
 	public BUTree<SCatchClause> parseCatchClause() throws ParseException {
 		BUTree<SFormalParameter> param;
 		BUTree<SBlockStmt> catchBlock;
@@ -32204,6 +30658,26 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SCatchClause.make(param, catchBlock));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		NonTerminal(modifiers, Modifiers)
+		NonTerminal(exceptType, QualifiedType)
+		Action({ exceptTypes = append(exceptTypes, exceptType); })
+		ZeroOrOne(
+			LookAhead(
+				Terminal("BIT_OR")
+			)
+			Action({ lateRun(); })
+			OneOrMore(
+				Terminal("BIT_OR")
+				NonTerminal(exceptType, AnnotatedQualifiedType)
+				Action({ exceptTypes = append(exceptTypes, exceptType); })
+			)
+			Action({ exceptType = dress(SUnionType.make(exceptTypes)); })
+		)
+		NonTerminal(exceptId, VariableDeclaratorId)
+		Action({ return dress(SFormalParameter.make(modifiers, exceptType, false, exceptId)); })
+	) */
 	public BUTree<SFormalParameter> parseCatchFormalParameter() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SType> exceptType;
@@ -32227,8 +30701,8 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("BIT_OR")
-		) */
+		Terminal("BIT_OR")
+	) */
 	private int matchCatchFormalParameter1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.BIT_OR);
 		if (lookahead == -1)
@@ -32236,6 +30710,24 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		Terminal("LPAREN")
+		NonTerminal(var, VariableDeclExpression)
+		Action({ vars = append(vars, var); })
+		ZeroOrMore(
+			LookAhead(2)
+			Terminal("SEMICOLON")
+			NonTerminal(var, VariableDeclExpression)
+			Action({ vars = append(vars, var); })
+		)
+		ZeroOrOne(
+			LookAhead(2)
+			Terminal("SEMICOLON")
+			Action({ trailingSemiColon.value = true; })
+		)
+		Terminal("RPAREN")
+		Action({ return vars; })
+	) */
 	public BUTree<SNodeList> parseResourceSpecification(ByRef<Boolean> trailingSemiColon) throws ParseException {
 		BUTree<SNodeList> vars = emptyList();
 		BUTree<SVariableDeclarationExpr> var;
@@ -32256,13 +30748,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Terminal("SEMICOLON")
-			NonTerminal(var, VariableDeclExpression)
-			Action({
-				vars = append(vars, var);
-			})
-		) */
+		LookAhead(2)
+		Terminal("SEMICOLON")
+		NonTerminal(var, VariableDeclExpression)
+	) */
 	private int matchResourceSpecification1(int lookahead) {
 		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
 			if (match(1, ParserImplConstants.VOLATILE) != -1) {
@@ -32336,12 +30825,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrOne(
-			LookAhead(2)
-			Terminal("SEMICOLON")
-			Action({
-				trailingSemiColon.value = true;
-			})
-		) */
+		LookAhead(2)
+		Terminal("SEMICOLON")
+	) */
 	private int matchResourceSpecification2(int lookahead) {
 		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
 			return lookahead;
@@ -32349,6 +30835,13 @@ public class ParserImplementation extends ParserNewBase {
 		return -1;
 	}
 
+	/* Sequence(
+		LookAhead({ getToken(1).kind == GT && getToken(1).realKind == RUNSIGNEDSHIFT })
+		Terminal("GT")
+		Terminal("GT")
+		Terminal("GT")
+		Action({ popNewWhitespaces(2); })
+	) */
 	public void parseRUNSIGNEDSHIFT() throws ParseException {
 		parse(ParserImplConstants.GT);
 		parse(ParserImplConstants.GT);
@@ -32356,12 +30849,25 @@ public class ParserImplementation extends ParserNewBase {
 		popNewWhitespaces(2);
 	}
 
+	/* Sequence(
+		LookAhead({ getToken(1).kind == GT && getToken(1).realKind == RSIGNEDSHIFT })
+		Terminal("GT")
+		Terminal("GT")
+		Action({ popNewWhitespaces(1); })
+	) */
 	public void parseRSIGNEDSHIFT() throws ParseException {
 		parse(ParserImplConstants.GT);
 		parse(ParserImplConstants.GT);
 		popNewWhitespaces(1);
 	}
 
+	/* Sequence(
+		ZeroOrMore(
+			NonTerminal(annotation, Annotation)
+			Action({ annotations = append(annotations, annotation); })
+		)
+		Action({ return annotations; })
+	) */
 	public BUTree<SNodeList> parseAnnotations() throws ParseException {
 		BUTree<SNodeList> annotations = emptyList();
 		BUTree<? extends SAnnotationExpr> annotation;
@@ -32372,6 +30878,41 @@ public class ParserImplementation extends ParserNewBase {
 		return annotations;
 	}
 
+	/* Sequence(
+		Choice(
+			Sequence(
+				LookAhead(
+					Terminal("AT")
+					NonTerminal(QualifiedName)
+					Terminal("LPAREN")
+					Choice(
+						Sequence(
+							NonTerminal(Name)
+							Terminal("ASSIGN")
+						)
+						Terminal("RPAREN")
+					)
+				)
+				NonTerminal(ret, NormalAnnotation)
+			)
+			Sequence(
+				LookAhead(
+					Terminal("AT")
+					NonTerminal(QualifiedName)
+					Terminal("LPAREN")
+				)
+				NonTerminal(ret, SingleMemberAnnotation)
+			)
+			Sequence(
+				LookAhead(
+					Terminal("AT")
+					NonTerminal(QualifiedName)
+				)
+				NonTerminal(ret, MarkerAnnotation)
+			)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SAnnotationExpr> parseAnnotation() throws ParseException {
 		BUTree<? extends SAnnotationExpr> ret;
 		if (matchAnnotation1(0) != -1) {
@@ -32387,9 +30928,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			NonTerminal(Name)
-			Terminal("ASSIGN")
-		) */
+		NonTerminal(Name)
+		Terminal("ASSIGN")
+	) */
 	private int matchAnnotation1_4_1(int lookahead) {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
@@ -32401,12 +30942,12 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Choice(
-			Sequence(
-				NonTerminal(Name)
-				Terminal("ASSIGN")
-			)
-			Terminal("RPAREN")
-		) */
+		Sequence(
+			NonTerminal(Name)
+			Terminal("ASSIGN")
+		)
+		Terminal("RPAREN")
+	) */
 	private int matchAnnotation1_4(int lookahead) {
 		int newLookahead;
 		newLookahead = matchAnnotation1_4_1(lookahead);
@@ -32419,17 +30960,17 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("AT")
-			NonTerminal(QualifiedName)
-			Terminal("LPAREN")
-			Choice(
-				Sequence(
-					NonTerminal(Name)
-					Terminal("ASSIGN")
-				)
-				Terminal("RPAREN")
+		Terminal("AT")
+		NonTerminal(QualifiedName)
+		Terminal("LPAREN")
+		Choice(
+			Sequence(
+				NonTerminal(Name)
+				Terminal("ASSIGN")
 			)
-		) */
+			Terminal("RPAREN")
+		)
+	) */
 	private int matchAnnotation1(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.AT);
 		if (lookahead == -1)
@@ -32447,10 +30988,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("AT")
-			NonTerminal(QualifiedName)
-			Terminal("LPAREN")
-		) */
+		Terminal("AT")
+		NonTerminal(QualifiedName)
+		Terminal("LPAREN")
+	) */
 	private int matchAnnotation4(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.AT);
 		if (lookahead == -1)
@@ -32465,9 +31006,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* Sequence(
-			Terminal("AT")
-			NonTerminal(QualifiedName)
-		) */
+		Terminal("AT")
+		NonTerminal(QualifiedName)
+	) */
 	private int matchAnnotation5(int lookahead) {
 		lookahead = match(lookahead, ParserImplConstants.AT);
 		if (lookahead == -1)
@@ -32478,6 +31019,17 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("AT")
+		NonTerminal(name, QualifiedName)
+		Terminal("LPAREN")
+		ZeroOrOne(
+			NonTerminal(pairs, MemberValuePairs)
+		)
+		Terminal("RPAREN")
+		Action({ return dress(SNormalAnnotationExpr.make(name, ensureNotNull(pairs))); })
+	) */
 	public BUTree<SNormalAnnotationExpr> parseNormalAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
 		BUTree<SNodeList> pairs = null;
@@ -32492,6 +31044,12 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SNormalAnnotationExpr.make(name, ensureNotNull(pairs)));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("AT")
+		NonTerminal(name, QualifiedName)
+		Action({ return dress(SMarkerAnnotationExpr.make(name)); })
+	) */
 	public BUTree<SMarkerAnnotationExpr> parseMarkerAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
 		run();
@@ -32500,6 +31058,15 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SMarkerAnnotationExpr.make(name));
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("AT")
+		NonTerminal(name, QualifiedName)
+		Terminal("LPAREN")
+		NonTerminal(memberVal, MemberValue)
+		Terminal("RPAREN")
+		Action({ return dress(SSingleMemberAnnotationExpr.make(name, memberVal)); })
+	) */
 	public BUTree<SSingleMemberAnnotationExpr> parseSingleMemberAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
 		BUTree<? extends SExpr> memberVal;
@@ -32512,6 +31079,16 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SSingleMemberAnnotationExpr.make(name, memberVal));
 	}
 
+	/* Sequence(
+		NonTerminal(pair, MemberValuePair)
+		Action({ ret = append(ret, pair); })
+		ZeroOrMore(
+			Terminal("COMMA")
+			NonTerminal(pair, MemberValuePair)
+			Action({ ret = append(ret, pair); })
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<SNodeList> parseMemberValuePairs() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SMemberValuePair> pair;
@@ -32525,6 +31102,13 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		NonTerminal(name, Name)
+		Terminal("ASSIGN")
+		NonTerminal(value, MemberValue)
+		Action({ return dress(SMemberValuePair.make(name, value)); })
+	) */
 	public BUTree<SMemberValuePair> parseMemberValuePair() throws ParseException {
 		BUTree<SName> name;
 		BUTree<? extends SExpr> value;
@@ -32535,6 +31119,14 @@ public class ParserImplementation extends ParserNewBase {
 		return dress(SMemberValuePair.make(name, value));
 	}
 
+	/* Sequence(
+		Choice(
+			NonTerminal(ret, Annotation)
+			NonTerminal(ret, MemberValueArrayInitializer)
+			NonTerminal(ret, ConditionalExpression)
+		)
+		Action({ return ret; })
+	) */
 	public BUTree<? extends SExpr> parseMemberValue() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		if (match(0, ParserImplConstants.AT) != -1) {
@@ -32549,6 +31141,26 @@ public class ParserImplementation extends ParserNewBase {
 		return ret;
 	}
 
+	/* Sequence(
+		Action({ run(); })
+		Terminal("LBRACE")
+		ZeroOrOne(
+			NonTerminal(member, MemberValue)
+			Action({ ret = append(ret, member); })
+			ZeroOrMore(
+				LookAhead(2)
+				Terminal("COMMA")
+				NonTerminal(member, MemberValue)
+				Action({ ret = append(ret, member); })
+			)
+		)
+		ZeroOrOne(
+			Terminal("COMMA")
+			Action({ trailingComma = true; })
+		)
+		Terminal("RBRACE")
+		Action({ return dress(SArrayInitializerExpr.make(ret, trailingComma)); })
+	) */
 	public BUTree<? extends SExpr> parseMemberValueArrayInitializer() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> member;
@@ -32573,13 +31185,10 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* ZeroOrMore(
-			LookAhead(2)
-			Terminal("COMMA")
-			NonTerminal(member, MemberValue)
-			Action({
-				ret = append(ret, member);
-			})
-		) */
+		LookAhead(2)
+		Terminal("COMMA")
+		NonTerminal(member, MemberValue)
+	) */
 	private int matchMemberValueArrayInitializer1(int lookahead) {
 		if (match(0, ParserImplConstants.COMMA) != -1) {
 			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
