@@ -23,6 +23,7 @@ import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
+import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
 import org.jlato.tree.Trees;
 import org.jlato.tree.name.Name;
@@ -121,6 +122,37 @@ public class CommentsTest {
 				Printer.printToString(stmt3, true));
 		Assert.assertArrayEquals(new String[]{"leading1", "leading2"}, stmt3.leadingComments());
 		Assert.assertArrayEquals(new String[]{"trailing2", "trailing1"}, stmt3.trailingComments());
+	}
+
+	@Test
+	public void commentsOnStatementsForceMultiLineAndFormat() throws ParseException {
+		ReturnStmt stmt1 = stmt.insertLeadingComment("leading", true);
+		Assert.assertEquals(
+				"/* leading */\nreturn foo;",
+				Printer.printToString(stmt1, true, FormattingSettings.Default.withCommentFormatting(true)));
+		Assert.assertArrayEquals(new String[]{"leading"}, stmt1.leadingComments());
+		Assert.assertArrayEquals(new String[]{}, stmt1.trailingComments());
+
+		ReturnStmt stmt2 = stmt1.insertTrailingComment("trailing", true);
+		Assert.assertEquals(
+				"/* leading */\nreturn foo; /* trailing */",
+				Printer.printToString(stmt2, true, FormattingSettings.Default.withCommentFormatting(true)));
+		Assert.assertArrayEquals(new String[]{"leading"}, stmt2.leadingComments());
+		Assert.assertArrayEquals(new String[]{"trailing"}, stmt2.trailingComments());
+
+		ReturnStmt stmt3 = stmt
+				.insertLeadingComment("leading1", true).insertLeadingComment("leading2", true)
+				.insertTrailingComment("trailing1", true).insertTrailingComment("trailing2", true);
+		Assert.assertEquals(
+				"/* leading1 */\n/* leading2 */\nreturn foo; /* trailing2 */ /* trailing1 */",
+				Printer.printToString(stmt3, true, FormattingSettings.Default.withCommentFormatting(true)));
+		Assert.assertArrayEquals(new String[]{"leading1", "leading2"}, stmt3.leadingComments());
+		Assert.assertArrayEquals(new String[]{"trailing2", "trailing1"}, stmt3.trailingComments());
+
+		ReturnStmt stmt4 = stmt.insertLeadingComment("two line/nleading", true);
+		Assert.assertEquals(
+				"/* two line/nleading */\nreturn foo;",
+				Printer.printToString(stmt4, true, FormattingSettings.Default.withCommentFormatting(true)));
 	}
 
 	@Test

@@ -125,18 +125,23 @@ public class FormattingSettings {
 	private final String newLineImage;
 	private final TreeMap<IndentationContext, Integer> indentationLevels;
 	private final TreeMap<SpacingLocation, Spacing> spacingCounts;
+	private final boolean docCommentFormatting;
+	private final boolean commentFormatting;
 
 	public FormattingSettings() {
-		this("\t", "\n", new TreeMap<IndentationContext, Integer>(), new TreeMap<SpacingLocation, Spacing>());
+		this("\t", "\n", new TreeMap<IndentationContext, Integer>(), new TreeMap<SpacingLocation, Spacing>(), true, false);
 	}
 
 	public FormattingSettings(String indentationImage, String newLineImage,
 	                          TreeMap<IndentationContext, Integer> indentationLevels,
-	                          TreeMap<SpacingLocation, Spacing> spacingCounts) {
+	                          TreeMap<SpacingLocation, Spacing> spacingCounts,
+	                          boolean docCommentFormatting, boolean commentFormatting) {
 		this.indentationImage = indentationImage;
 		this.newLineImage = newLineImage;
 		this.indentationLevels = indentationLevels;
 		this.spacingCounts = spacingCounts;
+		this.docCommentFormatting = docCommentFormatting;
+		this.commentFormatting = commentFormatting;
 	}
 
 	public String indentation() {
@@ -144,7 +149,7 @@ public class FormattingSettings {
 	}
 
 	public FormattingSettings withIndentation(String indentationImage) {
-		return new FormattingSettings(indentationImage, newLineImage, indentationLevels, spacingCounts);
+		return new FormattingSettings(indentationImage, newLineImage, indentationLevels, spacingCounts, docCommentFormatting, commentFormatting);
 	}
 
 	public String newLine() {
@@ -152,15 +157,15 @@ public class FormattingSettings {
 	}
 
 	public FormattingSettings withNewLine(String newLineImage) {
-		return new FormattingSettings(indentationImage, newLineImage, indentationLevels, spacingCounts);
+		return new FormattingSettings(indentationImage, newLineImage, indentationLevels, spacingCounts, docCommentFormatting, commentFormatting);
 	}
 
 	public FormattingSettings withIndentationLevel(IndentationContext context, int level) {
-		return new FormattingSettings(indentationImage, newLineImage, indentationLevels.put(context, level), spacingCounts);
+		return new FormattingSettings(indentationImage, newLineImage, indentationLevels.put(context, level), spacingCounts, docCommentFormatting, commentFormatting);
 	}
 
 	public FormattingSettings withSpacing(SpacingLocation location, Spacing spacing) {
-		return new FormattingSettings(indentationImage, newLineImage, indentationLevels, spacingCounts.put(location, spacing));
+		return new FormattingSettings(indentationImage, newLineImage, indentationLevels, spacingCounts.put(location, spacing), docCommentFormatting, commentFormatting);
 	}
 
 	public int indentation(IndentationContext context) {
@@ -173,4 +178,19 @@ public class FormattingSettings {
 		else return new Spacing(1, location.defaultUnit);
 	}
 
+	public FormattingSettings withDocCommentFormatting(boolean docCommentFormatting) {
+		return new FormattingSettings(indentationImage, newLineImage, indentationLevels, spacingCounts, docCommentFormatting, commentFormatting);
+	}
+
+	public FormattingSettings withCommentFormatting(boolean commentFormatting) {
+		return new FormattingSettings(indentationImage, newLineImage, indentationLevels, spacingCounts, docCommentFormatting, commentFormatting);
+	}
+
+	public boolean docCommentFormatting() {
+		return docCommentFormatting;
+	}
+
+	public boolean commentFormatting() {
+		return commentFormatting;
+	}
 }

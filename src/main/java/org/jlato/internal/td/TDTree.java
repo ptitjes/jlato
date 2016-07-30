@@ -262,7 +262,7 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 	}
 
 	private String trimDocCommentString(String docCommentString) {
-		return docCommentString.substring("/**".length(), docCommentString.length() - "*/".length()).trim();
+		return docCommentString.substring("/** ".length(), docCommentString.length() - " */".length());
 	}
 
 	public T insertNewLineBefore() {

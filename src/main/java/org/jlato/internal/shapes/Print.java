@@ -30,7 +30,6 @@ import org.jlato.printer.Spacing;
 import org.jlato.tree.Tree;
 
 import java.io.PrintWriter;
-import java.io.StringWriter;
 
 /**
  * @author Didier Villevalois
@@ -188,11 +187,13 @@ public class Print {
 		for (WToken token : tokens.elements) {
 			switch (token.kind) {
 				case ParserImplConstants.JAVA_DOC_COMMENT:
-					appendJavaDoc(token.string);
+					appendJavaDocComment(token.string);
 					break;
 				case ParserImplConstants.SINGLE_LINE_COMMENT:
+					appendSingleLineComment(token.string);
+					break;
 				case ParserImplConstants.MULTI_LINE_COMMENT:
-					appendComment(token.string);
+					appendMultiLineComment(token.string);
 					break;
 				case ParserImplConstants.NEWLINE:
 					appendNewLine(token.string);
@@ -204,19 +205,27 @@ public class Print {
 		}
 	}
 
-	private void appendJavaDoc(String image) {
-		appendJavaDocLine("/**", false);
+	private void appendFormattedComment(String image,
+	                                    String startMarker, String emptyLineMarker,
+	                                    String lineMarker, String stopMarker,
+	                                    boolean clearMarkers) {
+		appendCommentLine(startMarker, clearMarkers);
 
 		// Remove /** and */
 		image = image.trim();
-		image = image.substring(3, image.length() - 2);
+		if (image.trim().startsWith(startMarker.trim()))
+			image = image.substring(startMarker.length()).trim();
+		if (image.trim().endsWith(stopMarker.trim()))
+			image = image.substring(0, image.length() - stopMarker.length()).trim();
 
 		String[] lines = image.split("\n|\r\n|\r|\f");
 		for (int i = 0; i < lines.length; i++) {
 			String line = lines[i];
-			line = line.trim();
-			if (line.startsWith("*")) line = line.substring(1);
-			lines[i] = line.trim();
+			if (!emptyLineMarker.equals("") && line.trim().equals(emptyLineMarker.trim()))
+				line = "";
+			else if (!lineMarker.equals("") && line.trim().startsWith(lineMarker.trim()))
+				line = line.substring(lineMarker.trim().length()).trim();
+			lines[i] = line;
 		}
 
 		int first = 0;
@@ -236,22 +245,36 @@ public class Print {
 
 		for (int i = first; i <= last; i++) {
 			String line = lines[i];
-			if (line.isEmpty()) appendJavaDocLine(" *", false);
-			else appendJavaDocLine(" * " + line, false);
+			if (line.isEmpty()) appendCommentLine(emptyLineMarker, clearMarkers || i != last);
+			else appendCommentLine(lineMarker + line, clearMarkers || i != last);
 		}
-		appendJavaDocLine(" */", true);
+		appendCommentLine(stopMarker, false);
 	}
 
-	private void appendJavaDocLine(String image, boolean last) {
+	private void appendCommentLine(String image, boolean newLine) {
 		if (format && needsIndentation) doPrintIndent();
 		writer.append(image);
-		if (!last) appendNewLine();
+		if (newLine) appendNewLine();
 	}
 
 	private void appendComment(String image) {
 		if (format && needsIndentation) doPrintIndent();
 		writer.append(image);
 		afterAlpha = false;
+	}
+
+	private void appendJavaDocComment(String image) {
+		if (formattingSettings.docCommentFormatting()) appendFormattedComment(image, "/**", " *", " * ", " */", true);
+		else appendComment(image);
+	}
+
+	private void appendMultiLineComment(String image) {
+		if (formattingSettings.commentFormatting()) appendFormattedComment(image, "/* ", "", "", " */", false);
+		else appendComment(image);
+	}
+
+	private void appendSingleLineComment(String image) {
+		appendComment(image);
 	}
 
 	private void appendWhiteSpace(String string) {
