@@ -209,8 +209,6 @@ public class Print {
 	                                    String startMarker, String emptyLineMarker,
 	                                    String lineMarker, String stopMarker,
 	                                    boolean clearMarkers) {
-		appendCommentLine(startMarker, clearMarkers);
-
 		// Remove /** and */
 		image = image.trim();
 		if (image.trim().startsWith(startMarker.trim()))
@@ -225,6 +223,13 @@ public class Print {
 				line = "";
 			else if (!lineMarker.equals("") && line.trim().startsWith(lineMarker.trim()))
 				line = line.substring(lineMarker.trim().length()).trim();
+
+			// Some multi-line comments have "*" at the beginning of lines (eg. license comments)
+			if (line.startsWith("*")) {
+				line = " " + line;
+				clearMarkers = true;
+			} else if (line.startsWith(" *")) clearMarkers = true;
+
 			lines[i] = line;
 		}
 
@@ -243,8 +248,10 @@ public class Print {
 			}
 		}
 
+		appendCommentLine(startMarker, clearMarkers);
 		for (int i = first; i <= last; i++) {
 			String line = lines[i];
+			if (!clearMarkers && i == first) line = " " + line;
 			if (line.isEmpty()) appendCommentLine(emptyLineMarker, clearMarkers || i != last);
 			else appendCommentLine(lineMarker + line, clearMarkers || i != last);
 		}
@@ -269,7 +276,7 @@ public class Print {
 	}
 
 	private void appendMultiLineComment(String image) {
-		if (formattingSettings.commentFormatting()) appendFormattedComment(image, "/* ", "", "", " */", false);
+		if (formattingSettings.commentFormatting()) appendFormattedComment(image, "/*", "", "", " */", false);
 		else appendComment(image);
 	}
 
