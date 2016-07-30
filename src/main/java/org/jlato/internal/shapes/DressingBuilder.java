@@ -41,6 +41,11 @@ public class DressingBuilder<S extends STree> {
 		descendantStack.push(new ChildRunBuilder(null, tree));
 	}
 
+	public boolean notInVar() {
+		final ChildRunBuilder parentStack = descendantStack.peek();
+		return !(parentStack.tree instanceof BUTreeVar);
+	}
+
 	public void openChild(STraversal traversal) {
 		final ChildRunBuilder parentStack = descendantStack.peek();
 

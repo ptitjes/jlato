@@ -82,6 +82,34 @@ public final class LSList extends LexicalShape {
 	}
 
 	@Override
+	public boolean acceptsTrailingWhitespace() {
+		return after == null && shape.acceptsTrailingWhitespace();
+	}
+
+	@Override
+	public boolean acceptsLeadingWhitespace() {
+		return before == null && shape.acceptsLeadingWhitespace();
+	}
+
+	@Override
+	public void dressTrailing(WTokenRun tokens, DressingBuilder<?> builder) {
+		if (after == null && shape.acceptsTrailingWhitespace() && builder.notInVar()) {
+			builder.openChild(SNodeList.lastTraversal());
+			shape.dressTrailing(tokens, builder);
+			builder.closeChild();
+		}
+	}
+
+	@Override
+	public void dressLeading(WTokenRun tokens, DressingBuilder<?> builder) {
+		if (before == null && shape.acceptsLeadingWhitespace() && builder.notInVar()) {
+			builder.openChild(SNodeList.firstTraversal());
+			shape.dressLeading(tokens, builder);
+			builder.closeChild();
+		}
+	}
+
+	@Override
 	public void render(BUTree tree, WRunRun run, Print print) {
 		final RunRenderer renderer = new RunRenderer(print, run);
 
