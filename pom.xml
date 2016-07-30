@@ -85,7 +85,6 @@
 
 		<!-- Maven Plugins -->
 		<jflex-maven-plugin.version>1.6.1</jflex-maven-plugin.version>
-		<javacc-maven-plugin.version>2.6</javacc-maven-plugin.version>
 		<maven-clean-plugin.version>2.5</maven-clean-plugin.version>
 		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
 		<maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
@@ -138,22 +137,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>javacc-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>javacc</id>
-						<goals>
-							<goal>javacc</goal>
-						</goals>
-						<configuration>
-							<grammarEncoding>${project.build.sourceEncoding}</grammarEncoding>
-							<jdkVersion>${java.version}</jdkVersion>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -176,7 +159,7 @@
 								<artifactItem>
 									<groupId>com.github.javaparser</groupId>
 									<artifactId>javaparser-core</artifactId>
-									<version>2.1.0</version>
+									<version>2.5.1</version>
 									<type>jar</type>
 									<classifier>sources</classifier>
 								</artifactItem>
@@ -288,11 +271,6 @@
 					<groupId>de.jflex</groupId>
 					<artifactId>jflex-maven-plugin</artifactId>
 					<version>${jflex-maven-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>javacc-maven-plugin</artifactId>
-					<version>${javacc-maven-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

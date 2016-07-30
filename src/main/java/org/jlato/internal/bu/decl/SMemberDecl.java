@@ -3,7 +3,7 @@ package org.jlato.internal.bu.decl;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.shapes.*;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.parser.TokenType;
 import org.jlato.printer.FormattingSettings.IndentationContext;
 import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;

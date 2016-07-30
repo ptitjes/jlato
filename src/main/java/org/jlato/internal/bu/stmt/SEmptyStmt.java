@@ -7,7 +7,7 @@ import org.jlato.internal.bu.STraversal;
 import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDEmptyStmt;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.parser.TokenType;
 import org.jlato.printer.FormattingSettings.IndentationContext;
 import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;

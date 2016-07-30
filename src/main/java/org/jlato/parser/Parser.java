@@ -48,10 +48,9 @@ public class Parser {
 		this.configuration = configuration;
 	}
 
-	static final ParserInterface.Factory DefaultFactory = new ParserBase.JavaCCParserFactory();
+	static final ParserInterface.Factory DefaultFactory = new ParserNew.ParserNewFactory();
 
 	private ParserInterface.Factory factory() {
-		if (configuration.parser.equals("new")) return new ParserNew.ParserNewFactory();
 		return DefaultFactory;
 	}
 

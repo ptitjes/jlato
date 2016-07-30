@@ -18,7 +18,7 @@
  */
 package org.jlato.internal.parser;
 
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.parser.TokenType;
 
 /**
  * A Java 1.8 lexer.
@@ -106,137 +106,137 @@ StringLiteral = \" ([^\\\"\r\n] | {EscapeSequence})* (\"|\\)?
 
 %%
 
-<<EOF>>  { return newToken(ParserImplConstants.EOF); }
+<<EOF>>  { return newToken(TokenType.EOF); }
 
 <YYINITIAL> {
 
-    {LineTerminator}        { return newToken(ParserImplConstants.NEWLINE); }
-    {WhiteSpace}            { return newToken(ParserImplConstants.WHITESPACE); }
+    {LineTerminator}        { return newToken(TokenType.NEWLINE); }
+    {WhiteSpace}            { return newToken(TokenType.WHITESPACE); }
 
-    {MultiLineComment}      { return newToken(ParserImplConstants.MULTI_LINE_COMMENT); }
-    {EndOfLineComment}      { return newToken(ParserImplConstants.SINGLE_LINE_COMMENT); }
-    {DocumentationComment}  { return newToken(ParserImplConstants.JAVA_DOC_COMMENT); }
+    {MultiLineComment}      { return newToken(TokenType.MULTI_LINE_COMMENT); }
+    {EndOfLineComment}      { return newToken(TokenType.SINGLE_LINE_COMMENT); }
+    {DocumentationComment}  { return newToken(TokenType.JAVA_DOC_COMMENT); }
 
     /* quote variables */
-    {NodeVariable}          { return newToken(parser.quotesMode ? ParserImplConstants.NODE_VARIABLE : ParserImplConstants.IDENTIFIER); }
-    {NodeListVariable}      { return newToken(ParserImplConstants.NODE_LIST_VARIABLE); }
+    {NodeVariable}          { return newToken(parser.quotesMode ? TokenType.NODE_VARIABLE : TokenType.IDENTIFIER); }
+    {NodeListVariable}      { return newToken(TokenType.NODE_LIST_VARIABLE); }
 
     /* literals */
-    {IntegerLiteral}        { return newToken(ParserImplConstants.INTEGER_LITERAL); }
-    {LongLiteral}           { return newToken(ParserImplConstants.LONG_LITERAL); }
-    {FloatLiteral}          { return newToken(ParserImplConstants.FLOAT_LITERAL); }
-    {DoubleLiteral}         { return newToken(ParserImplConstants.DOUBLE_LITERAL); }
-    {CharacterLiteral}      { return newToken(ParserImplConstants.CHARACTER_LITERAL); }
-    {StringLiteral}         { return newToken(ParserImplConstants.STRING_LITERAL); }
+    {IntegerLiteral}        { return newToken(TokenType.INTEGER_LITERAL); }
+    {LongLiteral}           { return newToken(TokenType.LONG_LITERAL); }
+    {FloatLiteral}          { return newToken(TokenType.FLOAT_LITERAL); }
+    {DoubleLiteral}         { return newToken(TokenType.DOUBLE_LITERAL); }
+    {CharacterLiteral}      { return newToken(TokenType.CHARACTER_LITERAL); }
+    {StringLiteral}         { return newToken(TokenType.STRING_LITERAL); }
 
     /* keywords */
-    "abstract"		{ return newToken(ParserImplConstants.ABSTRACT); }
-    "assert"		{ return newToken(ParserImplConstants.ASSERT); }
-    "boolean"		{ return newToken(ParserImplConstants.BOOLEAN); }
-    "break"	    	{ return newToken(ParserImplConstants.BREAK); }
-    "byte"	    	{ return newToken(ParserImplConstants.BYTE); }
-    "case"	    	{ return newToken(ParserImplConstants.CASE); }
-    "catch"		    { return newToken(ParserImplConstants.CATCH); }
-    "char"  		{ return newToken(ParserImplConstants.CHAR); }
-    "class"	    	{ return newToken(ParserImplConstants.CLASS); }
-    "const"	    	{ return newToken(ParserImplConstants.CONST); }
-    "continue"		{ return newToken(ParserImplConstants.CONTINUE); }
-    "default"		{ return newToken(ParserImplConstants._DEFAULT); }
-    "do"	    	{ return newToken(ParserImplConstants.DO); }
-    "double"		{ return newToken(ParserImplConstants.DOUBLE); }
-    "else"	    	{ return newToken(ParserImplConstants.ELSE); }
-    "enum"	    	{ return newToken(ParserImplConstants.ENUM); }
-    "extends"		{ return newToken(ParserImplConstants.EXTENDS); }
-    "false" 		{ return newToken(ParserImplConstants.FALSE); }
-    "final"	    	{ return newToken(ParserImplConstants.FINAL); }
-    "finally"		{ return newToken(ParserImplConstants.FINALLY); }
-    "float"	    	{ return newToken(ParserImplConstants.FLOAT); }
-    "for"	    	{ return newToken(ParserImplConstants.FOR); }
-    "goto"	    	{ return newToken(ParserImplConstants.GOTO); }
-    "if"	    	{ return newToken(ParserImplConstants.IF); }
-    "implements"	{ return newToken(ParserImplConstants.IMPLEMENTS); }
-    "import"		{ return newToken(ParserImplConstants.IMPORT); }
-    "instanceof"	{ return newToken(ParserImplConstants.INSTANCEOF); }
-    "int"	    	{ return newToken(ParserImplConstants.INT); }
-    "interface"		{ return newToken(ParserImplConstants.INTERFACE); }
-    "long"		    { return newToken(ParserImplConstants.LONG); }
-    "native"		{ return newToken(ParserImplConstants.NATIVE); }
-    "new"	    	{ return newToken(ParserImplConstants.NEW); }
-    "null"		    { return newToken(ParserImplConstants.NULL); }
-    "package"		{ return newToken(ParserImplConstants.PACKAGE); }
-    "private"		{ return newToken(ParserImplConstants.PRIVATE); }
-    "protected"		{ return newToken(ParserImplConstants.PROTECTED); }
-    "public"		{ return newToken(ParserImplConstants.PUBLIC); }
-    "return"		{ return newToken(ParserImplConstants.RETURN); }
-    "short"	    	{ return newToken(ParserImplConstants.SHORT); }
-    "static"		{ return newToken(ParserImplConstants.STATIC); }
-    "strictfp"		{ return newToken(ParserImplConstants.STRICTFP); }
-    "super"	    	{ return newToken(ParserImplConstants.SUPER); }
-    "switch"		{ return newToken(ParserImplConstants.SWITCH); }
-    "synchronized"	{ return newToken(ParserImplConstants.SYNCHRONIZED); }
-    "this"	    	{ return newToken(ParserImplConstants.THIS); }
-    "throw"	    	{ return newToken(ParserImplConstants.THROW); }
-    "throws"		{ return newToken(ParserImplConstants.THROWS); }
-    "transient"		{ return newToken(ParserImplConstants.TRANSIENT); }
-    "true"		    { return newToken(ParserImplConstants.TRUE); }
-    "try"	    	{ return newToken(ParserImplConstants.TRY); }
-    "void"	    	{ return newToken(ParserImplConstants.VOID); }
-    "volatile"		{ return newToken(ParserImplConstants.VOLATILE); }
-    "while"	    	{ return newToken(ParserImplConstants.WHILE); }
+    "abstract"		{ return newToken(TokenType.ABSTRACT); }
+    "assert"		{ return newToken(TokenType.ASSERT); }
+    "boolean"		{ return newToken(TokenType.BOOLEAN); }
+    "break"	    	{ return newToken(TokenType.BREAK); }
+    "byte"	    	{ return newToken(TokenType.BYTE); }
+    "case"	    	{ return newToken(TokenType.CASE); }
+    "catch"		    { return newToken(TokenType.CATCH); }
+    "char"  		{ return newToken(TokenType.CHAR); }
+    "class"	    	{ return newToken(TokenType.CLASS); }
+    "const"	    	{ return newToken(TokenType.CONST); }
+    "continue"		{ return newToken(TokenType.CONTINUE); }
+    "default"		{ return newToken(TokenType.DEFAULT); }
+    "do"	    	{ return newToken(TokenType.DO); }
+    "double"		{ return newToken(TokenType.DOUBLE); }
+    "else"	    	{ return newToken(TokenType.ELSE); }
+    "enum"	    	{ return newToken(TokenType.ENUM); }
+    "extends"		{ return newToken(TokenType.EXTENDS); }
+    "false" 		{ return newToken(TokenType.FALSE); }
+    "final"	    	{ return newToken(TokenType.FINAL); }
+    "finally"		{ return newToken(TokenType.FINALLY); }
+    "float"	    	{ return newToken(TokenType.FLOAT); }
+    "for"	    	{ return newToken(TokenType.FOR); }
+    "goto"	    	{ return newToken(TokenType.GOTO); }
+    "if"	    	{ return newToken(TokenType.IF); }
+    "implements"	{ return newToken(TokenType.IMPLEMENTS); }
+    "import"		{ return newToken(TokenType.IMPORT); }
+    "instanceof"	{ return newToken(TokenType.INSTANCEOF); }
+    "int"	    	{ return newToken(TokenType.INT); }
+    "interface"		{ return newToken(TokenType.INTERFACE); }
+    "long"		    { return newToken(TokenType.LONG); }
+    "native"		{ return newToken(TokenType.NATIVE); }
+    "new"	    	{ return newToken(TokenType.NEW); }
+    "null"		    { return newToken(TokenType.NULL); }
+    "package"		{ return newToken(TokenType.PACKAGE); }
+    "private"		{ return newToken(TokenType.PRIVATE); }
+    "protected"		{ return newToken(TokenType.PROTECTED); }
+    "public"		{ return newToken(TokenType.PUBLIC); }
+    "return"		{ return newToken(TokenType.RETURN); }
+    "short"	    	{ return newToken(TokenType.SHORT); }
+    "static"		{ return newToken(TokenType.STATIC); }
+    "strictfp"		{ return newToken(TokenType.STRICTFP); }
+    "super"	    	{ return newToken(TokenType.SUPER); }
+    "switch"		{ return newToken(TokenType.SWITCH); }
+    "synchronized"	{ return newToken(TokenType.SYNCHRONIZED); }
+    "this"	    	{ return newToken(TokenType.THIS); }
+    "throw"	    	{ return newToken(TokenType.THROW); }
+    "throws"		{ return newToken(TokenType.THROWS); }
+    "transient"		{ return newToken(TokenType.TRANSIENT); }
+    "true"		    { return newToken(TokenType.TRUE); }
+    "try"	    	{ return newToken(TokenType.TRY); }
+    "void"	    	{ return newToken(TokenType.VOID); }
+    "volatile"		{ return newToken(TokenType.VOLATILE); }
+    "while"	    	{ return newToken(TokenType.WHILE); }
 
     /* operators */
-    "("	    	{ return newToken(ParserImplConstants.LPAREN); }
-    ")"	    	{ return newToken(ParserImplConstants.RPAREN); }
-    "{"	    	{ return newToken(ParserImplConstants.LBRACE); }
-    "}"		    { return newToken(ParserImplConstants.RBRACE); }
-    "["	    	{ return newToken(ParserImplConstants.LBRACKET); }
-    "]"		    { return newToken(ParserImplConstants.RBRACKET); }
-    ";"	    	{ return newToken(ParserImplConstants.SEMICOLON); }
-    ","	    	{ return newToken(ParserImplConstants.COMMA); }
-    "."	    	{ return newToken(ParserImplConstants.DOT); }
-    "@"		    { return newToken(ParserImplConstants.AT); }
+    "("	    	{ return newToken(TokenType.LPAREN); }
+    ")"	    	{ return newToken(TokenType.RPAREN); }
+    "{"	    	{ return newToken(TokenType.LBRACE); }
+    "}"		    { return newToken(TokenType.RBRACE); }
+    "["	    	{ return newToken(TokenType.LBRACKET); }
+    "]"		    { return newToken(TokenType.RBRACKET); }
+    ";"	    	{ return newToken(TokenType.SEMICOLON); }
+    ","	    	{ return newToken(TokenType.COMMA); }
+    "."	    	{ return newToken(TokenType.DOT); }
+    "@"		    { return newToken(TokenType.AT); }
 
-    "="	    	{ return newToken(ParserImplConstants.ASSIGN); }
-    "<"	    	{ return newToken(ParserImplConstants.LT); }
-    ">"	    	{ return newToken(ParserImplConstants.GT); }
-    "!"	    	{ return newToken(ParserImplConstants.BANG); }
-    "~"	    	{ return newToken(ParserImplConstants.TILDE); }
-    "?"	    	{ return newToken(ParserImplConstants.HOOK); }
-    ":"	    	{ return newToken(ParserImplConstants.COLON); }
-    "=="		{ return newToken(ParserImplConstants.EQ); }
-    "<="		{ return newToken(ParserImplConstants.LE); }
-    ">="		{ return newToken(ParserImplConstants.GE); }
-    "!="		{ return newToken(ParserImplConstants.NE); }
-    "||"		{ return newToken(ParserImplConstants.SC_OR); }
-    "&&"		{ return newToken(ParserImplConstants.SC_AND); }
-    "++"		{ return newToken(ParserImplConstants.INCR); }
-    "--"		{ return newToken(ParserImplConstants.DECR); }
-    "+"	    	{ return newToken(ParserImplConstants.PLUS); }
-    "-"	    	{ return newToken(ParserImplConstants.MINUS); }
-    "*"	    	{ return newToken(ParserImplConstants.STAR); }
-    "/" 		{ return newToken(ParserImplConstants.SLASH); }
-    "&" 		{ return newToken(ParserImplConstants.BIT_AND); }
-    "|"		    { return newToken(ParserImplConstants.BIT_OR); }
-    "^"		    { return newToken(ParserImplConstants.XOR); }
-    "%" 		{ return newToken(ParserImplConstants.REM); }
-    "<<"		{ return newToken(ParserImplConstants.LSHIFT); }
-    "+="		{ return newToken(ParserImplConstants.PLUSASSIGN); }
-    "-="		{ return newToken(ParserImplConstants.MINUSASSIGN); }
-    "*="		{ return newToken(ParserImplConstants.STARASSIGN); }
-    "/="		{ return newToken(ParserImplConstants.SLASHASSIGN); }
-    "&="		{ return newToken(ParserImplConstants.ANDASSIGN); }
-    "|="		{ return newToken(ParserImplConstants.ORASSIGN); }
-    "^="		{ return newToken(ParserImplConstants.XORASSIGN); }
-    "%="		{ return newToken(ParserImplConstants.REMASSIGN); }
-    "<<="		{ return newToken(ParserImplConstants.LSHIFTASSIGN); }
-    ">>="		{ return newToken(ParserImplConstants.RSIGNEDSHIFTASSIGN); }
-    ">>>="		{ return newToken(ParserImplConstants.RUNSIGNEDSHIFTASSIGN); }
-    "..."		{ return newToken(ParserImplConstants.ELLIPSIS); }
-    "->"		{ return newToken(ParserImplConstants.ARROW); }
-    "::"		{ return newToken(ParserImplConstants.DOUBLECOLON); }
+    "="	    	{ return newToken(TokenType.ASSIGN); }
+    "<"	    	{ return newToken(TokenType.LT); }
+    ">"	    	{ return newToken(TokenType.GT); }
+    "!"	    	{ return newToken(TokenType.BANG); }
+    "~"	    	{ return newToken(TokenType.TILDE); }
+    "?"	    	{ return newToken(TokenType.HOOK); }
+    ":"	    	{ return newToken(TokenType.COLON); }
+    "=="		{ return newToken(TokenType.EQ); }
+    "<="		{ return newToken(TokenType.LE); }
+    ">="		{ return newToken(TokenType.GE); }
+    "!="		{ return newToken(TokenType.NE); }
+    "||"		{ return newToken(TokenType.SC_OR); }
+    "&&"		{ return newToken(TokenType.SC_AND); }
+    "++"		{ return newToken(TokenType.INCR); }
+    "--"		{ return newToken(TokenType.DECR); }
+    "+"	    	{ return newToken(TokenType.PLUS); }
+    "-"	    	{ return newToken(TokenType.MINUS); }
+    "*"	    	{ return newToken(TokenType.STAR); }
+    "/" 		{ return newToken(TokenType.SLASH); }
+    "&" 		{ return newToken(TokenType.BIT_AND); }
+    "|"		    { return newToken(TokenType.BIT_OR); }
+    "^"		    { return newToken(TokenType.XOR); }
+    "%" 		{ return newToken(TokenType.REM); }
+    "<<"		{ return newToken(TokenType.LSHIFT); }
+    "+="		{ return newToken(TokenType.PLUSASSIGN); }
+    "-="		{ return newToken(TokenType.MINUSASSIGN); }
+    "*="		{ return newToken(TokenType.STARASSIGN); }
+    "/="		{ return newToken(TokenType.SLASHASSIGN); }
+    "&="		{ return newToken(TokenType.ANDASSIGN); }
+    "|="		{ return newToken(TokenType.ORASSIGN); }
+    "^="		{ return newToken(TokenType.XORASSIGN); }
+    "%="		{ return newToken(TokenType.REMASSIGN); }
+    "<<="		{ return newToken(TokenType.LSHIFTASSIGN); }
+    ">>="		{ return newToken(TokenType.RSIGNEDSHIFTASSIGN); }
+    ">>>="		{ return newToken(TokenType.RUNSIGNEDSHIFTASSIGN); }
+    "..."		{ return newToken(TokenType.ELLIPSIS); }
+    "->"		{ return newToken(TokenType.ARROW); }
+    "::"		{ return newToken(TokenType.DOUBLECOLON); }
 
     /* identifiers */
-    {Identifier}            { return newToken(ParserImplConstants.IDENTIFIER); }
+    {Identifier}            { return newToken(TokenType.IDENTIFIER); }
 
 }
 

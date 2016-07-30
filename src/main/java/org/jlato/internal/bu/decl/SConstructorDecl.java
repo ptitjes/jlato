@@ -12,7 +12,7 @@ import org.jlato.internal.bu.stmt.SBlockStmt;
 import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDConstructorDecl;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.parser.TokenType;
 import org.jlato.printer.FormattingSettings.IndentationContext;
 import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;

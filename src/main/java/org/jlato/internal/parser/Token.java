@@ -20,7 +20,7 @@
 package org.jlato.internal.parser;
 
 import org.jlato.internal.bu.WTokenRun;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.parser.TokenType;
 
 /**
  * An input Token.
@@ -34,7 +34,7 @@ public class Token {
 	 * stored in the file ...Constants.java.
 	 */
 	public int kind;
-	public int realKind = ParserImplConstants.GT;
+	public int realKind = TokenType.GT;
 	public WTokenRun whitespace;
 
 	/**

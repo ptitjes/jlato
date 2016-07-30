@@ -13,7 +13,7 @@ import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDAnnotationMemberDecl;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.parser.TokenType;
 import org.jlato.printer.FormattingSettings.IndentationContext;
 import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
@@ -350,7 +350,7 @@ public class SAnnotationMemberDecl extends SNode<SAnnotationMemberDecl> implemen
 		}
 	};
 
-	public static final LexicalShape defaultValShape = composite(token(LToken.Default).withSpacingBefore(space()), element());
+	public static final LexicalShape defaultValShape = composite(token(LToken.Default).withSpacing(space(), space()), element());
 
 	public static final LexicalShape shape = composite(
 			child(MODIFIERS, SExtendedModifier.multiLineShape),

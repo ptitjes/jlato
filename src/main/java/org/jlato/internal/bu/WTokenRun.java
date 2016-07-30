@@ -22,7 +22,7 @@ package org.jlato.internal.bu;
 import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.parser.TokenType;
 
 /**
  * @author Didier Villevalois
@@ -50,13 +50,13 @@ public class WTokenRun extends WRun {
 		java.util.ArrayList<String> comments = new java.util.ArrayList<String>();
 		for (WToken token : elements) {
 			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case TokenType.SINGLE_LINE_COMMENT:
+				case TokenType.MULTI_LINE_COMMENT:
 					comments.add(trimmedCommentString(token));
 					break;
-				case ParserImplConstants.JAVA_DOC_COMMENT:
-				case ParserImplConstants.NEWLINE:
-				case ParserImplConstants.WHITESPACE:
+				case TokenType.JAVA_DOC_COMMENT:
+				case TokenType.NEWLINE:
+				case TokenType.WHITESPACE:
 					break;
 				default:
 					// Checked at WToken instantiation
@@ -68,7 +68,7 @@ public class WTokenRun extends WRun {
 
 	private String trimmedCommentString(WToken comment) {
 		String commentString = comment.string;
-		return comment.kind == ParserImplConstants.SINGLE_LINE_COMMENT ?
+		return comment.kind == TokenType.SINGLE_LINE_COMMENT ?
 				commentString.substring("//".length()).trim() :
 				commentString.substring("/*".length(), commentString.length() - "*/".length()).trim();
 	}
@@ -157,14 +157,14 @@ public class WTokenRun extends WRun {
 		for (int i = 0; i < elements.size(); i++) {
 			final WToken token = elements.get(i);
 			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-				case ParserImplConstants.JAVA_DOC_COMMENT:
+				case TokenType.SINGLE_LINE_COMMENT:
+				case TokenType.MULTI_LINE_COMMENT:
+				case TokenType.JAVA_DOC_COMMENT:
 					if (!containsNewLines) return i + 1;
 					else break;
-				case ParserImplConstants.NEWLINE:
+				case TokenType.NEWLINE:
 					return i;
-				case ParserImplConstants.WHITESPACE:
+				case TokenType.WHITESPACE:
 					break;
 				default:
 					// Checked at WToken instantiation
@@ -181,17 +181,17 @@ public class WTokenRun extends WRun {
 		for (int i = elements.size() - 1; i >= 0; i--) {
 			final WToken token = elements.get(i);
 			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-				case ParserImplConstants.JAVA_DOC_COMMENT:
+				case TokenType.SINGLE_LINE_COMMENT:
+				case TokenType.MULTI_LINE_COMMENT:
+				case TokenType.JAVA_DOC_COMMENT:
 					emptyLine = false;
 					splitIndex = i;
 					break;
-				case ParserImplConstants.NEWLINE:
+				case TokenType.NEWLINE:
 					if (emptyLine) return splitIndex;
 					emptyLine = true;
 					break;
-				case ParserImplConstants.WHITESPACE:
+				case TokenType.WHITESPACE:
 					break;
 				default:
 					// Checked at WToken instantiation
@@ -205,13 +205,13 @@ public class WTokenRun extends WRun {
 		for (int i = 0; i < elements.size(); i++) {
 			final WToken token = elements.get(i);
 			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case TokenType.SINGLE_LINE_COMMENT:
+				case TokenType.MULTI_LINE_COMMENT:
 					break;
-				case ParserImplConstants.JAVA_DOC_COMMENT:
+				case TokenType.JAVA_DOC_COMMENT:
 					return i;
-				case ParserImplConstants.NEWLINE:
-				case ParserImplConstants.WHITESPACE:
+				case TokenType.NEWLINE:
+				case TokenType.WHITESPACE:
 					break;
 				default:
 					// Checked at WToken instantiation
@@ -227,14 +227,14 @@ public class WTokenRun extends WRun {
 		int count = 0;
 		for (WToken token : elements) {
 			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-				case ParserImplConstants.JAVA_DOC_COMMENT:
+				case TokenType.SINGLE_LINE_COMMENT:
+				case TokenType.MULTI_LINE_COMMENT:
+				case TokenType.JAVA_DOC_COMMENT:
 					count++;
 					break;
-				case ParserImplConstants.NEWLINE:
+				case TokenType.NEWLINE:
 					return false;
-				case ParserImplConstants.WHITESPACE:
+				case TokenType.WHITESPACE:
 					break;
 				default:
 					// Checked at WToken instantiation
@@ -249,16 +249,16 @@ public class WTokenRun extends WRun {
 		boolean emptyLine = true;
 		for (WToken token : elements) {
 			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-				case ParserImplConstants.JAVA_DOC_COMMENT:
+				case TokenType.SINGLE_LINE_COMMENT:
+				case TokenType.MULTI_LINE_COMMENT:
+				case TokenType.JAVA_DOC_COMMENT:
 					emptyLine = false;
 					break;
-				case ParserImplConstants.NEWLINE:
+				case TokenType.NEWLINE:
 					if (emptyLine) count++;
 					emptyLine = true;
 					break;
-				case ParserImplConstants.WHITESPACE:
+				case TokenType.WHITESPACE:
 					break;
 				default:
 					// Checked at WToken instantiation
@@ -271,13 +271,13 @@ public class WTokenRun extends WRun {
 	public boolean containsNewLines() {
 		for (WToken token : elements) {
 			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-				case ParserImplConstants.JAVA_DOC_COMMENT:
+				case TokenType.SINGLE_LINE_COMMENT:
+				case TokenType.MULTI_LINE_COMMENT:
+				case TokenType.JAVA_DOC_COMMENT:
 					break;
-				case ParserImplConstants.NEWLINE:
+				case TokenType.NEWLINE:
 					return true;
-				case ParserImplConstants.WHITESPACE:
+				case TokenType.WHITESPACE:
 					break;
 				default:
 					// Checked at WToken instantiation
@@ -290,12 +290,12 @@ public class WTokenRun extends WRun {
 	public boolean containsComments() {
 		for (WToken token : elements) {
 			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-				case ParserImplConstants.JAVA_DOC_COMMENT:
+				case TokenType.SINGLE_LINE_COMMENT:
+				case TokenType.MULTI_LINE_COMMENT:
+				case TokenType.JAVA_DOC_COMMENT:
 					return true;
-				case ParserImplConstants.NEWLINE:
-				case ParserImplConstants.WHITESPACE:
+				case TokenType.NEWLINE:
+				case TokenType.WHITESPACE:
 					break;
 				default:
 					// Checked at WToken instantiation
@@ -308,12 +308,12 @@ public class WTokenRun extends WRun {
 	public boolean containsSingleLineComment() {
 		for (WToken token : elements) {
 			switch (token.kind) {
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case TokenType.SINGLE_LINE_COMMENT:
 					return true;
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-				case ParserImplConstants.JAVA_DOC_COMMENT:
-				case ParserImplConstants.NEWLINE:
-				case ParserImplConstants.WHITESPACE:
+				case TokenType.MULTI_LINE_COMMENT:
+				case TokenType.JAVA_DOC_COMMENT:
+				case TokenType.NEWLINE:
+				case TokenType.WHITESPACE:
 					break;
 				default:
 					// Checked at WToken instantiation

@@ -8,7 +8,6 @@ import org.jlato.internal.bu.name.*;
 import org.jlato.internal.bu.stmt.*;
 import org.jlato.internal.bu.type.*;
 import org.jlato.parser.ParseException;
-import org.jlato.parser.ParserImplConstants;
 import org.jlato.parser.ParserInterface.TypeKind;
 import org.jlato.tree.Problem.Severity;
 import org.jlato.tree.decl.ModifierKeyword;
@@ -17,48 +16,46 @@ import org.jlato.tree.expr.BinaryOp;
 import org.jlato.tree.expr.UnaryOp;
 import org.jlato.tree.type.Primitive;
 
-import static org.jlato.parser.ParserImplConstants.GT;
-import static org.jlato.parser.ParserImplConstants.RSIGNEDSHIFT;
-import static org.jlato.parser.ParserImplConstants.RUNSIGNEDSHIFT;
-
 /**
  * Internal implementation of the Java parser as a recursive descent parser.
  */
 public class ParserImplementation extends ParserNewBase {
 
 	/* sequence(
-		terminal(NODE_LIST_VARIABLE)
-		action({ return makeVar(); })
+		terminal(id, NODE_LIST_VARIABLE)
+		action({ return makeVar(id); })
 	) */
 	public BUTree<SNodeList> parseNodeListVar() throws ParseException {
-		parse(ParserImplConstants.NODE_LIST_VARIABLE);
-		return makeVar();
+		Token id;
+		id = parse(TokenType.NODE_LIST_VARIABLE);
+		return makeVar(id);
 	}
 
 	/* sequence(
-		terminal(NODE_LIST_VARIABLE)
+		terminal(id, NODE_LIST_VARIABLE)
 	) */
 	private int matchNodeListVar(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.NODE_LIST_VARIABLE);
+		lookahead = match(lookahead, TokenType.NODE_LIST_VARIABLE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
 	}
 
 	/* sequence(
-		terminal(NODE_VARIABLE)
-		action({ return makeVar(); })
+		terminal(id, NODE_VARIABLE)
+		action({ return makeVar(id); })
 	) */
 	public BUTree<SName> parseNodeVar() throws ParseException {
-		parse(ParserImplConstants.NODE_VARIABLE);
-		return makeVar();
+		Token id;
+		id = parse(TokenType.NODE_VARIABLE);
+		return makeVar(id);
 	}
 
 	/* sequence(
-		terminal(NODE_VARIABLE)
+		terminal(id, NODE_VARIABLE)
 	) */
 	private int matchNodeVar(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.NODE_VARIABLE);
+		lookahead = match(lookahead, TokenType.NODE_VARIABLE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -109,12 +106,12 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(EOF)
 	) */
 	public void parseEpilog() throws ParseException {
-		if (match(0, ParserImplConstants.EOF) != -1) {
-			parse(ParserImplConstants.EOF);
-		} else if (match(0, ParserImplConstants.EOF) != -1) {
-			parse(ParserImplConstants.EOF);
+		if (match(0, TokenType.EOF) != -1) {
+			parse(TokenType.EOF);
+		} else if (match(0, TokenType.EOF) != -1) {
+			parse(TokenType.EOF);
 		} else {
-			throw produceParseException(ParserImplConstants.EOF);
+			throw produceParseException(TokenType.EOF);
 		}
 	}
 
@@ -131,9 +128,9 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SQualifiedName> name;
 		run();
 		annotations = parseAnnotations();
-		parse(ParserImplConstants.PACKAGE);
+		parse(TokenType.PACKAGE);
 		name = parseQualifiedName();
-		parse(ParserImplConstants.SEMICOLON);
+		parse(TokenType.SEMICOLON);
 		return dress(SPackageDecl.make(annotations, name));
 	}
 
@@ -147,13 +144,13 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.PACKAGE);
+		lookahead = match(lookahead, TokenType.PACKAGE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchQualifiedName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -169,7 +166,7 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseImportDecls() throws ParseException {
 		BUTree<SNodeList> imports = emptyList();
 		BUTree<SImportDecl> importDecl = null;
-		while (match(0, ParserImplConstants.IMPORT) != -1) {
+		while (match(0, TokenType.IMPORT) != -1) {
 			importDecl = parseImportDecl();
 			imports = append(imports, importDecl);
 		}
@@ -197,18 +194,18 @@ public class ParserImplementation extends ParserNewBase {
 		boolean isStatic = false;
 		boolean isAsterisk = false;
 		run();
-		parse(ParserImplConstants.IMPORT);
-		if (match(0, ParserImplConstants.STATIC) != -1) {
-			parse(ParserImplConstants.STATIC);
+		parse(TokenType.IMPORT);
+		if (match(0, TokenType.STATIC) != -1) {
+			parse(TokenType.STATIC);
 			isStatic = true;
 		}
 		name = parseQualifiedName();
-		if (match(0, ParserImplConstants.DOT) != -1) {
-			parse(ParserImplConstants.DOT);
-			parse(ParserImplConstants.STAR);
+		if (match(0, TokenType.DOT) != -1) {
+			parse(TokenType.DOT);
+			parse(TokenType.STAR);
 			isAsterisk = true;
 		}
-		parse(ParserImplConstants.SEMICOLON);
+		parse(TokenType.SEMICOLON);
 		return dress(SImportDecl.make(name, isStatic, isAsterisk));
 	}
 
@@ -222,7 +219,7 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseTypeDecls() throws ParseException {
 		BUTree<SNodeList> types = emptyList();
 		BUTree<? extends STypeDecl> typeDecl = null;
-		while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.SEMICOLON) != -1) {
+		while (match(0, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.SEMICOLON) != -1) {
 			typeDecl = parseTypeDecl();
 			types = append(types, typeDecl);
 		}
@@ -250,7 +247,7 @@ public class ParserImplementation extends ParserNewBase {
 					action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract)); })
 				)
 				sequence(
-					terminal(_DEFAULT)
+					terminal(DEFAULT)
 					action({ modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default)); })
 				)
 				sequence(
@@ -293,47 +290,47 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
 		while (matchModifiers_lookahead1(0) != -1) {
-			if (match(0, ParserImplConstants.PUBLIC) != -1) {
-				parse(ParserImplConstants.PUBLIC);
+			if (match(0, TokenType.PUBLIC) != -1) {
+				parse(TokenType.PUBLIC);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-			} else if (match(0, ParserImplConstants.PROTECTED) != -1) {
-				parse(ParserImplConstants.PROTECTED);
+			} else if (match(0, TokenType.PROTECTED) != -1) {
+				parse(TokenType.PROTECTED);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-			} else if (match(0, ParserImplConstants.PRIVATE) != -1) {
-				parse(ParserImplConstants.PRIVATE);
+			} else if (match(0, TokenType.PRIVATE) != -1) {
+				parse(TokenType.PRIVATE);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-			} else if (match(0, ParserImplConstants.ABSTRACT) != -1) {
-				parse(ParserImplConstants.ABSTRACT);
+			} else if (match(0, TokenType.ABSTRACT) != -1) {
+				parse(TokenType.ABSTRACT);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-			} else if (match(0, ParserImplConstants._DEFAULT) != -1) {
-				parse(ParserImplConstants._DEFAULT);
+			} else if (match(0, TokenType.DEFAULT) != -1) {
+				parse(TokenType.DEFAULT);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
-			} else if (match(0, ParserImplConstants.STATIC) != -1) {
-				parse(ParserImplConstants.STATIC);
+			} else if (match(0, TokenType.STATIC) != -1) {
+				parse(TokenType.STATIC);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-			} else if (match(0, ParserImplConstants.FINAL) != -1) {
-				parse(ParserImplConstants.FINAL);
+			} else if (match(0, TokenType.FINAL) != -1) {
+				parse(TokenType.FINAL);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-			} else if (match(0, ParserImplConstants.TRANSIENT) != -1) {
-				parse(ParserImplConstants.TRANSIENT);
+			} else if (match(0, TokenType.TRANSIENT) != -1) {
+				parse(TokenType.TRANSIENT);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-			} else if (match(0, ParserImplConstants.VOLATILE) != -1) {
-				parse(ParserImplConstants.VOLATILE);
+			} else if (match(0, TokenType.VOLATILE) != -1) {
+				parse(TokenType.VOLATILE);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-			} else if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
-				parse(ParserImplConstants.SYNCHRONIZED);
+			} else if (match(0, TokenType.SYNCHRONIZED) != -1) {
+				parse(TokenType.SYNCHRONIZED);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-			} else if (match(0, ParserImplConstants.NATIVE) != -1) {
-				parse(ParserImplConstants.NATIVE);
+			} else if (match(0, TokenType.NATIVE) != -1) {
+				parse(TokenType.NATIVE);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-			} else if (match(0, ParserImplConstants.STRICTFP) != -1) {
-				parse(ParserImplConstants.STRICTFP);
+			} else if (match(0, TokenType.STRICTFP) != -1) {
+				parse(TokenType.STRICTFP);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-			} else if (match(0, ParserImplConstants.AT) != -1) {
+			} else if (match(0, TokenType.AT) != -1) {
 				ann = parseAnnotation();
 				modifiers = append(modifiers, ann);
 			} else {
-				throw produceParseException(ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC);
+				throw produceParseException(TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC);
 			}
 		}
 		return modifiers;
@@ -356,7 +353,7 @@ public class ParserImplementation extends ParserNewBase {
 					terminal(ABSTRACT)
 				)
 				sequence(
-					terminal(_DEFAULT)
+					terminal(DEFAULT)
 				)
 				sequence(
 					terminal(STATIC)
@@ -408,7 +405,7 @@ public class ParserImplementation extends ParserNewBase {
 				terminal(ABSTRACT)
 			)
 			sequence(
-				terminal(_DEFAULT)
+				terminal(DEFAULT)
 			)
 			sequence(
 				terminal(STATIC)
@@ -462,7 +459,7 @@ public class ParserImplementation extends ParserNewBase {
 				terminal(ABSTRACT)
 			)
 			sequence(
-				terminal(_DEFAULT)
+				terminal(DEFAULT)
 			)
 			sequence(
 				terminal(STATIC)
@@ -511,7 +508,7 @@ public class ParserImplementation extends ParserNewBase {
 			terminal(ABSTRACT)
 		)
 		sequence(
-			terminal(_DEFAULT)
+			terminal(DEFAULT)
 		)
 		sequence(
 			terminal(STATIC)
@@ -586,7 +583,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(PUBLIC)
 	) */
 	private int matchModifiers_1_1_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.PUBLIC);
+		lookahead = match(lookahead, TokenType.PUBLIC);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -596,7 +593,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SYNCHRONIZED)
 	) */
 	private int matchModifiers_1_1_2_10(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SYNCHRONIZED);
+		lookahead = match(lookahead, TokenType.SYNCHRONIZED);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -606,7 +603,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(NATIVE)
 	) */
 	private int matchModifiers_1_1_2_11(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.NATIVE);
+		lookahead = match(lookahead, TokenType.NATIVE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -616,7 +613,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(STRICTFP)
 	) */
 	private int matchModifiers_1_1_2_12(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.STRICTFP);
+		lookahead = match(lookahead, TokenType.STRICTFP);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -636,7 +633,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(PROTECTED)
 	) */
 	private int matchModifiers_1_1_2_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.PROTECTED);
+		lookahead = match(lookahead, TokenType.PROTECTED);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -646,7 +643,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(PRIVATE)
 	) */
 	private int matchModifiers_1_1_2_3(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.PRIVATE);
+		lookahead = match(lookahead, TokenType.PRIVATE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -656,17 +653,17 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(ABSTRACT)
 	) */
 	private int matchModifiers_1_1_2_4(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.ABSTRACT);
+		lookahead = match(lookahead, TokenType.ABSTRACT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
 	}
 
 	/* sequence(
-		terminal(_DEFAULT)
+		terminal(DEFAULT)
 	) */
 	private int matchModifiers_1_1_2_5(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants._DEFAULT);
+		lookahead = match(lookahead, TokenType.DEFAULT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -676,7 +673,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(STATIC)
 	) */
 	private int matchModifiers_1_1_2_6(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.STATIC);
+		lookahead = match(lookahead, TokenType.STATIC);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -686,7 +683,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(FINAL)
 	) */
 	private int matchModifiers_1_1_2_7(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.FINAL);
+		lookahead = match(lookahead, TokenType.FINAL);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -696,7 +693,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(TRANSIENT)
 	) */
 	private int matchModifiers_1_1_2_8(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.TRANSIENT);
+		lookahead = match(lookahead, TokenType.TRANSIENT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -706,7 +703,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(VOLATILE)
 	) */
 	private int matchModifiers_1_1_2_9(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.VOLATILE);
+		lookahead = match(lookahead, TokenType.VOLATILE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -728,7 +725,7 @@ public class ParserImplementation extends ParserNewBase {
 				terminal(ABSTRACT)
 			)
 			sequence(
-				terminal(_DEFAULT)
+				terminal(DEFAULT)
 			)
 			sequence(
 				terminal(STATIC)
@@ -757,48 +754,48 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchModifiers_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.VOLATILE) != -1) {
+		if (match(0, TokenType.VOLATILE) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
+		if (match(0, TokenType.SYNCHRONIZED) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.NATIVE) != -1) {
+		if (match(0, TokenType.NATIVE) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.AT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.AT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.PUBLIC) != -1) {
+		if (match(0, TokenType.PUBLIC) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.FINAL) != -1) {
+		if (match(0, TokenType.FINAL) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.PROTECTED) != -1) {
+		if (match(0, TokenType.PROTECTED) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.ABSTRACT) != -1) {
+		if (match(0, TokenType.ABSTRACT) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants._DEFAULT) != -1) {
+		if (match(0, TokenType.TRANSIENT) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.TRANSIENT) != -1) {
+		if (match(0, TokenType.STRICTFP) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.STRICTFP) != -1) {
+		if (match(0, TokenType.DEFAULT) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.STATIC) != -1) {
+		if (match(0, TokenType.STATIC) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.PRIVATE) != -1) {
+		if (match(0, TokenType.PRIVATE) != -1) {
 			return lookahead;
 		}
 		return -1;
@@ -864,44 +861,44 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
 		while (matchModifiersNoDefault_lookahead1(0) != -1) {
-			if (match(0, ParserImplConstants.PUBLIC) != -1) {
-				parse(ParserImplConstants.PUBLIC);
+			if (match(0, TokenType.PUBLIC) != -1) {
+				parse(TokenType.PUBLIC);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
-			} else if (match(0, ParserImplConstants.PROTECTED) != -1) {
-				parse(ParserImplConstants.PROTECTED);
+			} else if (match(0, TokenType.PROTECTED) != -1) {
+				parse(TokenType.PROTECTED);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
-			} else if (match(0, ParserImplConstants.PRIVATE) != -1) {
-				parse(ParserImplConstants.PRIVATE);
+			} else if (match(0, TokenType.PRIVATE) != -1) {
+				parse(TokenType.PRIVATE);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
-			} else if (match(0, ParserImplConstants.ABSTRACT) != -1) {
-				parse(ParserImplConstants.ABSTRACT);
+			} else if (match(0, TokenType.ABSTRACT) != -1) {
+				parse(TokenType.ABSTRACT);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
-			} else if (match(0, ParserImplConstants.STATIC) != -1) {
-				parse(ParserImplConstants.STATIC);
+			} else if (match(0, TokenType.STATIC) != -1) {
+				parse(TokenType.STATIC);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
-			} else if (match(0, ParserImplConstants.FINAL) != -1) {
-				parse(ParserImplConstants.FINAL);
+			} else if (match(0, TokenType.FINAL) != -1) {
+				parse(TokenType.FINAL);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
-			} else if (match(0, ParserImplConstants.TRANSIENT) != -1) {
-				parse(ParserImplConstants.TRANSIENT);
+			} else if (match(0, TokenType.TRANSIENT) != -1) {
+				parse(TokenType.TRANSIENT);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
-			} else if (match(0, ParserImplConstants.VOLATILE) != -1) {
-				parse(ParserImplConstants.VOLATILE);
+			} else if (match(0, TokenType.VOLATILE) != -1) {
+				parse(TokenType.VOLATILE);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
-			} else if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
-				parse(ParserImplConstants.SYNCHRONIZED);
+			} else if (match(0, TokenType.SYNCHRONIZED) != -1) {
+				parse(TokenType.SYNCHRONIZED);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
-			} else if (match(0, ParserImplConstants.NATIVE) != -1) {
-				parse(ParserImplConstants.NATIVE);
+			} else if (match(0, TokenType.NATIVE) != -1) {
+				parse(TokenType.NATIVE);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
-			} else if (match(0, ParserImplConstants.STRICTFP) != -1) {
-				parse(ParserImplConstants.STRICTFP);
+			} else if (match(0, TokenType.STRICTFP) != -1) {
+				parse(TokenType.STRICTFP);
 				modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
-			} else if (match(0, ParserImplConstants.AT) != -1) {
+			} else if (match(0, TokenType.AT) != -1) {
 				ann = parseAnnotation();
 				modifiers = append(modifiers, ann);
 			} else {
-				throw produceParseException(ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC);
+				throw produceParseException(TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC);
 			}
 		}
 		return modifiers;
@@ -1139,7 +1136,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(PUBLIC)
 	) */
 	private int matchModifiersNoDefault_1_1_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.PUBLIC);
+		lookahead = match(lookahead, TokenType.PUBLIC);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -1149,7 +1146,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(NATIVE)
 	) */
 	private int matchModifiersNoDefault_1_1_2_10(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.NATIVE);
+		lookahead = match(lookahead, TokenType.NATIVE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -1159,7 +1156,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(STRICTFP)
 	) */
 	private int matchModifiersNoDefault_1_1_2_11(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.STRICTFP);
+		lookahead = match(lookahead, TokenType.STRICTFP);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -1179,7 +1176,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(PROTECTED)
 	) */
 	private int matchModifiersNoDefault_1_1_2_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.PROTECTED);
+		lookahead = match(lookahead, TokenType.PROTECTED);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -1189,7 +1186,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(PRIVATE)
 	) */
 	private int matchModifiersNoDefault_1_1_2_3(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.PRIVATE);
+		lookahead = match(lookahead, TokenType.PRIVATE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -1199,7 +1196,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(ABSTRACT)
 	) */
 	private int matchModifiersNoDefault_1_1_2_4(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.ABSTRACT);
+		lookahead = match(lookahead, TokenType.ABSTRACT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -1209,7 +1206,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(STATIC)
 	) */
 	private int matchModifiersNoDefault_1_1_2_5(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.STATIC);
+		lookahead = match(lookahead, TokenType.STATIC);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -1219,7 +1216,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(FINAL)
 	) */
 	private int matchModifiersNoDefault_1_1_2_6(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.FINAL);
+		lookahead = match(lookahead, TokenType.FINAL);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -1229,7 +1226,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(TRANSIENT)
 	) */
 	private int matchModifiersNoDefault_1_1_2_7(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.TRANSIENT);
+		lookahead = match(lookahead, TokenType.TRANSIENT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -1239,7 +1236,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(VOLATILE)
 	) */
 	private int matchModifiersNoDefault_1_1_2_8(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.VOLATILE);
+		lookahead = match(lookahead, TokenType.VOLATILE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -1249,7 +1246,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SYNCHRONIZED)
 	) */
 	private int matchModifiersNoDefault_1_1_2_9(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SYNCHRONIZED);
+		lookahead = match(lookahead, TokenType.SYNCHRONIZED);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -1297,45 +1294,45 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchModifiersNoDefault_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.VOLATILE) != -1) {
+		if (match(0, TokenType.VOLATILE) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
+		if (match(0, TokenType.SYNCHRONIZED) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.NATIVE) != -1) {
+		if (match(0, TokenType.NATIVE) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.AT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.AT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.PUBLIC) != -1) {
+		if (match(0, TokenType.PUBLIC) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.FINAL) != -1) {
+		if (match(0, TokenType.FINAL) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.PROTECTED) != -1) {
+		if (match(0, TokenType.PROTECTED) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.ABSTRACT) != -1) {
+		if (match(0, TokenType.ABSTRACT) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.TRANSIENT) != -1) {
+		if (match(0, TokenType.TRANSIENT) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.STRICTFP) != -1) {
+		if (match(0, TokenType.STRICTFP) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.STATIC) != -1) {
+		if (match(0, TokenType.STATIC) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.PRIVATE) != -1) {
+		if (match(0, TokenType.PRIVATE) != -1) {
 			return lookahead;
 		}
 		return -1;
@@ -1363,22 +1360,22 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends STypeDecl> ret;
 		run();
-		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
-			parse(ParserImplConstants.SEMICOLON);
+		if (match(0, TokenType.SEMICOLON) != -1) {
+			parse(TokenType.SEMICOLON);
 			ret = dress(SEmptyTypeDecl.make());
-		} else if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1) {
+		} else if (match(0, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE) != -1) {
 			modifiers = parseModifiers();
-			if (match(0, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1) {
+			if (match(0, TokenType.CLASS, TokenType.INTERFACE) != -1) {
 				ret = parseClassOrInterfaceDecl(modifiers);
-			} else if (match(0, ParserImplConstants.ENUM) != -1) {
+			} else if (match(0, TokenType.ENUM) != -1) {
 				ret = parseEnumDecl(modifiers);
-			} else if (match(0, ParserImplConstants.AT) != -1) {
+			} else if (match(0, TokenType.AT) != -1) {
 				ret = parseAnnotationTypeDecl(modifiers);
 			} else {
-				throw produceParseException(ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS);
+				throw produceParseException(TokenType.AT, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS);
 			}
 		} else {
-			throw produceParseException(ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.SEMICOLON);
+			throw produceParseException(TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.FINAL, TokenType.STATIC, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.SEMICOLON);
 		}
 		return ret;
 	}
@@ -1430,32 +1427,32 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> implementsClause = null;
 		BUTree<SNodeList> members;
 		ByRef<BUProblem> problem = new ByRef<BUProblem>(null);
-		if (match(0, ParserImplConstants.CLASS) != -1) {
-			parse(ParserImplConstants.CLASS);
+		if (match(0, TokenType.CLASS) != -1) {
+			parse(TokenType.CLASS);
 			typeKind = TypeKind.Class;
 			name = parseName();
-			if (match(0, ParserImplConstants.LT) != -1) {
+			if (match(0, TokenType.LT) != -1) {
 				typeParams = parseTypeParameters();
 			}
-			if (match(0, ParserImplConstants.EXTENDS) != -1) {
-				parse(ParserImplConstants.EXTENDS);
+			if (match(0, TokenType.EXTENDS) != -1) {
+				parse(TokenType.EXTENDS);
 				superClassType = parseAnnotatedQualifiedType();
 			}
-			if (match(0, ParserImplConstants.IMPLEMENTS) != -1) {
+			if (match(0, TokenType.IMPLEMENTS) != -1) {
 				implementsClause = parseImplementsList(typeKind, problem);
 			}
-		} else if (match(0, ParserImplConstants.INTERFACE) != -1) {
-			parse(ParserImplConstants.INTERFACE);
+		} else if (match(0, TokenType.INTERFACE) != -1) {
+			parse(TokenType.INTERFACE);
 			typeKind = TypeKind.Interface;
 			name = parseName();
-			if (match(0, ParserImplConstants.LT) != -1) {
+			if (match(0, TokenType.LT) != -1) {
 				typeParams = parseTypeParameters();
 			}
-			if (match(0, ParserImplConstants.EXTENDS) != -1) {
+			if (match(0, TokenType.EXTENDS) != -1) {
 				extendsClause = parseExtendsList();
 			}
 		} else {
-			throw produceParseException(ParserImplConstants.INTERFACE, ParserImplConstants.CLASS);
+			throw produceParseException(TokenType.INTERFACE, TokenType.CLASS);
 		}
 		members = parseClassOrInterfaceBody(typeKind);
 		if (typeKind == TypeKind.Interface)
@@ -1556,7 +1553,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchClassOrInterfaceDecl_1_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.CLASS);
+		lookahead = match(lookahead, TokenType.CLASS);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchName(lookahead);
@@ -1612,7 +1609,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(superClassType, AnnotatedQualifiedType)
 	) */
 	private int matchClassOrInterfaceDecl_1_1_5_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.EXTENDS);
+		lookahead = match(lookahead, TokenType.EXTENDS);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotatedQualifiedType(lookahead);
@@ -1653,7 +1650,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchClassOrInterfaceDecl_1_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.INTERFACE);
+		lookahead = match(lookahead, TokenType.INTERFACE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchName(lookahead);
@@ -1733,19 +1730,19 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
-		parse(ParserImplConstants.EXTENDS);
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		parse(TokenType.EXTENDS);
+		if (match(0, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
 			cit = parseAnnotatedQualifiedType();
 			ret = append(ret, cit);
-			while (match(0, ParserImplConstants.COMMA) != -1) {
-				parse(ParserImplConstants.COMMA);
+			while (match(0, TokenType.COMMA) != -1) {
+				parse(TokenType.COMMA);
 				cit = parseAnnotatedQualifiedType();
 				ret = append(ret, cit);
 			}
 		} else if (quotesMode) {
 			ret = parseNodeListVar();
 		} else {
-			throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE);
+			throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
 		}
 		return ret;
 	}
@@ -1767,7 +1764,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchExtendsList(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.EXTENDS);
+		lookahead = match(lookahead, TokenType.EXTENDS);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExtendsList_2(lookahead);
@@ -1836,7 +1833,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(cit, AnnotatedQualifiedType)
 	) */
 	private int matchExtendsList_2_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotatedQualifiedType(lookahead);
@@ -1885,12 +1882,12 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
-		parse(ParserImplConstants.IMPLEMENTS);
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		parse(TokenType.IMPLEMENTS);
+		if (match(0, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
 			cit = parseAnnotatedQualifiedType();
 			ret = append(ret, cit);
-			while (match(0, ParserImplConstants.COMMA) != -1) {
-				parse(ParserImplConstants.COMMA);
+			while (match(0, TokenType.COMMA) != -1) {
+				parse(TokenType.COMMA);
 				cit = parseAnnotatedQualifiedType();
 				ret = append(ret, cit);
 			}
@@ -1899,7 +1896,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (quotesMode) {
 			ret = parseNodeListVar();
 		} else {
-			throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE);
+			throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
 		}
 		return ret;
 	}
@@ -1921,7 +1918,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchImplementsList(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.IMPLEMENTS);
+		lookahead = match(lookahead, TokenType.IMPLEMENTS);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchImplementsList_2(lookahead);
@@ -1990,7 +1987,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(cit, AnnotatedQualifiedType)
 	) */
 	private int matchImplementsList_2_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotatedQualifiedType(lookahead);
@@ -2057,36 +2054,36 @@ public class ParserImplementation extends ParserNewBase {
 		boolean trailingComma = false;
 		BUTree<SNodeList> members = null;
 		ByRef<BUProblem> problem = new ByRef<BUProblem>(null);
-		parse(ParserImplConstants.ENUM);
+		parse(TokenType.ENUM);
 		name = parseName();
-		if (match(0, ParserImplConstants.IMPLEMENTS) != -1) {
+		if (match(0, TokenType.IMPLEMENTS) != -1) {
 			implementsClause = parseImplementsList(TypeKind.Enum, problem);
 		}
-		parse(ParserImplConstants.LBRACE);
-		if (match(0, ParserImplConstants.PUBLIC, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-			if (match(0, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.PUBLIC, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		parse(TokenType.LBRACE);
+		if (match(0, TokenType.PUBLIC, TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE) != -1) {
+			if (match(0, TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.PUBLIC, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
 				entry = parseEnumConstantDecl();
 				constants = append(constants, entry);
 				while (matchEnumDecl_lookahead1(0) != -1) {
-					parse(ParserImplConstants.COMMA);
+					parse(TokenType.COMMA);
 					entry = parseEnumConstantDecl();
 					constants = append(constants, entry);
 				}
 			} else if (quotesMode) {
 				constants = parseNodeListVar();
 			} else {
-				throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.PUBLIC, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.ABSTRACT, ParserImplConstants._DEFAULT, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE);
+				throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.PUBLIC, TokenType.STRICTFP, TokenType.AT, TokenType.STATIC, TokenType.FINAL, TokenType.ABSTRACT, TokenType.DEFAULT, TokenType.SYNCHRONIZED, TokenType.NATIVE, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
 			}
 		}
-		if (match(0, ParserImplConstants.COMMA) != -1) {
-			parse(ParserImplConstants.COMMA);
+		if (match(0, TokenType.COMMA) != -1) {
+			parse(TokenType.COMMA);
 			trailingComma = true;
 		}
-		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
-			parse(ParserImplConstants.SEMICOLON);
+		if (match(0, TokenType.SEMICOLON) != -1) {
+			parse(TokenType.SEMICOLON);
 			members = parseClassOrInterfaceBodyDecls(TypeKind.Enum);
 		}
-		parse(ParserImplConstants.RBRACE);
+		parse(TokenType.RBRACE);
 		return dress(SEnumDecl.make(modifiers, name, implementsClause, constants, trailingComma, ensureNotNull(members))).withProblem(problem.value);
 	}
 
@@ -2123,7 +2120,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 	) */
 	private int matchEnumDecl(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.ENUM);
+		lookahead = match(lookahead, TokenType.ENUM);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchName(lookahead);
@@ -2132,7 +2129,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchEnumDecl_3(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACE);
+		lookahead = match(lookahead, TokenType.LBRACE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchEnumDecl_5(lookahead);
@@ -2144,7 +2141,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchEnumDecl_7(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACE);
+		lookahead = match(lookahead, TokenType.RBRACE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -2282,7 +2279,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(entry, EnumConstantDecl)
 	) */
 	private int matchEnumDecl_5_1_1_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchEnumConstantDecl(lookahead);
@@ -2320,7 +2317,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(COMMA)
 	) */
 	private int matchEnumDecl_6_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -2343,7 +2340,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(members, ClassOrInterfaceBodyDecls)
 	) */
 	private int matchEnumDecl_7_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchClassOrInterfaceBodyDecls(lookahead);
@@ -2358,50 +2355,50 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(entry, EnumConstantDecl)
 	) */
 	private int matchEnumDecl_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.COMMA) != -1) {
-			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+		if (match(0, TokenType.COMMA) != -1) {
+			if (match(1, TokenType.VOLATILE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NATIVE) != -1) {
+			if (match(1, TokenType.NATIVE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FINAL) != -1) {
+			if (match(1, TokenType.FINAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+			if (match(1, TokenType.STRICTFP) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+			if (match(1, TokenType.ABSTRACT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants._DEFAULT) != -1) {
+			if (match(1, TokenType.STATIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STATIC) != -1) {
+			if (match(1, TokenType.PRIVATE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.PUBLIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.PROTECTED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+			if (match(1, TokenType.TRANSIENT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+			if (match(1, TokenType.DEFAULT) != -1) {
 				return lookahead;
 			}
 		}
@@ -2428,10 +2425,10 @@ public class ParserImplementation extends ParserNewBase {
 		run();
 		modifiers = parseModifiers();
 		name = parseName();
-		if (match(0, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.LPAREN) != -1) {
 			args = parseArguments();
 		}
-		if (match(0, ParserImplConstants.LBRACE) != -1) {
+		if (match(0, TokenType.LBRACE) != -1) {
 			classBody = parseClassOrInterfaceBody(TypeKind.Class);
 		}
 		return dress(SEnumConstantDecl.make(modifiers, name, optionOf(args), optionOf(classBody)));
@@ -2515,8 +2512,8 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SAnnotationDecl> parseAnnotationTypeDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SName> name;
 		BUTree<SNodeList> members;
-		parse(ParserImplConstants.AT);
-		parse(ParserImplConstants.INTERFACE);
+		parse(TokenType.AT);
+		parse(TokenType.INTERFACE);
 		name = parseName();
 		members = parseAnnotationTypeBody();
 		return dress(SAnnotationDecl.make(modifiers, name, members));
@@ -2529,10 +2526,10 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(members, AnnotationTypeBody)
 	) */
 	private int matchAnnotationTypeDecl(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.AT);
+		lookahead = match(lookahead, TokenType.AT);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.INTERFACE);
+		lookahead = match(lookahead, TokenType.INTERFACE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchName(lookahead);
@@ -2564,20 +2561,20 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseAnnotationTypeBody() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SMemberDecl> member;
-		parse(ParserImplConstants.LBRACE);
-		if (match(0, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.SEMICOLON, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-			if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.SEMICOLON) != -1) {
+		parse(TokenType.LBRACE);
+		if (match(0, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.SEMICOLON, TokenType.NODE_LIST_VARIABLE) != -1) {
+			if (match(0, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.SEMICOLON) != -1) {
 				do {
 					member = parseAnnotationTypeBodyDecl();
 					ret = append(ret, member);
-				} while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.SEMICOLON) != -1);
+				} while (match(0, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.SEMICOLON) != -1);
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
-				throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants._DEFAULT, ParserImplConstants.STATIC, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.ENUM, ParserImplConstants.SEMICOLON);
+				throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.AT, TokenType.NATIVE, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.FINAL, TokenType.TRANSIENT, TokenType.DEFAULT, TokenType.STATIC, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CLASS, TokenType.INTERFACE, TokenType.ENUM, TokenType.SEMICOLON);
 			}
 		}
-		parse(ParserImplConstants.RBRACE);
+		parse(TokenType.RBRACE);
 		return ret;
 	}
 
@@ -2597,13 +2594,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 	) */
 	private int matchAnnotationTypeBody(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LBRACE);
+		lookahead = match(lookahead, TokenType.LBRACE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotationTypeBody_2(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACE);
+		lookahead = match(lookahead, TokenType.RBRACE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -2736,26 +2733,26 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SMemberDecl> ret;
 		run();
-		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
-			parse(ParserImplConstants.SEMICOLON);
+		if (match(0, TokenType.SEMICOLON) != -1) {
+			parse(TokenType.SEMICOLON);
 			ret = dress(SEmptyTypeDecl.make());
-		} else if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.ENUM) != -1) {
+		} else if (match(0, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.INTERFACE, TokenType.CLASS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.ENUM) != -1) {
 			modifiers = parseModifiers();
 			if (matchAnnotationTypeBodyDecl_lookahead1(0) != -1) {
 				ret = parseAnnotationTypeMemberDecl(modifiers);
-			} else if (match(0, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1) {
+			} else if (match(0, TokenType.CLASS, TokenType.INTERFACE) != -1) {
 				ret = parseClassOrInterfaceDecl(modifiers);
-			} else if (match(0, ParserImplConstants.ENUM) != -1) {
+			} else if (match(0, TokenType.ENUM) != -1) {
 				ret = parseEnumDecl(modifiers);
-			} else if (match(0, ParserImplConstants.AT) != -1) {
+			} else if (match(0, TokenType.AT) != -1) {
 				ret = parseAnnotationTypeDecl(modifiers);
-			} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT) != -1) {
+			} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT) != -1) {
 				ret = parseFieldDecl(modifiers);
 			} else {
-				throw produceParseException(ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS);
+				throw produceParseException(TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.AT, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS);
 			}
 		} else {
-			throw produceParseException(ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.SEMICOLON);
+			throw produceParseException(TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.FINAL, TokenType.STATIC, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.SEMICOLON);
 		}
 		return ret;
 	}
@@ -2828,7 +2825,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 	) */
 	private int matchAnnotationTypeBodyDecl_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -2922,7 +2919,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -2935,7 +2932,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 		nonTerminal(dims, ArrayDims)
 		zeroOrOne(
-			terminal(_DEFAULT)
+			terminal(DEFAULT)
 			nonTerminal(val, MemberValue)
 			action({ defaultVal = optionOf(val); })
 		)
@@ -2950,15 +2947,15 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> val = null;
 		type = parseType(null);
 		name = parseName();
-		parse(ParserImplConstants.LPAREN);
-		parse(ParserImplConstants.RPAREN);
+		parse(TokenType.LPAREN);
+		parse(TokenType.RPAREN);
 		dims = parseArrayDims();
-		if (match(0, ParserImplConstants._DEFAULT) != -1) {
-			parse(ParserImplConstants._DEFAULT);
+		if (match(0, TokenType.DEFAULT) != -1) {
+			parse(TokenType.DEFAULT);
 			val = parseMemberValue();
 			defaultVal = optionOf(val);
 		}
-		parse(ParserImplConstants.SEMICOLON);
+		parse(TokenType.SEMICOLON);
 		return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal));
 	}
 
@@ -2969,7 +2966,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 		nonTerminal(dims, ArrayDims)
 		zeroOrOne(
-			terminal(_DEFAULT)
+			terminal(DEFAULT)
 			nonTerminal(val, MemberValue)
 		)
 		terminal(SEMICOLON)
@@ -2981,10 +2978,10 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchArrayDims(lookahead);
@@ -2993,14 +2990,14 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotationTypeMemberDecl_6(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
 	}
 
 	/* zeroOrOne(
-		terminal(_DEFAULT)
+		terminal(DEFAULT)
 		nonTerminal(val, MemberValue)
 	) */
 	private int matchAnnotationTypeMemberDecl_6(int lookahead) {
@@ -3012,11 +3009,11 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		terminal(_DEFAULT)
+		terminal(DEFAULT)
 		nonTerminal(val, MemberValue)
 	) */
 	private int matchAnnotationTypeMemberDecl_6_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants._DEFAULT);
+		lookahead = match(lookahead, TokenType.DEFAULT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchMemberValue(lookahead);
@@ -3048,21 +3045,21 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseTypeParameters() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<STypeParameter> tp;
-		parse(ParserImplConstants.LT);
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		parse(TokenType.LT);
+		if (match(0, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
 			tp = parseTypeParameter();
 			ret = append(ret, tp);
-			while (match(0, ParserImplConstants.COMMA) != -1) {
-				parse(ParserImplConstants.COMMA);
+			while (match(0, TokenType.COMMA) != -1) {
+				parse(TokenType.COMMA);
 				tp = parseTypeParameter();
 				ret = append(ret, tp);
 			}
 		} else if (quotesMode) {
 			ret = parseNodeListVar();
 		} else {
-			throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE);
+			throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
 		}
-		parse(ParserImplConstants.GT);
+		parse(TokenType.GT);
 		return ret;
 	}
 
@@ -3084,13 +3081,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GT)
 	) */
 	private int matchTypeParameters(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LT);
+		lookahead = match(lookahead, TokenType.LT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchTypeParameters_2(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.GT);
+		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -3156,7 +3153,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(tp, TypeParameter)
 	) */
 	private int matchTypeParameters_2_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchTypeParameter(lookahead);
@@ -3195,7 +3192,7 @@ public class ParserImplementation extends ParserNewBase {
 		run();
 		annotations = parseAnnotations();
 		name = parseName();
-		if (match(0, ParserImplConstants.EXTENDS) != -1) {
+		if (match(0, TokenType.EXTENDS) != -1) {
 			typeBounds = parseTypeBounds();
 		}
 		return dress(STypeParameter.make(annotations, name, ensureNotNull(typeBounds)));
@@ -3265,19 +3262,19 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
-		parse(ParserImplConstants.EXTENDS);
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		parse(TokenType.EXTENDS);
+		if (match(0, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
 			cit = parseAnnotatedQualifiedType();
 			ret = append(ret, cit);
-			while (match(0, ParserImplConstants.BIT_AND) != -1) {
-				parse(ParserImplConstants.BIT_AND);
+			while (match(0, TokenType.BIT_AND) != -1) {
+				parse(TokenType.BIT_AND);
 				cit = parseAnnotatedQualifiedType();
 				ret = append(ret, cit);
 			}
 		} else if (quotesMode) {
 			ret = parseNodeListVar();
 		} else {
-			throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE);
+			throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
 		}
 		return ret;
 	}
@@ -3299,7 +3296,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchTypeBounds(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.EXTENDS);
+		lookahead = match(lookahead, TokenType.EXTENDS);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchTypeBounds_2(lookahead);
@@ -3368,7 +3365,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(cit, AnnotatedQualifiedType)
 	) */
 	private int matchTypeBounds_2_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.BIT_AND);
+		lookahead = match(lookahead, TokenType.BIT_AND);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotatedQualifiedType(lookahead);
@@ -3400,9 +3397,9 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseClassOrInterfaceBody(TypeKind typeKind) throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SMemberDecl> member;
-		parse(ParserImplConstants.LBRACE);
+		parse(TokenType.LBRACE);
 		ret = parseClassOrInterfaceBodyDecls(typeKind);
-		parse(ParserImplConstants.RBRACE);
+		parse(TokenType.RBRACE);
 		return ret;
 	}
 
@@ -3412,13 +3409,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 	) */
 	private int matchClassOrInterfaceBody(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LBRACE);
+		lookahead = match(lookahead, TokenType.LBRACE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchClassOrInterfaceBodyDecls(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACE);
+		lookahead = match(lookahead, TokenType.RBRACE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -3442,16 +3439,16 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseClassOrInterfaceBodyDecls(TypeKind typeKind) throws ParseException {
 		BUTree<? extends SMemberDecl> member;
 		BUTree<SNodeList> ret = emptyList();
-		if (match(0, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.VOID, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.SEMICOLON, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-			if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.SEMICOLON) != -1) {
+		if (match(0, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.LBRACE, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.VOID, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.SEMICOLON, TokenType.NODE_LIST_VARIABLE) != -1) {
+			if (match(0, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.LBRACE, TokenType.LT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.BOOLEAN, TokenType.CHAR, TokenType.VOID, TokenType.SEMICOLON) != -1) {
 				do {
 					member = parseClassOrInterfaceBodyDecl(typeKind);
 					ret = append(ret, member);
-				} while (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.SEMICOLON) != -1);
+				} while (match(0, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.LBRACE, TokenType.LT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.BOOLEAN, TokenType.CHAR, TokenType.VOID, TokenType.SEMICOLON) != -1);
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
-				throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants._DEFAULT, ParserImplConstants.STATIC, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.ENUM, ParserImplConstants.LBRACE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.SEMICOLON);
+				throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.AT, TokenType.NATIVE, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.FINAL, TokenType.TRANSIENT, TokenType.DEFAULT, TokenType.STATIC, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.INTERFACE, TokenType.CLASS, TokenType.ENUM, TokenType.LBRACE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LT, TokenType.VOID, TokenType.SEMICOLON);
 			}
 		}
 		return ret;
@@ -3635,22 +3632,22 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SMemberDecl> ret;
 		BUProblem problem = null;
 		run();
-		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
-			parse(ParserImplConstants.SEMICOLON);
+		if (match(0, TokenType.SEMICOLON) != -1) {
+			parse(TokenType.SEMICOLON);
 			ret = dress(SEmptyMemberDecl.make());
-		} else if (match(0, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.STATIC, ParserImplConstants._DEFAULT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.LBRACE, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR) != -1) {
+		} else if (match(0, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.LBRACE, TokenType.LT, TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.FLOAT, TokenType.DOUBLE, TokenType.INT, TokenType.LONG, TokenType.BYTE, TokenType.SHORT, TokenType.BOOLEAN, TokenType.CHAR) != -1) {
 			modifiers = parseModifiers();
 			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default)) && typeKind != TypeKind.Interface) problem = new BUProblem(Severity.ERROR, "Only interfaces can have default members");
 
-			if (match(0, ParserImplConstants.LBRACE) != -1) {
+			if (match(0, TokenType.LBRACE) != -1) {
 				ret = parseInitializerDecl(modifiers);
 				if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have initializers"));
 
-			} else if (match(0, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1) {
+			} else if (match(0, TokenType.CLASS, TokenType.INTERFACE) != -1) {
 				ret = parseClassOrInterfaceDecl(modifiers);
-			} else if (match(0, ParserImplConstants.ENUM) != -1) {
+			} else if (match(0, TokenType.ENUM) != -1) {
 				ret = parseEnumDecl(modifiers);
-			} else if (match(0, ParserImplConstants.AT) != -1) {
+			} else if (match(0, TokenType.AT) != -1) {
 				ret = parseAnnotationTypeDecl(modifiers);
 			} else if (matchClassOrInterfaceBodyDecl_lookahead1(0) != -1) {
 				ret = parseConstructorDecl(modifiers);
@@ -3658,13 +3655,13 @@ public class ParserImplementation extends ParserNewBase {
 
 			} else if (matchClassOrInterfaceBodyDecl_lookahead2(0) != -1) {
 				ret = parseFieldDecl(modifiers);
-			} else if (match(0, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID) != -1) {
+			} else if (match(0, TokenType.LT, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID) != -1) {
 				ret = parseMethodDecl(modifiers);
 			} else {
-				throw produceParseException(ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.AT, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.LBRACE);
+				throw produceParseException(TokenType.LT, TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.AT, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.LBRACE);
 			}
 		} else {
-			throw produceParseException(ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.LT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.ENUM, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.LBRACE, ParserImplConstants.SEMICOLON);
+			throw produceParseException(TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.FINAL, TokenType.STATIC, TokenType.LT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.LBRACE, TokenType.SEMICOLON);
 		}
 		return ret.withProblem(problem);
 	}
@@ -3779,7 +3776,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 	) */
 	private int matchClassOrInterfaceBodyDecl_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -3958,7 +3955,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -4033,10 +4030,10 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACKET)
 	) */
 	private int matchClassOrInterfaceBodyDecl_lookahead2_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACKET);
+		lookahead = match(lookahead, TokenType.RBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -4049,13 +4046,13 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	private int matchClassOrInterfaceBodyDecl_lookahead2_4(int lookahead) {
 		int newLookahead;
-		newLookahead = match(lookahead, ParserImplConstants.COMMA);
+		newLookahead = match(lookahead, TokenType.COMMA);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = match(lookahead, ParserImplConstants.ASSIGN);
+		newLookahead = match(lookahead, TokenType.ASSIGN);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		newLookahead = match(lookahead, TokenType.SEMICOLON);
 		if (newLookahead != -1)
 			return newLookahead;
 		return -1;
@@ -4073,7 +4070,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SVariableDeclarator> val;
 		type = parseType(null);
 		variables = parseVariableDeclarators();
-		parse(ParserImplConstants.SEMICOLON);
+		parse(TokenType.SEMICOLON);
 		return dress(SFieldDecl.make(modifiers, type, variables));
 	}
 
@@ -4089,7 +4086,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchVariableDeclarators(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -4137,8 +4134,8 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SVariableDeclarator> val;
 		val = parseVariableDeclarator();
 		variables = append(variables, val);
-		while (match(0, ParserImplConstants.COMMA) != -1) {
-			parse(ParserImplConstants.COMMA);
+		while (match(0, TokenType.COMMA) != -1) {
+			parse(TokenType.COMMA);
 			val = parseVariableDeclarator();
 			variables = append(variables, val);
 		}
@@ -4181,7 +4178,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(val, VariableDeclarator)
 	) */
 	private int matchVariableDeclarators_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchVariableDeclarator(lookahead);
@@ -4206,8 +4203,8 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> initExpr = null;
 		run();
 		id = parseVariableDeclaratorId();
-		if (match(0, ParserImplConstants.ASSIGN) != -1) {
-			parse(ParserImplConstants.ASSIGN);
+		if (match(0, TokenType.ASSIGN) != -1) {
+			parse(TokenType.ASSIGN);
 			initExpr = parseVariableInitializer();
 			init = optionOf(initExpr);
 		}
@@ -4248,7 +4245,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(initExpr, VariableInitializer)
 	) */
 	private int matchVariableDeclarator_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.ASSIGN);
+		lookahead = match(lookahead, TokenType.ASSIGN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchVariableInitializer(lookahead);
@@ -4307,8 +4304,8 @@ public class ParserImplementation extends ParserNewBase {
 		while (matchArrayDims_lookahead1(0) != -1) {
 			run();
 			annotations = parseAnnotations();
-			parse(ParserImplConstants.LBRACKET);
-			parse(ParserImplConstants.RBRACKET);
+			parse(TokenType.LBRACKET);
+			parse(TokenType.RBRACKET);
 			arrayDims = append(arrayDims, dress(SArrayDim.make(annotations)));
 		}
 		return arrayDims;
@@ -4367,10 +4364,10 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACKET);
+		lookahead = match(lookahead, TokenType.RBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -4385,10 +4382,10 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACKET);
+		lookahead = match(lookahead, TokenType.RBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -4403,12 +4400,12 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	public BUTree<? extends SExpr> parseVariableInitializer() throws ParseException {
 		BUTree<? extends SExpr> ret;
-		if (match(0, ParserImplConstants.LBRACE) != -1) {
+		if (match(0, TokenType.LBRACE) != -1) {
 			ret = parseArrayInitializer();
-		} else if (match(0, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.LPAREN, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.NULL, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.PLUS, ParserImplConstants.MINUS) != -1) {
+		} else if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DECR, TokenType.INCR, TokenType.LPAREN, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.BOOLEAN, TokenType.CHAR, TokenType.VOID, TokenType.LT, TokenType.NEW, TokenType.THIS, TokenType.SUPER, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.BANG, TokenType.TILDE, TokenType.PLUS, TokenType.MINUS) != -1) {
 			ret = parseExpression();
 		} else {
-			throw produceParseException(ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LPAREN, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.LBRACE);
+			throw produceParseException(TokenType.BANG, TokenType.TILDE, TokenType.LPAREN, TokenType.SUPER, TokenType.NEW, TokenType.VOID, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.THIS, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.LBRACE);
 		}
 		return ret;
 	}
@@ -4466,21 +4463,21 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> val;
 		boolean trailingComma = false;
 		run();
-		parse(ParserImplConstants.LBRACE);
-		if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LT, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.THIS, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.LBRACE) != -1) {
+		parse(TokenType.LBRACE);
+		if (match(0, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DECR, TokenType.INCR, TokenType.MINUS, TokenType.PLUS, TokenType.SUPER, TokenType.NEW, TokenType.VOID, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.LT, TokenType.FALSE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.THIS, TokenType.TILDE, TokenType.BANG, TokenType.LBRACE) != -1) {
 			val = parseVariableInitializer();
 			values = append(values, val);
 			while (matchArrayInitializer_lookahead1(0) != -1) {
-				parse(ParserImplConstants.COMMA);
+				parse(TokenType.COMMA);
 				val = parseVariableInitializer();
 				values = append(values, val);
 			}
 		}
-		if (match(0, ParserImplConstants.COMMA) != -1) {
-			parse(ParserImplConstants.COMMA);
+		if (match(0, TokenType.COMMA) != -1) {
+			parse(TokenType.COMMA);
 			trailingComma = true;
 		}
-		parse(ParserImplConstants.RBRACE);
+		parse(TokenType.RBRACE);
 		return dress(SArrayInitializerExpr.make(values, trailingComma));
 	}
 
@@ -4500,7 +4497,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 	) */
 	private int matchArrayInitializer(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LBRACE);
+		lookahead = match(lookahead, TokenType.LBRACE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchArrayInitializer_3(lookahead);
@@ -4509,7 +4506,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchArrayInitializer_4(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACE);
+		lookahead = match(lookahead, TokenType.RBRACE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -4570,7 +4567,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(val, VariableInitializer)
 	) */
 	private int matchArrayInitializer_3_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchVariableInitializer(lookahead);
@@ -4594,7 +4591,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(COMMA)
 	) */
 	private int matchArrayInitializer_4_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -4606,101 +4603,101 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(val, VariableInitializer)
 	) */
 	private int matchArrayInitializer_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.COMMA) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.COMMA) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, TokenType.LBRACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -4738,24 +4735,24 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> throwsClause = null;
 		BUTree<SBlockStmt> block = null;
 		BUProblem problem = null;
-		if (match(0, ParserImplConstants.LT) != -1) {
+		if (match(0, TokenType.LT) != -1) {
 			typeParameters = parseTypeParameters();
 		}
 		type = parseResultType();
 		name = parseName();
 		parameters = parseFormalParameters();
 		arrayDims = parseArrayDims();
-		if (match(0, ParserImplConstants.THROWS) != -1) {
+		if (match(0, TokenType.THROWS) != -1) {
 			throwsClause = parseThrowsClause();
 		}
-		if (match(0, ParserImplConstants.LBRACE) != -1) {
+		if (match(0, TokenType.LBRACE) != -1) {
 			block = parseBlock();
-		} else if (match(0, ParserImplConstants.SEMICOLON) != -1) {
-			parse(ParserImplConstants.SEMICOLON);
+		} else if (match(0, TokenType.SEMICOLON) != -1) {
+			parse(TokenType.SEMICOLON);
 			if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
 
 		} else {
-			throw produceParseException(ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE);
+			throw produceParseException(TokenType.SEMICOLON, TokenType.LBRACE);
 		}
 		return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem);
 	}
@@ -4866,7 +4863,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 	) */
 	private int matchMethodDecl_7_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -4883,11 +4880,11 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseFormalParameters() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
-		parse(ParserImplConstants.LPAREN);
-		if (match(0, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.ABSTRACT, ParserImplConstants._DEFAULT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT) != -1) {
+		parse(TokenType.LPAREN);
+		if (match(0, TokenType.NODE_LIST_VARIABLE, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.STRICTFP, TokenType.AT, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.NATIVE, TokenType.ABSTRACT, TokenType.DEFAULT, TokenType.STATIC, TokenType.FINAL, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT) != -1) {
 			ret = parseFormalParameterList();
 		}
-		parse(ParserImplConstants.RPAREN);
+		parse(TokenType.RPAREN);
 		return ensureNotNull(ret);
 	}
 
@@ -4899,13 +4896,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 	) */
 	private int matchFormalParameters(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchFormalParameters_2(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -4953,18 +4950,18 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseFormalParameterList() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.PUBLIC, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+		if (match(0, TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.PUBLIC, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 			par = parseFormalParameter();
 			ret = append(ret, par);
-			while (match(0, ParserImplConstants.COMMA) != -1) {
-				parse(ParserImplConstants.COMMA);
+			while (match(0, TokenType.COMMA) != -1) {
+				parse(TokenType.COMMA);
 				par = parseFormalParameter();
 				ret = append(ret, par);
 			}
 		} else if (quotesMode) {
 			ret = parseNodeListVar();
 		} else {
-			throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.PUBLIC, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.ABSTRACT, ParserImplConstants._DEFAULT, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE);
+			throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.PUBLIC, TokenType.STRICTFP, TokenType.AT, TokenType.STATIC, TokenType.FINAL, TokenType.ABSTRACT, TokenType.DEFAULT, TokenType.SYNCHRONIZED, TokenType.NATIVE, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
 		}
 		return ret;
 	}
@@ -5051,7 +5048,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(par, FormalParameter)
 	) */
 	private int matchFormalParameterList_1_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchFormalParameter(lookahead);
@@ -5093,8 +5090,8 @@ public class ParserImplementation extends ParserNewBase {
 		run();
 		modifiers = parseModifiers();
 		type = parseType(null);
-		if (match(0, ParserImplConstants.ELLIPSIS) != -1) {
-			parse(ParserImplConstants.ELLIPSIS);
+		if (match(0, TokenType.ELLIPSIS) != -1) {
+			parse(TokenType.ELLIPSIS);
 			isVarArg = true;
 		}
 		id = parseVariableDeclaratorId();
@@ -5140,7 +5137,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(ELLIPSIS)
 	) */
 	private int matchFormalParameter_4_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.ELLIPSIS);
+		lookahead = match(lookahead, TokenType.ELLIPSIS);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -5160,11 +5157,11 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseThrowsClause() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SQualifiedType> cit;
-		parse(ParserImplConstants.THROWS);
+		parse(TokenType.THROWS);
 		cit = parseAnnotatedQualifiedType();
 		ret = append(ret, cit);
-		while (match(0, ParserImplConstants.COMMA) != -1) {
-			parse(ParserImplConstants.COMMA);
+		while (match(0, TokenType.COMMA) != -1) {
+			parse(TokenType.COMMA);
 			cit = parseAnnotatedQualifiedType();
 			ret = append(ret, cit);
 		}
@@ -5180,7 +5177,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchThrowsClause(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.THROWS);
+		lookahead = match(lookahead, TokenType.THROWS);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotatedQualifiedType(lookahead);
@@ -5211,7 +5208,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(cit, AnnotatedQualifiedType)
 	) */
 	private int matchThrowsClause_4_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotatedQualifiedType(lookahead);
@@ -5274,17 +5271,17 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SBlockStmt> block;
 		BUTree<SNodeList> stmts = emptyList();
 		BUTree<? extends SStmt> stmt;
-		if (match(0, ParserImplConstants.LT) != -1) {
+		if (match(0, TokenType.LT) != -1) {
 			typeParameters = parseTypeParameters();
 		}
 		name = parseName();
 		parameters = parseFormalParameters();
-		if (match(0, ParserImplConstants.THROWS) != -1) {
+		if (match(0, TokenType.THROWS) != -1) {
 			throwsClause = parseThrowsClause();
 		}
 		run();
-		parse(ParserImplConstants.LBRACE);
-		if (match(0, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.LPAREN, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+		parse(TokenType.LBRACE);
+		if (match(0, TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.INCR, TokenType.DECR, TokenType.FLOAT, TokenType.DOUBLE, TokenType.INT, TokenType.LONG, TokenType.BYTE, TokenType.SHORT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.LT, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.INTEGER_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.LPAREN, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.NATIVE, TokenType.AT, TokenType.STRICTFP, TokenType.FINAL, TokenType.STATIC, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.INTERFACE, TokenType.CLASS, TokenType.NODE_LIST_VARIABLE) != -1) {
 			if (matchConstructorDecl_lookahead1(0) != -1) {
 				if (matchConstructorDecl_lookahead2(0) != -1) {
 					stmt = parseExplicitConstructorInvocation();
@@ -5293,7 +5290,7 @@ public class ParserImplementation extends ParserNewBase {
 					stmt = parseBlockStatement();
 					stmts = append(stmts, stmt);
 				} else {
-					throw produceParseException(ParserImplConstants.PUBLIC, ParserImplConstants.AT, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.TRY, ParserImplConstants.CONTINUE, ParserImplConstants.RETURN, ParserImplConstants.THROW, ParserImplConstants.WHILE, ParserImplConstants.DO, ParserImplConstants.FOR, ParserImplConstants.BREAK, ParserImplConstants.SEMICOLON, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SWITCH, ParserImplConstants.IF, ParserImplConstants.ASSERT, ParserImplConstants.LBRACE, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE);
+					throw produceParseException(TokenType.PUBLIC, TokenType.AT, TokenType.NATIVE, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.FINAL, TokenType.TRANSIENT, TokenType.ABSTRACT, TokenType.STATIC, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.TRY, TokenType.CONTINUE, TokenType.RETURN, TokenType.THROW, TokenType.WHILE, TokenType.DO, TokenType.FOR, TokenType.BREAK, TokenType.SEMICOLON, TokenType.NEW, TokenType.VOID, TokenType.LT, TokenType.LPAREN, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.DECR, TokenType.INCR, TokenType.SWITCH, TokenType.IF, TokenType.ASSERT, TokenType.LBRACE, TokenType.CLASS, TokenType.INTERFACE);
 				}
 				while (matchConstructorDecl_lookahead4(0) != -1) {
 					stmt = parseBlockStatement();
@@ -5302,10 +5299,10 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (quotesMode) {
 				stmts = parseNodeListVar();
 			} else {
-				throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.LBRACE, ParserImplConstants.SEMICOLON, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.THIS, ParserImplConstants.VOID, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.SWITCH, ParserImplConstants.ASSERT, ParserImplConstants.BREAK, ParserImplConstants.CONTINUE, ParserImplConstants.RETURN, ParserImplConstants.THROW, ParserImplConstants.IF, ParserImplConstants.WHILE, ParserImplConstants.DO, ParserImplConstants.FOR, ParserImplConstants.TRY);
+				throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.STATIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.NATIVE, TokenType.STRICTFP, TokenType.AT, TokenType.CLASS, TokenType.INTERFACE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LBRACE, TokenType.SEMICOLON, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.THIS, TokenType.VOID, TokenType.SUPER, TokenType.NEW, TokenType.LPAREN, TokenType.LT, TokenType.INCR, TokenType.DECR, TokenType.SWITCH, TokenType.ASSERT, TokenType.BREAK, TokenType.CONTINUE, TokenType.RETURN, TokenType.THROW, TokenType.IF, TokenType.WHILE, TokenType.DO, TokenType.FOR, TokenType.TRY);
 			}
 		}
-		parse(ParserImplConstants.RBRACE);
+		parse(TokenType.RBRACE);
 		block = dress(SBlockStmt.make(stmts));
 		return dress(SConstructorDecl.make(modifiers, ensureNotNull(typeParameters), name, parameters, ensureNotNull(throwsClause), block));
 	}
@@ -5362,13 +5359,13 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchConstructorDecl_4(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACE);
+		lookahead = match(lookahead, TokenType.LBRACE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchConstructorDecl_7(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACE);
+		lookahead = match(lookahead, TokenType.RBRACE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -5656,2553 +5653,2553 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchConstructorDecl_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.VOLATILE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.VOLATILE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.NEW) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.THROW) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.NEW) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.THROW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.HOOK) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.GT) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.INTEGER_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.DO) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.LT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.HOOK) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THROW) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.GT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DO) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RETURN) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BREAK) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRY) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IF) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.WHILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.CLASS) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.STATIC) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.DO) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.THROW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DO) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.RETURN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.WHILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACE) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.INTERFACE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.CLASS) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
-			if (match(1, ParserImplConstants.VOLATILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DO) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STATIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BREAK) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRY) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IF) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NATIVE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRICTFP) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RETURN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.WHILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.BREAK) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.STATIC) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.BYTE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.TRY) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.IF) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.INTERFACE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.NULL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.SEMICOLON) != -1) {
+			if (match(1, TokenType.VOLATILE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.THROW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.DO) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.STATIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.BREAK) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.TRY) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.IF) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.WHILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.BREAK) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.FOR) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.BYTE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LPAREN) != -1) {
-			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+		if (match(0, TokenType.TRY) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NATIVE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants._DEFAULT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRICTFP) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STATIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.LBRACE) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.TRUE) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+		if (match(0, TokenType.IF) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LONG_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.SYNCHRONIZED) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.FINAL) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.NULL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.BOOLEAN) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.DECR) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.AT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.THIS) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.PUBLIC) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+		if (match(0, TokenType.FOR) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.SWITCH) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.LPAREN) != -1) {
+			if (match(1, TokenType.VOLATILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DEFAULT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.VOID) != -1) {
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+		if (match(0, TokenType.TRUE) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.TRANSIENT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LBRACE) != -1) {
-			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+		if (match(0, TokenType.FINAL) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THROW) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DO) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STATIC) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BREAK) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRY) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IF) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NATIVE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRICTFP) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RETURN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.WHILE) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.BOOLEAN) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ARROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.COLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.FLOAT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.DECR) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.NATIVE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.CHAR) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.STRICTFP) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.ABSTRACT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.AT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.INT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.THIS) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.RETURN) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.PUBLIC) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ARROW) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.COLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.DOUBLE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+		if (match(0, TokenType.SWITCH) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.PROTECTED) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.VOID) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LONG) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.TRANSIENT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.SUPER) != -1) {
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.ASSERT) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.LBRACE) != -1) {
+			if (match(1, TokenType.VOLATILE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.THROW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.DO) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.STATIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.BREAK) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.TRY) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.IF) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.FOR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.FINAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.RBRACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.PUBLIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.SWITCH) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.WHILE) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.SHORT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.PRIVATE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.ARROW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.CONTINUE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.COLON) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.FLOAT_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.INCR) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.FLOAT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.WHILE) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.NATIVE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.FALSE) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.CHAR) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.STRING_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.STRICTFP) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+		}
+		if (match(0, TokenType.ABSTRACT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.INT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.RETURN) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.IDENTIFIER) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ARROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.COLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.DOUBLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.PROTECTED) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.LONG) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.SUPER) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.ASSERT) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.SHORT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.PRIVATE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.CONTINUE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.INCR) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.WHILE) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.FALSE) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
@@ -8224,2386 +8221,2386 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(stmt, BlockStatement)
 	) */
 	private int matchConstructorDecl_lookahead3(int lookahead) {
-		if (match(0, ParserImplConstants.VOLATILE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.VOLATILE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.NEW) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.THROW) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.NEW) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.THROW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.HOOK) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.GT) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.INTEGER_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.CLASS) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.LT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.DO) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.HOOK) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THROW) != -1) {
+			if (match(1, TokenType.GT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DO) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RETURN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BREAK) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRY) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IF) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.WHILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.STATIC) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.INTERFACE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.CLASS) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
+		if (match(0, TokenType.DO) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DO) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.WHILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.STATIC) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.INTERFACE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.SEMICOLON) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.BREAK) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.BREAK) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.BYTE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.TRY) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.BYTE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.IF) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.NULL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.TRY) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.LBRACE) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+		if (match(0, TokenType.IF) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.FOR) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.SYNCHRONIZED) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LPAREN) != -1) {
-			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+		if (match(0, TokenType.NULL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NATIVE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants._DEFAULT) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STATIC) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.TRUE) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.FINAL) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LONG_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+		if (match(0, TokenType.FOR) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.BOOLEAN) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.LPAREN) != -1) {
+			if (match(1, TokenType.VOLATILE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.NATIVE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.DECR) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.STRICTFP) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.ABSTRACT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.STATIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.PROTECTED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.FINAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.RPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.PRIVATE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.AT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.PUBLIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.PUBLIC) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.TRANSIENT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.DEFAULT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.THIS) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.TRUE) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.SWITCH) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.VOID) != -1) {
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+		if (match(0, TokenType.FINAL) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.TRANSIENT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LBRACE) != -1) {
-			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+		if (match(0, TokenType.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THROW) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DO) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STATIC) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BREAK) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRY) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IF) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NATIVE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRICTFP) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RETURN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.WHILE) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.BOOLEAN) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.COLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ARROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.NATIVE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.DECR) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.FLOAT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.CHAR) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.STRICTFP) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.ABSTRACT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.AT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.INT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.PUBLIC) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.RETURN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.DOUBLE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.THIS) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.COLON) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ARROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.PROTECTED) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+		if (match(0, TokenType.SWITCH) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LONG) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.VOID) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.SUPER) != -1) {
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+		if (match(0, TokenType.TRANSIENT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.ASSERT) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.LBRACE) != -1) {
+			if (match(1, TokenType.VOLATILE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.THROW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.DO) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.STATIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.BREAK) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.TRY) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.IF) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.FOR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.FINAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.RBRACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.PUBLIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.SWITCH) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.WHILE) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.PRIVATE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.COLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.SHORT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.ARROW) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.CONTINUE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.FLOAT_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.INCR) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.NATIVE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.WHILE) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.FLOAT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.STRING_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.CHAR) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.FALSE) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.STRICTFP) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+		}
+		if (match(0, TokenType.ABSTRACT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.INT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.RETURN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.DOUBLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.IDENTIFIER) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.COLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ARROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.PROTECTED) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.LONG) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.SUPER) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.ASSERT) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.PRIVATE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.SHORT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.CONTINUE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.INCR) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.WHILE) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.FALSE) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
@@ -10615,2386 +10612,2386 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(stmt, BlockStatement)
 	) */
 	private int matchConstructorDecl_lookahead4(int lookahead) {
-		if (match(0, ParserImplConstants.VOLATILE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.VOLATILE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.NEW) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.THROW) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.NEW) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.THROW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.HOOK) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.GT) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.INTEGER_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.CLASS) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.LT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.DO) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.HOOK) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THROW) != -1) {
+			if (match(1, TokenType.GT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DO) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RETURN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BREAK) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRY) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IF) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.WHILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.STATIC) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.INTERFACE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.CLASS) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
+		if (match(0, TokenType.DO) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DO) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.WHILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACE) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.STATIC) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.INTERFACE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.SEMICOLON) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.BREAK) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.BREAK) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.BYTE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.TRY) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.BYTE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.IF) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.NULL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.TRY) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.LBRACE) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+		if (match(0, TokenType.IF) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.FOR) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.SYNCHRONIZED) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LPAREN) != -1) {
-			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+		if (match(0, TokenType.NULL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NATIVE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants._DEFAULT) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STATIC) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.TRUE) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.FINAL) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LONG_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+		if (match(0, TokenType.FOR) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.BOOLEAN) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.LPAREN) != -1) {
+			if (match(1, TokenType.VOLATILE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.NATIVE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.DECR) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.STRICTFP) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.ABSTRACT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.STATIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.PROTECTED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.FINAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.RPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.PRIVATE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.AT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.PUBLIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.PUBLIC) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.TRANSIENT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.DEFAULT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.THIS) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.TRUE) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.SWITCH) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.VOID) != -1) {
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+		if (match(0, TokenType.FINAL) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.TRANSIENT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LBRACE) != -1) {
-			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+		if (match(0, TokenType.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THROW) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DO) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STATIC) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BREAK) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRY) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IF) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NATIVE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRICTFP) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RETURN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.WHILE) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.BOOLEAN) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.COLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ARROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.NATIVE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.DECR) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.FLOAT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.CHAR) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.STRICTFP) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.ABSTRACT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.AT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.INT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.PUBLIC) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.RETURN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.DOUBLE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.THIS) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.COLON) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ARROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.PROTECTED) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+		if (match(0, TokenType.SWITCH) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LONG) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.VOID) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.SUPER) != -1) {
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+		if (match(0, TokenType.TRANSIENT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.ASSERT) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.LBRACE) != -1) {
+			if (match(1, TokenType.VOLATILE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.THROW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.DO) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.STATIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.BREAK) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.TRY) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.IF) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.FOR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.FINAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.RBRACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.PUBLIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.SWITCH) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.WHILE) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.PRIVATE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.COLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.SHORT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.ARROW) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.CONTINUE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.FLOAT_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.INCR) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.NATIVE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.WHILE) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.FLOAT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.STRING_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.CHAR) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.FALSE) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.STRICTFP) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+		}
+		if (match(0, TokenType.ABSTRACT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.INT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.RETURN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.DOUBLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.IDENTIFIER) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.COLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ARROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.PROTECTED) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.LONG) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.SUPER) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.ASSERT) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.PRIVATE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.SHORT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.CONTINUE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.INCR) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.WHILE) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.FALSE) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
@@ -13046,26 +13043,26 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> typeArgs = null;
 		run();
 		if (matchExplicitConstructorInvocation_lookahead1(0) != -1) {
-			if (match(0, ParserImplConstants.LT) != -1) {
+			if (match(0, TokenType.LT) != -1) {
 				typeArgs = parseTypeArguments();
 			}
-			parse(ParserImplConstants.THIS);
+			parse(TokenType.THIS);
 			isThis = true;
 			args = parseArguments();
-			parse(ParserImplConstants.SEMICOLON);
-		} else if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE) != -1) {
+			parse(TokenType.SEMICOLON);
+		} else if (match(0, TokenType.LPAREN, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.VOID, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE) != -1) {
 			if (matchExplicitConstructorInvocation_lookahead2(0) != -1) {
 				expr = parsePrimaryExpressionWithoutSuperSuffix();
-				parse(ParserImplConstants.DOT);
+				parse(TokenType.DOT);
 			}
-			if (match(0, ParserImplConstants.LT) != -1) {
+			if (match(0, TokenType.LT) != -1) {
 				typeArgs = parseTypeArguments();
 			}
-			parse(ParserImplConstants.SUPER);
+			parse(TokenType.SUPER);
 			args = parseArguments();
-			parse(ParserImplConstants.SEMICOLON);
+			parse(TokenType.SEMICOLON);
 		} else {
-			throw produceParseException(ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.VOID, ParserImplConstants.NEW);
+			throw produceParseException(TokenType.SUPER, TokenType.THIS, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.VOID, TokenType.NEW);
 		}
 		return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args));
 	}
@@ -13175,13 +13172,13 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchExplicitConstructorInvocation_2_1_2(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.THIS);
+		lookahead = match(lookahead, TokenType.THIS);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchArguments(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -13231,13 +13228,13 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchExplicitConstructorInvocation_2_2_2(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SUPER);
+		lookahead = match(lookahead, TokenType.SUPER);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchArguments(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -13271,7 +13268,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchPrimaryExpressionWithoutSuperSuffix(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.DOT);
+		lookahead = match(lookahead, TokenType.DOT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -13309,10 +13306,10 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchExplicitConstructorInvocation_lookahead1_1(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.THIS);
+		lookahead = match(lookahead, TokenType.THIS);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -13347,7 +13344,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchPrimaryExpressionWithoutSuperSuffix(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.DOT);
+		lookahead = match(lookahead, TokenType.DOT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -13373,15 +13370,15 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = null;
 		BUTree<? extends SStmt> stmt;
 		if (matchStatements_lookahead1(0) != -1) {
-			if (match(0, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1) {
+			if (match(0, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.VOID, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LPAREN, TokenType.LT, TokenType.DECR, TokenType.INCR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.AT, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.STATIC, TokenType.ABSTRACT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.CLASS, TokenType.INTERFACE) != -1) {
 				do {
 					stmt = parseBlockStatement();
 					ret = append(ret, stmt);
-				} while (match(0, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.VOLATILE, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE) != -1);
+				} while (match(0, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.VOID, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LPAREN, TokenType.LT, TokenType.DECR, TokenType.INCR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.AT, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.STATIC, TokenType.ABSTRACT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.CLASS, TokenType.INTERFACE) != -1);
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
-				throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.TRY, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.SEMICOLON, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.AT, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.INTERFACE, ParserImplConstants.CLASS);
+				throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.TRY, TokenType.DO, TokenType.WHILE, TokenType.BREAK, TokenType.FOR, TokenType.RETURN, TokenType.CONTINUE, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LBRACE, TokenType.ASSERT, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.DOUBLE, TokenType.VOID, TokenType.NEW, TokenType.LT, TokenType.LPAREN, TokenType.INCR, TokenType.DECR, TokenType.SEMICOLON, TokenType.IF, TokenType.SWITCH, TokenType.NATIVE, TokenType.STRICTFP, TokenType.AT, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.STATIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.INTERFACE, TokenType.CLASS);
 			}
 		}
 		return ensureNotNull(ret);
@@ -13519,2389 +13516,2389 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchStatements_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.VOLATILE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.VOLATILE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.NEW) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.THROW) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.NEW) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.THROW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.HOOK) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.GT) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.INTEGER_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.DO) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.LT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.HOOK) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THROW) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.GT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DO) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RETURN) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BREAK) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRY) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IF) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.WHILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.CLASS) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.STATIC) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.DO) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.THROW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.DO) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.RETURN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.WHILE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACE) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.INTERFACE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.CLASS) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
+		if (match(0, TokenType.STATIC) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.INTERFACE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.SEMICOLON) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.BREAK) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.BREAK) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.BYTE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.TRY) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.BYTE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.IF) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.NULL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.TRY) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.LBRACE) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+		if (match(0, TokenType.IF) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LPAREN) != -1) {
-			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+		if (match(0, TokenType.SYNCHRONIZED) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NATIVE) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants._DEFAULT) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STATIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.FOR) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.NULL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.TRUE) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.LONG_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.FINAL) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.LPAREN) != -1) {
+			if (match(1, TokenType.VOLATILE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.NATIVE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.STRICTFP) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.ABSTRACT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.STATIC) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.BOOLEAN) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.PROTECTED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.DECR) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.FINAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.RPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.PRIVATE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.PUBLIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.TRANSIENT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.DEFAULT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.AT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+		if (match(0, TokenType.FOR) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.THIS) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.TRUE) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.PUBLIC) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.SWITCH) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.VOID) != -1) {
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+		if (match(0, TokenType.FINAL) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.TRANSIENT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LBRACE) != -1) {
-			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+		if (match(0, TokenType.BOOLEAN) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THROW) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DO) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STATIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BREAK) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRY) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IF) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NATIVE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRICTFP) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RETURN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.WHILE) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.DECR) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.COLON) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ARROW) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.FLOAT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.NATIVE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.CHAR) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.AT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.ABSTRACT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.THIS) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.STRICTFP) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.INT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.PUBLIC) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.RETURN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.DOUBLE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+		if (match(0, TokenType.SWITCH) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.VOID) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.COLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.ARROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.PROTECTED) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.TRANSIENT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.LONG) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.SUPER) != -1) {
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+		if (match(0, TokenType.LBRACE) != -1) {
+			if (match(1, TokenType.VOLATILE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DO) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STATIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BREAK) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRY) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IF) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FOR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FINAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PUBLIC) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SWITCH) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRANSIENT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NATIVE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRICTFP) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ABSTRACT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RETURN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PROTECTED) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSERT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PRIVATE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CONTINUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.WHILE) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.COLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.ARROW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.ASSERT) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+		if (match(0, TokenType.FLOAT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.NATIVE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.CHAR) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.ABSTRACT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.STRICTFP) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.INT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.RETURN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.DOUBLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.IDENTIFIER) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.COLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ARROW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.PROTECTED) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTERFACE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CLASS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.LONG) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.AT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.SUPER) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.ASSERT) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.NODE_LIST_VARIABLE) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.SHORT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.SHORT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.PRIVATE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.CONTINUE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.PRIVATE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.INTERFACE) != -1) {
 				return lookahead;
 			}
-		}
-		if (match(0, ParserImplConstants.FLOAT_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.CLASS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.INCR) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.CONTINUE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.WHILE) != -1) {
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.FALSE) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.INCR) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.STRING_LITERAL) != -1) {
-			if (match(1, ParserImplConstants.ANDASSIGN) != -1) {
+		if (match(0, TokenType.WHILE) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
+		}
+		if (match(0, TokenType.FALSE) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOT) != -1) {
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACKET) != -1) {
+			if (match(1, TokenType.DOT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.LBRACKET) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ASSIGN) != -1) {
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ORASSIGN) != -1) {
+			if (match(1, TokenType.ASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.XORASSIGN) != -1) {
+			if (match(1, TokenType.ORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.XORASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STARASSIGN) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.STARASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SEMICOLON) != -1) {
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.SEMICOLON) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.REMASSIGN) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.REMASSIGN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.ANDASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LBRACKET) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.ORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.XORASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STARASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLECOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SLASHASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SEMICOLON) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.REMASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUSASSIGN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUSASSIGN) != -1) {
 				return lookahead;
 			}
 		}
@@ -15961,14 +15958,14 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SType> primitiveType = null;
 		BUTree<? extends SReferenceType> type = null;
 		BUTree<SNodeList> arrayDims;
-		if (match(0, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN) != -1) {
+		if (match(0, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN) != -1) {
 			primitiveType = parsePrimitiveType(annotations);
 			if (matchType_lookahead1(0) != -1) {
 				lateRun();
 				arrayDims = parseArrayDimsMandatory();
 				type = dress(SArrayType.make(primitiveType, arrayDims));
 			}
-		} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+		} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 			type = parseQualifiedType(annotations);
 			if (matchType_lookahead2(0) != -1) {
 				lateRun();
@@ -15976,7 +15973,7 @@ public class ParserImplementation extends ParserNewBase {
 				type = dress(SArrayType.make(type, arrayDims));
 			}
 		} else {
-			throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN);
+			throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN);
 		}
 		return type == null ? primitiveType : type;
 	}
@@ -16151,7 +16148,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -16165,7 +16162,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -16198,12 +16195,12 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SType> primitiveType;
 		BUTree<? extends SReferenceType> type;
 		BUTree<SNodeList> arrayDims;
-		if (match(0, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN) != -1) {
+		if (match(0, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN) != -1) {
 			primitiveType = parsePrimitiveType(annotations);
 			lateRun();
 			arrayDims = parseArrayDimsMandatory();
 			type = dress(SArrayType.make(primitiveType, arrayDims));
-		} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+		} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 			type = parseQualifiedType(annotations);
 			if (matchReferenceType_lookahead1(0) != -1) {
 				lateRun();
@@ -16211,7 +16208,7 @@ public class ParserImplementation extends ParserNewBase {
 				type = dress(SArrayType.make(type, arrayDims));
 			}
 		} else {
-			throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN);
+			throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN);
 		}
 		return type;
 	}
@@ -16339,7 +16336,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -16389,7 +16386,7 @@ public class ParserImplementation extends ParserNewBase {
 		ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs)));
 		while (matchQualifiedType_lookahead2(0) != -1) {
 			lateRun();
-			parse(ParserImplConstants.DOT);
+			parse(TokenType.DOT);
 			scope = optionOf(ret);
 			annotations = parseAnnotations();
 			name = parseName();
@@ -16485,7 +16482,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchQualifiedType_5_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.DOT);
+		lookahead = match(lookahead, TokenType.DOT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotations(lookahead);
@@ -16528,47 +16525,47 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(typeArgs, TypeArgumentsOrDiamond)
 	) */
 	private int matchQualifiedType_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.LT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.LT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.HOOK) != -1) {
+			if (match(1, TokenType.HOOK) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.GT) != -1) {
+			if (match(1, TokenType.GT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
@@ -16586,14 +16583,14 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchQualifiedType_lookahead2(int lookahead) {
-		if (match(0, ParserImplConstants.DOT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.DOT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
@@ -16605,47 +16602,47 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(typeArgs, TypeArgumentsOrDiamond)
 	) */
 	private int matchQualifiedType_lookahead3(int lookahead) {
-		if (match(0, ParserImplConstants.LT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.LT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.HOOK) != -1) {
+			if (match(1, TokenType.HOOK) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.GT) != -1) {
+			if (match(1, TokenType.GT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
@@ -16663,11 +16660,11 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseTypeArguments() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
-		parse(ParserImplConstants.LT);
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+		parse(TokenType.LT);
+		if (match(0, TokenType.AT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.HOOK, TokenType.NODE_LIST_VARIABLE) != -1) {
 			ret = parseTypeArgumentList();
 		}
-		parse(ParserImplConstants.GT);
+		parse(TokenType.GT);
 		return ret;
 	}
 
@@ -16679,13 +16676,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GT)
 	) */
 	private int matchTypeArguments(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LT);
+		lookahead = match(lookahead, TokenType.LT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchTypeArguments_2(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.GT);
+		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -16723,11 +16720,11 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseTypeArgumentsOrDiamond() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
-		parse(ParserImplConstants.LT);
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+		parse(TokenType.LT);
+		if (match(0, TokenType.AT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.HOOK, TokenType.NODE_LIST_VARIABLE) != -1) {
 			ret = parseTypeArgumentList();
 		}
-		parse(ParserImplConstants.GT);
+		parse(TokenType.GT);
 		return ret;
 	}
 
@@ -16739,13 +16736,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GT)
 	) */
 	private int matchTypeArgumentsOrDiamond(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LT);
+		lookahead = match(lookahead, TokenType.LT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchTypeArgumentsOrDiamond_2(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.GT);
+		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -16785,27 +16782,28 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		sequence(
 			lookAhead({ quotesMode })
-			terminal(NODE_LIST_VARIABLE)
-			action({ return makeVar(); })
+			terminal(id, NODE_LIST_VARIABLE)
+			action({ return makeVar(id); })
 		)
 	) */
 	public BUTree<SNodeList> parseTypeArgumentList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
-		if (match(0, ParserImplConstants.AT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.HOOK) != -1) {
+		Token id;
+		if (match(0, TokenType.AT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.HOOK) != -1) {
 			type = parseTypeArgument();
 			ret = append(ret, type);
-			while (match(0, ParserImplConstants.COMMA) != -1) {
-				parse(ParserImplConstants.COMMA);
+			while (match(0, TokenType.COMMA) != -1) {
+				parse(TokenType.COMMA);
 				type = parseTypeArgument();
 				ret = append(ret, type);
 			}
 			return ret;
 		} else if (quotesMode) {
-			parse(ParserImplConstants.NODE_LIST_VARIABLE);
-			return makeVar();
+			id = parse(TokenType.NODE_LIST_VARIABLE);
+			return makeVar(id);
 		} else {
-			throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.AT, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.HOOK);
+			throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.DOUBLE, TokenType.FLOAT, TokenType.HOOK);
 		}
 	}
 
@@ -16819,7 +16817,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		sequence(
 			lookAhead({ quotesMode })
-			terminal(NODE_LIST_VARIABLE)
+			terminal(id, NODE_LIST_VARIABLE)
 		)
 	) */
 	private int matchTypeArgumentList(int lookahead) {
@@ -16869,7 +16867,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(type, TypeArgument)
 	) */
 	private int matchTypeArgumentList_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchTypeArgument(lookahead);
@@ -16880,13 +16878,13 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* sequence(
 		lookAhead({ quotesMode })
-		terminal(NODE_LIST_VARIABLE)
+		terminal(id, NODE_LIST_VARIABLE)
 	) */
 	private int matchTypeArgumentList_2(int lookahead) {
 		lookahead = quotesMode ? lookahead : -1;
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.NODE_LIST_VARIABLE);
+		lookahead = match(lookahead, TokenType.NODE_LIST_VARIABLE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -16906,12 +16904,12 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> annotations = null;
 		run();
 		annotations = parseAnnotations();
-		if (match(0, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+		if (match(0, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 			ret = parseReferenceType(annotations);
-		} else if (match(0, ParserImplConstants.HOOK) != -1) {
+		} else if (match(0, TokenType.HOOK) != -1) {
 			ret = parseWildcard(annotations);
 		} else {
-			throw produceParseException(ParserImplConstants.HOOK, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT);
+			throw produceParseException(TokenType.HOOK, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT);
 		}
 		return ret;
 	}
@@ -16982,20 +16980,20 @@ public class ParserImplementation extends ParserNewBase {
 			run();
 			annotations = emptyList();
 		}
-		parse(ParserImplConstants.HOOK);
-		if (match(0, ParserImplConstants.EXTENDS, ParserImplConstants.SUPER) != -1) {
-			if (match(0, ParserImplConstants.EXTENDS) != -1) {
-				parse(ParserImplConstants.EXTENDS);
+		parse(TokenType.HOOK);
+		if (match(0, TokenType.EXTENDS, TokenType.SUPER) != -1) {
+			if (match(0, TokenType.EXTENDS) != -1) {
+				parse(TokenType.EXTENDS);
 				run();
 				boundAnnotations = parseAnnotations();
 				ext = parseReferenceType(boundAnnotations);
-			} else if (match(0, ParserImplConstants.SUPER) != -1) {
-				parse(ParserImplConstants.SUPER);
+			} else if (match(0, TokenType.SUPER) != -1) {
+				parse(TokenType.SUPER);
 				run();
 				boundAnnotations = parseAnnotations();
 				sup = parseReferenceType(boundAnnotations);
 			} else {
-				throw produceParseException(ParserImplConstants.SUPER, ParserImplConstants.EXTENDS);
+				throw produceParseException(TokenType.SUPER, TokenType.EXTENDS);
 			}
 		}
 		return dress(SWildcardType.make(annotations, optionOf(ext), optionOf(sup)));
@@ -17019,7 +17017,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchWildcard(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.HOOK);
+		lookahead = match(lookahead, TokenType.HOOK);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchWildcard_3(lookahead);
@@ -17100,7 +17098,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ext, ReferenceType)
 	) */
 	private int matchWildcard_3_1_1_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.EXTENDS);
+		lookahead = match(lookahead, TokenType.EXTENDS);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotations(lookahead);
@@ -17118,7 +17116,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(sup, ReferenceType)
 	) */
 	private int matchWildcard_3_1_1_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SUPER);
+		lookahead = match(lookahead, TokenType.SUPER);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotations(lookahead);
@@ -17179,32 +17177,32 @@ public class ParserImplementation extends ParserNewBase {
 			run();
 			annotations = emptyList();
 		}
-		if (match(0, ParserImplConstants.BOOLEAN) != -1) {
-			parse(ParserImplConstants.BOOLEAN);
+		if (match(0, TokenType.BOOLEAN) != -1) {
+			parse(TokenType.BOOLEAN);
 			primitive = Primitive.Boolean;
-		} else if (match(0, ParserImplConstants.CHAR) != -1) {
-			parse(ParserImplConstants.CHAR);
+		} else if (match(0, TokenType.CHAR) != -1) {
+			parse(TokenType.CHAR);
 			primitive = Primitive.Char;
-		} else if (match(0, ParserImplConstants.BYTE) != -1) {
-			parse(ParserImplConstants.BYTE);
+		} else if (match(0, TokenType.BYTE) != -1) {
+			parse(TokenType.BYTE);
 			primitive = Primitive.Byte;
-		} else if (match(0, ParserImplConstants.SHORT) != -1) {
-			parse(ParserImplConstants.SHORT);
+		} else if (match(0, TokenType.SHORT) != -1) {
+			parse(TokenType.SHORT);
 			primitive = Primitive.Short;
-		} else if (match(0, ParserImplConstants.INT) != -1) {
-			parse(ParserImplConstants.INT);
+		} else if (match(0, TokenType.INT) != -1) {
+			parse(TokenType.INT);
 			primitive = Primitive.Int;
-		} else if (match(0, ParserImplConstants.LONG) != -1) {
-			parse(ParserImplConstants.LONG);
+		} else if (match(0, TokenType.LONG) != -1) {
+			parse(TokenType.LONG);
 			primitive = Primitive.Long;
-		} else if (match(0, ParserImplConstants.FLOAT) != -1) {
-			parse(ParserImplConstants.FLOAT);
+		} else if (match(0, TokenType.FLOAT) != -1) {
+			parse(TokenType.FLOAT);
 			primitive = Primitive.Float;
-		} else if (match(0, ParserImplConstants.DOUBLE) != -1) {
-			parse(ParserImplConstants.DOUBLE);
+		} else if (match(0, TokenType.DOUBLE) != -1) {
+			parse(TokenType.DOUBLE);
 			primitive = Primitive.Double;
 		} else {
-			throw produceParseException(ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN);
+			throw produceParseException(TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN);
 		}
 		return dress(SPrimitiveType.make(annotations, primitive));
 	}
@@ -17303,7 +17301,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(BOOLEAN)
 	) */
 	private int matchPrimitiveType_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.BOOLEAN);
+		lookahead = match(lookahead, TokenType.BOOLEAN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -17313,7 +17311,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(CHAR)
 	) */
 	private int matchPrimitiveType_2_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.CHAR);
+		lookahead = match(lookahead, TokenType.CHAR);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -17323,7 +17321,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(BYTE)
 	) */
 	private int matchPrimitiveType_2_3(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.BYTE);
+		lookahead = match(lookahead, TokenType.BYTE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -17333,7 +17331,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SHORT)
 	) */
 	private int matchPrimitiveType_2_4(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SHORT);
+		lookahead = match(lookahead, TokenType.SHORT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -17343,7 +17341,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(INT)
 	) */
 	private int matchPrimitiveType_2_5(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.INT);
+		lookahead = match(lookahead, TokenType.INT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -17353,7 +17351,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(LONG)
 	) */
 	private int matchPrimitiveType_2_6(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LONG);
+		lookahead = match(lookahead, TokenType.LONG);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -17363,7 +17361,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(FLOAT)
 	) */
 	private int matchPrimitiveType_2_7(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.FLOAT);
+		lookahead = match(lookahead, TokenType.FLOAT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -17373,7 +17371,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(DOUBLE)
 	) */
 	private int matchPrimitiveType_2_8(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.DOUBLE);
+		lookahead = match(lookahead, TokenType.DOUBLE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -17392,14 +17390,14 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	public BUTree<? extends SType> parseResultType() throws ParseException {
 		BUTree<? extends SType> ret;
-		if (match(0, ParserImplConstants.VOID) != -1) {
+		if (match(0, TokenType.VOID) != -1) {
 			run();
-			parse(ParserImplConstants.VOID);
+			parse(TokenType.VOID);
 			ret = dress(SVoidType.make());
-		} else if (match(0, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+		} else if (match(0, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 			ret = parseType(null);
 		} else {
-			throw produceParseException(ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.VOID);
+			throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.VOID);
 		}
 		return ret;
 	}
@@ -17440,7 +17438,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(VOID)
 	) */
 	private int matchResultType_1_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.VOID);
+		lookahead = match(lookahead, TokenType.VOID);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -17498,7 +17496,7 @@ public class ParserImplementation extends ParserNewBase {
 		ret = dress(SQualifiedName.make(qualifier, name));
 		while (matchQualifiedName_lookahead1(0) != -1) {
 			lateRun();
-			parse(ParserImplConstants.DOT);
+			parse(TokenType.DOT);
 			qualifier = optionOf(ret);
 			name = parseName();
 			ret = dress(SQualifiedName.make(qualifier, name));
@@ -17545,7 +17543,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(name, Name)
 	) */
 	private int matchQualifiedName_4_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.DOT);
+		lookahead = match(lookahead, TokenType.DOT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchName(lookahead);
@@ -17560,11 +17558,11 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(name, Name)
 	) */
 	private int matchQualifiedName_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.DOT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.DOT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
@@ -17588,14 +17586,14 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SName> parseName() throws ParseException {
 		Token id;
 		BUTree<SName> name;
-		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
+		if (match(0, TokenType.IDENTIFIER) != -1) {
 			run();
-			id = parse(ParserImplConstants.IDENTIFIER);
+			id = parse(TokenType.IDENTIFIER);
 			name = dress(SName.make(id.image));
 		} else if (quotesMode) {
 			name = parseNodeVar();
 		} else {
-			throw produceParseException(ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER);
+			throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return name;
 	}
@@ -17642,7 +17640,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(id, IDENTIFIER)
 	) */
 	private int matchName_1_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.IDENTIFIER);
+		lookahead = match(lookahead, TokenType.IDENTIFIER);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -17734,29 +17732,29 @@ public class ParserImplementation extends ParserNewBase {
 		if (matchExpression_lookahead1(0) != -1) {
 			run();
 			ret = parseName();
-			parse(ParserImplConstants.ARROW);
+			parse(TokenType.ARROW);
 			ret = parseLambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), false);
 		} else if (matchExpression_lookahead2(0) != -1) {
 			run();
-			parse(ParserImplConstants.LPAREN);
-			parse(ParserImplConstants.RPAREN);
-			parse(ParserImplConstants.ARROW);
+			parse(TokenType.LPAREN);
+			parse(TokenType.RPAREN);
+			parse(TokenType.ARROW);
 			ret = parseLambdaBody(emptyList(), true);
 		} else if (matchExpression_lookahead3(0) != -1) {
 			run();
-			parse(ParserImplConstants.LPAREN);
+			parse(TokenType.LPAREN);
 			ret = parseName();
-			parse(ParserImplConstants.RPAREN);
-			parse(ParserImplConstants.ARROW);
+			parse(TokenType.RPAREN);
+			parse(TokenType.ARROW);
 			ret = parseLambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), true);
 		} else if (matchExpression_lookahead4(0) != -1) {
 			run();
-			parse(ParserImplConstants.LPAREN);
+			parse(TokenType.LPAREN);
 			params = parseInferredFormalParameterList();
-			parse(ParserImplConstants.RPAREN);
-			parse(ParserImplConstants.ARROW);
+			parse(TokenType.RPAREN);
+			parse(TokenType.ARROW);
 			ret = parseLambdaBody(params, true);
-		} else if (match(0, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
+		} else if (match(0, TokenType.MINUS, TokenType.PLUS, TokenType.LPAREN, TokenType.THIS, TokenType.SUPER, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.LT, TokenType.NEW, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR) != -1) {
 			ret = parseConditionalExpression();
 			if (matchExpression_lookahead5(0) != -1) {
 				lateRun();
@@ -17765,7 +17763,7 @@ public class ParserImplementation extends ParserNewBase {
 				ret = dress(SAssignExpr.make(ret, op, value));
 			}
 		} else {
-			throw produceParseException(ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.LT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.VOID, ParserImplConstants.LPAREN, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.NEW, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.DECR, ParserImplConstants.INCR);
+			throw produceParseException(TokenType.TILDE, TokenType.BANG, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.VOID, TokenType.LPAREN, TokenType.SUPER, TokenType.THIS, TokenType.NEW, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR);
 		}
 		return ret;
 	}
@@ -17922,7 +17920,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchLambdaBody(lookahead);
@@ -17943,13 +17941,13 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ret, LambdaBody)
 	) */
 	private int matchExpression_1_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchLambdaBody(lookahead);
@@ -17972,16 +17970,16 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ret, LambdaBody)
 	) */
 	private int matchExpression_1_3(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchLambdaBody(lookahead);
@@ -18003,16 +18001,16 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ret, LambdaBody)
 	) */
 	private int matchExpression_1_4(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchInferredFormalParameterList(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchLambdaBody(lookahead);
@@ -18075,7 +18073,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -18087,13 +18085,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(ARROW)
 	) */
 	private int matchExpression_lookahead2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -18106,16 +18104,16 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(ARROW)
 	) */
 	private int matchExpression_lookahead3(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -18127,13 +18125,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(COMMA)
 	) */
 	private int matchExpression_lookahead4(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -18145,1143 +18143,1143 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(value, Expression)
 	) */
 	private int matchExpression_lookahead5(int lookahead) {
-		if (match(0, ParserImplConstants.ANDASSIGN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.ANDASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.STARASSIGN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.SLASHASSIGN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.STARASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.REMASSIGN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.PLUSASSIGN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.SLASHASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.LSHIFTASSIGN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.ASSIGN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.ORASSIGN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.MINUSASSIGN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.REMASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.XORASSIGN) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.PLUSASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.LSHIFTASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.ASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.ORASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.MINUSASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.XORASSIGN) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -19305,14 +19303,14 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SBlockStmt> block;
 		BUTree<? extends SExpr> expr;
 		BUTree<SLambdaExpr> ret;
-		if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
+		if (match(0, TokenType.LPAREN, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
 			expr = parseExpression();
 			ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr)));
-		} else if (match(0, ParserImplConstants.LBRACE) != -1) {
+		} else if (match(0, TokenType.LBRACE) != -1) {
 			block = parseBlock();
 			ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
 		} else {
-			throw produceParseException(ParserImplConstants.LBRACE, ParserImplConstants.LPAREN, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NULL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.PLUS, ParserImplConstants.MINUS);
+			throw produceParseException(TokenType.LBRACE, TokenType.LPAREN, TokenType.DECR, TokenType.INCR, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LT, TokenType.NEW, TokenType.THIS, TokenType.SUPER, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.BANG, TokenType.TILDE, TokenType.PLUS, TokenType.MINUS);
 		}
 		return ret;
 	}
@@ -19388,8 +19386,8 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SFormalParameter> param;
 		param = parseInferredFormalParameter();
 		ret = append(ret, param);
-		while (match(0, ParserImplConstants.COMMA) != -1) {
-			parse(ParserImplConstants.COMMA);
+		while (match(0, TokenType.COMMA) != -1) {
+			parse(TokenType.COMMA);
 			param = parseInferredFormalParameter();
 			ret = append(ret, param);
 		}
@@ -19432,7 +19430,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(param, InferredFormalParameter)
 	) */
 	private int matchInferredFormalParameterList_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchInferredFormalParameter(lookahead);
@@ -19516,44 +19514,44 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	public AssignOp parseAssignmentOperator() throws ParseException {
 		AssignOp ret;
-		if (match(0, ParserImplConstants.ASSIGN) != -1) {
-			parse(ParserImplConstants.ASSIGN);
+		if (match(0, TokenType.ASSIGN) != -1) {
+			parse(TokenType.ASSIGN);
 			ret = AssignOp.Normal;
-		} else if (match(0, ParserImplConstants.STARASSIGN) != -1) {
-			parse(ParserImplConstants.STARASSIGN);
+		} else if (match(0, TokenType.STARASSIGN) != -1) {
+			parse(TokenType.STARASSIGN);
 			ret = AssignOp.Times;
-		} else if (match(0, ParserImplConstants.SLASHASSIGN) != -1) {
-			parse(ParserImplConstants.SLASHASSIGN);
+		} else if (match(0, TokenType.SLASHASSIGN) != -1) {
+			parse(TokenType.SLASHASSIGN);
 			ret = AssignOp.Divide;
-		} else if (match(0, ParserImplConstants.REMASSIGN) != -1) {
-			parse(ParserImplConstants.REMASSIGN);
+		} else if (match(0, TokenType.REMASSIGN) != -1) {
+			parse(TokenType.REMASSIGN);
 			ret = AssignOp.Remainder;
-		} else if (match(0, ParserImplConstants.PLUSASSIGN) != -1) {
-			parse(ParserImplConstants.PLUSASSIGN);
+		} else if (match(0, TokenType.PLUSASSIGN) != -1) {
+			parse(TokenType.PLUSASSIGN);
 			ret = AssignOp.Plus;
-		} else if (match(0, ParserImplConstants.MINUSASSIGN) != -1) {
-			parse(ParserImplConstants.MINUSASSIGN);
+		} else if (match(0, TokenType.MINUSASSIGN) != -1) {
+			parse(TokenType.MINUSASSIGN);
 			ret = AssignOp.Minus;
-		} else if (match(0, ParserImplConstants.LSHIFTASSIGN) != -1) {
-			parse(ParserImplConstants.LSHIFTASSIGN);
+		} else if (match(0, TokenType.LSHIFTASSIGN) != -1) {
+			parse(TokenType.LSHIFTASSIGN);
 			ret = AssignOp.LeftShift;
-		} else if (match(0, ParserImplConstants.RSIGNEDSHIFTASSIGN) != -1) {
-			parse(ParserImplConstants.RSIGNEDSHIFTASSIGN);
+		} else if (match(0, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
+			parse(TokenType.RSIGNEDSHIFTASSIGN);
 			ret = AssignOp.RightSignedShift;
-		} else if (match(0, ParserImplConstants.RUNSIGNEDSHIFTASSIGN) != -1) {
-			parse(ParserImplConstants.RUNSIGNEDSHIFTASSIGN);
+		} else if (match(0, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
+			parse(TokenType.RUNSIGNEDSHIFTASSIGN);
 			ret = AssignOp.RightUnsignedShift;
-		} else if (match(0, ParserImplConstants.ANDASSIGN) != -1) {
-			parse(ParserImplConstants.ANDASSIGN);
+		} else if (match(0, TokenType.ANDASSIGN) != -1) {
+			parse(TokenType.ANDASSIGN);
 			ret = AssignOp.And;
-		} else if (match(0, ParserImplConstants.XORASSIGN) != -1) {
-			parse(ParserImplConstants.XORASSIGN);
+		} else if (match(0, TokenType.XORASSIGN) != -1) {
+			parse(TokenType.XORASSIGN);
 			ret = AssignOp.XOr;
-		} else if (match(0, ParserImplConstants.ORASSIGN) != -1) {
-			parse(ParserImplConstants.ORASSIGN);
+		} else if (match(0, TokenType.ORASSIGN) != -1) {
+			parse(TokenType.ORASSIGN);
 			ret = AssignOp.Or;
 		} else {
-			throw produceParseException(ParserImplConstants.ORASSIGN, ParserImplConstants.XORASSIGN, ParserImplConstants.ANDASSIGN, ParserImplConstants.RUNSIGNEDSHIFTASSIGN, ParserImplConstants.RSIGNEDSHIFTASSIGN, ParserImplConstants.LSHIFTASSIGN, ParserImplConstants.MINUSASSIGN, ParserImplConstants.PLUSASSIGN, ParserImplConstants.REMASSIGN, ParserImplConstants.SLASHASSIGN, ParserImplConstants.STARASSIGN, ParserImplConstants.ASSIGN);
+			throw produceParseException(TokenType.ORASSIGN, TokenType.XORASSIGN, TokenType.ANDASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.LSHIFTASSIGN, TokenType.MINUSASSIGN, TokenType.PLUSASSIGN, TokenType.REMASSIGN, TokenType.SLASHASSIGN, TokenType.STARASSIGN, TokenType.ASSIGN);
 		}
 		return ret;
 	}
@@ -19688,7 +19686,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(ASSIGN)
 	) */
 	private int matchAssignmentOperator_1_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.ASSIGN);
+		lookahead = match(lookahead, TokenType.ASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -19698,7 +19696,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(ANDASSIGN)
 	) */
 	private int matchAssignmentOperator_1_10(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.ANDASSIGN);
+		lookahead = match(lookahead, TokenType.ANDASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -19708,7 +19706,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(XORASSIGN)
 	) */
 	private int matchAssignmentOperator_1_11(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.XORASSIGN);
+		lookahead = match(lookahead, TokenType.XORASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -19718,7 +19716,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(ORASSIGN)
 	) */
 	private int matchAssignmentOperator_1_12(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.ORASSIGN);
+		lookahead = match(lookahead, TokenType.ORASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -19728,7 +19726,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(STARASSIGN)
 	) */
 	private int matchAssignmentOperator_1_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.STARASSIGN);
+		lookahead = match(lookahead, TokenType.STARASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -19738,7 +19736,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SLASHASSIGN)
 	) */
 	private int matchAssignmentOperator_1_3(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SLASHASSIGN);
+		lookahead = match(lookahead, TokenType.SLASHASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -19748,7 +19746,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(REMASSIGN)
 	) */
 	private int matchAssignmentOperator_1_4(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.REMASSIGN);
+		lookahead = match(lookahead, TokenType.REMASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -19758,7 +19756,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(PLUSASSIGN)
 	) */
 	private int matchAssignmentOperator_1_5(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.PLUSASSIGN);
+		lookahead = match(lookahead, TokenType.PLUSASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -19768,7 +19766,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(MINUSASSIGN)
 	) */
 	private int matchAssignmentOperator_1_6(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.MINUSASSIGN);
+		lookahead = match(lookahead, TokenType.MINUSASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -19778,7 +19776,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(LSHIFTASSIGN)
 	) */
 	private int matchAssignmentOperator_1_7(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LSHIFTASSIGN);
+		lookahead = match(lookahead, TokenType.LSHIFTASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -19788,7 +19786,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RSIGNEDSHIFTASSIGN)
 	) */
 	private int matchAssignmentOperator_1_8(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.RSIGNEDSHIFTASSIGN);
+		lookahead = match(lookahead, TokenType.RSIGNEDSHIFTASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -19798,7 +19796,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RUNSIGNEDSHIFTASSIGN)
 	) */
 	private int matchAssignmentOperator_1_9(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.RUNSIGNEDSHIFTASSIGN);
+		lookahead = match(lookahead, TokenType.RUNSIGNEDSHIFTASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -19824,9 +19822,9 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parseConditionalOrExpression();
 		if (matchConditionalExpression_lookahead1(0) != -1) {
 			lateRun();
-			parse(ParserImplConstants.HOOK);
+			parse(TokenType.HOOK);
 			left = parseExpression();
-			parse(ParserImplConstants.COLON);
+			parse(TokenType.COLON);
 			right = parseConditionalExpression();
 			ret = dress(SConditionalExpr.make(ret, left, right));
 		}
@@ -19876,13 +19874,13 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, ConditionalExpression)
 	) */
 	private int matchConditionalExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.HOOK);
+		lookahead = match(lookahead, TokenType.HOOK);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.COLON);
+		lookahead = match(lookahead, TokenType.COLON);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchConditionalExpression(lookahead);
@@ -19899,98 +19897,98 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, ConditionalExpression)
 	) */
 	private int matchConditionalExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.HOOK) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.HOOK) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -20014,7 +20012,7 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parseConditionalAndExpression();
 		while (matchConditionalOrExpression_lookahead1(0) != -1) {
 			lateRun();
-			parse(ParserImplConstants.SC_OR);
+			parse(TokenType.SC_OR);
 			right = parseConditionalAndExpression();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right));
 		}
@@ -20060,7 +20058,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, ConditionalAndExpression)
 	) */
 	private int matchConditionalOrExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SC_OR);
+		lookahead = match(lookahead, TokenType.SC_OR);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchConditionalAndExpression(lookahead);
@@ -20075,98 +20073,98 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, ConditionalAndExpression)
 	) */
 	private int matchConditionalOrExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.SC_OR) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.SC_OR) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -20190,7 +20188,7 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parseInclusiveOrExpression();
 		while (matchConditionalAndExpression_lookahead1(0) != -1) {
 			lateRun();
-			parse(ParserImplConstants.SC_AND);
+			parse(TokenType.SC_AND);
 			right = parseInclusiveOrExpression();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right));
 		}
@@ -20236,7 +20234,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, InclusiveOrExpression)
 	) */
 	private int matchConditionalAndExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SC_AND);
+		lookahead = match(lookahead, TokenType.SC_AND);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchInclusiveOrExpression(lookahead);
@@ -20251,98 +20249,98 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, InclusiveOrExpression)
 	) */
 	private int matchConditionalAndExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.SC_AND) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.SC_AND) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -20366,7 +20364,7 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parseExclusiveOrExpression();
 		while (matchInclusiveOrExpression_lookahead1(0) != -1) {
 			lateRun();
-			parse(ParserImplConstants.BIT_OR);
+			parse(TokenType.BIT_OR);
 			right = parseExclusiveOrExpression();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right));
 		}
@@ -20412,7 +20410,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, ExclusiveOrExpression)
 	) */
 	private int matchInclusiveOrExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.BIT_OR);
+		lookahead = match(lookahead, TokenType.BIT_OR);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExclusiveOrExpression(lookahead);
@@ -20427,98 +20425,98 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, ExclusiveOrExpression)
 	) */
 	private int matchInclusiveOrExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.BIT_OR) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.BIT_OR) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -20542,7 +20540,7 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parseAndExpression();
 		while (matchExclusiveOrExpression_lookahead1(0) != -1) {
 			lateRun();
-			parse(ParserImplConstants.XOR);
+			parse(TokenType.XOR);
 			right = parseAndExpression();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right));
 		}
@@ -20588,7 +20586,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, AndExpression)
 	) */
 	private int matchExclusiveOrExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.XOR);
+		lookahead = match(lookahead, TokenType.XOR);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAndExpression(lookahead);
@@ -20603,98 +20601,98 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, AndExpression)
 	) */
 	private int matchExclusiveOrExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.XOR) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.XOR) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -20718,7 +20716,7 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parseEqualityExpression();
 		while (matchAndExpression_lookahead1(0) != -1) {
 			lateRun();
-			parse(ParserImplConstants.BIT_AND);
+			parse(TokenType.BIT_AND);
 			right = parseEqualityExpression();
 			ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right));
 		}
@@ -20764,7 +20762,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, EqualityExpression)
 	) */
 	private int matchAndExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.BIT_AND);
+		lookahead = match(lookahead, TokenType.BIT_AND);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchEqualityExpression(lookahead);
@@ -20779,98 +20777,98 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, EqualityExpression)
 	) */
 	private int matchAndExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.BIT_AND) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.BIT_AND) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -20904,14 +20902,14 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parseInstanceOfExpression();
 		while (matchEqualityExpression_lookahead1(0) != -1) {
 			lateRun();
-			if (match(0, ParserImplConstants.EQ) != -1) {
-				parse(ParserImplConstants.EQ);
+			if (match(0, TokenType.EQ) != -1) {
+				parse(TokenType.EQ);
 				op = BinaryOp.Equal;
-			} else if (match(0, ParserImplConstants.NE) != -1) {
-				parse(ParserImplConstants.NE);
+			} else if (match(0, TokenType.NE) != -1) {
+				parse(TokenType.NE);
 				op = BinaryOp.NotEqual;
 			} else {
-				throw produceParseException(ParserImplConstants.NE, ParserImplConstants.EQ);
+				throw produceParseException(TokenType.NE, TokenType.EQ);
 			}
 			right = parseInstanceOfExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -21011,7 +21009,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(EQ)
 	) */
 	private int matchEqualityExpression_2_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.EQ);
+		lookahead = match(lookahead, TokenType.EQ);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -21021,7 +21019,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(NE)
 	) */
 	private int matchEqualityExpression_2_1_3_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.NE);
+		lookahead = match(lookahead, TokenType.NE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -21040,193 +21038,193 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, InstanceOfExpression)
 	) */
 	private int matchEqualityExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.NE) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.NE) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.EQ) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.EQ) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -21253,7 +21251,7 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parseRelationalExpression();
 		if (matchInstanceOfExpression_lookahead1(0) != -1) {
 			lateRun();
-			parse(ParserImplConstants.INSTANCEOF);
+			parse(TokenType.INSTANCEOF);
 			run();
 			annotations = parseAnnotations();
 			type = parseType(annotations);
@@ -21302,7 +21300,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(type, Type)
 	) */
 	private int matchInstanceOfExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.INSTANCEOF);
+		lookahead = match(lookahead, TokenType.INSTANCEOF);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotations(lookahead);
@@ -21321,38 +21319,38 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(type, Type)
 	) */
 	private int matchInstanceOfExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.INSTANCEOF) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.INSTANCEOF) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
 		}
@@ -21394,20 +21392,20 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parseShiftExpression();
 		while (matchRelationalExpression_lookahead1(0) != -1) {
 			lateRun();
-			if (match(0, ParserImplConstants.LT) != -1) {
-				parse(ParserImplConstants.LT);
+			if (match(0, TokenType.LT) != -1) {
+				parse(TokenType.LT);
 				op = BinaryOp.Less;
-			} else if (match(0, ParserImplConstants.GT) != -1) {
-				parse(ParserImplConstants.GT);
+			} else if (match(0, TokenType.GT) != -1) {
+				parse(TokenType.GT);
 				op = BinaryOp.Greater;
-			} else if (match(0, ParserImplConstants.LE) != -1) {
-				parse(ParserImplConstants.LE);
+			} else if (match(0, TokenType.LE) != -1) {
+				parse(TokenType.LE);
 				op = BinaryOp.LessOrEqual;
-			} else if (match(0, ParserImplConstants.GE) != -1) {
-				parse(ParserImplConstants.GE);
+			} else if (match(0, TokenType.GE) != -1) {
+				parse(TokenType.GE);
 				op = BinaryOp.GreaterOrEqual;
 			} else {
-				throw produceParseException(ParserImplConstants.GE, ParserImplConstants.LE, ParserImplConstants.GT, ParserImplConstants.LT);
+				throw produceParseException(TokenType.GE, TokenType.LE, TokenType.GT, TokenType.LT);
 			}
 			right = parseShiftExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -21537,7 +21535,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(LT)
 	) */
 	private int matchRelationalExpression_2_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LT);
+		lookahead = match(lookahead, TokenType.LT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -21547,7 +21545,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GT)
 	) */
 	private int matchRelationalExpression_2_1_3_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.GT);
+		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -21557,7 +21555,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(LE)
 	) */
 	private int matchRelationalExpression_2_1_3_3(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LE);
+		lookahead = match(lookahead, TokenType.LE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -21567,7 +21565,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GE)
 	) */
 	private int matchRelationalExpression_2_1_3_4(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.GE);
+		lookahead = match(lookahead, TokenType.GE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -21592,383 +21590,383 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, ShiftExpression)
 	) */
 	private int matchRelationalExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.LT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.LT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.LE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.GT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.LE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.GE) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.GT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.GE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -22008,8 +22006,8 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parseAdditiveExpression();
 		while (matchShiftExpression_lookahead1(0) != -1) {
 			lateRun();
-			if (match(0, ParserImplConstants.LSHIFT) != -1) {
-				parse(ParserImplConstants.LSHIFT);
+			if (match(0, TokenType.LSHIFT) != -1) {
+				parse(TokenType.LSHIFT);
 				op = BinaryOp.LeftShift;
 			} else if (matchShiftExpression_lookahead2(0) != -1) {
 				parseRUNSIGNEDSHIFT();
@@ -22018,7 +22016,7 @@ public class ParserImplementation extends ParserNewBase {
 				parseRSIGNEDSHIFT();
 				op = BinaryOp.RightSignedShift;
 			} else {
-				throw produceParseException(ParserImplConstants.GT, ParserImplConstants.LSHIFT);
+				throw produceParseException(TokenType.GT, TokenType.LSHIFT);
 			}
 			right = parseAdditiveExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -22141,7 +22139,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(LSHIFT)
 	) */
 	private int matchShiftExpression_2_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LSHIFT);
+		lookahead = match(lookahead, TokenType.LSHIFT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -22187,103 +22185,103 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, AdditiveExpression)
 	) */
 	private int matchShiftExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.LSHIFT) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.LSHIFT) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.GT) != -1) {
-			if (match(1, ParserImplConstants.GT) != -1) {
+		if (match(0, TokenType.GT) != -1) {
+			if (match(1, TokenType.GT) != -1) {
 				return lookahead;
 			}
 		}
@@ -22295,9 +22293,9 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(RUNSIGNEDSHIFT)
 	) */
 	private int matchShiftExpression_lookahead2(int lookahead) {
-		if (match(0, ParserImplConstants.GT) != -1) {
-			if (match(1, ParserImplConstants.GT) != -1) {
-				if (match(2, ParserImplConstants.GT) != -1) {
+		if (match(0, TokenType.GT) != -1) {
+			if (match(1, TokenType.GT) != -1) {
+				if (match(2, TokenType.GT) != -1) {
 					return lookahead;
 				}
 			}
@@ -22310,8 +22308,8 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(RSIGNEDSHIFT)
 	) */
 	private int matchShiftExpression_lookahead3(int lookahead) {
-		if (match(0, ParserImplConstants.GT) != -1) {
-			if (match(1, ParserImplConstants.GT) != -1) {
+		if (match(0, TokenType.GT) != -1) {
+			if (match(1, TokenType.GT) != -1) {
 				return lookahead;
 			}
 		}
@@ -22345,14 +22343,14 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parseMultiplicativeExpression();
 		while (matchAdditiveExpression_lookahead1(0) != -1) {
 			lateRun();
-			if (match(0, ParserImplConstants.PLUS) != -1) {
-				parse(ParserImplConstants.PLUS);
+			if (match(0, TokenType.PLUS) != -1) {
+				parse(TokenType.PLUS);
 				op = BinaryOp.Plus;
-			} else if (match(0, ParserImplConstants.MINUS) != -1) {
-				parse(ParserImplConstants.MINUS);
+			} else if (match(0, TokenType.MINUS) != -1) {
+				parse(TokenType.MINUS);
 				op = BinaryOp.Minus;
 			} else {
-				throw produceParseException(ParserImplConstants.MINUS, ParserImplConstants.PLUS);
+				throw produceParseException(TokenType.MINUS, TokenType.PLUS);
 			}
 			right = parseMultiplicativeExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -22452,7 +22450,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(PLUS)
 	) */
 	private int matchAdditiveExpression_2_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.PLUS);
+		lookahead = match(lookahead, TokenType.PLUS);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -22462,7 +22460,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(MINUS)
 	) */
 	private int matchAdditiveExpression_2_1_3_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.MINUS);
+		lookahead = match(lookahead, TokenType.MINUS);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -22481,193 +22479,193 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, MultiplicativeExpression)
 	) */
 	private int matchAdditiveExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.PLUS) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.PLUS) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.MINUS) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.MINUS) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -22705,17 +22703,17 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parseUnaryExpression();
 		while (matchMultiplicativeExpression_lookahead1(0) != -1) {
 			lateRun();
-			if (match(0, ParserImplConstants.STAR) != -1) {
-				parse(ParserImplConstants.STAR);
+			if (match(0, TokenType.STAR) != -1) {
+				parse(TokenType.STAR);
 				op = BinaryOp.Times;
-			} else if (match(0, ParserImplConstants.SLASH) != -1) {
-				parse(ParserImplConstants.SLASH);
+			} else if (match(0, TokenType.SLASH) != -1) {
+				parse(TokenType.SLASH);
 				op = BinaryOp.Divide;
-			} else if (match(0, ParserImplConstants.REM) != -1) {
-				parse(ParserImplConstants.REM);
+			} else if (match(0, TokenType.REM) != -1) {
+				parse(TokenType.REM);
 				op = BinaryOp.Remainder;
 			} else {
-				throw produceParseException(ParserImplConstants.REM, ParserImplConstants.SLASH, ParserImplConstants.STAR);
+				throw produceParseException(TokenType.REM, TokenType.SLASH, TokenType.STAR);
 			}
 			right = parseUnaryExpression();
 			ret = dress(SBinaryExpr.make(ret, op, right));
@@ -22830,7 +22828,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(STAR)
 	) */
 	private int matchMultiplicativeExpression_2_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.STAR);
+		lookahead = match(lookahead, TokenType.STAR);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -22840,7 +22838,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SLASH)
 	) */
 	private int matchMultiplicativeExpression_2_1_3_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SLASH);
+		lookahead = match(lookahead, TokenType.SLASH);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -22850,7 +22848,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(REM)
 	) */
 	private int matchMultiplicativeExpression_2_1_3_3(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.REM);
+		lookahead = match(lookahead, TokenType.REM);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -22872,288 +22870,288 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, UnaryExpression)
 	) */
 	private int matchMultiplicativeExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.STAR) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.STAR) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.SLASH) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.REM) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.SLASH) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
+				return lookahead;
+			}
+		}
+		if (match(0, TokenType.REM) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHAR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.MINUS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BYTE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.IDENTIFIER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SUPER) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.NULL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BANG) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LPAREN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TRUE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.BOOLEAN) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.DECR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.SHORT) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -23185,25 +23183,25 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<? extends SExpr> parseUnaryExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
-		if (match(0, ParserImplConstants.DECR, ParserImplConstants.INCR) != -1) {
+		if (match(0, TokenType.DECR, TokenType.INCR) != -1) {
 			ret = parsePrefixExpression();
-		} else if (match(0, ParserImplConstants.MINUS, ParserImplConstants.PLUS) != -1) {
+		} else if (match(0, TokenType.MINUS, TokenType.PLUS) != -1) {
 			run();
-			if (match(0, ParserImplConstants.PLUS) != -1) {
-				parse(ParserImplConstants.PLUS);
+			if (match(0, TokenType.PLUS) != -1) {
+				parse(TokenType.PLUS);
 				op = UnaryOp.Positive;
-			} else if (match(0, ParserImplConstants.MINUS) != -1) {
-				parse(ParserImplConstants.MINUS);
+			} else if (match(0, TokenType.MINUS) != -1) {
+				parse(TokenType.MINUS);
 				op = UnaryOp.Negative;
 			} else {
-				throw produceParseException(ParserImplConstants.MINUS, ParserImplConstants.PLUS);
+				throw produceParseException(TokenType.MINUS, TokenType.PLUS);
 			}
 			ret = parseUnaryExpression();
 			ret = dress(SUnaryExpr.make(op, ret));
-		} else if (match(0, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.NULL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN) != -1) {
+		} else if (match(0, TokenType.BANG, TokenType.TILDE, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.DOUBLE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.NEW, TokenType.LT, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.SUPER, TokenType.THIS, TokenType.LPAREN) != -1) {
 			ret = parseUnaryExpressionNotPlusMinus();
 		} else {
-			throw produceParseException(ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NEW, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.DECR, ParserImplConstants.INCR);
+			throw produceParseException(TokenType.SUPER, TokenType.THIS, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.VOID, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.NEW, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR);
 		}
 		return ret;
 	}
@@ -23305,7 +23303,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(PLUS)
 	) */
 	private int matchUnaryExpression_1_2_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.PLUS);
+		lookahead = match(lookahead, TokenType.PLUS);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -23315,7 +23313,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(MINUS)
 	) */
 	private int matchUnaryExpression_1_2_2_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.MINUS);
+		lookahead = match(lookahead, TokenType.MINUS);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -23340,14 +23338,14 @@ public class ParserImplementation extends ParserNewBase {
 		UnaryOp op;
 		BUTree<? extends SExpr> ret;
 		run();
-		if (match(0, ParserImplConstants.INCR) != -1) {
-			parse(ParserImplConstants.INCR);
+		if (match(0, TokenType.INCR) != -1) {
+			parse(TokenType.INCR);
 			op = UnaryOp.PreIncrement;
-		} else if (match(0, ParserImplConstants.DECR) != -1) {
-			parse(ParserImplConstants.DECR);
+		} else if (match(0, TokenType.DECR) != -1) {
+			parse(TokenType.DECR);
 			op = UnaryOp.PreDecrement;
 		} else {
-			throw produceParseException(ParserImplConstants.DECR, ParserImplConstants.INCR);
+			throw produceParseException(TokenType.DECR, TokenType.INCR);
 		}
 		ret = parseUnaryExpression();
 		return dress(SUnaryExpr.make(op, ret));
@@ -23397,7 +23395,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(INCR)
 	) */
 	private int matchPrefixExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.INCR);
+		lookahead = match(lookahead, TokenType.INCR);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -23407,7 +23405,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(DECR)
 	) */
 	private int matchPrefixExpression_2_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.DECR);
+		lookahead = match(lookahead, TokenType.DECR);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -23443,25 +23441,25 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<? extends SExpr> parseUnaryExpressionNotPlusMinus() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
-		if (match(0, ParserImplConstants.BANG, ParserImplConstants.TILDE) != -1) {
+		if (match(0, TokenType.BANG, TokenType.TILDE) != -1) {
 			run();
-			if (match(0, ParserImplConstants.TILDE) != -1) {
-				parse(ParserImplConstants.TILDE);
+			if (match(0, TokenType.TILDE) != -1) {
+				parse(TokenType.TILDE);
 				op = UnaryOp.Inverse;
-			} else if (match(0, ParserImplConstants.BANG) != -1) {
-				parse(ParserImplConstants.BANG);
+			} else if (match(0, TokenType.BANG) != -1) {
+				parse(TokenType.BANG);
 				op = UnaryOp.Not;
 			} else {
-				throw produceParseException(ParserImplConstants.BANG, ParserImplConstants.TILDE);
+				throw produceParseException(TokenType.BANG, TokenType.TILDE);
 			}
 			ret = parseUnaryExpression();
 			ret = dress(SUnaryExpr.make(op, ret));
 		} else if (matchUnaryExpressionNotPlusMinus_lookahead1(0) != -1) {
 			ret = parseCastExpression();
-		} else if (match(0, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL) != -1) {
+		} else if (match(0, TokenType.SUPER, TokenType.THIS, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.NEW, TokenType.LT, TokenType.LPAREN, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL) != -1) {
 			ret = parsePostfixExpression();
 		} else {
-			throw produceParseException(ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.BANG, ParserImplConstants.TILDE);
+			throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE);
 		}
 		return ret;
 	}
@@ -23573,7 +23571,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(TILDE)
 	) */
 	private int matchUnaryExpressionNotPlusMinus_1_1_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.TILDE);
+		lookahead = match(lookahead, TokenType.TILDE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -23583,7 +23581,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(BANG)
 	) */
 	private int matchUnaryExpressionNotPlusMinus_1_1_2_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.BANG);
+		lookahead = match(lookahead, TokenType.BANG);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -23637,14 +23635,14 @@ public class ParserImplementation extends ParserNewBase {
 		ret = parsePrimaryExpression();
 		if (matchPostfixExpression_lookahead1(0) != -1) {
 			lateRun();
-			if (match(0, ParserImplConstants.INCR) != -1) {
-				parse(ParserImplConstants.INCR);
+			if (match(0, TokenType.INCR) != -1) {
+				parse(TokenType.INCR);
 				op = UnaryOp.PostIncrement;
-			} else if (match(0, ParserImplConstants.DECR) != -1) {
-				parse(ParserImplConstants.DECR);
+			} else if (match(0, TokenType.DECR) != -1) {
+				parse(TokenType.DECR);
 				op = UnaryOp.PostDecrement;
 			} else {
-				throw produceParseException(ParserImplConstants.DECR, ParserImplConstants.INCR);
+				throw produceParseException(TokenType.DECR, TokenType.INCR);
 			}
 			ret = dress(SUnaryExpr.make(op, ret));
 		}
@@ -23735,7 +23733,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(INCR)
 	) */
 	private int matchPostfixExpression_2_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.INCR);
+		lookahead = match(lookahead, TokenType.INCR);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -23745,7 +23743,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(DECR)
 	) */
 	private int matchPostfixExpression_2_1_3_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.DECR);
+		lookahead = match(lookahead, TokenType.DECR);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -23763,10 +23761,10 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchPostfixExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.INCR) != -1) {
+		if (match(0, TokenType.INCR) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.DECR) != -1) {
+		if (match(0, TokenType.DECR) != -1) {
 			return lookahead;
 		}
 		return -1;
@@ -23823,27 +23821,27 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> arrayDims;
 		BUTree<? extends SExpr> ret;
 		run();
-		parse(ParserImplConstants.LPAREN);
+		parse(TokenType.LPAREN);
 		run();
 		annotations = parseAnnotations();
-		if (match(0, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN) != -1) {
+		if (match(0, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN) != -1) {
 			primitiveType = parsePrimitiveType(annotations);
-			if (match(0, ParserImplConstants.RPAREN) != -1) {
-				parse(ParserImplConstants.RPAREN);
+			if (match(0, TokenType.RPAREN) != -1) {
+				parse(TokenType.RPAREN);
 				ret = parseUnaryExpression();
 				ret = dress(SCastExpr.make(primitiveType, ret));
-			} else if (match(0, ParserImplConstants.AT, ParserImplConstants.LBRACKET) != -1) {
+			} else if (match(0, TokenType.AT, TokenType.LBRACKET) != -1) {
 				lateRun();
 				arrayDims = parseArrayDimsMandatory();
 				type = dress(SArrayType.make(primitiveType, arrayDims));
 				type = parseReferenceCastTypeRest(type);
-				parse(ParserImplConstants.RPAREN);
+				parse(TokenType.RPAREN);
 				ret = parseUnaryExpressionNotPlusMinus();
 				ret = dress(SCastExpr.make(type, ret));
 			} else {
-				throw produceParseException(ParserImplConstants.AT, ParserImplConstants.LBRACKET, ParserImplConstants.RPAREN);
+				throw produceParseException(TokenType.AT, TokenType.LBRACKET, TokenType.RPAREN);
 			}
-		} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+		} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 			type = parseQualifiedType(annotations);
 			if (matchCastExpression_lookahead1(0) != -1) {
 				lateRun();
@@ -23851,11 +23849,11 @@ public class ParserImplementation extends ParserNewBase {
 				type = dress(SArrayType.make(type, arrayDims));
 			}
 			type = parseReferenceCastTypeRest(type);
-			parse(ParserImplConstants.RPAREN);
+			parse(TokenType.RPAREN);
 			ret = parseUnaryExpressionNotPlusMinus();
 			ret = dress(SCastExpr.make(type, ret));
 		} else {
-			throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN);
+			throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN);
 		}
 		return ret;
 	}
@@ -23895,7 +23893,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchCastExpression(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotations(lookahead);
@@ -24001,7 +23999,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ret, UnaryExpression)
 	) */
 	private int matchCastExpression_5_1_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchUnaryExpression(lookahead);
@@ -24023,7 +24021,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchReferenceCastTypeRest(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchUnaryExpressionNotPlusMinus(lookahead);
@@ -24055,7 +24053,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchReferenceCastTypeRest(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchUnaryExpressionNotPlusMinus(lookahead);
@@ -24101,7 +24099,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -24132,12 +24130,12 @@ public class ParserImplementation extends ParserNewBase {
 			types = append(types, type);
 			lateRun();
 			do {
-				parse(ParserImplConstants.BIT_AND);
+				parse(TokenType.BIT_AND);
 				run();
 				annotations = parseAnnotations();
 				type = parseReferenceType(annotations);
 				types = append(types, type);
-			} while (match(0, ParserImplConstants.BIT_AND) != -1);
+			} while (match(0, TokenType.BIT_AND) != -1);
 			type = dress(SIntersectionType.make(types));
 		}
 		return type;
@@ -24220,7 +24218,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(type, ReferenceType)
 	) */
 	private int matchReferenceCastTypeRest_1_1_4_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.BIT_AND);
+		lookahead = match(lookahead, TokenType.BIT_AND);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotations(lookahead);
@@ -24236,7 +24234,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(BIT_AND)
 	) */
 	private int matchReferenceCastTypeRest_lookahead1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.BIT_AND);
+		lookahead = match(lookahead, TokenType.BIT_AND);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -24288,35 +24286,35 @@ public class ParserImplementation extends ParserNewBase {
 		Token literal;
 		BUTree<? extends SExpr> ret;
 		run();
-		if (match(0, ParserImplConstants.INTEGER_LITERAL) != -1) {
-			literal = parse(ParserImplConstants.INTEGER_LITERAL);
+		if (match(0, TokenType.INTEGER_LITERAL) != -1) {
+			literal = parse(TokenType.INTEGER_LITERAL);
 			ret = SLiteralExpr.make(Integer.class, literal.image);
-		} else if (match(0, ParserImplConstants.LONG_LITERAL) != -1) {
-			literal = parse(ParserImplConstants.LONG_LITERAL);
+		} else if (match(0, TokenType.LONG_LITERAL) != -1) {
+			literal = parse(TokenType.LONG_LITERAL);
 			ret = SLiteralExpr.make(Long.class, literal.image);
-		} else if (match(0, ParserImplConstants.FLOAT_LITERAL) != -1) {
-			literal = parse(ParserImplConstants.FLOAT_LITERAL);
+		} else if (match(0, TokenType.FLOAT_LITERAL) != -1) {
+			literal = parse(TokenType.FLOAT_LITERAL);
 			ret = SLiteralExpr.make(Float.class, literal.image);
-		} else if (match(0, ParserImplConstants.DOUBLE_LITERAL) != -1) {
-			literal = parse(ParserImplConstants.DOUBLE_LITERAL);
+		} else if (match(0, TokenType.DOUBLE_LITERAL) != -1) {
+			literal = parse(TokenType.DOUBLE_LITERAL);
 			ret = SLiteralExpr.make(Double.class, literal.image);
-		} else if (match(0, ParserImplConstants.CHARACTER_LITERAL) != -1) {
-			literal = parse(ParserImplConstants.CHARACTER_LITERAL);
+		} else if (match(0, TokenType.CHARACTER_LITERAL) != -1) {
+			literal = parse(TokenType.CHARACTER_LITERAL);
 			ret = SLiteralExpr.make(Character.class, literal.image);
-		} else if (match(0, ParserImplConstants.STRING_LITERAL) != -1) {
-			literal = parse(ParserImplConstants.STRING_LITERAL);
+		} else if (match(0, TokenType.STRING_LITERAL) != -1) {
+			literal = parse(TokenType.STRING_LITERAL);
 			ret = SLiteralExpr.make(String.class, literal.image);
-		} else if (match(0, ParserImplConstants.TRUE) != -1) {
-			literal = parse(ParserImplConstants.TRUE);
+		} else if (match(0, TokenType.TRUE) != -1) {
+			literal = parse(TokenType.TRUE);
 			ret = SLiteralExpr.make(Boolean.class, literal.image);
-		} else if (match(0, ParserImplConstants.FALSE) != -1) {
-			literal = parse(ParserImplConstants.FALSE);
+		} else if (match(0, TokenType.FALSE) != -1) {
+			literal = parse(TokenType.FALSE);
 			ret = SLiteralExpr.make(Boolean.class, literal.image);
-		} else if (match(0, ParserImplConstants.NULL) != -1) {
-			literal = parse(ParserImplConstants.NULL);
+		} else if (match(0, TokenType.NULL) != -1) {
+			literal = parse(TokenType.NULL);
 			ret = SLiteralExpr.make(Void.class, literal.image);
 		} else {
-			throw produceParseException(ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL);
+			throw produceParseException(TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL);
 		}
 		return dress(ret);
 	}
@@ -24424,7 +24422,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(literal, INTEGER_LITERAL)
 	) */
 	private int matchLiteral_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.INTEGER_LITERAL);
+		lookahead = match(lookahead, TokenType.INTEGER_LITERAL);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -24434,7 +24432,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(literal, LONG_LITERAL)
 	) */
 	private int matchLiteral_2_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LONG_LITERAL);
+		lookahead = match(lookahead, TokenType.LONG_LITERAL);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -24444,7 +24442,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(literal, FLOAT_LITERAL)
 	) */
 	private int matchLiteral_2_3(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.FLOAT_LITERAL);
+		lookahead = match(lookahead, TokenType.FLOAT_LITERAL);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -24454,7 +24452,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(literal, DOUBLE_LITERAL)
 	) */
 	private int matchLiteral_2_4(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.DOUBLE_LITERAL);
+		lookahead = match(lookahead, TokenType.DOUBLE_LITERAL);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -24464,7 +24462,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(literal, CHARACTER_LITERAL)
 	) */
 	private int matchLiteral_2_5(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.CHARACTER_LITERAL);
+		lookahead = match(lookahead, TokenType.CHARACTER_LITERAL);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -24474,7 +24472,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(literal, STRING_LITERAL)
 	) */
 	private int matchLiteral_2_6(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.STRING_LITERAL);
+		lookahead = match(lookahead, TokenType.STRING_LITERAL);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -24484,7 +24482,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(literal, TRUE)
 	) */
 	private int matchLiteral_2_7(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.TRUE);
+		lookahead = match(lookahead, TokenType.TRUE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -24494,7 +24492,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(literal, FALSE)
 	) */
 	private int matchLiteral_2_8(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.FALSE);
+		lookahead = match(lookahead, TokenType.FALSE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -24504,7 +24502,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(literal, NULL)
 	) */
 	private int matchLiteral_2_9(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.NULL);
+		lookahead = match(lookahead, TokenType.NULL);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -24576,132 +24574,132 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ret, PrimarySuffix)
 	) */
 	private int matchPrimaryExpression_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.DOUBLECOLON) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.DOUBLECOLON) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, ParserImplConstants.DOT) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LBRACKET) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.DOT) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+		}
+		if (match(0, TokenType.LBRACKET) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.THIS) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.FALSE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.TILDE) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.VOID) != -1) {
+				return lookahead;
+			}
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -24917,39 +24915,39 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> typeArgs = null;
 		BUTree<SNodeList> params;
 		BUTree<? extends SType> type;
-		if (match(0, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL) != -1) {
+		if (match(0, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL) != -1) {
 			ret = parseLiteral();
-		} else if (match(0, ParserImplConstants.THIS) != -1) {
+		} else if (match(0, TokenType.THIS) != -1) {
 			run();
-			parse(ParserImplConstants.THIS);
+			parse(TokenType.THIS);
 			ret = dress(SThisExpr.make(none()));
-		} else if (match(0, ParserImplConstants.SUPER) != -1) {
+		} else if (match(0, TokenType.SUPER) != -1) {
 			run();
-			parse(ParserImplConstants.SUPER);
+			parse(TokenType.SUPER);
 			ret = dress(SSuperExpr.make(none()));
-			if (match(0, ParserImplConstants.DOT) != -1) {
+			if (match(0, TokenType.DOT) != -1) {
 				lateRun();
-				parse(ParserImplConstants.DOT);
+				parse(TokenType.DOT);
 				if (matchPrimaryPrefix_lookahead1(0) != -1) {
 					ret = parseMethodInvocation(ret);
-				} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+				} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 					ret = parseFieldAccess(ret);
 				} else {
-					throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT);
+					throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT);
 				}
-			} else if (match(0, ParserImplConstants.DOUBLECOLON) != -1) {
+			} else if (match(0, TokenType.DOUBLECOLON) != -1) {
 				lateRun();
 				ret = parseMethodReferenceSuffix(ret);
 			} else {
-				throw produceParseException(ParserImplConstants.DOUBLECOLON, ParserImplConstants.DOT);
+				throw produceParseException(TokenType.DOUBLECOLON, TokenType.DOT);
 			}
-		} else if (match(0, ParserImplConstants.NEW) != -1) {
+		} else if (match(0, TokenType.NEW) != -1) {
 			ret = parseAllocationExpression(null);
 		} else if (matchPrimaryPrefix_lookahead2(0) != -1) {
 			run();
 			type = parseResultType();
-			parse(ParserImplConstants.DOT);
-			parse(ParserImplConstants.CLASS);
+			parse(TokenType.DOT);
+			parse(TokenType.CLASS);
 			ret = dress(SClassExpr.make(type));
 		} else if (matchPrimaryPrefix_lookahead3(0) != -1) {
 			run();
@@ -24959,44 +24957,44 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (matchPrimaryPrefix_lookahead4(0) != -1) {
 			run();
 			ret = parseMethodInvocation(null);
-		} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+		} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 			ret = parseName();
-			if (match(0, ParserImplConstants.ARROW) != -1) {
+			if (match(0, TokenType.ARROW) != -1) {
 				lateRun();
-				parse(ParserImplConstants.ARROW);
+				parse(TokenType.ARROW);
 				ret = parseLambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), false);
 			}
-		} else if (match(0, ParserImplConstants.LPAREN) != -1) {
+		} else if (match(0, TokenType.LPAREN) != -1) {
 			run();
-			parse(ParserImplConstants.LPAREN);
-			if (match(0, ParserImplConstants.RPAREN) != -1) {
-				parse(ParserImplConstants.RPAREN);
-				parse(ParserImplConstants.ARROW);
+			parse(TokenType.LPAREN);
+			if (match(0, TokenType.RPAREN) != -1) {
+				parse(TokenType.RPAREN);
+				parse(TokenType.ARROW);
 				ret = parseLambdaBody(emptyList(), true);
 			} else if (matchPrimaryPrefix_lookahead5(0) != -1) {
 				ret = parseName();
-				parse(ParserImplConstants.RPAREN);
-				parse(ParserImplConstants.ARROW);
+				parse(TokenType.RPAREN);
+				parse(TokenType.ARROW);
 				ret = parseLambdaBody(singletonList(makeFormalParameter((BUTree<SName>) ret)), true);
 			} else if (matchPrimaryPrefix_lookahead6(0) != -1) {
 				params = parseInferredFormalParameterList();
-				parse(ParserImplConstants.RPAREN);
-				parse(ParserImplConstants.ARROW);
+				parse(TokenType.RPAREN);
+				parse(TokenType.ARROW);
 				ret = parseLambdaBody(params, true);
 			} else if (isLambda(0)) {
 				params = parseFormalParameterList();
-				parse(ParserImplConstants.RPAREN);
-				parse(ParserImplConstants.ARROW);
+				parse(TokenType.RPAREN);
+				parse(TokenType.ARROW);
 				ret = parseLambdaBody(params, true);
-			} else if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
+			} else if (match(0, TokenType.LPAREN, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
 				ret = parseExpression();
-				parse(ParserImplConstants.RPAREN);
+				parse(TokenType.RPAREN);
 				ret = dress(SParenthesizedExpr.make(ret));
 			} else {
-				throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.NEW, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants._DEFAULT, ParserImplConstants.ABSTRACT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.PUBLIC, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.RPAREN);
+				throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.SUPER, TokenType.THIS, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.VOID, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.BOOLEAN, TokenType.CHAR, TokenType.NEW, TokenType.TILDE, TokenType.BANG, TokenType.PLUS, TokenType.MINUS, TokenType.DECR, TokenType.INCR, TokenType.NODE_LIST_VARIABLE, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.FINAL, TokenType.STATIC, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.AT, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.RPAREN);
 			}
 		} else {
-			throw produceParseException(ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL);
+			throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.VOID, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.DOUBLE, TokenType.FLOAT, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL);
 		}
 		return ret;
 	}
@@ -25262,7 +25260,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(THIS)
 	) */
 	private int matchPrimaryPrefix_1_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.THIS);
+		lookahead = match(lookahead, TokenType.THIS);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -25293,7 +25291,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchPrimaryPrefix_1_3(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SUPER);
+		lookahead = match(lookahead, TokenType.SUPER);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchPrimaryPrefix_1_3_4(lookahead);
@@ -25351,7 +25349,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchPrimaryPrefix_1_3_4_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.DOT);
+		lookahead = match(lookahead, TokenType.DOT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchPrimaryPrefix_1_3_4_1_3(lookahead);
@@ -25425,10 +25423,10 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchResultType(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.DOT);
+		lookahead = match(lookahead, TokenType.DOT);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.CLASS);
+		lookahead = match(lookahead, TokenType.CLASS);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -25503,7 +25501,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ret, LambdaBody)
 	) */
 	private int matchPrimaryPrefix_1_8_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchLambdaBody(lookahead);
@@ -25555,7 +25553,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchPrimaryPrefix_1_9(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchPrimaryPrefix_1_9_3(lookahead);
@@ -25629,10 +25627,10 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ret, LambdaBody)
 	) */
 	private int matchPrimaryPrefix_1_9_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchLambdaBody(lookahead);
@@ -25656,10 +25654,10 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchLambdaBody(lookahead);
@@ -25682,10 +25680,10 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchInferredFormalParameterList(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchLambdaBody(lookahead);
@@ -25708,10 +25706,10 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchFormalParameterList(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchLambdaBody(lookahead);
@@ -25728,7 +25726,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -25748,7 +25746,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -25784,10 +25782,10 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchResultType(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.DOT);
+		lookahead = match(lookahead, TokenType.DOT);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.CLASS);
+		lookahead = match(lookahead, TokenType.CLASS);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -25801,7 +25799,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchResultType(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.DOUBLECOLON);
+		lookahead = match(lookahead, TokenType.DOUBLECOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -25821,7 +25819,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -25857,10 +25855,10 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ARROW);
+		lookahead = match(lookahead, TokenType.ARROW);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -25874,7 +25872,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -25899,14 +25897,14 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		if (matchPrimarySuffix_lookahead1(0) != -1) {
 			ret = parsePrimarySuffixWithoutSuper(scope);
-		} else if (match(0, ParserImplConstants.DOT) != -1) {
-			parse(ParserImplConstants.DOT);
-			parse(ParserImplConstants.SUPER);
+		} else if (match(0, TokenType.DOT) != -1) {
+			parse(TokenType.DOT);
+			parse(TokenType.SUPER);
 			ret = dress(SSuperExpr.make(optionOf(scope)));
-		} else if (match(0, ParserImplConstants.DOUBLECOLON) != -1) {
+		} else if (match(0, TokenType.DOUBLECOLON) != -1) {
 			ret = parseMethodReferenceSuffix(scope);
 		} else {
-			throw produceParseException(ParserImplConstants.DOUBLECOLON, ParserImplConstants.DOT, ParserImplConstants.LBRACKET);
+			throw produceParseException(TokenType.DOUBLECOLON, TokenType.DOT, TokenType.LBRACKET);
 		}
 		return ret;
 	}
@@ -25972,10 +25970,10 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SUPER)
 	) */
 	private int matchPrimarySuffix_1_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.DOT);
+		lookahead = match(lookahead, TokenType.DOT);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SUPER);
+		lookahead = match(lookahead, TokenType.SUPER);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -25986,115 +25984,115 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ret, PrimarySuffixWithoutSuper)
 	) */
 	private int matchPrimarySuffix_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.DOT) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.DOT) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.LBRACKET) != -1) {
-			if (match(1, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.LBRACKET) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}
@@ -26136,27 +26134,27 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<? extends SExpr> parsePrimarySuffixWithoutSuper(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<SName> name;
-		if (match(0, ParserImplConstants.DOT) != -1) {
-			parse(ParserImplConstants.DOT);
-			if (match(0, ParserImplConstants.THIS) != -1) {
-				parse(ParserImplConstants.THIS);
+		if (match(0, TokenType.DOT) != -1) {
+			parse(TokenType.DOT);
+			if (match(0, TokenType.THIS) != -1) {
+				parse(TokenType.THIS);
 				ret = dress(SThisExpr.make(optionOf(scope)));
-			} else if (match(0, ParserImplConstants.NEW) != -1) {
+			} else if (match(0, TokenType.NEW) != -1) {
 				ret = parseAllocationExpression(scope);
 			} else if (matchPrimarySuffixWithoutSuper_lookahead1(0) != -1) {
 				ret = parseMethodInvocation(scope);
-			} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+			} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 				ret = parseFieldAccess(scope);
 			} else {
-				throw produceParseException(ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.THIS);
+				throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.NEW, TokenType.THIS);
 			}
-		} else if (match(0, ParserImplConstants.LBRACKET) != -1) {
-			parse(ParserImplConstants.LBRACKET);
+		} else if (match(0, TokenType.LBRACKET) != -1) {
+			parse(TokenType.LBRACKET);
 			ret = parseExpression();
-			parse(ParserImplConstants.RBRACKET);
+			parse(TokenType.RBRACKET);
 			ret = dress(SArrayAccessExpr.make(scope, ret));
 		} else {
-			throw produceParseException(ParserImplConstants.LBRACKET, ParserImplConstants.DOT);
+			throw produceParseException(TokenType.LBRACKET, TokenType.DOT);
 		}
 		return ret;
 	}
@@ -26256,7 +26254,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchPrimarySuffixWithoutSuper_1_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.DOT);
+		lookahead = match(lookahead, TokenType.DOT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchPrimarySuffixWithoutSuper_1_1_2(lookahead);
@@ -26303,7 +26301,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(THIS)
 	) */
 	private int matchPrimarySuffixWithoutSuper_1_1_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.THIS);
+		lookahead = match(lookahead, TokenType.THIS);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -26332,13 +26330,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACKET)
 	) */
 	private int matchPrimarySuffixWithoutSuper_1_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACKET);
+		lookahead = match(lookahead, TokenType.RBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -26358,7 +26356,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -26418,7 +26416,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SName> name;
 		BUTree<SNodeList> args = null;
 		BUTree<? extends SExpr> ret;
-		if (match(0, ParserImplConstants.LT) != -1) {
+		if (match(0, TokenType.LT) != -1) {
 			typeArgs = parseTypeArguments();
 		}
 		name = parseName();
@@ -26493,23 +26491,23 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseArguments() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
-		parse(ParserImplConstants.LPAREN);
-		if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LT, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.THIS, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.NODE_LIST_VARIABLE) != -1) {
+		parse(TokenType.LPAREN);
+		if (match(0, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DECR, TokenType.INCR, TokenType.MINUS, TokenType.PLUS, TokenType.SUPER, TokenType.NEW, TokenType.VOID, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.LT, TokenType.FALSE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.THIS, TokenType.TILDE, TokenType.BANG, TokenType.NODE_LIST_VARIABLE) != -1) {
 			if (matchArguments_lookahead1(0) != -1) {
 				expr = parseExpression();
 				ret = append(ret, expr);
-				while (match(0, ParserImplConstants.COMMA) != -1) {
-					parse(ParserImplConstants.COMMA);
+				while (match(0, TokenType.COMMA) != -1) {
+					parse(TokenType.COMMA);
 					expr = parseExpression();
 					ret = append(ret, expr);
 				}
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
-				throw produceParseException(ParserImplConstants.NODE_LIST_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.BOOLEAN, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR);
+				throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.VOID, TokenType.DOUBLE, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR);
 			}
 		}
-		parse(ParserImplConstants.RPAREN);
+		parse(TokenType.RPAREN);
 		return ret;
 	}
 
@@ -26534,13 +26532,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 	) */
 	private int matchArguments(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchArguments_2(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -26655,7 +26653,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(expr, Expression)
 	) */
 	private int matchArguments_2_1_1_1_4_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
@@ -26687,97 +26685,97 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchArguments_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.NODE_VARIABLE) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.NEW) != -1) {
+		if (match(0, TokenType.NEW) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.FLOAT) != -1) {
+		if (match(0, TokenType.FLOAT) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.LT) != -1) {
+		if (match(0, TokenType.LT) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.CHAR) != -1) {
+		if (match(0, TokenType.CHAR) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.INTEGER_LITERAL) != -1) {
+		if (match(0, TokenType.INTEGER_LITERAL) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.INT) != -1) {
+		if (match(0, TokenType.INT) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.MINUS) != -1) {
+		if (match(0, TokenType.MINUS) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.BYTE) != -1) {
+		if (match(0, TokenType.BYTE) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
+		if (match(0, TokenType.IDENTIFIER) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.DOUBLE) != -1) {
+		if (match(0, TokenType.DOUBLE) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.LONG) != -1) {
+		if (match(0, TokenType.LONG) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.SUPER) != -1) {
+		if (match(0, TokenType.SUPER) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.NULL) != -1) {
+		if (match(0, TokenType.NULL) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+		if (match(0, TokenType.DOUBLE_LITERAL) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+		if (match(0, TokenType.CHARACTER_LITERAL) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.BANG) != -1) {
+		if (match(0, TokenType.BANG) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.LPAREN) != -1) {
+		if (match(0, TokenType.LPAREN) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.TRUE) != -1) {
+		if (match(0, TokenType.TRUE) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.LONG_LITERAL) != -1) {
+		if (match(0, TokenType.LONG_LITERAL) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.BOOLEAN) != -1) {
+		if (match(0, TokenType.BOOLEAN) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.DECR) != -1) {
+		if (match(0, TokenType.DECR) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.SHORT) != -1) {
+		if (match(0, TokenType.SHORT) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.FLOAT_LITERAL) != -1) {
+		if (match(0, TokenType.FLOAT_LITERAL) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.INCR) != -1) {
+		if (match(0, TokenType.INCR) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.THIS) != -1) {
+		if (match(0, TokenType.THIS) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.FALSE) != -1) {
+		if (match(0, TokenType.FALSE) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.STRING_LITERAL) != -1) {
+		if (match(0, TokenType.STRING_LITERAL) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.TILDE) != -1) {
+		if (match(0, TokenType.TILDE) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.VOID) != -1) {
+		if (match(0, TokenType.VOID) != -1) {
 			return lookahead;
 		}
-		if (match(0, ParserImplConstants.PLUS) != -1) {
+		if (match(0, TokenType.PLUS) != -1) {
 			return lookahead;
 		}
 		return -1;
@@ -26802,17 +26800,17 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> typeArgs = null;
 		BUTree<SName> name;
 		BUTree<? extends SExpr> ret;
-		parse(ParserImplConstants.DOUBLECOLON);
-		if (match(0, ParserImplConstants.LT) != -1) {
+		parse(TokenType.DOUBLECOLON);
+		if (match(0, TokenType.LT) != -1) {
 			typeArgs = parseTypeArguments();
 		}
-		if (match(0, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE) != -1) {
 			name = parseName();
-		} else if (match(0, ParserImplConstants.NEW) != -1) {
-			parse(ParserImplConstants.NEW);
+		} else if (match(0, TokenType.NEW) != -1) {
+			parse(TokenType.NEW);
 			name = SName.make("new");
 		} else {
-			throw produceParseException(ParserImplConstants.NEW, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER);
+			throw produceParseException(TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name));
 		return ret;
@@ -26831,7 +26829,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchMethodReferenceSuffix(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.DOUBLECOLON);
+		lookahead = match(lookahead, TokenType.DOUBLECOLON);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchMethodReferenceSuffix_2(lookahead);
@@ -26885,7 +26883,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(NEW)
 	) */
 	private int matchMethodReferenceSuffix_3_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.NEW);
+		lookahead = match(lookahead, TokenType.NEW);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -26934,30 +26932,30 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> annotations = null;
 		if (scope == null) run();
 
-		parse(ParserImplConstants.NEW);
-		if (match(0, ParserImplConstants.LT) != -1) {
+		parse(TokenType.NEW);
+		if (match(0, TokenType.LT) != -1) {
 			typeArgs = parseTypeArguments();
 		}
 		run();
 		annotations = parseAnnotations();
-		if (match(0, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN) != -1) {
+		if (match(0, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN) != -1) {
 			type = parsePrimitiveType(annotations);
 			ret = parseArrayCreationExpr(type);
-		} else if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+		} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 			type = parseQualifiedType(annotations);
-			if (match(0, ParserImplConstants.AT, ParserImplConstants.LBRACKET) != -1) {
+			if (match(0, TokenType.AT, TokenType.LBRACKET) != -1) {
 				ret = parseArrayCreationExpr(type);
-			} else if (match(0, ParserImplConstants.LPAREN) != -1) {
+			} else if (match(0, TokenType.LPAREN) != -1) {
 				args = parseArguments();
 				if (matchAllocationExpression_lookahead1(0) != -1) {
 					anonymousBody = parseClassOrInterfaceBody(TypeKind.Class);
 				}
 				ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody)));
 			} else {
-				throw produceParseException(ParserImplConstants.LPAREN, ParserImplConstants.AT, ParserImplConstants.LBRACKET);
+				throw produceParseException(TokenType.LPAREN, TokenType.AT, TokenType.LBRACKET);
 			}
 		} else {
-			throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN);
+			throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN);
 		}
 		return ret;
 	}
@@ -26991,7 +26989,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchAllocationExpression(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.NEW);
+		lookahead = match(lookahead, TokenType.NEW);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAllocationExpression_3(lookahead);
@@ -27171,7 +27169,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(LBRACE)
 	) */
 	private int matchAllocationExpression_lookahead1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LBRACE);
+		lookahead = match(lookahead, TokenType.LBRACE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -27205,12 +27203,12 @@ public class ParserImplementation extends ParserNewBase {
 			arrayDimExprs = parseArrayDimExprsMandatory();
 			arrayDims = parseArrayDims();
 			return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none()));
-		} else if (match(0, ParserImplConstants.AT, ParserImplConstants.LBRACKET) != -1) {
+		} else if (match(0, TokenType.AT, TokenType.LBRACKET) != -1) {
 			arrayDims = parseArrayDimsMandatory();
 			initializer = parseArrayInitializer();
 			return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer)));
 		} else {
-			throw produceParseException(ParserImplConstants.AT, ParserImplConstants.LBRACKET);
+			throw produceParseException(TokenType.AT, TokenType.LBRACKET);
 		}
 	}
 
@@ -27285,13 +27283,13 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACKET);
+		lookahead = match(lookahead, TokenType.RBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -27321,9 +27319,9 @@ public class ParserImplementation extends ParserNewBase {
 		do {
 			run();
 			annotations = parseAnnotations();
-			parse(ParserImplConstants.LBRACKET);
+			parse(TokenType.LBRACKET);
 			expr = parseExpression();
-			parse(ParserImplConstants.RBRACKET);
+			parse(TokenType.RBRACKET);
 			arrayDimExprs = append(arrayDimExprs, dress(SArrayDimExpr.make(annotations, expr)));
 		} while (matchArrayDimExprsMandatory_lookahead1(0) != -1);
 		return arrayDimExprs;
@@ -27390,13 +27388,13 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACKET);
+		lookahead = match(lookahead, TokenType.RBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -27412,13 +27410,13 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACKET);
+		lookahead = match(lookahead, TokenType.RBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -27445,8 +27443,8 @@ public class ParserImplementation extends ParserNewBase {
 		do {
 			run();
 			annotations = parseAnnotations();
-			parse(ParserImplConstants.LBRACKET);
-			parse(ParserImplConstants.RBRACKET);
+			parse(TokenType.LBRACKET);
+			parse(TokenType.RBRACKET);
 			arrayDims = append(arrayDims, dress(SArrayDim.make(annotations)));
 		} while (matchArrayDimsMandatory_lookahead1(0) != -1);
 		return arrayDims;
@@ -27507,10 +27505,10 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACKET);
+		lookahead = match(lookahead, TokenType.RBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -27525,10 +27523,10 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACKET);
+		lookahead = match(lookahead, TokenType.LBRACKET);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACKET);
+		lookahead = match(lookahead, TokenType.RBRACKET);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -27562,38 +27560,38 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SStmt> ret;
 		if (matchStatement_lookahead1(0) != -1) {
 			ret = parseLabeledStatement();
-		} else if (match(0, ParserImplConstants.ASSERT) != -1) {
+		} else if (match(0, TokenType.ASSERT) != -1) {
 			ret = parseAssertStatement();
-		} else if (match(0, ParserImplConstants.LBRACE) != -1) {
+		} else if (match(0, TokenType.LBRACE) != -1) {
 			ret = parseBlock();
-		} else if (match(0, ParserImplConstants.SEMICOLON) != -1) {
+		} else if (match(0, TokenType.SEMICOLON) != -1) {
 			ret = parseEmptyStatement();
-		} else if (match(0, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.VOID, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.DECR, ParserImplConstants.INCR) != -1) {
+		} else if (match(0, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.BYTE, TokenType.SHORT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.FLOAT, TokenType.DOUBLE, TokenType.INT, TokenType.LONG, TokenType.LT, TokenType.LPAREN, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.DECR, TokenType.INCR) != -1) {
 			ret = parseStatementExpression();
-		} else if (match(0, ParserImplConstants.SWITCH) != -1) {
+		} else if (match(0, TokenType.SWITCH) != -1) {
 			ret = parseSwitchStatement();
-		} else if (match(0, ParserImplConstants.IF) != -1) {
+		} else if (match(0, TokenType.IF) != -1) {
 			ret = parseIfStatement();
-		} else if (match(0, ParserImplConstants.WHILE) != -1) {
+		} else if (match(0, TokenType.WHILE) != -1) {
 			ret = parseWhileStatement();
-		} else if (match(0, ParserImplConstants.DO) != -1) {
+		} else if (match(0, TokenType.DO) != -1) {
 			ret = parseDoStatement();
-		} else if (match(0, ParserImplConstants.FOR) != -1) {
+		} else if (match(0, TokenType.FOR) != -1) {
 			ret = parseForStatement();
-		} else if (match(0, ParserImplConstants.BREAK) != -1) {
+		} else if (match(0, TokenType.BREAK) != -1) {
 			ret = parseBreakStatement();
-		} else if (match(0, ParserImplConstants.CONTINUE) != -1) {
+		} else if (match(0, TokenType.CONTINUE) != -1) {
 			ret = parseContinueStatement();
-		} else if (match(0, ParserImplConstants.RETURN) != -1) {
+		} else if (match(0, TokenType.RETURN) != -1) {
 			ret = parseReturnStatement();
-		} else if (match(0, ParserImplConstants.THROW) != -1) {
+		} else if (match(0, TokenType.THROW) != -1) {
 			ret = parseThrowStatement();
-		} else if (match(0, ParserImplConstants.SYNCHRONIZED) != -1) {
+		} else if (match(0, TokenType.SYNCHRONIZED) != -1) {
 			ret = parseSynchronizedStatement();
-		} else if (match(0, ParserImplConstants.TRY) != -1) {
+		} else if (match(0, TokenType.TRY) != -1) {
 			ret = parseTryStatement();
 		} else {
-			throw produceParseException(ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT);
+			throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LT, TokenType.NEW, TokenType.LPAREN, TokenType.THIS, TokenType.SUPER, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.INCR, TokenType.DECR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT);
 		}
 		return ret;
 	}
@@ -27718,13 +27716,13 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(ret, LabeledStatement)
 	) */
 	private int matchStatement_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.NODE_VARIABLE) != -1) {
-			if (match(1, ParserImplConstants.COLON) != -1) {
+		if (match(0, TokenType.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.COLON) != -1) {
 				return lookahead;
 			}
 		}
-		if (match(0, ParserImplConstants.IDENTIFIER) != -1) {
-			if (match(1, ParserImplConstants.COLON) != -1) {
+		if (match(0, TokenType.IDENTIFIER) != -1) {
+			if (match(1, TokenType.COLON) != -1) {
 				return lookahead;
 			}
 		}
@@ -27746,13 +27744,13 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> check;
 		BUTree<? extends SExpr> msg = null;
 		run();
-		parse(ParserImplConstants.ASSERT);
+		parse(TokenType.ASSERT);
 		check = parseExpression();
-		if (match(0, ParserImplConstants.COLON) != -1) {
-			parse(ParserImplConstants.COLON);
+		if (match(0, TokenType.COLON) != -1) {
+			parse(TokenType.COLON);
 			msg = parseExpression();
 		}
-		parse(ParserImplConstants.SEMICOLON);
+		parse(TokenType.SEMICOLON);
 		return dress(SAssertStmt.make(check, optionOf(msg)));
 	}
 
@@ -27766,7 +27764,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 	) */
 	private int matchAssertStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.ASSERT);
+		lookahead = match(lookahead, TokenType.ASSERT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
@@ -27775,7 +27773,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchAssertStatement_4(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -27798,7 +27796,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(msg, Expression)
 	) */
 	private int matchAssertStatement_4_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COLON);
+		lookahead = match(lookahead, TokenType.COLON);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
@@ -27819,7 +27817,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SStmt> stmt;
 		run();
 		label = parseName();
-		parse(ParserImplConstants.COLON);
+		parse(TokenType.COLON);
 		stmt = parseStatement();
 		return dress(SLabeledStmt.make(label, stmt));
 	}
@@ -27833,7 +27831,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.COLON);
+		lookahead = match(lookahead, TokenType.COLON);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchStatement(lookahead);
@@ -27852,9 +27850,9 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SBlockStmt> parseBlock() throws ParseException {
 		BUTree<SNodeList> stmts;
 		run();
-		parse(ParserImplConstants.LBRACE);
+		parse(TokenType.LBRACE);
 		stmts = parseStatements();
-		parse(ParserImplConstants.RBRACE);
+		parse(TokenType.RBRACE);
 		return dress(SBlockStmt.make(ensureNotNull(stmts)));
 	}
 
@@ -27864,13 +27862,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 	) */
 	private int matchBlock(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LBRACE);
+		lookahead = match(lookahead, TokenType.LBRACE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchStatements(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACE);
+		lookahead = match(lookahead, TokenType.RBRACE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -27919,12 +27917,12 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (matchBlockStatement_lookahead2(0) != -1) {
 			run();
 			expr = parseVariableDeclExpression();
-			parse(ParserImplConstants.SEMICOLON);
+			parse(TokenType.SEMICOLON);
 			ret = dress(SExpressionStmt.make(expr));
-		} else if (match(0, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.VOID, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT) != -1) {
+		} else if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.VOID, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.BOOLEAN, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.LPAREN, TokenType.LT, TokenType.DECR, TokenType.INCR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT) != -1) {
 			ret = parseStatement();
 		} else {
-			throw produceParseException(ParserImplConstants.TRY, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.THROW, ParserImplConstants.RETURN, ParserImplConstants.CONTINUE, ParserImplConstants.BREAK, ParserImplConstants.FOR, ParserImplConstants.DO, ParserImplConstants.WHILE, ParserImplConstants.IF, ParserImplConstants.SWITCH, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.NULL, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.SEMICOLON, ParserImplConstants.LBRACE, ParserImplConstants.ASSERT, ParserImplConstants.AT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.VOLATILE, ParserImplConstants.CLASS, ParserImplConstants.INTERFACE);
+			throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LPAREN, TokenType.LT, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INCR, TokenType.DECR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.AT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.ABSTRACT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.VOLATILE, TokenType.CLASS, TokenType.INTERFACE);
 		}
 		return ret;
 	}
@@ -28026,7 +28024,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchVariableDeclExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -28055,10 +28053,10 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	private int matchBlockStatement_lookahead1_2(int lookahead) {
 		int newLookahead;
-		newLookahead = match(lookahead, ParserImplConstants.CLASS);
+		newLookahead = match(lookahead, TokenType.CLASS);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = match(lookahead, ParserImplConstants.INTERFACE);
+		newLookahead = match(lookahead, TokenType.INTERFACE);
 		if (newLookahead != -1)
 			return newLookahead;
 		return -1;
@@ -28112,7 +28110,7 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	public BUTree<SEmptyStmt> parseEmptyStatement() throws ParseException {
 		run();
-		parse(ParserImplConstants.SEMICOLON);
+		parse(TokenType.SEMICOLON);
 		return dress(SEmptyStmt.make());
 	}
 
@@ -28120,7 +28118,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 	) */
 	private int matchEmptyStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -28162,32 +28160,32 @@ public class ParserImplementation extends ParserNewBase {
 		AssignOp op;
 		BUTree<? extends SExpr> value;
 		run();
-		if (match(0, ParserImplConstants.DECR, ParserImplConstants.INCR) != -1) {
+		if (match(0, TokenType.DECR, TokenType.INCR) != -1) {
 			expr = parsePrefixExpression();
-		} else if (match(0, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL) != -1) {
+		} else if (match(0, TokenType.SUPER, TokenType.THIS, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.NEW, TokenType.LT, TokenType.LPAREN, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL) != -1) {
 			expr = parsePrimaryExpression();
-			if (match(0, ParserImplConstants.INCR, ParserImplConstants.RUNSIGNEDSHIFTASSIGN, ParserImplConstants.ANDASSIGN, ParserImplConstants.XORASSIGN, ParserImplConstants.ORASSIGN, ParserImplConstants.PLUSASSIGN, ParserImplConstants.MINUSASSIGN, ParserImplConstants.LSHIFTASSIGN, ParserImplConstants.RSIGNEDSHIFTASSIGN, ParserImplConstants.ASSIGN, ParserImplConstants.STARASSIGN, ParserImplConstants.SLASHASSIGN, ParserImplConstants.REMASSIGN, ParserImplConstants.DECR) != -1) {
-				if (match(0, ParserImplConstants.INCR) != -1) {
+			if (match(0, TokenType.INCR, TokenType.RUNSIGNEDSHIFTASSIGN, TokenType.ANDASSIGN, TokenType.XORASSIGN, TokenType.ORASSIGN, TokenType.PLUSASSIGN, TokenType.MINUSASSIGN, TokenType.LSHIFTASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.ASSIGN, TokenType.STARASSIGN, TokenType.SLASHASSIGN, TokenType.REMASSIGN, TokenType.DECR) != -1) {
+				if (match(0, TokenType.INCR) != -1) {
 					lateRun();
-					parse(ParserImplConstants.INCR);
+					parse(TokenType.INCR);
 					expr = dress(SUnaryExpr.make(UnaryOp.PostIncrement, expr));
-				} else if (match(0, ParserImplConstants.DECR) != -1) {
+				} else if (match(0, TokenType.DECR) != -1) {
 					lateRun();
-					parse(ParserImplConstants.DECR);
+					parse(TokenType.DECR);
 					expr = dress(SUnaryExpr.make(UnaryOp.PostDecrement, expr));
-				} else if (match(0, ParserImplConstants.ORASSIGN, ParserImplConstants.XORASSIGN, ParserImplConstants.ANDASSIGN, ParserImplConstants.RUNSIGNEDSHIFTASSIGN, ParserImplConstants.RSIGNEDSHIFTASSIGN, ParserImplConstants.LSHIFTASSIGN, ParserImplConstants.MINUSASSIGN, ParserImplConstants.PLUSASSIGN, ParserImplConstants.REMASSIGN, ParserImplConstants.SLASHASSIGN, ParserImplConstants.STARASSIGN, ParserImplConstants.ASSIGN) != -1) {
+				} else if (match(0, TokenType.ORASSIGN, TokenType.XORASSIGN, TokenType.ANDASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.LSHIFTASSIGN, TokenType.MINUSASSIGN, TokenType.PLUSASSIGN, TokenType.REMASSIGN, TokenType.SLASHASSIGN, TokenType.STARASSIGN, TokenType.ASSIGN) != -1) {
 					lateRun();
 					op = parseAssignmentOperator();
 					value = parseExpression();
 					expr = dress(SAssignExpr.make(expr, op, value));
 				} else {
-					throw produceParseException(ParserImplConstants.PLUSASSIGN, ParserImplConstants.MINUSASSIGN, ParserImplConstants.SLASHASSIGN, ParserImplConstants.REMASSIGN, ParserImplConstants.RUNSIGNEDSHIFTASSIGN, ParserImplConstants.ANDASSIGN, ParserImplConstants.LSHIFTASSIGN, ParserImplConstants.RSIGNEDSHIFTASSIGN, ParserImplConstants.XORASSIGN, ParserImplConstants.ORASSIGN, ParserImplConstants.ASSIGN, ParserImplConstants.STARASSIGN, ParserImplConstants.DECR, ParserImplConstants.INCR);
+					throw produceParseException(TokenType.PLUSASSIGN, TokenType.MINUSASSIGN, TokenType.SLASHASSIGN, TokenType.REMASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN, TokenType.ANDASSIGN, TokenType.LSHIFTASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.XORASSIGN, TokenType.ORASSIGN, TokenType.ASSIGN, TokenType.STARASSIGN, TokenType.DECR, TokenType.INCR);
 				}
 			}
 		} else {
-			throw produceParseException(ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.DOUBLE, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.VOID, ParserImplConstants.DECR, ParserImplConstants.INCR);
+			throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.LPAREN, TokenType.THIS, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.NEW, TokenType.SUPER, TokenType.BOOLEAN, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.VOID, TokenType.DECR, TokenType.INCR);
 		}
-		parse(ParserImplConstants.SEMICOLON);
+		parse(TokenType.SEMICOLON);
 		return dress(SExpressionStmt.make(expr));
 	}
 
@@ -28218,7 +28216,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchStatementExpression_2(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -28355,7 +28353,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(INCR)
 	) */
 	private int matchStatementExpression_2_2_2_1_1_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.INCR);
+		lookahead = match(lookahead, TokenType.INCR);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -28365,7 +28363,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(DECR)
 	) */
 	private int matchStatementExpression_2_2_2_1_1_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.DECR);
+		lookahead = match(lookahead, TokenType.DECR);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -28404,16 +28402,16 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SSwitchCase> entry;
 		BUTree<SNodeList> entries = emptyList();
 		run();
-		parse(ParserImplConstants.SWITCH);
-		parse(ParserImplConstants.LPAREN);
+		parse(TokenType.SWITCH);
+		parse(TokenType.LPAREN);
 		selector = parseExpression();
-		parse(ParserImplConstants.RPAREN);
-		parse(ParserImplConstants.LBRACE);
-		while (match(0, ParserImplConstants._DEFAULT, ParserImplConstants.CASE) != -1) {
+		parse(TokenType.RPAREN);
+		parse(TokenType.LBRACE);
+		while (match(0, TokenType.DEFAULT, TokenType.CASE) != -1) {
 			entry = parseSwitchEntry();
 			entries = append(entries, entry);
 		}
-		parse(ParserImplConstants.RBRACE);
+		parse(TokenType.RBRACE);
 		return dress(SSwitchStmt.make(selector, entries));
 	}
 
@@ -28429,25 +28427,25 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 	) */
 	private int matchSwitchStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SWITCH);
+		lookahead = match(lookahead, TokenType.SWITCH);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LBRACE);
+		lookahead = match(lookahead, TokenType.LBRACE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchSwitchStatement_7(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACE);
+		lookahead = match(lookahead, TokenType.RBRACE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -28483,7 +28481,7 @@ public class ParserImplementation extends ParserNewBase {
 				terminal(CASE)
 				nonTerminal(label, Expression)
 			)
-			terminal(_DEFAULT)
+			terminal(DEFAULT)
 		)
 		terminal(COLON)
 		nonTerminal(stmts, Statements)
@@ -28493,15 +28491,15 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> label = null;
 		BUTree<SNodeList> stmts;
 		run();
-		if (match(0, ParserImplConstants.CASE) != -1) {
-			parse(ParserImplConstants.CASE);
+		if (match(0, TokenType.CASE) != -1) {
+			parse(TokenType.CASE);
 			label = parseExpression();
-		} else if (match(0, ParserImplConstants._DEFAULT) != -1) {
-			parse(ParserImplConstants._DEFAULT);
+		} else if (match(0, TokenType.DEFAULT) != -1) {
+			parse(TokenType.DEFAULT);
 		} else {
-			throw produceParseException(ParserImplConstants._DEFAULT, ParserImplConstants.CASE);
+			throw produceParseException(TokenType.DEFAULT, TokenType.CASE);
 		}
-		parse(ParserImplConstants.COLON);
+		parse(TokenType.COLON);
 		stmts = parseStatements();
 		return dress(SSwitchCase.make(optionOf(label), ensureNotNull(stmts)));
 	}
@@ -28512,7 +28510,7 @@ public class ParserImplementation extends ParserNewBase {
 				terminal(CASE)
 				nonTerminal(label, Expression)
 			)
-			terminal(_DEFAULT)
+			terminal(DEFAULT)
 		)
 		terminal(COLON)
 		nonTerminal(stmts, Statements)
@@ -28521,7 +28519,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchSwitchEntry_2(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.COLON);
+		lookahead = match(lookahead, TokenType.COLON);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchStatements(lookahead);
@@ -28535,14 +28533,14 @@ public class ParserImplementation extends ParserNewBase {
 			terminal(CASE)
 			nonTerminal(label, Expression)
 		)
-		terminal(_DEFAULT)
+		terminal(DEFAULT)
 	) */
 	private int matchSwitchEntry_2(int lookahead) {
 		int newLookahead;
 		newLookahead = matchSwitchEntry_2_1(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = match(lookahead, ParserImplConstants._DEFAULT);
+		newLookahead = match(lookahead, TokenType.DEFAULT);
 		if (newLookahead != -1)
 			return newLookahead;
 		return -1;
@@ -28553,7 +28551,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(label, Expression)
 	) */
 	private int matchSwitchEntry_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.CASE);
+		lookahead = match(lookahead, TokenType.CASE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
@@ -28581,13 +28579,13 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SStmt> thenStmt;
 		BUTree<? extends SStmt> elseStmt = null;
 		run();
-		parse(ParserImplConstants.IF);
-		parse(ParserImplConstants.LPAREN);
+		parse(TokenType.IF);
+		parse(TokenType.LPAREN);
 		condition = parseExpression();
-		parse(ParserImplConstants.RPAREN);
+		parse(TokenType.RPAREN);
 		thenStmt = parseStatement();
 		if (matchIfStatement_lookahead1(0) != -1) {
-			parse(ParserImplConstants.ELSE);
+			parse(TokenType.ELSE);
 			elseStmt = parseStatement();
 		}
 		return dress(SIfStmt.make(condition, thenStmt, optionOf(elseStmt)));
@@ -28606,16 +28604,16 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchIfStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.IF);
+		lookahead = match(lookahead, TokenType.IF);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchStatement(lookahead);
@@ -28646,7 +28644,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(elseStmt, Statement)
 	) */
 	private int matchIfStatement_7_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.ELSE);
+		lookahead = match(lookahead, TokenType.ELSE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchStatement(lookahead);
@@ -28661,7 +28659,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(elseStmt, Statement)
 	) */
 	private int matchIfStatement_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.ELSE) != -1) {
+		if (match(0, TokenType.ELSE) != -1) {
 			return lookahead;
 		}
 		return -1;
@@ -28680,10 +28678,10 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> body;
 		run();
-		parse(ParserImplConstants.WHILE);
-		parse(ParserImplConstants.LPAREN);
+		parse(TokenType.WHILE);
+		parse(TokenType.LPAREN);
 		condition = parseExpression();
-		parse(ParserImplConstants.RPAREN);
+		parse(TokenType.RPAREN);
 		body = parseStatement();
 		return dress(SWhileStmt.make(condition, body));
 	}
@@ -28696,16 +28694,16 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(body, Statement)
 	) */
 	private int matchWhileStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.WHILE);
+		lookahead = match(lookahead, TokenType.WHILE);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchStatement(lookahead);
@@ -28729,13 +28727,13 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> condition;
 		BUTree<? extends SStmt> body;
 		run();
-		parse(ParserImplConstants.DO);
+		parse(TokenType.DO);
 		body = parseStatement();
-		parse(ParserImplConstants.WHILE);
-		parse(ParserImplConstants.LPAREN);
+		parse(TokenType.WHILE);
+		parse(TokenType.LPAREN);
 		condition = parseExpression();
-		parse(ParserImplConstants.RPAREN);
-		parse(ParserImplConstants.SEMICOLON);
+		parse(TokenType.RPAREN);
+		parse(TokenType.SEMICOLON);
 		return dress(SDoStmt.make(body, condition));
 	}
 
@@ -28749,25 +28747,25 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 	) */
 	private int matchDoStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.DO);
+		lookahead = match(lookahead, TokenType.DO);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchStatement(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.WHILE);
+		lookahead = match(lookahead, TokenType.WHILE);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -28817,28 +28815,28 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> update = null;
 		BUTree<? extends SStmt> body;
 		run();
-		parse(ParserImplConstants.FOR);
-		parse(ParserImplConstants.LPAREN);
+		parse(TokenType.FOR);
+		parse(TokenType.LPAREN);
 		if (matchForStatement_lookahead1(0) != -1) {
 			varExpr = parseVariableDeclExpression();
-			parse(ParserImplConstants.COLON);
+			parse(TokenType.COLON);
 			expr = parseExpression();
-		} else if (match(0, ParserImplConstants.INCR, ParserImplConstants.DECR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.DOUBLE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.VOLATILE, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.STATIC, ParserImplConstants.ABSTRACT, ParserImplConstants.PUBLIC, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.AT, ParserImplConstants.SEMICOLON) != -1) {
-			if (match(0, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.LT, ParserImplConstants.VOID, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.THIS, ParserImplConstants.TILDE, ParserImplConstants.BANG, ParserImplConstants.AT, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.PUBLIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED) != -1) {
+		} else if (match(0, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.VOID, TokenType.DOUBLE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TILDE, TokenType.BANG, TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.STATIC, TokenType.ABSTRACT, TokenType.PUBLIC, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.SEMICOLON) != -1) {
+			if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.DECR, TokenType.INCR, TokenType.PLUS, TokenType.MINUS, TokenType.LT, TokenType.VOID, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SUPER, TokenType.NEW, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.THIS, TokenType.TILDE, TokenType.BANG, TokenType.AT, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.PUBLIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.ABSTRACT, TokenType.STATIC, TokenType.NATIVE, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.SYNCHRONIZED) != -1) {
 				init = parseForInit();
 			}
-			parse(ParserImplConstants.SEMICOLON);
-			if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
+			parse(TokenType.SEMICOLON);
+			if (match(0, TokenType.LPAREN, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
 				expr = parseExpression();
 			}
-			parse(ParserImplConstants.SEMICOLON);
-			if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.VOID, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.LT, ParserImplConstants.NEW, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.DECR, ParserImplConstants.INCR) != -1) {
+			parse(TokenType.SEMICOLON);
+			if (match(0, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.MINUS, TokenType.PLUS, TokenType.BANG, TokenType.TILDE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.VOID, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.LT, TokenType.NEW, TokenType.THIS, TokenType.SUPER, TokenType.DECR, TokenType.INCR) != -1) {
 				update = parseForUpdate();
 			}
 		} else {
-			throw produceParseException(ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LPAREN, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.NULL, ParserImplConstants.VOID, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LT, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.VOLATILE, ParserImplConstants.TRANSIENT, ParserImplConstants.FINAL, ParserImplConstants.STATIC, ParserImplConstants.AT, ParserImplConstants.STRICTFP, ParserImplConstants.NATIVE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.ABSTRACT, ParserImplConstants.PRIVATE, ParserImplConstants.PROTECTED, ParserImplConstants.PUBLIC, ParserImplConstants.SEMICOLON);
+			throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL, TokenType.VOID, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SEMICOLON);
 		}
-		parse(ParserImplConstants.RPAREN);
+		parse(TokenType.RPAREN);
 		body = parseStatement();
 		if (varExpr != null)
 			return dress(SForeachStmt.make(varExpr, expr, body));
@@ -28878,16 +28876,16 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(body, Statement)
 	) */
 	private int matchForStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.FOR);
+		lookahead = match(lookahead, TokenType.FOR);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchForStatement_4(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchStatement(lookahead);
@@ -28944,7 +28942,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchVariableDeclExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.COLON);
+		lookahead = match(lookahead, TokenType.COLON);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
@@ -28970,13 +28968,13 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchForStatement_4_2_1(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchForStatement_4_2_3(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchForStatement_4_2_5(lookahead);
@@ -29056,7 +29054,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchVariableDeclExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.COLON);
+		lookahead = match(lookahead, TokenType.COLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -29087,10 +29085,10 @@ public class ParserImplementation extends ParserNewBase {
 			expr = parseVariableDeclExpression();
 			ret = emptyList();
 			ret = append(ret, expr);
-		} else if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
+		} else if (match(0, TokenType.LPAREN, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
 			ret = parseExpressionList();
 		} else {
-			throw produceParseException(ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.VOID, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.THIS, ParserImplConstants.LPAREN, ParserImplConstants.LT, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.AT, ParserImplConstants.PUBLIC, ParserImplConstants.PROTECTED, ParserImplConstants.PRIVATE, ParserImplConstants.ABSTRACT, ParserImplConstants.STATIC, ParserImplConstants.FINAL, ParserImplConstants.TRANSIENT, ParserImplConstants.VOLATILE, ParserImplConstants.SYNCHRONIZED, ParserImplConstants.NATIVE, ParserImplConstants.STRICTFP);
+			throw produceParseException(TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.SUPER, TokenType.NEW, TokenType.NULL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.THIS, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.DECR, TokenType.INCR, TokenType.PLUS, TokenType.MINUS, TokenType.AT, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.STATIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.NATIVE, TokenType.STRICTFP);
 		}
 		return ret;
 	}
@@ -29185,8 +29183,8 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> expr;
 		expr = parseExpression();
 		ret = append(ret, expr);
-		while (match(0, ParserImplConstants.COMMA) != -1) {
-			parse(ParserImplConstants.COMMA);
+		while (match(0, TokenType.COMMA) != -1) {
+			parse(TokenType.COMMA);
 			expr = parseExpression();
 			ret = append(ret, expr);
 		}
@@ -29229,7 +29227,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(expr, Expression)
 	) */
 	private int matchExpressionList_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
@@ -29270,11 +29268,11 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SBreakStmt> parseBreakStatement() throws ParseException {
 		BUTree<SName> id = null;
 		run();
-		parse(ParserImplConstants.BREAK);
-		if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+		parse(TokenType.BREAK);
+		if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 			id = parseName();
 		}
-		parse(ParserImplConstants.SEMICOLON);
+		parse(TokenType.SEMICOLON);
 		return dress(SBreakStmt.make(optionOf(id)));
 	}
 
@@ -29286,13 +29284,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 	) */
 	private int matchBreakStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.BREAK);
+		lookahead = match(lookahead, TokenType.BREAK);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchBreakStatement_3(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -29331,11 +29329,11 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SContinueStmt> parseContinueStatement() throws ParseException {
 		BUTree<SName> id = null;
 		run();
-		parse(ParserImplConstants.CONTINUE);
-		if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+		parse(TokenType.CONTINUE);
+		if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 			id = parseName();
 		}
-		parse(ParserImplConstants.SEMICOLON);
+		parse(TokenType.SEMICOLON);
 		return dress(SContinueStmt.make(optionOf(id)));
 	}
 
@@ -29347,13 +29345,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 	) */
 	private int matchContinueStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.CONTINUE);
+		lookahead = match(lookahead, TokenType.CONTINUE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchContinueStatement_3(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -29392,11 +29390,11 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SReturnStmt> parseReturnStatement() throws ParseException {
 		BUTree<? extends SExpr> expr = null;
 		run();
-		parse(ParserImplConstants.RETURN);
-		if (match(0, ParserImplConstants.LPAREN, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
+		parse(TokenType.RETURN);
+		if (match(0, TokenType.LPAREN, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
 			expr = parseExpression();
 		}
-		parse(ParserImplConstants.SEMICOLON);
+		parse(TokenType.SEMICOLON);
 		return dress(SReturnStmt.make(optionOf(expr)));
 	}
 
@@ -29408,13 +29406,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 	) */
 	private int matchReturnStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.RETURN);
+		lookahead = match(lookahead, TokenType.RETURN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchReturnStatement_3(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -29451,9 +29449,9 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SThrowStmt> parseThrowStatement() throws ParseException {
 		BUTree<? extends SExpr> expr;
 		run();
-		parse(ParserImplConstants.THROW);
+		parse(TokenType.THROW);
 		expr = parseExpression();
-		parse(ParserImplConstants.SEMICOLON);
+		parse(TokenType.SEMICOLON);
 		return dress(SThrowStmt.make(expr));
 	}
 
@@ -29463,13 +29461,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 	) */
 	private int matchThrowStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.THROW);
+		lookahead = match(lookahead, TokenType.THROW);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -29488,10 +29486,10 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> expr;
 		BUTree<SBlockStmt> block;
 		run();
-		parse(ParserImplConstants.SYNCHRONIZED);
-		parse(ParserImplConstants.LPAREN);
+		parse(TokenType.SYNCHRONIZED);
+		parse(TokenType.LPAREN);
 		expr = parseExpression();
-		parse(ParserImplConstants.RPAREN);
+		parse(TokenType.RPAREN);
 		block = parseBlock();
 		return dress(SSynchronizedStmt.make(expr, block));
 	}
@@ -29504,16 +29502,16 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(block, Block)
 	) */
 	private int matchSynchronizedStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SYNCHRONIZED);
+		lookahead = match(lookahead, TokenType.SYNCHRONIZED);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchBlock(lookahead);
@@ -29563,33 +29561,33 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SBlockStmt> finallyBlock = null;
 		BUTree<SNodeList> catchClauses = null;
 		run();
-		parse(ParserImplConstants.TRY);
-		if (match(0, ParserImplConstants.LPAREN) != -1) {
+		parse(TokenType.TRY);
+		if (match(0, TokenType.LPAREN) != -1) {
 			resources = parseResourceSpecification(trailingSemiColon);
 			tryBlock = parseBlock();
-			if (match(0, ParserImplConstants.CATCH) != -1) {
+			if (match(0, TokenType.CATCH) != -1) {
 				catchClauses = parseCatchClauses();
 			}
-			if (match(0, ParserImplConstants.FINALLY) != -1) {
-				parse(ParserImplConstants.FINALLY);
+			if (match(0, TokenType.FINALLY) != -1) {
+				parse(TokenType.FINALLY);
 				finallyBlock = parseBlock();
 			}
-		} else if (match(0, ParserImplConstants.LBRACE) != -1) {
+		} else if (match(0, TokenType.LBRACE) != -1) {
 			tryBlock = parseBlock();
-			if (match(0, ParserImplConstants.CATCH) != -1) {
+			if (match(0, TokenType.CATCH) != -1) {
 				catchClauses = parseCatchClauses();
-				if (match(0, ParserImplConstants.FINALLY) != -1) {
-					parse(ParserImplConstants.FINALLY);
+				if (match(0, TokenType.FINALLY) != -1) {
+					parse(TokenType.FINALLY);
 					finallyBlock = parseBlock();
 				}
-			} else if (match(0, ParserImplConstants.FINALLY) != -1) {
-				parse(ParserImplConstants.FINALLY);
+			} else if (match(0, TokenType.FINALLY) != -1) {
+				parse(TokenType.FINALLY);
 				finallyBlock = parseBlock();
 			} else {
-				throw produceParseException(ParserImplConstants.FINALLY, ParserImplConstants.CATCH);
+				throw produceParseException(TokenType.FINALLY, TokenType.CATCH);
 			}
 		} else {
-			throw produceParseException(ParserImplConstants.LBRACE, ParserImplConstants.LPAREN);
+			throw produceParseException(TokenType.LBRACE, TokenType.LPAREN);
 		}
 		return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock)));
 	}
@@ -29627,7 +29625,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchTryStatement(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.TRY);
+		lookahead = match(lookahead, TokenType.TRY);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchTryStatement_3(lookahead);
@@ -29741,7 +29739,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(finallyBlock, Block)
 	) */
 	private int matchTryStatement_3_1_4_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.FINALLY);
+		lookahead = match(lookahead, TokenType.FINALLY);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchBlock(lookahead);
@@ -29834,7 +29832,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(finallyBlock, Block)
 	) */
 	private int matchTryStatement_3_2_2_1_2_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.FINALLY);
+		lookahead = match(lookahead, TokenType.FINALLY);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchBlock(lookahead);
@@ -29848,7 +29846,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(finallyBlock, Block)
 	) */
 	private int matchTryStatement_3_2_2_2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.FINALLY);
+		lookahead = match(lookahead, TokenType.FINALLY);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchBlock(lookahead);
@@ -29870,7 +29868,7 @@ public class ParserImplementation extends ParserNewBase {
 		do {
 			catchClause = parseCatchClause();
 			catchClauses = append(catchClauses, catchClause);
-		} while (match(0, ParserImplConstants.CATCH) != -1);
+		} while (match(0, TokenType.CATCH) != -1);
 		return catchClauses;
 	}
 
@@ -29924,10 +29922,10 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SFormalParameter> param;
 		BUTree<SBlockStmt> catchBlock;
 		run();
-		parse(ParserImplConstants.CATCH);
-		parse(ParserImplConstants.LPAREN);
+		parse(TokenType.CATCH);
+		parse(TokenType.LPAREN);
 		param = parseCatchFormalParameter();
-		parse(ParserImplConstants.RPAREN);
+		parse(TokenType.RPAREN);
 		catchBlock = parseBlock();
 		return dress(SCatchClause.make(param, catchBlock));
 	}
@@ -29940,16 +29938,16 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(catchBlock, Block)
 	) */
 	private int matchCatchClause(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.CATCH);
+		lookahead = match(lookahead, TokenType.CATCH);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchCatchFormalParameter(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchBlock(lookahead);
@@ -29990,10 +29988,10 @@ public class ParserImplementation extends ParserNewBase {
 		if (matchCatchFormalParameter_lookahead1(0) != -1) {
 			lateRun();
 			do {
-				parse(ParserImplConstants.BIT_OR);
+				parse(TokenType.BIT_OR);
 				exceptType = parseAnnotatedQualifiedType();
 				exceptTypes = append(exceptTypes, exceptType);
-			} while (match(0, ParserImplConstants.BIT_OR) != -1);
+			} while (match(0, TokenType.BIT_OR) != -1);
 			exceptType = dress(SUnionType.make(exceptTypes));
 		}
 		exceptId = parseVariableDeclaratorId();
@@ -30084,7 +30082,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(exceptType, AnnotatedQualifiedType)
 	) */
 	private int matchCatchFormalParameter_5_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.BIT_OR);
+		lookahead = match(lookahead, TokenType.BIT_OR);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotatedQualifiedType(lookahead);
@@ -30097,7 +30095,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(BIT_OR)
 	) */
 	private int matchCatchFormalParameter_lookahead1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.BIT_OR);
+		lookahead = match(lookahead, TokenType.BIT_OR);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -30124,19 +30122,19 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseResourceSpecification(ByRef<Boolean> trailingSemiColon) throws ParseException {
 		BUTree<SNodeList> vars = emptyList();
 		BUTree<SVariableDeclarationExpr> var;
-		parse(ParserImplConstants.LPAREN);
+		parse(TokenType.LPAREN);
 		var = parseVariableDeclExpression();
 		vars = append(vars, var);
 		while (matchResourceSpecification_lookahead1(0) != -1) {
-			parse(ParserImplConstants.SEMICOLON);
+			parse(TokenType.SEMICOLON);
 			var = parseVariableDeclExpression();
 			vars = append(vars, var);
 		}
 		if (matchResourceSpecification_lookahead2(0) != -1) {
-			parse(ParserImplConstants.SEMICOLON);
+			parse(TokenType.SEMICOLON);
 			trailingSemiColon.value = true;
 		}
-		parse(ParserImplConstants.RPAREN);
+		parse(TokenType.RPAREN);
 		return vars;
 	}
 
@@ -30155,7 +30153,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 	) */
 	private int matchResourceSpecification(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchVariableDeclExpression(lookahead);
@@ -30167,7 +30165,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchResourceSpecification_5(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -30194,7 +30192,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(var, VariableDeclExpression)
 	) */
 	private int matchResourceSpecification_4_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchVariableDeclExpression(lookahead);
@@ -30220,7 +30218,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 	) */
 	private int matchResourceSpecification_5_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.SEMICOLON);
+		lookahead = match(lookahead, TokenType.SEMICOLON);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -30232,71 +30230,71 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(var, VariableDeclExpression)
 	) */
 	private int matchResourceSpecification_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
-			if (match(1, ParserImplConstants.VOLATILE) != -1) {
+		if (match(0, TokenType.SEMICOLON) != -1) {
+			if (match(1, TokenType.VOLATILE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SYNCHRONIZED) != -1) {
+			if (match(1, TokenType.SYNCHRONIZED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NATIVE) != -1) {
+			if (match(1, TokenType.NATIVE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FINAL) != -1) {
+			if (match(1, TokenType.FINAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.ABSTRACT) != -1) {
+			if (match(1, TokenType.ABSTRACT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRICTFP) != -1) {
+			if (match(1, TokenType.STRICTFP) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STATIC) != -1) {
+			if (match(1, TokenType.STATIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PRIVATE) != -1) {
+			if (match(1, TokenType.PRIVATE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PUBLIC) != -1) {
+			if (match(1, TokenType.PUBLIC) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PROTECTED) != -1) {
+			if (match(1, TokenType.PROTECTED) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRANSIENT) != -1) {
+			if (match(1, TokenType.TRANSIENT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
 		}
@@ -30308,73 +30306,73 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(SEMICOLON)
 	) */
 	private int matchResourceSpecification_lookahead2(int lookahead) {
-		if (match(0, ParserImplConstants.SEMICOLON) != -1) {
+		if (match(0, TokenType.SEMICOLON) != -1) {
 			return lookahead;
 		}
 		return -1;
 	}
 
 	/* sequence(
-		lookAhead({ getToken(1).kind == GT && getToken(1).realKind == RUNSIGNEDSHIFT })
+		lookAhead({ getToken(1).kind == TokenType.GT && getToken(1).realKind == TokenType.RUNSIGNEDSHIFT })
 		terminal(GT)
 		terminal(GT)
 		terminal(GT)
 		action({ popNewWhitespaces(2); })
 	) */
 	public void parseRUNSIGNEDSHIFT() throws ParseException {
-		parse(ParserImplConstants.GT);
-		parse(ParserImplConstants.GT);
-		parse(ParserImplConstants.GT);
+		parse(TokenType.GT);
+		parse(TokenType.GT);
+		parse(TokenType.GT);
 		popNewWhitespaces(2);
 	}
 
 	/* sequence(
-		lookAhead({ getToken(1).kind == GT && getToken(1).realKind == RUNSIGNEDSHIFT })
+		lookAhead({ getToken(1).kind == TokenType.GT && getToken(1).realKind == TokenType.RUNSIGNEDSHIFT })
 		terminal(GT)
 		terminal(GT)
 		terminal(GT)
 	) */
 	private int matchRUNSIGNEDSHIFT(int lookahead) {
-		lookahead = getToken(1).kind == GT && getToken(1).realKind == RUNSIGNEDSHIFT ? lookahead : -1;
+		lookahead = getToken(1).kind == TokenType.GT && getToken(1).realKind == TokenType.RUNSIGNEDSHIFT ? lookahead : -1;
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.GT);
+		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.GT);
+		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.GT);
+		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
 	}
 
 	/* sequence(
-		lookAhead({ getToken(1).kind == GT && getToken(1).realKind == RSIGNEDSHIFT })
+		lookAhead({ getToken(1).kind == TokenType.GT && getToken(1).realKind == TokenType.RSIGNEDSHIFT })
 		terminal(GT)
 		terminal(GT)
 		action({ popNewWhitespaces(1); })
 	) */
 	public void parseRSIGNEDSHIFT() throws ParseException {
-		parse(ParserImplConstants.GT);
-		parse(ParserImplConstants.GT);
+		parse(TokenType.GT);
+		parse(TokenType.GT);
 		popNewWhitespaces(1);
 	}
 
 	/* sequence(
-		lookAhead({ getToken(1).kind == GT && getToken(1).realKind == RSIGNEDSHIFT })
+		lookAhead({ getToken(1).kind == TokenType.GT && getToken(1).realKind == TokenType.RSIGNEDSHIFT })
 		terminal(GT)
 		terminal(GT)
 	) */
 	private int matchRSIGNEDSHIFT(int lookahead) {
-		lookahead = getToken(1).kind == GT && getToken(1).realKind == RSIGNEDSHIFT ? lookahead : -1;
+		lookahead = getToken(1).kind == TokenType.GT && getToken(1).realKind == TokenType.RSIGNEDSHIFT ? lookahead : -1;
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.GT);
+		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.GT);
+		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -30390,7 +30388,7 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SNodeList> parseAnnotations() throws ParseException {
 		BUTree<SNodeList> annotations = emptyList();
 		BUTree<? extends SAnnotationExpr> annotation;
-		while (match(0, ParserImplConstants.AT) != -1) {
+		while (match(0, TokenType.AT) != -1) {
 			annotation = parseAnnotation();
 			annotations = append(annotations, annotation);
 		}
@@ -30476,7 +30474,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else if (matchAnnotation_lookahead3(0) != -1) {
 			ret = parseMarkerAnnotation();
 		} else {
-			throw produceParseException(ParserImplConstants.AT);
+			throw produceParseException(TokenType.AT);
 		}
 		return ret;
 	}
@@ -30632,13 +30630,13 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchAnnotation_lookahead1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.AT);
+		lookahead = match(lookahead, TokenType.AT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchQualifiedName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchAnnotation_lookahead1_4(lookahead);
@@ -30659,7 +30657,7 @@ public class ParserImplementation extends ParserNewBase {
 		newLookahead = matchAnnotation_lookahead1_4_1(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = match(lookahead, ParserImplConstants.RPAREN);
+		newLookahead = match(lookahead, TokenType.RPAREN);
 		if (newLookahead != -1)
 			return newLookahead;
 		return -1;
@@ -30673,7 +30671,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ASSIGN);
+		lookahead = match(lookahead, TokenType.ASSIGN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -30685,13 +30683,13 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(LPAREN)
 	) */
 	private int matchAnnotation_lookahead2(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.AT);
+		lookahead = match(lookahead, TokenType.AT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchQualifiedName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -30702,7 +30700,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(QualifiedName)
 	) */
 	private int matchAnnotation_lookahead3(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.AT);
+		lookahead = match(lookahead, TokenType.AT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchQualifiedName(lookahead);
@@ -30726,13 +30724,13 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SQualifiedName> name;
 		BUTree<SNodeList> pairs = null;
 		run();
-		parse(ParserImplConstants.AT);
+		parse(TokenType.AT);
 		name = parseQualifiedName();
-		parse(ParserImplConstants.LPAREN);
-		if (match(0, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER) != -1) {
+		parse(TokenType.LPAREN);
+		if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
 			pairs = parseMemberValuePairs();
 		}
-		parse(ParserImplConstants.RPAREN);
+		parse(TokenType.RPAREN);
 		return dress(SNormalAnnotationExpr.make(name, ensureNotNull(pairs)));
 	}
 
@@ -30746,19 +30744,19 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 	) */
 	private int matchNormalAnnotation(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.AT);
+		lookahead = match(lookahead, TokenType.AT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchQualifiedName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchNormalAnnotation_5(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -30794,7 +30792,7 @@ public class ParserImplementation extends ParserNewBase {
 	public BUTree<SMarkerAnnotationExpr> parseMarkerAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
 		run();
-		parse(ParserImplConstants.AT);
+		parse(TokenType.AT);
 		name = parseQualifiedName();
 		return dress(SMarkerAnnotationExpr.make(name));
 	}
@@ -30804,7 +30802,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(name, QualifiedName)
 	) */
 	private int matchMarkerAnnotation(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.AT);
+		lookahead = match(lookahead, TokenType.AT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchQualifiedName(lookahead);
@@ -30826,11 +30824,11 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SQualifiedName> name;
 		BUTree<? extends SExpr> memberVal;
 		run();
-		parse(ParserImplConstants.AT);
+		parse(TokenType.AT);
 		name = parseQualifiedName();
-		parse(ParserImplConstants.LPAREN);
+		parse(TokenType.LPAREN);
 		memberVal = parseMemberValue();
-		parse(ParserImplConstants.RPAREN);
+		parse(TokenType.RPAREN);
 		return dress(SSingleMemberAnnotationExpr.make(name, memberVal));
 	}
 
@@ -30842,19 +30840,19 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RPAREN)
 	) */
 	private int matchSingleMemberAnnotation(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.AT);
+		lookahead = match(lookahead, TokenType.AT);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchQualifiedName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.LPAREN);
+		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchMemberValue(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RPAREN);
+		lookahead = match(lookahead, TokenType.RPAREN);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -30875,8 +30873,8 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SMemberValuePair> pair;
 		pair = parseMemberValuePair();
 		ret = append(ret, pair);
-		while (match(0, ParserImplConstants.COMMA) != -1) {
-			parse(ParserImplConstants.COMMA);
+		while (match(0, TokenType.COMMA) != -1) {
+			parse(TokenType.COMMA);
 			pair = parseMemberValuePair();
 			ret = append(ret, pair);
 		}
@@ -30919,7 +30917,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(pair, MemberValuePair)
 	) */
 	private int matchMemberValuePairs_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchMemberValuePair(lookahead);
@@ -30940,7 +30938,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> value;
 		run();
 		name = parseName();
-		parse(ParserImplConstants.ASSIGN);
+		parse(TokenType.ASSIGN);
 		value = parseMemberValue();
 		return dress(SMemberValuePair.make(name, value));
 	}
@@ -30954,7 +30952,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.ASSIGN);
+		lookahead = match(lookahead, TokenType.ASSIGN);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchMemberValue(lookahead);
@@ -30973,14 +30971,14 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	public BUTree<? extends SExpr> parseMemberValue() throws ParseException {
 		BUTree<? extends SExpr> ret;
-		if (match(0, ParserImplConstants.AT) != -1) {
+		if (match(0, TokenType.AT) != -1) {
 			ret = parseAnnotation();
-		} else if (match(0, ParserImplConstants.LBRACE) != -1) {
+		} else if (match(0, TokenType.LBRACE) != -1) {
 			ret = parseMemberValueArrayInitializer();
-		} else if (match(0, ParserImplConstants.MINUS, ParserImplConstants.PLUS, ParserImplConstants.LPAREN, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LT, ParserImplConstants.FLOAT, ParserImplConstants.DOUBLE, ParserImplConstants.INT, ParserImplConstants.LONG, ParserImplConstants.BYTE, ParserImplConstants.SHORT, ParserImplConstants.BOOLEAN, ParserImplConstants.CHAR, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.INCR, ParserImplConstants.DECR) != -1) {
+		} else if (match(0, TokenType.MINUS, TokenType.PLUS, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.FLOAT, TokenType.DOUBLE, TokenType.INT, TokenType.LONG, TokenType.BYTE, TokenType.SHORT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR) != -1) {
 			ret = parseConditionalExpression();
 		} else {
-			throw produceParseException(ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.NULL, ParserImplConstants.TRUE, ParserImplConstants.FALSE, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.STRING_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.VOID, ParserImplConstants.IDENTIFIER, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.LONG, ParserImplConstants.INT, ParserImplConstants.DOUBLE, ParserImplConstants.FLOAT, ParserImplConstants.CHAR, ParserImplConstants.BOOLEAN, ParserImplConstants.SHORT, ParserImplConstants.BYTE, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.THIS, ParserImplConstants.SUPER, ParserImplConstants.NEW, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.LBRACE, ParserImplConstants.AT);
+			throw produceParseException(TokenType.PLUS, TokenType.MINUS, TokenType.BANG, TokenType.TILDE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LT, TokenType.LPAREN, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.DECR, TokenType.INCR, TokenType.LBRACE, TokenType.AT);
 		}
 		return ret;
 	}
@@ -31043,21 +31041,21 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> member;
 		boolean trailingComma = false;
 		run();
-		parse(ParserImplConstants.LBRACE);
-		if (match(0, ParserImplConstants.PLUS, ParserImplConstants.MINUS, ParserImplConstants.BANG, ParserImplConstants.TILDE, ParserImplConstants.SUPER, ParserImplConstants.THIS, ParserImplConstants.BOOLEAN, ParserImplConstants.FLOAT, ParserImplConstants.LONG, ParserImplConstants.DOUBLE, ParserImplConstants.BYTE, ParserImplConstants.CHAR, ParserImplConstants.INT, ParserImplConstants.SHORT, ParserImplConstants.NODE_VARIABLE, ParserImplConstants.IDENTIFIER, ParserImplConstants.VOID, ParserImplConstants.NEW, ParserImplConstants.LT, ParserImplConstants.LPAREN, ParserImplConstants.NULL, ParserImplConstants.FALSE, ParserImplConstants.TRUE, ParserImplConstants.STRING_LITERAL, ParserImplConstants.CHARACTER_LITERAL, ParserImplConstants.DOUBLE_LITERAL, ParserImplConstants.FLOAT_LITERAL, ParserImplConstants.LONG_LITERAL, ParserImplConstants.INTEGER_LITERAL, ParserImplConstants.DECR, ParserImplConstants.INCR, ParserImplConstants.LBRACE, ParserImplConstants.AT) != -1) {
+		parse(TokenType.LBRACE);
+		if (match(0, TokenType.PLUS, TokenType.MINUS, TokenType.BANG, TokenType.TILDE, TokenType.SUPER, TokenType.THIS, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.NEW, TokenType.LT, TokenType.LPAREN, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DECR, TokenType.INCR, TokenType.LBRACE, TokenType.AT) != -1) {
 			member = parseMemberValue();
 			ret = append(ret, member);
 			while (matchMemberValueArrayInitializer_lookahead1(0) != -1) {
-				parse(ParserImplConstants.COMMA);
+				parse(TokenType.COMMA);
 				member = parseMemberValue();
 				ret = append(ret, member);
 			}
 		}
-		if (match(0, ParserImplConstants.COMMA) != -1) {
-			parse(ParserImplConstants.COMMA);
+		if (match(0, TokenType.COMMA) != -1) {
+			parse(TokenType.COMMA);
 			trailingComma = true;
 		}
-		parse(ParserImplConstants.RBRACE);
+		parse(TokenType.RBRACE);
 		return dress(SArrayInitializerExpr.make(ret, trailingComma));
 	}
 
@@ -31077,7 +31075,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(RBRACE)
 	) */
 	private int matchMemberValueArrayInitializer(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.LBRACE);
+		lookahead = match(lookahead, TokenType.LBRACE);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchMemberValueArrayInitializer_3(lookahead);
@@ -31086,7 +31084,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchMemberValueArrayInitializer_4(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = match(lookahead, ParserImplConstants.RBRACE);
+		lookahead = match(lookahead, TokenType.RBRACE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -31147,7 +31145,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(member, MemberValue)
 	) */
 	private int matchMemberValueArrayInitializer_3_1_3_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchMemberValue(lookahead);
@@ -31171,7 +31169,7 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(COMMA)
 	) */
 	private int matchMemberValueArrayInitializer_4_1(int lookahead) {
-		lookahead = match(lookahead, ParserImplConstants.COMMA);
+		lookahead = match(lookahead, TokenType.COMMA);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -31183,104 +31181,104 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(member, MemberValue)
 	) */
 	private int matchMemberValueArrayInitializer_lookahead1(int lookahead) {
-		if (match(0, ParserImplConstants.COMMA) != -1) {
-			if (match(1, ParserImplConstants.NODE_VARIABLE) != -1) {
+		if (match(0, TokenType.COMMA) != -1) {
+			if (match(1, TokenType.NODE_VARIABLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NEW) != -1) {
+			if (match(1, TokenType.NEW) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT) != -1) {
+			if (match(1, TokenType.FLOAT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LT) != -1) {
+			if (match(1, TokenType.LT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHAR) != -1) {
+			if (match(1, TokenType.CHAR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INTEGER_LITERAL) != -1) {
+			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INT) != -1) {
+			if (match(1, TokenType.INT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.MINUS) != -1) {
+			if (match(1, TokenType.MINUS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BYTE) != -1) {
+			if (match(1, TokenType.BYTE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.IDENTIFIER) != -1) {
+			if (match(1, TokenType.IDENTIFIER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE) != -1) {
+			if (match(1, TokenType.DOUBLE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG) != -1) {
+			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SUPER) != -1) {
+			if (match(1, TokenType.SUPER) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.NULL) != -1) {
+			if (match(1, TokenType.NULL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DOUBLE_LITERAL) != -1) {
+			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.CHARACTER_LITERAL) != -1) {
+			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BANG) != -1) {
+			if (match(1, TokenType.BANG) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LPAREN) != -1) {
+			if (match(1, TokenType.LPAREN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TRUE) != -1) {
+			if (match(1, TokenType.TRUE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LONG_LITERAL) != -1) {
+			if (match(1, TokenType.LONG_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.BOOLEAN) != -1) {
+			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.SHORT) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.DECR) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.AT) != -1) {
+			if (match(1, TokenType.AT) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FLOAT_LITERAL) != -1) {
+			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.INCR) != -1) {
+			if (match(1, TokenType.INCR) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.THIS) != -1) {
+			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.STRING_LITERAL) != -1) {
+			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.FALSE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.TILDE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.VOID) != -1) {
+			if (match(1, TokenType.VOID) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.LBRACE) != -1) {
+			if (match(1, TokenType.LBRACE) != -1) {
 				return lookahead;
 			}
-			if (match(1, ParserImplConstants.PLUS) != -1) {
+			if (match(1, TokenType.PLUS) != -1) {
 				return lookahead;
 			}
 		}

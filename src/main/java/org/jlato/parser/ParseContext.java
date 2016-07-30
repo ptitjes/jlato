@@ -20,7 +20,7 @@
 package org.jlato.parser;
 
 import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.STree;
+import org.jlato.parser.ParserInterface.TypeKind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.*;
@@ -30,8 +30,6 @@ import org.jlato.tree.name.Name;
 import org.jlato.tree.name.QualifiedName;
 import org.jlato.tree.stmt.Stmt;
 import org.jlato.tree.type.Type;
-
-import static org.jlato.parser.ParserBase.TypeKind;
 
 /**
  * @author Didier Villevalois

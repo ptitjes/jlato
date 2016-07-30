@@ -19,127 +19,127 @@
 
 package org.jlato.internal.bu;
 
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.parser.TokenType;
 
 /**
  * @author Didier Villevalois
  */
 public class LToken {
 
-	public static final LToken Ellipsis = new LToken(ParserImplConstants.ELLIPSIS, "...");
+	public static final LToken Ellipsis = new LToken(TokenType.ELLIPSIS, "...");
 
-	public static final LToken Public = new LToken(ParserImplConstants.PUBLIC, "public");
-	public static final LToken Protected = new LToken(ParserImplConstants.PROTECTED, "protected");
-	public static final LToken Private = new LToken(ParserImplConstants.PRIVATE, "private");
-	public static final LToken Abstract = new LToken(ParserImplConstants.ABSTRACT, "abstract");
-	public static final LToken Default = new LToken(ParserImplConstants.DEFAULT, "default");
-	public static final LToken Static = new LToken(ParserImplConstants.STATIC, "static");
-	public static final LToken Final = new LToken(ParserImplConstants.FINAL, "final");
-	public static final LToken Transient = new LToken(ParserImplConstants.TRANSIENT, "transient");
-	public static final LToken Volatile = new LToken(ParserImplConstants.VOLATILE, "volatile");
-	public static final LToken Synchronized = new LToken(ParserImplConstants.SYNCHRONIZED, "synchronized");
-	public static final LToken Native = new LToken(ParserImplConstants.NATIVE, "native");
-	public static final LToken StrictFP = new LToken(ParserImplConstants.STRICTFP, "strictfp");
+	public static final LToken Public = new LToken(TokenType.PUBLIC, "public");
+	public static final LToken Protected = new LToken(TokenType.PROTECTED, "protected");
+	public static final LToken Private = new LToken(TokenType.PRIVATE, "private");
+	public static final LToken Abstract = new LToken(TokenType.ABSTRACT, "abstract");
+	public static final LToken Default = new LToken(TokenType.DEFAULT, "default");
+	public static final LToken Static = new LToken(TokenType.STATIC, "static");
+	public static final LToken Final = new LToken(TokenType.FINAL, "final");
+	public static final LToken Transient = new LToken(TokenType.TRANSIENT, "transient");
+	public static final LToken Volatile = new LToken(TokenType.VOLATILE, "volatile");
+	public static final LToken Synchronized = new LToken(TokenType.SYNCHRONIZED, "synchronized");
+	public static final LToken Native = new LToken(TokenType.NATIVE, "native");
+	public static final LToken StrictFP = new LToken(TokenType.STRICTFP, "strictfp");
 
-	public static final LToken Package = new LToken(ParserImplConstants.PACKAGE, "package");
-	public static final LToken Import = new LToken(ParserImplConstants.IMPORT, "import");
+	public static final LToken Package = new LToken(TokenType.PACKAGE, "package");
+	public static final LToken Import = new LToken(TokenType.IMPORT, "import");
 
-	public static final LToken Class = new LToken(ParserImplConstants.CLASS, "class");
-	public static final LToken Interface = new LToken(ParserImplConstants.INTERFACE, "interface");
-	public static final LToken Enum = new LToken(ParserImplConstants.ENUM, "enum");
+	public static final LToken Class = new LToken(TokenType.CLASS, "class");
+	public static final LToken Interface = new LToken(TokenType.INTERFACE, "interface");
+	public static final LToken Enum = new LToken(TokenType.ENUM, "enum");
 
-	public static final LToken This = new LToken(ParserImplConstants.THIS, "this");
-	public static final LToken Super = new LToken(ParserImplConstants.SUPER, "super");
-	public static final LToken Extends = new LToken(ParserImplConstants.EXTENDS, "extends");
-	public static final LToken Implements = new LToken(ParserImplConstants.IMPLEMENTS, "implements");
-	public static final LToken Throws = new LToken(ParserImplConstants.THROWS, "throws");
+	public static final LToken This = new LToken(TokenType.THIS, "this");
+	public static final LToken Super = new LToken(TokenType.SUPER, "super");
+	public static final LToken Extends = new LToken(TokenType.EXTENDS, "extends");
+	public static final LToken Implements = new LToken(TokenType.IMPLEMENTS, "implements");
+	public static final LToken Throws = new LToken(TokenType.THROWS, "throws");
 
-	public static final LToken Try = new LToken(ParserImplConstants.TRY, "try");
-	public static final LToken Catch = new LToken(ParserImplConstants.CATCH, "catch");
-	public static final LToken Finally = new LToken(ParserImplConstants.FINALLY, "finally");
-	public static final LToken Throw = new LToken(ParserImplConstants.THROW, "throw");
-	public static final LToken If = new LToken(ParserImplConstants.IF, "if");
-	public static final LToken Else = new LToken(ParserImplConstants.ELSE, "else");
-	public static final LToken For = new LToken(ParserImplConstants.FOR, "for");
-	public static final LToken Do = new LToken(ParserImplConstants.DO, "do");
-	public static final LToken While = new LToken(ParserImplConstants.WHILE, "while");
-	public static final LToken Continue = new LToken(ParserImplConstants.CONTINUE, "continue");
-	public static final LToken Break = new LToken(ParserImplConstants.BREAK, "break");
-	public static final LToken Return = new LToken(ParserImplConstants.RETURN, "return");
-	public static final LToken Switch = new LToken(ParserImplConstants.SWITCH, "switch");
-	public static final LToken Case = new LToken(ParserImplConstants.CASE, "case");
-	public static final LToken Assert = new LToken(ParserImplConstants.ASSERT, "assert");
+	public static final LToken Try = new LToken(TokenType.TRY, "try");
+	public static final LToken Catch = new LToken(TokenType.CATCH, "catch");
+	public static final LToken Finally = new LToken(TokenType.FINALLY, "finally");
+	public static final LToken Throw = new LToken(TokenType.THROW, "throw");
+	public static final LToken If = new LToken(TokenType.IF, "if");
+	public static final LToken Else = new LToken(TokenType.ELSE, "else");
+	public static final LToken For = new LToken(TokenType.FOR, "for");
+	public static final LToken Do = new LToken(TokenType.DO, "do");
+	public static final LToken While = new LToken(TokenType.WHILE, "while");
+	public static final LToken Continue = new LToken(TokenType.CONTINUE, "continue");
+	public static final LToken Break = new LToken(TokenType.BREAK, "break");
+	public static final LToken Return = new LToken(TokenType.RETURN, "return");
+	public static final LToken Switch = new LToken(TokenType.SWITCH, "switch");
+	public static final LToken Case = new LToken(TokenType.CASE, "case");
+	public static final LToken Assert = new LToken(TokenType.ASSERT, "assert");
 
-	public static final LToken New = new LToken(ParserImplConstants.NEW, "new");
-	public static final LToken InstanceOf = new LToken(ParserImplConstants.INSTANCEOF, "instanceof");
+	public static final LToken New = new LToken(TokenType.NEW, "new");
+	public static final LToken InstanceOf = new LToken(TokenType.INSTANCEOF, "instanceof");
 
-	public static final LToken Void = new LToken(ParserImplConstants.VOID, "void");
-	public static final LToken Boolean = new LToken(ParserImplConstants.BOOLEAN, "boolean");
-	public static final LToken Char = new LToken(ParserImplConstants.CHAR, "char");
-	public static final LToken Byte = new LToken(ParserImplConstants.BYTE, "byte");
-	public static final LToken Short = new LToken(ParserImplConstants.SHORT, "short");
-	public static final LToken Int = new LToken(ParserImplConstants.INT, "int");
-	public static final LToken Long = new LToken(ParserImplConstants.LONG, "long");
-	public static final LToken Float = new LToken(ParserImplConstants.FLOAT, "float");
-	public static final LToken Double = new LToken(ParserImplConstants.DOUBLE, "double");
+	public static final LToken Void = new LToken(TokenType.VOID, "void");
+	public static final LToken Boolean = new LToken(TokenType.BOOLEAN, "boolean");
+	public static final LToken Char = new LToken(TokenType.CHAR, "char");
+	public static final LToken Byte = new LToken(TokenType.BYTE, "byte");
+	public static final LToken Short = new LToken(TokenType.SHORT, "short");
+	public static final LToken Int = new LToken(TokenType.INT, "int");
+	public static final LToken Long = new LToken(TokenType.LONG, "long");
+	public static final LToken Float = new LToken(TokenType.FLOAT, "float");
+	public static final LToken Double = new LToken(TokenType.DOUBLE, "double");
 
-	public static final LToken Plus = new LToken(ParserImplConstants.PLUS, "+");
-	public static final LToken Minus = new LToken(ParserImplConstants.MINUS, "-");
-	public static final LToken Increment = new LToken(ParserImplConstants.INCR, "++");
-	public static final LToken Decrement = new LToken(ParserImplConstants.DECR, "--");
-	public static final LToken Not = new LToken(ParserImplConstants.BANG, "!");
-	public static final LToken Inverse = new LToken(ParserImplConstants.TILDE, "~");
-	public static final LToken Or = new LToken(ParserImplConstants.SC_OR, "||");
-	public static final LToken And = new LToken(ParserImplConstants.SC_AND, "&&");
-	public static final LToken BinOr = new LToken(ParserImplConstants.BIT_OR, "|");
-	public static final LToken BinAnd = new LToken(ParserImplConstants.BIT_AND, "&");
-	public static final LToken XOr = new LToken(ParserImplConstants.XOR, "^");
-	public static final LToken Equal = new LToken(ParserImplConstants.EQ, "==");
-	public static final LToken NotEqual = new LToken(ParserImplConstants.NE, "!=");
-	public static final LToken Less = new LToken(ParserImplConstants.LT, "<");
-	public static final LToken Greater = new LToken(ParserImplConstants.GT, ">");
-	public static final LToken LessOrEqual = new LToken(ParserImplConstants.LE, "<=");
-	public static final LToken GreaterOrEqual = new LToken(ParserImplConstants.GE, ">=");
-	public static final LToken LShift = new LToken(ParserImplConstants.LSHIFT, "<<");
-	public static final LToken RSignedShift = new LToken(ParserImplConstants.RSIGNEDSHIFT, ">>");
-	public static final LToken RUnsignedShift = new LToken(ParserImplConstants.RUNSIGNEDSHIFT, ">>>");
-	public static final LToken Times = new LToken(ParserImplConstants.STAR, "*");
-	public static final LToken Divide = new LToken(ParserImplConstants.SLASH, "/");
-	public static final LToken Remainder = new LToken(ParserImplConstants.REM, "%");
-	public static final LToken QuestionMark = new LToken(ParserImplConstants.HOOK, "?");
+	public static final LToken Plus = new LToken(TokenType.PLUS, "+");
+	public static final LToken Minus = new LToken(TokenType.MINUS, "-");
+	public static final LToken Increment = new LToken(TokenType.INCR, "++");
+	public static final LToken Decrement = new LToken(TokenType.DECR, "--");
+	public static final LToken Not = new LToken(TokenType.BANG, "!");
+	public static final LToken Inverse = new LToken(TokenType.TILDE, "~");
+	public static final LToken Or = new LToken(TokenType.SC_OR, "||");
+	public static final LToken And = new LToken(TokenType.SC_AND, "&&");
+	public static final LToken BinOr = new LToken(TokenType.BIT_OR, "|");
+	public static final LToken BinAnd = new LToken(TokenType.BIT_AND, "&");
+	public static final LToken XOr = new LToken(TokenType.XOR, "^");
+	public static final LToken Equal = new LToken(TokenType.EQ, "==");
+	public static final LToken NotEqual = new LToken(TokenType.NE, "!=");
+	public static final LToken Less = new LToken(TokenType.LT, "<");
+	public static final LToken Greater = new LToken(TokenType.GT, ">");
+	public static final LToken LessOrEqual = new LToken(TokenType.LE, "<=");
+	public static final LToken GreaterOrEqual = new LToken(TokenType.GE, ">=");
+	public static final LToken LShift = new LToken(TokenType.LSHIFT, "<<");
+	public static final LToken RSignedShift = new LToken(TokenType.RSIGNEDSHIFT, ">>");
+	public static final LToken RUnsignedShift = new LToken(TokenType.RUNSIGNEDSHIFT, ">>>");
+	public static final LToken Times = new LToken(TokenType.STAR, "*");
+	public static final LToken Divide = new LToken(TokenType.SLASH, "/");
+	public static final LToken Remainder = new LToken(TokenType.REM, "%");
+	public static final LToken QuestionMark = new LToken(TokenType.HOOK, "?");
 
-	public static final LToken Assign = new LToken(ParserImplConstants.ASSIGN, "=");
-	public static final LToken AssignPlus = new LToken(ParserImplConstants.PLUSASSIGN, "+=");
-	public static final LToken AssignMinus = new LToken(ParserImplConstants.MINUSASSIGN, "-=");
-	public static final LToken AssignTimes = new LToken(ParserImplConstants.STARASSIGN, "*=");
-	public static final LToken AssignDivide = new LToken(ParserImplConstants.SLASHASSIGN, "/=");
-	public static final LToken AssignAnd = new LToken(ParserImplConstants.ANDASSIGN, "&=");
-	public static final LToken AssignOr = new LToken(ParserImplConstants.ORASSIGN, "|=");
-	public static final LToken AssignXOr = new LToken(ParserImplConstants.XORASSIGN, "^=");
-	public static final LToken AssignRemainder = new LToken(ParserImplConstants.REMASSIGN, "%=");
-	public static final LToken AssignLShift = new LToken(ParserImplConstants.LSHIFTASSIGN, "<<=");
-	public static final LToken AssignRSignedShift = new LToken(ParserImplConstants.RSIGNEDSHIFTASSIGN, ">>=");
-	public static final LToken AssignRUnsignedShift = new LToken(ParserImplConstants.RUNSIGNEDSHIFTASSIGN, ">>>=");
+	public static final LToken Assign = new LToken(TokenType.ASSIGN, "=");
+	public static final LToken AssignPlus = new LToken(TokenType.PLUSASSIGN, "+=");
+	public static final LToken AssignMinus = new LToken(TokenType.MINUSASSIGN, "-=");
+	public static final LToken AssignTimes = new LToken(TokenType.STARASSIGN, "*=");
+	public static final LToken AssignDivide = new LToken(TokenType.SLASHASSIGN, "/=");
+	public static final LToken AssignAnd = new LToken(TokenType.ANDASSIGN, "&=");
+	public static final LToken AssignOr = new LToken(TokenType.ORASSIGN, "|=");
+	public static final LToken AssignXOr = new LToken(TokenType.XORASSIGN, "^=");
+	public static final LToken AssignRemainder = new LToken(TokenType.REMASSIGN, "%=");
+	public static final LToken AssignLShift = new LToken(TokenType.LSHIFTASSIGN, "<<=");
+	public static final LToken AssignRSignedShift = new LToken(TokenType.RSIGNEDSHIFTASSIGN, ">>=");
+	public static final LToken AssignRUnsignedShift = new LToken(TokenType.RUNSIGNEDSHIFTASSIGN, ">>>=");
 
-	public static final LToken Null = new LToken(ParserImplConstants.NULL, "null");
-	public static final LToken True = new LToken(ParserImplConstants.TRUE, "true");
-	public static final LToken False = new LToken(ParserImplConstants.FALSE, "false");
+	public static final LToken Null = new LToken(TokenType.NULL, "null");
+	public static final LToken True = new LToken(TokenType.TRUE, "true");
+	public static final LToken False = new LToken(TokenType.FALSE, "false");
 
-	public static final LToken At = new LToken(ParserImplConstants.AT, "@");
-	public static final LToken SemiColon = new LToken(ParserImplConstants.SEMICOLON, ";");
-	public static final LToken Colon = new LToken(ParserImplConstants.COLON, ":");
-	public static final LToken Comma = new LToken(ParserImplConstants.COMMA, ",");
-	public static final LToken Dot = new LToken(ParserImplConstants.DOT, ".");
+	public static final LToken At = new LToken(TokenType.AT, "@");
+	public static final LToken SemiColon = new LToken(TokenType.SEMICOLON, ";");
+	public static final LToken Colon = new LToken(TokenType.COLON, ":");
+	public static final LToken Comma = new LToken(TokenType.COMMA, ",");
+	public static final LToken Dot = new LToken(TokenType.DOT, ".");
 
-	public static final LToken DoubleColon = new LToken(ParserImplConstants.DOUBLECOLON, "::");
-	public static final LToken Arrow = new LToken(ParserImplConstants.ARROW, "->");
+	public static final LToken DoubleColon = new LToken(TokenType.DOUBLECOLON, "::");
+	public static final LToken Arrow = new LToken(TokenType.ARROW, "->");
 
-	public static final LToken BracketLeft = new LToken(ParserImplConstants.LBRACKET, "[");
-	public static final LToken BracketRight = new LToken(ParserImplConstants.RBRACKET, "]");
-	public static final LToken BraceLeft = new LToken(ParserImplConstants.LBRACE, "{");
-	public static final LToken BraceRight = new LToken(ParserImplConstants.RBRACE, "}");
-	public static final LToken ParenthesisLeft = new LToken(ParserImplConstants.LPAREN, "(");
-	public static final LToken ParenthesisRight = new LToken(ParserImplConstants.RPAREN, ")");
+	public static final LToken BracketLeft = new LToken(TokenType.LBRACKET, "[");
+	public static final LToken BracketRight = new LToken(TokenType.RBRACKET, "]");
+	public static final LToken BraceLeft = new LToken(TokenType.LBRACE, "{");
+	public static final LToken BraceRight = new LToken(TokenType.RBRACE, "}");
+	public static final LToken ParenthesisLeft = new LToken(TokenType.LPAREN, "(");
+	public static final LToken ParenthesisRight = new LToken(TokenType.RPAREN, ")");
 
 	public final int kind;
 	public final String string;
@@ -150,69 +150,69 @@ public class LToken {
 	}
 
 	public boolean isIdentifier() {
-		return kind == ParserImplConstants.IDENTIFIER;
+		return kind == TokenType.IDENTIFIER;
 	}
 
 	public boolean isKeyword() {
 		switch (kind) {
-			case ParserImplConstants.PUBLIC:
-			case ParserImplConstants.PROTECTED:
-			case ParserImplConstants.PRIVATE:
-			case ParserImplConstants.ABSTRACT:
-			case ParserImplConstants.DEFAULT:
-			case ParserImplConstants.STATIC:
-			case ParserImplConstants.FINAL:
-			case ParserImplConstants.TRANSIENT:
-			case ParserImplConstants.VOLATILE:
-			case ParserImplConstants.SYNCHRONIZED:
-			case ParserImplConstants.NATIVE:
-			case ParserImplConstants.STRICTFP:
+			case TokenType.PUBLIC:
+			case TokenType.PROTECTED:
+			case TokenType.PRIVATE:
+			case TokenType.ABSTRACT:
+			case TokenType.DEFAULT:
+			case TokenType.STATIC:
+			case TokenType.FINAL:
+			case TokenType.TRANSIENT:
+			case TokenType.VOLATILE:
+			case TokenType.SYNCHRONIZED:
+			case TokenType.NATIVE:
+			case TokenType.STRICTFP:
 
-			case ParserImplConstants.PACKAGE:
-			case ParserImplConstants.IMPORT:
+			case TokenType.PACKAGE:
+			case TokenType.IMPORT:
 
-			case ParserImplConstants.CLASS:
-			case ParserImplConstants.INTERFACE:
-			case ParserImplConstants.ENUM:
+			case TokenType.CLASS:
+			case TokenType.INTERFACE:
+			case TokenType.ENUM:
 
-			case ParserImplConstants.THIS:
-			case ParserImplConstants.SUPER:
-			case ParserImplConstants.EXTENDS:
-			case ParserImplConstants.IMPLEMENTS:
-			case ParserImplConstants.THROWS:
+			case TokenType.THIS:
+			case TokenType.SUPER:
+			case TokenType.EXTENDS:
+			case TokenType.IMPLEMENTS:
+			case TokenType.THROWS:
 
-			case ParserImplConstants.TRY:
-			case ParserImplConstants.CATCH:
-			case ParserImplConstants.FINALLY:
-			case ParserImplConstants.THROW:
-			case ParserImplConstants.IF:
-			case ParserImplConstants.ELSE:
-			case ParserImplConstants.FOR:
-			case ParserImplConstants.DO:
-			case ParserImplConstants.WHILE:
-			case ParserImplConstants.CONTINUE:
-			case ParserImplConstants.BREAK:
-			case ParserImplConstants.RETURN:
-			case ParserImplConstants.SWITCH:
-			case ParserImplConstants.CASE:
-			case ParserImplConstants.ASSERT:
+			case TokenType.TRY:
+			case TokenType.CATCH:
+			case TokenType.FINALLY:
+			case TokenType.THROW:
+			case TokenType.IF:
+			case TokenType.ELSE:
+			case TokenType.FOR:
+			case TokenType.DO:
+			case TokenType.WHILE:
+			case TokenType.CONTINUE:
+			case TokenType.BREAK:
+			case TokenType.RETURN:
+			case TokenType.SWITCH:
+			case TokenType.CASE:
+			case TokenType.ASSERT:
 
-			case ParserImplConstants.NEW:
-			case ParserImplConstants.INSTANCEOF:
+			case TokenType.NEW:
+			case TokenType.INSTANCEOF:
 
-			case ParserImplConstants.VOID:
-			case ParserImplConstants.BOOLEAN:
-			case ParserImplConstants.CHAR:
-			case ParserImplConstants.BYTE:
-			case ParserImplConstants.SHORT:
-			case ParserImplConstants.INT:
-			case ParserImplConstants.LONG:
-			case ParserImplConstants.FLOAT:
-			case ParserImplConstants.DOUBLE:
+			case TokenType.VOID:
+			case TokenType.BOOLEAN:
+			case TokenType.CHAR:
+			case TokenType.BYTE:
+			case TokenType.SHORT:
+			case TokenType.INT:
+			case TokenType.LONG:
+			case TokenType.FLOAT:
+			case TokenType.DOUBLE:
 
-			case ParserImplConstants.NULL:
-			case ParserImplConstants.TRUE:
-			case ParserImplConstants.FALSE:
+			case TokenType.NULL:
+			case TokenType.TRUE:
+			case TokenType.FALSE:
 				return true;
 
 			default:
@@ -226,43 +226,43 @@ public class LToken {
 /*
 	public boolean isOperator() {
 		switch (kind) {
-			case ParserImplConstants.PLUS:
-			case ParserImplConstants.MINUS:
-			case ParserImplConstants.INCR:
-			case ParserImplConstants.DECR:
-			case ParserImplConstants.BANG:
-			case ParserImplConstants.TILDE:
-			case ParserImplConstants.SC_OR:
-			case ParserImplConstants.SC_AND:
-			case ParserImplConstants.BIT_OR:
-			case ParserImplConstants.BIT_AND:
-			case ParserImplConstants.XOR:
-			case ParserImplConstants.EQ:
-			case ParserImplConstants.NE:
-			case ParserImplConstants.LT:
-			case ParserImplConstants.GT:
-			case ParserImplConstants.LE:
-			case ParserImplConstants.GE:
-			case ParserImplConstants.LSHIFT:
-			case ParserImplConstants.RSIGNEDSHIFT:
-			case ParserImplConstants.RUNSIGNEDSHIFT:
-			case ParserImplConstants.STAR:
-			case ParserImplConstants.SLASH:
-			case ParserImplConstants.REM:
-			case ParserImplConstants.HOOK:
+			case TokenType.PLUS:
+			case TokenType.MINUS:
+			case TokenType.INCR:
+			case TokenType.DECR:
+			case TokenType.BANG:
+			case TokenType.TILDE:
+			case TokenType.SC_OR:
+			case TokenType.SC_AND:
+			case TokenType.BIT_OR:
+			case TokenType.BIT_AND:
+			case TokenType.XOR:
+			case TokenType.EQ:
+			case TokenType.NE:
+			case TokenType.LT:
+			case TokenType.GT:
+			case TokenType.LE:
+			case TokenType.GE:
+			case TokenType.LSHIFT:
+			case TokenType.RSIGNEDSHIFT:
+			case TokenType.RUNSIGNEDSHIFT:
+			case TokenType.STAR:
+			case TokenType.SLASH:
+			case TokenType.REM:
+			case TokenType.HOOK:
 
-			case ParserImplConstants.ASSIGN:
-			case ParserImplConstants.PLUSASSIGN:
-			case ParserImplConstants.MINUSASSIGN:
-			case ParserImplConstants.STARASSIGN:
-			case ParserImplConstants.SLASHASSIGN:
-			case ParserImplConstants.ANDASSIGN:
-			case ParserImplConstants.ORASSIGN:
-			case ParserImplConstants.XORASSIGN:
-			case ParserImplConstants.REMASSIGN:
-			case ParserImplConstants.LSHIFTASSIGN:
-			case ParserImplConstants.RSIGNEDSHIFTASSIGN:
-			case ParserImplConstants.RUNSIGNEDSHIFTASSIGN:
+			case TokenType.ASSIGN:
+			case TokenType.PLUSASSIGN:
+			case TokenType.MINUSASSIGN:
+			case TokenType.STARASSIGN:
+			case TokenType.SLASHASSIGN:
+			case TokenType.ANDASSIGN:
+			case TokenType.ORASSIGN:
+			case TokenType.XORASSIGN:
+			case TokenType.REMASSIGN:
+			case TokenType.LSHIFTASSIGN:
+			case TokenType.RSIGNEDSHIFTASSIGN:
+			case TokenType.RUNSIGNEDSHIFTASSIGN:
 				return true;
 			default:
 				return false;
@@ -271,23 +271,23 @@ public class LToken {
 
 	public boolean isSeparator() {
 		switch (kind) {
-			case ParserImplConstants.ELLIPSIS:
+			case TokenType.ELLIPSIS:
 
-			case ParserImplConstants.AT:
-			case ParserImplConstants.SEMICOLON:
-			case ParserImplConstants.COLON:
-			case ParserImplConstants.COMMA:
-			case ParserImplConstants.DOT:
+			case TokenType.AT:
+			case TokenType.SEMICOLON:
+			case TokenType.COLON:
+			case TokenType.COMMA:
+			case TokenType.DOT:
 
-			case ParserImplConstants.DOUBLECOLON:
-			case ParserImplConstants.ARROW:
+			case TokenType.DOUBLECOLON:
+			case TokenType.ARROW:
 
-			case ParserImplConstants.LBRACKET:
-			case ParserImplConstants.RBRACKET:
-			case ParserImplConstants.LBRACE:
-			case ParserImplConstants.RBRACE:
-			case ParserImplConstants.LPAREN:
-			case ParserImplConstants.RPAREN:
+			case TokenType.LBRACKET:
+			case TokenType.RBRACKET:
+			case TokenType.LBRACE:
+			case TokenType.RBRACE:
+			case TokenType.LPAREN:
+			case TokenType.RPAREN:
 				return true;
 
 			default:

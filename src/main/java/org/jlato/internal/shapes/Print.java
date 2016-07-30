@@ -24,7 +24,7 @@ import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.WToken;
 import org.jlato.internal.bu.WTokenRun;
 import org.jlato.internal.td.TDTree;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.parser.TokenType;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Spacing;
 import org.jlato.tree.Tree;
@@ -186,19 +186,19 @@ public class Print {
 	private void dump(WTokenRun tokens) {
 		for (WToken token : tokens.elements) {
 			switch (token.kind) {
-				case ParserImplConstants.JAVA_DOC_COMMENT:
+				case TokenType.JAVA_DOC_COMMENT:
 					appendJavaDocComment(token.string);
 					break;
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
+				case TokenType.SINGLE_LINE_COMMENT:
 					appendSingleLineComment(token.string);
 					break;
-				case ParserImplConstants.MULTI_LINE_COMMENT:
+				case TokenType.MULTI_LINE_COMMENT:
 					appendMultiLineComment(token.string);
 					break;
-				case ParserImplConstants.NEWLINE:
+				case TokenType.NEWLINE:
 					appendNewLine(token.string);
 					break;
-				case ParserImplConstants.WHITESPACE:
+				case TokenType.WHITESPACE:
 					appendWhiteSpace(token.string);
 					break;
 			}

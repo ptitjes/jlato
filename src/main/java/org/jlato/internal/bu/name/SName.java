@@ -10,7 +10,7 @@ import org.jlato.internal.bu.expr.SExpr;
 import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.name.TDName;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.parser.TokenType;
 import org.jlato.printer.FormattingSettings.IndentationContext;
 import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
@@ -168,7 +168,7 @@ public class SName extends SNode<SName> implements SExpr {
 
 	public static final LexicalShape shape = token(new LSToken.Provider() {
 		public LToken tokenFor(BUTree tree) {
-			return new LToken(ParserImplConstants.IDENTIFIER, ((SName) tree.state).id);
+			return new LToken(TokenType.IDENTIFIER, ((SName) tree.state).id);
 		}
 	});
 }

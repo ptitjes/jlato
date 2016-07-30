@@ -42,9 +42,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
 
-import static org.jlato.parser.ParserImplConstants.ARROW;
-import static org.jlato.parser.ParserImplConstants.LPAREN;
-import static org.jlato.parser.ParserImplConstants.RPAREN;
+import static org.jlato.internal.parser.TokenType.ARROW;
+import static org.jlato.internal.parser.TokenType.LPAREN;
+import static org.jlato.internal.parser.TokenType.RPAREN;
 
 /**
  * @author Didier Villevalois
@@ -60,8 +60,9 @@ public abstract class ParserNewBase {
 		lexer.setParser(this);
 	}
 
-	protected final void configure(ParserConfiguration configuration) {
+	protected final void configure(ParserConfiguration configuration, boolean quotesMode) {
 		this.configuration = configuration;
+		this.quotesMode = quotesMode;
 	}
 
 	protected void reset(InputStream inputStream, String encoding) {
@@ -301,11 +302,11 @@ public abstract class ParserNewBase {
 			token = lexer.yylex();
 
 			switch (token.kind) {
-				case ParserImplConstants.MULTI_LINE_COMMENT:
-				case ParserImplConstants.SINGLE_LINE_COMMENT:
-				case ParserImplConstants.JAVA_DOC_COMMENT:
-				case ParserImplConstants.WHITESPACE:
-				case ParserImplConstants.NEWLINE:
+				case TokenType.MULTI_LINE_COMMENT:
+				case TokenType.SINGLE_LINE_COMMENT:
+				case TokenType.JAVA_DOC_COMMENT:
+				case TokenType.WHITESPACE:
+				case TokenType.NEWLINE:
 					if (configuration.preserveWhitespaces) builder.add(new WToken(token.kind, token.image));
 					break;
 				default:
@@ -328,8 +329,8 @@ public abstract class ParserNewBase {
 
 		Token token = getToken(0);
 		if (token.kind != tokenType) {
-			String found = token.kind == ParserImplConstants.EOF ? "<EOF>" : token.image;
-			String expected = ParserImplConstants.tokenImage[tokenType];
+			String found = token.kind == TokenType.EOF ? "<EOF>" : token.image;
+			String expected = TokenType.tokenImage[tokenType];
 			throw new ParseException("Found " + found + " – Expected " + expected +
 					" (" + token.beginLine + ":" + token.beginColumn + ")");
 		}
@@ -352,7 +353,7 @@ public abstract class ParserNewBase {
 		String eol = System.getProperty("line.separator", "\n");
 		StringBuffer expected = new StringBuffer();
 		for (int i = 0; i < expectedTokenTypes.length; i++) {
-			expected.append(ParserImplConstants.tokenImage[expectedTokenTypes[i]]).append(' ');
+			expected.append(TokenType.tokenImage[expectedTokenTypes[i]]).append(' ');
 			expected.append("...");
 			expected.append(eol).append("    ");
 		}
@@ -361,9 +362,9 @@ public abstract class ParserNewBase {
 		Token tok = getToken(0);
 
 		if (tok.kind == 0) {
-			retval += ParserImplConstants.tokenImage[0];
+			retval += TokenType.tokenImage[0];
 		} else {
-			retval += " " + ParserImplConstants.tokenImage[tok.kind];
+			retval += " " + TokenType.tokenImage[tok.kind];
 			retval += " \"";
 			retval += add_escapes(tok.image);
 			retval += " \"";
@@ -387,8 +388,8 @@ public abstract class ParserNewBase {
 		);
 	}
 
-	protected <S extends STree> BUTreeVar<S> makeVar() {
-		String image = getToken(0).image;
+	protected <S extends STree> BUTreeVar<S> makeVar(Token id) {
+		String image = id.image;
 		boolean nodeListVar = image.startsWith("..$");
 		String name = nodeListVar ? image.substring(3) : image.substring(1);
 		return BUTreeVar.var(name);

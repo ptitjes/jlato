@@ -59,7 +59,7 @@ public class ParserNew extends ParserInterface {
 	private final ParserImplementation implementation = new ParserImplementation();
 
 	public ParserNew(ParserConfiguration configuration, boolean quotesMode) {
-		implementation.configure(configuration);
+		implementation.configure(configuration, quotesMode);
 	}
 
 	// Parser interface

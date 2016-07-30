@@ -22,7 +22,7 @@ package org.jlato.internal.td;
 import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.parser.TokenType;
 import org.jlato.printer.Printer;
 import org.jlato.rewrite.MatchVisitor;
 import org.jlato.rewrite.Matcher;
@@ -202,7 +202,7 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 
 		final WToken comment = createComment(commentString, expressionContext, forceMultiLine);
 		final WTokenRun newLeading;
-		if (expressionContext && comment.kind != ParserImplConstants.SINGLE_LINE_COMMENT) {
+		if (expressionContext && comment.kind != TokenType.SINGLE_LINE_COMMENT) {
 			newLeading = leading.append(comment).append(whitespace(" "));
 		} else {
 			newLeading = leading.append(comment).append(newLine());

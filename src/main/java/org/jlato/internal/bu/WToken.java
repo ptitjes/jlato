@@ -19,7 +19,7 @@
 
 package org.jlato.internal.bu;
 
-import org.jlato.parser.ParserImplConstants;
+import org.jlato.internal.parser.TokenType;
 
 /**
  * @author Didier Villevalois
@@ -27,23 +27,23 @@ import org.jlato.parser.ParserImplConstants;
 public class WToken {
 
 	public static WToken newLine() {
-		return new WToken(ParserImplConstants.NEWLINE, "\n");
+		return new WToken(TokenType.NEWLINE, "\n");
 	}
 
 	public static WToken singleLineComment(String image) {
-		return new WToken(ParserImplConstants.SINGLE_LINE_COMMENT, image);
+		return new WToken(TokenType.SINGLE_LINE_COMMENT, image);
 	}
 
 	public static WToken multiLineComment(String image) {
-		return new WToken(ParserImplConstants.MULTI_LINE_COMMENT, image);
+		return new WToken(TokenType.MULTI_LINE_COMMENT, image);
 	}
 
 	public static WToken javaDocComment(String image) {
-		return new WToken(ParserImplConstants.JAVA_DOC_COMMENT, image);
+		return new WToken(TokenType.JAVA_DOC_COMMENT, image);
 	}
 
 	public static WToken whitespace(String image) {
-		return new WToken(ParserImplConstants.WHITESPACE, image);
+		return new WToken(TokenType.WHITESPACE, image);
 	}
 
 	public final int kind;
@@ -51,11 +51,11 @@ public class WToken {
 
 	public WToken(int kind, String string) {
 		switch (kind) {
-			case ParserImplConstants.SINGLE_LINE_COMMENT:
-			case ParserImplConstants.MULTI_LINE_COMMENT:
-			case ParserImplConstants.JAVA_DOC_COMMENT:
-			case ParserImplConstants.NEWLINE:
-			case ParserImplConstants.WHITESPACE:
+			case TokenType.SINGLE_LINE_COMMENT:
+			case TokenType.MULTI_LINE_COMMENT:
+			case TokenType.JAVA_DOC_COMMENT:
+			case TokenType.NEWLINE:
+			case TokenType.WHITESPACE:
 				break;
 			default:
 				throw new IllegalArgumentException("Tokens are supposed to be meaningless");
