@@ -56,7 +56,7 @@ Releases are distributed on Maven central:
 <dependency>
   <groupId>org.jlato</groupId>
   <artifactId>jlato</artifactId>
-  <version>0.0.5</version>
+  <version>0.0.6</version>
 </dependency>
 ```
 
