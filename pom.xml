@@ -24,7 +24,7 @@
 
 	<groupId>org.jlato</groupId>
 	<artifactId>jlato</artifactId>
-	<version>0.0.6</version>
+	<version>0.0.7-SNAPSHOT</version>
 
 	<name>JLaTo</name>
 	<description>Java Language Tools</description>
