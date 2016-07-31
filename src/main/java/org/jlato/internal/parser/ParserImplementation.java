@@ -5713,14 +5713,12 @@ public class ParserImplementation extends ParserNewBase {
 		zeroOrOne(
 			choice(
 				sequence(
-					lookAhead(2)
 					zeroOrOne(
 						lookAhead({ inConstructor })
 						nonTerminal(stmt, ExplicitConstructorInvocation)
 						action({ ret = append(ret, stmt); })
 					)
 					zeroOrMore(
-						lookAhead(2)
 						nonTerminal(stmt, BlockStatement)
 						action({ ret = append(ret, stmt); })
 					)
@@ -5736,20 +5734,20 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<SNodeList> parseStatements(boolean inConstructor) throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<? extends SStmt> stmt;
-		if (match(0, TokenType.LT, TokenType.THIS, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.DOUBLE, TokenType.NEW, TokenType.SUPER, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.AT, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.FINAL, TokenType.STATIC, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.INTERFACE, TokenType.CLASS, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.DECR, TokenType.INCR, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.TRY, TokenType.THROW, TokenType.RETURN, TokenType.NODE_LIST_VARIABLE) != -1) {
-			if (matchStatements_lookahead1(0) != -1) {
-				if (inConstructor && matchStatements_lookahead2(0) != -1) {
+		if (match(0, TokenType.LT, TokenType.THIS, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.BOOLEAN, TokenType.NEW, TokenType.SUPER, TokenType.LPAREN, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.FINAL, TokenType.STATIC, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.AT, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.CLASS, TokenType.INTERFACE, TokenType.ASSERT, TokenType.LBRACE, TokenType.SEMICOLON, TokenType.DECR, TokenType.INCR, TokenType.SWITCH, TokenType.IF, TokenType.WHILE, TokenType.DO, TokenType.FOR, TokenType.BREAK, TokenType.CONTINUE, TokenType.RETURN, TokenType.THROW, TokenType.TRY, TokenType.NODE_LIST_VARIABLE) != -1) {
+			if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.BOOLEAN, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LPAREN, TokenType.LT, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.SYNCHRONIZED, TokenType.TRY, TokenType.RETURN, TokenType.THROW, TokenType.BREAK, TokenType.CONTINUE, TokenType.DO, TokenType.FOR, TokenType.IF, TokenType.WHILE, TokenType.INCR, TokenType.DECR, TokenType.SWITCH, TokenType.LBRACE, TokenType.SEMICOLON, TokenType.ASSERT, TokenType.STATIC, TokenType.FINAL, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.STRICTFP, TokenType.AT, TokenType.NATIVE, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.INTERFACE, TokenType.CLASS) != -1) {
+				if (inConstructor && matchStatements_lookahead1(0) != -1) {
 					stmt = parseExplicitConstructorInvocation();
 					ret = append(ret, stmt);
 				}
-				while (matchStatements_lookahead3(0) != -1) {
+				while (match(0, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.VOID, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LPAREN, TokenType.LT, TokenType.DECR, TokenType.INCR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.AT, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.STATIC, TokenType.ABSTRACT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.CLASS, TokenType.INTERFACE) != -1) {
 					stmt = parseBlockStatement();
 					ret = append(ret, stmt);
 				}
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
-				throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.NULL, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.THIS, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.SUPER, TokenType.NEW, TokenType.VOID, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.STATIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.NATIVE, TokenType.STRICTFP, TokenType.AT, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.CLASS, TokenType.INTERFACE, TokenType.TRY, TokenType.INCR, TokenType.DECR, TokenType.SWITCH, TokenType.LBRACE, TokenType.SEMICOLON, TokenType.ASSERT, TokenType.RETURN, TokenType.THROW, TokenType.BREAK, TokenType.CONTINUE, TokenType.DO, TokenType.FOR, TokenType.IF, TokenType.WHILE);
+				throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.DOUBLE, TokenType.LT, TokenType.LPAREN, TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.ASSERT, TokenType.SWITCH, TokenType.DECR, TokenType.INCR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.FINAL, TokenType.STATIC, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.NATIVE, TokenType.AT, TokenType.STRICTFP, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.INTERFACE, TokenType.CLASS);
 			}
 		}
 		return ensureNotNull(ret);
@@ -5759,13 +5757,11 @@ public class ParserImplementation extends ParserNewBase {
 		zeroOrOne(
 			choice(
 				sequence(
-					lookAhead(2)
 					zeroOrOne(
 						lookAhead({ inConstructor })
 						nonTerminal(stmt, ExplicitConstructorInvocation)
 					)
 					zeroOrMore(
-						lookAhead(2)
 						nonTerminal(stmt, BlockStatement)
 					)
 				)
@@ -5786,13 +5782,11 @@ public class ParserImplementation extends ParserNewBase {
 	/* zeroOrOne(
 		choice(
 			sequence(
-				lookAhead(2)
 				zeroOrOne(
 					lookAhead({ inConstructor })
 					nonTerminal(stmt, ExplicitConstructorInvocation)
 				)
 				zeroOrMore(
-					lookAhead(2)
 					nonTerminal(stmt, BlockStatement)
 				)
 			)
@@ -5813,13 +5807,11 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		choice(
 			sequence(
-				lookAhead(2)
 				zeroOrOne(
 					lookAhead({ inConstructor })
 					nonTerminal(stmt, ExplicitConstructorInvocation)
 				)
 				zeroOrMore(
-					lookAhead(2)
 					nonTerminal(stmt, BlockStatement)
 				)
 			)
@@ -5838,13 +5830,11 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* choice(
 		sequence(
-			lookAhead(2)
 			zeroOrOne(
 				lookAhead({ inConstructor })
 				nonTerminal(stmt, ExplicitConstructorInvocation)
 			)
 			zeroOrMore(
-				lookAhead(2)
 				nonTerminal(stmt, BlockStatement)
 			)
 		)
@@ -5865,21 +5855,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		zeroOrOne(
 			lookAhead({ inConstructor })
 			nonTerminal(stmt, ExplicitConstructorInvocation)
 		)
 		zeroOrMore(
-			lookAhead(2)
 			nonTerminal(stmt, BlockStatement)
 		)
 	) */
 	private int matchStatements_1_1_1_1(int lookahead, boolean inConstructor) {
-		lookahead = matchStatements_1_1_1_1_2(lookahead, inConstructor);
+		lookahead = matchStatements_1_1_1_1_1(lookahead, inConstructor);
 		if (lookahead == -1)
 			return -1;
-		lookahead = matchStatements_1_1_1_1_3(lookahead, inConstructor);
+		lookahead = matchStatements_1_1_1_1_2(lookahead, inConstructor);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -5889,9 +5877,9 @@ public class ParserImplementation extends ParserNewBase {
 		lookAhead({ inConstructor })
 		nonTerminal(stmt, ExplicitConstructorInvocation)
 	) */
-	private int matchStatements_1_1_1_1_2(int lookahead, boolean inConstructor) {
+	private int matchStatements_1_1_1_1_1(int lookahead, boolean inConstructor) {
 		int newLookahead;
-		newLookahead = matchStatements_1_1_1_1_2_1(lookahead, inConstructor);
+		newLookahead = matchStatements_1_1_1_1_1_1(lookahead, inConstructor);
 		if (newLookahead != -1)
 			return newLookahead;
 		return lookahead;
@@ -5901,7 +5889,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookAhead({ inConstructor })
 		nonTerminal(stmt, ExplicitConstructorInvocation)
 	) */
-	private int matchStatements_1_1_1_1_2_1(int lookahead, boolean inConstructor) {
+	private int matchStatements_1_1_1_1_1_1(int lookahead, boolean inConstructor) {
 		lookahead = inConstructor ? lookahead : -1;
 		if (lookahead == -1)
 			return -1;
@@ -5912,24 +5900,22 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrMore(
-		lookAhead(2)
 		nonTerminal(stmt, BlockStatement)
 	) */
-	private int matchStatements_1_1_1_1_3(int lookahead, boolean inConstructor) {
+	private int matchStatements_1_1_1_1_2(int lookahead, boolean inConstructor) {
 		int newLookahead;
-		newLookahead = matchStatements_1_1_1_1_3_1(lookahead, inConstructor);
+		newLookahead = matchStatements_1_1_1_1_2_1(lookahead, inConstructor);
 		while (newLookahead != -1) {
 			lookahead = newLookahead;
-			newLookahead = matchStatements_1_1_1_1_3_1(lookahead, inConstructor);
+			newLookahead = matchStatements_1_1_1_1_2_1(lookahead, inConstructor);
 		}
 		return lookahead;
 	}
 
 	/* sequence(
-		lookAhead(2)
 		nonTerminal(stmt, BlockStatement)
 	) */
-	private int matchStatements_1_1_1_1_3_1(int lookahead, boolean inConstructor) {
+	private int matchStatements_1_1_1_1_2_1(int lookahead, boolean inConstructor) {
 		lookahead = matchBlockStatement(lookahead);
 		if (lookahead == -1)
 			return -1;
@@ -5951,4808 +5937,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
-		zeroOrOne(
-			lookAhead({ inConstructor })
-			nonTerminal(stmt, ExplicitConstructorInvocation)
-		)
-		zeroOrMore(
-			lookAhead(2)
-			nonTerminal(stmt, BlockStatement)
-		)
-	) */
-	private int matchStatements_lookahead1(int lookahead) {
-		if (match(0, TokenType.VOLATILE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.NEW) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.THROW) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.HOOK) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.GT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.INTEGER_LITERAL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.CLASS) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.DO) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DO) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RETURN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BREAK) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRY) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IF) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.WHILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACE) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.STATIC) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.INTERFACE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.SEMICOLON) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.BREAK) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.BYTE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.TRY) != -1) {
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACE) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.IF) != -1) {
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.SYNCHRONIZED) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.NULL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.CHARACTER_LITERAL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.FOR) != -1) {
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LPAREN) != -1) {
-			if (match(1, TokenType.VOLATILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NATIVE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ABSTRACT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRICTFP) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STATIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DEFAULT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.TRUE) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.FINAL) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LONG_LITERAL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.BOOLEAN) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.DECR) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.AT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.PUBLIC) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.THIS) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.SWITCH) != -1) {
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.VOID) != -1) {
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.TRANSIENT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LBRACE) != -1) {
-			if (match(1, TokenType.VOLATILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DO) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STATIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BREAK) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRY) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IF) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NATIVE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRICTFP) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ABSTRACT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RETURN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.WHILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.NODE_VARIABLE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.COLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ARROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.NATIVE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.FLOAT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.CHAR) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.ABSTRACT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.STRICTFP) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.INT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.RETURN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.DOUBLE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.IDENTIFIER) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.COLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ARROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.PROTECTED) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LONG) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.SUPER) != -1) {
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.DOUBLE_LITERAL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.ASSERT) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.PRIVATE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.SHORT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.CONTINUE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.FLOAT_LITERAL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.INCR) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.WHILE) != -1) {
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.STRING_LITERAL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.FALSE) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
-	/* sequence(
 		nonTerminal(ExplicitConstructorInvocation)
 	) */
-	private int matchStatements_lookahead2(int lookahead) {
+	private int matchStatements_lookahead1(int lookahead) {
 		lookahead = matchExplicitConstructorInvocation(lookahead);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		nonTerminal(stmt, BlockStatement)
-	) */
-	private int matchStatements_lookahead3(int lookahead) {
-		if (match(0, TokenType.VOLATILE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.NEW) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.THROW) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.HOOK) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.GT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.INTEGER_LITERAL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.CLASS) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.DO) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DO) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RETURN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BREAK) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRY) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IF) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.WHILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACE) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.STATIC) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.INTERFACE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.SEMICOLON) != -1) {
-			return lookahead;
-		}
-		if (match(0, TokenType.BREAK) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.BYTE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.TRY) != -1) {
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACE) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.IF) != -1) {
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.SYNCHRONIZED) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.NULL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.CHARACTER_LITERAL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.FOR) != -1) {
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LPAREN) != -1) {
-			if (match(1, TokenType.VOLATILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NATIVE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRICTFP) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ABSTRACT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STATIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DEFAULT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.TRUE) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.FINAL) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LONG_LITERAL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.BOOLEAN) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.DECR) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.AT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.PUBLIC) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.THIS) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.SWITCH) != -1) {
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.VOID) != -1) {
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.TRANSIENT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LBRACE) != -1) {
-			if (match(1, TokenType.VOLATILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DO) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STATIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BREAK) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRY) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IF) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SYNCHRONIZED) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FOR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FINAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PUBLIC) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SWITCH) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRANSIENT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NATIVE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRICTFP) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ABSTRACT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RETURN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PROTECTED) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSERT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_LIST_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PRIVATE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CONTINUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.WHILE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.NODE_VARIABLE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.COLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ARROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.NATIVE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.FLOAT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.CHAR) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.STRICTFP) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.ABSTRACT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.INT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.RETURN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.DOUBLE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.IDENTIFIER) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.COLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ARROW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.PROTECTED) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LONG) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.SUPER) != -1) {
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.DOUBLE_LITERAL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.ASSERT) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.PRIVATE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTERFACE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CLASS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.SHORT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.CONTINUE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.FLOAT_LITERAL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.INCR) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.WHILE) != -1) {
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.STRING_LITERAL) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.FALSE) != -1) {
-			if (match(1, TokenType.ANDASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LBRACKET) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LSHIFTASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.ORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.XORASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STARASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLECOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SLASHASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SEMICOLON) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.REMASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUSASSIGN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUSASSIGN) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -12564,7 +7755,6 @@ public class ParserImplementation extends ParserNewBase {
 			sequence(
 				nonTerminal(ret, ConditionalExpression)
 				zeroOrOne(
-					lookAhead(2)
 					action({ lateRun(); })
 					nonTerminal(op, AssignmentOperator)
 					nonTerminal(value, Expression)
@@ -12606,7 +7796,7 @@ public class ParserImplementation extends ParserNewBase {
 			ret = parseLambdaBody(params, true);
 		} else if (match(0, TokenType.MINUS, TokenType.PLUS, TokenType.LPAREN, TokenType.THIS, TokenType.SUPER, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.LT, TokenType.NEW, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR) != -1) {
 			ret = parseConditionalExpression();
-			if (matchExpression_lookahead5(0) != -1) {
+			if (match(0, TokenType.ORASSIGN, TokenType.XORASSIGN, TokenType.ANDASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.LSHIFTASSIGN, TokenType.MINUSASSIGN, TokenType.PLUSASSIGN, TokenType.REMASSIGN, TokenType.SLASHASSIGN, TokenType.STARASSIGN, TokenType.ASSIGN) != -1) {
 				lateRun();
 				op = parseAssignmentOperator();
 				value = parseExpression();
@@ -12668,7 +7858,6 @@ public class ParserImplementation extends ParserNewBase {
 			sequence(
 				nonTerminal(ret, ConditionalExpression)
 				zeroOrOne(
-					lookAhead(2)
 					nonTerminal(op, AssignmentOperator)
 					nonTerminal(value, Expression)
 				)
@@ -12731,7 +7920,6 @@ public class ParserImplementation extends ParserNewBase {
 		sequence(
 			nonTerminal(ret, ConditionalExpression)
 			zeroOrOne(
-				lookAhead(2)
 				nonTerminal(op, AssignmentOperator)
 				nonTerminal(value, Expression)
 			)
@@ -12872,7 +8060,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, ConditionalExpression)
 		zeroOrOne(
-			lookAhead(2)
 			nonTerminal(op, AssignmentOperator)
 			nonTerminal(value, Expression)
 		)
@@ -12888,7 +8075,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrOne(
-		lookAhead(2)
 		nonTerminal(op, AssignmentOperator)
 		nonTerminal(value, Expression)
 	) */
@@ -12901,7 +8087,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		nonTerminal(op, AssignmentOperator)
 		nonTerminal(value, Expression)
 	) */
@@ -12985,1155 +8170,6 @@ public class ParserImplementation extends ParserNewBase {
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
-	}
-
-	/* zeroOrOne(
-		lookAhead(2)
-		nonTerminal(op, AssignmentOperator)
-		nonTerminal(value, Expression)
-	) */
-	private int matchExpression_lookahead5(int lookahead) {
-		if (match(0, TokenType.ANDASSIGN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.RUNSIGNEDSHIFTASSIGN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.STARASSIGN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.SLASHASSIGN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.RSIGNEDSHIFTASSIGN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.REMASSIGN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.PLUSASSIGN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LSHIFTASSIGN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.ASSIGN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.ORASSIGN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.MINUSASSIGN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.XORASSIGN) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -14655,7 +8691,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, ConditionalOrExpression)
 		zeroOrOne(
-			lookAhead(2)
 			action({ lateRun(); })
 			terminal(HOOK)
 			nonTerminal(left, Expression)
@@ -14670,7 +8705,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> left;
 		BUTree<? extends SExpr> right;
 		ret = parseConditionalOrExpression();
-		if (matchConditionalExpression_lookahead1(0) != -1) {
+		if (match(0, TokenType.HOOK) != -1) {
 			lateRun();
 			parse(TokenType.HOOK);
 			left = parseExpression();
@@ -14684,7 +8719,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, ConditionalOrExpression)
 		zeroOrOne(
-			lookAhead(2)
 			terminal(HOOK)
 			nonTerminal(left, Expression)
 			terminal(COLON)
@@ -14702,7 +8736,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrOne(
-		lookAhead(2)
 		terminal(HOOK)
 		nonTerminal(left, Expression)
 		terminal(COLON)
@@ -14717,7 +8750,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		terminal(HOOK)
 		nonTerminal(left, Expression)
 		terminal(COLON)
@@ -14739,116 +8771,9 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
-	/* zeroOrOne(
-		lookAhead(2)
-		terminal(HOOK)
-		nonTerminal(left, Expression)
-		terminal(COLON)
-		nonTerminal(right, ConditionalExpression)
-	) */
-	private int matchConditionalExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.HOOK) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
 	/* sequence(
 		nonTerminal(ret, ConditionalAndExpression)
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			terminal(SC_OR)
 			nonTerminal(right, ConditionalAndExpression)
@@ -14860,7 +8785,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseConditionalAndExpression();
-		while (matchConditionalOrExpression_lookahead1(0) != -1) {
+		while (match(0, TokenType.SC_OR) != -1) {
 			lateRun();
 			parse(TokenType.SC_OR);
 			right = parseConditionalAndExpression();
@@ -14872,7 +8797,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, ConditionalAndExpression)
 		zeroOrMore(
-			lookAhead(2)
 			terminal(SC_OR)
 			nonTerminal(right, ConditionalAndExpression)
 		)
@@ -14888,7 +8812,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrMore(
-		lookAhead(2)
 		terminal(SC_OR)
 		nonTerminal(right, ConditionalAndExpression)
 	) */
@@ -14903,7 +8826,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		terminal(SC_OR)
 		nonTerminal(right, ConditionalAndExpression)
 	) */
@@ -14917,114 +8839,9 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
-	/* zeroOrMore(
-		lookAhead(2)
-		terminal(SC_OR)
-		nonTerminal(right, ConditionalAndExpression)
-	) */
-	private int matchConditionalOrExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.SC_OR) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
 	/* sequence(
 		nonTerminal(ret, InclusiveOrExpression)
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			terminal(SC_AND)
 			nonTerminal(right, InclusiveOrExpression)
@@ -15036,7 +8853,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseInclusiveOrExpression();
-		while (matchConditionalAndExpression_lookahead1(0) != -1) {
+		while (match(0, TokenType.SC_AND) != -1) {
 			lateRun();
 			parse(TokenType.SC_AND);
 			right = parseInclusiveOrExpression();
@@ -15048,7 +8865,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, InclusiveOrExpression)
 		zeroOrMore(
-			lookAhead(2)
 			terminal(SC_AND)
 			nonTerminal(right, InclusiveOrExpression)
 		)
@@ -15064,7 +8880,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrMore(
-		lookAhead(2)
 		terminal(SC_AND)
 		nonTerminal(right, InclusiveOrExpression)
 	) */
@@ -15079,7 +8894,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		terminal(SC_AND)
 		nonTerminal(right, InclusiveOrExpression)
 	) */
@@ -15093,114 +8907,9 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
-	/* zeroOrMore(
-		lookAhead(2)
-		terminal(SC_AND)
-		nonTerminal(right, InclusiveOrExpression)
-	) */
-	private int matchConditionalAndExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.SC_AND) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
 	/* sequence(
 		nonTerminal(ret, ExclusiveOrExpression)
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			terminal(BIT_OR)
 			nonTerminal(right, ExclusiveOrExpression)
@@ -15212,7 +8921,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseExclusiveOrExpression();
-		while (matchInclusiveOrExpression_lookahead1(0) != -1) {
+		while (match(0, TokenType.BIT_OR) != -1) {
 			lateRun();
 			parse(TokenType.BIT_OR);
 			right = parseExclusiveOrExpression();
@@ -15224,7 +8933,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, ExclusiveOrExpression)
 		zeroOrMore(
-			lookAhead(2)
 			terminal(BIT_OR)
 			nonTerminal(right, ExclusiveOrExpression)
 		)
@@ -15240,7 +8948,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrMore(
-		lookAhead(2)
 		terminal(BIT_OR)
 		nonTerminal(right, ExclusiveOrExpression)
 	) */
@@ -15255,7 +8962,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		terminal(BIT_OR)
 		nonTerminal(right, ExclusiveOrExpression)
 	) */
@@ -15269,114 +8975,9 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
-	/* zeroOrMore(
-		lookAhead(2)
-		terminal(BIT_OR)
-		nonTerminal(right, ExclusiveOrExpression)
-	) */
-	private int matchInclusiveOrExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.BIT_OR) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
 	/* sequence(
 		nonTerminal(ret, AndExpression)
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			terminal(XOR)
 			nonTerminal(right, AndExpression)
@@ -15388,7 +8989,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseAndExpression();
-		while (matchExclusiveOrExpression_lookahead1(0) != -1) {
+		while (match(0, TokenType.XOR) != -1) {
 			lateRun();
 			parse(TokenType.XOR);
 			right = parseAndExpression();
@@ -15400,7 +9001,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, AndExpression)
 		zeroOrMore(
-			lookAhead(2)
 			terminal(XOR)
 			nonTerminal(right, AndExpression)
 		)
@@ -15416,7 +9016,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrMore(
-		lookAhead(2)
 		terminal(XOR)
 		nonTerminal(right, AndExpression)
 	) */
@@ -15431,7 +9030,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		terminal(XOR)
 		nonTerminal(right, AndExpression)
 	) */
@@ -15445,114 +9043,9 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
-	/* zeroOrMore(
-		lookAhead(2)
-		terminal(XOR)
-		nonTerminal(right, AndExpression)
-	) */
-	private int matchExclusiveOrExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.XOR) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
 	/* sequence(
 		nonTerminal(ret, EqualityExpression)
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			terminal(BIT_AND)
 			nonTerminal(right, EqualityExpression)
@@ -15564,7 +9057,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> right;
 		ret = parseEqualityExpression();
-		while (matchAndExpression_lookahead1(0) != -1) {
+		while (match(0, TokenType.BIT_AND) != -1) {
 			lateRun();
 			parse(TokenType.BIT_AND);
 			right = parseEqualityExpression();
@@ -15576,7 +9069,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, EqualityExpression)
 		zeroOrMore(
-			lookAhead(2)
 			terminal(BIT_AND)
 			nonTerminal(right, EqualityExpression)
 		)
@@ -15592,7 +9084,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrMore(
-		lookAhead(2)
 		terminal(BIT_AND)
 		nonTerminal(right, EqualityExpression)
 	) */
@@ -15607,7 +9098,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		terminal(BIT_AND)
 		nonTerminal(right, EqualityExpression)
 	) */
@@ -15621,114 +9111,9 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
-	/* zeroOrMore(
-		lookAhead(2)
-		terminal(BIT_AND)
-		nonTerminal(right, EqualityExpression)
-	) */
-	private int matchAndExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.BIT_AND) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
 	/* sequence(
 		nonTerminal(ret, InstanceOfExpression)
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			choice(
 				sequence(
@@ -15750,7 +9135,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
 		ret = parseInstanceOfExpression();
-		while (matchEqualityExpression_lookahead1(0) != -1) {
+		while (match(0, TokenType.NE, TokenType.EQ) != -1) {
 			lateRun();
 			if (match(0, TokenType.EQ) != -1) {
 				parse(TokenType.EQ);
@@ -15770,7 +9155,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, InstanceOfExpression)
 		zeroOrMore(
-			lookAhead(2)
 			choice(
 				sequence(
 					terminal(EQ)
@@ -15793,7 +9177,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrMore(
-		lookAhead(2)
 		choice(
 			sequence(
 				terminal(EQ)
@@ -15815,7 +9198,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		choice(
 			sequence(
 				terminal(EQ)
@@ -15827,7 +9209,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, InstanceOfExpression)
 	) */
 	private int matchEqualityExpression_2_1(int lookahead) {
-		lookahead = matchEqualityExpression_2_1_3(lookahead);
+		lookahead = matchEqualityExpression_2_1_2(lookahead);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchInstanceOfExpression(lookahead);
@@ -15844,12 +9226,12 @@ public class ParserImplementation extends ParserNewBase {
 			terminal(NE)
 		)
 	) */
-	private int matchEqualityExpression_2_1_3(int lookahead) {
+	private int matchEqualityExpression_2_1_2(int lookahead) {
 		int newLookahead;
-		newLookahead = matchEqualityExpression_2_1_3_1(lookahead);
+		newLookahead = matchEqualityExpression_2_1_2_1(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = matchEqualityExpression_2_1_3_2(lookahead);
+		newLookahead = matchEqualityExpression_2_1_2_2(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
 		return -1;
@@ -15858,7 +9240,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(EQ)
 	) */
-	private int matchEqualityExpression_2_1_3_1(int lookahead) {
+	private int matchEqualityExpression_2_1_2_1(int lookahead) {
 		lookahead = match(lookahead, TokenType.EQ);
 		if (lookahead == -1)
 			return -1;
@@ -15868,223 +9250,16 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(NE)
 	) */
-	private int matchEqualityExpression_2_1_3_2(int lookahead) {
+	private int matchEqualityExpression_2_1_2_2(int lookahead) {
 		lookahead = match(lookahead, TokenType.NE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
 	}
 
-	/* zeroOrMore(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(EQ)
-			)
-			sequence(
-				terminal(NE)
-			)
-		)
-		nonTerminal(right, InstanceOfExpression)
-	) */
-	private int matchEqualityExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.NE) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.EQ) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
 	/* sequence(
 		nonTerminal(ret, RelationalExpression)
 		zeroOrOne(
-			lookAhead(2)
 			action({ lateRun(); })
 			terminal(INSTANCEOF)
 			action({ run(); })
@@ -16099,7 +9274,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> annotations;
 		BUTree<? extends SType> type;
 		ret = parseRelationalExpression();
-		if (matchInstanceOfExpression_lookahead1(0) != -1) {
+		if (match(0, TokenType.INSTANCEOF) != -1) {
 			lateRun();
 			parse(TokenType.INSTANCEOF);
 			run();
@@ -16113,7 +9288,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, RelationalExpression)
 		zeroOrOne(
-			lookAhead(2)
 			terminal(INSTANCEOF)
 			nonTerminal(annotations, Annotations)
 			nonTerminal(type, Type)
@@ -16130,7 +9304,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrOne(
-		lookAhead(2)
 		terminal(INSTANCEOF)
 		nonTerminal(annotations, Annotations)
 		nonTerminal(type, Type)
@@ -16144,7 +9317,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		terminal(INSTANCEOF)
 		nonTerminal(annotations, Annotations)
 		nonTerminal(type, Type)
@@ -16162,55 +9334,9 @@ public class ParserImplementation extends ParserNewBase {
 		return lookahead;
 	}
 
-	/* zeroOrOne(
-		lookAhead(2)
-		terminal(INSTANCEOF)
-		nonTerminal(annotations, Annotations)
-		nonTerminal(type, Type)
-	) */
-	private int matchInstanceOfExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.INSTANCEOF) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.AT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
 	/* sequence(
 		nonTerminal(ret, ShiftExpression)
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			choice(
 				sequence(
@@ -16240,7 +9366,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
 		ret = parseShiftExpression();
-		while (matchRelationalExpression_lookahead1(0) != -1) {
+		while (match(0, TokenType.GT, TokenType.LT, TokenType.GE, TokenType.LE) != -1) {
 			lateRun();
 			if (match(0, TokenType.LT) != -1) {
 				parse(TokenType.LT);
@@ -16266,7 +9392,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, ShiftExpression)
 		zeroOrMore(
-			lookAhead(2)
 			choice(
 				sequence(
 					terminal(LT)
@@ -16295,7 +9420,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrMore(
-		lookAhead(2)
 		choice(
 			sequence(
 				terminal(LT)
@@ -16323,7 +9447,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		choice(
 			sequence(
 				terminal(LT)
@@ -16341,7 +9464,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, ShiftExpression)
 	) */
 	private int matchRelationalExpression_2_1(int lookahead) {
-		lookahead = matchRelationalExpression_2_1_3(lookahead);
+		lookahead = matchRelationalExpression_2_1_2(lookahead);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchShiftExpression(lookahead);
@@ -16364,18 +9487,18 @@ public class ParserImplementation extends ParserNewBase {
 			terminal(GE)
 		)
 	) */
-	private int matchRelationalExpression_2_1_3(int lookahead) {
+	private int matchRelationalExpression_2_1_2(int lookahead) {
 		int newLookahead;
-		newLookahead = matchRelationalExpression_2_1_3_1(lookahead);
+		newLookahead = matchRelationalExpression_2_1_2_1(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = matchRelationalExpression_2_1_3_2(lookahead);
+		newLookahead = matchRelationalExpression_2_1_2_2(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = matchRelationalExpression_2_1_3_3(lookahead);
+		newLookahead = matchRelationalExpression_2_1_2_3(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = matchRelationalExpression_2_1_3_4(lookahead);
+		newLookahead = matchRelationalExpression_2_1_2_4(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
 		return -1;
@@ -16384,7 +9507,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(LT)
 	) */
-	private int matchRelationalExpression_2_1_3_1(int lookahead) {
+	private int matchRelationalExpression_2_1_2_1(int lookahead) {
 		lookahead = match(lookahead, TokenType.LT);
 		if (lookahead == -1)
 			return -1;
@@ -16394,7 +9517,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(GT)
 	) */
-	private int matchRelationalExpression_2_1_3_2(int lookahead) {
+	private int matchRelationalExpression_2_1_2_2(int lookahead) {
 		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
@@ -16404,7 +9527,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(LE)
 	) */
-	private int matchRelationalExpression_2_1_3_3(int lookahead) {
+	private int matchRelationalExpression_2_1_2_3(int lookahead) {
 		lookahead = match(lookahead, TokenType.LE);
 		if (lookahead == -1)
 			return -1;
@@ -16414,413 +9537,11 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(GE)
 	) */
-	private int matchRelationalExpression_2_1_3_4(int lookahead) {
+	private int matchRelationalExpression_2_1_2_4(int lookahead) {
 		lookahead = match(lookahead, TokenType.GE);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(LT)
-			)
-			sequence(
-				terminal(GT)
-			)
-			sequence(
-				terminal(LE)
-			)
-			sequence(
-				terminal(GE)
-			)
-		)
-		nonTerminal(right, ShiftExpression)
-	) */
-	private int matchRelationalExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.LT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.GT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.GE) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -17169,7 +9890,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, MultiplicativeExpression)
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			choice(
 				sequence(
@@ -17191,7 +9911,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
 		ret = parseMultiplicativeExpression();
-		while (matchAdditiveExpression_lookahead1(0) != -1) {
+		while (match(0, TokenType.MINUS, TokenType.PLUS) != -1) {
 			lateRun();
 			if (match(0, TokenType.PLUS) != -1) {
 				parse(TokenType.PLUS);
@@ -17211,7 +9931,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, MultiplicativeExpression)
 		zeroOrMore(
-			lookAhead(2)
 			choice(
 				sequence(
 					terminal(PLUS)
@@ -17234,7 +9953,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrMore(
-		lookAhead(2)
 		choice(
 			sequence(
 				terminal(PLUS)
@@ -17256,7 +9974,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		choice(
 			sequence(
 				terminal(PLUS)
@@ -17268,7 +9985,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, MultiplicativeExpression)
 	) */
 	private int matchAdditiveExpression_2_1(int lookahead) {
-		lookahead = matchAdditiveExpression_2_1_3(lookahead);
+		lookahead = matchAdditiveExpression_2_1_2(lookahead);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchMultiplicativeExpression(lookahead);
@@ -17285,12 +10002,12 @@ public class ParserImplementation extends ParserNewBase {
 			terminal(MINUS)
 		)
 	) */
-	private int matchAdditiveExpression_2_1_3(int lookahead) {
+	private int matchAdditiveExpression_2_1_2(int lookahead) {
 		int newLookahead;
-		newLookahead = matchAdditiveExpression_2_1_3_1(lookahead);
+		newLookahead = matchAdditiveExpression_2_1_2_1(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = matchAdditiveExpression_2_1_3_2(lookahead);
+		newLookahead = matchAdditiveExpression_2_1_2_2(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
 		return -1;
@@ -17299,7 +10016,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(PLUS)
 	) */
-	private int matchAdditiveExpression_2_1_3_1(int lookahead) {
+	private int matchAdditiveExpression_2_1_2_1(int lookahead) {
 		lookahead = match(lookahead, TokenType.PLUS);
 		if (lookahead == -1)
 			return -1;
@@ -17309,223 +10026,16 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(MINUS)
 	) */
-	private int matchAdditiveExpression_2_1_3_2(int lookahead) {
+	private int matchAdditiveExpression_2_1_2_2(int lookahead) {
 		lookahead = match(lookahead, TokenType.MINUS);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
 	}
 
-	/* zeroOrMore(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(PLUS)
-			)
-			sequence(
-				terminal(MINUS)
-			)
-		)
-		nonTerminal(right, MultiplicativeExpression)
-	) */
-	private int matchAdditiveExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.PLUS) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.MINUS) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
 	/* sequence(
 		nonTerminal(ret, UnaryExpression)
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			choice(
 				sequence(
@@ -17551,7 +10061,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> right;
 		BinaryOp op;
 		ret = parseUnaryExpression();
-		while (matchMultiplicativeExpression_lookahead1(0) != -1) {
+		while (match(0, TokenType.SLASH, TokenType.STAR, TokenType.REM) != -1) {
 			lateRun();
 			if (match(0, TokenType.STAR) != -1) {
 				parse(TokenType.STAR);
@@ -17574,7 +10084,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, UnaryExpression)
 		zeroOrMore(
-			lookAhead(2)
 			choice(
 				sequence(
 					terminal(STAR)
@@ -17600,7 +10109,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrMore(
-		lookAhead(2)
 		choice(
 			sequence(
 				terminal(STAR)
@@ -17625,7 +10133,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		choice(
 			sequence(
 				terminal(STAR)
@@ -17640,7 +10147,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(right, UnaryExpression)
 	) */
 	private int matchMultiplicativeExpression_2_1(int lookahead) {
-		lookahead = matchMultiplicativeExpression_2_1_3(lookahead);
+		lookahead = matchMultiplicativeExpression_2_1_2(lookahead);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchUnaryExpression(lookahead);
@@ -17660,15 +10167,15 @@ public class ParserImplementation extends ParserNewBase {
 			terminal(REM)
 		)
 	) */
-	private int matchMultiplicativeExpression_2_1_3(int lookahead) {
+	private int matchMultiplicativeExpression_2_1_2(int lookahead) {
 		int newLookahead;
-		newLookahead = matchMultiplicativeExpression_2_1_3_1(lookahead);
+		newLookahead = matchMultiplicativeExpression_2_1_2_1(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = matchMultiplicativeExpression_2_1_3_2(lookahead);
+		newLookahead = matchMultiplicativeExpression_2_1_2_2(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = matchMultiplicativeExpression_2_1_3_3(lookahead);
+		newLookahead = matchMultiplicativeExpression_2_1_2_3(lookahead);
 		if (newLookahead != -1)
 			return newLookahead;
 		return -1;
@@ -17677,7 +10184,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(STAR)
 	) */
-	private int matchMultiplicativeExpression_2_1_3_1(int lookahead) {
+	private int matchMultiplicativeExpression_2_1_2_1(int lookahead) {
 		lookahead = match(lookahead, TokenType.STAR);
 		if (lookahead == -1)
 			return -1;
@@ -17687,7 +10194,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(SLASH)
 	) */
-	private int matchMultiplicativeExpression_2_1_3_2(int lookahead) {
+	private int matchMultiplicativeExpression_2_1_2_2(int lookahead) {
 		lookahead = match(lookahead, TokenType.SLASH);
 		if (lookahead == -1)
 			return -1;
@@ -17697,315 +10204,11 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(REM)
 	) */
-	private int matchMultiplicativeExpression_2_1_3_3(int lookahead) {
+	private int matchMultiplicativeExpression_2_1_2_3(int lookahead) {
 		lookahead = match(lookahead, TokenType.REM);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(STAR)
-			)
-			sequence(
-				terminal(SLASH)
-			)
-			sequence(
-				terminal(REM)
-			)
-		)
-		nonTerminal(right, UnaryExpression)
-	) */
-	private int matchMultiplicativeExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.STAR) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.SLASH) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.REM) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -19361,7 +11564,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, PrimaryPrefix)
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			nonTerminal(ret, PrimarySuffix)
 		)
@@ -19370,7 +11572,7 @@ public class ParserImplementation extends ParserNewBase {
 	protected BUTree<? extends SExpr> parsePrimaryExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		ret = parsePrimaryPrefix();
-		while (matchPrimaryExpression_lookahead1(0) != -1) {
+		while (match(0, TokenType.DOUBLECOLON, TokenType.DOT, TokenType.LBRACKET) != -1) {
 			lateRun();
 			ret = parsePrimarySuffix(ret);
 		}
@@ -19380,7 +11582,6 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		nonTerminal(ret, PrimaryPrefix)
 		zeroOrMore(
-			lookAhead(2)
 			nonTerminal(ret, PrimarySuffix)
 		)
 	) */
@@ -19395,7 +11596,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrMore(
-		lookAhead(2)
 		nonTerminal(ret, PrimarySuffix)
 	) */
 	private int matchPrimaryExpression_2(int lookahead) {
@@ -19409,7 +11609,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		nonTerminal(ret, PrimarySuffix)
 	) */
 	private int matchPrimaryExpression_2_1(int lookahead) {
@@ -19417,143 +11616,6 @@ public class ParserImplementation extends ParserNewBase {
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		nonTerminal(ret, PrimarySuffix)
-	) */
-	private int matchPrimaryExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.DOUBLECOLON) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.DOT) != -1) {
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.LBRACKET) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
 	}
 
 	/* sequence(
@@ -24962,7 +17024,6 @@ public class ParserImplementation extends ParserNewBase {
 			action({ vars = append(vars, var); })
 		)
 		zeroOrOne(
-			lookAhead(2)
 			terminal(SEMICOLON)
 			action({ trailingSemiColon.value = true; })
 		)
@@ -24980,7 +17041,7 @@ public class ParserImplementation extends ParserNewBase {
 			var = parseVariableDeclExpression();
 			vars = append(vars, var);
 		}
-		if (matchResourceSpecification_lookahead2(0) != -1) {
+		if (match(0, TokenType.SEMICOLON) != -1) {
 			parse(TokenType.SEMICOLON);
 			trailingSemiColon.value = true;
 		}
@@ -24997,7 +17058,6 @@ public class ParserImplementation extends ParserNewBase {
 			nonTerminal(var, VariableDeclExpression)
 		)
 		zeroOrOne(
-			lookAhead(2)
 			terminal(SEMICOLON)
 		)
 		terminal(RPAREN)
@@ -25052,7 +17112,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrOne(
-		lookAhead(2)
 		terminal(SEMICOLON)
 	) */
 	private int matchResourceSpecification_5(int lookahead) {
@@ -25064,7 +17123,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(2)
 		terminal(SEMICOLON)
 	) */
 	private int matchResourceSpecification_5_1(int lookahead) {
@@ -25147,17 +17205,6 @@ public class ParserImplementation extends ParserNewBase {
 			if (match(1, TokenType.LONG) != -1) {
 				return lookahead;
 			}
-		}
-		return -1;
-	}
-
-	/* zeroOrOne(
-		lookAhead(2)
-		terminal(SEMICOLON)
-	) */
-	private int matchResourceSpecification_lookahead2(int lookahead) {
-		if (match(0, TokenType.SEMICOLON) != -1) {
-			return lookahead;
 		}
 		return -1;
 	}
