@@ -17,10 +17,8 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.rewrite;
+package org.jlato.pattern;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.patterns.TreePattern;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.QuotesParser;

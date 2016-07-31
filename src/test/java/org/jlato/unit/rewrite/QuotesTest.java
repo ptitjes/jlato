@@ -23,9 +23,9 @@ import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.printer.Printer;
-import org.jlato.rewrite.Pattern;
-import org.jlato.rewrite.Quotes;
-import org.jlato.rewrite.Substitution;
+import org.jlato.pattern.Pattern;
+import org.jlato.pattern.Quotes;
+import org.jlato.pattern.Substitution;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ImportDecl;
@@ -44,7 +44,7 @@ import org.junit.runners.JUnit4;
 import java.io.FileNotFoundException;
 
 import static org.jlato.parser.ParseContext.*;
-import static org.jlato.rewrite.Quotes.*;
+import static org.jlato.pattern.Quotes.*;
 import static org.jlato.tree.Trees.*;
 
 /**

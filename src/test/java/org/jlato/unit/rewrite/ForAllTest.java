@@ -21,7 +21,7 @@ package org.jlato.unit.rewrite;
 
 import org.jlato.parser.ParseException;
 import org.jlato.printer.FormattingSettings;
-import org.jlato.rewrite.*;
+import org.jlato.pattern.*;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Node;
 import org.jlato.tree.decl.ClassDecl;
@@ -40,7 +40,7 @@ import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 
-import static org.jlato.rewrite.Quotes.*;
+import static org.jlato.pattern.Quotes.*;
 import static org.jlato.tree.Trees.name;
 
 /**

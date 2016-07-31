@@ -26,8 +26,8 @@ import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
-import org.jlato.rewrite.Pattern;
-import org.jlato.rewrite.Substitution;
+import org.jlato.pattern.Pattern;
+import org.jlato.pattern.Substitution;
 import org.jlato.tree.Kind;
 import org.jlato.tree.Tree;
 

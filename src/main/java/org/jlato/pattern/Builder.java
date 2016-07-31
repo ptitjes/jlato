@@ -17,13 +17,12 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.rewrite;
+package org.jlato.pattern;
 
 /**
  * @author Didier Villevalois
  */
-@SuppressWarnings("unused")
-public interface Matcher<T> {
+public interface Builder<T> {
 
-	Substitution match(Object object, Substitution substitution);
+	T build(Substitution substitution);
 }

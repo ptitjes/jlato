@@ -19,8 +19,8 @@
 
 package org.jlato.tree;
 
-import org.jlato.rewrite.Matcher;
-import org.jlato.rewrite.Substitution;
+import org.jlato.pattern.Matcher;
+import org.jlato.pattern.Substitution;
 
 /**
  * @author Didier Villevalois

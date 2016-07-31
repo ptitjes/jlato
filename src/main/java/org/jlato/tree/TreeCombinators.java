@@ -19,8 +19,8 @@
 
 package org.jlato.tree;
 
-import org.jlato.rewrite.MatchVisitor;
-import org.jlato.rewrite.Matcher;
+import org.jlato.pattern.MatchVisitor;
+import org.jlato.pattern.Matcher;
 
 /**
  * @author Didier Villevalois

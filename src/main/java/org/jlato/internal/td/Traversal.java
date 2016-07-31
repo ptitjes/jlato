@@ -19,9 +19,9 @@
 
 package org.jlato.internal.td;
 
-import org.jlato.rewrite.MatchVisitor;
-import org.jlato.rewrite.Matcher;
-import org.jlato.rewrite.Substitution;
+import org.jlato.pattern.MatchVisitor;
+import org.jlato.pattern.Matcher;
+import org.jlato.pattern.Substitution;
 import org.jlato.tree.Tree;
 
 /**

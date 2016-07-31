@@ -22,19 +22,12 @@ package org.jlato.unit.rewrite;
 import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
-import org.jlato.printer.Printer;
-import org.jlato.rewrite.Pattern;
-import org.jlato.rewrite.Quotes;
-import org.jlato.rewrite.Substitution;
-import org.jlato.tree.NodeList;
+import org.jlato.pattern.Pattern;
+import org.jlato.pattern.Quotes;
+import org.jlato.pattern.Substitution;
 import org.jlato.tree.Tree;
-import org.jlato.tree.decl.ImportDecl;
-import org.jlato.tree.decl.MethodDecl;
-import org.jlato.tree.decl.PackageDecl;
-import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.name.QualifiedName;
-import org.jlato.tree.stmt.Stmt;
 import org.jlato.unit.util.BaseTestFromFiles;
 import org.jlato.util.Function1;
 import org.junit.Assert;
@@ -45,8 +38,6 @@ import org.junit.runners.JUnit4;
 import java.io.FileNotFoundException;
 
 import static org.jlato.parser.ParseContext.*;
-import static org.jlato.rewrite.Quotes.*;
-import static org.jlato.tree.Trees.*;
 
 /**
  * @author Didier Villevalois

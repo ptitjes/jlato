@@ -21,9 +21,9 @@ package org.jlato.unit.rewrite;
 
 import org.jlato.parser.ParseException;
 import org.jlato.printer.FormattingSettings;
-import org.jlato.rewrite.MatchVisitor;
-import org.jlato.rewrite.Matcher;
-import org.jlato.rewrite.Substitution;
+import org.jlato.pattern.MatchVisitor;
+import org.jlato.pattern.Matcher;
+import org.jlato.pattern.Substitution;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.CompilationUnit;
