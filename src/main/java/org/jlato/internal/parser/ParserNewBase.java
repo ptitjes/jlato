@@ -115,7 +115,7 @@ public abstract class ParserNewBase {
 
 	protected abstract BUTree<STypeParameter> parseTypeParameter() throws ParseException;
 
-	protected abstract BUTree<SNodeList> parseStatements() throws ParseException;
+	protected abstract BUTree<SNodeList> parseStatements(boolean inConstructor) throws ParseException;
 
 	protected abstract BUTree<? extends SStmt> parseBlockStatement() throws ParseException;
 

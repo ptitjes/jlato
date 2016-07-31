@@ -152,7 +152,7 @@ public class ParserNew extends ParserInterface {
 
 	@Override
 	protected BUTree<SNodeList> parseStatements() throws ParseException {
-		return implementation.parseStatements();
+		return implementation.parseStatements(false);
 	}
 
 	@Override
