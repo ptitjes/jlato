@@ -8,7 +8,7 @@ jdk:
   - openjdk6
 
 after_success:
-  - mvn clean test integration-test jacoco:report coveralls:report
+  - mvn clean test integration-test jacoco:report
   - bash <(curl -s https://codecov.io/bash)
 
 notifications:

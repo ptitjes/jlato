@@ -15,7 +15,7 @@ JLaTo is a Java Language Tools library.
 [info-javadoc]: http://javadoc.io/doc/org.jlato/jlato
 [info-doc]: https://jlato.readthedocs.io/
 [info-build]: https://travis-ci.org/ptitjes/jlato
-[info-coverage]: https://coveralls.io/github/ptitjes/jlato?branch=master
+[info-coverage]: https://codecov.io/gh/ptitjes/jlato
 [info-issues]: https://github.com/ptitjes/jlato/issues
 [info-license]: COPYING.LESSER
 [info-irc]: https://webchat.freenode.net/?channels=jlato
@@ -24,7 +24,7 @@ JLaTo is a Java Language Tools library.
 [shield-javadoc]: https://img.shields.io/badge/javadoc-latest-orange.svg
 [shield-doc]: https://readthedocs.org/projects/docs/badge/?version=latest
 [shield-build]: https://img.shields.io/travis/ptitjes/jlato/master.svg
-[shield-coverage]: https://img.shields.io/coveralls/ptitjes/jlato/master.svg
+[shield-coverage]: https://codecov.io/gh/ptitjes/jlato/branch/master/graph/badge.svg
 [shield-issues]: https://img.shields.io/github/issues-raw/ptitjes/jlato.svg
 [shield-license]: https://img.shields.io/badge/license-LGPL%203.0-blue.svg
 [shield-irc]: https://img.shields.io/badge/irc-%23jlato-red.svg
