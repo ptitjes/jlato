@@ -27,7 +27,6 @@ import org.jlato.internal.bu.name.*;
 import org.jlato.internal.bu.stmt.*;
 import org.jlato.internal.bu.type.*;
 import org.jlato.parser.ParseException;
-import org.jlato.parser.ParserInterface.TypeKind;
 import org.jlato.tree.Problem.Severity;
 import org.jlato.tree.decl.ModifierKeyword;
 import org.jlato.tree.expr.AssignOp;

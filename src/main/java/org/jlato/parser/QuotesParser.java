@@ -20,6 +20,7 @@
 package org.jlato.parser;
 
 import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.parser.ParserInterface;
 import org.jlato.internal.patterns.TreePattern;
 import org.jlato.rewrite.Pattern;
 import org.jlato.tree.Tree;

@@ -20,7 +20,8 @@
 package org.jlato.parser;
 
 import org.jlato.internal.bu.BUTree;
-import org.jlato.parser.ParserInterface.TypeKind;
+import org.jlato.internal.parser.ParserInterface;
+import org.jlato.internal.parser.TypeKind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.*;

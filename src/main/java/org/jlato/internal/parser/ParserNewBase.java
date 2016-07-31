@@ -35,7 +35,6 @@ import org.jlato.internal.bu.type.SUnknownType;
 import org.jlato.internal.shapes.DressingBuilder;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.parser.*;
-import org.jlato.parser.ParserInterface.TypeKind;
 
 import java.io.*;
 import java.util.Iterator;
