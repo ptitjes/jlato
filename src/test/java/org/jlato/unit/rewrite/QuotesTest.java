@@ -84,18 +84,18 @@ public class QuotesTest extends BaseTestFromFiles {
 
 	@Test
 	public void constructorDecl() throws FileNotFoundException, ParseException {
-		final Pattern<MemberDecl> pattern = Quotes.quote(ParseContext.Class_MemberDecl, "public Test() { super(); }");
+		final Pattern<MemberDecl> pattern = Quotes.quote(ParseContext.MemberDeclWithinClass, "public Test() { super(); }");
 
-		Assert.assertFalse(parse(ParseContext.Class_MemberDecl, "public Test() { }").matches(pattern));
-		Assert.assertTrue(parse(ParseContext.Class_MemberDecl, "public Test() { super(); }").matches(pattern));
+		Assert.assertFalse(parse(ParseContext.MemberDeclWithinClass, "public Test() { }").matches(pattern));
+		Assert.assertTrue(parse(ParseContext.MemberDeclWithinClass, "public Test() { super(); }").matches(pattern));
 	}
 
 	@Test
 	public void constructorDeclWithVar() throws FileNotFoundException, ParseException {
-		final Pattern<MemberDecl> pattern = Quotes.quote(ParseContext.Class_MemberDecl, "public Test() { ..$_ }");
+		final Pattern<MemberDecl> pattern = Quotes.quote(ParseContext.MemberDeclWithinClass, "public Test() { ..$_ }");
 
-		Assert.assertTrue(parse(ParseContext.Class_MemberDecl, "public Test() { }").matches(pattern));
-		Assert.assertTrue(parse(ParseContext.Class_MemberDecl, "public Test() { super(); }").matches(pattern));
+		Assert.assertTrue(parse(ParseContext.MemberDeclWithinClass, "public Test() { }").matches(pattern));
+		Assert.assertTrue(parse(ParseContext.MemberDeclWithinClass, "public Test() { super(); }").matches(pattern));
 	}
 
 	@Test

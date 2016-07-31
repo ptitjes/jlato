@@ -78,7 +78,7 @@ public abstract class ParseContext<T extends Tree> {
 		}
 	};
 
-	public final static ParseContext<MemberDecl> MemberDecl(final TypeKind kind) {
+	private static ParseContext<MemberDecl> memberDecl(final TypeKind kind) {
 		return new ParseContext<MemberDecl>() {
 			@Override
 			protected BUTree<?> callProduction(ParserInterface parser) throws ParseException {
@@ -87,15 +87,15 @@ public abstract class ParseContext<T extends Tree> {
 		};
 	}
 
-	public final static ParseContext<MemberDecl> MemberDecl = MemberDecl(TypeKind.Empty);
+	public final static ParseContext<MemberDecl> MemberDecl = memberDecl(TypeKind.Empty);
 
-	public final static ParseContext<MemberDecl> Class_MemberDecl = MemberDecl(TypeKind.Class);
+	public final static ParseContext<MemberDecl> MemberDeclWithinClass = memberDecl(TypeKind.Class);
 
-	public final static ParseContext<MemberDecl> Interface_MemberDecl = MemberDecl(TypeKind.Interface);
+	public final static ParseContext<MemberDecl> MemberDeclWithinInterface = memberDecl(TypeKind.Interface);
 
-	public final static ParseContext<MemberDecl> Enum_MemberDecl = MemberDecl(TypeKind.Enum);
+	public final static ParseContext<MemberDecl> MemberDeclWithinEnum = memberDecl(TypeKind.Enum);
 
-	public final static ParseContext<MemberDecl> Annotation_MemberDecl = new ParseContext<MemberDecl>() {
+	public final static ParseContext<MemberDecl> MemberDeclWithinAnnotation = new ParseContext<MemberDecl>() {
 		@Override
 		protected BUTree<?> callProduction(ParserInterface parser) throws ParseException {
 			return parser.parseAnnotationMemberDecl();

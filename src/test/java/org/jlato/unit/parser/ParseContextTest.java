@@ -33,9 +33,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
-
 import static org.jlato.parser.ParseContext.*;
 import static org.jlato.tree.Trees.*;
 
@@ -123,27 +120,27 @@ public class ParseContextTest {
 	public void interfaceMemberDecl() throws ParseException {
 		Assert.assertEquals(
 				"ERROR: An interface cannot have initializers\n",
-				parsePrint(Interface_MemberDecl, "{}")
+				parsePrint(MemberDeclWithinInterface, "{}")
 		);
 		Assert.assertEquals(
 				"ERROR: An interface cannot have initializers\n",
-				parsePrint(Interface_MemberDecl, "static {}")
+				parsePrint(MemberDeclWithinInterface, "static {}")
 		);
 		Assert.assertEquals(
 				"ERROR: An interface cannot have constructors\n",
-				parsePrint(Interface_MemberDecl, "public TestClass() { super(); }")
+				parsePrint(MemberDeclWithinInterface, "public TestClass() { super(); }")
 		);
 		Assert.assertEquals(
 				"public int hashCode() { return 0; }",
-				parsePrint(Interface_MemberDecl, "public int hashCode() { return 0; }")
+				parsePrint(MemberDeclWithinInterface, "public int hashCode() { return 0; }")
 		);
 		Assert.assertEquals(
 				"public int hashCode();",
-				parsePrint(Interface_MemberDecl, "public int hashCode();")
+				parsePrint(MemberDeclWithinInterface, "public int hashCode();")
 		);
 		Assert.assertEquals(
 				"public int field = 0;",
-				parsePrint(Interface_MemberDecl, "public int field = 0;")
+				parsePrint(MemberDeclWithinInterface, "public int field = 0;")
 		);
 	}
 
@@ -151,11 +148,11 @@ public class ParseContextTest {
 	public void annotationTypeMemberDecl() throws ParseException {
 		Assert.assertEquals(
 				"int value() default 5;",
-				parsePrint(Annotation_MemberDecl, "int value() default 5;")
+				parsePrint(MemberDeclWithinAnnotation, "int value() default 5;")
 		);
 		Assert.assertEquals(
 				"public int field = 0;",
-				parsePrint(Annotation_MemberDecl, "public int field = 0;")
+				parsePrint(MemberDeclWithinAnnotation, "public int field = 0;")
 		);
 	}
 
@@ -163,23 +160,23 @@ public class ParseContextTest {
 	public void enumMemberDecl() throws ParseException {
 		Assert.assertEquals(
 				"{}",
-				parsePrint(Enum_MemberDecl, "{}")
+				parsePrint(MemberDeclWithinEnum, "{}")
 		);
 		Assert.assertEquals(
 				"static {}",
-				parsePrint(Enum_MemberDecl, "static {}")
+				parsePrint(MemberDeclWithinEnum, "static {}")
 		);
 		Assert.assertEquals(
 				"public TestClass() { super(); }",
-				parsePrint(Enum_MemberDecl, "public TestClass() { super(); }")
+				parsePrint(MemberDeclWithinEnum, "public TestClass() { super(); }")
 		);
 		Assert.assertEquals(
 				"public int hashCode() { return 0; }",
-				parsePrint(Enum_MemberDecl, "public int hashCode() { return 0; }")
+				parsePrint(MemberDeclWithinEnum, "public int hashCode() { return 0; }")
 		);
 		Assert.assertEquals(
 				"public int field = 0;",
-				parsePrint(Enum_MemberDecl, "public int field = 0;")
+				parsePrint(MemberDeclWithinEnum, "public int field = 0;")
 		);
 	}
 
