@@ -125,6 +125,38 @@ public class QuotesTest extends BaseTestFromFiles {
 	}
 
 	@Test
+	public void methodCallsWithArgs() throws FileNotFoundException, ParseException {
+		final Pattern<Expr> pattern = Quotes.expr("$p.equals(a, b)");
+
+		Assert.assertFalse(parse(Expression, "o.equals()").matches(pattern));
+		Assert.assertFalse(parse(Expression, "o.otherMethod()").matches(pattern));
+		Assert.assertFalse(parse(Expression, "o.equals(a)").matches(pattern));
+		Assert.assertFalse(parse(Expression, "o.equals(b)").matches(pattern));
+		Assert.assertTrue(parse(Expression, "o.equals(a, b)").matches(pattern));
+
+		Assert.assertTrue(parse(Expression, "o.equals(a, b)").match(pattern).binds("p"));
+		Assert.assertEquals(name("o"), parse(Expression, "o.equals(a, b)").match(pattern).get("p"));
+	}
+
+	@Test
+	public void methodCallsWithArgsNodeVar() throws FileNotFoundException, ParseException {
+		final Pattern<Expr> pattern = Quotes.expr("$p.equals(..$args)");
+
+		Assert.assertTrue(parse(Expression, "o.equals()").matches(pattern));
+		Assert.assertFalse(parse(Expression, "o.otherMethod()").matches(pattern));
+
+		Assert.assertNotNull(parse(Expression, "o.equals()").match(pattern));
+		Assert.assertNull(parse(Expression, "o.otherMethod()").match(pattern));
+		Assert.assertTrue(parse(Expression, "o.equals()").match(pattern).binds("p"));
+		Assert.assertEquals(name("o"), parse(Expression, "o.equals()").match(pattern).get("p"));
+
+		Assert.assertTrue(parse(Expression, "o.equals(a)").match(pattern).binds("p"));
+		Assert.assertEquals(name("o"), parse(Expression, "o.equals(a)").match(pattern).get("p"));
+		Assert.assertTrue(parse(Expression, "o.equals(a)").match(pattern).binds("args"));
+		Assert.assertEquals(listOf(name("a")), parse(Expression, "o.equals(a)").match(pattern).get("args"));
+	}
+
+	@Test
 	public void enclosedExpr() throws FileNotFoundException, ParseException {
 		Assert.assertEquals("(var ? true : false)", Printer.printToString(
 				expr("($e ? true : false)").build(Substitution.empty().bind("e", name("var")))

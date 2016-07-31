@@ -1,0 +1,88 @@
+{
+  kind: TryStmt,
+  catchs: [
+  ],
+  finallyBlock: null,
+  resources: [
+    {
+      kind: VariableDeclarationExpr,
+      declaration: {
+        kind: LocalVariableDecl,
+        modifiers: [
+        ],
+        type: {
+          kind: QualifiedType,
+          annotations: [
+          ],
+          name: BufferedReader,
+          scope: null,
+          typeArgs: null,
+        },
+        variables: [
+          {
+            kind: VariableDeclarator,
+            id: {
+              kind: VariableDeclaratorId,
+              dims: [
+              ],
+              name: br,
+            },
+            init: {
+              kind: ObjectCreationExpr,
+              args: [
+                {
+                  kind: ObjectCreationExpr,
+                  args: [
+                    path,
+                  ],
+                  body: null,
+                  scope: null,
+                  type: {
+                    kind: QualifiedType,
+                    annotations: [
+                    ],
+                    name: FileReader,
+                    scope: null,
+                    typeArgs: null,
+                  },
+                  typeArgs: [
+                  ],
+                },
+              ],
+              body: null,
+              scope: null,
+              type: {
+                kind: QualifiedType,
+                annotations: [
+                ],
+                name: BufferedReader,
+                scope: null,
+                typeArgs: null,
+              },
+              typeArgs: [
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+  trailingSemiColon: true,
+  tryBlock: {
+    kind: BlockStmt,
+    stmts: [
+      {
+        kind: ReturnStmt,
+        expr: {
+          kind: MethodInvocationExpr,
+          args: [
+          ],
+          name: readLine,
+          scope: br,
+          typeArgs: [
+          ],
+        },
+      },
+    ],
+  },
+}

@@ -1,0 +1,39 @@
+{
+  kind: QualifiedType,
+  annotations: [
+    {
+      kind: NormalAnnotationExpr,
+      name: MyAnnotation,
+      pairs: [
+        {
+          kind: MemberValuePair,
+          name: element,
+          value: {
+            kind: ArrayInitializerExpr,
+            trailingComma: false,
+            values: [
+              {
+                kind: LiteralExpr,
+                literalClass: java.lang.String,
+                literalString: "val1",
+              },
+              {
+                kind: LiteralExpr,
+                literalClass: java.lang.String,
+                literalString: "val2",
+              },
+              {
+                kind: LiteralExpr,
+                literalClass: java.lang.String,
+                literalString: "val3",
+              },
+            ],
+          },
+        },
+      ],
+    },
+  ],
+  name: MyType,
+  scope: null,
+  typeArgs: null,
+}
