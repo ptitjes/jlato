@@ -48,6 +48,11 @@ public class SNodeList implements STree {
 	}
 
 	@Override
+	public STreeKind treeKind() {
+		return STreeKind.NodeList;
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public Tree instantiate(TDLocation<?> location) {
 		return new TDNodeList<Tree>((TDLocation<SNodeList>) location);

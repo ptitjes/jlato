@@ -41,6 +41,11 @@ public class SNodeEither implements STree {
 	}
 
 	@Override
+	public STreeKind treeKind() {
+		return STreeKind.NodeEither;
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public Tree instantiate(TDLocation<?> location) {
 		return new TDNodeEither<Tree, Tree>((TDLocation<SNodeEither>) location);

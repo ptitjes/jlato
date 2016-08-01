@@ -46,6 +46,11 @@ public class SNodeMap implements STree {
 	}
 
 	@Override
+	public STreeKind treeKind() {
+		return STreeKind.NodeMap;
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public Tree instantiate(TDLocation<?> location) {
 		return new TDNodeMap<Tree>((TDLocation<SNodeMap>) location);

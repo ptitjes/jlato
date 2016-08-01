@@ -28,6 +28,8 @@ import org.jlato.tree.*;
  */
 public interface STree {
 
+	STreeKind treeKind();
+
 	Iterable<SProperty> allProperties();
 
 	STraversal firstChild();
@@ -39,4 +41,12 @@ public interface STree {
 	Tree instantiate(TDLocation<?> location);
 
 	LexicalShape shape();
+
+	enum STreeKind {
+		Node,
+		NodeEither,
+		NodeList,
+		NodeMap,
+		NodeOption,
+	}
 }

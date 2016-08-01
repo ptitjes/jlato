@@ -258,10 +258,8 @@ public abstract class ParserNewBase {
 		while (traversal != null) {
 			BUTree<?> child = traversal.traverse(state);
 
-			if (child != null) {
-				if (child.state instanceof SNodeList
-						|| child.state instanceof SNodeOption
-						|| child.state instanceof SNodeEither) {
+			if (child != null && child.state != null) {
+				if (child.state.treeKind() != STree.STreeKind.Node) {
 					child = doCollectProblems(child);
 					if (child.hasProblems()) {
 						tree = tree.traverseReplace(traversal, child);

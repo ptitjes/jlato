@@ -32,6 +32,11 @@ public abstract class SNode<S extends SNode<S>> implements STree {
 	public SNode() {
 	}
 
+	@Override
+	public STreeKind treeKind() {
+		return STreeKind.Node;
+	}
+
 	public abstract Kind kind();
 
 	@Override
