@@ -54,20 +54,28 @@ public class Parser {
 		return DefaultFactory;
 	}
 
-	public <T extends Tree> T parse(ParseContext<T> context, InputStream inputStream, String encoding) throws ParseException {
-		if (parserInstance == null) {
-			parserInstance = factory().newInstance(inputStream, encoding, configuration, false);
-		} else parserInstance.reset(inputStream, encoding);
-		BUTree<?> tree = context.callProduction(parserInstance);
-		return safeAsTree(tree);
+	public <T extends Tree> T parse(ParseContext<T> context, InputStream inputStream, String encoding) throws ParseException, IOException {
+		try {
+			if (parserInstance == null) {
+				parserInstance = factory().newInstance(inputStream, encoding, configuration, false);
+			} else parserInstance.reset(inputStream, encoding);
+			BUTree<?> tree = context.callProduction(parserInstance);
+			return safeAsTree(tree);
+		} finally {
+			inputStream.close();
+		}
 	}
 
-	public <T extends Tree> T parse(ParseContext<T> context, Reader reader) throws ParseException {
-		if (parserInstance == null) {
-			parserInstance = factory().newInstance(reader, configuration, false);
-		} else parserInstance.reset(reader);
-		BUTree<?> tree = context.callProduction(parserInstance);
-		return safeAsTree(tree);
+	public <T extends Tree> T parse(ParseContext<T> context, Reader reader) throws ParseException, IOException {
+		try {
+			if (parserInstance == null) {
+				parserInstance = factory().newInstance(reader, configuration, false);
+			} else parserInstance.reset(reader);
+			BUTree<?> tree = context.callProduction(parserInstance);
+			return safeAsTree(tree);
+		} finally {
+			reader.close();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -77,18 +85,22 @@ public class Parser {
 
 	public <T extends Tree> T parse(ParseContext<T> context, String content) throws ParseException {
 		final StringReader reader = new StringReader(content);
-		return parse(context, reader);
+		try {
+			return parse(context, reader);
+		} catch (IOException e) {
+			throw new IllegalStateException();
+		}
 	}
 
-	public CompilationUnit parse(InputStream inputStream, String encoding) throws ParseException {
+	public CompilationUnit parse(InputStream inputStream, String encoding) throws ParseException, IOException {
 		return parse(ParseContext.CompilationUnit, inputStream, encoding);
 	}
 
-	public CompilationUnit parse(File file, String encoding) throws ParseException, FileNotFoundException {
+	public CompilationUnit parse(File file, String encoding) throws ParseException, IOException {
 		return parse(ParseContext.CompilationUnit, new FileInputStream(file), encoding);
 	}
 
-	public NodeMap<CompilationUnit> parseAll(File directory, String encoding) throws ParseException, FileNotFoundException {
+	public NodeMap<CompilationUnit> parseAll(File directory, String encoding) throws ParseException, IOException {
 		List<File> files = collectAllJavaFiles(directory, new ArrayList<File>());
 
 		String rootPath = directory.getAbsolutePath();
