@@ -40,11 +40,33 @@ import org.jlato.internal.parser.TokenType;
     }
 
     private Token newToken(int type) {
-        return newToken(type, yytext());
-    }
+        String image;
+        switch (type) {
+            case TokenType.WHITESPACE:
+            case TokenType.NEWLINE:
 
-    private Token newToken(int type, String value) {
-        Token token = Token.newToken(type, value);
+            case TokenType.SINGLE_LINE_COMMENT:
+            case TokenType.JAVA_DOC_COMMENT:
+            case TokenType.MULTI_LINE_COMMENT:
+
+            case TokenType.INTEGER_LITERAL:
+            case TokenType.LONG_LITERAL:
+            case TokenType.FLOAT_LITERAL:
+            case TokenType.DOUBLE_LITERAL:
+            case TokenType.CHARACTER_LITERAL:
+            case TokenType.STRING_LITERAL:
+
+            case TokenType.NODE_VARIABLE:
+            case TokenType.NODE_LIST_VARIABLE:
+            case TokenType.IDENTIFIER:
+                image = yytext();
+                break;
+
+            default:
+                image = TokenType.tokenImage[type];
+        }
+
+        Token token = Token.newToken(type, image);
         token.beginLine = yyline + 1;
         token.beginColumn = yycolumn + 1;
         return token;
@@ -59,7 +81,7 @@ import org.jlato.internal.parser.TokenType;
 %column
 
 LineTerminator = \r|\n|\r\n|\f
-WhiteSpace = [\ \t]
+WhiteSpace = [\ \t]+
 
 MultiLineComment   = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 EndOfLineComment     = "//" [^\r\n]*

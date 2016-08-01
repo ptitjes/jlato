@@ -348,7 +348,7 @@ public abstract class ParserNewBase {
 		String eol = System.getProperty("line.separator", "\n");
 		StringBuffer expected = new StringBuffer();
 		for (int i = 0; i < expectedTokenTypes.length; i++) {
-			expected.append(TokenType.tokenImage[expectedTokenTypes[i]]).append(' ');
+			expected.append("\"").append(TokenType.tokenImage[expectedTokenTypes[i]]).append("\" ");
 			expected.append("...");
 			expected.append(eol).append("    ");
 		}
