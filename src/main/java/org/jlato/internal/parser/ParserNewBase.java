@@ -249,28 +249,30 @@ public abstract class ParserNewBase {
 
 	// TODO This should be handled through BUTree.validate() ?
 	private <S extends STree> BUTree<S> doCollectProblems(BUTree<S> tree) {
-		S state = tree.state;
-		boolean hasProblem = false;
-
-		STraversal traversal = state.firstChild();
-		while (traversal != null) {
-			BUTree<?> child = traversal.traverse(state);
-
-			if (child != null && child.state != null) {
-				if (child.state.treeKind() != STree.STreeKind.Node) {
-					child = doCollectProblems(child);
-					if (child.hasProblems()) {
-						tree = tree.traverseReplace(traversal, child);
-					}
-				}
-				if (child.hasProblems()) hasProblem = true;
-			}
-
-			traversal = traversal.rightSibling(state);
-		}
-
-		if (hasProblem) tree = tree.setProblems();
 		return tree;
+
+//		S state = tree.state;
+//		boolean hasProblem = false;
+//
+//		STraversal traversal = state.firstChild();
+//		while (traversal != null) {
+//			BUTree<?> child = traversal.traverse(state);
+//
+//			if (child != null && child.state != null) {
+//				if (child.state.treeKind() != STree.STreeKind.Node) {
+//					child = doCollectProblems(child);
+//					if (child.hasProblems()) {
+//						tree = tree.traverseReplace(traversal, child);
+//					}
+//				}
+//				if (child.hasProblems()) hasProblem = true;
+//			}
+//
+//			traversal = traversal.rightSibling(state);
+//		}
+//
+//		if (hasProblem) tree = tree.setProblems();
+//		return tree;
 	}
 
 	// Base parse methods

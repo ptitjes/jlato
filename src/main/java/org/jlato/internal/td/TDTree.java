@@ -60,7 +60,13 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 
 	@Override
 	public boolean hasProblems() {
-		return location.tree.hasProblems();
+		return findAll(new Matcher<Tree>() {
+			@Override
+			public Substitution match(Object object, Substitution substitution) {
+				return !TDTree.treeOf((Tree) object).problems().isEmpty() ? substitution : null;
+			}
+		}).iterator().hasNext();
+//		return location.tree.hasProblems();
 	}
 
 	@Override
