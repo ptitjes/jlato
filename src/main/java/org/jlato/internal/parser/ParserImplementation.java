@@ -14715,7 +14715,14 @@ public class ParserImplementation extends ParserNewBase {
 			)
 			sequence(
 				lookAhead(
-					nonTerminal(VariableDeclExpression)
+					nonTerminal(ModifiersNoDefault)
+					nonTerminal(Type)
+					nonTerminal(VariableDeclaratorId)
+					choice(
+						terminal(ASSIGN)
+						terminal(COMMA)
+						terminal(SEMICOLON)
+					)
 				)
 				action({ run(); })
 				nonTerminal(expr, VariableDeclExpression)
@@ -14765,7 +14772,14 @@ public class ParserImplementation extends ParserNewBase {
 			)
 			sequence(
 				lookAhead(
-					nonTerminal(VariableDeclExpression)
+					nonTerminal(ModifiersNoDefault)
+					nonTerminal(Type)
+					nonTerminal(VariableDeclaratorId)
+					choice(
+						terminal(ASSIGN)
+						terminal(COMMA)
+						terminal(SEMICOLON)
+					)
 				)
 				nonTerminal(expr, VariableDeclExpression)
 				terminal(SEMICOLON)
@@ -14794,7 +14808,14 @@ public class ParserImplementation extends ParserNewBase {
 		)
 		sequence(
 			lookAhead(
-				nonTerminal(VariableDeclExpression)
+				nonTerminal(ModifiersNoDefault)
+				nonTerminal(Type)
+				nonTerminal(VariableDeclaratorId)
+				choice(
+					terminal(ASSIGN)
+					terminal(COMMA)
+					terminal(SEMICOLON)
+				)
 			)
 			nonTerminal(expr, VariableDeclExpression)
 			terminal(SEMICOLON)
@@ -14838,7 +14859,14 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* sequence(
 		lookAhead(
-			nonTerminal(VariableDeclExpression)
+			nonTerminal(ModifiersNoDefault)
+			nonTerminal(Type)
+			nonTerminal(VariableDeclaratorId)
+			choice(
+				terminal(ASSIGN)
+				terminal(COMMA)
+				terminal(SEMICOLON)
+			)
 		)
 		nonTerminal(expr, VariableDeclExpression)
 		terminal(SEMICOLON)
@@ -14886,13 +14914,48 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		nonTerminal(VariableDeclExpression)
+		nonTerminal(ModifiersNoDefault)
+		nonTerminal(Type)
+		nonTerminal(VariableDeclaratorId)
+		choice(
+			terminal(ASSIGN)
+			terminal(COMMA)
+			terminal(SEMICOLON)
+		)
 	) */
 	private int matchBlockStatement_lookahead2(int lookahead) {
-		lookahead = matchVariableDeclExpression(lookahead);
+		lookahead = matchModifiersNoDefault(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = matchType(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = matchVariableDeclaratorId(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = matchBlockStatement_lookahead2_4(lookahead);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
+	}
+
+	/* choice(
+		terminal(ASSIGN)
+		terminal(COMMA)
+		terminal(SEMICOLON)
+	) */
+	private int matchBlockStatement_lookahead2_4(int lookahead) {
+		int newLookahead;
+		newLookahead = match(lookahead, TokenType.ASSIGN);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = match(lookahead, TokenType.COMMA);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = match(lookahead, TokenType.SEMICOLON);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
 	}
 
 	/* sequence(
@@ -15601,7 +15664,9 @@ public class ParserImplementation extends ParserNewBase {
 		choice(
 			sequence(
 				lookAhead(
-					nonTerminal(VariableDeclExpression)
+					nonTerminal(Modifiers)
+					nonTerminal(Type)
+					nonTerminal(VariableDeclaratorId)
 					terminal(COLON)
 				)
 				nonTerminal(varExpr, VariableDeclExpression)
@@ -15674,7 +15739,9 @@ public class ParserImplementation extends ParserNewBase {
 		choice(
 			sequence(
 				lookAhead(
-					nonTerminal(VariableDeclExpression)
+					nonTerminal(Modifiers)
+					nonTerminal(Type)
+					nonTerminal(VariableDeclaratorId)
 					terminal(COLON)
 				)
 				nonTerminal(varExpr, VariableDeclExpression)
@@ -15720,7 +15787,9 @@ public class ParserImplementation extends ParserNewBase {
 	/* choice(
 		sequence(
 			lookAhead(
-				nonTerminal(VariableDeclExpression)
+				nonTerminal(Modifiers)
+				nonTerminal(Type)
+				nonTerminal(VariableDeclaratorId)
 				terminal(COLON)
 			)
 			nonTerminal(varExpr, VariableDeclExpression)
@@ -15754,7 +15823,9 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* sequence(
 		lookAhead(
-			nonTerminal(VariableDeclExpression)
+			nonTerminal(Modifiers)
+			nonTerminal(Type)
+			nonTerminal(VariableDeclaratorId)
 			terminal(COLON)
 		)
 		nonTerminal(varExpr, VariableDeclExpression)
@@ -15870,11 +15941,19 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		nonTerminal(VariableDeclExpression)
+		nonTerminal(Modifiers)
+		nonTerminal(Type)
+		nonTerminal(VariableDeclaratorId)
 		terminal(COLON)
 	) */
 	private int matchForStatement_lookahead1(int lookahead) {
-		lookahead = matchVariableDeclExpression(lookahead);
+		lookahead = matchModifiers(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = matchType(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = matchVariableDeclaratorId(lookahead);
 		if (lookahead == -1)
 			return -1;
 		lookahead = match(lookahead, TokenType.COLON);
