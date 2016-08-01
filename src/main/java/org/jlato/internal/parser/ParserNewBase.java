@@ -37,9 +37,7 @@ import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.parser.*;
 
 import java.io.*;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.util.*;
 
 import static org.jlato.internal.parser.TokenType.ARROW;
 import static org.jlato.internal.parser.TokenType.LPAREN;
@@ -277,7 +275,7 @@ public abstract class ParserNewBase {
 
 	// Base parse methods
 
-	private LinkedList<Token> lookaheadTokens = new LinkedList<Token>();
+	private CircularBuffer<Token> lookaheadTokens = new CircularBuffer<Token>(20, 10);
 	protected int matchLookahead;
 
 	private void advance(int index) {
@@ -331,7 +329,7 @@ public abstract class ParserNewBase {
 			throw new ParseException("Found " + found + " – Expected " + expected +
 					" (" + token.beginLine + ":" + token.beginColumn + ")");
 		}
-		lookaheadTokens.remove(0);
+		lookaheadTokens.dropHead();
 		return token;
 	}
 
@@ -497,5 +495,86 @@ public abstract class ParserNewBase {
 			}
 		}
 		return retval.toString();
+	}
+
+	static class CircularBuffer<E> {
+		private Object[] elementData;
+		private int head;
+		private int tail;
+		private final int capacityIncrement;
+
+		public CircularBuffer(int initialCapacity, int capacityIncrement) {
+			elementData = new Object[initialCapacity];
+			head = 0;
+			tail = 0;
+			this.capacityIncrement = capacityIncrement;
+		}
+
+		public int size() {
+			if (head <= tail) return tail - head;
+			else return elementData.length - head + tail;
+		}
+
+		public void clear() {
+			head = tail = 0;
+		}
+
+		public void add(E value) {
+			ensureCapacityForAppend();
+
+			elementData[tail++] = value;
+			if (tail == elementData.length) {
+				tail = 0;
+			}
+		}
+
+		public E dropHead() {
+			if (head == tail) throw new NoSuchElementException();
+
+			E element = elementData(head++);
+			if (head == elementData.length) {
+				head = 0;
+			}
+			return element;
+		}
+
+		public E get(int index) {
+			int realIndex = head + index;
+			if (head < tail) {
+				if (realIndex < tail) {
+					return elementData(realIndex);
+				}
+			} else {
+				if (realIndex < elementData.length) {
+					return elementData(realIndex);
+				}
+				realIndex = realIndex - elementData.length;
+				if (realIndex < tail) {
+					return elementData(realIndex);
+				}
+			}
+
+			throw new NoSuchElementException();
+		}
+
+		@SuppressWarnings("unchecked")
+		private E elementData(int index) {
+			return (E) elementData[index];
+		}
+
+		private void ensureCapacityForAppend() {
+			int currentCapacity = elementData.length;
+			int newCapacity = currentCapacity + capacityIncrement;
+
+			if (tail + 1 == head) {
+				elementData = Arrays.copyOf(elementData, newCapacity);
+				System.arraycopy(elementData, head, elementData, head + capacityIncrement, currentCapacity - head);
+				head = head + capacityIncrement;
+				System.out.println("Size: " + newCapacity);
+			} else if (tail == currentCapacity - 1 && head == 0) {
+				elementData = Arrays.copyOf(elementData, newCapacity);
+				System.out.println("Size: " + newCapacity);
+			}
+		}
 	}
 }
