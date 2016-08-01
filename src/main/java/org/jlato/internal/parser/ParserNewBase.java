@@ -570,10 +570,8 @@ public abstract class ParserNewBase {
 				elementData = Arrays.copyOf(elementData, newCapacity);
 				System.arraycopy(elementData, head, elementData, head + capacityIncrement, currentCapacity - head);
 				head = head + capacityIncrement;
-				System.out.println("Size: " + newCapacity);
 			} else if (tail == currentCapacity - 1 && head == 0) {
 				elementData = Arrays.copyOf(elementData, newCapacity);
-				System.out.println("Size: " + newCapacity);
 			}
 		}
 	}
