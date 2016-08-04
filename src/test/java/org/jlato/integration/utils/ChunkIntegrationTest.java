@@ -70,7 +70,8 @@ public abstract class ChunkIntegrationTest<T extends Tree> implements BulkTestCl
 				Assert.assertEquals(formatted, actualFormatted);
 			} else if (failure != null) {
 				try {
-					parse(source);
+					T tree = parse(source);
+					Assert.assertNull(tree);
 				} catch (ParseException e) {
 					Assert.assertEquals(failure, e.getMessage());
 				}
