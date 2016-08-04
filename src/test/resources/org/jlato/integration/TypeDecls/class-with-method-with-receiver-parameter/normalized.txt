@@ -1,0 +1,50 @@
+{
+  kind: ClassDecl,
+  extendsClause: null,
+  implementsClause: [
+  ],
+  members: [
+    {
+      kind: MethodDecl,
+      body: {
+        kind: BlockStmt,
+        stmts: [
+        ],
+      },
+      dims: [
+      ],
+      modifiers: [
+      ],
+      name: test,
+      params: [
+        {
+          kind: FormalParameter,
+          id: null,
+          isVarArgs: false,
+          modifiers: [
+          ],
+          type: {
+            kind: QualifiedType,
+            annotations: [
+            ],
+            name: Test,
+            scope: null,
+            typeArgs: null,
+          },
+        },
+      ],
+      throwsClause: [
+      ],
+      type: {
+        kind: VoidType,
+      },
+      typeParams: [
+      ],
+    },
+  ],
+  modifiers: [
+  ],
+  name: Test,
+  typeParams: [
+  ],
+}

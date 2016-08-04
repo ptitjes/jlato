@@ -5120,14 +5120,33 @@ public class ParserImplementation extends ParserNewBase {
 			terminal(ELLIPSIS)
 			action({ isVarArg = true; })
 		)
-		nonTerminal(id, VariableDeclaratorId)
+		choice(
+			sequence(
+				lookAhead(
+					zeroOrOne(
+						nonTerminal(name, Name)
+						terminal(DOT)
+					)
+					terminal(THIS)
+				)
+				zeroOrOne(
+					nonTerminal(name, Name)
+					terminal(DOT)
+				)
+				terminal(THIS)
+				action({ isReceiver = true; })
+			)
+			nonTerminal(id, VariableDeclaratorId)
+		)
 		action({ return dress(SFormalParameter.make(modifiers, type, isVarArg, id)); })
 	) */
 	protected BUTree<SFormalParameter> parseFormalParameter() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SType> type;
 		boolean isVarArg = false;
-		BUTree<SVariableDeclaratorId> id;
+		BUTree<SVariableDeclaratorId> id = null;
+		BUTree<SName> name;
+		boolean isReceiver = false;
 		run();
 		modifiers = parseModifiers();
 		type = parseType(null);
@@ -5135,7 +5154,18 @@ public class ParserImplementation extends ParserNewBase {
 			parse(TokenType.ELLIPSIS);
 			isVarArg = true;
 		}
-		id = parseVariableDeclaratorId();
+		if (matchFormalParameter_lookahead1(0) != -1) {
+			if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
+				name = parseName();
+				parse(TokenType.DOT);
+			}
+			parse(TokenType.THIS);
+			isReceiver = true;
+		} else if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
+			id = parseVariableDeclaratorId();
+		} else {
+			throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.THIS);
+		}
 		return dress(SFormalParameter.make(modifiers, type, isVarArg, id));
 	}
 
@@ -5145,7 +5175,23 @@ public class ParserImplementation extends ParserNewBase {
 		zeroOrOne(
 			terminal(ELLIPSIS)
 		)
-		nonTerminal(id, VariableDeclaratorId)
+		choice(
+			sequence(
+				lookAhead(
+					zeroOrOne(
+						nonTerminal(name, Name)
+						terminal(DOT)
+					)
+					terminal(THIS)
+				)
+				zeroOrOne(
+					nonTerminal(name, Name)
+					terminal(DOT)
+				)
+				terminal(THIS)
+			)
+			nonTerminal(id, VariableDeclaratorId)
+		)
 	) */
 	private int matchFormalParameter(int lookahead) {
 		lookahead = matchModifiers(lookahead);
@@ -5157,7 +5203,7 @@ public class ParserImplementation extends ParserNewBase {
 		lookahead = matchFormalParameter_4(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = matchVariableDeclaratorId(lookahead);
+		lookahead = matchFormalParameter_5(lookahead);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -5179,6 +5225,127 @@ public class ParserImplementation extends ParserNewBase {
 	) */
 	private int matchFormalParameter_4_1(int lookahead) {
 		lookahead = match(lookahead, TokenType.ELLIPSIS);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* choice(
+		sequence(
+			lookAhead(
+				zeroOrOne(
+					nonTerminal(name, Name)
+					terminal(DOT)
+				)
+				terminal(THIS)
+			)
+			zeroOrOne(
+				nonTerminal(name, Name)
+				terminal(DOT)
+			)
+			terminal(THIS)
+		)
+		nonTerminal(id, VariableDeclaratorId)
+	) */
+	private int matchFormalParameter_5(int lookahead) {
+		int newLookahead;
+		newLookahead = matchFormalParameter_5_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchVariableDeclaratorId(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
+	}
+
+	/* sequence(
+		lookAhead(
+			zeroOrOne(
+				nonTerminal(name, Name)
+				terminal(DOT)
+			)
+			terminal(THIS)
+		)
+		zeroOrOne(
+			nonTerminal(name, Name)
+			terminal(DOT)
+		)
+		terminal(THIS)
+	) */
+	private int matchFormalParameter_5_1(int lookahead) {
+		lookahead = matchFormalParameter_5_1_2(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.THIS);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* zeroOrOne(
+		nonTerminal(name, Name)
+		terminal(DOT)
+	) */
+	private int matchFormalParameter_5_1_2(int lookahead) {
+		int newLookahead;
+		newLookahead = matchFormalParameter_5_1_2_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return lookahead;
+	}
+
+	/* sequence(
+		nonTerminal(name, Name)
+		terminal(DOT)
+	) */
+	private int matchFormalParameter_5_1_2_1(int lookahead) {
+		lookahead = matchName(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.DOT);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		zeroOrOne(
+			nonTerminal(name, Name)
+			terminal(DOT)
+		)
+		terminal(THIS)
+	) */
+	private int matchFormalParameter_lookahead1(int lookahead) {
+		lookahead = matchFormalParameter_lookahead1_1(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.THIS);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* zeroOrOne(
+		nonTerminal(name, Name)
+		terminal(DOT)
+	) */
+	private int matchFormalParameter_lookahead1_1(int lookahead) {
+		int newLookahead;
+		newLookahead = matchFormalParameter_lookahead1_1_1(lookahead);
+		if (newLookahead != -1)
+			return newLookahead;
+		return lookahead;
+	}
+
+	/* sequence(
+		nonTerminal(name, Name)
+		terminal(DOT)
+	) */
+	private int matchFormalParameter_lookahead1_1_1(int lookahead) {
+		lookahead = matchName(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.DOT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
