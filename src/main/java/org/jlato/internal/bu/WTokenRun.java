@@ -19,7 +19,6 @@
 
 package org.jlato.internal.bu;
 
-import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.IndexedList;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.parser.TokenType;
@@ -29,21 +28,28 @@ import org.jlato.internal.parser.TokenType;
  */
 public class WTokenRun extends WRun {
 
-	public static final WTokenRun EMPTY = new WTokenRun(Vector.<WToken>empty());
+	public static final WTokenRun EMPTY = new WTokenRun(Vector.<WToken>empty(), false);
+	public static final WTokenRun NEW = new WTokenRun(Vector.<WToken>empty(), true);
 	public static final WTokenRun NULL = null;
 
 	public final IndexedList<WToken> elements;
+	public final boolean newTokens;
 
-	public WTokenRun(IndexedList<WToken> elements) {
+	public WTokenRun(IndexedList<WToken> elements, boolean newTokens) {
 		this.elements = elements;
+		this.newTokens = newTokens;
+	}
+
+	public WTokenRun setNewTokens() {
+		return new WTokenRun(elements, true);
 	}
 
 	public WTokenRun prepend(WToken element) {
-		return new WTokenRun(elements.prepend(element));
+		return new WTokenRun(elements.prepend(element), newTokens);
 	}
 
 	public WTokenRun append(WToken element) {
-		return new WTokenRun(elements.append(element));
+		return new WTokenRun(elements.append(element), newTokens);
 	}
 
 	public String[] getComments() {
@@ -76,7 +82,7 @@ public class WTokenRun extends WRun {
 	public WTokenRun replaceOrAppendDocComment(WToken docComment) {
 		int indexOfDocComment = indexOfDocComment();
 		if (indexOfDocComment != -1) {
-			return new WTokenRun(elements.set(indexOfDocComment, docComment));
+			return new WTokenRun(elements.set(indexOfDocComment, docComment), newTokens);
 		} else {
 			return append(docComment).append(WToken.newLine());
 		}
@@ -90,16 +96,16 @@ public class WTokenRun extends WRun {
 	public TwoWaySplit splitTrailingComment() {
 		int splitIndex = splitIndexOfTrailingComment();
 		return new TwoWaySplit(
-				splitIndex == 0 ? NULL : new WTokenRun(elements.take(splitIndex)),
-				splitIndex == elements.size() ? EMPTY : new WTokenRun(elements.drop(splitIndex))
+				splitIndex == 0 ? NULL : new WTokenRun(elements.take(splitIndex), newTokens),
+				splitIndex == elements.size() ? EMPTY : new WTokenRun(elements.drop(splitIndex), newTokens)
 		);
 	}
 
 	public TwoWaySplit splitLeadingComments() {
 		int splitIndex = splitIndexOfLeadingComments();
 		return new TwoWaySplit(
-				splitIndex == 0 ? EMPTY : new WTokenRun(elements.take(splitIndex)),
-				splitIndex == elements.size() ? NULL : new WTokenRun(elements.drop(splitIndex))
+				splitIndex == 0 ? EMPTY : new WTokenRun(elements.take(splitIndex), newTokens),
+				splitIndex == elements.size() ? NULL : new WTokenRun(elements.drop(splitIndex), newTokens)
 		);
 	}
 
@@ -287,6 +293,24 @@ public class WTokenRun extends WRun {
 		return false;
 	}
 
+	public boolean containsNoWhitespace() {
+		for (WToken token : elements) {
+			switch (token.kind) {
+				case TokenType.SINGLE_LINE_COMMENT:
+				case TokenType.MULTI_LINE_COMMENT:
+				case TokenType.JAVA_DOC_COMMENT:
+				case TokenType.NEWLINE:
+					break;
+				case TokenType.WHITESPACE:
+					return false;
+				default:
+					// Checked at WToken instantiation
+					throw new IllegalStateException();
+			}
+		}
+		return true;
+	}
+
 	public boolean containsComments() {
 		for (WToken token : elements) {
 			switch (token.kind) {
@@ -348,7 +372,7 @@ public class WTokenRun extends WRun {
 		}
 
 		public WTokenRun build() {
-			return new WTokenRun(elements.build());
+			return new WTokenRun(elements.build(), false);
 		}
 	}
 }

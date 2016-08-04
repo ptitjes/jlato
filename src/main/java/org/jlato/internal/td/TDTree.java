@@ -204,7 +204,7 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
-		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
+		final WTokenRun leading = dressing.leading == null ? WTokenRun.NEW : dressing.leading;
 
 		final WToken comment = createComment(commentString, expressionContext, forceMultiLine);
 		final WTokenRun newLeading;
@@ -227,7 +227,7 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
-		final WTokenRun trailing = dressing.trailing == null ? WTokenRun.EMPTY : dressing.trailing;
+		final WTokenRun trailing = dressing.trailing == null ? WTokenRun.NEW : dressing.trailing;
 
 		final WToken comment = createComment(commentString, expressionContext, forceMultiLine || trailing.containsSingleLineComment());
 		final WTokenRun newTrailing = trailing.prepend(comment).prepend(whitespace(" "));
@@ -252,8 +252,8 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
-		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
-		final WTokenRun newLeading = leading.replaceOrAppendDocComment(comment);
+		final WTokenRun leading = dressing.leading == null ? WTokenRun.NEW : dressing.leading;
+		final WTokenRun newLeading = leading.replaceOrAppendDocComment(comment).setNewTokens();
 
 		return location.replaceTree(tree.withDressing(dressing.withLeading(newLeading)));
 	}
@@ -262,7 +262,7 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
-		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
+		final WTokenRun leading = dressing.leading == null ? WTokenRun.NEW : dressing.leading;
 		final WToken docComment = leading.getDocComment();
 		return docComment != null ? trimDocCommentString(docComment.string) : null;
 	}
@@ -275,8 +275,8 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
-		final WTokenRun leading = dressing.leading == null ? WTokenRun.EMPTY : dressing.leading;
-		final WTokenRun newLeading = leading.prepend(newLine());
+		final WTokenRun leading = dressing.leading == null ? WTokenRun.NEW : dressing.leading;
+		final WTokenRun newLeading = leading.prepend(newLine()).setNewTokens();
 
 		return location.replaceTree(tree.withDressing(dressing.withLeading(newLeading)));
 	}
@@ -285,8 +285,8 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
-		final WTokenRun trailing = dressing.trailing == null ? WTokenRun.EMPTY : dressing.trailing;
-		final WTokenRun newTrailing = trailing.append(newLine());
+		final WTokenRun trailing = dressing.trailing == null ? WTokenRun.NEW : dressing.trailing;
+		final WTokenRun newTrailing = trailing.append(newLine()).setNewTokens();
 
 		return location.replaceTree(tree.withDressing(dressing.withTrailing(newTrailing)));
 	}

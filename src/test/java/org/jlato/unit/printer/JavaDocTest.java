@@ -19,9 +19,16 @@
 
 package org.jlato.unit.printer;
 
+import org.jlato.parser.ParseContext;
 import org.jlato.parser.ParseException;
+import org.jlato.parser.Parser;
+import org.jlato.parser.ParserConfiguration;
+import org.jlato.pattern.MatchVisitor;
+import org.jlato.pattern.Quotes;
+import org.jlato.pattern.Substitution;
 import org.jlato.printer.Printer;
-import org.jlato.tree.decl.FieldDecl;
+import org.jlato.tree.Trees;
+import org.jlato.tree.decl.*;
 import org.jlato.tree.type.Primitive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -58,6 +65,97 @@ public class JavaDocTest {
 				Printer.printToString(decl)
 		);
 		Assert.assertEquals("A simple comment.", decl.docComment());
+	}
+
+	@Test
+	public void formatMethodJavaDoc() throws FileNotFoundException, ParseException {
+		ClassDecl classDecl = classDecl(name("Test"))
+				.withMembers(Trees.<MemberDecl>listOf(
+						methodDecl(voidType(), name("method"))
+								.withBody(blockStmt())
+								.withDocComment("A simple comment.")
+				));
+		Assert.assertEquals("class Test {\n" +
+						"\n" +
+						"\t/**\n" +
+						"\t * A simple comment.\n" +
+						"\t */\n" +
+						"\tvoid method() {\n" +
+						"\t}\n" +
+						"}",
+				Printer.printToString(classDecl)
+		);
+	}
+
+	@Test
+	public void formatMethodAlreadyFormattedJavaDoc() throws FileNotFoundException, ParseException {
+		String classDef = "class Test {\n" +
+				"\n" +
+				"\t/**\n" +
+				"\t * A simple comment,\n" +
+				"\t * that is on two lines.\n" +
+				"\t */\n" +
+				"\tvoid method() {\n" +
+				"\t}\n" +
+				"}";
+		Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
+		TypeDecl typeDecl = parser.parse(ParseContext.TypeDecl, classDef);
+		Assert.assertEquals(
+				classDef,
+				Printer.printToString(typeDecl, false)
+		);
+	}
+
+	@Test
+	public void formatMethodReplaced() throws FileNotFoundException, ParseException {
+		String classDef = "class Test {\n" +
+				"\n" +
+				"\t/**\n" +
+				"\t * A simple comment.\n" +
+				"\t */\n" +
+				"\tvoid method() {\n" +
+				"\t}\n" +
+				"}";
+		Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
+		ClassDecl classDecl = (ClassDecl) parser.parse(ParseContext.TypeDecl, classDef);
+		classDecl = classDecl.forAll(Quotes.memberDecl("void method() { }"), new MatchVisitor<MemberDecl>() {
+			@Override
+			public MemberDecl visit(MemberDecl memberDecl, Substitution s) {
+				return methodDecl(voidType(), name("method"))
+						.withBody(blockStmt())
+						.withDocComment("A simple comment.");
+			}
+		});
+
+		Assert.assertEquals(
+				classDef,
+				Printer.printToString(classDecl, false)
+		);
+	}
+
+	@Test
+	public void formatJavaDocReplaced() throws FileNotFoundException, ParseException {
+		String classDef = "class Test {\n" +
+				"\n" +
+				"\t/**\n" +
+				"\t * A simple comment.\n" +
+				"\t */\n" +
+				"\tvoid method() {\n" +
+				"\t}\n" +
+				"}";
+		Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
+		ClassDecl classDecl = (ClassDecl) parser.parse(ParseContext.TypeDecl, classDef);
+		classDecl = classDecl.forAll(Quotes.memberDecl("void method() { }"), new MatchVisitor<MemberDecl>() {
+			@Override
+			public MemberDecl visit(MemberDecl memberDecl, Substitution s) {
+				return ((MethodDecl) memberDecl).withDocComment("A simple comment.");
+			}
+		});
+
+		Assert.assertEquals(
+				classDef,
+				Printer.printToString(classDecl, false)
+		);
 	}
 
 	@Test

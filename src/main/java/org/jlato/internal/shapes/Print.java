@@ -23,8 +23,8 @@ import org.jlato.internal.bu.BUTree;
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.WToken;
 import org.jlato.internal.bu.WTokenRun;
-import org.jlato.internal.td.TDTree;
 import org.jlato.internal.parser.TokenType;
+import org.jlato.internal.td.TDTree;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Spacing;
 import org.jlato.tree.Tree;
@@ -116,7 +116,9 @@ public class Print {
 	}
 
 	public void append(LToken token) {
-		boolean requiresFormatting = existingWhitespace == null;
+		boolean requiresFormatting = existingWhitespace == null ||
+				(leadingWhitespace != null && leadingWhitespace.newTokens);
+
 		if (!start) {
 			renderTrailing();
 			renderSpacing();
@@ -187,13 +189,13 @@ public class Print {
 		for (WToken token : tokens.elements) {
 			switch (token.kind) {
 				case TokenType.JAVA_DOC_COMMENT:
-					appendJavaDocComment(token.string);
+					appendJavaDocComment(token.string, tokens.newTokens);
 					break;
 				case TokenType.SINGLE_LINE_COMMENT:
 					appendSingleLineComment(token.string);
 					break;
 				case TokenType.MULTI_LINE_COMMENT:
-					appendMultiLineComment(token.string);
+					appendMultiLineComment(token.string, tokens.newTokens);
 					break;
 				case TokenType.NEWLINE:
 					appendNewLine(token.string);
@@ -209,6 +211,8 @@ public class Print {
 	                                    String startMarker, String emptyLineMarker,
 	                                    String lineMarker, String stopMarker,
 	                                    boolean clearMarkers) {
+		// TODO Rewrite this code !
+
 		// Remove /** and */
 		image = image.trim();
 		if (image.trim().startsWith(startMarker.trim()))
@@ -222,7 +226,7 @@ public class Print {
 			if (!emptyLineMarker.equals("") && line.trim().equals(emptyLineMarker.trim()))
 				line = "";
 			else if (!lineMarker.equals("") && line.trim().startsWith(lineMarker.trim()))
-				line = line.substring(lineMarker.trim().length()).trim();
+				line = line/*.trim()*/.substring(lineMarker.trim().length()).trim();
 
 			// Some multi-line comments have "*" at the beginning of lines (eg. license comments)
 			if (line.startsWith("*")) {
@@ -248,18 +252,18 @@ public class Print {
 			}
 		}
 
-		appendCommentLine(startMarker, clearMarkers);
+		appendFormattedCommentLine(startMarker, clearMarkers);
 		for (int i = first; i <= last; i++) {
 			String line = lines[i];
 			if (!clearMarkers && i == first) line = " " + line;
-			if (line.isEmpty()) appendCommentLine(emptyLineMarker, clearMarkers || i != last);
-			else appendCommentLine(lineMarker + line, clearMarkers || i != last);
+			if (line.isEmpty()) appendFormattedCommentLine(emptyLineMarker, clearMarkers || i != last);
+			else appendFormattedCommentLine(lineMarker + line, clearMarkers || i != last);
 		}
-		appendCommentLine(stopMarker, false);
+		appendFormattedCommentLine(stopMarker, false);
 	}
 
-	private void appendCommentLine(String image, boolean newLine) {
-		if (format && needsIndentation) doPrintIndent();
+	private void appendFormattedCommentLine(String image, boolean newLine) {
+		if (needsIndentation) doPrintIndent();
 		writer.append(image);
 		if (newLine) appendNewLine();
 	}
@@ -270,13 +274,15 @@ public class Print {
 		afterAlpha = false;
 	}
 
-	private void appendJavaDocComment(String image) {
-		if (formattingSettings.docCommentFormatting()) appendFormattedComment(image, "/**", " *", " * ", " */", true);
+	private void appendJavaDocComment(String image, boolean newTokens) {
+		if ((format || newTokens) && formattingSettings.docCommentFormatting())
+			appendFormattedComment(image, "/**", " *", " * ", " */", true);
 		else appendComment(image);
 	}
 
-	private void appendMultiLineComment(String image) {
-		if (formattingSettings.commentFormatting()) appendFormattedComment(image, "/*", "", "", " */", false);
+	private void appendMultiLineComment(String image, boolean newTokens) {
+		if ((format || newTokens) && formattingSettings.commentFormatting())
+			appendFormattedComment(image, "/*", "", "", " */", false);
 		else appendComment(image);
 	}
 
