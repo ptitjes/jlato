@@ -5124,13 +5124,13 @@ public class ParserImplementation extends ParserNewBase {
 			sequence(
 				lookAhead(
 					zeroOrOne(
-						nonTerminal(name, Name)
+						nonTerminal(Name)
 						terminal(DOT)
 					)
 					terminal(THIS)
 				)
 				zeroOrOne(
-					nonTerminal(name, Name)
+					nonTerminal(receiverTypeName, Name)
 					terminal(DOT)
 				)
 				terminal(THIS)
@@ -5138,15 +5138,15 @@ public class ParserImplementation extends ParserNewBase {
 			)
 			nonTerminal(id, VariableDeclaratorId)
 		)
-		action({ return dress(SFormalParameter.make(modifiers, type, isVarArg, id)); })
+		action({ return dress(SFormalParameter.make(modifiers, type, isVarArg, optionOf(id), isReceiver, optionOf(receiverTypeName))); })
 	) */
 	protected BUTree<SFormalParameter> parseFormalParameter() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SType> type;
 		boolean isVarArg = false;
 		BUTree<SVariableDeclaratorId> id = null;
-		BUTree<SName> name;
 		boolean isReceiver = false;
+		BUTree<SName> receiverTypeName = null;
 		run();
 		modifiers = parseModifiers();
 		type = parseType(null);
@@ -5156,7 +5156,7 @@ public class ParserImplementation extends ParserNewBase {
 		}
 		if (matchFormalParameter_lookahead1(0) != -1) {
 			if (match(0, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER) != -1) {
-				name = parseName();
+				receiverTypeName = parseName();
 				parse(TokenType.DOT);
 			}
 			parse(TokenType.THIS);
@@ -5166,7 +5166,7 @@ public class ParserImplementation extends ParserNewBase {
 		} else {
 			throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.THIS);
 		}
-		return dress(SFormalParameter.make(modifiers, type, isVarArg, id));
+		return dress(SFormalParameter.make(modifiers, type, isVarArg, optionOf(id), isReceiver, optionOf(receiverTypeName)));
 	}
 
 	/* sequence(
@@ -5179,13 +5179,13 @@ public class ParserImplementation extends ParserNewBase {
 			sequence(
 				lookAhead(
 					zeroOrOne(
-						nonTerminal(name, Name)
+						nonTerminal(Name)
 						terminal(DOT)
 					)
 					terminal(THIS)
 				)
 				zeroOrOne(
-					nonTerminal(name, Name)
+					nonTerminal(receiverTypeName, Name)
 					terminal(DOT)
 				)
 				terminal(THIS)
@@ -5234,13 +5234,13 @@ public class ParserImplementation extends ParserNewBase {
 		sequence(
 			lookAhead(
 				zeroOrOne(
-					nonTerminal(name, Name)
+					nonTerminal(Name)
 					terminal(DOT)
 				)
 				terminal(THIS)
 			)
 			zeroOrOne(
-				nonTerminal(name, Name)
+				nonTerminal(receiverTypeName, Name)
 				terminal(DOT)
 			)
 			terminal(THIS)
@@ -5261,13 +5261,13 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		lookAhead(
 			zeroOrOne(
-				nonTerminal(name, Name)
+				nonTerminal(Name)
 				terminal(DOT)
 			)
 			terminal(THIS)
 		)
 		zeroOrOne(
-			nonTerminal(name, Name)
+			nonTerminal(receiverTypeName, Name)
 			terminal(DOT)
 		)
 		terminal(THIS)
@@ -5283,7 +5283,7 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrOne(
-		nonTerminal(name, Name)
+		nonTerminal(receiverTypeName, Name)
 		terminal(DOT)
 	) */
 	private int matchFormalParameter_5_1_2(int lookahead) {
@@ -5295,7 +5295,7 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		nonTerminal(name, Name)
+		nonTerminal(receiverTypeName, Name)
 		terminal(DOT)
 	) */
 	private int matchFormalParameter_5_1_2_1(int lookahead) {
@@ -5310,7 +5310,7 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* sequence(
 		zeroOrOne(
-			nonTerminal(name, Name)
+			nonTerminal(Name)
 			terminal(DOT)
 		)
 		terminal(THIS)
@@ -5326,7 +5326,7 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrOne(
-		nonTerminal(name, Name)
+		nonTerminal(Name)
 		terminal(DOT)
 	) */
 	private int matchFormalParameter_lookahead1_1(int lookahead) {
@@ -5338,7 +5338,7 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		nonTerminal(name, Name)
+		nonTerminal(Name)
 		terminal(DOT)
 	) */
 	private int matchFormalParameter_lookahead1_1_1(int lookahead) {
@@ -17043,7 +17043,7 @@ public class ParserImplementation extends ParserNewBase {
 			action({ exceptType = dress(SUnionType.make(exceptTypes)); })
 		)
 		nonTerminal(exceptId, VariableDeclaratorId)
-		action({ return dress(SFormalParameter.make(modifiers, exceptType, false, exceptId)); })
+		action({ return dress(SFormalParameter.make(modifiers, exceptType, false, optionOf(exceptId), false, none())); })
 	) */
 	protected BUTree<SFormalParameter> parseCatchFormalParameter() throws ParseException {
 		BUTree<SNodeList> modifiers;
@@ -17064,7 +17064,7 @@ public class ParserImplementation extends ParserNewBase {
 			exceptType = dress(SUnionType.make(exceptTypes));
 		}
 		exceptId = parseVariableDeclaratorId();
-		return dress(SFormalParameter.make(modifiers, exceptType, false, exceptId));
+		return dress(SFormalParameter.make(modifiers, exceptType, false, optionOf(exceptId), false, none()));
 	}
 
 	/* sequence(

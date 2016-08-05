@@ -21,7 +21,9 @@ package org.jlato.tree.decl;
 
 import org.jlato.tree.Node;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.TreeCombinators;
+import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
@@ -104,7 +106,23 @@ public interface FormalParameter extends Node, TreeCombinators<FormalParameter> 
 	 *
 	 * @return the identifier of this formal parameter.
 	 */
-	VariableDeclaratorId id();
+	NodeOption<VariableDeclaratorId> id();
+
+	/**
+	 * Replaces the identifier of this formal parameter.
+	 *
+	 * @param id the replacement for the identifier of this formal parameter.
+	 * @return the resulting mutated formal parameter.
+	 */
+	FormalParameter withId(NodeOption<VariableDeclaratorId> id);
+
+	/**
+	 * Mutates the identifier of this formal parameter.
+	 *
+	 * @param mutation the mutation to apply to the identifier of this formal parameter.
+	 * @return the resulting mutated formal parameter.
+	 */
+	FormalParameter withId(Mutation<NodeOption<VariableDeclaratorId>> mutation);
 
 	/**
 	 * Replaces the identifier of this formal parameter.
@@ -115,10 +133,70 @@ public interface FormalParameter extends Node, TreeCombinators<FormalParameter> 
 	FormalParameter withId(VariableDeclaratorId id);
 
 	/**
-	 * Mutates the identifier of this formal parameter.
+	 * Replaces the identifier of this formal parameter.
 	 *
-	 * @param mutation the mutation to apply to the identifier of this formal parameter.
 	 * @return the resulting mutated formal parameter.
 	 */
-	FormalParameter withId(Mutation<VariableDeclaratorId> mutation);
+	FormalParameter withNoId();
+
+	/**
+	 * Tests whether this formal parameter is receiver.
+	 *
+	 * @return <code>true</code> if this formal parameter is receiver, <code>false</code> otherwise.
+	 */
+	boolean isReceiver();
+
+	/**
+	 * Sets whether this formal parameter is receiver.
+	 *
+	 * @param isReceiver <code>true</code> if this formal parameter is receiver, <code>false</code> otherwise.
+	 * @return the resulting mutated formal parameter.
+	 */
+	FormalParameter setReceiver(boolean isReceiver);
+
+	/**
+	 * Mutates whether this formal parameter is receiver.
+	 *
+	 * @param mutation the mutation to apply to whether this formal parameter is receiver.
+	 * @return the resulting mutated formal parameter.
+	 */
+	FormalParameter setReceiver(Mutation<Boolean> mutation);
+
+	/**
+	 * Returns the receiver type name of this formal parameter.
+	 *
+	 * @return the receiver type name of this formal parameter.
+	 */
+	NodeOption<Name> receiverTypeName();
+
+	/**
+	 * Replaces the receiver type name of this formal parameter.
+	 *
+	 * @param receiverTypeName the replacement for the receiver type name of this formal parameter.
+	 * @return the resulting mutated formal parameter.
+	 */
+	FormalParameter withReceiverTypeName(NodeOption<Name> receiverTypeName);
+
+	/**
+	 * Mutates the receiver type name of this formal parameter.
+	 *
+	 * @param mutation the mutation to apply to the receiver type name of this formal parameter.
+	 * @return the resulting mutated formal parameter.
+	 */
+	FormalParameter withReceiverTypeName(Mutation<NodeOption<Name>> mutation);
+
+	/**
+	 * Replaces the receiver type name of this formal parameter.
+	 *
+	 * @param receiverTypeName the replacement for the receiver type name of this formal parameter.
+	 * @return the resulting mutated formal parameter.
+	 */
+	FormalParameter withReceiverTypeName(Name receiverTypeName);
+
+	/**
+	 * Replaces the receiver type name of this formal parameter.
+	 *
+	 * @return the resulting mutated formal parameter.
+	 */
+	FormalParameter withNoReceiverTypeName();
 }

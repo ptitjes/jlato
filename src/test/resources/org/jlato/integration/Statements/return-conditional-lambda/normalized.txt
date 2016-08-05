@@ -40,9 +40,11 @@
             ],
             name: object,
           },
+          isReceiver: false,
           isVarArgs: false,
           modifiers: [
           ],
+          receiverTypeName: null,
           type: {
             kind: UnknownType,
           },

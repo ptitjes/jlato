@@ -30,6 +30,7 @@ import org.jlato.tree.name.QualifiedName;
 import org.jlato.tree.stmt.*;
 import org.jlato.tree.type.*;
 import org.jlato.unit.util.Arbitrary;
+import org.junit.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -330,8 +331,10 @@ public class TreesEqualsHashCodeTest {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Type type = arbitrary.arbitraryType();
 			boolean isVarArgs = arbitrary.arbitraryBoolean();
-			VariableDeclaratorId id = arbitrary.arbitraryVariableDeclaratorId();
-			FormalParameter expected = Trees.formalParameter().withModifiers(modifiers).withType(type).setVarArgs(isVarArgs).withId(id);
+			NodeOption<VariableDeclaratorId> id = arbitrary.arbitraryOptionVariableDeclaratorId();
+			boolean isReceiver = arbitrary.arbitraryBoolean();
+			NodeOption<Name> receiverTypeName = arbitrary.arbitraryOptionName();
+			FormalParameter expected = Trees.formalParameter().withModifiers(modifiers).withType(type).setVarArgs(isVarArgs).withId(id).setReceiver(isReceiver).withReceiverTypeName(receiverTypeName);
 			Assert.assertEquals(expected, expected);
 			Assert.assertNotEquals(expected, null);
 			FormalParameter actual = Trees.formalParameter();
@@ -347,6 +350,12 @@ public class TreesEqualsHashCodeTest {
 			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withId(id);
+			Assert.assertNotEquals(expected, actual);
+			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
+			actual = actual.setReceiver(isReceiver);
+			Assert.assertNotEquals(expected, actual);
+			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
+			actual = actual.withReceiverTypeName(receiverTypeName);
 			Assert.assertEquals(expected, actual);
 			Assert.assertEquals(expected.hashCode(), actual.hashCode());
 		}

@@ -19,37 +19,27 @@
 
 package org.jlato.internal.bu.decl;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SProperty;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STypeSafeProperty;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeList;
+import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.type.SType;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDFormalParameter;
-import org.jlato.internal.parser.TokenType;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.VariableDeclaratorId;
+import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
-import java.util.Collections;
+import java.util.Arrays;
 
-import static org.jlato.internal.shapes.IndentationConstraint.*;
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
+import static org.jlato.internal.shapes.SpacingConstraint.space;
 
 /**
  * A state object for a formal parameter.
@@ -59,14 +49,16 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	/**
 	 * Creates a <code>BUTree</code> with a new formal parameter.
 	 *
-	 * @param modifiers the modifiers child <code>BUTree</code>.
-	 * @param type      the type child <code>BUTree</code>.
-	 * @param isVarArgs the is a variadic parameter child <code>BUTree</code>.
-	 * @param id        the identifier child <code>BUTree</code>.
+	 * @param modifiers        the modifiers child <code>BUTree</code>.
+	 * @param type             the type child <code>BUTree</code>.
+	 * @param isVarArgs        the is a variadic parameter child <code>BUTree</code>.
+	 * @param id               the identifier child <code>BUTree</code>.
+	 * @param isReceiver       the is receiver child <code>BUTree</code>.
+	 * @param receiverTypeName the receiver type name child <code>BUTree</code>.
 	 * @return the new <code>BUTree</code> with a formal parameter.
 	 */
-	public static BUTree<SFormalParameter> make(BUTree<SNodeList> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SVariableDeclaratorId> id) {
-		return new BUTree<SFormalParameter>(new SFormalParameter(modifiers, type, isVarArgs, id));
+	public static BUTree<SFormalParameter> make(BUTree<SNodeList> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SNodeOption> id, boolean isReceiver, BUTree<SNodeOption> receiverTypeName) {
+		return new BUTree<SFormalParameter>(new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName));
 	}
 
 	/**
@@ -87,21 +79,35 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	/**
 	 * The identifier of this formal parameter state.
 	 */
-	public final BUTree<SVariableDeclaratorId> id;
+	public final BUTree<SNodeOption> id;
+
+	/**
+	 * The is receiver of this formal parameter state.
+	 */
+	public final boolean isReceiver;
+
+	/**
+	 * The receiver type name of this formal parameter state.
+	 */
+	public final BUTree<SNodeOption> receiverTypeName;
 
 	/**
 	 * Constructs a formal parameter state.
 	 *
-	 * @param modifiers the modifiers child <code>BUTree</code>.
-	 * @param type      the type child <code>BUTree</code>.
-	 * @param isVarArgs the is a variadic parameter child <code>BUTree</code>.
-	 * @param id        the identifier child <code>BUTree</code>.
+	 * @param modifiers        the modifiers child <code>BUTree</code>.
+	 * @param type             the type child <code>BUTree</code>.
+	 * @param isVarArgs        the is a variadic parameter child <code>BUTree</code>.
+	 * @param id               the identifier child <code>BUTree</code>.
+	 * @param isReceiver       the is receiver child <code>BUTree</code>.
+	 * @param receiverTypeName the receiver type name child <code>BUTree</code>.
 	 */
-	public SFormalParameter(BUTree<SNodeList> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SVariableDeclaratorId> id) {
+	public SFormalParameter(BUTree<SNodeList> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SNodeOption> id, boolean isReceiver, BUTree<SNodeOption> receiverTypeName) {
 		this.modifiers = modifiers;
 		this.type = type;
 		this.isVarArgs = isVarArgs;
 		this.id = id;
+		this.isReceiver = isReceiver;
+		this.receiverTypeName = receiverTypeName;
 	}
 
 	/**
@@ -121,7 +127,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 * @return the resulting mutated formal parameter state.
 	 */
 	public SFormalParameter withModifiers(BUTree<SNodeList> modifiers) {
-		return new SFormalParameter(modifiers, type, isVarArgs, id);
+		return new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName);
 	}
 
 	/**
@@ -131,7 +137,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 * @return the resulting mutated formal parameter state.
 	 */
 	public SFormalParameter withType(BUTree<? extends SType> type) {
-		return new SFormalParameter(modifiers, type, isVarArgs, id);
+		return new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName);
 	}
 
 	/**
@@ -141,7 +147,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 * @return the resulting mutated formal parameter state.
 	 */
 	public SFormalParameter setVarArgs(boolean isVarArgs) {
-		return new SFormalParameter(modifiers, type, isVarArgs, id);
+		return new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName);
 	}
 
 	/**
@@ -150,8 +156,28 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 * @param id the replacement for the identifier of this formal parameter state.
 	 * @return the resulting mutated formal parameter state.
 	 */
-	public SFormalParameter withId(BUTree<SVariableDeclaratorId> id) {
-		return new SFormalParameter(modifiers, type, isVarArgs, id);
+	public SFormalParameter withId(BUTree<SNodeOption> id) {
+		return new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName);
+	}
+
+	/**
+	 * Replaces the is receiver of this formal parameter state.
+	 *
+	 * @param isReceiver the replacement for the is receiver of this formal parameter state.
+	 * @return the resulting mutated formal parameter state.
+	 */
+	public SFormalParameter setReceiver(boolean isReceiver) {
+		return new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName);
+	}
+
+	/**
+	 * Replaces the receiver type name of this formal parameter state.
+	 *
+	 * @param receiverTypeName the replacement for the receiver type name of this formal parameter state.
+	 * @return the resulting mutated formal parameter state.
+	 */
+	public SFormalParameter withReceiverTypeName(BUTree<SNodeOption> receiverTypeName) {
+		return new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName);
 	}
 
 	/**
@@ -182,7 +208,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 */
 	@Override
 	public Iterable<SProperty> allProperties() {
-		return Collections.<SProperty>singleton(VAR_ARGS);
+		return Arrays.<SProperty>asList(VAR_ARGS, RECEIVER);
 	}
 
 	/**
@@ -202,7 +228,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 */
 	@Override
 	public STraversal lastChild() {
-		return ID;
+		return RECEIVER_TYPE_NAME;
 	}
 
 	/**
@@ -222,7 +248,11 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 			return false;
 		if (isVarArgs != state.isVarArgs)
 			return false;
-		if (id == null ? state.id != null : !id.equals(state.id))
+		if (!id.equals(state.id))
+			return false;
+		if (isReceiver != state.isReceiver)
+			return false;
+		if (!receiverTypeName.equals(state.receiverTypeName))
 			return false;
 		return true;
 	}
@@ -238,7 +268,9 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 		result = 37 * result + modifiers.hashCode();
 		if (type != null) result = 37 * result + type.hashCode();
 		result = 37 * result + (isVarArgs ? 1 : 0);
-		if (id != null) result = 37 * result + id.hashCode();
+		result = 37 * result + id.hashCode();
+		result = 37 * result + (isReceiver ? 1 : 0);
+		result = 37 * result + receiverTypeName.hashCode();
 		return result;
 	}
 
@@ -288,7 +320,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 		}
 	};
 
-	public static STypeSafeTraversal<SFormalParameter, SVariableDeclaratorId, VariableDeclaratorId> ID = new STypeSafeTraversal<SFormalParameter, SVariableDeclaratorId, VariableDeclaratorId>() {
+	public static STypeSafeTraversal<SFormalParameter, SNodeOption, NodeOption<VariableDeclaratorId>> ID = new STypeSafeTraversal<SFormalParameter, SNodeOption, NodeOption<VariableDeclaratorId>>() {
 
 		@Override
 		public BUTree<?> doTraverse(SFormalParameter state) {
@@ -296,7 +328,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 		}
 
 		@Override
-		public SFormalParameter doRebuildParentState(SFormalParameter state, BUTree<SVariableDeclaratorId> child) {
+		public SFormalParameter doRebuildParentState(SFormalParameter state, BUTree<SNodeOption> child) {
 			return state.withId(child);
 		}
 
@@ -307,7 +339,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 
 		@Override
 		public STraversal rightSibling(STree state) {
-			return null;
+			return RECEIVER_TYPE_NAME;
 		}
 	};
 
@@ -324,12 +356,54 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 		}
 	};
 
+	public static STypeSafeTraversal<SFormalParameter, SNodeOption, NodeOption<Name>> RECEIVER_TYPE_NAME = new STypeSafeTraversal<SFormalParameter, SNodeOption, NodeOption<Name>>() {
+
+		@Override
+		public BUTree<?> doTraverse(SFormalParameter state) {
+			return state.receiverTypeName;
+		}
+
+		@Override
+		public SFormalParameter doRebuildParentState(SFormalParameter state, BUTree<SNodeOption> child) {
+			return state.withReceiverTypeName(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STree state) {
+			return ID;
+		}
+
+		@Override
+		public STraversal rightSibling(STree state) {
+			return null;
+		}
+	};
+
+	public static STypeSafeProperty<SFormalParameter, Boolean> RECEIVER = new STypeSafeProperty<SFormalParameter, Boolean>() {
+
+		@Override
+		public Boolean doRetrieve(SFormalParameter state) {
+			return state.isReceiver;
+		}
+
+		@Override
+		public SFormalParameter doRebuildParentState(SFormalParameter state, Boolean value) {
+			return state.setReceiver(value);
+		}
+	};
+
 	public static final LexicalShape shape = composite(
 			child(MODIFIERS, SExtendedModifier.singleLineShape),
 			child(TYPE),
 			when(data(VAR_ARGS), token(LToken.Ellipsis)),
 			when(not(childIs(TYPE, withKind(Kind.UnknownType))), none().withSpacingAfter(space())),
-			child(ID)
+			alternative(data(RECEIVER),
+					composite(
+							child(RECEIVER_TYPE_NAME, when(some(), composite(element(), token(LToken.Dot)))),
+							token(LToken.This)
+					),
+					child(ID, element())
+			)
 	);
 
 	public static final LexicalShape listShape = list(true,

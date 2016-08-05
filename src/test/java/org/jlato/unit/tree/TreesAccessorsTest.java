@@ -30,6 +30,7 @@ import org.jlato.tree.name.QualifiedName;
 import org.jlato.tree.stmt.*;
 import org.jlato.tree.type.*;
 import org.jlato.unit.util.Arbitrary;
+import org.junit.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -319,21 +320,37 @@ public class TreesAccessorsTest {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Type type = arbitrary.arbitraryType();
 			boolean isVarArgs = arbitrary.arbitraryBoolean();
-			VariableDeclaratorId id = arbitrary.arbitraryVariableDeclaratorId();
+			NodeOption<VariableDeclaratorId> id = arbitrary.arbitraryOptionVariableDeclaratorId();
+			boolean isReceiver = arbitrary.arbitraryBoolean();
+			NodeOption<Name> receiverTypeName = arbitrary.arbitraryOptionName();
 
 			// Use factory method without argument
-			FormalParameter t = Trees.formalParameter().withModifiers(modifiers).withType(type).setVarArgs(isVarArgs).withId(id);
+			FormalParameter t = Trees.formalParameter().withModifiers(modifiers).withType(type).setVarArgs(isVarArgs).withId(id).setReceiver(isReceiver).withReceiverTypeName(receiverTypeName);
 			Assert.assertEquals(modifiers, t.modifiers());
 			Assert.assertEquals(type, t.type());
 			Assert.assertEquals(isVarArgs, t.isVarArgs());
 			Assert.assertEquals(id, t.id());
+			Assert.assertEquals(isReceiver, t.isReceiver());
+			Assert.assertEquals(receiverTypeName, t.receiverTypeName());
 
 			// Use factory method with arguments
-			t = Trees.formalParameter(type, id).withModifiers(modifiers).setVarArgs(isVarArgs);
+			t = Trees.formalParameter(type).withModifiers(modifiers).setVarArgs(isVarArgs).withId(id).setReceiver(isReceiver).withReceiverTypeName(receiverTypeName);
 			Assert.assertEquals(modifiers, t.modifiers());
 			Assert.assertEquals(type, t.type());
 			Assert.assertEquals(isVarArgs, t.isVarArgs());
 			Assert.assertEquals(id, t.id());
+			Assert.assertEquals(isReceiver, t.isReceiver());
+			Assert.assertEquals(receiverTypeName, t.receiverTypeName());
+
+			// Use specialized NodeOption.some() mutators
+			t = t.withId(id.get()).withReceiverTypeName(receiverTypeName.get());
+			Assert.assertEquals(id, t.id());
+			Assert.assertEquals(receiverTypeName, t.receiverTypeName());
+
+			// Use specialized NodeOption.none() mutators
+			t = t.withNoId().withNoReceiverTypeName();
+			Assert.assertEquals(Trees.<VariableDeclaratorId>none(), t.id());
+			Assert.assertEquals(Trees.<Name>none(), t.receiverTypeName());
 		}
 	}
 

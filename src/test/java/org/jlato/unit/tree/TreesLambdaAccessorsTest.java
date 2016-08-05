@@ -31,6 +31,7 @@ import org.jlato.tree.stmt.*;
 import org.jlato.tree.type.*;
 import org.jlato.unit.util.Arbitrary;
 import org.jlato.util.Mutation;
+import org.junit.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -275,21 +276,29 @@ public class TreesLambdaAccessorsTest {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Type type = arbitrary.arbitraryType();
 			boolean isVarArgs = arbitrary.arbitraryBoolean();
-			VariableDeclaratorId id = arbitrary.arbitraryVariableDeclaratorId();
-			FormalParameter t = Trees.formalParameter().withModifiers(modifiers).withType(type).setVarArgs(isVarArgs).withId(id);
+			NodeOption<VariableDeclaratorId> id = arbitrary.arbitraryOptionVariableDeclaratorId();
+			boolean isReceiver = arbitrary.arbitraryBoolean();
+			NodeOption<Name> receiverTypeName = arbitrary.arbitraryOptionName();
+			FormalParameter t = Trees.formalParameter().withModifiers(modifiers).withType(type).setVarArgs(isVarArgs).withId(id).setReceiver(isReceiver).withReceiverTypeName(receiverTypeName);
 			Assert.assertEquals(modifiers, t.modifiers());
 			Assert.assertEquals(type, t.type());
 			Assert.assertEquals(isVarArgs, t.isVarArgs());
 			Assert.assertEquals(id, t.id());
+			Assert.assertEquals(isReceiver, t.isReceiver());
+			Assert.assertEquals(receiverTypeName, t.receiverTypeName());
 			NodeList<ExtendedModifier> modifiers2 = arbitrary.arbitraryListExtendedModifier();
 			Type type2 = arbitrary.arbitraryType();
 			boolean isVarArgs2 = arbitrary.arbitraryBoolean();
-			VariableDeclaratorId id2 = arbitrary.arbitraryVariableDeclaratorId();
-			FormalParameter t2 = t.withModifiers(mutationBy(modifiers, modifiers2)).withType(mutationBy(type, type2)).setVarArgs(mutationBy(isVarArgs, isVarArgs2)).withId(mutationBy(id, id2));
+			NodeOption<VariableDeclaratorId> id2 = arbitrary.arbitraryOptionVariableDeclaratorId();
+			boolean isReceiver2 = arbitrary.arbitraryBoolean();
+			NodeOption<Name> receiverTypeName2 = arbitrary.arbitraryOptionName();
+			FormalParameter t2 = t.withModifiers(mutationBy(modifiers, modifiers2)).withType(mutationBy(type, type2)).setVarArgs(mutationBy(isVarArgs, isVarArgs2)).withId(mutationBy(id, id2)).setReceiver(mutationBy(isReceiver, isReceiver2)).withReceiverTypeName(mutationBy(receiverTypeName, receiverTypeName2));
 			Assert.assertEquals(modifiers2, t2.modifiers());
 			Assert.assertEquals(type2, t2.type());
 			Assert.assertEquals(isVarArgs2, t2.isVarArgs());
 			Assert.assertEquals(id2, t2.id());
+			Assert.assertEquals(isReceiver2, t2.isReceiver());
+			Assert.assertEquals(receiverTypeName2, t2.receiverTypeName());
 		}
 	}
 

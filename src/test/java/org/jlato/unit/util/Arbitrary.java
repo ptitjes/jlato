@@ -152,7 +152,11 @@ public class Arbitrary {
 	}
 
 	public FormalParameter arbitraryFormalParameter() {
-		return new TDFormalParameter(arbitraryListExtendedModifier(), arbitraryType(), arbitraryBoolean(), arbitraryVariableDeclaratorId());
+		if (arbitraryBoolean()) {
+			return new TDFormalParameter(arbitraryListExtendedModifier(), arbitraryType(), arbitraryBoolean(), arbitraryOptionVariableDeclaratorId(), false, Trees.<Name>none());
+		} else {
+			return new TDFormalParameter(arbitraryListExtendedModifier(), arbitraryType(), arbitraryBoolean(), Trees.<VariableDeclaratorId>none(), true, arbitraryOptionName());
+		}
 	}
 
 	private TypeParameter arbitraryTypeParameter() {
@@ -570,5 +574,14 @@ public class Arbitrary {
 	public NodeEither<Expr, BlockStmt> arbitraryEitherExprBlockStmt() {
 		boolean expr = arbitraryBoolean();
 		return expr ? Trees.<Expr, BlockStmt>left(arbitraryExpr()) : Trees.<Expr, BlockStmt>right(arbitraryBlockStmt());
+	}
+
+	public NodeOption<VariableDeclaratorId> arbitraryOptionVariableDeclaratorId() {
+		return arbitraryOptionOf(new Function0<VariableDeclaratorId>() {
+			@Override
+			public VariableDeclaratorId apply() {
+				return arbitraryVariableDeclaratorId();
+			}
+		});
 	}
 }

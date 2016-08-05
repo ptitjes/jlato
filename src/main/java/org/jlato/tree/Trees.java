@@ -20,20 +20,20 @@
 package org.jlato.tree;
 
 import org.jlato.internal.bu.Literals;
-import org.jlato.internal.td.coll.*;
 import org.jlato.internal.td.coll.TDNodeEither;
 import org.jlato.internal.td.coll.TDNodeList;
+import org.jlato.internal.td.coll.TDNodeMap;
 import org.jlato.internal.td.coll.TDNodeOption;
 import org.jlato.internal.td.decl.*;
 import org.jlato.internal.td.expr.*;
-import org.jlato.internal.td.name.*;
 import org.jlato.internal.td.name.TDName;
 import org.jlato.internal.td.name.TDQualifiedName;
 import org.jlato.internal.td.stmt.*;
 import org.jlato.internal.td.type.*;
 import org.jlato.tree.decl.*;
 import org.jlato.tree.expr.*;
-import org.jlato.tree.name.*;
+import org.jlato.tree.name.Name;
+import org.jlato.tree.name.QualifiedName;
 import org.jlato.tree.stmt.*;
 import org.jlato.tree.type.*;
 
@@ -355,7 +355,18 @@ public final class Trees {
 	 * @return the new formal parameter instance.
 	 */
 	public static FormalParameter formalParameter() {
-		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), null, false, null);
+		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), null, false, Trees.<VariableDeclaratorId>none(), false, Trees.<Name>none());
+	}
+
+	/**
+	 * Creates a formal parameter.
+	 *
+	 * @param type the type child tree.
+	 * @param id   the identifier child tree.
+	 * @return the new formal parameter instance.
+	 */
+	public static FormalParameter formalParameter(Type type) {
+		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), type, false, Trees.<VariableDeclaratorId>none(), false, Trees.<Name>none());
 	}
 
 	/**
@@ -366,7 +377,7 @@ public final class Trees {
 	 * @return the new formal parameter instance.
 	 */
 	public static FormalParameter formalParameter(Type type, VariableDeclaratorId id) {
-		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), type, false, id);
+		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), type, false, Trees.some(id), false, Trees.<Name>none());
 	}
 
 	/**
@@ -778,35 +789,35 @@ public final class Trees {
 	}
 
 	public static LiteralExpr<Void> nullLiteralExpr() {
-	return new TDLiteralExpr<Void>(Void.class, Literals.from(Void.class, null));
+		return new TDLiteralExpr<Void>(Void.class, Literals.from(Void.class, null));
 	}
 
 	public static LiteralExpr<Boolean> literalExpr(boolean value) {
-	return new TDLiteralExpr<Boolean>(Boolean.class, Literals.from(Boolean.class, value));
+		return new TDLiteralExpr<Boolean>(Boolean.class, Literals.from(Boolean.class, value));
 	}
 
 	public static LiteralExpr<Integer> literalExpr(int value) {
-	return new TDLiteralExpr<Integer>(Integer.class, Literals.from(Integer.class, value));
+		return new TDLiteralExpr<Integer>(Integer.class, Literals.from(Integer.class, value));
 	}
 
 	public static LiteralExpr<Long> literalExpr(long value) {
-	return new TDLiteralExpr<Long>(Long.class, Literals.from(Long.class, value));
+		return new TDLiteralExpr<Long>(Long.class, Literals.from(Long.class, value));
 	}
 
 	public static LiteralExpr<Float> literalExpr(float value) {
-	return new TDLiteralExpr<Float>(Float.class, Literals.from(Float.class, value));
+		return new TDLiteralExpr<Float>(Float.class, Literals.from(Float.class, value));
 	}
 
 	public static LiteralExpr<Double> literalExpr(double value) {
-	return new TDLiteralExpr<Double>(Double.class, Literals.from(Double.class, value));
+		return new TDLiteralExpr<Double>(Double.class, Literals.from(Double.class, value));
 	}
 
 	public static LiteralExpr<Character> literalExpr(char value) {
-	return new TDLiteralExpr<Character>(Character.class, Literals.from(Character.class, value));
+		return new TDLiteralExpr<Character>(Character.class, Literals.from(Character.class, value));
 	}
 
 	public static LiteralExpr<String> literalExpr(String value) {
-	return new TDLiteralExpr<String>(String.class, Literals.from(String.class, value));
+		return new TDLiteralExpr<String>(String.class, Literals.from(String.class, value));
 	}
 
 	/**

@@ -1,0 +1,8 @@
+class Test {
+
+	class Inner {
+
+		Inner(Test Test.this) {
+		}
+	}
+}

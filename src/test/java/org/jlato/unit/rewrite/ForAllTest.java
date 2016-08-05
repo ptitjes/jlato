@@ -99,7 +99,7 @@ public class ForAllTest extends BaseTestFromFiles {
 		final CompilationUnit rewrote = cu.forAll(paramPattern, new MatchVisitor<FormalParameter>() {
 			@Override
 			public FormalParameter visit(FormalParameter p, Substitution s) {
-				return p.withId(p.id().withName(name(p.id().name().id() + "42")));
+				return p.withId(p.id().get().withName(name(p.id().get().name().id() + "42")));
 			}
 		});
 

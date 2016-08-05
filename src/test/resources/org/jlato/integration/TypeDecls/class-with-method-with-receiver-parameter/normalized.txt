@@ -20,9 +20,11 @@
         {
           kind: FormalParameter,
           id: null,
+          isReceiver: true,
           isVarArgs: false,
           modifiers: [
           ],
+          receiverTypeName: null,
           type: {
             kind: QualifiedType,
             annotations: [

@@ -23,9 +23,11 @@
             ],
             name: l,
           },
+          isReceiver: false,
           isVarArgs: false,
           modifiers: [
           ],
+          receiverTypeName: null,
           type: {
             kind: UnknownType,
           },

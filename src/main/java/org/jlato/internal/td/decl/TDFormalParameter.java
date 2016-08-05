@@ -20,17 +20,16 @@
 package org.jlato.internal.td.decl;
 
 import org.jlato.internal.bu.coll.SNodeList;
+import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.decl.SFormalParameter;
-import org.jlato.internal.bu.decl.SVariableDeclaratorId;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
-import org.jlato.tree.Kind;
-import org.jlato.tree.Node;
-import org.jlato.tree.NodeList;
+import org.jlato.tree.*;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.decl.VariableDeclaratorId;
+import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
 
@@ -60,13 +59,15 @@ public class TDFormalParameter extends TDTree<SFormalParameter, Node, FormalPara
 	/**
 	 * Creates a formal parameter with the specified child trees.
 	 *
-	 * @param modifiers the modifiers child tree.
-	 * @param type      the type child tree.
-	 * @param isVarArgs the is a variadic parameter child tree.
-	 * @param id        the identifier child tree.
+	 * @param modifiers        the modifiers child tree.
+	 * @param type             the type child tree.
+	 * @param isVarArgs        the is a variadic parameter child tree.
+	 * @param id               the identifier child tree.
+	 * @param isReceiver       the is receiver child tree.
+	 * @param receiverTypeName the receiver type name child tree.
 	 */
-	public TDFormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, VariableDeclaratorId id) {
-		super(new TDLocation<SFormalParameter>(SFormalParameter.make(TDTree.<SNodeList>treeOf(modifiers), TDTree.<SType>treeOf(type), isVarArgs, TDTree.<SVariableDeclaratorId>treeOf(id))));
+	public TDFormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, NodeOption<VariableDeclaratorId> id, boolean isReceiver, NodeOption<Name> receiverTypeName) {
+		super(new TDLocation<SFormalParameter>(SFormalParameter.make(TDTree.<SNodeList>treeOf(modifiers), TDTree.<SType>treeOf(type), isVarArgs, TDTree.<SNodeOption>treeOf(id), isReceiver, TDTree.<SNodeOption>treeOf(receiverTypeName))));
 	}
 
 	/**
@@ -161,7 +162,7 @@ public class TDFormalParameter extends TDTree<SFormalParameter, Node, FormalPara
 	 *
 	 * @return the identifier of this formal parameter.
 	 */
-	public VariableDeclaratorId id() {
+	public NodeOption<VariableDeclaratorId> id() {
 		return location.safeTraversal(SFormalParameter.ID);
 	}
 
@@ -171,7 +172,7 @@ public class TDFormalParameter extends TDTree<SFormalParameter, Node, FormalPara
 	 * @param id the replacement for the identifier of this formal parameter.
 	 * @return the resulting mutated formal parameter.
 	 */
-	public FormalParameter withId(VariableDeclaratorId id) {
+	public FormalParameter withId(NodeOption<VariableDeclaratorId> id) {
 		return location.safeTraversalReplace(SFormalParameter.ID, id);
 	}
 
@@ -181,7 +182,103 @@ public class TDFormalParameter extends TDTree<SFormalParameter, Node, FormalPara
 	 * @param mutation the mutation to apply to the identifier of this formal parameter.
 	 * @return the resulting mutated formal parameter.
 	 */
-	public FormalParameter withId(Mutation<VariableDeclaratorId> mutation) {
+	public FormalParameter withId(Mutation<NodeOption<VariableDeclaratorId>> mutation) {
 		return location.safeTraversalMutate(SFormalParameter.ID, mutation);
+	}
+
+	/**
+	 * Replaces the identifier of this formal parameter.
+	 *
+	 * @param id the replacement for the identifier of this formal parameter.
+	 * @return the resulting mutated formal parameter.
+	 */
+	public FormalParameter withId(VariableDeclaratorId id) {
+		return location.safeTraversalReplace(SFormalParameter.ID, Trees.some(id));
+	}
+
+	/**
+	 * Replaces the identifier of this formal parameter.
+	 *
+	 * @return the resulting mutated formal parameter.
+	 */
+	public FormalParameter withNoId() {
+		return location.safeTraversalReplace(SFormalParameter.ID, Trees.<VariableDeclaratorId>none());
+	}
+
+	/**
+	 * Tests whether this formal parameter is receiver.
+	 *
+	 * @return <code>true</code> if this formal parameter is receiver, <code>false</code> otherwise.
+	 */
+	public boolean isReceiver() {
+		return location.safeProperty(SFormalParameter.RECEIVER);
+	}
+
+	/**
+	 * Sets whether this formal parameter is receiver.
+	 *
+	 * @param isReceiver <code>true</code> if this formal parameter is receiver, <code>false</code> otherwise.
+	 * @return the resulting mutated formal parameter.
+	 */
+	public FormalParameter setReceiver(boolean isReceiver) {
+		return location.safePropertyReplace(SFormalParameter.RECEIVER, isReceiver);
+	}
+
+	/**
+	 * Mutates whether this formal parameter is receiver.
+	 *
+	 * @param mutation the mutation to apply to whether this formal parameter is receiver.
+	 * @return the resulting mutated formal parameter.
+	 */
+	public FormalParameter setReceiver(Mutation<Boolean> mutation) {
+		return location.safePropertyMutate(SFormalParameter.RECEIVER, mutation);
+	}
+
+	/**
+	 * Returns the receiver type name of this formal parameter.
+	 *
+	 * @return the receiver type name of this formal parameter.
+	 */
+	public NodeOption<Name> receiverTypeName() {
+		return location.safeTraversal(SFormalParameter.RECEIVER_TYPE_NAME);
+	}
+
+	/**
+	 * Replaces the receiver type name of this formal parameter.
+	 *
+	 * @param receiverTypeName the replacement for the receiver type name of this formal parameter.
+	 * @return the resulting mutated formal parameter.
+	 */
+	public FormalParameter withReceiverTypeName(NodeOption<Name> receiverTypeName) {
+		return location.safeTraversalReplace(SFormalParameter.RECEIVER_TYPE_NAME, receiverTypeName);
+	}
+
+	/**
+	 * Mutates the receiver type name of this formal parameter.
+	 *
+	 * @param mutation the mutation to apply to the receiver type name of this formal parameter.
+	 * @return the resulting mutated formal parameter.
+	 */
+	public FormalParameter withReceiverTypeName(Mutation<NodeOption<Name>> mutation) {
+		return location.safeTraversalMutate(SFormalParameter.RECEIVER_TYPE_NAME, mutation);
+	}
+
+	/**
+	 * Replaces the receiver type name of this formal parameter.
+	 *
+	 * @param receiverTypeName the replacement for the receiver type name of this formal parameter.
+	 * @return the resulting mutated formal parameter.
+	 */
+	public FormalParameter withReceiverTypeName(Name receiverTypeName) {
+		return location.safeTraversalReplace(SFormalParameter.RECEIVER_TYPE_NAME, Trees.some(receiverTypeName));
+	}
+
+	/**
+	 * Replaces the receiver type name of this formal parameter.
+	 *
+	 * @return the resulting mutated formal parameter.
+	 */
+	public FormalParameter withNoReceiverTypeName() {
+		return location.safeTraversalReplace(SFormalParameter.RECEIVER_TYPE_NAME, Trees.<Name>none());
 	}
 }

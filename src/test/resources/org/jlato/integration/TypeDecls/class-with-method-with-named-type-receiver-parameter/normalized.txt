@@ -1,0 +1,60 @@
+{
+  kind: ClassDecl,
+  extendsClause: null,
+  implementsClause: [
+  ],
+  members: [
+    {
+      kind: ClassDecl,
+      extendsClause: null,
+      implementsClause: [
+      ],
+      members: [
+        {
+          kind: ConstructorDecl,
+          body: {
+            kind: BlockStmt,
+            stmts: [
+            ],
+          },
+          modifiers: [
+          ],
+          name: Inner,
+          params: [
+            {
+              kind: FormalParameter,
+              id: null,
+              isReceiver: true,
+              isVarArgs: false,
+              modifiers: [
+              ],
+              receiverTypeName: Test,
+              type: {
+                kind: QualifiedType,
+                annotations: [
+                ],
+                name: Test,
+                scope: null,
+                typeArgs: null,
+              },
+            },
+          ],
+          throwsClause: [
+          ],
+          typeParams: [
+          ],
+        },
+      ],
+      modifiers: [
+      ],
+      name: Inner,
+      typeParams: [
+      ],
+    },
+  ],
+  modifiers: [
+  ],
+  name: Test,
+  typeParams: [
+  ],
+}

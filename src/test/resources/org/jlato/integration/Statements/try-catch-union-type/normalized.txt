@@ -16,9 +16,11 @@
           ],
           name: ex,
         },
+        isReceiver: false,
         isVarArgs: false,
         modifiers: [
         ],
+        receiverTypeName: null,
         type: {
           kind: UnionType,
           types: [
