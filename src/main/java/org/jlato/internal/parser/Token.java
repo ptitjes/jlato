@@ -19,9 +19,6 @@
 
 package org.jlato.internal.parser;
 
-import org.jlato.internal.bu.WTokenRun;
-import org.jlato.internal.parser.TokenType;
-
 /**
  * An input Token.
  */
@@ -35,7 +32,6 @@ public class Token {
 	 */
 	public int kind;
 	public int realKind = TokenType.GT;
-	public WTokenRun whitespace;
 
 	/**
 	 * The line number of the first character of this Token.

@@ -74,13 +74,13 @@ public abstract class ParserNewBase {
 	protected void reset(Reader reader) {
 		lexer.yyreset(reader);
 		lookaheadTokens.clear();
+		lookaheadWhitespace.clear();
 		matchLookahead = 0;
 
 		if (configuration.preserveWhitespaces) {
 			lastProcessedToken = -1;
 			runStack.clear();
 			runStack.push(Vector.<WTokenRun>empty());
-//			pushWhitespace(0);
 		}
 	}
 
@@ -143,11 +143,6 @@ public abstract class ParserNewBase {
 	protected void lateRun() {
 		if (!configuration.preserveWhitespaces) return;
 
-//		pushWhitespace(0);
-//		IndexedList<WTokenRun> tokenRuns = runStack.pop();
-//		WTokenRun tokenRun = tokenRuns.last();
-//		runStack.push(tokenRuns.take(tokenRuns.size() - 1));
-//		runStack.push(Vector.<WTokenRun>empty().append(tokenRun));
 		runStack.push(Vector.<WTokenRun>empty());
 		pushWhitespace(0);
 	}
@@ -161,7 +156,7 @@ public abstract class ParserNewBase {
 
 	private void pushWhitespace(int upToToken) {
 		for (int i = lastProcessedToken + 1; i <= upToToken; i++) {
-			pushWhitespace(getToken(i).whitespace);
+			pushWhitespace(getWhitespace(i));
 		}
 		lastProcessedToken = upToToken;
 	}
@@ -278,13 +273,13 @@ public abstract class ParserNewBase {
 	// Base parse methods
 
 	private CircularBuffer<Token> lookaheadTokens = new CircularBuffer<Token>(20, 10);
+	private CircularBuffer<WTokenRun> lookaheadWhitespace = new CircularBuffer<WTokenRun>(20, 10);
 	protected int matchLookahead;
 
 	private void advance(int index) {
 		try {
 			for (int i = lookaheadTokens.size(); i <= index; i++) {
-				Token token = getNextToken();
-				lookaheadTokens.add(token);
+				pushNextToken();
 			}
 		} catch (IOException e) {
 			// TODO Fix error management
@@ -292,7 +287,7 @@ public abstract class ParserNewBase {
 		}
 	}
 
-	private Token getNextToken() throws IOException {
+	private void pushNextToken() throws IOException {
 		Token token;
 		WTokenRun.Builder builder = configuration.preserveWhitespaces ? new WTokenRun.Builder() : null;
 		do {
@@ -307,8 +302,9 @@ public abstract class ParserNewBase {
 					if (configuration.preserveWhitespaces) builder.add(new WToken(token.kind, token.image));
 					break;
 				default:
-					if (configuration.preserveWhitespaces) token.whitespace = builder.build();
-					return token;
+					lookaheadTokens.add(token);
+					if (configuration.preserveWhitespaces) lookaheadWhitespace.add(builder.build());
+					return;
 			}
 		} while (true);
 	}
@@ -316,6 +312,11 @@ public abstract class ParserNewBase {
 	protected Token getToken(int index) {
 		advance(index);
 		return lookaheadTokens.get(index);
+	}
+
+	protected WTokenRun getWhitespace(int index) {
+		advance(index);
+		return lookaheadWhitespace.get(index);
 	}
 
 	protected Token parse(int tokenType) throws ParseException {
@@ -332,6 +333,7 @@ public abstract class ParserNewBase {
 					" (" + token.beginLine + ":" + token.beginColumn + ")");
 		}
 		lookaheadTokens.dropHead();
+		if (configuration.preserveWhitespaces) lookaheadWhitespace.dropHead();
 		return token;
 	}
 
