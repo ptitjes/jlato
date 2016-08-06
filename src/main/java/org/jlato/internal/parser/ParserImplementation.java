@@ -17371,9 +17371,6 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GT)
 	) */
 	private int matchRUNSIGNEDSHIFT(int lookahead) {
-		lookahead = getToken(1).kind == TokenType.GT && getToken(1).realKind == TokenType.RUNSIGNEDSHIFT ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
 		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
@@ -17404,9 +17401,6 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GT)
 	) */
 	private int matchRSIGNEDSHIFT(int lookahead) {
-		lookahead = getToken(1).kind == TokenType.GT && getToken(1).realKind == TokenType.RSIGNEDSHIFT ? lookahead : -1;
-		if (lookahead == -1)
-			return -1;
 		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;

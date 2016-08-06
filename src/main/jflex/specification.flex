@@ -66,10 +66,7 @@ import org.jlato.internal.parser.TokenType;
                 image = TokenType.tokenImage[type];
         }
 
-        Token token = Token.newToken(type, image);
-        token.beginLine = yyline + 1;
-        token.beginColumn = yycolumn + 1;
-        return token;
+        return new Token(type, image, yyline + 1, yycolumn + 1);
     }
 %}
 
