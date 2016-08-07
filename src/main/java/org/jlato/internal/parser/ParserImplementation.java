@@ -17351,7 +17351,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead({ getToken(1).kind == TokenType.GT && getToken(1).realKind == TokenType.RUNSIGNEDSHIFT })
 		terminal(GT)
 		terminal(GT)
 		terminal(GT)
@@ -17365,7 +17364,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead({ getToken(1).kind == TokenType.GT && getToken(1).realKind == TokenType.RUNSIGNEDSHIFT })
 		terminal(GT)
 		terminal(GT)
 		terminal(GT)
@@ -17384,7 +17382,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead({ getToken(1).kind == TokenType.GT && getToken(1).realKind == TokenType.RSIGNEDSHIFT })
 		terminal(GT)
 		terminal(GT)
 		action({ popNewWhitespaces(1); })
@@ -17396,7 +17393,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead({ getToken(1).kind == TokenType.GT && getToken(1).realKind == TokenType.RSIGNEDSHIFT })
 		terminal(GT)
 		terminal(GT)
 	) */
