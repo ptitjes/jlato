@@ -362,7 +362,6 @@ public final class Trees {
 	 * Creates a formal parameter.
 	 *
 	 * @param type the type child tree.
-	 * @param id   the identifier child tree.
 	 * @return the new formal parameter instance.
 	 */
 	public static FormalParameter formalParameter(Type type) {

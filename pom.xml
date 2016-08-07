@@ -169,6 +169,13 @@
 									<type>jar</type>
 									<classifier>sources</classifier>
 								</artifactItem>
+								<artifactItem>
+									<groupId>org.jlato</groupId>
+									<artifactId>jlato</artifactId>
+									<version>0.0.6</version>
+									<type>jar</type>
+									<classifier>sources</classifier>
+								</artifactItem>
 							</artifactItems>
 						</configuration>
 					</execution>

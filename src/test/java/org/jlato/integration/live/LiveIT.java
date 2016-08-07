@@ -67,6 +67,19 @@ public class LiveIT {
 		parse("com.javaslang", "javaslang", "1.2.2", parser, "UTF-8");
 	}
 
+
+	@Test
+	public void parseJLaTo() throws IOException, ParseException {
+		Parser parser = new Parser();
+		parse("org.jlato", "jlato", "0.0.6", parser, "UTF-8");
+	}
+
+	@Test
+	public void parsePreserveJLaTo() throws IOException, ParseException {
+		Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
+		parse("org.jlato", "jlato", "0.0.6", parser, "UTF-8");
+	}
+
 	private void parse(String group, String artifactId, String version, Parser parser, String encoding) throws IOException, ParseException {
 		File file = makeLocalFile(artifactId, version);
 		JarFile jarFile = new JarFile(file);
