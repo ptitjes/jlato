@@ -56,7 +56,6 @@ public class ParseJdkIT {
 
 	private void parse(ZipFile file, String basePath, Parser parser, String encoding) throws IOException, ParseException {
 		Enumeration<? extends ZipEntry> entries = file.entries();
-		int count = 0;
 		while (entries.hasMoreElements()) {
 			ZipEntry entry = entries.nextElement();
 			String name = entry.getName();
@@ -64,7 +63,6 @@ public class ParseJdkIT {
 				InputStream inputStream = file.getInputStream(entry);
 				try {
 					parser.parse(inputStream, encoding);
-					count++;
 				} catch (RuntimeException e) {
 					System.out.println(name);
 					throw e;
@@ -79,7 +77,6 @@ public class ParseJdkIT {
 				}
 			}
 		}
-		System.out.println(count);
 	}
 
 	private File makeLocalFile(String artifactId, String version) {
