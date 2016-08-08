@@ -38,6 +38,8 @@ import java.io.Reader;
  */
 public abstract class ParserInterface {
 
+//	public abstract void printStats();
+
 	public interface Factory {
 
 		ParserInterface newInstance(InputStream in, String encoding, ParserConfiguration configuration, boolean quotesMode);

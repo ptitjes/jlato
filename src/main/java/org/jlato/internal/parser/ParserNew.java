@@ -54,6 +54,10 @@ public class ParserNew extends ParserInterface {
 		}
 	}
 
+//	public void printStats() {
+//		implementation.printStats();
+//	}
+
 	private ParserNewBase implementation;
 
 	public ParserNew(ParserConfiguration configuration, boolean quotesMode) {

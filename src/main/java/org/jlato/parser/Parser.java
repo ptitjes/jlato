@@ -115,6 +115,10 @@ public class Parser {
 		return set;
 	}
 
+//	public void printStats() {
+//		parserInstance.printStats();
+//	}
+
 	// TODO Use NIO filesystem walker
 	private static List<File> collectAllJavaFiles(File rootDirectory, List<File> files) {
 		final File[] localFiles = rootDirectory.listFiles(JAVA_FILTER);

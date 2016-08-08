@@ -52,6 +52,7 @@ public class ParseJdkIT {
 		Parser parser = new Parser();
 		ZipFile zipFile = new ZipFile(OPENJDK_LOCATION);
 		parse(zipFile, "jdk/src/share/classes/", parser, "UTF-8");
+//		parser.printStats();
 	}
 
 	private void parse(ZipFile file, String basePath, Parser parser, String encoding) throws IOException, ParseException {

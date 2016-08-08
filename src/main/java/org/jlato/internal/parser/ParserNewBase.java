@@ -19,7 +19,8 @@
 
 package org.jlato.internal.parser;
 
-import com.github.andrewoma.dexx.collection.IndexedList;
+import com.github.andrewoma.dexx.collection.*;
+import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeEither;
@@ -39,10 +40,8 @@ import org.jlato.parser.ParserConfiguration;
 import org.jlato.tree.expr.BinaryOp;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Stack;
+import java.util.*;
+import java.util.Map;
 
 import static org.jlato.internal.parser.TokenType.*;
 
@@ -54,6 +53,7 @@ public abstract class ParserNewBase {
 	private final Lexer lexer;
 	protected ParserConfiguration configuration;
 	protected boolean quotesMode = false;
+	private boolean preserveWhitespaces;
 
 	public ParserNewBase() {
 		lexer = new Lexer();
@@ -63,6 +63,7 @@ public abstract class ParserNewBase {
 	protected final void configure(ParserConfiguration configuration, boolean quotesMode) {
 		this.configuration = configuration;
 		this.quotesMode = quotesMode;
+		this.preserveWhitespaces = configuration.preserveWhitespaces;
 	}
 
 	protected void reset(InputStream inputStream, String encoding) {
@@ -76,10 +77,10 @@ public abstract class ParserNewBase {
 
 	protected void reset(Reader reader) {
 		lexer.yyreset(reader);
-		lookahead.clear();
+		lookaheadCells.clear();
 		matchLookahead = 0;
 
-		if (configuration.preserveWhitespaces) {
+		if (preserveWhitespaces) {
 			lastProcessedToken = -1;
 			runStack.clear();
 			runStack.push(Vector.<WTokenRun>empty());
@@ -136,21 +137,21 @@ public abstract class ParserNewBase {
 	private int lastProcessedToken;
 
 	protected void run() {
-		if (!configuration.preserveWhitespaces) return;
+		if (!preserveWhitespaces) return;
 
 		pushWhitespace(0);
 		runStack.push(Vector.<WTokenRun>empty());
 	}
 
 	protected void lateRun() {
-		if (!configuration.preserveWhitespaces) return;
+		if (!preserveWhitespaces) return;
 
 		runStack.push(Vector.<WTokenRun>empty());
 		pushWhitespace(0);
 	}
 
 	protected void popNewWhitespaces(int count) {
-		if (!configuration.preserveWhitespaces) return;
+		if (!preserveWhitespaces) return;
 
 		IndexedList<WTokenRun> tokenRuns = runStack.pop();
 		runStack.push(tokenRuns.take(tokenRuns.size() - count));
@@ -179,7 +180,7 @@ public abstract class ParserNewBase {
 	}
 
 	protected <S extends STree> BUTree<S> doDress(BUTree<S> tree) {
-		if (!configuration.preserveWhitespaces) return tree;
+		if (!preserveWhitespaces) return tree;
 
 		final IndexedList<WTokenRun> tokens = popTokens();
 
@@ -220,7 +221,7 @@ public abstract class ParserNewBase {
 	}
 
 	protected <S extends STree> BUTree<S> dressWithPrologAndEpilog(BUTree<S> tree) {
-		if (!configuration.preserveWhitespaces) return tree;
+		if (!preserveWhitespaces) return tree;
 
 		assert runStack.size() == 1;
 		final IndexedList<WTokenRun> tokens = popTokens();
@@ -274,28 +275,40 @@ public abstract class ParserNewBase {
 
 	// Base parse methods
 
+	public static final int PRODUCTION_COUNT = 12;
+	public static final short[] EMPTY_MATCHES = new short[PRODUCTION_COUNT];
+
+	static {
+		for (int i = 0; i < PRODUCTION_COUNT; i++) {
+			EMPTY_MATCHES[i] = -2;
+		}
+	}
+
 	static class LookaheadCell {
 		public Token token;
 		public WTokenRun whitespace;
+		public short[] matches = new short[PRODUCTION_COUNT];
 	}
 
-	private CircularBuffer<LookaheadCell> lookahead = new CircularBuffer<LookaheadCell>(20, 10) {
+	private CircularBuffer<LookaheadCell> lookaheadCells = new CircularBuffer<LookaheadCell>(20, 10) {
 		@Override
 		protected LookaheadCell createCell() {
-			return new LookaheadCell();
+			LookaheadCell cell = new LookaheadCell();
+			return cell;
 		}
 
 		@Override
 		protected void clearCell(LookaheadCell cell) {
 			cell.token = null;
 			cell.whitespace = null;
+			System.arraycopy(EMPTY_MATCHES, 0, cell.matches, 0, PRODUCTION_COUNT);
 		}
 	};
 	protected int matchLookahead;
 
 	private void advance(int index) {
 		try {
-			for (int i = lookahead.size(); i <= index; i++) {
+			for (int i = lookaheadCells.size(); i <= index; i++) {
 				pushNextToken();
 			}
 		} catch (IOException e) {
@@ -305,40 +318,60 @@ public abstract class ParserNewBase {
 	}
 
 	private void pushNextToken() throws IOException {
-		Token token;
-		WTokenRun.Builder builder = configuration.preserveWhitespaces ? new WTokenRun.Builder() : null;
-		do {
-			token = lexer.yylex();
+		if (preserveWhitespaces) {
+			Token token;
+			WTokenRun.Builder builder = new WTokenRun.Builder();
+			do {
+				token = lexer.yylex();
 
-			switch (token.kind) {
-				case TokenType.MULTI_LINE_COMMENT:
-				case TokenType.SINGLE_LINE_COMMENT:
-				case TokenType.JAVA_DOC_COMMENT:
-				case TokenType.WHITESPACE:
-				case TokenType.NEWLINE:
-					if (configuration.preserveWhitespaces) builder.add(new WToken(token.kind, token.image));
-					break;
-				default:
-					LookaheadCell cell = lookahead.add();
-					cell.token = token;
-					if (configuration.preserveWhitespaces) cell.whitespace = builder.build();
-					return;
-			}
-		} while (true);
+				switch (token.kind) {
+					case TokenType.MULTI_LINE_COMMENT:
+					case TokenType.SINGLE_LINE_COMMENT:
+					case TokenType.JAVA_DOC_COMMENT:
+					case TokenType.WHITESPACE:
+					case TokenType.NEWLINE:
+						builder.add(new WToken(token.kind, token.image));
+						break;
+					default:
+						LookaheadCell cell = lookaheadCells.add();
+						cell.token = token;
+						cell.whitespace = builder.build();
+						return;
+				}
+			} while (true);
+		} else {
+			Token token;
+			do {
+				token = lexer.yylex();
+
+				switch (token.kind) {
+					case TokenType.MULTI_LINE_COMMENT:
+					case TokenType.SINGLE_LINE_COMMENT:
+					case TokenType.JAVA_DOC_COMMENT:
+					case TokenType.WHITESPACE:
+					case TokenType.NEWLINE:
+						break;
+					default:
+						LookaheadCell cell = lookaheadCells.add();
+						cell.token = token;
+						return;
+				}
+			} while (true);
+		}
 	}
 
 	protected Token getToken(int index) {
 		advance(index);
-		return lookahead.get(index).token;
+		return lookaheadCells.get(index).token;
 	}
 
 	protected WTokenRun getWhitespace(int index) {
 		advance(index);
-		return lookahead.get(index).whitespace;
+		return lookaheadCells.get(index).whitespace;
 	}
 
 	protected Token parse(int tokenType) throws ParseException {
-		if (configuration.preserveWhitespaces) {
+		if (preserveWhitespaces) {
 			pushWhitespace(0);
 			lastProcessedToken--;
 		}
@@ -350,7 +383,7 @@ public abstract class ParserNewBase {
 			throw new ParseException("Found " + found + " – Expected " + expected +
 					" (" + token.beginLine + ":" + token.beginColumn + ")");
 		}
-		lookahead.dropHead();
+		lookaheadCells.dropHead();
 		return token;
 	}
 
@@ -364,6 +397,60 @@ public abstract class ParserNewBase {
 		}
 		return -1;
 	}
+
+	protected int memoizeMatch(int lookahead, int productionNumber, int match) {
+		advance(lookahead);
+		lookaheadCells.get(lookahead).matches[productionNumber] = match == -1 ? -1 : (short) (match - lookahead);
+		return match;
+	}
+
+	protected int memoizedMatch(int lookahead, int productionNumber) {
+		advance(lookahead);
+		short match = lookaheadCells.get(lookahead).matches[productionNumber];
+
+//		if (match > -2) hit(productionNumber);
+//		else miss(productionNumber);
+//		call(productionNumber);
+
+		return match < 0 ? match : lookahead + match;
+	}
+
+//	private void hit(int productionNumber) {
+//		Integer hits = hitStats.get(productionNumber);
+//		hitStats.put(productionNumber, hits == null ? 1 : hits + 1);
+//	}
+//
+//	private void miss(int productionNumber) {
+//		Integer misses = missStats.get(productionNumber);
+//		missStats.put(productionNumber, misses == null ? 1 : misses + 1);
+//	}
+//
+//	private void call(int productionNumber) {
+//		Integer calls = callStats.get(productionNumber);
+//		callStats.put(productionNumber, calls == null ? 1 : calls + 1);
+//	}
+
+//	public void printStats() {
+//		java.util.ArrayList<java.util.Map.Entry<Integer, Integer>> hits = new java.util.ArrayList<java.util.Map.Entry<Integer, Integer>>(hitStats.entrySet());
+//		Collections.sort(hits, new Comparator<Map.Entry<Integer, Integer>>() {
+//			@Override
+//			public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+//				return -o1.getValue().compareTo(o2.getValue());
+//			}
+//		});
+//
+//		System.out.println("Productions covered: " + callStats.size());
+//		for (Map.Entry<Integer, Integer> hit : hits) {
+//			System.out.println("Production " + hit.getKey() +
+//					" - hits: " + hit.getValue() +
+//					" - misses: " + missStats.get(hit.getKey()) +
+//					" - calls: " + callStats.get(hit.getKey()));
+//		}
+//	}
+//
+//	public java.util.Map<Integer, Integer> hitStats = new java.util.HashMap<Integer, Integer>();
+//	public java.util.Map<Integer, Integer> missStats = new java.util.HashMap<Integer, Integer>();
+//	public java.util.Map<Integer, Integer> callStats = new java.util.HashMap<Integer, Integer>();
 
 	protected ParseException produceParseException(int... expectedTokenTypes) {
 		String eol = System.getProperty("line.separator", "\n");
@@ -804,19 +891,6 @@ public abstract class ParserNewBase {
 		}
 
 		@SuppressWarnings("unchecked")
-		public void add(E value) {
-			ensureCapacityForAppend();
-
-			clearCell((E) elementData[tail]);
-			elementData[tail] = value;
-
-			tail++;
-			if (tail == elementData.length) {
-				tail = 0;
-			}
-		}
-
-		@SuppressWarnings("unchecked")
 		public E add() {
 			ensureCapacityForAppend();
 
@@ -876,7 +950,7 @@ public abstract class ParserNewBase {
 				initialize(tail, head);
 			} else if (tail == currentCapacity - 1 && head == 0) {
 				elementData = Arrays.copyOf(elementData, newCapacity);
-				initialize(tail, elementData.length);
+				initialize(tail, newCapacity);
 			}
 		}
 	}
