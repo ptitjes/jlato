@@ -526,9 +526,12 @@ public abstract class ParserNewBase {
 							case LPAREN:
 							case IDENTIFIER:
 							case THIS:
+							case SUPER:
 							case NEW:
 							case NULL:
 
+							case FALSE:
+							case TRUE:
 							case LONG_LITERAL:
 							case INTEGER_LITERAL:
 							case FLOAT_LITERAL:
