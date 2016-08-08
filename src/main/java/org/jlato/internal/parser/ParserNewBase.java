@@ -34,14 +34,17 @@ import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.bu.type.SUnknownType;
 import org.jlato.internal.shapes.DressingBuilder;
 import org.jlato.internal.shapes.LexicalShape;
-import org.jlato.parser.*;
+import org.jlato.parser.ParseException;
+import org.jlato.parser.ParserConfiguration;
+import org.jlato.tree.expr.BinaryOp;
 
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Stack;
 
-import static org.jlato.internal.parser.TokenType.ARROW;
-import static org.jlato.internal.parser.TokenType.LPAREN;
-import static org.jlato.internal.parser.TokenType.RPAREN;
+import static org.jlato.internal.parser.TokenType.*;
 
 /**
  * @author Didier Villevalois
@@ -404,6 +407,53 @@ public abstract class ParserNewBase {
 		}
 	}
 
+	int precedenceForInstanceOf() {
+		return 8;
+	}
+
+	int precedenceFor(BinaryOp op) {
+		switch (op) {
+			case Or:
+				return 2;
+			case And:
+				return 3;
+			case BinOr:
+				return 4;
+			case XOr:
+				return 5;
+			case BinAnd:
+				return 6;
+			case Equal:
+			case NotEqual:
+				return 7;
+
+			// InstanceOf is 8
+
+			case Less:
+			case Greater:
+			case LessOrEqual:
+			case GreaterOrEqual:
+				return 9;
+			case LeftShift:
+			case RightSignedShift:
+			case RightUnsignedShift:
+				return 10;
+			case Plus:
+			case Minus:
+				return 11;
+			case Times:
+			case Divide:
+			case Remainder:
+				return 12;
+			default:
+				return -1;
+		}
+	}
+
+	boolean leftAssociative(BinaryOp op) {
+		return true;
+	}
+
 	boolean isLambda(int initialLookahead) {
 		for (int lookahead = initialLookahead; ; lookahead++) {
 			int kind = getToken(lookahead).kind;
@@ -414,6 +464,208 @@ public abstract class ParserNewBase {
 				case RPAREN:
 					if (lookahead == initialLookahead) return true;
 					else return getToken(lookahead + 1).kind == ARROW;
+			}
+		}
+	}
+
+	boolean isCast(int initialLookahead) {
+		if (getToken(initialLookahead).kind != LPAREN) return false;
+
+		int gtLtBalance = 0;
+		for (int lookahead = initialLookahead + 1; ; lookahead++) {
+			switch (getToken(lookahead).kind) {
+				case LT:
+					gtLtBalance++;
+					break;
+				case GT:
+					gtLtBalance--;
+					break;
+				case LPAREN:
+					// ( after ( => Expr
+					return false;
+				case RPAREN:
+					if (gtLtBalance != 0) return false;
+					else if (lookahead == initialLookahead + 1) return false; // Lambda
+					else {
+						switch (getToken(lookahead + 1).kind) {
+							case LT:
+							case GT:
+							case ARROW:
+							case HOOK:
+							case EQ:
+							case LE:
+							case GE:
+							case NE:
+							case SC_OR:
+							case SC_AND:
+							case INCR:
+							case DECR:
+							case STAR:
+							case SLASH:
+							case BIT_AND:
+							case BIT_OR:
+							case XOR:
+							case REM:
+							case LSHIFT:
+							case PLUSASSIGN:
+							case MINUSASSIGN:
+							case STARASSIGN:
+							case SLASHASSIGN:
+							case ANDASSIGN:
+							case ORASSIGN:
+							case XORASSIGN:
+							case REMASSIGN:
+							case LSHIFTASSIGN:
+							case RSIGNEDSHIFTASSIGN:
+							case RUNSIGNEDSHIFTASSIGN:
+
+							case SEMICOLON:
+							case RPAREN:
+								return false;
+
+							case LPAREN:
+							case IDENTIFIER:
+							case THIS:
+							case NEW:
+							case NULL:
+
+							case LONG_LITERAL:
+							case INTEGER_LITERAL:
+							case FLOAT_LITERAL:
+							case DOUBLE_LITERAL:
+							case CHARACTER_LITERAL:
+							case STRING_LITERAL:
+								return true;
+
+							case BANG:
+							case TILDE:
+							case PLUS:
+							case MINUS:
+								if (lookahead == 2) {
+									switch (getToken(initialLookahead + 1).kind) {
+										case BOOLEAN:
+										case BYTE:
+										case CHAR:
+										case DOUBLE:
+										case FLOAT:
+										case INT:
+										case LONG:
+										case SHORT:
+											return true;
+									}
+								}
+								break;
+						}
+					}
+					break;
+
+				case AT:
+					return true;
+
+				case ABSTRACT:
+				case ASSERT:
+				case BREAK:
+				case CASE:
+				case CATCH:
+				case CLASS:
+				case CONST:
+				case CONTINUE:
+				case DEFAULT:
+				case DO:
+				case ELSE:
+				case ENUM:
+				case FALSE:
+				case FINAL:
+				case FINALLY:
+				case FOR:
+				case GOTO:
+				case IF:
+				case IMPLEMENTS:
+				case IMPORT:
+				case INSTANCEOF:
+				case INTERFACE:
+				case NATIVE:
+				case NEW:
+				case NULL:
+				case PACKAGE:
+				case PRIVATE:
+				case PROTECTED:
+				case PUBLIC:
+				case RETURN:
+				case STATIC:
+				case STRICTFP:
+				case SWITCH:
+				case SYNCHRONIZED:
+				case THIS:
+				case THROW:
+				case THROWS:
+				case TRANSIENT:
+				case TRUE:
+				case TRY:
+				case VOID:
+				case VOLATILE:
+				case WHILE:
+				case LONG_LITERAL:
+				case INTEGER_LITERAL:
+				case FLOAT_LITERAL:
+				case DOUBLE_LITERAL:
+				case CHARACTER_LITERAL:
+				case STRING_LITERAL:
+				case LBRACE:
+				case RBRACE:
+				case SEMICOLON:
+				case ASSIGN:
+				case BANG:
+				case TILDE:
+				case COLON:
+				case EQ:
+				case LE:
+				case GE:
+				case NE:
+				case SC_OR:
+				case SC_AND:
+				case INCR:
+				case DECR:
+				case PLUS:
+				case MINUS:
+				case STAR:
+				case SLASH:
+				case BIT_OR:
+				case XOR:
+				case REM:
+				case LSHIFT:
+				case PLUSASSIGN:
+				case MINUSASSIGN:
+				case STARASSIGN:
+				case SLASHASSIGN:
+				case ANDASSIGN:
+				case ORASSIGN:
+				case XORASSIGN:
+				case REMASSIGN:
+				case LSHIFTASSIGN:
+				case RSIGNEDSHIFTASSIGN:
+				case RUNSIGNEDSHIFTASSIGN:
+				case ELLIPSIS:
+				case ARROW:
+				case DOUBLECOLON:
+					return false;
+
+				case BOOLEAN:
+				case BYTE:
+				case CHAR:
+				case DOUBLE:
+				case FLOAT:
+				case INT:
+				case LONG:
+				case SHORT:
+
+				case LBRACKET:
+				case RBRACKET:
+				case HOOK:
+				case EXTENDS:
+				case SUPER:
+				case BIT_AND:
+					break;
 			}
 		}
 	}

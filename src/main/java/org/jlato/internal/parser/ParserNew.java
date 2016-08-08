@@ -54,9 +54,17 @@ public class ParserNew extends ParserInterface {
 		}
 	}
 
-	private final ParserImplementation implementation = new ParserImplementation();
+	private ParserNewBase implementation;
 
 	public ParserNew(ParserConfiguration configuration, boolean quotesMode) {
+		if (configuration.parser.equals("2")) {
+			implementation = new ParserImplementation2();
+		} else if (configuration.parser.equals("3")) {
+			implementation = new ParserImplementation3();
+		} else {
+			implementation = new ParserImplementation();
+		}
+
 		implementation.configure(configuration, quotesMode);
 	}
 

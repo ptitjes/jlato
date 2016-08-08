@@ -1,22 +1,3 @@
-/*
- * Copyright (C) 2015-2016 Didier Villevalois.
- *
- * This file is part of JLaTo.
- *
- * JLaTo is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
- * JLaTo is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.jlato.internal.parser;
 
 import org.jlato.internal.bu.*;
@@ -37,7 +18,7 @@ import org.jlato.tree.type.Primitive;
 /**
  * Internal implementation of the Java parser as a recursive descent parser.
  */
-public class ParserImplementation extends ParserNewBase {
+public class ParserImplementation3 extends ParserNewBase {
 
 	/* sequence(
 		terminal(id, NODE_LIST_VARIABLE)
@@ -4483,10 +4464,10 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		if (match(0, TokenType.LBRACE) != -1) {
 			ret = parseArrayInitializer();
-		} else if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DECR, TokenType.INCR, TokenType.LPAREN, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.BOOLEAN, TokenType.CHAR, TokenType.VOID, TokenType.LT, TokenType.NEW, TokenType.THIS, TokenType.SUPER, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.BANG, TokenType.TILDE, TokenType.PLUS, TokenType.MINUS) != -1) {
+		} else if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.MINUS, TokenType.PLUS, TokenType.TILDE, TokenType.BANG, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.VOID, TokenType.NEW, TokenType.LT, TokenType.LPAREN, TokenType.DECR, TokenType.INCR) != -1) {
 			ret = parseExpression();
 		} else {
-			throw produceParseException(TokenType.BANG, TokenType.TILDE, TokenType.LPAREN, TokenType.SUPER, TokenType.NEW, TokenType.VOID, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.THIS, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.LBRACE);
+			throw produceParseException(TokenType.INCR, TokenType.DECR, TokenType.MINUS, TokenType.PLUS, TokenType.LPAREN, TokenType.TILDE, TokenType.BANG, TokenType.NEW, TokenType.SUPER, TokenType.VOID, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.THIS, TokenType.FALSE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LBRACE);
 		}
 		return ret;
 	}
@@ -4550,7 +4531,7 @@ public class ParserImplementation extends ParserNewBase {
 		boolean trailingComma = false;
 		run();
 		parse(TokenType.LBRACE);
-		if (match(0, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DECR, TokenType.INCR, TokenType.MINUS, TokenType.PLUS, TokenType.SUPER, TokenType.NEW, TokenType.VOID, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.LT, TokenType.FALSE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.THIS, TokenType.TILDE, TokenType.BANG, TokenType.LBRACE) != -1) {
+		if (match(0, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.THIS, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TILDE, TokenType.BANG, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR, TokenType.LBRACE) != -1) {
 			val = parseVariableInitializer();
 			values = append(values, val);
 			while (matchArrayInitializer_lookahead1(0) == -1) {
@@ -7983,7 +7964,7 @@ public class ParserImplementation extends ParserNewBase {
 			parse(TokenType.RPAREN);
 			parse(TokenType.ARROW);
 			ret = parseLambdaBody(params, true);
-		} else if (match(0, TokenType.MINUS, TokenType.PLUS, TokenType.LPAREN, TokenType.THIS, TokenType.SUPER, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.LT, TokenType.NEW, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR) != -1) {
+		} else if (match(0, TokenType.LPAREN, TokenType.SUPER, TokenType.THIS, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.VOID, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.NEW, TokenType.TILDE, TokenType.BANG, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
 			ret = parseConditionalExpression();
 			if (match(0, TokenType.ORASSIGN, TokenType.XORASSIGN, TokenType.ANDASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.LSHIFTASSIGN, TokenType.MINUSASSIGN, TokenType.PLUSASSIGN, TokenType.REMASSIGN, TokenType.SLASHASSIGN, TokenType.STARASSIGN, TokenType.ASSIGN) != -1) {
 				lateRun();
@@ -7992,7 +7973,7 @@ public class ParserImplementation extends ParserNewBase {
 				ret = dress(SAssignExpr.make(ret, op, value));
 			}
 		} else {
-			throw produceParseException(TokenType.TILDE, TokenType.BANG, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.VOID, TokenType.LPAREN, TokenType.SUPER, TokenType.THIS, TokenType.NEW, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR);
+			throw produceParseException(TokenType.BANG, TokenType.TILDE, TokenType.LPAREN, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.VOID, TokenType.LT, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.PLUS, TokenType.MINUS, TokenType.INCR, TokenType.DECR);
 		}
 		return ret;
 	}
@@ -8378,14 +8359,14 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SBlockStmt> block;
 		BUTree<? extends SExpr> expr;
 		BUTree<SLambdaExpr> ret;
-		if (match(0, TokenType.LPAREN, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
+		if (match(0, TokenType.PLUS, TokenType.MINUS, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.BOOLEAN, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LT, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.INCR, TokenType.DECR) != -1) {
 			expr = parseExpression();
 			ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr)));
 		} else if (match(0, TokenType.LBRACE) != -1) {
 			block = parseBlock();
 			ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
 		} else {
-			throw produceParseException(TokenType.LBRACE, TokenType.LPAREN, TokenType.DECR, TokenType.INCR, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LT, TokenType.NEW, TokenType.THIS, TokenType.SUPER, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.BANG, TokenType.TILDE, TokenType.PLUS, TokenType.MINUS);
+			throw produceParseException(TokenType.LBRACE, TokenType.LPAREN, TokenType.DECR, TokenType.INCR, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.VOID, TokenType.NEW, TokenType.LT, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.BANG, TokenType.MINUS, TokenType.PLUS);
 		}
 		return ret;
 	}
@@ -8878,7 +8859,7 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		nonTerminal(ret, ConditionalOrExpression)
+		nonTerminal(ret, BinaryExpression)
 		zeroOrOne(
 			action({ lateRun(); })
 			terminal(HOOK)
@@ -8893,7 +8874,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SExpr> left;
 		BUTree<? extends SExpr> right;
-		ret = parseConditionalOrExpression();
+		ret = parseBinaryExpression(1);
 		if (match(0, TokenType.HOOK) != -1) {
 			lateRun();
 			parse(TokenType.HOOK);
@@ -8906,7 +8887,7 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		nonTerminal(ret, ConditionalOrExpression)
+		nonTerminal(ret, BinaryExpression)
 		zeroOrOne(
 			terminal(HOOK)
 			nonTerminal(left, Expression)
@@ -8915,7 +8896,7 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchConditionalExpression(int lookahead) {
-		lookahead = matchConditionalOrExpression(lookahead);
+		lookahead = matchBinaryExpression(lookahead, 1);
 		if (lookahead == -1)
 			return -1;
 		lookahead = matchConditionalExpression_2(lookahead);
@@ -8961,447 +8942,176 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		nonTerminal(ret, ConditionalAndExpression)
+		nonTerminal(ret, UnaryExpression)
 		zeroOrMore(
-			action({ lateRun(); })
-			terminal(SC_OR)
-			nonTerminal(right, ConditionalAndExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right)); })
-		)
-		action({ return ret; })
-	) */
-	protected BUTree<? extends SExpr> parseConditionalOrExpression() throws ParseException {
-		BUTree<? extends SExpr> ret;
-		BUTree<? extends SExpr> right;
-		ret = parseConditionalAndExpression();
-		while (match(0, TokenType.SC_OR) != -1) {
-			lateRun();
-			parse(TokenType.SC_OR);
-			right = parseConditionalAndExpression();
-			ret = dress(SBinaryExpr.make(ret, BinaryOp.Or, right));
-		}
-		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, ConditionalAndExpression)
-		zeroOrMore(
-			terminal(SC_OR)
-			nonTerminal(right, ConditionalAndExpression)
-		)
-	) */
-	private int matchConditionalOrExpression(int lookahead) {
-		lookahead = matchConditionalAndExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchConditionalOrExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(SC_OR)
-		nonTerminal(right, ConditionalAndExpression)
-	) */
-	private int matchConditionalOrExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchConditionalOrExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchConditionalOrExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SC_OR)
-		nonTerminal(right, ConditionalAndExpression)
-	) */
-	private int matchConditionalOrExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.SC_OR);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchConditionalAndExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, InclusiveOrExpression)
-		zeroOrMore(
-			action({ lateRun(); })
-			terminal(SC_AND)
-			nonTerminal(right, InclusiveOrExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right)); })
-		)
-		action({ return ret; })
-	) */
-	protected BUTree<? extends SExpr> parseConditionalAndExpression() throws ParseException {
-		BUTree<? extends SExpr> ret;
-		BUTree<? extends SExpr> right;
-		ret = parseInclusiveOrExpression();
-		while (match(0, TokenType.SC_AND) != -1) {
-			lateRun();
-			parse(TokenType.SC_AND);
-			right = parseInclusiveOrExpression();
-			ret = dress(SBinaryExpr.make(ret, BinaryOp.And, right));
-		}
-		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, InclusiveOrExpression)
-		zeroOrMore(
-			terminal(SC_AND)
-			nonTerminal(right, InclusiveOrExpression)
-		)
-	) */
-	private int matchConditionalAndExpression(int lookahead) {
-		lookahead = matchInclusiveOrExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchConditionalAndExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(SC_AND)
-		nonTerminal(right, InclusiveOrExpression)
-	) */
-	private int matchConditionalAndExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchConditionalAndExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchConditionalAndExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(SC_AND)
-		nonTerminal(right, InclusiveOrExpression)
-	) */
-	private int matchConditionalAndExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.SC_AND);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchInclusiveOrExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, ExclusiveOrExpression)
-		zeroOrMore(
-			action({ lateRun(); })
-			terminal(BIT_OR)
-			nonTerminal(right, ExclusiveOrExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right)); })
-		)
-		action({ return ret; })
-	) */
-	protected BUTree<? extends SExpr> parseInclusiveOrExpression() throws ParseException {
-		BUTree<? extends SExpr> ret;
-		BUTree<? extends SExpr> right;
-		ret = parseExclusiveOrExpression();
-		while (match(0, TokenType.BIT_OR) != -1) {
-			lateRun();
-			parse(TokenType.BIT_OR);
-			right = parseExclusiveOrExpression();
-			ret = dress(SBinaryExpr.make(ret, BinaryOp.BinOr, right));
-		}
-		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, ExclusiveOrExpression)
-		zeroOrMore(
-			terminal(BIT_OR)
-			nonTerminal(right, ExclusiveOrExpression)
-		)
-	) */
-	private int matchInclusiveOrExpression(int lookahead) {
-		lookahead = matchExclusiveOrExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchInclusiveOrExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(BIT_OR)
-		nonTerminal(right, ExclusiveOrExpression)
-	) */
-	private int matchInclusiveOrExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchInclusiveOrExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchInclusiveOrExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(BIT_OR)
-		nonTerminal(right, ExclusiveOrExpression)
-	) */
-	private int matchInclusiveOrExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.BIT_OR);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExclusiveOrExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, AndExpression)
-		zeroOrMore(
-			action({ lateRun(); })
-			terminal(XOR)
-			nonTerminal(right, AndExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right)); })
-		)
-		action({ return ret; })
-	) */
-	protected BUTree<? extends SExpr> parseExclusiveOrExpression() throws ParseException {
-		BUTree<? extends SExpr> ret;
-		BUTree<? extends SExpr> right;
-		ret = parseAndExpression();
-		while (match(0, TokenType.XOR) != -1) {
-			lateRun();
-			parse(TokenType.XOR);
-			right = parseAndExpression();
-			ret = dress(SBinaryExpr.make(ret, BinaryOp.XOr, right));
-		}
-		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, AndExpression)
-		zeroOrMore(
-			terminal(XOR)
-			nonTerminal(right, AndExpression)
-		)
-	) */
-	private int matchExclusiveOrExpression(int lookahead) {
-		lookahead = matchAndExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchExclusiveOrExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(XOR)
-		nonTerminal(right, AndExpression)
-	) */
-	private int matchExclusiveOrExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchExclusiveOrExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchExclusiveOrExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(XOR)
-		nonTerminal(right, AndExpression)
-	) */
-	private int matchExclusiveOrExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.XOR);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAndExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, EqualityExpression)
-		zeroOrMore(
-			action({ lateRun(); })
-			terminal(BIT_AND)
-			nonTerminal(right, EqualityExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right)); })
-		)
-		action({ return ret; })
-	) */
-	protected BUTree<? extends SExpr> parseAndExpression() throws ParseException {
-		BUTree<? extends SExpr> ret;
-		BUTree<? extends SExpr> right;
-		ret = parseEqualityExpression();
-		while (match(0, TokenType.BIT_AND) != -1) {
-			lateRun();
-			parse(TokenType.BIT_AND);
-			right = parseEqualityExpression();
-			ret = dress(SBinaryExpr.make(ret, BinaryOp.BinAnd, right));
-		}
-		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, EqualityExpression)
-		zeroOrMore(
-			terminal(BIT_AND)
-			nonTerminal(right, EqualityExpression)
-		)
-	) */
-	private int matchAndExpression(int lookahead) {
-		lookahead = matchEqualityExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAndExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		terminal(BIT_AND)
-		nonTerminal(right, EqualityExpression)
-	) */
-	private int matchAndExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAndExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchAndExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(BIT_AND)
-		nonTerminal(right, EqualityExpression)
-	) */
-	private int matchAndExpression_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.BIT_AND);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchEqualityExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, InstanceOfExpression)
-		zeroOrMore(
+			lookAhead(
+				choice(
+					sequence(
+						lookAhead({ precedenceForInstanceOf() >= minPrecedence })
+						terminal(INSTANCEOF)
+					)
+					nonTerminal(op, BinaryOperator)
+				)
+			)
 			action({ lateRun(); })
 			choice(
 				sequence(
-					terminal(EQ)
-					action({ op = BinaryOp.Equal; })
+					lookAhead({ precedenceForInstanceOf() >= minPrecedence })
+					terminal(INSTANCEOF)
+					action({ run(); })
+					nonTerminal(annotations, Annotations)
+					nonTerminal(type, Type)
+					action({ ret = dress(SInstanceOfExpr.make(ret, type)); })
 				)
 				sequence(
-					terminal(NE)
-					action({ op = BinaryOp.NotEqual; })
+					lookAhead(
+						nonTerminal(op, BinaryOperator)
+					)
+					nonTerminal(op, BinaryOperator)
+					action({
+						int oldPrecedence = minPrecedence;
+						minPrecedence = precedenceFor(op) + (leftAssociative(op) ? 1 : 0);
+					})
+					nonTerminal(rhs, BinaryExpression)
+					action({ minPrecedence = oldPrecedence; })
+					action({ ret = dress(SBinaryExpr.make(ret, op, rhs)); })
 				)
 			)
-			nonTerminal(right, InstanceOfExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
 		)
 		action({ return ret; })
 	) */
-	protected BUTree<? extends SExpr> parseEqualityExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseBinaryExpression(int minPrecedence) throws ParseException {
 		BUTree<? extends SExpr> ret;
-		BUTree<? extends SExpr> right;
+		BUTree<? extends SExpr> rhs;
 		BinaryOp op;
-		ret = parseInstanceOfExpression();
-		while (match(0, TokenType.NE, TokenType.EQ) != -1) {
+		BUTree<SNodeList> annotations;
+		BUTree<? extends SType> type;
+		ret = parseUnaryExpression();
+		while (matchBinaryExpression_lookahead1(0, minPrecedence) != -1) {
 			lateRun();
-			if (match(0, TokenType.EQ) != -1) {
-				parse(TokenType.EQ);
-				op = BinaryOp.Equal;
-			} else if (match(0, TokenType.NE) != -1) {
-				parse(TokenType.NE);
-				op = BinaryOp.NotEqual;
+			if (precedenceForInstanceOf() >= minPrecedence && matchBinaryExpression_lookahead2(0, minPrecedence) != -1) {
+				parse(TokenType.INSTANCEOF);
+				run();
+				annotations = parseAnnotations();
+				type = parseType(annotations);
+				ret = dress(SInstanceOfExpr.make(ret, type));
+			} else if (matchBinaryExpression_lookahead3(0, minPrecedence) != -1) {
+				op = parseBinaryOperator(minPrecedence);
+				int oldPrecedence = minPrecedence;
+				minPrecedence = precedenceFor(op) + (leftAssociative(op) ? 1 : 0);
+				rhs = parseBinaryExpression(minPrecedence);
+				minPrecedence = oldPrecedence;
+				ret = dress(SBinaryExpr.make(ret, op, rhs));
 			} else {
-				throw produceParseException(TokenType.NE, TokenType.EQ);
+				throw produceParseException(TokenType.SLASH, TokenType.REM, TokenType.SC_OR, TokenType.BIT_AND, TokenType.XOR, TokenType.SC_AND, TokenType.BIT_OR, TokenType.LT, TokenType.GT, TokenType.EQ, TokenType.NE, TokenType.LE, TokenType.GE, TokenType.MINUS, TokenType.STAR, TokenType.LSHIFT, TokenType.PLUS, TokenType.INSTANCEOF);
 			}
-			right = parseInstanceOfExpression();
-			ret = dress(SBinaryExpr.make(ret, op, right));
 		}
 		return ret;
 	}
 
 	/* sequence(
-		nonTerminal(ret, InstanceOfExpression)
+		nonTerminal(ret, UnaryExpression)
 		zeroOrMore(
-			choice(
-				sequence(
-					terminal(EQ)
-				)
-				sequence(
-					terminal(NE)
+			lookAhead(
+				choice(
+					sequence(
+						lookAhead({ precedenceForInstanceOf() >= minPrecedence })
+						terminal(INSTANCEOF)
+					)
+					nonTerminal(op, BinaryOperator)
 				)
 			)
-			nonTerminal(right, InstanceOfExpression)
+			choice(
+				sequence(
+					lookAhead({ precedenceForInstanceOf() >= minPrecedence })
+					terminal(INSTANCEOF)
+					nonTerminal(annotations, Annotations)
+					nonTerminal(type, Type)
+				)
+				sequence(
+					lookAhead(
+						nonTerminal(op, BinaryOperator)
+					)
+					nonTerminal(op, BinaryOperator)
+					nonTerminal(rhs, BinaryExpression)
+				)
+			)
 		)
 	) */
-	private int matchEqualityExpression(int lookahead) {
-		lookahead = matchInstanceOfExpression(lookahead);
+	private int matchBinaryExpression(int lookahead, int minPrecedence) {
+		lookahead = matchUnaryExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
-		lookahead = matchEqualityExpression_2(lookahead);
+		lookahead = matchBinaryExpression_2(lookahead, minPrecedence);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
 	}
 
 	/* zeroOrMore(
-		choice(
-			sequence(
-				terminal(EQ)
-			)
-			sequence(
-				terminal(NE)
+		lookAhead(
+			choice(
+				sequence(
+					lookAhead({ precedenceForInstanceOf() >= minPrecedence })
+					terminal(INSTANCEOF)
+				)
+				nonTerminal(op, BinaryOperator)
 			)
 		)
-		nonTerminal(right, InstanceOfExpression)
+		choice(
+			sequence(
+				lookAhead({ precedenceForInstanceOf() >= minPrecedence })
+				terminal(INSTANCEOF)
+				nonTerminal(annotations, Annotations)
+				nonTerminal(type, Type)
+			)
+			sequence(
+				lookAhead(
+					nonTerminal(op, BinaryOperator)
+				)
+				nonTerminal(op, BinaryOperator)
+				nonTerminal(rhs, BinaryExpression)
+			)
+		)
 	) */
-	private int matchEqualityExpression_2(int lookahead) {
+	private int matchBinaryExpression_2(int lookahead, int minPrecedence) {
 		int newLookahead;
-		newLookahead = matchEqualityExpression_2_1(lookahead);
+		newLookahead = matchBinaryExpression_2_1(lookahead, minPrecedence);
 		while (newLookahead != -1) {
 			lookahead = newLookahead;
-			newLookahead = matchEqualityExpression_2_1(lookahead);
+			newLookahead = matchBinaryExpression_2_1(lookahead, minPrecedence);
 		}
 		return lookahead;
 	}
 
 	/* sequence(
-		choice(
-			sequence(
-				terminal(EQ)
-			)
-			sequence(
-				terminal(NE)
+		lookAhead(
+			choice(
+				sequence(
+					lookAhead({ precedenceForInstanceOf() >= minPrecedence })
+					terminal(INSTANCEOF)
+				)
+				nonTerminal(op, BinaryOperator)
 			)
 		)
-		nonTerminal(right, InstanceOfExpression)
+		choice(
+			sequence(
+				lookAhead({ precedenceForInstanceOf() >= minPrecedence })
+				terminal(INSTANCEOF)
+				nonTerminal(annotations, Annotations)
+				nonTerminal(type, Type)
+			)
+			sequence(
+				lookAhead(
+					nonTerminal(op, BinaryOperator)
+				)
+				nonTerminal(op, BinaryOperator)
+				nonTerminal(rhs, BinaryExpression)
+			)
+		)
 	) */
-	private int matchEqualityExpression_2_1(int lookahead) {
-		lookahead = matchEqualityExpression_2_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchInstanceOfExpression(lookahead);
+	private int matchBinaryExpression_2_1(int lookahead, int minPrecedence) {
+		lookahead = matchBinaryExpression_2_1_3(lookahead, minPrecedence);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -9409,108 +9119,40 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* choice(
 		sequence(
-			terminal(EQ)
+			lookAhead({ precedenceForInstanceOf() >= minPrecedence })
+			terminal(INSTANCEOF)
+			nonTerminal(annotations, Annotations)
+			nonTerminal(type, Type)
 		)
 		sequence(
-			terminal(NE)
+			lookAhead(
+				nonTerminal(op, BinaryOperator)
+			)
+			nonTerminal(op, BinaryOperator)
+			nonTerminal(rhs, BinaryExpression)
 		)
 	) */
-	private int matchEqualityExpression_2_1_2(int lookahead) {
+	private int matchBinaryExpression_2_1_3(int lookahead, int minPrecedence) {
 		int newLookahead;
-		newLookahead = matchEqualityExpression_2_1_2_1(lookahead);
+		newLookahead = matchBinaryExpression_2_1_3_1(lookahead, minPrecedence);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = matchEqualityExpression_2_1_2_2(lookahead);
+		newLookahead = matchBinaryExpression_2_1_3_2(lookahead, minPrecedence);
 		if (newLookahead != -1)
 			return newLookahead;
 		return -1;
 	}
 
 	/* sequence(
-		terminal(EQ)
-	) */
-	private int matchEqualityExpression_2_1_2_1(int lookahead) {
-		lookahead = match(lookahead, TokenType.EQ);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(NE)
-	) */
-	private int matchEqualityExpression_2_1_2_2(int lookahead) {
-		lookahead = match(lookahead, TokenType.NE);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(ret, RelationalExpression)
-		zeroOrOne(
-			action({ lateRun(); })
-			terminal(INSTANCEOF)
-			action({ run(); })
-			nonTerminal(annotations, Annotations)
-			nonTerminal(type, Type)
-			action({ ret = dress(SInstanceOfExpr.make(ret, type)); })
-		)
-		action({ return ret; })
-	) */
-	protected BUTree<? extends SExpr> parseInstanceOfExpression() throws ParseException {
-		BUTree<? extends SExpr> ret;
-		BUTree<SNodeList> annotations;
-		BUTree<? extends SType> type;
-		ret = parseRelationalExpression();
-		if (match(0, TokenType.INSTANCEOF) != -1) {
-			lateRun();
-			parse(TokenType.INSTANCEOF);
-			run();
-			annotations = parseAnnotations();
-			type = parseType(annotations);
-			ret = dress(SInstanceOfExpr.make(ret, type));
-		}
-		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, RelationalExpression)
-		zeroOrOne(
-			terminal(INSTANCEOF)
-			nonTerminal(annotations, Annotations)
-			nonTerminal(type, Type)
-		)
-	) */
-	private int matchInstanceOfExpression(int lookahead) {
-		lookahead = matchRelationalExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchInstanceOfExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrOne(
+		lookAhead({ precedenceForInstanceOf() >= minPrecedence })
 		terminal(INSTANCEOF)
 		nonTerminal(annotations, Annotations)
 		nonTerminal(type, Type)
 	) */
-	private int matchInstanceOfExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchInstanceOfExpression_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(INSTANCEOF)
-		nonTerminal(annotations, Annotations)
-		nonTerminal(type, Type)
-	) */
-	private int matchInstanceOfExpression_2_1(int lookahead) {
+	private int matchBinaryExpression_2_1_3_1(int lookahead, int minPrecedence) {
+		lookahead = precedenceForInstanceOf() >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
 		lookahead = match(lookahead, TokenType.INSTANCEOF);
 		if (lookahead == -1)
 			return -1;
@@ -9524,139 +9166,33 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		nonTerminal(ret, ShiftExpression)
-		zeroOrMore(
-			action({ lateRun(); })
-			choice(
-				sequence(
-					terminal(LT)
-					action({ op = BinaryOp.Less; })
-				)
-				sequence(
-					terminal(GT)
-					action({ op = BinaryOp.Greater; })
-				)
-				sequence(
-					terminal(LE)
-					action({ op = BinaryOp.LessOrEqual; })
-				)
-				sequence(
-					terminal(GE)
-					action({ op = BinaryOp.GreaterOrEqual; })
-				)
-			)
-			nonTerminal(right, ShiftExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
+		lookAhead(
+			nonTerminal(op, BinaryOperator)
 		)
-		action({ return ret; })
+		nonTerminal(op, BinaryOperator)
+		nonTerminal(rhs, BinaryExpression)
 	) */
-	protected BUTree<? extends SExpr> parseRelationalExpression() throws ParseException {
-		BUTree<? extends SExpr> ret;
-		BUTree<? extends SExpr> right;
-		BinaryOp op;
-		ret = parseShiftExpression();
-		while (match(0, TokenType.GT, TokenType.LT, TokenType.GE, TokenType.LE) != -1) {
-			lateRun();
-			if (match(0, TokenType.LT) != -1) {
-				parse(TokenType.LT);
-				op = BinaryOp.Less;
-			} else if (match(0, TokenType.GT) != -1) {
-				parse(TokenType.GT);
-				op = BinaryOp.Greater;
-			} else if (match(0, TokenType.LE) != -1) {
-				parse(TokenType.LE);
-				op = BinaryOp.LessOrEqual;
-			} else if (match(0, TokenType.GE) != -1) {
-				parse(TokenType.GE);
-				op = BinaryOp.GreaterOrEqual;
-			} else {
-				throw produceParseException(TokenType.GE, TokenType.LE, TokenType.GT, TokenType.LT);
-			}
-			right = parseShiftExpression();
-			ret = dress(SBinaryExpr.make(ret, op, right));
-		}
-		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, ShiftExpression)
-		zeroOrMore(
-			choice(
-				sequence(
-					terminal(LT)
-				)
-				sequence(
-					terminal(GT)
-				)
-				sequence(
-					terminal(LE)
-				)
-				sequence(
-					terminal(GE)
-				)
-			)
-			nonTerminal(right, ShiftExpression)
-		)
-	) */
-	private int matchRelationalExpression(int lookahead) {
-		lookahead = matchShiftExpression(lookahead);
+	private int matchBinaryExpression_2_1_3_2(int lookahead, int minPrecedence) {
+		lookahead = matchBinaryOperator(lookahead, minPrecedence);
 		if (lookahead == -1)
 			return -1;
-		lookahead = matchRelationalExpression_2(lookahead);
+		lookahead = matchBinaryExpression(lookahead, minPrecedence);
 		if (lookahead == -1)
 			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		choice(
-			sequence(
-				terminal(LT)
-			)
-			sequence(
-				terminal(GT)
-			)
-			sequence(
-				terminal(LE)
-			)
-			sequence(
-				terminal(GE)
-			)
-		)
-		nonTerminal(right, ShiftExpression)
-	) */
-	private int matchRelationalExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchRelationalExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchRelationalExpression_2_1(lookahead);
-		}
 		return lookahead;
 	}
 
 	/* sequence(
 		choice(
 			sequence(
-				terminal(LT)
+				lookAhead({ precedenceForInstanceOf() >= minPrecedence })
+				terminal(INSTANCEOF)
 			)
-			sequence(
-				terminal(GT)
-			)
-			sequence(
-				terminal(LE)
-			)
-			sequence(
-				terminal(GE)
-			)
+			nonTerminal(op, BinaryOperator)
 		)
-		nonTerminal(right, ShiftExpression)
 	) */
-	private int matchRelationalExpression_2_1(int lookahead) {
-		lookahead = matchRelationalExpression_2_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchShiftExpression(lookahead);
+	private int matchBinaryExpression_lookahead1(int lookahead, int minPrecedence) {
+		lookahead = matchBinaryExpression_lookahead1_1(lookahead, minPrecedence);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -9664,40 +9200,765 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* choice(
 		sequence(
-			terminal(LT)
+			lookAhead({ precedenceForInstanceOf() >= minPrecedence })
+			terminal(INSTANCEOF)
 		)
-		sequence(
-			terminal(GT)
-		)
-		sequence(
-			terminal(LE)
-		)
-		sequence(
-			terminal(GE)
-		)
+		nonTerminal(op, BinaryOperator)
 	) */
-	private int matchRelationalExpression_2_1_2(int lookahead) {
+	private int matchBinaryExpression_lookahead1_1(int lookahead, int minPrecedence) {
 		int newLookahead;
-		newLookahead = matchRelationalExpression_2_1_2_1(lookahead);
+		newLookahead = matchBinaryExpression_lookahead1_1_1(lookahead, minPrecedence);
 		if (newLookahead != -1)
 			return newLookahead;
-		newLookahead = matchRelationalExpression_2_1_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchRelationalExpression_2_1_2_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchRelationalExpression_2_1_2_4(lookahead);
+		newLookahead = matchBinaryOperator(lookahead, minPrecedence);
 		if (newLookahead != -1)
 			return newLookahead;
 		return -1;
 	}
 
 	/* sequence(
+		lookAhead({ precedenceForInstanceOf() >= minPrecedence })
+		terminal(INSTANCEOF)
+	) */
+	private int matchBinaryExpression_lookahead1_1_1(int lookahead, int minPrecedence) {
+		lookahead = precedenceForInstanceOf() >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.INSTANCEOF);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		terminal(INSTANCEOF)
+	) */
+	private int matchBinaryExpression_lookahead2(int lookahead, int minPrecedence) {
+		lookahead = match(lookahead, TokenType.INSTANCEOF);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		nonTerminal(op, BinaryOperator)
+	) */
+	private int matchBinaryExpression_lookahead3(int lookahead, int minPrecedence) {
+		lookahead = matchBinaryOperator(lookahead, minPrecedence);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		choice(
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Or) >= minPrecedence })
+				terminal(SC_OR)
+				action({ ret = BinaryOp.Or; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Plus) >= minPrecedence })
+				terminal(SC_AND)
+				action({ ret = BinaryOp.And; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Plus) >= minPrecedence })
+				terminal(BIT_OR)
+				action({ ret = BinaryOp.BinOr; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.BinAnd) >= minPrecedence })
+				terminal(BIT_AND)
+				action({ ret = BinaryOp.BinAnd; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.XOr) >= minPrecedence })
+				terminal(XOR)
+				action({ ret = BinaryOp.XOr; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Equal) >= minPrecedence })
+				terminal(EQ)
+				action({ ret = BinaryOp.Equal; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.NotEqual) >= minPrecedence })
+				terminal(NE)
+				action({ ret = BinaryOp.NotEqual; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Less) >= minPrecedence })
+				terminal(LT)
+				action({ ret = BinaryOp.Less; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.RightUnsignedShift) >= minPrecedence })
+				terminal(GT)
+				terminal(GT)
+				terminal(GT)
+				action({
+					popNewWhitespaces(2);
+					ret = BinaryOp.RightUnsignedShift;
+				})
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.RightSignedShift) >= minPrecedence })
+				terminal(GT)
+				terminal(GT)
+				action({
+					popNewWhitespaces(1);
+					ret = BinaryOp.RightSignedShift;
+				})
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Greater) >= minPrecedence })
+				terminal(GT)
+				action({ ret = BinaryOp.Greater; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.LessOrEqual) >= minPrecedence })
+				terminal(LE)
+				action({ ret = BinaryOp.LessOrEqual; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.GreaterOrEqual) >= minPrecedence })
+				terminal(GE)
+				action({ ret = BinaryOp.GreaterOrEqual; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.LeftShift) >= minPrecedence })
+				terminal(LSHIFT)
+				action({ ret = BinaryOp.LeftShift; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Plus) >= minPrecedence })
+				terminal(PLUS)
+				action({ ret = BinaryOp.Plus; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Minus) >= minPrecedence })
+				terminal(MINUS)
+				action({ ret = BinaryOp.Minus; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Times) >= minPrecedence })
+				terminal(STAR)
+				action({ ret = BinaryOp.Times; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Divide) >= minPrecedence })
+				terminal(SLASH)
+				action({ ret = BinaryOp.Divide; })
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Remainder) >= minPrecedence })
+				terminal(REM)
+				action({ ret = BinaryOp.Remainder; })
+			)
+		)
+		action({ return ret; })
+	) */
+	protected BinaryOp parseBinaryOperator(int minPrecedence) throws ParseException {
+		BinaryOp ret;
+		if (precedenceFor(BinaryOp.Or) >= minPrecedence && matchBinaryOperator_lookahead1(0, minPrecedence) != -1) {
+			parse(TokenType.SC_OR);
+			ret = BinaryOp.Or;
+		} else if (precedenceFor(BinaryOp.Plus) >= minPrecedence && matchBinaryOperator_lookahead2(0, minPrecedence) != -1) {
+			parse(TokenType.SC_AND);
+			ret = BinaryOp.And;
+		} else if (precedenceFor(BinaryOp.Plus) >= minPrecedence && matchBinaryOperator_lookahead3(0, minPrecedence) != -1) {
+			parse(TokenType.BIT_OR);
+			ret = BinaryOp.BinOr;
+		} else if (precedenceFor(BinaryOp.BinAnd) >= minPrecedence && matchBinaryOperator_lookahead4(0, minPrecedence) != -1) {
+			parse(TokenType.BIT_AND);
+			ret = BinaryOp.BinAnd;
+		} else if (precedenceFor(BinaryOp.XOr) >= minPrecedence && matchBinaryOperator_lookahead5(0, minPrecedence) != -1) {
+			parse(TokenType.XOR);
+			ret = BinaryOp.XOr;
+		} else if (precedenceFor(BinaryOp.Equal) >= minPrecedence && matchBinaryOperator_lookahead6(0, minPrecedence) != -1) {
+			parse(TokenType.EQ);
+			ret = BinaryOp.Equal;
+		} else if (precedenceFor(BinaryOp.NotEqual) >= minPrecedence && matchBinaryOperator_lookahead7(0, minPrecedence) != -1) {
+			parse(TokenType.NE);
+			ret = BinaryOp.NotEqual;
+		} else if (precedenceFor(BinaryOp.Less) >= minPrecedence && matchBinaryOperator_lookahead8(0, minPrecedence) != -1) {
+			parse(TokenType.LT);
+			ret = BinaryOp.Less;
+		} else if (precedenceFor(BinaryOp.RightUnsignedShift) >= minPrecedence && matchBinaryOperator_lookahead9(0, minPrecedence) != -1) {
+			parse(TokenType.GT);
+			parse(TokenType.GT);
+			parse(TokenType.GT);
+			popNewWhitespaces(2);
+			ret = BinaryOp.RightUnsignedShift;
+		} else if (precedenceFor(BinaryOp.RightSignedShift) >= minPrecedence && matchBinaryOperator_lookahead10(0, minPrecedence) != -1) {
+			parse(TokenType.GT);
+			parse(TokenType.GT);
+			popNewWhitespaces(1);
+			ret = BinaryOp.RightSignedShift;
+		} else if (precedenceFor(BinaryOp.Greater) >= minPrecedence && matchBinaryOperator_lookahead11(0, minPrecedence) != -1) {
+			parse(TokenType.GT);
+			ret = BinaryOp.Greater;
+		} else if (precedenceFor(BinaryOp.LessOrEqual) >= minPrecedence && matchBinaryOperator_lookahead12(0, minPrecedence) != -1) {
+			parse(TokenType.LE);
+			ret = BinaryOp.LessOrEqual;
+		} else if (precedenceFor(BinaryOp.GreaterOrEqual) >= minPrecedence && matchBinaryOperator_lookahead13(0, minPrecedence) != -1) {
+			parse(TokenType.GE);
+			ret = BinaryOp.GreaterOrEqual;
+		} else if (precedenceFor(BinaryOp.LeftShift) >= minPrecedence && matchBinaryOperator_lookahead14(0, minPrecedence) != -1) {
+			parse(TokenType.LSHIFT);
+			ret = BinaryOp.LeftShift;
+		} else if (precedenceFor(BinaryOp.Plus) >= minPrecedence && matchBinaryOperator_lookahead15(0, minPrecedence) != -1) {
+			parse(TokenType.PLUS);
+			ret = BinaryOp.Plus;
+		} else if (precedenceFor(BinaryOp.Minus) >= minPrecedence && matchBinaryOperator_lookahead16(0, minPrecedence) != -1) {
+			parse(TokenType.MINUS);
+			ret = BinaryOp.Minus;
+		} else if (precedenceFor(BinaryOp.Times) >= minPrecedence && matchBinaryOperator_lookahead17(0, minPrecedence) != -1) {
+			parse(TokenType.STAR);
+			ret = BinaryOp.Times;
+		} else if (precedenceFor(BinaryOp.Divide) >= minPrecedence && matchBinaryOperator_lookahead18(0, minPrecedence) != -1) {
+			parse(TokenType.SLASH);
+			ret = BinaryOp.Divide;
+		} else if (precedenceFor(BinaryOp.Remainder) >= minPrecedence && matchBinaryOperator_lookahead19(0, minPrecedence) != -1) {
+			parse(TokenType.REM);
+			ret = BinaryOp.Remainder;
+		} else {
+			throw produceParseException(TokenType.REM, TokenType.SLASH, TokenType.STAR, TokenType.MINUS, TokenType.PLUS, TokenType.LSHIFT, TokenType.GE, TokenType.LE, TokenType.GT, TokenType.LT, TokenType.NE, TokenType.EQ, TokenType.XOR, TokenType.BIT_AND, TokenType.BIT_OR, TokenType.SC_AND, TokenType.SC_OR);
+		}
+		return ret;
+	}
+
+	/* sequence(
+		choice(
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Or) >= minPrecedence })
+				terminal(SC_OR)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Plus) >= minPrecedence })
+				terminal(SC_AND)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Plus) >= minPrecedence })
+				terminal(BIT_OR)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.BinAnd) >= minPrecedence })
+				terminal(BIT_AND)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.XOr) >= minPrecedence })
+				terminal(XOR)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Equal) >= minPrecedence })
+				terminal(EQ)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.NotEqual) >= minPrecedence })
+				terminal(NE)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Less) >= minPrecedence })
+				terminal(LT)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.RightUnsignedShift) >= minPrecedence })
+				terminal(GT)
+				terminal(GT)
+				terminal(GT)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.RightSignedShift) >= minPrecedence })
+				terminal(GT)
+				terminal(GT)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Greater) >= minPrecedence })
+				terminal(GT)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.LessOrEqual) >= minPrecedence })
+				terminal(LE)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.GreaterOrEqual) >= minPrecedence })
+				terminal(GE)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.LeftShift) >= minPrecedence })
+				terminal(LSHIFT)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Plus) >= minPrecedence })
+				terminal(PLUS)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Minus) >= minPrecedence })
+				terminal(MINUS)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Times) >= minPrecedence })
+				terminal(STAR)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Divide) >= minPrecedence })
+				terminal(SLASH)
+			)
+			sequence(
+				lookAhead({ precedenceFor(BinaryOp.Remainder) >= minPrecedence })
+				terminal(REM)
+			)
+		)
+	) */
+	private int matchBinaryOperator(int lookahead, int minPrecedence) {
+		lookahead = matchBinaryOperator_1(lookahead, minPrecedence);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* choice(
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.Or) >= minPrecedence })
+			terminal(SC_OR)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.Plus) >= minPrecedence })
+			terminal(SC_AND)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.Plus) >= minPrecedence })
+			terminal(BIT_OR)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.BinAnd) >= minPrecedence })
+			terminal(BIT_AND)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.XOr) >= minPrecedence })
+			terminal(XOR)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.Equal) >= minPrecedence })
+			terminal(EQ)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.NotEqual) >= minPrecedence })
+			terminal(NE)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.Less) >= minPrecedence })
+			terminal(LT)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.RightUnsignedShift) >= minPrecedence })
+			terminal(GT)
+			terminal(GT)
+			terminal(GT)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.RightSignedShift) >= minPrecedence })
+			terminal(GT)
+			terminal(GT)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.Greater) >= minPrecedence })
+			terminal(GT)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.LessOrEqual) >= minPrecedence })
+			terminal(LE)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.GreaterOrEqual) >= minPrecedence })
+			terminal(GE)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.LeftShift) >= minPrecedence })
+			terminal(LSHIFT)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.Plus) >= minPrecedence })
+			terminal(PLUS)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.Minus) >= minPrecedence })
+			terminal(MINUS)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.Times) >= minPrecedence })
+			terminal(STAR)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.Divide) >= minPrecedence })
+			terminal(SLASH)
+		)
+		sequence(
+			lookAhead({ precedenceFor(BinaryOp.Remainder) >= minPrecedence })
+			terminal(REM)
+		)
+	) */
+	private int matchBinaryOperator_1(int lookahead, int minPrecedence) {
+		int newLookahead;
+		newLookahead = matchBinaryOperator_1_1(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_2(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_3(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_4(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_5(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_6(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_7(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_8(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_9(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_10(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_11(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_12(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_13(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_14(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_15(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_16(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_17(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_18(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		newLookahead = matchBinaryOperator_1_19(lookahead, minPrecedence);
+		if (newLookahead != -1)
+			return newLookahead;
+		return -1;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.Or) >= minPrecedence })
+		terminal(SC_OR)
+	) */
+	private int matchBinaryOperator_1_1(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.Or) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.SC_OR);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.RightSignedShift) >= minPrecedence })
+		terminal(GT)
+		terminal(GT)
+	) */
+	private int matchBinaryOperator_1_10(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.RightSignedShift) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.GT);
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.GT);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.Greater) >= minPrecedence })
+		terminal(GT)
+	) */
+	private int matchBinaryOperator_1_11(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.Greater) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.GT);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.LessOrEqual) >= minPrecedence })
+		terminal(LE)
+	) */
+	private int matchBinaryOperator_1_12(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.LessOrEqual) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.LE);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.GreaterOrEqual) >= minPrecedence })
+		terminal(GE)
+	) */
+	private int matchBinaryOperator_1_13(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.GreaterOrEqual) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.GE);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.LeftShift) >= minPrecedence })
+		terminal(LSHIFT)
+	) */
+	private int matchBinaryOperator_1_14(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.LeftShift) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.LSHIFT);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.Plus) >= minPrecedence })
+		terminal(PLUS)
+	) */
+	private int matchBinaryOperator_1_15(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.Plus) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.PLUS);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.Minus) >= minPrecedence })
+		terminal(MINUS)
+	) */
+	private int matchBinaryOperator_1_16(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.Minus) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.MINUS);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.Times) >= minPrecedence })
+		terminal(STAR)
+	) */
+	private int matchBinaryOperator_1_17(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.Times) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.STAR);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.Divide) >= minPrecedence })
+		terminal(SLASH)
+	) */
+	private int matchBinaryOperator_1_18(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.Divide) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.SLASH);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.Remainder) >= minPrecedence })
+		terminal(REM)
+	) */
+	private int matchBinaryOperator_1_19(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.Remainder) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.REM);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.Plus) >= minPrecedence })
+		terminal(SC_AND)
+	) */
+	private int matchBinaryOperator_1_2(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.Plus) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.SC_AND);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.Plus) >= minPrecedence })
+		terminal(BIT_OR)
+	) */
+	private int matchBinaryOperator_1_3(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.Plus) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.BIT_OR);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.BinAnd) >= minPrecedence })
+		terminal(BIT_AND)
+	) */
+	private int matchBinaryOperator_1_4(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.BinAnd) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.BIT_AND);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.XOr) >= minPrecedence })
+		terminal(XOR)
+	) */
+	private int matchBinaryOperator_1_5(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.XOr) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.XOR);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.Equal) >= minPrecedence })
+		terminal(EQ)
+	) */
+	private int matchBinaryOperator_1_6(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.Equal) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.EQ);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.NotEqual) >= minPrecedence })
+		terminal(NE)
+	) */
+	private int matchBinaryOperator_1_7(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.NotEqual) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.NE);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.Less) >= minPrecedence })
 		terminal(LT)
 	) */
-	private int matchRelationalExpression_2_1_2_1(int lookahead) {
+	private int matchBinaryOperator_1_8(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.Less) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
 		lookahead = match(lookahead, TokenType.LT);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		lookAhead({ precedenceFor(BinaryOp.RightUnsignedShift) >= minPrecedence })
+		terminal(GT)
+		terminal(GT)
+		terminal(GT)
+	) */
+	private int matchBinaryOperator_1_9(int lookahead, int minPrecedence) {
+		lookahead = precedenceFor(BinaryOp.RightUnsignedShift) >= minPrecedence ? lookahead : -1;
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.GT);
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.GT);
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.GT);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		terminal(SC_OR)
+	) */
+	private int matchBinaryOperator_lookahead1(int lookahead, int minPrecedence) {
+		lookahead = match(lookahead, TokenType.SC_OR);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		terminal(GT)
+		terminal(GT)
+	) */
+	private int matchBinaryOperator_lookahead10(int lookahead, int minPrecedence) {
+		lookahead = match(lookahead, TokenType.GT);
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -9706,7 +9967,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(GT)
 	) */
-	private int matchRelationalExpression_2_1_2_2(int lookahead) {
+	private int matchBinaryOperator_lookahead11(int lookahead, int minPrecedence) {
 		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
@@ -9716,7 +9977,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(LE)
 	) */
-	private int matchRelationalExpression_2_1_2_3(int lookahead) {
+	private int matchBinaryOperator_lookahead12(int lookahead, int minPrecedence) {
 		lookahead = match(lookahead, TokenType.LE);
 		if (lookahead == -1)
 			return -1;
@@ -9726,7 +9987,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(GE)
 	) */
-	private int matchRelationalExpression_2_1_2_4(int lookahead) {
+	private int matchBinaryOperator_lookahead13(int lookahead, int minPrecedence) {
 		lookahead = match(lookahead, TokenType.GE);
 		if (lookahead == -1)
 			return -1;
@@ -9734,171 +9995,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		nonTerminal(ret, AdditiveExpression)
-		zeroOrMore(
-			lookAhead(2)
-			action({ lateRun(); })
-			choice(
-				sequence(
-					terminal(LSHIFT)
-					action({ op = BinaryOp.LeftShift; })
-				)
-				sequence(
-					lookAhead(3)
-					nonTerminal(RUNSIGNEDSHIFT)
-					action({ op = BinaryOp.RightUnsignedShift; })
-				)
-				sequence(
-					lookAhead(2)
-					nonTerminal(RSIGNEDSHIFT)
-					action({ op = BinaryOp.RightSignedShift; })
-				)
-			)
-			nonTerminal(right, AdditiveExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
-		)
-		action({ return ret; })
-	) */
-	protected BUTree<? extends SExpr> parseShiftExpression() throws ParseException {
-		BUTree<? extends SExpr> ret;
-		BUTree<? extends SExpr> right;
-		BinaryOp op;
-		ret = parseAdditiveExpression();
-		while (matchShiftExpression_lookahead1(0) != -1) {
-			lateRun();
-			if (match(0, TokenType.LSHIFT) != -1) {
-				parse(TokenType.LSHIFT);
-				op = BinaryOp.LeftShift;
-			} else if (matchShiftExpression_lookahead2(0) != -1) {
-				parseRUNSIGNEDSHIFT();
-				op = BinaryOp.RightUnsignedShift;
-			} else if (matchShiftExpression_lookahead3(0) != -1) {
-				parseRSIGNEDSHIFT();
-				op = BinaryOp.RightSignedShift;
-			} else {
-				throw produceParseException(TokenType.GT, TokenType.LSHIFT);
-			}
-			right = parseAdditiveExpression();
-			ret = dress(SBinaryExpr.make(ret, op, right));
-		}
-		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, AdditiveExpression)
-		zeroOrMore(
-			lookAhead(2)
-			choice(
-				sequence(
-					terminal(LSHIFT)
-				)
-				sequence(
-					lookAhead(3)
-					nonTerminal(RUNSIGNEDSHIFT)
-				)
-				sequence(
-					lookAhead(2)
-					nonTerminal(RSIGNEDSHIFT)
-				)
-			)
-			nonTerminal(right, AdditiveExpression)
-		)
-	) */
-	private int matchShiftExpression(int lookahead) {
-		lookahead = matchAdditiveExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchShiftExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(LSHIFT)
-			)
-			sequence(
-				lookAhead(3)
-				nonTerminal(RUNSIGNEDSHIFT)
-			)
-			sequence(
-				lookAhead(2)
-				nonTerminal(RSIGNEDSHIFT)
-			)
-		)
-		nonTerminal(right, AdditiveExpression)
-	) */
-	private int matchShiftExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchShiftExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchShiftExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(LSHIFT)
-			)
-			sequence(
-				lookAhead(3)
-				nonTerminal(RUNSIGNEDSHIFT)
-			)
-			sequence(
-				lookAhead(2)
-				nonTerminal(RSIGNEDSHIFT)
-			)
-		)
-		nonTerminal(right, AdditiveExpression)
-	) */
-	private int matchShiftExpression_2_1(int lookahead) {
-		lookahead = matchShiftExpression_2_1_3(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAdditiveExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(LSHIFT)
-		)
-		sequence(
-			lookAhead(3)
-			nonTerminal(RUNSIGNEDSHIFT)
-		)
-		sequence(
-			lookAhead(2)
-			nonTerminal(RSIGNEDSHIFT)
-		)
-	) */
-	private int matchShiftExpression_2_1_3(int lookahead) {
-		int newLookahead;
-		newLookahead = matchShiftExpression_2_1_3_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchShiftExpression_2_1_3_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchShiftExpression_2_1_3_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
 		terminal(LSHIFT)
 	) */
-	private int matchShiftExpression_2_1_3_1(int lookahead) {
+	private int matchBinaryOperator_lookahead14(int lookahead, int minPrecedence) {
 		lookahead = match(lookahead, TokenType.LSHIFT);
 		if (lookahead == -1)
 			return -1;
@@ -9906,306 +10005,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(3)
-		nonTerminal(RUNSIGNEDSHIFT)
-	) */
-	private int matchShiftExpression_2_1_3_2(int lookahead) {
-		lookahead = matchRUNSIGNEDSHIFT(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		nonTerminal(RSIGNEDSHIFT)
-	) */
-	private int matchShiftExpression_2_1_3_3(int lookahead) {
-		lookahead = matchRSIGNEDSHIFT(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		lookAhead(2)
-		choice(
-			sequence(
-				terminal(LSHIFT)
-			)
-			sequence(
-				lookAhead(3)
-				nonTerminal(RUNSIGNEDSHIFT)
-			)
-			sequence(
-				lookAhead(2)
-				nonTerminal(RSIGNEDSHIFT)
-			)
-		)
-		nonTerminal(right, AdditiveExpression)
-	) */
-	private int matchShiftExpression_lookahead1(int lookahead) {
-		if (match(0, TokenType.LSHIFT) != -1) {
-			if (match(1, TokenType.NEW) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NODE_VARIABLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHAR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INTEGER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.MINUS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BYTE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.IDENTIFIER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SUPER) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.NULL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DOUBLE_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.CHARACTER_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BANG) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LPAREN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TRUE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.LONG_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.BOOLEAN) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.SHORT) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.DECR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.INCR) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.THIS) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.FALSE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.STRING_LITERAL) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.TILDE) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.VOID) != -1) {
-				return lookahead;
-			}
-			if (match(1, TokenType.PLUS) != -1) {
-				return lookahead;
-			}
-		}
-		if (match(0, TokenType.GT) != -1) {
-			if (match(1, TokenType.GT) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(3)
-		nonTerminal(RUNSIGNEDSHIFT)
-	) */
-	private int matchShiftExpression_lookahead2(int lookahead) {
-		if (match(0, TokenType.GT) != -1) {
-			if (match(1, TokenType.GT) != -1) {
-				if (match(2, TokenType.GT) != -1) {
-					return lookahead;
-				}
-			}
-		}
-		return -1;
-	}
-
-	/* sequence(
-		lookAhead(2)
-		nonTerminal(RSIGNEDSHIFT)
-	) */
-	private int matchShiftExpression_lookahead3(int lookahead) {
-		if (match(0, TokenType.GT) != -1) {
-			if (match(1, TokenType.GT) != -1) {
-				return lookahead;
-			}
-		}
-		return -1;
-	}
-
-	/* sequence(
-		nonTerminal(ret, MultiplicativeExpression)
-		zeroOrMore(
-			action({ lateRun(); })
-			choice(
-				sequence(
-					terminal(PLUS)
-					action({ op = BinaryOp.Plus; })
-				)
-				sequence(
-					terminal(MINUS)
-					action({ op = BinaryOp.Minus; })
-				)
-			)
-			nonTerminal(right, MultiplicativeExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
-		)
-		action({ return ret; })
-	) */
-	protected BUTree<? extends SExpr> parseAdditiveExpression() throws ParseException {
-		BUTree<? extends SExpr> ret;
-		BUTree<? extends SExpr> right;
-		BinaryOp op;
-		ret = parseMultiplicativeExpression();
-		while (match(0, TokenType.MINUS, TokenType.PLUS) != -1) {
-			lateRun();
-			if (match(0, TokenType.PLUS) != -1) {
-				parse(TokenType.PLUS);
-				op = BinaryOp.Plus;
-			} else if (match(0, TokenType.MINUS) != -1) {
-				parse(TokenType.MINUS);
-				op = BinaryOp.Minus;
-			} else {
-				throw produceParseException(TokenType.MINUS, TokenType.PLUS);
-			}
-			right = parseMultiplicativeExpression();
-			ret = dress(SBinaryExpr.make(ret, op, right));
-		}
-		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, MultiplicativeExpression)
-		zeroOrMore(
-			choice(
-				sequence(
-					terminal(PLUS)
-				)
-				sequence(
-					terminal(MINUS)
-				)
-			)
-			nonTerminal(right, MultiplicativeExpression)
-		)
-	) */
-	private int matchAdditiveExpression(int lookahead) {
-		lookahead = matchMultiplicativeExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchAdditiveExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		choice(
-			sequence(
-				terminal(PLUS)
-			)
-			sequence(
-				terminal(MINUS)
-			)
-		)
-		nonTerminal(right, MultiplicativeExpression)
-	) */
-	private int matchAdditiveExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAdditiveExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchAdditiveExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(PLUS)
-			)
-			sequence(
-				terminal(MINUS)
-			)
-		)
-		nonTerminal(right, MultiplicativeExpression)
-	) */
-	private int matchAdditiveExpression_2_1(int lookahead) {
-		lookahead = matchAdditiveExpression_2_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMultiplicativeExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(PLUS)
-		)
-		sequence(
-			terminal(MINUS)
-		)
-	) */
-	private int matchAdditiveExpression_2_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchAdditiveExpression_2_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchAdditiveExpression_2_1_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
 		terminal(PLUS)
 	) */
-	private int matchAdditiveExpression_2_1_2_1(int lookahead) {
+	private int matchBinaryOperator_lookahead15(int lookahead, int minPrecedence) {
 		lookahead = match(lookahead, TokenType.PLUS);
 		if (lookahead == -1)
 			return -1;
@@ -10215,7 +10017,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(MINUS)
 	) */
-	private int matchAdditiveExpression_2_1_2_2(int lookahead) {
+	private int matchBinaryOperator_lookahead16(int lookahead, int minPrecedence) {
 		lookahead = match(lookahead, TokenType.MINUS);
 		if (lookahead == -1)
 			return -1;
@@ -10223,157 +10025,9 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		nonTerminal(ret, UnaryExpression)
-		zeroOrMore(
-			action({ lateRun(); })
-			choice(
-				sequence(
-					terminal(STAR)
-					action({ op = BinaryOp.Times; })
-				)
-				sequence(
-					terminal(SLASH)
-					action({ op = BinaryOp.Divide; })
-				)
-				sequence(
-					terminal(REM)
-					action({ op = BinaryOp.Remainder; })
-				)
-			)
-			nonTerminal(right, UnaryExpression)
-			action({ ret = dress(SBinaryExpr.make(ret, op, right)); })
-		)
-		action({ return ret; })
-	) */
-	protected BUTree<? extends SExpr> parseMultiplicativeExpression() throws ParseException {
-		BUTree<? extends SExpr> ret;
-		BUTree<? extends SExpr> right;
-		BinaryOp op;
-		ret = parseUnaryExpression();
-		while (match(0, TokenType.SLASH, TokenType.STAR, TokenType.REM) != -1) {
-			lateRun();
-			if (match(0, TokenType.STAR) != -1) {
-				parse(TokenType.STAR);
-				op = BinaryOp.Times;
-			} else if (match(0, TokenType.SLASH) != -1) {
-				parse(TokenType.SLASH);
-				op = BinaryOp.Divide;
-			} else if (match(0, TokenType.REM) != -1) {
-				parse(TokenType.REM);
-				op = BinaryOp.Remainder;
-			} else {
-				throw produceParseException(TokenType.REM, TokenType.SLASH, TokenType.STAR);
-			}
-			right = parseUnaryExpression();
-			ret = dress(SBinaryExpr.make(ret, op, right));
-		}
-		return ret;
-	}
-
-	/* sequence(
-		nonTerminal(ret, UnaryExpression)
-		zeroOrMore(
-			choice(
-				sequence(
-					terminal(STAR)
-				)
-				sequence(
-					terminal(SLASH)
-				)
-				sequence(
-					terminal(REM)
-				)
-			)
-			nonTerminal(right, UnaryExpression)
-		)
-	) */
-	private int matchMultiplicativeExpression(int lookahead) {
-		lookahead = matchUnaryExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchMultiplicativeExpression_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* zeroOrMore(
-		choice(
-			sequence(
-				terminal(STAR)
-			)
-			sequence(
-				terminal(SLASH)
-			)
-			sequence(
-				terminal(REM)
-			)
-		)
-		nonTerminal(right, UnaryExpression)
-	) */
-	private int matchMultiplicativeExpression_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMultiplicativeExpression_2_1(lookahead);
-		while (newLookahead != -1) {
-			lookahead = newLookahead;
-			newLookahead = matchMultiplicativeExpression_2_1(lookahead);
-		}
-		return lookahead;
-	}
-
-	/* sequence(
-		choice(
-			sequence(
-				terminal(STAR)
-			)
-			sequence(
-				terminal(SLASH)
-			)
-			sequence(
-				terminal(REM)
-			)
-		)
-		nonTerminal(right, UnaryExpression)
-	) */
-	private int matchMultiplicativeExpression_2_1(int lookahead) {
-		lookahead = matchMultiplicativeExpression_2_1_2(lookahead);
-		if (lookahead == -1)
-			return -1;
-		lookahead = matchUnaryExpression(lookahead);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* choice(
-		sequence(
-			terminal(STAR)
-		)
-		sequence(
-			terminal(SLASH)
-		)
-		sequence(
-			terminal(REM)
-		)
-	) */
-	private int matchMultiplicativeExpression_2_1_2(int lookahead) {
-		int newLookahead;
-		newLookahead = matchMultiplicativeExpression_2_1_2_1(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchMultiplicativeExpression_2_1_2_2(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		newLookahead = matchMultiplicativeExpression_2_1_2_3(lookahead);
-		if (newLookahead != -1)
-			return newLookahead;
-		return -1;
-	}
-
-	/* sequence(
 		terminal(STAR)
 	) */
-	private int matchMultiplicativeExpression_2_1_2_1(int lookahead) {
+	private int matchBinaryOperator_lookahead17(int lookahead, int minPrecedence) {
 		lookahead = match(lookahead, TokenType.STAR);
 		if (lookahead == -1)
 			return -1;
@@ -10383,7 +10037,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(SLASH)
 	) */
-	private int matchMultiplicativeExpression_2_1_2_2(int lookahead) {
+	private int matchBinaryOperator_lookahead18(int lookahead, int minPrecedence) {
 		lookahead = match(lookahead, TokenType.SLASH);
 		if (lookahead == -1)
 			return -1;
@@ -10393,8 +10047,96 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		terminal(REM)
 	) */
-	private int matchMultiplicativeExpression_2_1_2_3(int lookahead) {
+	private int matchBinaryOperator_lookahead19(int lookahead, int minPrecedence) {
 		lookahead = match(lookahead, TokenType.REM);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		terminal(SC_AND)
+	) */
+	private int matchBinaryOperator_lookahead2(int lookahead, int minPrecedence) {
+		lookahead = match(lookahead, TokenType.SC_AND);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		terminal(BIT_OR)
+	) */
+	private int matchBinaryOperator_lookahead3(int lookahead, int minPrecedence) {
+		lookahead = match(lookahead, TokenType.BIT_OR);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		terminal(BIT_AND)
+	) */
+	private int matchBinaryOperator_lookahead4(int lookahead, int minPrecedence) {
+		lookahead = match(lookahead, TokenType.BIT_AND);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		terminal(XOR)
+	) */
+	private int matchBinaryOperator_lookahead5(int lookahead, int minPrecedence) {
+		lookahead = match(lookahead, TokenType.XOR);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		terminal(EQ)
+	) */
+	private int matchBinaryOperator_lookahead6(int lookahead, int minPrecedence) {
+		lookahead = match(lookahead, TokenType.EQ);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		terminal(NE)
+	) */
+	private int matchBinaryOperator_lookahead7(int lookahead, int minPrecedence) {
+		lookahead = match(lookahead, TokenType.NE);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		terminal(LT)
+	) */
+	private int matchBinaryOperator_lookahead8(int lookahead, int minPrecedence) {
+		lookahead = match(lookahead, TokenType.LT);
+		if (lookahead == -1)
+			return -1;
+		return lookahead;
+	}
+
+	/* sequence(
+		terminal(GT)
+		terminal(GT)
+		terminal(GT)
+	) */
+	private int matchBinaryOperator_lookahead9(int lookahead, int minPrecedence) {
+		lookahead = match(lookahead, TokenType.GT);
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.GT);
+		if (lookahead == -1)
+			return -1;
+		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;
@@ -10671,9 +10413,7 @@ public class ParserImplementation extends ParserNewBase {
 				action({ ret = dress(SUnaryExpr.make(op, ret)); })
 			)
 			sequence(
-				lookAhead(
-					nonTerminal(CastExpression)
-				)
+				lookAhead({ isCast() })
 				nonTerminal(ret, CastExpression)
 			)
 			nonTerminal(ret, PostfixExpression)
@@ -10696,7 +10436,7 @@ public class ParserImplementation extends ParserNewBase {
 			}
 			ret = parseUnaryExpression();
 			ret = dress(SUnaryExpr.make(op, ret));
-		} else if (matchUnaryExpressionNotPlusMinus_lookahead1(0) != -1) {
+		} else if (isCast(0)) {
 			ret = parseCastExpression();
 		} else if (match(0, TokenType.SUPER, TokenType.THIS, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.NEW, TokenType.LT, TokenType.LPAREN, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL) != -1) {
 			ret = parsePostfixExpression();
@@ -10720,9 +10460,7 @@ public class ParserImplementation extends ParserNewBase {
 				nonTerminal(ret, UnaryExpression)
 			)
 			sequence(
-				lookAhead(
-					nonTerminal(CastExpression)
-				)
+				lookAhead({ isCast() })
 				nonTerminal(ret, CastExpression)
 			)
 			nonTerminal(ret, PostfixExpression)
@@ -10748,9 +10486,7 @@ public class ParserImplementation extends ParserNewBase {
 			nonTerminal(ret, UnaryExpression)
 		)
 		sequence(
-			lookAhead(
-				nonTerminal(CastExpression)
-			)
+			lookAhead({ isCast() })
 			nonTerminal(ret, CastExpression)
 		)
 		nonTerminal(ret, PostfixExpression)
@@ -10830,22 +10566,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		lookAhead(
-			nonTerminal(CastExpression)
-		)
+		lookAhead({ isCast() })
 		nonTerminal(ret, CastExpression)
 	) */
 	private int matchUnaryExpressionNotPlusMinus_1_2(int lookahead) {
-		lookahead = matchCastExpression(lookahead);
+		lookahead = isCast(lookahead) ? lookahead : -1;
 		if (lookahead == -1)
 			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		nonTerminal(CastExpression)
-	) */
-	private int matchUnaryExpressionNotPlusMinus_lookahead1(int lookahead) {
 		lookahead = matchCastExpression(lookahead);
 		if (lookahead == -1)
 			return -1;
@@ -12087,12 +11814,12 @@ public class ParserImplementation extends ParserNewBase {
 				parse(TokenType.RPAREN);
 				parse(TokenType.ARROW);
 				ret = parseLambdaBody(params, true);
-			} else if (match(0, TokenType.LPAREN, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
+			} else if (match(0, TokenType.PLUS, TokenType.MINUS, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.BOOLEAN, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LT, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.INCR, TokenType.DECR) != -1) {
 				ret = parseExpression();
 				parse(TokenType.RPAREN);
 				ret = dress(SParenthesizedExpr.make(ret));
 			} else {
-				throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.SUPER, TokenType.THIS, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.LPAREN, TokenType.LT, TokenType.VOID, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.BOOLEAN, TokenType.CHAR, TokenType.NEW, TokenType.TILDE, TokenType.BANG, TokenType.PLUS, TokenType.MINUS, TokenType.DECR, TokenType.INCR, TokenType.NODE_LIST_VARIABLE, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.FINAL, TokenType.STATIC, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.AT, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.RPAREN);
+				throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.VOID, TokenType.BOOLEAN, TokenType.CHAR, TokenType.FLOAT, TokenType.DOUBLE, TokenType.INT, TokenType.LONG, TokenType.BYTE, TokenType.SHORT, TokenType.NEW, TokenType.LPAREN, TokenType.SUPER, TokenType.THIS, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.TILDE, TokenType.BANG, TokenType.PLUS, TokenType.MINUS, TokenType.DECR, TokenType.INCR, TokenType.NODE_LIST_VARIABLE, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.FINAL, TokenType.STATIC, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.AT, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.RPAREN);
 			}
 		} else {
 			throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.VOID, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.DOUBLE, TokenType.FLOAT, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL);
@@ -13166,10 +12893,10 @@ public class ParserImplementation extends ParserNewBase {
 			if (match(1, TokenType.BOOLEAN) != -1) {
 				return lookahead;
 			}
-			if (match(1, TokenType.DECR) != -1) {
+			if (match(1, TokenType.SHORT) != -1) {
 				return lookahead;
 			}
-			if (match(1, TokenType.SHORT) != -1) {
+			if (match(1, TokenType.DECR) != -1) {
 				return lookahead;
 			}
 			if (match(1, TokenType.FLOAT_LITERAL) != -1) {
@@ -13181,13 +12908,13 @@ public class ParserImplementation extends ParserNewBase {
 			if (match(1, TokenType.THIS) != -1) {
 				return lookahead;
 			}
-			if (match(1, TokenType.TILDE) != -1) {
+			if (match(1, TokenType.FALSE) != -1) {
 				return lookahead;
 			}
 			if (match(1, TokenType.STRING_LITERAL) != -1) {
 				return lookahead;
 			}
-			if (match(1, TokenType.FALSE) != -1) {
+			if (match(1, TokenType.TILDE) != -1) {
 				return lookahead;
 			}
 			if (match(1, TokenType.VOID) != -1) {
@@ -13592,8 +13319,8 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
 		parse(TokenType.LPAREN);
-		if (match(0, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.MINUS, TokenType.PLUS, TokenType.BANG, TokenType.TILDE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.VOID, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.LT, TokenType.NEW, TokenType.THIS, TokenType.SUPER, TokenType.DECR, TokenType.INCR, TokenType.NODE_LIST_VARIABLE) != -1) {
-			if (match(0, TokenType.LPAREN, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
+		if (match(0, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.PLUS, TokenType.MINUS, TokenType.TILDE, TokenType.BANG, TokenType.LT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.VOID, TokenType.SUPER, TokenType.THIS, TokenType.NEW, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.DECR, TokenType.INCR, TokenType.NODE_LIST_VARIABLE) != -1) {
+			if (match(0, TokenType.PLUS, TokenType.MINUS, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.BOOLEAN, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LT, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.INCR, TokenType.DECR) != -1) {
 				expr = parseExpression();
 				ret = append(ret, expr);
 				while (match(0, TokenType.COMMA) != -1) {
@@ -13604,7 +13331,7 @@ public class ParserImplementation extends ParserNewBase {
 			} else if (quotesMode) {
 				ret = parseNodeListVar();
 			} else {
-				throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.LPAREN, TokenType.DECR, TokenType.INCR, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LT, TokenType.NEW, TokenType.THIS, TokenType.SUPER, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.BANG, TokenType.TILDE, TokenType.PLUS, TokenType.MINUS);
+				throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.LPAREN, TokenType.DECR, TokenType.INCR, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.VOID, TokenType.NEW, TokenType.LT, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.TILDE, TokenType.BANG, TokenType.MINUS, TokenType.PLUS);
 			}
 		}
 		parse(TokenType.RPAREN);
@@ -15876,20 +15603,20 @@ public class ParserImplementation extends ParserNewBase {
 			varExpr = parseVariableDeclExpression();
 			parse(TokenType.COLON);
 			expr = parseExpression();
-		} else if (match(0, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.VOID, TokenType.DOUBLE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TILDE, TokenType.BANG, TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.STATIC, TokenType.ABSTRACT, TokenType.PUBLIC, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.SEMICOLON) != -1) {
-			if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.DECR, TokenType.INCR, TokenType.PLUS, TokenType.MINUS, TokenType.LT, TokenType.VOID, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SUPER, TokenType.NEW, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.THIS, TokenType.TILDE, TokenType.BANG, TokenType.AT, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.PUBLIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.ABSTRACT, TokenType.STATIC, TokenType.NATIVE, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.SYNCHRONIZED) != -1) {
+		} else if (match(0, TokenType.DECR, TokenType.INCR, TokenType.MINUS, TokenType.PLUS, TokenType.BANG, TokenType.TILDE, TokenType.LPAREN, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.VOID, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.STATIC, TokenType.ABSTRACT, TokenType.PUBLIC, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.SEMICOLON) != -1) {
+			if (match(0, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.LT, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.VOID, TokenType.BANG, TokenType.TILDE, TokenType.DECR, TokenType.INCR, TokenType.MINUS, TokenType.PLUS, TokenType.AT, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.PUBLIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.ABSTRACT, TokenType.STATIC, TokenType.NATIVE, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.SYNCHRONIZED) != -1) {
 				init = parseForInit();
 			}
 			parse(TokenType.SEMICOLON);
-			if (match(0, TokenType.LPAREN, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
+			if (match(0, TokenType.PLUS, TokenType.MINUS, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.BOOLEAN, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LT, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.INCR, TokenType.DECR) != -1) {
 				expr = parseExpression();
 			}
 			parse(TokenType.SEMICOLON);
-			if (match(0, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.MINUS, TokenType.PLUS, TokenType.BANG, TokenType.TILDE, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.VOID, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.LT, TokenType.NEW, TokenType.THIS, TokenType.SUPER, TokenType.DECR, TokenType.INCR) != -1) {
+			if (match(0, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.PLUS, TokenType.MINUS, TokenType.TILDE, TokenType.BANG, TokenType.LT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.VOID, TokenType.SUPER, TokenType.THIS, TokenType.NEW, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.DECR, TokenType.INCR) != -1) {
 				update = parseForUpdate();
 			}
 		} else {
-			throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL, TokenType.VOID, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SEMICOLON);
+			throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.INCR, TokenType.DECR, TokenType.FALSE, TokenType.TRUE, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.VOID, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LT, TokenType.TILDE, TokenType.BANG, TokenType.MINUS, TokenType.PLUS, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SEMICOLON);
 		}
 		parse(TokenType.RPAREN);
 		body = parseStatement();
@@ -16154,10 +15881,10 @@ public class ParserImplementation extends ParserNewBase {
 			expr = parseVariableDeclExpression();
 			ret = emptyList();
 			ret = append(ret, expr);
-		} else if (match(0, TokenType.LPAREN, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
+		} else if (match(0, TokenType.PLUS, TokenType.MINUS, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.BOOLEAN, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LT, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.INCR, TokenType.DECR) != -1) {
 			ret = parseExpressionList();
 		} else {
-			throw produceParseException(TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.SUPER, TokenType.NEW, TokenType.NULL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.THIS, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.DECR, TokenType.INCR, TokenType.PLUS, TokenType.MINUS, TokenType.AT, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.STATIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.NATIVE, TokenType.STRICTFP);
+			throw produceParseException(TokenType.DECR, TokenType.INCR, TokenType.MINUS, TokenType.PLUS, TokenType.LT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.VOID, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.BANG, TokenType.TILDE, TokenType.AT, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.STATIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.NATIVE, TokenType.STRICTFP);
 		}
 		return ret;
 	}
@@ -16460,7 +16187,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUTree<? extends SExpr> expr = null;
 		run();
 		parse(TokenType.RETURN);
-		if (match(0, TokenType.LPAREN, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR) != -1) {
+		if (match(0, TokenType.PLUS, TokenType.MINUS, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.BOOLEAN, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LT, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.INCR, TokenType.DECR) != -1) {
 			expr = parseExpression();
 		}
 		parse(TokenType.SEMICOLON);
@@ -17351,62 +17078,6 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
-		terminal(GT)
-		terminal(GT)
-		terminal(GT)
-		action({ popNewWhitespaces(2); })
-	) */
-	protected void parseRUNSIGNEDSHIFT() throws ParseException {
-		parse(TokenType.GT);
-		parse(TokenType.GT);
-		parse(TokenType.GT);
-		popNewWhitespaces(2);
-	}
-
-	/* sequence(
-		terminal(GT)
-		terminal(GT)
-		terminal(GT)
-	) */
-	private int matchRUNSIGNEDSHIFT(int lookahead) {
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
-		terminal(GT)
-		terminal(GT)
-		action({ popNewWhitespaces(1); })
-	) */
-	protected void parseRSIGNEDSHIFT() throws ParseException {
-		parse(TokenType.GT);
-		parse(TokenType.GT);
-		popNewWhitespaces(1);
-	}
-
-	/* sequence(
-		terminal(GT)
-		terminal(GT)
-	) */
-	private int matchRSIGNEDSHIFT(int lookahead) {
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		lookahead = match(lookahead, TokenType.GT);
-		if (lookahead == -1)
-			return -1;
-		return lookahead;
-	}
-
-	/* sequence(
 		zeroOrMore(
 			nonTerminal(annotation, Annotation)
 			action({ annotations = append(annotations, annotation); })
@@ -18003,10 +17674,10 @@ public class ParserImplementation extends ParserNewBase {
 			ret = parseAnnotation();
 		} else if (match(0, TokenType.LBRACE) != -1) {
 			ret = parseMemberValueArrayInitializer();
-		} else if (match(0, TokenType.MINUS, TokenType.PLUS, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.FLOAT, TokenType.DOUBLE, TokenType.INT, TokenType.LONG, TokenType.BYTE, TokenType.SHORT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR) != -1) {
+		} else if (match(0, TokenType.BANG, TokenType.TILDE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.BOOLEAN, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.LPAREN, TokenType.LT, TokenType.PLUS, TokenType.MINUS, TokenType.DECR, TokenType.INCR) != -1) {
 			ret = parseConditionalExpression();
 		} else {
-			throw produceParseException(TokenType.PLUS, TokenType.MINUS, TokenType.BANG, TokenType.TILDE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LT, TokenType.LPAREN, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.DECR, TokenType.INCR, TokenType.LBRACE, TokenType.AT);
+			throw produceParseException(TokenType.FALSE, TokenType.TRUE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.LT, TokenType.LPAREN, TokenType.BANG, TokenType.TILDE, TokenType.PLUS, TokenType.MINUS, TokenType.DECR, TokenType.INCR, TokenType.LBRACE, TokenType.AT);
 		}
 		return ret;
 	}
@@ -18075,7 +17746,7 @@ public class ParserImplementation extends ParserNewBase {
 		boolean trailingComma = false;
 		run();
 		parse(TokenType.LBRACE);
-		if (match(0, TokenType.PLUS, TokenType.MINUS, TokenType.BANG, TokenType.TILDE, TokenType.SUPER, TokenType.THIS, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.NEW, TokenType.LT, TokenType.LPAREN, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DECR, TokenType.INCR, TokenType.LBRACE, TokenType.AT) != -1) {
+		if (match(0, TokenType.DECR, TokenType.INCR, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.LT, TokenType.LPAREN, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.BANG, TokenType.TILDE, TokenType.PLUS, TokenType.MINUS, TokenType.LBRACE, TokenType.AT) != -1) {
 			member = parseMemberValue();
 			ret = append(ret, member);
 			while (matchMemberValueArrayInitializer_lookahead1(0) == -1) {
