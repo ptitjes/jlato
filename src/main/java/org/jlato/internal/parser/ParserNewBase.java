@@ -76,8 +76,7 @@ public abstract class ParserNewBase {
 
 	protected void reset(Reader reader) {
 		lexer.yyreset(reader);
-		lookaheadTokens.clear();
-		lookaheadWhitespace.clear();
+		lookahead.clear();
 		matchLookahead = 0;
 
 		if (configuration.preserveWhitespaces) {
@@ -275,13 +274,28 @@ public abstract class ParserNewBase {
 
 	// Base parse methods
 
-	private CircularBuffer<Token> lookaheadTokens = new CircularBuffer<Token>(20, 10);
-	private CircularBuffer<WTokenRun> lookaheadWhitespace = new CircularBuffer<WTokenRun>(20, 10);
+	static class LookaheadCell {
+		public Token token;
+		public WTokenRun whitespace;
+	}
+
+	private CircularBuffer<LookaheadCell> lookahead = new CircularBuffer<LookaheadCell>(20, 10) {
+		@Override
+		protected LookaheadCell createCell() {
+			return new LookaheadCell();
+		}
+
+		@Override
+		protected void clearCell(LookaheadCell cell) {
+			cell.token = null;
+			cell.whitespace = null;
+		}
+	};
 	protected int matchLookahead;
 
 	private void advance(int index) {
 		try {
-			for (int i = lookaheadTokens.size(); i <= index; i++) {
+			for (int i = lookahead.size(); i <= index; i++) {
 				pushNextToken();
 			}
 		} catch (IOException e) {
@@ -305,8 +319,9 @@ public abstract class ParserNewBase {
 					if (configuration.preserveWhitespaces) builder.add(new WToken(token.kind, token.image));
 					break;
 				default:
-					lookaheadTokens.add(token);
-					if (configuration.preserveWhitespaces) lookaheadWhitespace.add(builder.build());
+					LookaheadCell cell = lookahead.add();
+					cell.token = token;
+					if (configuration.preserveWhitespaces) cell.whitespace = builder.build();
 					return;
 			}
 		} while (true);
@@ -314,12 +329,12 @@ public abstract class ParserNewBase {
 
 	protected Token getToken(int index) {
 		advance(index);
-		return lookaheadTokens.get(index);
+		return lookahead.get(index).token;
 	}
 
 	protected WTokenRun getWhitespace(int index) {
 		advance(index);
-		return lookaheadWhitespace.get(index);
+		return lookahead.get(index).whitespace;
 	}
 
 	protected Token parse(int tokenType) throws ParseException {
@@ -335,8 +350,7 @@ public abstract class ParserNewBase {
 			throw new ParseException("Found " + found + " – Expected " + expected +
 					" (" + token.beginLine + ":" + token.beginColumn + ")");
 		}
-		lookaheadTokens.dropHead();
-		if (configuration.preserveWhitespaces) lookaheadWhitespace.dropHead();
+		lookahead.dropHead();
 		return token;
 	}
 
@@ -756,7 +770,7 @@ public abstract class ParserNewBase {
 		return retval.toString();
 	}
 
-	static class CircularBuffer<E> {
+	static abstract class CircularBuffer<E> {
 		private Object[] elementData;
 		private int head;
 		private int tail;
@@ -764,10 +778,21 @@ public abstract class ParserNewBase {
 
 		public CircularBuffer(int initialCapacity, int capacityIncrement) {
 			elementData = new Object[initialCapacity];
+			initialize(0, initialCapacity);
 			head = 0;
 			tail = 0;
 			this.capacityIncrement = capacityIncrement;
 		}
+
+		private void initialize(int from, int to) {
+			for (int i = from; i < to; i++) {
+				elementData[i] = createCell();
+			}
+		}
+
+		protected abstract E createCell();
+
+		protected abstract void clearCell(E cell);
 
 		public int size() {
 			if (head <= tail) return tail - head;
@@ -778,13 +803,32 @@ public abstract class ParserNewBase {
 			head = tail = 0;
 		}
 
+		@SuppressWarnings("unchecked")
 		public void add(E value) {
 			ensureCapacityForAppend();
 
-			elementData[tail++] = value;
+			clearCell((E) elementData[tail]);
+			elementData[tail] = value;
+
+			tail++;
 			if (tail == elementData.length) {
 				tail = 0;
 			}
+		}
+
+		@SuppressWarnings("unchecked")
+		public E add() {
+			ensureCapacityForAppend();
+
+			E cell = (E) elementData[tail];
+			clearCell(cell);
+
+			tail++;
+			if (tail == elementData.length) {
+				tail = 0;
+			}
+
+			return cell;
 		}
 
 		public E dropHead() {
@@ -829,8 +873,10 @@ public abstract class ParserNewBase {
 				elementData = Arrays.copyOf(elementData, newCapacity);
 				System.arraycopy(elementData, head, elementData, head + capacityIncrement, currentCapacity - head);
 				head = head + capacityIncrement;
+				initialize(tail, head);
 			} else if (tail == currentCapacity - 1 && head == 0) {
 				elementData = Arrays.copyOf(elementData, newCapacity);
+				initialize(tail, elementData.length);
 			}
 		}
 	}
