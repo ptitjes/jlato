@@ -42,8 +42,8 @@ import org.jlato.internal.parser.TokenType;
     private Token newToken(int type) {
         String image;
         switch (type) {
-            case TokenType.WHITESPACE:
             case TokenType.NEWLINE:
+            case TokenType.WHITESPACE:
 
             case TokenType.SINGLE_LINE_COMMENT:
             case TokenType.JAVA_DOC_COMMENT:
@@ -66,7 +66,15 @@ import org.jlato.internal.parser.TokenType;
                 image = TokenType.tokenImage[type];
         }
 
-        return new Token(type, image, yyline + 1, yycolumn + 1);
+        int line = yyline + 1;
+        int column = yycolumn + 1;
+
+        if (type == TokenType.NEWLINE) {
+            yyline++;
+            yycolumn = 0;
+        } else yycolumn += image.length();
+
+        return new Token(type, image, line, column);
     }
 %}
 
@@ -74,8 +82,8 @@ import org.jlato.internal.parser.TokenType;
 %class Lexer
 %type Token
 %unicode
-%line
-%column
+//%line
+//%column
 
 LineTerminator = \r|\n|\r\n|\f
 WhiteSpace = [\ \t]+
@@ -85,8 +93,8 @@ EndOfLineComment     = "//" [^\r\n]*
 DocumentationComment = "/**" {CommentContent} "*"+ "/"
 CommentContent       = ( [^*] | \*+ [^/*] )*
 
-NodeVariable = "$" [:jletterdigit:]*
-NodeListVariable = "..$" [:jletterdigit:]*
+NodeVariable = "$" [:jletterdigit:]+
+NodeListVariable = "..$" [:jletterdigit:]+
 
 Identifier = [:jletter:] [:jletterdigit:]*
 
