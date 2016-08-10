@@ -486,7 +486,7 @@ public abstract class ParserNewBase {
 	}
 
 	BUTree<SFormalParameter> makeFormalParameter(BUTree<SName> name) {
-		return SFormalParameter.make(emptyList(), SUnknownType.make(), false,
+		return SFormalParameter.make(emptyList(), SUnknownType.make(), false, emptyList(),
 				optionOf(SVariableDeclaratorId.make(name, emptyList())), false, none()
 		);
 	}

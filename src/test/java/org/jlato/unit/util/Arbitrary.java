@@ -153,9 +153,9 @@ public class Arbitrary {
 
 	public FormalParameter arbitraryFormalParameter() {
 		if (arbitraryBoolean()) {
-			return new TDFormalParameter(arbitraryListExtendedModifier(), arbitraryType(), arbitraryBoolean(), arbitraryOptionVariableDeclaratorId(), false, Trees.<Name>none());
+			return new TDFormalParameter(arbitraryListExtendedModifier(), arbitraryType(), arbitraryBoolean(), arbitraryListAnnotationExpr(), arbitraryOptionVariableDeclaratorId(), false, Trees.<Name>none());
 		} else {
-			return new TDFormalParameter(arbitraryListExtendedModifier(), arbitraryType(), arbitraryBoolean(), Trees.<VariableDeclaratorId>none(), true, arbitraryOptionName());
+			return new TDFormalParameter(arbitraryListExtendedModifier(), arbitraryType(), arbitraryBoolean(), arbitraryListAnnotationExpr(), Trees.<VariableDeclaratorId>none(), true, arbitraryOptionName());
 		}
 	}
 

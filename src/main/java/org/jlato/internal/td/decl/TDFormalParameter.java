@@ -25,10 +25,15 @@ import org.jlato.internal.bu.decl.SFormalParameter;
 import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.TDTree;
-import org.jlato.tree.*;
+import org.jlato.tree.Kind;
+import org.jlato.tree.Node;
+import org.jlato.tree.NodeList;
+import org.jlato.tree.NodeOption;
+import org.jlato.tree.Trees;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.decl.VariableDeclaratorId;
+import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 import org.jlato.util.Mutation;
@@ -59,15 +64,16 @@ public class TDFormalParameter extends TDTree<SFormalParameter, Node, FormalPara
 	/**
 	 * Creates a formal parameter with the specified child trees.
 	 *
-	 * @param modifiers        the modifiers child tree.
-	 * @param type             the type child tree.
-	 * @param isVarArgs        the is a variadic parameter child tree.
-	 * @param id               the identifier child tree.
-	 * @param isReceiver       the is receiver child tree.
-	 * @param receiverTypeName the receiver type name child tree.
+	 * @param modifiers           the modifiers child tree.
+	 * @param type                the type child tree.
+	 * @param isVarArgs           the is a variadic parameter child tree.
+	 * @param ellipsisAnnotations the ellipsis annotations child tree.
+	 * @param id                  the identifier child tree.
+	 * @param isReceiver          the is receiver child tree.
+	 * @param receiverTypeName    the receiver type name child tree.
 	 */
-	public TDFormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, NodeOption<VariableDeclaratorId> id, boolean isReceiver, NodeOption<Name> receiverTypeName) {
-		super(new TDLocation<SFormalParameter>(SFormalParameter.make(TDTree.<SNodeList>treeOf(modifiers), TDTree.<SType>treeOf(type), isVarArgs, TDTree.<SNodeOption>treeOf(id), isReceiver, TDTree.<SNodeOption>treeOf(receiverTypeName))));
+	public TDFormalParameter(NodeList<ExtendedModifier> modifiers, Type type, boolean isVarArgs, NodeList<AnnotationExpr> ellipsisAnnotations, NodeOption<VariableDeclaratorId> id, boolean isReceiver, NodeOption<Name> receiverTypeName) {
+		super(new TDLocation<SFormalParameter>(SFormalParameter.make(TDTree.<SNodeList>treeOf(modifiers), TDTree.<SType>treeOf(type), isVarArgs, TDTree.<SNodeList>treeOf(ellipsisAnnotations), TDTree.<SNodeOption>treeOf(id), isReceiver, TDTree.<SNodeOption>treeOf(receiverTypeName))));
 	}
 
 	/**
@@ -155,6 +161,35 @@ public class TDFormalParameter extends TDTree<SFormalParameter, Node, FormalPara
 	 */
 	public FormalParameter setVarArgs(Mutation<Boolean> mutation) {
 		return location.safePropertyMutate(SFormalParameter.VAR_ARGS, mutation);
+	}
+
+	/**
+	 * Returns the ellipsis annotations of this formal parameter.
+	 *
+	 * @return the ellipsis annotations of this formal parameter.
+	 */
+	public NodeList<AnnotationExpr> ellipsisAnnotations() {
+		return location.safeTraversal(SFormalParameter.ELLIPSIS_ANNOTATIONS);
+	}
+
+	/**
+	 * Replaces the ellipsis annotations of this formal parameter.
+	 *
+	 * @param ellipsisAnnotations the replacement for the ellipsis annotations of this formal parameter.
+	 * @return the resulting mutated formal parameter.
+	 */
+	public FormalParameter withEllipsisAnnotations(NodeList<AnnotationExpr> ellipsisAnnotations) {
+		return location.safeTraversalReplace(SFormalParameter.ELLIPSIS_ANNOTATIONS, ellipsisAnnotations);
+	}
+
+	/**
+	 * Mutates the ellipsis annotations of this formal parameter.
+	 *
+	 * @param mutation the mutation to apply to the ellipsis annotations of this formal parameter.
+	 * @return the resulting mutated formal parameter.
+	 */
+	public FormalParameter withEllipsisAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
+		return location.safeTraversalMutate(SFormalParameter.ELLIPSIS_ANNOTATIONS, mutation);
 	}
 
 	/**

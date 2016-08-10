@@ -10,6 +10,8 @@
       },
       param: {
         kind: FormalParameter,
+        ellipsisAnnotations: [
+        ],
         id: {
           kind: VariableDeclaratorId,
           dims: [

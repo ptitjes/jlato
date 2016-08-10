@@ -23,6 +23,8 @@
             params: [
               {
                 kind: FormalParameter,
+                ellipsisAnnotations: [
+                ],
                 id: {
                   kind: VariableDeclaratorId,
                   dims: [

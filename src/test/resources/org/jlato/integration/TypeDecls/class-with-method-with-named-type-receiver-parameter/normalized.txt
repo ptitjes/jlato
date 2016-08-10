@@ -23,6 +23,8 @@
           params: [
             {
               kind: FormalParameter,
+              ellipsisAnnotations: [
+              ],
               id: null,
               isReceiver: true,
               isVarArgs: false,

@@ -355,7 +355,7 @@ public final class Trees {
 	 * @return the new formal parameter instance.
 	 */
 	public static FormalParameter formalParameter() {
-		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), null, false, Trees.<VariableDeclaratorId>none(), false, Trees.<Name>none());
+		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), null, false, Trees.<AnnotationExpr>emptyList(), Trees.<VariableDeclaratorId>none(), false, Trees.<Name>none());
 	}
 
 	/**
@@ -365,7 +365,7 @@ public final class Trees {
 	 * @return the new formal parameter instance.
 	 */
 	public static FormalParameter formalParameter(Type type) {
-		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), type, false, Trees.<VariableDeclaratorId>none(), false, Trees.<Name>none());
+		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), type, false, Trees.<AnnotationExpr>emptyList(), Trees.<VariableDeclaratorId>none(), false, Trees.<Name>none());
 	}
 
 	/**
@@ -376,7 +376,7 @@ public final class Trees {
 	 * @return the new formal parameter instance.
 	 */
 	public static FormalParameter formalParameter(Type type, VariableDeclaratorId id) {
-		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), type, false, Trees.some(id), false, Trees.<Name>none());
+		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), type, false, Trees.<AnnotationExpr>emptyList(), Trees.some(id), false, Trees.<Name>none());
 	}
 
 	/**

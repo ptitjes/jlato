@@ -5125,6 +5125,7 @@ public class ParserImplementation extends ParserNewBase {
 		nonTerminal(modifiers, Modifiers)
 		nonTerminal(type, Type)
 		zeroOrOne(
+			nonTerminal(ellipsisAnnotations, Annotations)
 			terminal(ELLIPSIS)
 			action({ isVarArg = true; })
 		)
@@ -5146,11 +5147,12 @@ public class ParserImplementation extends ParserNewBase {
 			)
 			nonTerminal(id, VariableDeclaratorId)
 		)
-		action({ return dress(SFormalParameter.make(modifiers, type, isVarArg, optionOf(id), isReceiver, optionOf(receiverTypeName))); })
+		action({ return dress(SFormalParameter.make(modifiers, type, isVarArg, ensureNotNull(ellipsisAnnotations), optionOf(id), isReceiver, optionOf(receiverTypeName))); })
 	) */
 	protected BUTree<SFormalParameter> parseFormalParameter() throws ParseException {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SType> type;
+		BUTree<SNodeList> ellipsisAnnotations = null;
 		boolean isVarArg = false;
 		BUTree<SVariableDeclaratorId> id = null;
 		boolean isReceiver = false;
@@ -5158,7 +5160,8 @@ public class ParserImplementation extends ParserNewBase {
 		run();
 		modifiers = parseModifiers();
 		type = parseType(null);
-		if (match(0, TokenType.ELLIPSIS) != -1) {
+		if (match(0, TokenType.AT, TokenType.ELLIPSIS) != -1) {
+			ellipsisAnnotations = parseAnnotations();
 			parse(TokenType.ELLIPSIS);
 			isVarArg = true;
 		}
@@ -5174,13 +5177,14 @@ public class ParserImplementation extends ParserNewBase {
 		} else {
 			throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.THIS);
 		}
-		return dress(SFormalParameter.make(modifiers, type, isVarArg, optionOf(id), isReceiver, optionOf(receiverTypeName)));
+		return dress(SFormalParameter.make(modifiers, type, isVarArg, ensureNotNull(ellipsisAnnotations), optionOf(id), isReceiver, optionOf(receiverTypeName)));
 	}
 
 	/* sequence(
 		nonTerminal(modifiers, Modifiers)
 		nonTerminal(type, Type)
 		zeroOrOne(
+			nonTerminal(ellipsisAnnotations, Annotations)
 			terminal(ELLIPSIS)
 		)
 		choice(
@@ -5218,6 +5222,7 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* zeroOrOne(
+		nonTerminal(ellipsisAnnotations, Annotations)
 		terminal(ELLIPSIS)
 	) */
 	private int matchFormalParameter_4(int lookahead) {
@@ -5229,9 +5234,13 @@ public class ParserImplementation extends ParserNewBase {
 	}
 
 	/* sequence(
+		nonTerminal(ellipsisAnnotations, Annotations)
 		terminal(ELLIPSIS)
 	) */
 	private int matchFormalParameter_4_1(int lookahead) {
+		lookahead = matchAnnotations(lookahead);
+		if (lookahead == -1)
+			return -1;
 		lookahead = match(lookahead, TokenType.ELLIPSIS);
 		if (lookahead == -1)
 			return -1;
@@ -17083,7 +17092,7 @@ public class ParserImplementation extends ParserNewBase {
 			action({ exceptType = dress(SUnionType.make(exceptTypes)); })
 		)
 		nonTerminal(exceptId, VariableDeclaratorId)
-		action({ return dress(SFormalParameter.make(modifiers, exceptType, false, optionOf(exceptId), false, none())); })
+		action({ return dress(SFormalParameter.make(modifiers, exceptType, false, emptyList(), optionOf(exceptId), false, none())); })
 	) */
 	protected BUTree<SFormalParameter> parseCatchFormalParameter() throws ParseException {
 		BUTree<SNodeList> modifiers;
@@ -17104,7 +17113,7 @@ public class ParserImplementation extends ParserNewBase {
 			exceptType = dress(SUnionType.make(exceptTypes));
 		}
 		exceptId = parseVariableDeclaratorId();
-		return dress(SFormalParameter.make(modifiers, exceptType, false, optionOf(exceptId), false, none()));
+		return dress(SFormalParameter.make(modifiers, exceptType, false, emptyList(), optionOf(exceptId), false, none()));
 	}
 
 	/* sequence(

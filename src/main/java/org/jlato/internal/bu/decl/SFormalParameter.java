@@ -19,11 +19,19 @@
 
 package org.jlato.internal.bu.decl;
 
-import org.jlato.internal.bu.*;
+import org.jlato.internal.bu.BUTree;
+import org.jlato.internal.bu.LToken;
+import org.jlato.internal.bu.SNode;
+import org.jlato.internal.bu.SProperty;
+import org.jlato.internal.bu.STraversal;
+import org.jlato.internal.bu.STree;
+import org.jlato.internal.bu.STypeSafeProperty;
+import org.jlato.internal.bu.STypeSafeTraversal;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.coll.SNodeOption;
+import org.jlato.internal.bu.expr.SAnnotationExpr;
 import org.jlato.internal.bu.type.SType;
-import org.jlato.internal.shapes.LexicalShape;
+import org.jlato.internal.shapes.*;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDFormalParameter;
 import org.jlato.tree.Kind;
@@ -32,14 +40,19 @@ import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.VariableDeclaratorId;
+import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.type.Type;
 
 import java.util.Arrays;
 
+import static org.jlato.internal.shapes.IndentationConstraint.*;
 import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.space;
+import static org.jlato.internal.shapes.LexicalShape.alternative;
+import static org.jlato.internal.shapes.SpacingConstraint.*;
+import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
 /**
  * A state object for a formal parameter.
@@ -49,16 +62,17 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	/**
 	 * Creates a <code>BUTree</code> with a new formal parameter.
 	 *
-	 * @param modifiers        the modifiers child <code>BUTree</code>.
-	 * @param type             the type child <code>BUTree</code>.
-	 * @param isVarArgs        the is a variadic parameter child <code>BUTree</code>.
-	 * @param id               the identifier child <code>BUTree</code>.
-	 * @param isReceiver       the is receiver child <code>BUTree</code>.
-	 * @param receiverTypeName the receiver type name child <code>BUTree</code>.
+	 * @param modifiers           the modifiers child <code>BUTree</code>.
+	 * @param type                the type child <code>BUTree</code>.
+	 * @param isVarArgs           the is a variadic parameter child <code>BUTree</code>.
+	 * @param ellipsisAnnotations the ellipsis annotations child <code>BUTree</code>.
+	 * @param id                  the identifier child <code>BUTree</code>.
+	 * @param isReceiver          the is receiver child <code>BUTree</code>.
+	 * @param receiverTypeName    the receiver type name child <code>BUTree</code>.
 	 * @return the new <code>BUTree</code> with a formal parameter.
 	 */
-	public static BUTree<SFormalParameter> make(BUTree<SNodeList> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SNodeOption> id, boolean isReceiver, BUTree<SNodeOption> receiverTypeName) {
-		return new BUTree<SFormalParameter>(new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName));
+	public static BUTree<SFormalParameter> make(BUTree<SNodeList> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SNodeList> ellipsisAnnotations, BUTree<SNodeOption> id, boolean isReceiver, BUTree<SNodeOption> receiverTypeName) {
+		return new BUTree<SFormalParameter>(new SFormalParameter(modifiers, type, isVarArgs, ellipsisAnnotations, id, isReceiver, receiverTypeName));
 	}
 
 	/**
@@ -75,6 +89,11 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 * The is a variadic parameter of this formal parameter state.
 	 */
 	public final boolean isVarArgs;
+
+	/**
+	 * The ellipsis annotations of this formal parameter state.
+	 */
+	public final BUTree<SNodeList> ellipsisAnnotations;
 
 	/**
 	 * The identifier of this formal parameter state.
@@ -94,17 +113,19 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	/**
 	 * Constructs a formal parameter state.
 	 *
-	 * @param modifiers        the modifiers child <code>BUTree</code>.
-	 * @param type             the type child <code>BUTree</code>.
-	 * @param isVarArgs        the is a variadic parameter child <code>BUTree</code>.
-	 * @param id               the identifier child <code>BUTree</code>.
-	 * @param isReceiver       the is receiver child <code>BUTree</code>.
-	 * @param receiverTypeName the receiver type name child <code>BUTree</code>.
+	 * @param modifiers           the modifiers child <code>BUTree</code>.
+	 * @param type                the type child <code>BUTree</code>.
+	 * @param isVarArgs           the is a variadic parameter child <code>BUTree</code>.
+	 * @param ellipsisAnnotations the ellipsis annotations child <code>BUTree</code>.
+	 * @param id                  the identifier child <code>BUTree</code>.
+	 * @param isReceiver          the is receiver child <code>BUTree</code>.
+	 * @param receiverTypeName    the receiver type name child <code>BUTree</code>.
 	 */
-	public SFormalParameter(BUTree<SNodeList> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SNodeOption> id, boolean isReceiver, BUTree<SNodeOption> receiverTypeName) {
+	public SFormalParameter(BUTree<SNodeList> modifiers, BUTree<? extends SType> type, boolean isVarArgs, BUTree<SNodeList> ellipsisAnnotations, BUTree<SNodeOption> id, boolean isReceiver, BUTree<SNodeOption> receiverTypeName) {
 		this.modifiers = modifiers;
 		this.type = type;
 		this.isVarArgs = isVarArgs;
+		this.ellipsisAnnotations = ellipsisAnnotations;
 		this.id = id;
 		this.isReceiver = isReceiver;
 		this.receiverTypeName = receiverTypeName;
@@ -127,7 +148,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 * @return the resulting mutated formal parameter state.
 	 */
 	public SFormalParameter withModifiers(BUTree<SNodeList> modifiers) {
-		return new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName);
+		return new SFormalParameter(modifiers, type, isVarArgs, ellipsisAnnotations, id, isReceiver, receiverTypeName);
 	}
 
 	/**
@@ -137,7 +158,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 * @return the resulting mutated formal parameter state.
 	 */
 	public SFormalParameter withType(BUTree<? extends SType> type) {
-		return new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName);
+		return new SFormalParameter(modifiers, type, isVarArgs, ellipsisAnnotations, id, isReceiver, receiverTypeName);
 	}
 
 	/**
@@ -147,7 +168,17 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 * @return the resulting mutated formal parameter state.
 	 */
 	public SFormalParameter setVarArgs(boolean isVarArgs) {
-		return new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName);
+		return new SFormalParameter(modifiers, type, isVarArgs, ellipsisAnnotations, id, isReceiver, receiverTypeName);
+	}
+
+	/**
+	 * Replaces the ellipsis annotations of this formal parameter state.
+	 *
+	 * @param ellipsisAnnotations the replacement for the ellipsis annotations of this formal parameter state.
+	 * @return the resulting mutated formal parameter state.
+	 */
+	public SFormalParameter withEllipsisAnnotations(BUTree<SNodeList> ellipsisAnnotations) {
+		return new SFormalParameter(modifiers, type, isVarArgs, ellipsisAnnotations, id, isReceiver, receiverTypeName);
 	}
 
 	/**
@@ -157,7 +188,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 * @return the resulting mutated formal parameter state.
 	 */
 	public SFormalParameter withId(BUTree<SNodeOption> id) {
-		return new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName);
+		return new SFormalParameter(modifiers, type, isVarArgs, ellipsisAnnotations, id, isReceiver, receiverTypeName);
 	}
 
 	/**
@@ -167,7 +198,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 * @return the resulting mutated formal parameter state.
 	 */
 	public SFormalParameter setReceiver(boolean isReceiver) {
-		return new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName);
+		return new SFormalParameter(modifiers, type, isVarArgs, ellipsisAnnotations, id, isReceiver, receiverTypeName);
 	}
 
 	/**
@@ -177,7 +208,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	 * @return the resulting mutated formal parameter state.
 	 */
 	public SFormalParameter withReceiverTypeName(BUTree<SNodeOption> receiverTypeName) {
-		return new SFormalParameter(modifiers, type, isVarArgs, id, isReceiver, receiverTypeName);
+		return new SFormalParameter(modifiers, type, isVarArgs, ellipsisAnnotations, id, isReceiver, receiverTypeName);
 	}
 
 	/**
@@ -248,6 +279,8 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 			return false;
 		if (isVarArgs != state.isVarArgs)
 			return false;
+		if (!ellipsisAnnotations.equals(state.ellipsisAnnotations))
+			return false;
 		if (!id.equals(state.id))
 			return false;
 		if (isReceiver != state.isReceiver)
@@ -268,6 +301,7 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 		result = 37 * result + modifiers.hashCode();
 		if (type != null) result = 37 * result + type.hashCode();
 		result = 37 * result + (isVarArgs ? 1 : 0);
+		result = 37 * result + ellipsisAnnotations.hashCode();
 		result = 37 * result + id.hashCode();
 		result = 37 * result + (isReceiver ? 1 : 0);
 		result = 37 * result + receiverTypeName.hashCode();
@@ -316,6 +350,29 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 
 		@Override
 		public STraversal rightSibling(STree state) {
+			return ELLIPSIS_ANNOTATIONS;
+		}
+	};
+
+	public static STypeSafeTraversal<SFormalParameter, SNodeList, NodeList<AnnotationExpr>> ELLIPSIS_ANNOTATIONS = new STypeSafeTraversal<SFormalParameter, SNodeList, NodeList<AnnotationExpr>>() {
+
+		@Override
+		public BUTree<?> doTraverse(SFormalParameter state) {
+			return state.ellipsisAnnotations;
+		}
+
+		@Override
+		public SFormalParameter doRebuildParentState(SFormalParameter state, BUTree<SNodeList> child) {
+			return state.withEllipsisAnnotations(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STree state) {
+			return TYPE;
+		}
+
+		@Override
+		public STraversal rightSibling(STree state) {
 			return ID;
 		}
 	};
@@ -334,25 +391,12 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 
 		@Override
 		public STraversal leftSibling(STree state) {
-			return TYPE;
+			return ELLIPSIS_ANNOTATIONS;
 		}
 
 		@Override
 		public STraversal rightSibling(STree state) {
 			return RECEIVER_TYPE_NAME;
-		}
-	};
-
-	public static STypeSafeProperty<SFormalParameter, Boolean> VAR_ARGS = new STypeSafeProperty<SFormalParameter, Boolean>() {
-
-		@Override
-		public Boolean doRetrieve(SFormalParameter state) {
-			return state.isVarArgs;
-		}
-
-		@Override
-		public SFormalParameter doRebuildParentState(SFormalParameter state, Boolean value) {
-			return state.setVarArgs(value);
 		}
 	};
 
@@ -379,6 +423,19 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 		}
 	};
 
+	public static STypeSafeProperty<SFormalParameter, Boolean> VAR_ARGS = new STypeSafeProperty<SFormalParameter, Boolean>() {
+
+		@Override
+		public Boolean doRetrieve(SFormalParameter state) {
+			return state.isVarArgs;
+		}
+
+		@Override
+		public SFormalParameter doRebuildParentState(SFormalParameter state, Boolean value) {
+			return state.setVarArgs(value);
+		}
+	};
+
 	public static STypeSafeProperty<SFormalParameter, Boolean> RECEIVER = new STypeSafeProperty<SFormalParameter, Boolean>() {
 
 		@Override
@@ -395,7 +452,15 @@ public class SFormalParameter extends SNode<SFormalParameter> implements STree {
 	public static final LexicalShape shape = composite(
 			child(MODIFIERS, SExtendedModifier.singleLineShape),
 			child(TYPE),
-			when(data(VAR_ARGS), token(LToken.Ellipsis)),
+			when(data(VAR_ARGS),
+					alternative(childIs(ELLIPSIS_ANNOTATIONS, not(empty())),
+							composite(
+									child(ELLIPSIS_ANNOTATIONS, org.jlato.internal.bu.expr.SAnnotationExpr.singleLineAnnotationsShapeWithSpaceBefore),
+									token(LToken.Ellipsis)
+							),
+							token(LToken.Ellipsis)
+					)
+			),
 			when(not(childIs(TYPE, withKind(Kind.UnknownType))), none().withSpacingAfter(space())),
 			alternative(data(RECEIVER),
 					composite(
