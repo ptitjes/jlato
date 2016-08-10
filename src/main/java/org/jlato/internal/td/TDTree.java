@@ -240,9 +240,12 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 	}
 
 	private WToken createComment(String commentString, boolean expressionContext, boolean forceMultiLine) {
-		if (expressionContext || forceMultiLine)
-			return WToken.multiLineComment("/* " + commentString.trim() + " */");
-		else
+		if (expressionContext || forceMultiLine) {
+			if (commentString.trim().startsWith("*"))
+				return WToken.multiLineComment("/*\n" + commentString + "\n */");
+			else
+				return WToken.multiLineComment("/* " + commentString.trim() + " */");
+		} else
 			return WToken.singleLineComment("// " + commentString.trim());
 	}
 
