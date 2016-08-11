@@ -116,8 +116,9 @@ public class Print {
 	}
 
 	public void append(LToken token) {
-		boolean requiresFormatting = existingWhitespace == null ||
-				(leadingWhitespace != null && leadingWhitespace.newTokens);
+		boolean requiresFormatting =
+				(leadingWhitespace != null && leadingWhitespace.newTokens) ||
+				(existingWhitespace == null || existingWhitespace.newTokens);
 
 		if (!start) {
 			renderTrailing();

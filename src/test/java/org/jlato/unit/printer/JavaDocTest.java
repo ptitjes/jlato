@@ -24,6 +24,7 @@ import org.jlato.parser.ParseException;
 import org.jlato.parser.Parser;
 import org.jlato.parser.ParserConfiguration;
 import org.jlato.pattern.MatchVisitor;
+import org.jlato.pattern.Pattern;
 import org.jlato.pattern.Quotes;
 import org.jlato.pattern.Substitution;
 import org.jlato.printer.Printer;
@@ -149,6 +150,35 @@ public class JavaDocTest {
 			@Override
 			public MemberDecl visit(MemberDecl memberDecl, Substitution s) {
 				return ((MethodDecl) memberDecl).withDocComment("A simple comment.");
+			}
+		});
+
+		Assert.assertEquals(
+				classDef,
+				Printer.printToString(classDecl, false)
+		);
+	}
+
+	@Test
+	public void formatMethodReplacedWithAnnotations() throws FileNotFoundException, ParseException {
+		String classDef = "class Test extends Other {\n" +
+				"\n" +
+				"\t/**\n" +
+				"\t * A simple comment.\n" +
+				"\t */\n" +
+				"\t@Override\n" +
+				"\tpublic void method() {\n" +
+				"\t}\n" +
+				"}";
+		Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
+		ClassDecl classDecl = (ClassDecl) parser.parse(ParseContext.TypeDecl, classDef);
+		final Pattern<MemberDecl> quote = Quotes.memberDecl("@Override\npublic void method() { }");
+		classDecl = classDecl.forAll(quote, new MatchVisitor<MemberDecl>() {
+			@Override
+			public MemberDecl visit(MemberDecl memberDecl, Substitution s) {
+				return ((MethodDecl) quote.build())
+						.withBody(blockStmt())
+						.withDocComment("A simple comment.");
 			}
 		});
 
