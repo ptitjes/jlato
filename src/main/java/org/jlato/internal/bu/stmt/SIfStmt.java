@@ -19,31 +19,27 @@
 
 package org.jlato.internal.bu.stmt;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeOption;
 import org.jlato.internal.bu.expr.SExpr;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDIfStmt;
-import org.jlato.internal.parser.TokenType;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeOption;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.Stmt;
 
-import static org.jlato.internal.shapes.IndentationConstraint.*;
-import static org.jlato.internal.shapes.LSCondition.*;
+import static org.jlato.internal.shapes.IndentationConstraint.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.LSCondition.some;
+import static org.jlato.internal.shapes.LSCondition.withKind;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
+import static org.jlato.internal.shapes.SpacingConstraint.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.spacing;
+import static org.jlato.printer.FormattingSettings.IndentationContext.IfElse;
 import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 
 /**
@@ -286,13 +282,13 @@ public class SIfStmt extends SNode<SIfStmt> implements SStmt {
 							alternative(withKind(Kind.ExpressionStmt),
 									defaultShape()
 											.withSpacingBefore(spacing(IfStmt_ThenExpressionStmt))
-											.withIndentationBefore(indent(IndentationContext.IfElse))
-											.withIndentationAfter(unIndent(IndentationContext.IfElse))
+											.withIndentationBefore(indent(IfElse))
+											.withIndentationAfter(unIndent(IfElse))
 											.withSpacingAfter(newLine()),
 									defaultShape()
 											.withSpacingBefore(spacing(IfStmt_ThenOtherStmt))
-											.withIndentationBefore(indent(IndentationContext.IfElse))
-											.withIndentationAfter(unIndent(IndentationContext.IfElse))
+											.withIndentationBefore(indent(IfElse))
+											.withIndentationAfter(unIndent(IfElse))
 											.withSpacingAfter(newLine())
 							)
 					)
@@ -306,12 +302,12 @@ public class SIfStmt extends SNode<SIfStmt> implements SStmt {
 									alternative(withKind(Kind.ExpressionStmt),
 											defaultShape()
 													.withSpacingBefore(spacing(IfStmt_ElseExpressionStmt))
-													.withIndentationBefore(indent(IndentationContext.IfElse))
-													.withIndentationAfter(unIndent(IndentationContext.IfElse)),
+													.withIndentationBefore(indent(IfElse))
+													.withIndentationAfter(unIndent(IfElse)),
 											defaultShape()
 													.withSpacingBefore(spacing(IfStmt_ElseOtherStmt))
-													.withIndentationBefore(indent(IndentationContext.IfElse))
-													.withIndentationAfter(unIndent(IndentationContext.IfElse))
+													.withIndentationBefore(indent(IfElse))
+													.withIndentationAfter(unIndent(IfElse))
 													.withSpacingAfter(newLine())
 									)
 							)

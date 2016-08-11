@@ -19,30 +19,24 @@
 
 package org.jlato.internal.bu.stmt;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeList;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDBlockStmt;
-import org.jlato.internal.parser.TokenType;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.stmt.Stmt;
 
-import static org.jlato.internal.shapes.IndentationConstraint.*;
-import static org.jlato.internal.shapes.LSCondition.*;
+import static org.jlato.internal.shapes.IndentationConstraint.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.empty;
+import static org.jlato.internal.shapes.LSCondition.not;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
+import static org.jlato.internal.shapes.SpacingConstraint.newLine;
+import static org.jlato.printer.FormattingSettings.IndentationContext.Block;
 
 /**
  * A state object for a block statement.
@@ -188,14 +182,14 @@ public class SBlockStmt extends SNode<SBlockStmt> implements SStmt {
 	public static final LexicalShape shape = composite(
 			token(LToken.BraceLeft)
 					.withSpacingAfter(newLine())
-					.withIndentationAfter(indent(IndentationContext.Block)),
+					.withIndentationAfter(indent(Block)),
 			child(STMTS, listShape),
 			alternative(childIs(STMTS, not(empty())),
 					token(LToken.BraceRight)
-							.withIndentationBefore(unIndent(IndentationContext.Block))
+							.withIndentationBefore(unIndent(Block))
 							.withSpacingBefore(newLine()),
 					token(LToken.BraceRight)
-							.withIndentationBefore(unIndent(IndentationContext.Block))
+							.withIndentationBefore(unIndent(Block))
 			)
 	);
 }

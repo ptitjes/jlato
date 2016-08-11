@@ -21,12 +21,7 @@ package org.jlato.internal.bu.expr;
 
 import org.jlato.internal.bu.LToken;
 import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.shapes.*;
-import org.jlato.internal.parser.TokenType;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
-import org.jlato.tree.Kind;
 
 import static org.jlato.internal.shapes.IndentationConstraint.*;
 import static org.jlato.internal.shapes.LSCondition.*;
@@ -41,11 +36,9 @@ import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
 public interface SExpr extends STree {
 
 	LexicalShape argumentsShape = list(true,
-			token(LToken.ParenthesisLeft)
-					.withIndentationAfter(IndentationConstraint.indent(IndentationContext.Parameters)),
+			token(LToken.ParenthesisLeft),
 			token(LToken.Comma).withSpacingAfter(space()),
 			token(LToken.ParenthesisRight)
-					.withIndentationBefore(IndentationConstraint.unIndent(IndentationContext.Parameters))
 	);
 
 	LexicalShape listShape = list(

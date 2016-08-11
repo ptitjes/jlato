@@ -19,32 +19,30 @@
 
 package org.jlato.internal.bu.stmt;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.expr.SExpr;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDSwitchStmt;
-import org.jlato.internal.parser.TokenType;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.SwitchCase;
 
-import static org.jlato.internal.shapes.IndentationConstraint.*;
-import static org.jlato.internal.shapes.LSCondition.*;
+import static org.jlato.internal.shapes.IndentationConstraint.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.empty;
+import static org.jlato.internal.shapes.LSCondition.not;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
+import static org.jlato.internal.shapes.SpacingConstraint.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.spacing;
+import static org.jlato.printer.FormattingSettings.IndentationContext.Switch;
+import static org.jlato.printer.FormattingSettings.IndentationContext.SwitchCase;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.SwitchStmt_AfterSwitchKeyword;
 
 /**
  * A state object for a 'switch' statement.
@@ -238,14 +236,14 @@ public class SSwitchStmt extends SNode<SSwitchStmt> implements SStmt {
 			token(LToken.ParenthesisRight).withSpacingAfter(space()),
 			token(LToken.BraceLeft)
 					.withSpacingAfter(newLine())
-					.withIndentationAfter(indent(IndentationContext.Switch)),
+					.withIndentationAfter(indent(Switch)),
 			child(CASES, SSwitchCase.listShape),
 			alternative(childIs(CASES, not(empty())),
 					token(LToken.BraceRight)
-							.withIndentationBefore(unIndent(IndentationContext.Switch))
+							.withIndentationBefore(unIndent(Switch))
 							.withSpacingBefore(newLine()),
 					token(LToken.BraceRight)
-							.withIndentationBefore(unIndent(IndentationContext.Switch))
+							.withIndentationBefore(unIndent(Switch))
 			)
 	);
 }

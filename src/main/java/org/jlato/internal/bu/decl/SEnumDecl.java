@@ -19,22 +19,12 @@
 
 package org.jlato.internal.bu.decl;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.SProperty;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STypeSafeProperty;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.decl.TDEnumDecl;
-import org.jlato.internal.parser.TokenType;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.Tree;
@@ -46,12 +36,18 @@ import org.jlato.tree.type.QualifiedType;
 
 import java.util.Collections;
 
-import static org.jlato.internal.shapes.IndentationConstraint.*;
-import static org.jlato.internal.shapes.LSCondition.*;
+import static org.jlato.internal.shapes.IndentationConstraint.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.LSCondition.childIs;
+import static org.jlato.internal.shapes.LSCondition.data;
+import static org.jlato.internal.shapes.LSCondition.empty;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
+import static org.jlato.internal.shapes.SpacingConstraint.newLine;
+import static org.jlato.internal.shapes.SpacingConstraint.space;
+import static org.jlato.internal.shapes.SpacingConstraint.spacing;
+import static org.jlato.printer.FormattingSettings.IndentationContext.TypeBody;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_AfterConstants;
+import static org.jlato.printer.FormattingSettings.SpacingLocation.EnumBody_BetweenConstants;
 
 /**
  * A state object for an enum declaration.
@@ -421,7 +417,7 @@ public class SEnumDecl extends SNode<SEnumDecl> implements STypeDecl {
 			child(IMPLEMENTS_CLAUSE, org.jlato.internal.bu.type.SQualifiedType.implementsClauseShape),
 			token(LToken.BraceLeft)
 					.withSpacingBefore(space())
-					.withIndentationAfter(indent(IndentationContext.TypeBody)),
+					.withIndentationAfter(indent(TypeBody)),
 			child(ENUM_CONSTANTS, SEnumConstantDecl.listShape),
 			when(data(TRAILING_COMMA), token(LToken.Comma).withSpacingAfter(spacing(EnumBody_BetweenConstants))),
 			alternative(childIs(MEMBERS, empty()),
@@ -436,6 +432,6 @@ public class SEnumDecl extends SNode<SEnumDecl> implements STypeDecl {
 			),
 			child(MEMBERS, SMemberDecl.membersShape),
 			token(LToken.BraceRight)
-					.withIndentationBefore(unIndent(IndentationContext.TypeBody))
+					.withIndentationBefore(unIndent(TypeBody))
 	);
 }

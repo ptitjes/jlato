@@ -19,20 +19,12 @@
 
 package org.jlato.internal.bu.stmt;
 
-import org.jlato.internal.bu.BUTree;
-import org.jlato.internal.bu.LToken;
-import org.jlato.internal.bu.SNode;
-import org.jlato.internal.bu.STraversal;
-import org.jlato.internal.bu.STree;
-import org.jlato.internal.bu.STypeSafeTraversal;
+import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.coll.SNodeOption;
-import org.jlato.internal.shapes.*;
+import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.internal.td.TDLocation;
 import org.jlato.internal.td.stmt.TDSwitchCase;
-import org.jlato.internal.parser.TokenType;
-import org.jlato.printer.FormattingSettings.IndentationContext;
-import org.jlato.printer.FormattingSettings.SpacingLocation;
 import org.jlato.tree.Kind;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
@@ -40,12 +32,12 @@ import org.jlato.tree.Tree;
 import org.jlato.tree.expr.Expr;
 import org.jlato.tree.stmt.Stmt;
 
-import static org.jlato.internal.shapes.IndentationConstraint.*;
-import static org.jlato.internal.shapes.LSCondition.*;
+import static org.jlato.internal.shapes.IndentationConstraint.indent;
+import static org.jlato.internal.shapes.IndentationConstraint.unIndent;
+import static org.jlato.internal.shapes.LSCondition.some;
 import static org.jlato.internal.shapes.LexicalShape.*;
-import static org.jlato.internal.shapes.SpacingConstraint.*;
-import static org.jlato.printer.FormattingSettings.IndentationContext.*;
-import static org.jlato.printer.FormattingSettings.SpacingLocation.*;
+import static org.jlato.internal.shapes.SpacingConstraint.newLine;
+import static org.jlato.printer.FormattingSettings.IndentationContext.SwitchCase;
 
 /**
  * A state object for a 'switch' case.
@@ -238,9 +230,9 @@ public class SSwitchCase extends SNode<SSwitchCase> implements STree {
 					token(LToken.Default)
 			)),
 			token(LToken.Colon).withSpacingAfter(newLine()),
-			none().withIndentationAfter(indent(IndentationContext.SwitchCase)),
+			none().withIndentationAfter(indent(SwitchCase)),
 			child(STMTS, SStmt.listShape),
-			none().withIndentationBefore(unIndent(IndentationContext.SwitchCase))
+			none().withIndentationBefore(unIndent(SwitchCase))
 	);
 
 	public static final LexicalShape listShape = list(none().withSpacingAfter(newLine()));
