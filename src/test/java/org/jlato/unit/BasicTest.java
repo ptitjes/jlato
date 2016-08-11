@@ -110,11 +110,11 @@ public class BasicTest {
 		Name object1 = name("object");
 
 		MethodInvocationExpr object2 = methodInvocationExpr(name("method1"))
-				.withScope(object1.insertNewLineAfter())
+				.withScope(object1.appendTrailingNewLine())
 				.withArgs(Trees.<Expr>listOf(name("arg1"), name("arg2")));
 
 		MethodInvocationExpr object3 = methodInvocationExpr(name("method2"))
-				.withScope(object2.insertNewLineAfter())
+				.withScope(object2.appendTrailingNewLine())
 				.withArgs(Trees.<Expr>listOf(name("arg1"), name("arg2")));
 
 		Assert.assertEquals(

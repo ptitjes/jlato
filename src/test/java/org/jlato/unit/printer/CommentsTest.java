@@ -26,6 +26,8 @@ import org.jlato.parser.ParserConfiguration;
 import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
 import org.jlato.tree.Trees;
+import org.jlato.tree.decl.CompilationUnit;
+import org.jlato.tree.decl.TypeDecl;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.stmt.ReturnStmt;
@@ -35,7 +37,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.jlato.tree.Trees.blockStmt;
+import static org.jlato.tree.Trees.*;
 
 /**
  * @author Didier Villevalois
@@ -54,15 +56,41 @@ public class CommentsTest {
 	}
 
 	@Test
+	public void commentsOnCompilationUnit() throws ParseException {
+		CompilationUnit cu = compilationUnit()
+				.withPackageDecl(packageDecl(qualifiedName("org.jlato")))
+				.withImports(listOf(
+						importDecl(qualifiedName("org.jlato.tree.Tree"))
+				))
+				.withTypes(Trees.<TypeDecl>listOf(
+						classDecl(name("Test"))
+				))
+				.appendLeadingComment(" * This is a copyright statement.", true)
+				.appendLeadingNewLine();
+
+		Assert.assertEquals("/*\n" +
+						" * This is a copyright statement.\n" +
+						" */\n" +
+						"\n" +
+						"package org.jlato;\n" +
+						"\n" +
+						"import org.jlato.tree.Tree;\n" +
+						"\n" +
+						"class Test {\n" +
+						"}\n",
+				Printer.printToString(cu, true));
+	}
+
+	@Test
 	public void commentsOnStatements() throws ParseException {
-		ReturnStmt stmt1 = stmt.insertLeadingComment("leading");
+		ReturnStmt stmt1 = stmt.appendLeadingComment("leading");
 		Assert.assertEquals(
 				"// leading\nreturn foo;",
 				Printer.printToString(stmt1, true));
 		Assert.assertArrayEquals(new String[]{"leading"}, stmt1.leadingComments());
 		Assert.assertArrayEquals(new String[]{}, stmt1.trailingComments());
 
-		ReturnStmt stmt2 = stmt1.insertTrailingComment("trailing");
+		ReturnStmt stmt2 = stmt1.prependTrailingComment("trailing");
 		Assert.assertEquals(
 				"// leading\nreturn foo; // trailing",
 				Printer.printToString(stmt2, true));
@@ -70,8 +98,8 @@ public class CommentsTest {
 		Assert.assertArrayEquals(new String[]{"trailing"}, stmt2.trailingComments());
 
 		ReturnStmt stmt3 = stmt
-				.insertLeadingComment("leading1").insertLeadingComment("leading2")
-				.insertTrailingComment("trailing1").insertTrailingComment("trailing2");
+				.appendLeadingComment("leading1").appendLeadingComment("leading2")
+				.prependTrailingComment("trailing1").prependTrailingComment("trailing2");
 		Assert.assertEquals(
 				"// leading1\n// leading2\nreturn foo; /* trailing2 */ // trailing1",
 				Printer.printToString(stmt3, true));
@@ -82,16 +110,16 @@ public class CommentsTest {
 	@Test
 	public void commentsOnStatementsWithNewLines() throws ParseException {
 		BlockStmt stmt1 = blockStmt().withStmts(Trees.<Stmt>listOf(
-				stmt.insertLeadingComment("leading1"),
-				stmt.insertNewLineBefore().insertLeadingComment("leading2")
+				stmt.appendLeadingComment("leading1"),
+				stmt.prependLeadingNewLine().appendLeadingComment("leading2")
 		));
 		Assert.assertEquals(
 				"{\n\t// leading1\n\treturn foo;\n\n\t// leading2\n\treturn foo;\n}",
 				Printer.printToString(stmt1, true));
 
 		BlockStmt stmt2 = blockStmt().withStmts(Trees.<Stmt>listOf(
-				stmt.insertNewLineAfter().insertTrailingComment("trailing1"),
-				stmt.insertTrailingComment("trailing2")
+				stmt.appendTrailingNewLine().prependTrailingComment("trailing1"),
+				stmt.prependTrailingComment("trailing2")
 		));
 		Assert.assertEquals(
 				"{\n\treturn foo; // trailing1\n\n\treturn foo; // trailing2\n}",
@@ -100,14 +128,14 @@ public class CommentsTest {
 
 	@Test
 	public void commentsOnStatementsForceMultiLine() throws ParseException {
-		ReturnStmt stmt1 = stmt.insertLeadingComment("leading", true);
+		ReturnStmt stmt1 = stmt.appendLeadingComment("leading", true);
 		Assert.assertEquals(
 				"/* leading */\nreturn foo;",
 				Printer.printToString(stmt1, true));
 		Assert.assertArrayEquals(new String[]{"leading"}, stmt1.leadingComments());
 		Assert.assertArrayEquals(new String[]{}, stmt1.trailingComments());
 
-		ReturnStmt stmt2 = stmt1.insertTrailingComment("trailing", true);
+		ReturnStmt stmt2 = stmt1.prependTrailingComment("trailing", true);
 		Assert.assertEquals(
 				"/* leading */\nreturn foo; /* trailing */",
 				Printer.printToString(stmt2, true));
@@ -115,8 +143,8 @@ public class CommentsTest {
 		Assert.assertArrayEquals(new String[]{"trailing"}, stmt2.trailingComments());
 
 		ReturnStmt stmt3 = stmt
-				.insertLeadingComment("leading1", true).insertLeadingComment("leading2", true)
-				.insertTrailingComment("trailing1", true).insertTrailingComment("trailing2", true);
+				.appendLeadingComment("leading1", true).appendLeadingComment("leading2", true)
+				.prependTrailingComment("trailing1", true).prependTrailingComment("trailing2", true);
 		Assert.assertEquals(
 				"/* leading1 */\n/* leading2 */\nreturn foo; /* trailing2 */ /* trailing1 */",
 				Printer.printToString(stmt3, true));
@@ -126,14 +154,14 @@ public class CommentsTest {
 
 	@Test
 	public void commentsOnStatementsForceMultiLineAndFormat() throws ParseException {
-		ReturnStmt stmt1 = stmt.insertLeadingComment("leading", true);
+		ReturnStmt stmt1 = stmt.appendLeadingComment("leading", true);
 		Assert.assertEquals(
 				"/* leading */\nreturn foo;",
 				Printer.printToString(stmt1, true, FormattingSettings.Default.withCommentFormatting(true)));
 		Assert.assertArrayEquals(new String[]{"leading"}, stmt1.leadingComments());
 		Assert.assertArrayEquals(new String[]{}, stmt1.trailingComments());
 
-		ReturnStmt stmt2 = stmt1.insertTrailingComment("trailing", true);
+		ReturnStmt stmt2 = stmt1.prependTrailingComment("trailing", true);
 		Assert.assertEquals(
 				"/* leading */\nreturn foo; /* trailing */",
 				Printer.printToString(stmt2, true, FormattingSettings.Default.withCommentFormatting(true)));
@@ -141,15 +169,15 @@ public class CommentsTest {
 		Assert.assertArrayEquals(new String[]{"trailing"}, stmt2.trailingComments());
 
 		ReturnStmt stmt3 = stmt
-				.insertLeadingComment("leading1", true).insertLeadingComment("leading2", true)
-				.insertTrailingComment("trailing1", true).insertTrailingComment("trailing2", true);
+				.appendLeadingComment("leading1", true).appendLeadingComment("leading2", true)
+				.prependTrailingComment("trailing1", true).prependTrailingComment("trailing2", true);
 		Assert.assertEquals(
 				"/* leading1 */\n/* leading2 */\nreturn foo; /* trailing2 */ /* trailing1 */",
 				Printer.printToString(stmt3, true, FormattingSettings.Default.withCommentFormatting(true)));
 		Assert.assertArrayEquals(new String[]{"leading1", "leading2"}, stmt3.leadingComments());
 		Assert.assertArrayEquals(new String[]{"trailing2", "trailing1"}, stmt3.trailingComments());
 
-		ReturnStmt stmt4 = stmt.insertLeadingComment("two line/nleading", true);
+		ReturnStmt stmt4 = stmt.appendLeadingComment("two line/nleading", true);
 		Assert.assertEquals(
 				"/* two line/nleading */\nreturn foo;",
 				Printer.printToString(stmt4, true, FormattingSettings.Default.withCommentFormatting(true)));
@@ -157,14 +185,14 @@ public class CommentsTest {
 
 	@Test
 	public void commentsOnExpressions() throws ParseException {
-		Name expr1 = expr.insertLeadingComment("leading");
+		Name expr1 = expr.appendLeadingComment("leading");
 		Assert.assertEquals(
 				"/* leading */ foo",
 				Printer.printToString(expr1, true));
 		Assert.assertArrayEquals(new String[]{"leading"}, expr1.leadingComments());
 		Assert.assertArrayEquals(new String[]{}, expr1.trailingComments());
 
-		Name expr2 = expr1.insertTrailingComment("trailing");
+		Name expr2 = expr1.prependTrailingComment("trailing");
 		Assert.assertEquals(
 				"/* leading */ foo /* trailing */",
 				Printer.printToString(expr2, true));
@@ -172,8 +200,8 @@ public class CommentsTest {
 		Assert.assertArrayEquals(new String[]{"trailing"}, expr2.trailingComments());
 
 		Name expr3 = expr
-				.insertLeadingComment("leading1").insertLeadingComment("leading2")
-				.insertTrailingComment("trailing1").insertTrailingComment("trailing2");
+				.appendLeadingComment("leading1").appendLeadingComment("leading2")
+				.prependTrailingComment("trailing1").prependTrailingComment("trailing2");
 		Assert.assertEquals(
 				"/* leading1 */ /* leading2 */ foo /* trailing2 */ /* trailing1 */",
 				Printer.printToString(expr3, true));

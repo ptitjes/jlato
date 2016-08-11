@@ -41,7 +41,7 @@ public interface TreeCombinators<T extends Tree> extends Tree {
 	 * @param commentString the comment string (without comment start and stop markers).
 	 * @return this tree with the inserted leading comment.
 	 */
-	T insertLeadingComment(String commentString);
+	T appendLeadingComment(String commentString);
 
 	/**
 	 * Inserts a leading comment to this tree with the specified comment string.
@@ -52,7 +52,7 @@ public interface TreeCombinators<T extends Tree> extends Tree {
 	 * @param forceMultiLine whether to force the use of a single-line comment.
 	 * @return this tree with the inserted leading comment.
 	 */
-	T insertLeadingComment(String commentString, boolean forceMultiLine);
+	T appendLeadingComment(String commentString, boolean forceMultiLine);
 
 	/**
 	 * Inserts a trailing comment to this tree with the specified comment string.
@@ -62,7 +62,7 @@ public interface TreeCombinators<T extends Tree> extends Tree {
 	 * @param commentString the comment string (without comment start and stop markers).
 	 * @return this tree with the inserted trailing comment.
 	 */
-	T insertTrailingComment(String commentString);
+	T prependTrailingComment(String commentString);
 
 	/**
 	 * Inserts a trailing comment to this tree with the specified comment string.
@@ -73,9 +73,11 @@ public interface TreeCombinators<T extends Tree> extends Tree {
 	 * @param forceMultiLine whether to force the use of a single-line comment.
 	 * @return this tree with the inserted trailing comment.
 	 */
-	T insertTrailingComment(String commentString, boolean forceMultiLine);
+	T prependTrailingComment(String commentString, boolean forceMultiLine);
 
-	T insertNewLineBefore();
+	T prependLeadingNewLine();
 
-	T insertNewLineAfter();
+	T appendLeadingNewLine();
+
+	T appendTrailingNewLine();
 }

@@ -266,11 +266,11 @@ public class NodeContainersTest {
 	}
 
 	private Expr newArgWithComments() {
-		return name("newArg").insertLeadingComment("leading").insertTrailingComment("trailing");
+		return name("newArg").appendLeadingComment("leading").prependTrailingComment("trailing");
 	}
 
 	private Expr newArgWithComments(int index) {
-		return name("newArg" + index).insertLeadingComment("leading" + index).insertTrailingComment("trailing" + index);
+		return name("newArg" + index).appendLeadingComment("leading" + index).prependTrailingComment("trailing" + index);
 	}
 
 	@Test

@@ -23,15 +23,16 @@ import com.github.andrewoma.dexx.collection.Builder;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.parser.TokenType;
-import org.jlato.printer.Printer;
 import org.jlato.pattern.MatchVisitor;
 import org.jlato.pattern.Matcher;
 import org.jlato.pattern.Substitution;
+import org.jlato.printer.Printer;
 import org.jlato.tree.Node;
 import org.jlato.tree.Problem;
 import org.jlato.tree.Tree;
 import org.jlato.tree.TreeCombinators;
 import org.jlato.tree.expr.Expr;
+import org.jlato.util.Function2;
 
 import java.util.LinkedList;
 
@@ -194,11 +195,11 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 				tree.dressing.trailing.getComments();
 	}
 
-	public T insertLeadingComment(String commentString) {
-		return insertLeadingComment(commentString, false);
+	public T appendLeadingComment(String commentString) {
+		return appendLeadingComment(commentString, false);
 	}
 
-	public T insertLeadingComment(String commentString, boolean forceMultiLine) {
+	public T appendLeadingComment(String commentString, boolean forceMultiLine) {
 		boolean expressionContext = expressionContext();
 
 		final BUTree<S> tree = location.tree;
@@ -217,11 +218,11 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		return location.replaceTree(tree.withDressing(dressing.withLeading(newLeading)));
 	}
 
-	public T insertTrailingComment(String commentString) {
-		return insertTrailingComment(commentString, false);
+	public T prependTrailingComment(String commentString) {
+		return prependTrailingComment(commentString, false);
 	}
 
-	public T insertTrailingComment(String commentString, boolean forceMultiLine) {
+	public T prependTrailingComment(String commentString, boolean forceMultiLine) {
 		boolean expressionContext = expressionContext();
 
 		final BUTree<S> tree = location.tree;
@@ -274,22 +275,49 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		return docCommentString.substring("/** ".length(), docCommentString.length() - " */".length());
 	}
 
-	public T insertNewLineBefore() {
+	public T prependLeadingNewLine() {
+		return rewriteLeading(PREPEND_NEWLINE, null);
+	}
+
+	private static final Function2<WTokenRun, Void, WTokenRun> PREPEND_NEWLINE = new Function2<WTokenRun, Void, WTokenRun>() {
+		@Override
+		public WTokenRun apply(WTokenRun run, Void arg) {
+			return run.prepend(newLine());
+		}
+	};
+
+	@Override
+	public T appendLeadingNewLine() {
+		return rewriteLeading(APPEND_NEWLINE, null);
+	}
+
+	public T appendTrailingNewLine() {
+		return rewriteTrailing(APPEND_NEWLINE, null);
+	}
+
+	private static final Function2<WTokenRun, Void, WTokenRun> APPEND_NEWLINE = new Function2<WTokenRun, Void, WTokenRun>() {
+		@Override
+		public WTokenRun apply(WTokenRun run, Void arg) {
+			return run.append(newLine());
+		}
+	};
+
+	public <A> T rewriteLeading(Function2<WTokenRun, A, WTokenRun> f, A arg) {
 		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
 		final WTokenRun leading = dressing.leading == null ? WTokenRun.NEW : dressing.leading;
-		final WTokenRun newLeading = leading.prepend(newLine()).setNewTokens();
+		final WTokenRun newLeading = f.apply(leading, arg).setNewTokens();
 
 		return location.replaceTree(tree.withDressing(dressing.withLeading(newLeading)));
 	}
 
-	public T insertNewLineAfter() {
+	public <A> T rewriteTrailing(Function2<WTokenRun, A, WTokenRun> f, A arg) {
 		final BUTree<S> tree = location.tree;
 		final WDressing dressing = tree.dressing == null ? new WDressing() : tree.dressing;
 
 		final WTokenRun trailing = dressing.trailing == null ? WTokenRun.NEW : dressing.trailing;
-		final WTokenRun newTrailing = trailing.append(newLine()).setNewTokens();
+		final WTokenRun newTrailing = f.apply(trailing, arg).setNewTokens();
 
 		return location.replaceTree(tree.withDressing(dressing.withTrailing(newTrailing)));
 	}
