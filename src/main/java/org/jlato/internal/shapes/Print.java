@@ -193,7 +193,7 @@ public class Print {
 					appendJavaDocComment(token.string, tokens.newTokens);
 					break;
 				case TokenType.SINGLE_LINE_COMMENT:
-					appendSingleLineComment(token.string);
+					appendSingleLineComment(token.string, tokens.newTokens);
 					break;
 				case TokenType.MULTI_LINE_COMMENT:
 					appendMultiLineComment(token.string, tokens.newTokens);
@@ -269,8 +269,8 @@ public class Print {
 		if (newLine) appendNewLine();
 	}
 
-	private void appendComment(String image) {
-		if (format && needsIndentation) doPrintIndent();
+	private void appendComment(String image, boolean newTokens) {
+		if ((format || newTokens) && needsIndentation) doPrintIndent();
 		writer.append(image);
 		afterAlpha = false;
 	}
@@ -278,17 +278,17 @@ public class Print {
 	private void appendJavaDocComment(String image, boolean newTokens) {
 		if ((format || newTokens) && formattingSettings.docCommentFormatting())
 			appendFormattedComment(image, "/**", " *", " * ", " */", true);
-		else appendComment(image);
+		else appendComment(image, newTokens);
 	}
 
 	private void appendMultiLineComment(String image, boolean newTokens) {
 		if ((format || newTokens) && formattingSettings.commentFormatting())
 			appendFormattedComment(image, "/*", "", "", " */", false);
-		else appendComment(image);
+		else appendComment(image, newTokens);
 	}
 
-	private void appendSingleLineComment(String image) {
-		appendComment(image);
+	private void appendSingleLineComment(String image, boolean newTokens) {
+		appendComment(image, newTokens);
 	}
 
 	private void appendWhiteSpace(String string) {

@@ -27,7 +27,9 @@ import org.jlato.printer.FormattingSettings;
 import org.jlato.printer.Printer;
 import org.jlato.tree.Trees;
 import org.jlato.tree.decl.CompilationUnit;
+import org.jlato.tree.decl.MethodDecl;
 import org.jlato.tree.decl.TypeDecl;
+import org.jlato.tree.expr.Expr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.stmt.ReturnStmt;
@@ -79,6 +81,31 @@ public class CommentsTest {
 						"class Test {\n" +
 						"}\n",
 				Printer.printToString(cu, true));
+	}
+
+	@Test
+	public void commentsInStatementBlocks() throws ParseException {
+		MethodDecl decl = methodDecl(voidType(), name("method"))
+				.withBody(blockStmt().withStmts(Trees.<Stmt>listOf(
+						expressionStmt(methodInvocationExpr(name("call1"))),
+						expressionStmt(methodInvocationExpr(name("call2")))
+								.prependLeadingNewLine()
+								.appendLeadingComment("Test comment!"),
+						expressionStmt(methodInvocationExpr(name("call3")))
+								.prependLeadingNewLine()
+								.appendLeadingComment("Test comment!")
+				)));
+
+		Assert.assertEquals("void method() {\n" +
+						"\tcall1();\n" +
+						"\n" +
+						"\t// Test comment!\n" +
+						"\tcall2();\n" +
+						"\n" +
+						"\t// Test comment!\n" +
+						"\tcall3();\n" +
+						"}",
+				Printer.printToString(decl, false));
 	}
 
 	@Test

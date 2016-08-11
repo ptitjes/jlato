@@ -210,9 +210,9 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		final WToken comment = createComment(commentString, expressionContext, forceMultiLine);
 		final WTokenRun newLeading;
 		if (expressionContext && comment.kind != TokenType.SINGLE_LINE_COMMENT) {
-			newLeading = leading.append(comment).append(whitespace(" "));
+			newLeading = leading.append(comment).append(whitespace(" ")).setNewTokens();
 		} else {
-			newLeading = leading.append(comment).append(newLine());
+			newLeading = leading.append(comment).append(newLine()).setNewTokens();
 		}
 
 		return location.replaceTree(tree.withDressing(dressing.withLeading(newLeading)));
@@ -231,7 +231,7 @@ public abstract class TDTree<S extends STree, ST extends Tree, T extends ST> imp
 		final WTokenRun trailing = dressing.trailing == null ? WTokenRun.NEW : dressing.trailing;
 
 		final WToken comment = createComment(commentString, expressionContext, forceMultiLine || trailing.containsSingleLineComment());
-		final WTokenRun newTrailing = trailing.prepend(comment).prepend(whitespace(" "));
+		final WTokenRun newTrailing = trailing.prepend(comment).prepend(whitespace(" ")).setNewTokens();
 
 		return location.replaceTree(tree.withDressing(dressing.withTrailing(newTrailing)));
 	}
