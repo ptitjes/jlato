@@ -358,7 +358,7 @@ public class SAnnotationMemberDecl extends SNode<SAnnotationMemberDecl> implemen
 		}
 	};
 
-	public static final LexicalShape defaultValShape = composite(token(LToken.Default).withSpacingBefore(space()), element());
+	public static final LexicalShape defaultValShape = composite(token(LToken.Default).withSpacing(space(), space()), element());
 
 	public static final LexicalShape shape = composite(
 			child(MODIFIERS, SExtendedModifier.multiLineShape),
