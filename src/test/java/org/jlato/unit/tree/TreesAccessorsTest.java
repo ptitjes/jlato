@@ -30,7 +30,6 @@ import org.jlato.tree.name.QualifiedName;
 import org.jlato.tree.stmt.*;
 import org.jlato.tree.type.*;
 import org.jlato.unit.util.Arbitrary;
-import org.junit.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -320,24 +319,27 @@ public class TreesAccessorsTest {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			Type type = arbitrary.arbitraryType();
 			boolean isVarArgs = arbitrary.arbitraryBoolean();
+			NodeList<AnnotationExpr> ellipsisAnnotations = arbitrary.arbitraryListAnnotationExpr();
 			NodeOption<VariableDeclaratorId> id = arbitrary.arbitraryOptionVariableDeclaratorId();
 			boolean isReceiver = arbitrary.arbitraryBoolean();
 			NodeOption<Name> receiverTypeName = arbitrary.arbitraryOptionName();
 
 			// Use factory method without argument
-			FormalParameter t = Trees.formalParameter().withModifiers(modifiers).withType(type).setVarArgs(isVarArgs).withId(id).setReceiver(isReceiver).withReceiverTypeName(receiverTypeName);
+			FormalParameter t = Trees.formalParameter().withModifiers(modifiers).withType(type).setVarArgs(isVarArgs).withEllipsisAnnotations(ellipsisAnnotations).withId(id).setReceiver(isReceiver).withReceiverTypeName(receiverTypeName);
 			Assert.assertEquals(modifiers, t.modifiers());
 			Assert.assertEquals(type, t.type());
 			Assert.assertEquals(isVarArgs, t.isVarArgs());
+			Assert.assertEquals(ellipsisAnnotations, t.ellipsisAnnotations());
 			Assert.assertEquals(id, t.id());
 			Assert.assertEquals(isReceiver, t.isReceiver());
 			Assert.assertEquals(receiverTypeName, t.receiverTypeName());
 
 			// Use factory method with arguments
-			t = Trees.formalParameter(type).withModifiers(modifiers).setVarArgs(isVarArgs).withId(id).setReceiver(isReceiver).withReceiverTypeName(receiverTypeName);
+			t = Trees.formalParameter(type).withModifiers(modifiers).setVarArgs(isVarArgs).withEllipsisAnnotations(ellipsisAnnotations).withId(id).setReceiver(isReceiver).withReceiverTypeName(receiverTypeName);
 			Assert.assertEquals(modifiers, t.modifiers());
 			Assert.assertEquals(type, t.type());
 			Assert.assertEquals(isVarArgs, t.isVarArgs());
+			Assert.assertEquals(ellipsisAnnotations, t.ellipsisAnnotations());
 			Assert.assertEquals(id, t.id());
 			Assert.assertEquals(isReceiver, t.isReceiver());
 			Assert.assertEquals(receiverTypeName, t.receiverTypeName());
