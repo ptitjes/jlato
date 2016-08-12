@@ -457,6 +457,7 @@ public class TreesAccessorsTest {
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			NodeList<TypeParameter> typeParams = arbitrary.arbitraryListTypeParameter();
+			NodeList<AnnotationExpr> additionalAnnotations = arbitrary.arbitraryListAnnotationExpr();
 			Type type = arbitrary.arbitraryType();
 			Name name = arbitrary.arbitraryName();
 			NodeList<FormalParameter> params = arbitrary.arbitraryListFormalParameter();
@@ -465,9 +466,10 @@ public class TreesAccessorsTest {
 			NodeOption<BlockStmt> body = arbitrary.arbitraryOptionBlockStmt();
 
 			// Use factory method without argument
-			MethodDecl t = Trees.methodDecl().withModifiers(modifiers).withTypeParams(typeParams).withType(type).withName(name).withParams(params).withDims(dims).withThrowsClause(throwsClause).withBody(body);
+			MethodDecl t = Trees.methodDecl().withModifiers(modifiers).withTypeParams(typeParams).withAdditionalAnnotations(additionalAnnotations).withType(type).withName(name).withParams(params).withDims(dims).withThrowsClause(throwsClause).withBody(body);
 			Assert.assertEquals(modifiers, t.modifiers());
 			Assert.assertEquals(typeParams, t.typeParams());
+			Assert.assertEquals(additionalAnnotations, t.additionalAnnotations());
 			Assert.assertEquals(type, t.type());
 			Assert.assertEquals(name, t.name());
 			Assert.assertEquals(params, t.params());
@@ -476,9 +478,10 @@ public class TreesAccessorsTest {
 			Assert.assertEquals(body, t.body());
 
 			// Use factory method with arguments
-			t = Trees.methodDecl(type, name).withModifiers(modifiers).withTypeParams(typeParams).withParams(params).withDims(dims).withThrowsClause(throwsClause).withBody(body);
+			t = Trees.methodDecl(type, name).withModifiers(modifiers).withTypeParams(typeParams).withAdditionalAnnotations(additionalAnnotations).withParams(params).withDims(dims).withThrowsClause(throwsClause).withBody(body);
 			Assert.assertEquals(modifiers, t.modifiers());
 			Assert.assertEquals(typeParams, t.typeParams());
+			Assert.assertEquals(additionalAnnotations, t.additionalAnnotations());
 			Assert.assertEquals(type, t.type());
 			Assert.assertEquals(name, t.name());
 			Assert.assertEquals(params, t.params());

@@ -82,7 +82,7 @@ public class TraversalTest extends BaseTestFromFiles {
 
 		final int nodeCount = countIterable(cu.findAll(ANY_NODE));
 
-		Assert.assertEquals(3619, nodeCount);
+		Assert.assertEquals(3635, nodeCount);
 	}
 
 	@Test
@@ -92,7 +92,7 @@ public class TraversalTest extends BaseTestFromFiles {
 
 		final int nodeCount = countIterable(cu.rightFindAll(ANY_NODE));
 
-		Assert.assertEquals(3619, nodeCount);
+		Assert.assertEquals(3635, nodeCount);
 	}
 
 	@Test

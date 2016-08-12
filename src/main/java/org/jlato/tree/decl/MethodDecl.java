@@ -22,6 +22,7 @@ package org.jlato.tree.decl;
 import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
 import org.jlato.tree.TreeCombinators;
+import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.QualifiedType;
@@ -78,6 +79,29 @@ public interface MethodDecl extends MemberDecl, Documentable<MethodDecl>, TreeCo
 	 * @return the resulting mutated method declaration.
 	 */
 	MethodDecl withTypeParams(Mutation<NodeList<TypeParameter>> mutation);
+
+	/**
+	 * Returns the additional annotations of this method declaration.
+	 *
+	 * @return the additional annotations of this method declaration.
+	 */
+	NodeList<AnnotationExpr> additionalAnnotations();
+
+	/**
+	 * Replaces the additional annotations of this method declaration.
+	 *
+	 * @param additionalAnnotations the replacement for the additional annotations of this method declaration.
+	 * @return the resulting mutated method declaration.
+	 */
+	MethodDecl withAdditionalAnnotations(NodeList<AnnotationExpr> additionalAnnotations);
+
+	/**
+	 * Mutates the additional annotations of this method declaration.
+	 *
+	 * @param mutation the mutation to apply to the additional annotations of this method declaration.
+	 * @return the resulting mutated method declaration.
+	 */
+	MethodDecl withAdditionalAnnotations(Mutation<NodeList<AnnotationExpr>> mutation);
 
 	/**
 	 * Returns the type of this method declaration.

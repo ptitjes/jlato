@@ -10,6 +10,8 @@
         severity: ERROR,
         code: Only interfaces can have default members,
       ],
+      additionalAnnotations: [
+      ],
       body: {
         kind: BlockStmt,
         stmts: [

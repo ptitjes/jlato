@@ -1,0 +1,6 @@
+class Test {
+
+	<A> @B
+	void test() {
+	}
+}

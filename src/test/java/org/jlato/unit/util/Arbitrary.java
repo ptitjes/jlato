@@ -224,7 +224,7 @@ public class Arbitrary {
 		}, new Function0<MemberDecl>() {
 			@Override
 			public MemberDecl apply() {
-				return new TDMethodDecl(arbitraryListExtendedModifier(), arbitraryListTypeParameter(), arbitraryType(), arbitraryName(), arbitraryListFormalParameter(), arbitraryListArrayDim(), arbitraryListQualifiedType(), arbitraryOptionBlockStmt());
+				return new TDMethodDecl(arbitraryListExtendedModifier(), arbitraryListTypeParameter(), arbitraryListAnnotationExpr(), arbitraryType(), arbitraryName(), arbitraryListFormalParameter(), arbitraryListArrayDim(), arbitraryListQualifiedType(), arbitraryOptionBlockStmt());
 			}
 		});
 	}

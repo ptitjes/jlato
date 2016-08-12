@@ -4756,6 +4756,7 @@ public class ParserImplementation extends ParserNewBase {
 	/* sequence(
 		zeroOrOne(
 			nonTerminal(typeParameters, TypeParameters)
+			nonTerminal(additionalAnnotations, Annotations)
 		)
 		nonTerminal(type, ResultType)
 		nonTerminal(name, Name)
@@ -4773,10 +4774,11 @@ public class ParserImplementation extends ParserNewBase {
 				})
 			)
 		)
-		action({ return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem); })
+		action({ return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), ensureNotNull(additionalAnnotations), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem); })
 	) */
 	protected BUTree<SMethodDecl> parseMethodDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<SNodeList> typeParameters = null;
+		BUTree<SNodeList> additionalAnnotations = null;
 		BUTree<? extends SType> type;
 		BUTree<SName> name;
 		BUTree<SNodeList> parameters;
@@ -4786,6 +4788,7 @@ public class ParserImplementation extends ParserNewBase {
 		BUProblem problem = null;
 		if (match(0, TokenType.LT) != -1) {
 			typeParameters = parseTypeParameters();
+			additionalAnnotations = parseAnnotations();
 		}
 		type = parseResultType();
 		name = parseName();
@@ -4803,12 +4806,13 @@ public class ParserImplementation extends ParserNewBase {
 		} else {
 			throw produceParseException(TokenType.SEMICOLON, TokenType.LBRACE);
 		}
-		return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem);
+		return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), ensureNotNull(additionalAnnotations), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem);
 	}
 
 	/* sequence(
 		zeroOrOne(
 			nonTerminal(typeParameters, TypeParameters)
+			nonTerminal(additionalAnnotations, Annotations)
 		)
 		nonTerminal(type, ResultType)
 		nonTerminal(name, Name)
@@ -4851,6 +4855,7 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* zeroOrOne(
 		nonTerminal(typeParameters, TypeParameters)
+		nonTerminal(additionalAnnotations, Annotations)
 	) */
 	private int matchMethodDecl_1(int lookahead) {
 		int newLookahead;
@@ -4862,9 +4867,13 @@ public class ParserImplementation extends ParserNewBase {
 
 	/* sequence(
 		nonTerminal(typeParameters, TypeParameters)
+		nonTerminal(additionalAnnotations, Annotations)
 	) */
 	private int matchMethodDecl_1_1(int lookahead) {
 		lookahead = matchTypeParameters(lookahead);
+		if (lookahead == -1)
+			return -1;
+		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
 			return -1;
 		return lookahead;

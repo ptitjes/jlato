@@ -7,6 +7,10 @@
     {
       kind: MethodDecl,
       additionalAnnotations: [
+        {
+          kind: MarkerAnnotationExpr,
+          name: B,
+        },
       ],
       body: {
         kind: BlockStmt,
@@ -16,10 +20,6 @@
       dims: [
       ],
       modifiers: [
-        {
-          kind: MarkerAnnotationExpr,
-          name: Detectable,
-        },
       ],
       name: test,
       params: [
@@ -30,6 +30,14 @@
         kind: VoidType,
       },
       typeParams: [
+        {
+          kind: TypeParameter,
+          annotations: [
+          ],
+          bounds: [
+          ],
+          name: A,
+        },
       ],
     },
   ],

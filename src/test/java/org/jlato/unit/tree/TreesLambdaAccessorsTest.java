@@ -399,15 +399,17 @@ public class TreesLambdaAccessorsTest {
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			NodeList<TypeParameter> typeParams = arbitrary.arbitraryListTypeParameter();
+			NodeList<AnnotationExpr> additionalAnnotations = arbitrary.arbitraryListAnnotationExpr();
 			Type type = arbitrary.arbitraryType();
 			Name name = arbitrary.arbitraryName();
 			NodeList<FormalParameter> params = arbitrary.arbitraryListFormalParameter();
 			NodeList<ArrayDim> dims = arbitrary.arbitraryListArrayDim();
 			NodeList<QualifiedType> throwsClause = arbitrary.arbitraryListQualifiedType();
 			NodeOption<BlockStmt> body = arbitrary.arbitraryOptionBlockStmt();
-			MethodDecl t = Trees.methodDecl().withModifiers(modifiers).withTypeParams(typeParams).withType(type).withName(name).withParams(params).withDims(dims).withThrowsClause(throwsClause).withBody(body);
+			MethodDecl t = Trees.methodDecl().withModifiers(modifiers).withTypeParams(typeParams).withAdditionalAnnotations(additionalAnnotations).withType(type).withName(name).withParams(params).withDims(dims).withThrowsClause(throwsClause).withBody(body);
 			Assert.assertEquals(modifiers, t.modifiers());
 			Assert.assertEquals(typeParams, t.typeParams());
+			Assert.assertEquals(additionalAnnotations, t.additionalAnnotations());
 			Assert.assertEquals(type, t.type());
 			Assert.assertEquals(name, t.name());
 			Assert.assertEquals(params, t.params());
@@ -416,15 +418,17 @@ public class TreesLambdaAccessorsTest {
 			Assert.assertEquals(body, t.body());
 			NodeList<ExtendedModifier> modifiers2 = arbitrary.arbitraryListExtendedModifier();
 			NodeList<TypeParameter> typeParams2 = arbitrary.arbitraryListTypeParameter();
+			NodeList<AnnotationExpr> additionalAnnotations2 = arbitrary.arbitraryListAnnotationExpr();
 			Type type2 = arbitrary.arbitraryType();
 			Name name2 = arbitrary.arbitraryName();
 			NodeList<FormalParameter> params2 = arbitrary.arbitraryListFormalParameter();
 			NodeList<ArrayDim> dims2 = arbitrary.arbitraryListArrayDim();
 			NodeList<QualifiedType> throwsClause2 = arbitrary.arbitraryListQualifiedType();
 			NodeOption<BlockStmt> body2 = arbitrary.arbitraryOptionBlockStmt();
-			MethodDecl t2 = t.withModifiers(mutationBy(modifiers, modifiers2)).withTypeParams(mutationBy(typeParams, typeParams2)).withType(mutationBy(type, type2)).withName(mutationBy(name, name2)).withParams(mutationBy(params, params2)).withDims(mutationBy(dims, dims2)).withThrowsClause(mutationBy(throwsClause, throwsClause2)).withBody(mutationBy(body, body2));
+			MethodDecl t2 = t.withModifiers(mutationBy(modifiers, modifiers2)).withTypeParams(mutationBy(typeParams, typeParams2)).withAdditionalAnnotations(mutationBy(additionalAnnotations, additionalAnnotations2)).withType(mutationBy(type, type2)).withName(mutationBy(name, name2)).withParams(mutationBy(params, params2)).withDims(mutationBy(dims, dims2)).withThrowsClause(mutationBy(throwsClause, throwsClause2)).withBody(mutationBy(body, body2));
 			Assert.assertEquals(modifiers2, t2.modifiers());
 			Assert.assertEquals(typeParams2, t2.typeParams());
+			Assert.assertEquals(additionalAnnotations2, t2.additionalAnnotations());
 			Assert.assertEquals(type2, t2.type());
 			Assert.assertEquals(name2, t2.name());
 			Assert.assertEquals(params2, t2.params());

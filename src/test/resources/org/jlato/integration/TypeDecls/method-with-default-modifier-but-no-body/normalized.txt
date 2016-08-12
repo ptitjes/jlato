@@ -9,6 +9,8 @@
         severity: ERROR,
         code: Default methods must have a body,
       ],
+      additionalAnnotations: [
+      ],
       body: null,
       dims: [
       ],

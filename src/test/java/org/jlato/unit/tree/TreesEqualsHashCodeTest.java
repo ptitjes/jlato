@@ -474,13 +474,14 @@ public class TreesEqualsHashCodeTest {
 		for (int i = 0; i < 10; i++) {
 			NodeList<ExtendedModifier> modifiers = arbitrary.arbitraryListExtendedModifier();
 			NodeList<TypeParameter> typeParams = arbitrary.arbitraryListTypeParameter();
+			NodeList<AnnotationExpr> additionalAnnotations = arbitrary.arbitraryListAnnotationExpr();
 			Type type = arbitrary.arbitraryType();
 			Name name = arbitrary.arbitraryName();
 			NodeList<FormalParameter> params = arbitrary.arbitraryListFormalParameter();
 			NodeList<ArrayDim> dims = arbitrary.arbitraryListArrayDim();
 			NodeList<QualifiedType> throwsClause = arbitrary.arbitraryListQualifiedType();
 			NodeOption<BlockStmt> body = arbitrary.arbitraryOptionBlockStmt();
-			MethodDecl expected = Trees.methodDecl().withModifiers(modifiers).withTypeParams(typeParams).withType(type).withName(name).withParams(params).withDims(dims).withThrowsClause(throwsClause).withBody(body);
+			MethodDecl expected = Trees.methodDecl().withModifiers(modifiers).withTypeParams(typeParams).withAdditionalAnnotations(additionalAnnotations).withType(type).withName(name).withParams(params).withDims(dims).withThrowsClause(throwsClause).withBody(body);
 			Assert.assertEquals(expected, expected);
 			Assert.assertNotEquals(expected, null);
 			MethodDecl actual = Trees.methodDecl();
@@ -490,6 +491,9 @@ public class TreesEqualsHashCodeTest {
 			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withTypeParams(typeParams);
+			Assert.assertNotEquals(expected, actual);
+			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
+			actual = actual.withAdditionalAnnotations(additionalAnnotations);
 			Assert.assertNotEquals(expected, actual);
 			Assert.assertNotEquals(expected.hashCode(), actual.hashCode());
 			actual = actual.withType(type);

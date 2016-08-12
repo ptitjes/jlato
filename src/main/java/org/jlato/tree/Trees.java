@@ -20,14 +20,10 @@
 package org.jlato.tree;
 
 import org.jlato.internal.bu.Literals;
-import org.jlato.internal.td.coll.TDNodeEither;
-import org.jlato.internal.td.coll.TDNodeList;
-import org.jlato.internal.td.coll.TDNodeMap;
-import org.jlato.internal.td.coll.TDNodeOption;
+import org.jlato.internal.td.coll.*;
 import org.jlato.internal.td.decl.*;
 import org.jlato.internal.td.expr.*;
-import org.jlato.internal.td.name.TDName;
-import org.jlato.internal.td.name.TDQualifiedName;
+import org.jlato.internal.td.name.*;
 import org.jlato.internal.td.stmt.*;
 import org.jlato.internal.td.type.*;
 import org.jlato.tree.decl.*;
@@ -369,17 +365,6 @@ public final class Trees {
 	}
 
 	/**
-	 * Creates a formal parameter.
-	 *
-	 * @param type the type child tree.
-	 * @param id   the identifier child tree.
-	 * @return the new formal parameter instance.
-	 */
-	public static FormalParameter formalParameter(Type type, VariableDeclaratorId id) {
-		return new TDFormalParameter(Trees.<ExtendedModifier>emptyList(), type, false, Trees.<AnnotationExpr>emptyList(), Trees.some(id), false, Trees.<Name>none());
-	}
-
-	/**
 	 * Creates an import declaration.
 	 *
 	 * @return the new import declaration instance.
@@ -461,7 +446,7 @@ public final class Trees {
 	 * @return the new method declaration instance.
 	 */
 	public static MethodDecl methodDecl() {
-		return new TDMethodDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), null, null, Trees.<FormalParameter>emptyList(), Trees.<ArrayDim>emptyList(), Trees.<QualifiedType>emptyList(), Trees.<BlockStmt>none());
+		return new TDMethodDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), Trees.<AnnotationExpr>emptyList(), null, null, Trees.<FormalParameter>emptyList(), Trees.<ArrayDim>emptyList(), Trees.<QualifiedType>emptyList(), Trees.<BlockStmt>none());
 	}
 
 	/**
@@ -472,7 +457,7 @@ public final class Trees {
 	 * @return the new method declaration instance.
 	 */
 	public static MethodDecl methodDecl(Type type, Name name) {
-		return new TDMethodDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), type, name, Trees.<FormalParameter>emptyList(), Trees.<ArrayDim>emptyList(), Trees.<QualifiedType>emptyList(), Trees.<BlockStmt>none());
+		return new TDMethodDecl(Trees.<ExtendedModifier>emptyList(), Trees.<TypeParameter>emptyList(), Trees.<AnnotationExpr>emptyList(), type, name, Trees.<FormalParameter>emptyList(), Trees.<ArrayDim>emptyList(), Trees.<QualifiedType>emptyList(), Trees.<BlockStmt>none());
 	}
 
 	/**

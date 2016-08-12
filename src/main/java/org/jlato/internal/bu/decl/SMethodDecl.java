@@ -35,12 +35,13 @@ import org.jlato.tree.decl.ArrayDim;
 import org.jlato.tree.decl.ExtendedModifier;
 import org.jlato.tree.decl.FormalParameter;
 import org.jlato.tree.decl.TypeParameter;
+import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.QualifiedType;
 import org.jlato.tree.type.Type;
 
-import static org.jlato.internal.shapes.LSCondition.some;
+import static org.jlato.internal.shapes.LSCondition.*;
 import static org.jlato.internal.shapes.LexicalShape.*;
 import static org.jlato.internal.shapes.SpacingConstraint.space;
 
@@ -52,18 +53,19 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	/**
 	 * Creates a <code>BUTree</code> with a new method declaration.
 	 *
-	 * @param modifiers    the modifiers child <code>BUTree</code>.
-	 * @param typeParams   the type parameters child <code>BUTree</code>.
-	 * @param type         the type child <code>BUTree</code>.
-	 * @param name         the name child <code>BUTree</code>.
-	 * @param params       the parameters child <code>BUTree</code>.
-	 * @param dims         the dimensions child <code>BUTree</code>.
-	 * @param throwsClause the 'throws' clause child <code>BUTree</code>.
-	 * @param body         the body child <code>BUTree</code>.
+	 * @param modifiers             the modifiers child <code>BUTree</code>.
+	 * @param typeParams            the type parameters child <code>BUTree</code>.
+	 * @param additionalAnnotations the additional annotations child <code>BUTree</code>.
+	 * @param type                  the type child <code>BUTree</code>.
+	 * @param name                  the name child <code>BUTree</code>.
+	 * @param params                the parameters child <code>BUTree</code>.
+	 * @param dims                  the dimensions child <code>BUTree</code>.
+	 * @param throwsClause          the 'throws' clause child <code>BUTree</code>.
+	 * @param body                  the body child <code>BUTree</code>.
 	 * @return the new <code>BUTree</code> with a method declaration.
 	 */
-	public static BUTree<SMethodDecl> make(BUTree<SNodeList> modifiers, BUTree<SNodeList> typeParams, BUTree<? extends SType> type, BUTree<SName> name, BUTree<SNodeList> params, BUTree<SNodeList> dims, BUTree<SNodeList> throwsClause, BUTree<SNodeOption> body) {
-		return new BUTree<SMethodDecl>(new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body));
+	public static BUTree<SMethodDecl> make(BUTree<SNodeList> modifiers, BUTree<SNodeList> typeParams, BUTree<SNodeList> additionalAnnotations, BUTree<? extends SType> type, BUTree<SName> name, BUTree<SNodeList> params, BUTree<SNodeList> dims, BUTree<SNodeList> throwsClause, BUTree<SNodeOption> body) {
+		return new BUTree<SMethodDecl>(new SMethodDecl(modifiers, typeParams, additionalAnnotations, type, name, params, dims, throwsClause, body));
 	}
 
 	/**
@@ -75,6 +77,11 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	 * The type parameters of this method declaration state.
 	 */
 	public final BUTree<SNodeList> typeParams;
+
+	/**
+	 * The additional annotations of this method declaration state.
+	 */
+	public final BUTree<SNodeList> additionalAnnotations;
 
 	/**
 	 * The type of this method declaration state.
@@ -109,18 +116,20 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	/**
 	 * Constructs a method declaration state.
 	 *
-	 * @param modifiers    the modifiers child <code>BUTree</code>.
-	 * @param typeParams   the type parameters child <code>BUTree</code>.
-	 * @param type         the type child <code>BUTree</code>.
-	 * @param name         the name child <code>BUTree</code>.
-	 * @param params       the parameters child <code>BUTree</code>.
-	 * @param dims         the dimensions child <code>BUTree</code>.
-	 * @param throwsClause the 'throws' clause child <code>BUTree</code>.
-	 * @param body         the body child <code>BUTree</code>.
+	 * @param modifiers             the modifiers child <code>BUTree</code>.
+	 * @param typeParams            the type parameters child <code>BUTree</code>.
+	 * @param additionalAnnotations the additional annotations child <code>BUTree</code>.
+	 * @param type                  the type child <code>BUTree</code>.
+	 * @param name                  the name child <code>BUTree</code>.
+	 * @param params                the parameters child <code>BUTree</code>.
+	 * @param dims                  the dimensions child <code>BUTree</code>.
+	 * @param throwsClause          the 'throws' clause child <code>BUTree</code>.
+	 * @param body                  the body child <code>BUTree</code>.
 	 */
-	public SMethodDecl(BUTree<SNodeList> modifiers, BUTree<SNodeList> typeParams, BUTree<? extends SType> type, BUTree<SName> name, BUTree<SNodeList> params, BUTree<SNodeList> dims, BUTree<SNodeList> throwsClause, BUTree<SNodeOption> body) {
+	public SMethodDecl(BUTree<SNodeList> modifiers, BUTree<SNodeList> typeParams, BUTree<SNodeList> additionalAnnotations, BUTree<? extends SType> type, BUTree<SName> name, BUTree<SNodeList> params, BUTree<SNodeList> dims, BUTree<SNodeList> throwsClause, BUTree<SNodeOption> body) {
 		this.modifiers = modifiers;
 		this.typeParams = typeParams;
+		this.additionalAnnotations = additionalAnnotations;
 		this.type = type;
 		this.name = name;
 		this.params = params;
@@ -146,7 +155,7 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	 * @return the resulting mutated method declaration state.
 	 */
 	public SMethodDecl withModifiers(BUTree<SNodeList> modifiers) {
-		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		return new SMethodDecl(modifiers, typeParams, additionalAnnotations, type, name, params, dims, throwsClause, body);
 	}
 
 	/**
@@ -156,7 +165,17 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	 * @return the resulting mutated method declaration state.
 	 */
 	public SMethodDecl withTypeParams(BUTree<SNodeList> typeParams) {
-		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		return new SMethodDecl(modifiers, typeParams, additionalAnnotations, type, name, params, dims, throwsClause, body);
+	}
+
+	/**
+	 * Replaces the additional annotations of this method declaration state.
+	 *
+	 * @param additionalAnnotations the replacement for the additional annotations of this method declaration state.
+	 * @return the resulting mutated method declaration state.
+	 */
+	public SMethodDecl withAdditionalAnnotations(BUTree<SNodeList> additionalAnnotations) {
+		return new SMethodDecl(modifiers, typeParams, additionalAnnotations, type, name, params, dims, throwsClause, body);
 	}
 
 	/**
@@ -166,7 +185,7 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	 * @return the resulting mutated method declaration state.
 	 */
 	public SMethodDecl withType(BUTree<? extends SType> type) {
-		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		return new SMethodDecl(modifiers, typeParams, additionalAnnotations, type, name, params, dims, throwsClause, body);
 	}
 
 	/**
@@ -176,7 +195,7 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	 * @return the resulting mutated method declaration state.
 	 */
 	public SMethodDecl withName(BUTree<SName> name) {
-		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		return new SMethodDecl(modifiers, typeParams, additionalAnnotations, type, name, params, dims, throwsClause, body);
 	}
 
 	/**
@@ -186,7 +205,7 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	 * @return the resulting mutated method declaration state.
 	 */
 	public SMethodDecl withParams(BUTree<SNodeList> params) {
-		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		return new SMethodDecl(modifiers, typeParams, additionalAnnotations, type, name, params, dims, throwsClause, body);
 	}
 
 	/**
@@ -196,7 +215,7 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	 * @return the resulting mutated method declaration state.
 	 */
 	public SMethodDecl withDims(BUTree<SNodeList> dims) {
-		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		return new SMethodDecl(modifiers, typeParams, additionalAnnotations, type, name, params, dims, throwsClause, body);
 	}
 
 	/**
@@ -206,7 +225,7 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	 * @return the resulting mutated method declaration state.
 	 */
 	public SMethodDecl withThrowsClause(BUTree<SNodeList> throwsClause) {
-		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		return new SMethodDecl(modifiers, typeParams, additionalAnnotations, type, name, params, dims, throwsClause, body);
 	}
 
 	/**
@@ -216,7 +235,7 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	 * @return the resulting mutated method declaration state.
 	 */
 	public SMethodDecl withBody(BUTree<SNodeOption> body) {
-		return new SMethodDecl(modifiers, typeParams, type, name, params, dims, throwsClause, body);
+		return new SMethodDecl(modifiers, typeParams, additionalAnnotations, type, name, params, dims, throwsClause, body);
 	}
 
 	/**
@@ -275,6 +294,8 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 			return false;
 		if (!typeParams.equals(state.typeParams))
 			return false;
+		if (!additionalAnnotations.equals(state.additionalAnnotations))
+			return false;
 		if (type == null ? state.type != null : !type.equals(state.type))
 			return false;
 		if (name == null ? state.name != null : !name.equals(state.name))
@@ -300,6 +321,7 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 		int result = 17;
 		result = 37 * result + modifiers.hashCode();
 		result = 37 * result + typeParams.hashCode();
+		result = 37 * result + additionalAnnotations.hashCode();
 		if (type != null) result = 37 * result + type.hashCode();
 		if (name != null) result = 37 * result + name.hashCode();
 		result = 37 * result + params.hashCode();
@@ -351,6 +373,29 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 
 		@Override
 		public STraversal rightSibling(STree state) {
+			return ADDITIONAL_ANNOTATIONS;
+		}
+	};
+
+	public static STypeSafeTraversal<SMethodDecl, SNodeList, NodeList<AnnotationExpr>> ADDITIONAL_ANNOTATIONS = new STypeSafeTraversal<SMethodDecl, SNodeList, NodeList<AnnotationExpr>>() {
+
+		@Override
+		public BUTree<?> doTraverse(SMethodDecl state) {
+			return state.additionalAnnotations;
+		}
+
+		@Override
+		public SMethodDecl doRebuildParentState(SMethodDecl state, BUTree<SNodeList> child) {
+			return state.withAdditionalAnnotations(child);
+		}
+
+		@Override
+		public STraversal leftSibling(STree state) {
+			return TYPE_PARAMS;
+		}
+
+		@Override
+		public STraversal rightSibling(STree state) {
 			return TYPE;
 		}
 	};
@@ -369,7 +414,7 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 
 		@Override
 		public STraversal leftSibling(STree state) {
-			return TYPE_PARAMS;
+			return ADDITIONAL_ANNOTATIONS;
 		}
 
 		@Override
@@ -496,6 +541,9 @@ public class SMethodDecl extends SNode<SMethodDecl> implements SMemberDecl {
 	public static final LexicalShape shape = composite(
 			child(MODIFIERS, SExtendedModifier.multiLineShape),
 			child(TYPE_PARAMS, STypeParameter.listShape),
+			when(childIs(TYPE_PARAMS, not(empty())),
+					child(ADDITIONAL_ANNOTATIONS, org.jlato.internal.bu.expr.SAnnotationExpr.multiLineShape)
+			),
 			child(TYPE),
 			child(NAME).withSpacingBefore(space()),
 			token(LToken.ParenthesisLeft),

@@ -6,6 +6,8 @@
   members: [
     {
       kind: MethodDecl,
+      additionalAnnotations: [
+      ],
       body: {
         kind: BlockStmt,
         stmts: [

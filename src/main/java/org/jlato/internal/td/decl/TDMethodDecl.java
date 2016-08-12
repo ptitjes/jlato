@@ -31,6 +31,7 @@ import org.jlato.tree.NodeList;
 import org.jlato.tree.NodeOption;
 import org.jlato.tree.Trees;
 import org.jlato.tree.decl.*;
+import org.jlato.tree.expr.AnnotationExpr;
 import org.jlato.tree.name.Name;
 import org.jlato.tree.stmt.BlockStmt;
 import org.jlato.tree.type.QualifiedType;
@@ -63,17 +64,18 @@ public class TDMethodDecl extends TDTree<SMethodDecl, MemberDecl, MethodDecl> im
 	/**
 	 * Creates a method declaration with the specified child trees.
 	 *
-	 * @param modifiers    the modifiers child tree.
-	 * @param typeParams   the type parameters child tree.
-	 * @param type         the type child tree.
-	 * @param name         the name child tree.
-	 * @param params       the parameters child tree.
-	 * @param dims         the dimensions child tree.
-	 * @param throwsClause the 'throws' clause child tree.
-	 * @param body         the body child tree.
+	 * @param modifiers             the modifiers child tree.
+	 * @param typeParams            the type parameters child tree.
+	 * @param additionalAnnotations the additional annotations child tree.
+	 * @param type                  the type child tree.
+	 * @param name                  the name child tree.
+	 * @param params                the parameters child tree.
+	 * @param dims                  the dimensions child tree.
+	 * @param throwsClause          the 'throws' clause child tree.
+	 * @param body                  the body child tree.
 	 */
-	public TDMethodDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, NodeOption<BlockStmt> body) {
-		super(new TDLocation<SMethodDecl>(SMethodDecl.make(TDTree.<SNodeList>treeOf(modifiers), TDTree.<SNodeList>treeOf(typeParams), TDTree.<SType>treeOf(type), TDTree.<SName>treeOf(name), TDTree.<SNodeList>treeOf(params), TDTree.<SNodeList>treeOf(dims), TDTree.<SNodeList>treeOf(throwsClause), TDTree.<SNodeOption>treeOf(body))));
+	public TDMethodDecl(NodeList<ExtendedModifier> modifiers, NodeList<TypeParameter> typeParams, NodeList<AnnotationExpr> additionalAnnotations, Type type, Name name, NodeList<FormalParameter> params, NodeList<ArrayDim> dims, NodeList<QualifiedType> throwsClause, NodeOption<BlockStmt> body) {
+		super(new TDLocation<SMethodDecl>(SMethodDecl.make(TDTree.<SNodeList>treeOf(modifiers), TDTree.<SNodeList>treeOf(typeParams), TDTree.<SNodeList>treeOf(additionalAnnotations), TDTree.<SType>treeOf(type), TDTree.<SName>treeOf(name), TDTree.<SNodeList>treeOf(params), TDTree.<SNodeList>treeOf(dims), TDTree.<SNodeList>treeOf(throwsClause), TDTree.<SNodeOption>treeOf(body))));
 	}
 
 	/**
@@ -132,6 +134,35 @@ public class TDMethodDecl extends TDTree<SMethodDecl, MemberDecl, MethodDecl> im
 	 */
 	public MethodDecl withTypeParams(Mutation<NodeList<TypeParameter>> mutation) {
 		return location.safeTraversalMutate(SMethodDecl.TYPE_PARAMS, mutation);
+	}
+
+	/**
+	 * Returns the additional annotations of this method declaration.
+	 *
+	 * @return the additional annotations of this method declaration.
+	 */
+	public NodeList<AnnotationExpr> additionalAnnotations() {
+		return location.safeTraversal(SMethodDecl.ADDITIONAL_ANNOTATIONS);
+	}
+
+	/**
+	 * Replaces the additional annotations of this method declaration.
+	 *
+	 * @param additionalAnnotations the replacement for the additional annotations of this method declaration.
+	 * @return the resulting mutated method declaration.
+	 */
+	public MethodDecl withAdditionalAnnotations(NodeList<AnnotationExpr> additionalAnnotations) {
+		return location.safeTraversalReplace(SMethodDecl.ADDITIONAL_ANNOTATIONS, additionalAnnotations);
+	}
+
+	/**
+	 * Mutates the additional annotations of this method declaration.
+	 *
+	 * @param mutation the mutation to apply to the additional annotations of this method declaration.
+	 * @return the resulting mutated method declaration.
+	 */
+	public MethodDecl withAdditionalAnnotations(Mutation<NodeList<AnnotationExpr>> mutation) {
+		return location.safeTraversalMutate(SMethodDecl.ADDITIONAL_ANNOTATIONS, mutation);
 	}
 
 	/**
