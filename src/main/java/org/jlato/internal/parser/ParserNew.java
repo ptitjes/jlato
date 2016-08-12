@@ -63,8 +63,6 @@ public class ParserNew extends ParserInterface {
 	public ParserNew(ParserConfiguration configuration, boolean quotesMode) {
 		if (configuration.parser.equals("2")) {
 			implementation = new ParserImplementation2();
-		} else if (configuration.parser.equals("3")) {
-			implementation = new ParserImplementation3();
 		} else {
 			implementation = new ParserImplementation();
 		}
