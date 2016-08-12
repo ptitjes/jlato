@@ -40,14 +40,29 @@ import org.jlato.internal.parser.TokenType;
     }
 
     private Token newToken(int type) {
+        int line = yyline + 1;
+        int column = yycolumn + 1;
+
         String image;
         switch (type) {
-            case TokenType.NEWLINE:
-            case TokenType.WHITESPACE:
-
-            case TokenType.SINGLE_LINE_COMMENT:
             case TokenType.JAVA_DOC_COMMENT:
             case TokenType.MULTI_LINE_COMMENT:
+                image = yytext();
+                moveLineColumn(image);
+                break;
+
+            case TokenType.SINGLE_LINE_COMMENT:
+                image = yytext();
+                yycolumn += image.length();
+                break;
+
+            case TokenType.NEWLINE:
+                image = yytext();
+                yyline++;
+                yycolumn = 0;
+                break;
+
+            case TokenType.WHITESPACE:
 
             case TokenType.INTEGER_LITERAL:
             case TokenType.LONG_LITERAL:
@@ -60,22 +75,33 @@ import org.jlato.internal.parser.TokenType;
             case TokenType.NODE_LIST_VARIABLE:
             case TokenType.IDENTIFIER:
                 image = yytext();
+                yycolumn += image.length();
                 break;
 
             default:
                 image = TokenType.tokenImage[type];
+                yycolumn += image.length();
         }
-
-        int line = yyline + 1;
-        int column = yycolumn + 1;
-
-        if (type == TokenType.NEWLINE) {
-            yyline++;
-            yycolumn = 0;
-        } else yycolumn += image.length();
 
         return new Token(type, image, line, column);
     }
+
+	private void moveLineColumn(String image) {
+		for (int i = 0; i < image.length(); i++) {
+			char c = image.charAt(i);
+			switch (c) {
+				case '\r':
+					if (i + 1 < image.length() && image.charAt(i + 1) == '\n') i++;
+				case '\n':
+				case '\f':
+					yyline++;
+					yycolumn = 0;
+					break;
+				default:
+					yycolumn++;
+			}
+		}
+	}
 %}
 
 %public

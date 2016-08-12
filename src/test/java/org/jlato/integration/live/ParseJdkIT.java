@@ -68,11 +68,12 @@ public class ParseJdkIT {
 					System.out.println(name);
 					throw e;
 				} catch (ParseException e) {
-					e.printStackTrace();
-					System.out.flush();
+					System.out.println(e.getMessage());
 					System.out.println(name);
 					System.out.println();
 					copyStreams(file.getInputStream(entry), System.out);
+					System.out.flush();
+					e.printStackTrace(System.out);
 					System.out.flush();
 					throw e;
 				}
