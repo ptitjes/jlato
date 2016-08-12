@@ -56,9 +56,10 @@ public class ProfileRunner {
 //		Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
 //		parse("com.github.javaparser", "javaparser-core", "2.5.1", parser, "UTF-8", 10);
 //		parse("com.javaslang", "javaslang", "1.2.2", parser, "UTF-8", 10);
+		parse("com.javaslang", "javaslang", "1.2.2", preservingParser, "UTF-8", 10);
 
-		ZipFile zipFile = new ZipFile(OPENJDK_LOCATION);
-		parse(zipFile, "jdk/src/share/classes/", parser, "UTF-8");
+//		ZipFile zipFile = new ZipFile(OPENJDK_LOCATION);
+//		parse(zipFile, "jdk/src/share/classes/", parser, "UTF-8");
 	}
 
 	private void parse(String group, String artifactId, String version, Parser parser, String encoding, int count) throws IOException, ParseException {
