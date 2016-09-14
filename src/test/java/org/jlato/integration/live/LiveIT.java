@@ -83,27 +83,7 @@ public class LiveIT {
 	private void parse(String group, String artifactId, String version, Parser parser, String encoding) throws IOException, ParseException {
 		File file = makeLocalFile(artifactId, version);
 		JarFile jarFile = new JarFile(file);
-		Enumeration<JarEntry> entries = jarFile.entries();
-		while (entries.hasMoreElements()) {
-			JarEntry jarEntry = entries.nextElement();
-			String name = jarEntry.getName();
-			if (name.endsWith(".java")) {
-				InputStream inputStream = jarFile.getInputStream(jarEntry);
-				try {
-					parser.parse(inputStream, encoding);
-				} catch (RuntimeException e) {
-					System.out.println(name);
-					throw e;
-				} catch (ParseException e) {
-					e.printStackTrace();
-					System.out.flush();
-					System.out.println();
-					copyStreams(jarFile.getInputStream(jarEntry), System.out);
-					System.out.flush();
-					throw e;
-				}
-			}
-		}
+		parser.parseAll(jarFile, encoding);
 	}
 
 	private File makeLocalFile(String artifactId, String version) {

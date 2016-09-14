@@ -34,4 +34,17 @@ public class ParseException extends Exception {
 	public ParseException(String message) {
 		super(message);
 	}
+
+	/**
+	 * Constructor with message.
+	 *
+	 * @param message the exception message.
+	 * @param cause   the cause (which is saved for later retrieval by the
+	 *                {@link #getCause()} method).  (A <tt>null</tt> value is
+	 *                permitted, and indicates that the cause is nonexistent or
+	 *                unknown.)
+	 */
+	public ParseException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

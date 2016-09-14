@@ -20,7 +20,6 @@
 package org.jlato.internal.parser;
 
 import com.github.andrewoma.dexx.collection.*;
-import com.github.andrewoma.dexx.collection.ArrayList;
 import com.github.andrewoma.dexx.collection.Vector;
 import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeEither;
@@ -37,11 +36,9 @@ import org.jlato.internal.shapes.DressingBuilder;
 import org.jlato.internal.shapes.LexicalShape;
 import org.jlato.parser.ParseException;
 import org.jlato.parser.ParserConfiguration;
-import org.jlato.tree.expr.BinaryOp;
 
 import java.io.*;
 import java.util.*;
-import java.util.Map;
 
 import static org.jlato.internal.parser.TokenType.*;
 
@@ -85,6 +82,8 @@ public abstract class ParserNewBase {
 			runStack.clear();
 			runStack.push(Vector.<WTokenRun>empty());
 		}
+
+		resetStats();
 	}
 
 	// Parser interface
@@ -275,25 +274,28 @@ public abstract class ParserNewBase {
 
 	// Base parse methods
 
-	public static final int PRODUCTION_COUNT = 12;
-	public static final short[] EMPTY_MATCHES = new short[PRODUCTION_COUNT];
+	protected abstract int memoizedProductionCount();
 
-	static {
-		for (int i = 0; i < PRODUCTION_COUNT; i++) {
-			EMPTY_MATCHES[i] = -2;
+	private final int memoizedProductionCount = memoizedProductionCount();
+	private final short[] emptyMatches = new short[memoizedProductionCount()];
+
+	{
+		for (int i = 0; i < memoizedProductionCount; i++) {
+			emptyMatches[i] = -2;
 		}
 	}
 
 	static class LookaheadCell {
 		public Token token;
 		public WTokenRun whitespace;
-		public short[] matches = new short[PRODUCTION_COUNT];
+		public short[] matches;
 	}
 
 	private CircularBuffer<LookaheadCell> lookaheadCells = new CircularBuffer<LookaheadCell>(20, 10) {
 		@Override
 		protected LookaheadCell createCell() {
 			LookaheadCell cell = new LookaheadCell();
+			cell.matches = new short[memoizedProductionCount];
 			return cell;
 		}
 
@@ -301,7 +303,7 @@ public abstract class ParserNewBase {
 		protected void clearCell(LookaheadCell cell) {
 			cell.token = null;
 			cell.whitespace = null;
-			System.arraycopy(EMPTY_MATCHES, 0, cell.matches, 0, PRODUCTION_COUNT);
+			System.arraycopy(emptyMatches, 0, cell.matches, 0, memoizedProductionCount);
 		}
 	};
 	protected int matchLookahead;
@@ -376,6 +378,12 @@ public abstract class ParserNewBase {
 			lastProcessedToken--;
 		}
 
+		// Stats
+		if (matchCount > 400) {
+			System.out.print(matchCount + ": ");
+			dumpTokens();
+		}
+
 		Token token = getToken(0);
 		if (token.kind != tokenType) {
 			String found = token.kind == TokenType.EOF ? "<EOF>" : token.image;
@@ -384,15 +392,25 @@ public abstract class ParserNewBase {
 					" (" + token.beginLine + ":" + token.beginColumn + ")");
 		}
 		lookaheadCells.dropHead();
+
+		// Stats
+		addMatchCount();
+
 		return token;
 	}
 
 	protected int match(int lookahead, int tokenType) {
+		// Stats
+		matchCount++;
+
 		return getToken(lookahead).kind == tokenType ? lookahead + 1 : -1;
 	}
 
 	protected int match(int lookahead, int... tokenTypes) {
 		for (int tokenType : tokenTypes) {
+			// Stats
+			matchCount++;
+
 			if (getToken(lookahead).kind == tokenType) return lookahead + 1;
 		}
 		return -1;
@@ -415,6 +433,33 @@ public abstract class ParserNewBase {
 		return match < 0 ? match : lookahead + match;
 	}
 
+	private void resetStats() {
+		matchCount = 0;
+	}
+
+	private int matchCount = 0;
+	private int maxMatchCount = -1;
+	private int[] allMatchCounts = new int[0];
+
+	private void addMatchCount() {
+		if (matchCount > maxMatchCount) {
+			int[] newMatchCounts = new int[matchCount + 1];
+			System.arraycopy(allMatchCounts, 0, newMatchCounts, 0, maxMatchCount + 1);
+			allMatchCounts = newMatchCounts;
+			maxMatchCount = matchCount;
+		}
+		allMatchCounts[matchCount]++;
+		matchCount = 0;
+	}
+
+	private void dumpTokens() {
+		int count = lookaheadCells.size();
+		for (int i = 0; i < count; i++) {
+			System.out.print(lookaheadCells.get(i).token.toString() + " ");
+		}
+		System.out.println();
+	}
+
 //	private void hit(int productionNumber) {
 //		Integer hits = hitStats.get(productionNumber);
 //		hitStats.put(productionNumber, hits == null ? 1 : hits + 1);
@@ -430,7 +475,12 @@ public abstract class ParserNewBase {
 //		callStats.put(productionNumber, calls == null ? 1 : calls + 1);
 //	}
 
-//	public void printStats() {
+	public void printStats() {
+		for (int i = 0; i <= maxMatchCount; i++) {
+			int count = allMatchCounts[i];
+			if (count != 0) System.out.println("" + i + " matches: " + count + " times");
+		}
+
 //		java.util.ArrayList<java.util.Map.Entry<Integer, Integer>> hits = new java.util.ArrayList<java.util.Map.Entry<Integer, Integer>>(hitStats.entrySet());
 //		Collections.sort(hits, new Comparator<Map.Entry<Integer, Integer>>() {
 //			@Override
@@ -446,8 +496,8 @@ public abstract class ParserNewBase {
 //					" - misses: " + missStats.get(hit.getKey()) +
 //					" - calls: " + callStats.get(hit.getKey()));
 //		}
-//	}
-//
+	}
+
 //	public java.util.Map<Integer, Integer> hitStats = new java.util.HashMap<Integer, Integer>();
 //	public java.util.Map<Integer, Integer> missStats = new java.util.HashMap<Integer, Integer>();
 //	public java.util.Map<Integer, Integer> callStats = new java.util.HashMap<Integer, Integer>();

@@ -54,9 +54,9 @@ public class ParserNew extends ParserInterface {
 		}
 	}
 
-//	public void printStats() {
-//		implementation.printStats();
-//	}
+	public void printStats() {
+		implementation.printStats();
+	}
 
 	private ParserNewBase implementation;
 

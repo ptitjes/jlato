@@ -30,7 +30,10 @@ import org.jlato.tree.decl.CompilationUnit;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * @author Didier Villevalois
@@ -112,12 +115,40 @@ public class Parser {
 			final String path = file.getAbsolutePath().substring(rootPath.length());
 			set = set.put(path, cu);
 		}
+
+		printStats();
 		return set;
 	}
 
-//	public void printStats() {
-//		parserInstance.printStats();
-//	}
+	public NodeMap<CompilationUnit> parseAll(ZipFile file, String encoding) throws ParseException, IOException {
+		return parseAll(file, null, encoding);
+	}
+
+	public NodeMap<CompilationUnit> parseAll(ZipFile file, String basePath, String encoding) throws ParseException, IOException {
+		NodeMap<CompilationUnit> set = Trees.emptyMap();
+
+		Enumeration<? extends ZipEntry> entries = file.entries();
+		while (entries.hasMoreElements()) {
+			ZipEntry entry = entries.nextElement();
+			String name = entry.getName();
+			if ((basePath == null || name.contains(basePath)) && name.endsWith(".java")) {
+				InputStream inputStream = file.getInputStream(entry);
+				try {
+					CompilationUnit cu = parse(inputStream, encoding);
+					set = set.put(name, cu);
+				} catch (ParseException e) {
+					throw new ParseException("In " + name, e);
+				}
+			}
+		}
+
+		printStats();
+		return set;
+	}
+
+	public void printStats() {
+		parserInstance.printStats();
+	}
 
 	// TODO Use NIO filesystem walker
 	private static List<File> collectAllJavaFiles(File rootDirectory, List<File> files) {
