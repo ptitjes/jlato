@@ -40,7 +40,7 @@ import org.jlato.tree.type.Primitive;
 public class ParserImplementation extends ParserNewBase {
 
 	protected int memoizedProductionCount() {
-		return 12;
+		return 11;
 	}
 
 	/* sequence(
@@ -405,10 +405,14 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchModifiers(int lookahead) {
+		int initialLookahead = lookahead;
+		int memoizedMatch = memoizedMatch(initialLookahead, 7);
+		if (memoizedMatch > -2)
+			return memoizedMatch;
 		lookahead = matchModifiers_1(lookahead);
 		if (lookahead == -1)
-			return -1;
-		return lookahead;
+			return memoizeMatch(initialLookahead, 7, -1);
+		return memoizeMatch(initialLookahead, 7, lookahead);
 	}
 
 	/* zeroOrMore(
@@ -970,10 +974,14 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchModifiersNoDefault(int lookahead) {
+		int initialLookahead = lookahead;
+		int memoizedMatch = memoizedMatch(initialLookahead, 9);
+		if (memoizedMatch > -2)
+			return memoizedMatch;
 		lookahead = matchModifiersNoDefault_1(lookahead);
 		if (lookahead == -1)
-			return -1;
-		return lookahead;
+			return memoizeMatch(initialLookahead, 9, -1);
+		return memoizeMatch(initialLookahead, 9, lookahead);
 	}
 
 	/* zeroOrMore(
@@ -6488,10 +6496,14 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchType(int lookahead) {
+		int initialLookahead = lookahead;
+		int memoizedMatch = memoizedMatch(initialLookahead, 8);
+		if (memoizedMatch > -2)
+			return memoizedMatch;
 		lookahead = matchType_1(lookahead);
 		if (lookahead == -1)
-			return -1;
-		return lookahead;
+			return memoizeMatch(initialLookahead, 8, -1);
+		return memoizeMatch(initialLookahead, 8, lookahead);
 	}
 
 	/* choice(
@@ -6901,16 +6913,20 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchQualifiedType(int lookahead) {
+		int initialLookahead = lookahead;
+		int memoizedMatch = memoizedMatch(initialLookahead, 4);
+		if (memoizedMatch > -2)
+			return memoizedMatch;
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
-			return -1;
+			return memoizeMatch(initialLookahead, 4, -1);
 		lookahead = matchQualifiedType_3(lookahead);
 		if (lookahead == -1)
-			return -1;
+			return memoizeMatch(initialLookahead, 4, -1);
 		lookahead = matchQualifiedType_5(lookahead);
 		if (lookahead == -1)
-			return -1;
-		return lookahead;
+			return memoizeMatch(initialLookahead, 4, -1);
+		return memoizeMatch(initialLookahead, 4, lookahead);
 	}
 
 	/* zeroOrOne(
@@ -7161,16 +7177,20 @@ public class ParserImplementation extends ParserNewBase {
 		terminal(GT)
 	) */
 	private int matchTypeArguments(int lookahead) {
+		int initialLookahead = lookahead;
+		int memoizedMatch = memoizedMatch(initialLookahead, 5);
+		if (memoizedMatch > -2)
+			return memoizedMatch;
 		lookahead = match(lookahead, TokenType.LT);
 		if (lookahead == -1)
-			return -1;
+			return memoizeMatch(initialLookahead, 5, -1);
 		lookahead = matchTypeArguments_2(lookahead);
 		if (lookahead == -1)
-			return -1;
+			return memoizeMatch(initialLookahead, 5, -1);
 		lookahead = match(lookahead, TokenType.GT);
 		if (lookahead == -1)
-			return -1;
-		return lookahead;
+			return memoizeMatch(initialLookahead, 5, -1);
+		return memoizeMatch(initialLookahead, 5, lookahead);
 	}
 
 	/* zeroOrOne(
@@ -8003,13 +8023,17 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchQualifiedName(int lookahead) {
+		int initialLookahead = lookahead;
+		int memoizedMatch = memoizedMatch(initialLookahead, 1);
+		if (memoizedMatch > -2)
+			return memoizedMatch;
 		lookahead = matchName(lookahead);
 		if (lookahead == -1)
-			return -1;
+			return memoizeMatch(initialLookahead, 1, -1);
 		lookahead = matchQualifiedName_4(lookahead);
 		if (lookahead == -1)
-			return -1;
-		return lookahead;
+			return memoizeMatch(initialLookahead, 1, -1);
+		return memoizeMatch(initialLookahead, 1, lookahead);
 	}
 
 	/* zeroOrMore(
@@ -11405,16 +11429,20 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchCastExpression(int lookahead) {
+		int initialLookahead = lookahead;
+		int memoizedMatch = memoizedMatch(initialLookahead, 2);
+		if (memoizedMatch > -2)
+			return memoizedMatch;
 		lookahead = match(lookahead, TokenType.LPAREN);
 		if (lookahead == -1)
-			return -1;
+			return memoizeMatch(initialLookahead, 2, -1);
 		lookahead = matchAnnotations(lookahead);
 		if (lookahead == -1)
-			return -1;
+			return memoizeMatch(initialLookahead, 2, -1);
 		lookahead = matchCastExpression_5(lookahead);
 		if (lookahead == -1)
-			return -1;
-		return lookahead;
+			return memoizeMatch(initialLookahead, 2, -1);
+		return memoizeMatch(initialLookahead, 2, lookahead);
 	}
 
 	/* choice(
@@ -12108,13 +12136,17 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchPrimaryExpressionWithoutSuperSuffix(int lookahead) {
+		int initialLookahead = lookahead;
+		int memoizedMatch = memoizedMatch(initialLookahead, 6);
+		if (memoizedMatch > -2)
+			return memoizedMatch;
 		lookahead = matchPrimaryPrefix(lookahead);
 		if (lookahead == -1)
-			return -1;
+			return memoizeMatch(initialLookahead, 6, -1);
 		lookahead = matchPrimaryExpressionWithoutSuperSuffix_2(lookahead);
 		if (lookahead == -1)
-			return -1;
-		return lookahead;
+			return memoizeMatch(initialLookahead, 6, -1);
+		return memoizeMatch(initialLookahead, 6, lookahead);
 	}
 
 	/* zeroOrMore(
@@ -14095,16 +14127,20 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchMethodReferenceSuffix(int lookahead) {
+		int initialLookahead = lookahead;
+		int memoizedMatch = memoizedMatch(initialLookahead, 10);
+		if (memoizedMatch > -2)
+			return memoizedMatch;
 		lookahead = match(lookahead, TokenType.DOUBLECOLON);
 		if (lookahead == -1)
-			return -1;
+			return memoizeMatch(initialLookahead, 10, -1);
 		lookahead = matchMethodReferenceSuffix_2(lookahead);
 		if (lookahead == -1)
-			return -1;
+			return memoizeMatch(initialLookahead, 10, -1);
 		lookahead = matchMethodReferenceSuffix_3(lookahead);
 		if (lookahead == -1)
-			return -1;
-		return lookahead;
+			return memoizeMatch(initialLookahead, 10, -1);
+		return memoizeMatch(initialLookahead, 10, lookahead);
 	}
 
 	/* zeroOrOne(
@@ -14729,10 +14765,14 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchArrayDimsMandatory(int lookahead) {
+		int initialLookahead = lookahead;
+		int memoizedMatch = memoizedMatch(initialLookahead, 3);
+		if (memoizedMatch > -2)
+			return memoizedMatch;
 		lookahead = matchArrayDimsMandatory_1(lookahead);
 		if (lookahead == -1)
-			return -1;
-		return lookahead;
+			return memoizeMatch(initialLookahead, 3, -1);
+		return memoizeMatch(initialLookahead, 3, lookahead);
 	}
 
 	/* oneOrMore(
@@ -17752,10 +17792,14 @@ public class ParserImplementation extends ParserNewBase {
 		)
 	) */
 	private int matchAnnotations(int lookahead) {
+		int initialLookahead = lookahead;
+		int memoizedMatch = memoizedMatch(initialLookahead, 0);
+		if (memoizedMatch > -2)
+			return memoizedMatch;
 		lookahead = matchAnnotations_1(lookahead);
 		if (lookahead == -1)
-			return -1;
-		return lookahead;
+			return memoizeMatch(initialLookahead, 0, -1);
+		return memoizeMatch(initialLookahead, 0, lookahead);
 	}
 
 	/* zeroOrMore(
