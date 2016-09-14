@@ -39,6 +39,9 @@ import org.jlato.parser.ParserConfiguration;
 
 import java.io.*;
 import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static org.jlato.internal.parser.TokenType.*;
 
@@ -379,9 +382,10 @@ public abstract class ParserNewBase {
 		}
 
 		// Stats
-		if (matchCount > 400) {
+		if (matchCount == 574) {
 			System.out.print(matchCount + ": ");
 			dumpTokens();
+			dumpMatchHistory();
 		}
 
 		Token token = getToken(0);
@@ -401,12 +405,16 @@ public abstract class ParserNewBase {
 
 	protected int match(int lookahead, int tokenType) {
 		// Stats
+		historizeMatches(new int[]{tokenType});
 		matchCount++;
 
 		return getToken(lookahead).kind == tokenType ? lookahead + 1 : -1;
 	}
 
 	protected int match(int lookahead, int... tokenTypes) {
+		// Stats
+		historizeMatches(tokenTypes);
+
 		for (int tokenType : tokenTypes) {
 			// Stats
 			matchCount++;
@@ -426,9 +434,9 @@ public abstract class ParserNewBase {
 		advance(lookahead);
 		short match = lookaheadCells.get(lookahead).matches[productionNumber];
 
-//		if (match > -2) hit(productionNumber);
-//		else miss(productionNumber);
-//		call(productionNumber);
+		if (match > -2) hit(productionNumber);
+		else miss(productionNumber);
+		call(productionNumber);
 
 		return match < 0 ? match : lookahead + match;
 	}
@@ -437,11 +445,29 @@ public abstract class ParserNewBase {
 		matchCount = 0;
 	}
 
+	private int totalMatchCount = 0;
 	private int matchCount = 0;
 	private int maxMatchCount = -1;
 	private int[] allMatchCounts = new int[0];
 
+	private List<String> matchHistory = new LinkedList<String>();
+
+	protected void historize(String matchMethod) {
+		matchHistory.add(matchMethod);
+	}
+
+	protected void historizeMatches(int[] matches) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("  >> ");
+		for (int match : matches) {
+			builder.append(TokenType.tokenImage[match] + " ");
+		}
+		historize(builder.toString());
+	}
+
 	private void addMatchCount() {
+		matchHistory.clear();
+
 		if (matchCount > maxMatchCount) {
 			int[] newMatchCounts = new int[matchCount + 1];
 			System.arraycopy(allMatchCounts, 0, newMatchCounts, 0, maxMatchCount + 1);
@@ -449,7 +475,14 @@ public abstract class ParserNewBase {
 			maxMatchCount = matchCount;
 		}
 		allMatchCounts[matchCount]++;
+		totalMatchCount += matchCount;
 		matchCount = 0;
+	}
+
+	private void dumpMatchHistory() {
+		for (String matches : matchHistory) {
+			System.out.println(matches);
+		}
 	}
 
 	private void dumpTokens() {
@@ -460,47 +493,59 @@ public abstract class ParserNewBase {
 		System.out.println();
 	}
 
-//	private void hit(int productionNumber) {
-//		Integer hits = hitStats.get(productionNumber);
-//		hitStats.put(productionNumber, hits == null ? 1 : hits + 1);
-//	}
-//
-//	private void miss(int productionNumber) {
-//		Integer misses = missStats.get(productionNumber);
-//		missStats.put(productionNumber, misses == null ? 1 : misses + 1);
-//	}
-//
-//	private void call(int productionNumber) {
-//		Integer calls = callStats.get(productionNumber);
-//		callStats.put(productionNumber, calls == null ? 1 : calls + 1);
-//	}
+	private void hit(int productionNumber) {
+		Integer hits = hitStats.get(productionNumber);
+		hitStats.put(productionNumber, hits == null ? 1 : hits + 1);
+	}
+
+	private void miss(int productionNumber) {
+		Integer misses = missStats.get(productionNumber);
+		missStats.put(productionNumber, misses == null ? 1 : misses + 1);
+	}
+
+	private void call(int productionNumber) {
+		Integer calls = callStats.get(productionNumber);
+		callStats.put(productionNumber, calls == null ? 1 : calls + 1);
+	}
 
 	public void printStats() {
+		System.out.println("Total match count: " + totalMatchCount);
 		for (int i = 0; i <= maxMatchCount; i++) {
 			int count = allMatchCounts[i];
 			if (count != 0) System.out.println("" + i + " matches: " + count + " times");
 		}
 
-//		java.util.ArrayList<java.util.Map.Entry<Integer, Integer>> hits = new java.util.ArrayList<java.util.Map.Entry<Integer, Integer>>(hitStats.entrySet());
-//		Collections.sort(hits, new Comparator<Map.Entry<Integer, Integer>>() {
-//			@Override
-//			public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
-//				return -o1.getValue().compareTo(o2.getValue());
-//			}
-//		});
-//
-//		System.out.println("Productions covered: " + callStats.size());
-//		for (Map.Entry<Integer, Integer> hit : hits) {
-//			System.out.println("Production " + hit.getKey() +
-//					" - hits: " + hit.getValue() +
-//					" - misses: " + missStats.get(hit.getKey()) +
-//					" - calls: " + callStats.get(hit.getKey()));
-//		}
+		java.util.ArrayList<java.util.Map.Entry<Integer, Integer>> hits = new java.util.ArrayList<java.util.Map.Entry<Integer, Integer>>(hitStats.entrySet());
+		java.util.ArrayList<java.util.Map.Entry<Integer, Integer>> misses = new java.util.ArrayList<java.util.Map.Entry<Integer, Integer>>(missStats.entrySet());
+		Comparator<Map.Entry<Integer, Integer>> comparator = new Comparator<Map.Entry<Integer, Integer>>() {
+			@Override
+			public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+				return -o1.getValue().compareTo(o2.getValue());
+			}
+		};
+		Collections.sort(hits, comparator);
+		Collections.sort(misses, comparator);
+
+		System.out.println("Productions covered: " + callStats.size());
+		System.out.println("Hits: ");
+		for (Map.Entry<Integer, Integer> hit : hits) {
+			System.out.println("Production " + hit.getKey() +
+					" - hits: " + hit.getValue() +
+					" - misses: " + missStats.get(hit.getKey()) +
+					" - calls: " + callStats.get(hit.getKey()));
+		}
+		System.out.println("Misses: ");
+		for (Map.Entry<Integer, Integer> miss : misses) {
+			System.out.println("Production " + miss.getKey() +
+					" - misses: " + miss.getValue() +
+					" - hits: " + hitStats.get(miss.getKey()) +
+					" - calls: " + callStats.get(miss.getKey()));
+		}
 	}
 
-//	public java.util.Map<Integer, Integer> hitStats = new java.util.HashMap<Integer, Integer>();
-//	public java.util.Map<Integer, Integer> missStats = new java.util.HashMap<Integer, Integer>();
-//	public java.util.Map<Integer, Integer> callStats = new java.util.HashMap<Integer, Integer>();
+	public java.util.Map<Integer, Integer> hitStats = new java.util.HashMap<Integer, Integer>();
+	public java.util.Map<Integer, Integer> missStats = new java.util.HashMap<Integer, Integer>();
+	public java.util.Map<Integer, Integer> callStats = new java.util.HashMap<Integer, Integer>();
 
 	protected ParseException produceParseException(int... expectedTokenTypes) {
 		String eol = System.getProperty("line.separator", "\n");
