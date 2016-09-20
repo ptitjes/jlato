@@ -22,6 +22,8 @@ package org.jlato.internal.parser.all;
 import org.jlato.internal.parser.all.Grammar.GrammarState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,6 +33,8 @@ public class Configuration {
 	public final Prediction prediction;
 	public final GrammarState state;
 	public final CallStack callStack;
+
+	private static final boolean FIRST_ONLY = true;
 
 	public Configuration(Prediction prediction, GrammarState state, CallStack callStack) {
 		this.prediction = prediction;
@@ -68,64 +72,31 @@ public class Configuration {
 				'}';
 	}
 
-	public static class CallStack {
-
-		public static final CallStack EMPTY = new CallStack(null, null);
-
-		public final GrammarState state;
-		public final CallStack parent;
-
-		public CallStack(GrammarState state, CallStack parent) {
-			this.state = state;
-			this.parent = parent;
-		}
-
-		public CallStack push(GrammarState state) {
-			return new CallStack(state, this);
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			CallStack callStack = (CallStack) o;
-
-			if (state != null ? !state.equals(callStack.state) : callStack.state != null) return false;
-			return parent != null ? parent.equals(callStack.parent) : callStack.parent == null;
-
-		}
-
-		@Override
-		public int hashCode() {
-			int result = state != null ? state.hashCode() : 0;
-			result = 31 * result + (parent != null ? parent.hashCode() : 0);
-			return result;
-		}
-
-		@Override
-		public String toString() {
-			return "" + state + (parent == EMPTY ? "" : ":" + parent);
-		}
-	}
-
 	public static class Prediction {
 
-		public static final Prediction NIL = new Prediction(null, -1);
+		public static final Prediction NIL = new Prediction(null, -1, null);
 
 		public final int prediction;
+		public final GrammarState choiceState;
 		public final Prediction parent;
 
-		public Prediction(Prediction parent, int prediction) {
+		public Prediction(Prediction parent, int prediction, GrammarState choiceState) {
 			this.prediction = prediction;
+			this.choiceState = choiceState;
 			this.parent = parent;
 		}
 
-		public Prediction append(int prediction) {
-			return new Prediction(this, prediction);
+		public Prediction append(int prediction, GrammarState choiceState) {
+			return new Prediction(this, prediction, choiceState);
+		}
+
+		public int length() {
+			return this == NIL ? 0 : parent.length() + 1;
 		}
 
 		public List<Integer> toList() {
+			if (FIRST_ONLY) return new ArrayList<Integer>(Arrays.asList(rootPrediction()));
+
 			return toList(this, new ArrayList<Integer>());
 		}
 
@@ -135,6 +106,12 @@ public class Configuration {
 			return toList(prediction.parent, list);
 		}
 
+		public int rootPrediction() {
+			if (this == NIL) return -1;
+			else if (parent == NIL) return prediction;
+			else return parent.rootPrediction();
+		}
+
 		@Override
 		public boolean equals(Object o) {
 			if (this == o) return true;
@@ -142,12 +119,18 @@ public class Configuration {
 
 			Prediction that = (Prediction) o;
 
+			if (FIRST_ONLY) {
+				return rootPrediction() == that.rootPrediction();
+			}
+
 			if (prediction != that.prediction) return false;
 			return parent != null ? parent.equals(that.parent) : that.parent == null;
 		}
 
 		@Override
 		public int hashCode() {
+			if (FIRST_ONLY) return rootPrediction();
+
 			int result = prediction;
 			result = 31 * result + (parent != null ? parent.hashCode() : 0);
 			return result;
@@ -155,7 +138,7 @@ public class Configuration {
 
 		@Override
 		public String toString() {
-			return (parent == NIL ? "" : "" + parent + ".") + prediction;
+			return this == NIL ? "NIL" : (parent == NIL ? "" : "" + parent + ".") + prediction;
 		}
 	}
 }

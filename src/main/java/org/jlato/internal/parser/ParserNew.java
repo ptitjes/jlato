@@ -58,7 +58,7 @@ public class ParserNew extends ParserInterface {
 		implementation.printStats();
 	}
 
-	private ParserNewBase implementation;
+	private ParserBase implementation;
 
 	public ParserNew(ParserConfiguration configuration, boolean quotesMode) {
 		if (configuration.parser.equals("2")) {
@@ -84,109 +84,101 @@ public class ParserNew extends ParserInterface {
 
 	@Override
 	public BUTree<SCompilationUnit> parseCompilationUnit() throws ParseException {
-		return implementation.parseCompilationUnit();
+		return implementation.parseCompilationUnitEntry();
 	}
 
 	@Override
 	public BUTree<SPackageDecl> parsePackageDecl() throws ParseException {
-		return implementation.wrapWithPrologAndEpilog(implementation.parsePackageDecl());
+		return implementation.parsePackageDeclEntry();
 	}
 
 	@Override
 	public BUTree<SImportDecl> parseImportDecl() throws ParseException {
-		return implementation.wrapWithPrologAndEpilog(implementation.parseImportDecl());
+		return implementation.parseImportDeclEntry();
 	}
 
 	@Override
 	public BUTree<? extends STypeDecl> parseTypeDecl() throws ParseException {
-		return implementation.wrapWithPrologAndEpilog(implementation.parseTypeDecl());
+		return implementation.parseTypeDeclEntry();
 	}
 
 	@Override
 	public BUTree<? extends SMemberDecl> parseMemberDecl(TypeKind kind) throws ParseException {
-		return implementation.wrapWithPrologAndEpilog(implementation.parseClassOrInterfaceBodyDecl(kind));
+		return implementation.parseMemberDeclEntry(kind);
 	}
 
 	@Override
 	public BUTree<? extends SMemberDecl> parseAnnotationMemberDecl() throws ParseException {
-		return implementation.wrapWithPrologAndEpilog(implementation.parseAnnotationTypeBodyDecl());
+		return implementation.parseAnnotationMemberDeclEntry();
 	}
 
 	@Override
 	public BUTree<SNodeList> parseModifiers() throws ParseException {
-		return implementation.parseModifiers();
+		return implementation.parseModifiersEntry();
 	}
 
 	@Override
 	public BUTree<SNodeList> parseAnnotations() throws ParseException {
-		return implementation.parseAnnotations();
+		return implementation.parseAnnotationsEntry();
 	}
 
 	@Override
 	public BUTree<SMethodDecl> parseMethodDecl() throws ParseException {
-		implementation.run();
-		BUTree<SNodeList> modifiers = implementation.parseModifiers();
-		return implementation.wrapWithPrologAndEpilog(implementation.parseMethodDecl(modifiers));
+		return implementation.parseMethodDeclEntry();
 	}
 
 	@Override
 	public BUTree<SFieldDecl> parseFieldDecl() throws ParseException {
-		implementation.run();
-		BUTree<SNodeList> modifiers = implementation.parseModifiers();
-		return implementation.wrapWithPrologAndEpilog(implementation.parseFieldDecl(modifiers));
+		return implementation.parseFieldDeclEntry();
 	}
 
 	@Override
 	public BUTree<SAnnotationMemberDecl> parseAnnotationElementDecl() throws ParseException {
-		implementation.run();
-		BUTree<SNodeList> modifiers = implementation.parseModifiers();
-		return implementation.wrapWithPrologAndEpilog(implementation.parseAnnotationTypeMemberDecl(modifiers));
+		return implementation.parseAnnotationElementDeclEntry();
 	}
 
 	@Override
 	public BUTree<SEnumConstantDecl> parseEnumConstantDecl() throws ParseException {
-		return implementation.wrapWithPrologAndEpilog(implementation.parseEnumConstantDecl());
+		return implementation.parseEnumConstantDeclEntry();
 	}
 
 	@Override
 	public BUTree<SFormalParameter> parseFormalParameter() throws ParseException {
-		return implementation.wrapWithPrologAndEpilog(implementation.parseFormalParameter());
+		return implementation.parseFormalParameterEntry();
 	}
 
 	@Override
 	public BUTree<STypeParameter> parseTypeParameter() throws ParseException {
-		return implementation.wrapWithPrologAndEpilog(implementation.parseTypeParameter());
+		return implementation.parseTypeParameterEntry();
 	}
 
 	@Override
 	public BUTree<SNodeList> parseStatements() throws ParseException {
-		return implementation.parseStatements(false);
+		return implementation.parseStatementsEntry();
 	}
 
 	@Override
 	public BUTree<? extends SStmt> parseBlockStatement() throws ParseException {
-		return implementation.wrapWithPrologAndEpilog(implementation.parseBlockStatement());
+		return implementation.parseBlockStatementEntry();
 	}
 
 	@Override
 	public BUTree<? extends SExpr> parseExpression() throws ParseException {
-		return implementation.wrapWithPrologAndEpilog(implementation.parseExpression());
+		return implementation.parseExpressionEntry();
 	}
 
 	@Override
 	public BUTree<? extends SType> parseType() throws ParseException {
-		implementation.run();
-		final BUTree<SNodeList> annotations = implementation.parseAnnotations();
-		return implementation.wrapWithPrologAndEpilog(implementation.parseType(annotations));
+		return implementation.parseTypeEntry();
 	}
 
 	@Override
 	public BUTree<SQualifiedName> parseQualifiedName() throws ParseException {
-		return implementation.wrapWithPrologAndEpilog(implementation.parseQualifiedName());
+		return implementation.parseQualifiedNameEntry();
 	}
 
 	@Override
 	public BUTree<SName> parseName() throws ParseException {
-		return implementation.wrapWithPrologAndEpilog(implementation.parseName());
+		return implementation.parseNameEntry();
 	}
 }

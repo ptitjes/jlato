@@ -29,13 +29,13 @@ import org.jlato.internal.parser.TokenType;
 %%
 
 %{
-    private ParserNewBase parser;
+    private ParserBase parser;
 
     public Lexer() {
         this((java.io.Reader)null);
     }
 
-    public void setParser(ParserNewBase parser) {
+    public void setParser(ParserBase parser) {
         this.parser = parser;
     }
 

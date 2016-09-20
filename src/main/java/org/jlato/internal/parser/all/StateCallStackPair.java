@@ -17,29 +17,37 @@
  * along with JLaTo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jlato.parser;
+package org.jlato.internal.parser.all;
 
 /**
  * @author Didier Villevalois
  */
-public class ParserConfiguration {
+public class StateCallStackPair {
 
-	public static final ParserConfiguration Default = new ParserConfiguration(false, "2");
+	public final Grammar.GrammarState state;
+	public final CallStack callStack;
 
-	public final boolean preserveWhitespaces;
-
-	public final String parser;
-
-	private ParserConfiguration(boolean preserveWhitespaces, String parser) {
-		this.preserveWhitespaces = preserveWhitespaces;
-		this.parser = parser;
+	public StateCallStackPair(Grammar.GrammarState state, CallStack callStack) {
+		this.state = state;
+		this.callStack = callStack;
 	}
 
-	public ParserConfiguration preserveWhitespaces(boolean preserveWhitespaces) {
-		return new ParserConfiguration(preserveWhitespaces, parser);
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		StateCallStackPair that = (StateCallStackPair) o;
+
+		if (!state.equals(that.state)) return false;
+		return callStack.equals(that.callStack);
+
 	}
 
-	public ParserConfiguration setParser(String parser) {
-		return new ParserConfiguration(preserveWhitespaces, parser);
+	@Override
+	public int hashCode() {
+		int result = state.hashCode();
+		result = 31 * result + callStack.hashCode();
+		return result;
 	}
 }
