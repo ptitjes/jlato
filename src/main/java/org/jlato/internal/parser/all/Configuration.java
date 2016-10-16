@@ -23,7 +23,6 @@ import org.jlato.internal.parser.all.Grammar.GrammarState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**

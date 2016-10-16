@@ -156,8 +156,8 @@ public abstract class Grammar {
 		public final boolean end;
 		public final int nonTerminal;
 		public final Map<Integer, GrammarState> choiceTransitions = new HashMap<Integer, GrammarState>();
-		public final Map<Integer, Set<GrammarState>> nonTerminalTransitions = new HashMap<Integer, Set<GrammarState>>();
-		public final Map<Integer, Set<GrammarState>> terminalTransitions = new HashMap<Integer, Set<GrammarState>>();
+		public final Map<Integer, GrammarState> nonTerminalTransitions = new HashMap<Integer, GrammarState>();
+		public final Map<Integer, GrammarState> terminalTransitions = new HashMap<Integer, GrammarState>();
 
 		public GrammarState(Expansion location) {
 			this.location = location;
@@ -190,27 +190,20 @@ public abstract class Grammar {
 			choiceTransitions.put(index, target);
 		}
 
-		void addNonTerminal(int symbol, GrammarState target) {
-			Set<GrammarState> targets = nonTerminalTransitions.get(symbol);
-			if (targets == null) {
-				targets = new HashSet<GrammarState>();
-				nonTerminalTransitions.put(symbol, targets);
-			}
-			targets.add(target);
+		void setNonTerminal(int symbol, GrammarState target) {
+			if (nonTerminalTransitions.containsKey(symbol))
+				throw new IllegalStateException("Already defined non-terminal " + symbol + " transition for state " + location.name);
+			nonTerminalTransitions.put(symbol, target);
 		}
 
-		void addTerminal(int tokenType, GrammarState target) {
-			Set<GrammarState> targets = terminalTransitions.get(tokenType);
-			if (targets == null) {
-				targets = new HashSet<GrammarState>();
-				terminalTransitions.put(tokenType, targets);
-			}
-			targets.add(target);
+		void setTerminal(int tokenType, GrammarState target) {
+			if (terminalTransitions.containsKey(tokenType))
+				throw new IllegalStateException("Already defined terminal " + tokenType + " transition for state " + location.name);
+			terminalTransitions.put(tokenType, target);
 		}
 
-		public Set<GrammarState> match(Token token) {
-			Set<GrammarState> targets = terminalTransitions.get(token.kind);
-			return targets != null ? targets : Collections.<GrammarState>emptySet();
+		public GrammarState match(Token token) {
+			return terminalTransitions.get(token.kind);
 		}
 
 		@Override
@@ -226,29 +219,18 @@ public abstract class Grammar {
 			}
 			if (!terminalTransitions.isEmpty()) {
 				builder.append(" ");
-				for (Map.Entry<Integer, Set<GrammarState>> entry : terminalTransitions.entrySet()) {
-					builder.append("[tok:" + TokenType.tokenImage[entry.getKey()] + "->" + names(entry.getValue()) + "]");
+				for (Map.Entry<Integer, GrammarState> entry : terminalTransitions.entrySet()) {
+					builder.append("[tok:" + TokenType.tokenImage[entry.getKey()] + "->" + entry.getValue().location.name + "]");
 				}
 			}
 			if (!nonTerminalTransitions.isEmpty()) {
 				builder.append(" ");
-				for (Map.Entry<Integer, Set<GrammarState>> entry : nonTerminalTransitions.entrySet()) {
-					builder.append("[nt:" + entry.getKey() + "->" + names(entry.getValue()) + "]");
+				for (Map.Entry<Integer, GrammarState> entry : nonTerminalTransitions.entrySet()) {
+					builder.append("[nt:" + entry.getKey() + "->" + entry.getValue().location.name + "]");
 				}
 			}
 
 			return builder.toString();
-		}
-
-		private String names(Set<GrammarState> states) {
-			StringBuilder buffer = new StringBuilder();
-			boolean first = true;
-			for (GrammarState state : states) {
-				if (first) first = false;
-				else buffer.append(",");
-				buffer.append(state.location.name);
-			}
-			return buffer.toString();
 		}
 	}
 
@@ -394,7 +376,7 @@ public abstract class Grammar {
 		@Override
 		protected void initializeStates(GrammarState start, GrammarState end, Grammar grammar, int entryPoint) {
 			super.initializeStates(start, end, grammar, entryPoint);
-			start.addNonTerminal(symbol, end);
+			start.setNonTerminal(symbol, end);
 
 			if (entryPoint != -1) grammar.addNonTerminalEntryPointEndState(entryPoint, symbol, end);
 			else grammar.addNonTerminalEndState(symbol, end);
@@ -413,7 +395,7 @@ public abstract class Grammar {
 		@Override
 		protected void initializeStates(GrammarState start, GrammarState end, Grammar grammar, int entryPoint) {
 			super.initializeStates(start, end, grammar, entryPoint);
-			start.addTerminal(tokenType, end);
+			start.setTerminal(tokenType, end);
 		}
 
 	}

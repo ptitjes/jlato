@@ -19,178 +19,80 @@
 
 package org.jlato.internal.parser.all;
 
-import com.github.andrewoma.dexx.collection.*;
-
-import java.lang.Iterable;
+import com.github.andrewoma.dexx.collection.HashSet;
+import com.github.andrewoma.dexx.collection.Set;
 
 /**
  * @author Didier Villevalois
  */
-public abstract class CallStack {
+public class CallStack {
 
-	public static final CallStack WILDCARD = new Root(Kind.WILDCARD);
-	public static final CallStack EMPTY = new Root(Kind.EMPTY);
+	public static final CallStack WILDCARD = new CallStack(0);
+	public static final CallStack EMPTY = new CallStack(1);
 
 	private final int hashCode;
+	public final Grammar.GrammarState head;
+	public final Set<CallStack> tails;
 
 	private CallStack(int hashCode) {
 		this.hashCode = hashCode;
+		this.head = null;
+		this.tails = null;
 	}
 
-	protected abstract Kind kind();
+	public CallStack(Grammar.GrammarState head, Set<CallStack> tails) {
+		this.hashCode = computeHashCode(head, tails);
+		this.head = head;
+		this.tails = tails;
+	}
+
+	public CallStack push(Grammar.GrammarState state) {
+		return new CallStack(state, emptyTails().add(this));
+	}
+
+	private static Set<CallStack> emptyTails() {
+		return HashSet.empty();
+	}
+
+	public void pop(CallStackReader reader) {
+		if (this == WILDCARD || this == EMPTY) return;
+		for (CallStack tail : tails) {
+			reader.handleNext(head, tail);
+		}
+	}
+
+	public interface CallStackReader {
+		public void handleNext(Grammar.GrammarState head, CallStack tail);
+	}
 
 	@Override
 	public int hashCode() {
 		return hashCode;
 	}
 
-	public CallStack push(Grammar.GrammarState state) {
-		return new Push(state, this);
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		CallStack other = (CallStack) o;
+
+		if (this == WILDCARD) return other == WILDCARD;
+		if (this == EMPTY) return other == EMPTY;
+		return head.equals(other.head) && tails.equals(other.tails);
 	}
 
-	public CallStack merge(CallStack other) {
-		Kind kind = kind();
-		Kind otherKind = other.kind();
-
-		if (kind == Kind.WILDCARD || otherKind == Kind.WILDCARD) return WILDCARD;
-
-		Builder<CallStack, Set<CallStack>> stacks = Sets.builder();
-		if (kind == Kind.MERGE || otherKind == Kind.MERGE) {
-			if (kind == Kind.MERGE) stacks.addAll((Iterable<CallStack>) ((Merge) this).stacks);
-			else stacks.add(this);
-
-			if (otherKind == Kind.MERGE) stacks.addAll((Iterable<CallStack>) ((Merge) other).stacks);
-			else stacks.add(other);
-		}
-		return new Merge(stacks.build());
+	private static int computeHashCode(Grammar.GrammarState head, Set<CallStack> tails) {
+		int result = 3;
+		result = 31 * result + head.hashCode();
+		result = 31 * result + tails.hashCode();
+		return result;
 	}
 
-	public void pop(CallStackReader reader) {
-		switch (kind()) {
-			case MERGE:
-				Merge merge = (Merge) this;
-				for (CallStack stack : merge.stacks) {
-					stack.pop(reader);
-				}
-				break;
-			case PUSH:
-				Push push = (Push) this;
-				reader.handleNext(push.state, push.parent);
-				break;
-			case WILDCARD:
-			case EMPTY:
-		}
-	}
-
-	public interface CallStackReader {
-		public void handleNext(Grammar.GrammarState state, CallStack parent);
-	}
-
-	private enum Kind {
-		WILDCARD, EMPTY, MERGE, PUSH
-	}
-
-	private static class Merge extends CallStack {
-
-		public final Set<CallStack> stacks;
-
-		public Merge(Set<CallStack> stacks) {
-			super(computeHashCode(stacks));
-			this.stacks = stacks;
-		}
-
-		@Override
-		protected Kind kind() {
-			return Kind.MERGE;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			Merge other = (Merge) o;
-
-			return stacks.equals(other.stacks);
-		}
-
-		private static int computeHashCode(Set<CallStack> stacks) {
-			return stacks.hashCode();
-		}
-
-		@Override
-		public String toString() {
-			return stacks.toString();
-		}
-	}
-
-	private static class Push extends CallStack {
-
-		public final Grammar.GrammarState state;
-		public final CallStack parent;
-
-		public Push(Grammar.GrammarState state, CallStack parent) {
-			super(computeHashCode(state, parent));
-			this.state = state;
-			this.parent = parent;
-		}
-
-		@Override
-		protected Kind kind() {
-			return Kind.PUSH;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			Push other = (Push) o;
-
-			return state.equals(other.state) && parent.equals(other.parent);
-
-		}
-
-		private static int computeHashCode(Grammar.GrammarState state, CallStack parent) {
-			int result = state.hashCode();
-			result = 31 * result + parent.hashCode();
-			return result;
-		}
-
-		@Override
-		public String toString() {
-			return state + ":" + parent;
-		}
-	}
-
-	private static class Root extends CallStack {
-
-		public final Kind kind;
-
-		public Root(Kind kind) {
-			super(computeHashCode(kind));
-			this.kind = kind;
-		}
-
-		@Override
-		protected Kind kind() {
-			return kind;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			return o == this;
-		}
-
-		private static int computeHashCode(Kind kind) {
-			return kind.hashCode();
-		}
-
-		@Override
-		public String toString() {
-			if (kind == Kind.WILDCARD) return "#";
-			if (kind == Kind.EMPTY) return "[]";
-			throw new IllegalStateException();
-		}
+	@Override
+	public String toString() {
+		if (this == WILDCARD) return "#";
+		if (this == EMPTY) return "[]";
+		return head + ":" + tails.makeString(",", "{", "}", -1, null);
 	}
 }

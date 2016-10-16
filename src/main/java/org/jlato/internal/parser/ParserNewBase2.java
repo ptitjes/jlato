@@ -63,8 +63,8 @@ public abstract class ParserNewBase2 extends ParserBase {
 	protected void popCallStack() {
 		callStack.pop(new CallStack.CallStackReader() {
 			@Override
-			public void handleNext(Grammar.GrammarState state, CallStack parent) {
-				callStack = parent;
+			public void handleNext(Grammar.GrammarState head, CallStack tail) {
+				callStack = tail;
 			}
 		});
 	}
@@ -207,10 +207,10 @@ public abstract class ParserNewBase2 extends ParserBase {
 	private Set<Configuration> moveAlong(Set<Configuration> configurations, Token token) {
 		Set<Configuration> newConfigurations = new HashSet<Configuration>();
 		for (Configuration configuration : configurations) {
-			Set<Grammar.GrammarState> targets = configuration.state.match(token);
-			for (Grammar.GrammarState target : targets) {
-				newConfigurations.add(new Configuration(configuration.prediction, target, configuration.callStack));
-			}
+			Grammar.GrammarState target = configuration.state.match(token);
+			if (target == null) continue;
+
+			newConfigurations.add(new Configuration(configuration.prediction, target, configuration.callStack));
 		}
 		return newConfigurations;
 	}
@@ -286,8 +286,8 @@ public abstract class ParserNewBase2 extends ParserBase {
 			} else {
 				callStack.pop(new CallStack.CallStackReader() {
 					@Override
-					public void handleNext(Grammar.GrammarState state, CallStack parent) {
-						newConfigurations.add(new Configuration(configuration.prediction, state, parent));
+					public void handleNext(Grammar.GrammarState head, CallStack tail) {
+						newConfigurations.add(new Configuration(configuration.prediction, head, tail));
 					}
 				});
 			}
@@ -297,12 +297,13 @@ public abstract class ParserNewBase2 extends ParserBase {
 				newConfigurations.add(new Configuration(configuration.prediction.append(entry.getKey(), state), entry.getValue(), callStack));
 			}
 			// Handle non-terminal call
-			for (Map.Entry<Integer, Set<Grammar.GrammarState>> entry : state.nonTerminalTransitions.entrySet()) {
+			for (Map.Entry<Integer, Grammar.GrammarState> entry : state.nonTerminalTransitions.entrySet()) {
+				Grammar.GrammarState target = entry.getValue();
+				if (target == null) continue;
+
 				Integer symbol = entry.getKey();
-				Grammar.GrammarState startState = grammar.getStartState(symbol);
-				for (Grammar.GrammarState targetState : entry.getValue()) {
-					newConfigurations.add(new Configuration(configuration.prediction, startState, callStack.push(targetState)));
-				}
+				Grammar.GrammarState start = grammar.getStartState(symbol);
+				newConfigurations.add(new Configuration(configuration.prediction, start, callStack.push(target)));
 			}
 		}
 	}
