@@ -21,21 +21,15 @@ package org.jlato.internal.parser.all;
 
 import org.jlato.internal.parser.all.Grammar.GrammarState;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * @author Didier Villevalois
  */
 public class Configuration {
-	public final Prediction prediction;
+	public final int prediction;
 	public final GrammarState state;
 	public final CallStack callStack;
 
-	private static final boolean FIRST_ONLY = true;
-
-	public Configuration(Prediction prediction, GrammarState state, CallStack callStack) {
+	public Configuration(int prediction, GrammarState state, CallStack callStack) {
 		this.prediction = prediction;
 		this.state = state;
 		this.callStack = callStack;
@@ -48,14 +42,14 @@ public class Configuration {
 
 		Configuration that = (Configuration) o;
 
-		if (!prediction.equals(that.prediction)) return false;
+		if (prediction != that.prediction) return false;
 		if (!state.equals(that.state)) return false;
 		return callStack.equals(that.callStack);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = prediction.hashCode();
+		int result = prediction;
 		result = 31 * result + state.hashCode();
 		result = 31 * result + callStack.hashCode();
 		return result;
@@ -68,75 +62,5 @@ public class Configuration {
 				", state=" + state +
 				", callStack=" + callStack +
 				'}';
-	}
-
-	public static class Prediction {
-
-		public static final Prediction NIL = new Prediction(null, -1, null);
-
-		public final int prediction;
-		public final GrammarState choiceState;
-		public final Prediction parent;
-
-		public Prediction(Prediction parent, int prediction, GrammarState choiceState) {
-			this.prediction = prediction;
-			this.choiceState = choiceState;
-			this.parent = parent;
-		}
-
-		public Prediction append(int prediction, GrammarState choiceState) {
-			return new Prediction(this, prediction, choiceState);
-		}
-
-		public int length() {
-			return this == NIL ? 0 : parent.length() + 1;
-		}
-
-		public List<Integer> toList() {
-			if (FIRST_ONLY) return new ArrayList<Integer>(Arrays.asList(rootPrediction()));
-
-			return toList(this, new ArrayList<Integer>());
-		}
-
-		private static List<Integer> toList(Prediction prediction, List<Integer> list) {
-			if (prediction == NIL) return list;
-			list.add(0, prediction.prediction);
-			return toList(prediction.parent, list);
-		}
-
-		public int rootPrediction() {
-			if (this == NIL) return -1;
-			else if (parent == NIL) return prediction;
-			else return parent.rootPrediction();
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			Prediction that = (Prediction) o;
-
-			if (FIRST_ONLY) {
-				return rootPrediction() == that.rootPrediction();
-			}
-
-			if (prediction != that.prediction) return false;
-			return parent != null ? parent.equals(that.parent) : that.parent == null;
-		}
-
-		@Override
-		public int hashCode() {
-			if (FIRST_ONLY) return rootPrediction();
-
-			int result = prediction;
-			result = 31 * result + (parent != null ? parent.hashCode() : 0);
-			return result;
-		}
-
-		@Override
-		public String toString() {
-			return this == NIL ? "NIL" : (parent == NIL ? "" : "" + parent + ".") + prediction;
-		}
 	}
 }

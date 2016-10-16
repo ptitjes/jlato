@@ -19,16 +19,10 @@
 
 package org.jlato.internal.parser.all;
 
-import com.github.andrewoma.dexx.collection.*;
+import com.github.andrewoma.dexx.collection.Sets;
 import org.jlato.internal.parser.Token;
 
-import java.lang.Iterable;
 import java.util.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Didier Villevalois
@@ -39,17 +33,15 @@ public class PredictionState {
 
 	public final Map<Integer, PredictionState> transitions = new HashMap<Integer, PredictionState>();
 
-	public final List<Integer> prediction;
+	public final int prediction;
 
 	public final boolean stackSensitive;
 
 	public PredictionState(Set<Configuration> configurations) {
 		this.configurations = /*merge*/(configurations);
-		this.prediction = longestCommonPredictions();
+		this.prediction = commonPrediction();
 
-		HashMap<StateCallStackPair, Set<Configuration.Prediction>> conflictSetsPerLoc = getConflictSetsPerLoc();
-		HashMap<Grammar.GrammarState, Set<Configuration.Prediction>> prodSetsPerState = getProdSetsPerState();
-		stackSensitive = conflictingAlternatives(conflictSetsPerLoc) && !viableAlternative(prodSetsPerState);
+		stackSensitive = checkStackSensitive();
 	}
 
 	private static Set<Configuration> merge(Set<Configuration> configurations) {
@@ -118,52 +110,48 @@ public class PredictionState {
 
 			Configuration that = ((MergeKey) o).configuration;
 
-			if (!configuration.prediction.equals(that.prediction)) return false;
+			if (configuration.prediction != that.prediction) return false;
 			if (!configuration.state.equals(that.state)) return false;
 			return configuration.callStack.head.equals(that.callStack.head);
 		}
 
 		@Override
 		public int hashCode() {
-			int result = configuration.prediction.hashCode();
+			int result = configuration.prediction;
 			result = 31 * result + configuration.state.hashCode();
 			result = 31 * result + (configuration.callStack.head != null ? configuration.callStack.head.hashCode() : 0);
 			return result;
 		}
 	}
 
-	private boolean conflictingAlternatives(HashMap<StateCallStackPair, Set<Configuration.Prediction>> conflictSetsPerLoc) {
-		for (Map.Entry<StateCallStackPair, Set<Configuration.Prediction>> entry : conflictSetsPerLoc.entrySet()) {
+	private boolean checkStackSensitive() {
+		HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc = getConflictSetsPerLoc();
+		HashMap<Grammar.GrammarState, Set<Integer>> prodSetsPerState = getProdSetsPerState();
+		return conflictingAlternatives(conflictSetsPerLoc) && !viableAlternative(prodSetsPerState);
+	}
+
+	private boolean conflictingAlternatives(HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc) {
+		for (Map.Entry<StateCallStackPair, Set<Integer>> entry : conflictSetsPerLoc.entrySet()) {
 			if (entry.getValue().size() > 1) return true;
 		}
 		return false;
 	}
 
-	private boolean viableAlternative(HashMap<Grammar.GrammarState, Set<Configuration.Prediction>> prodSetsPerState) {
-		for (Map.Entry<Grammar.GrammarState, Set<Configuration.Prediction>> entry : prodSetsPerState.entrySet()) {
+	private boolean viableAlternative(HashMap<Grammar.GrammarState, Set<Integer>> prodSetsPerState) {
+		for (Map.Entry<Grammar.GrammarState, Set<Integer>> entry : prodSetsPerState.entrySet()) {
 			if (entry.getValue().size() == 1) return true;
 		}
 		return false;
 	}
 
-	private List<Integer> longestCommonPredictions() {
-		List<Integer> lcp = null;
-		for (Configuration configuration : this.configurations) {
-			// Longest first lcp
-			List<Integer> predictions = configuration.prediction.toList();
-
-			if (lcp == null) lcp = predictions;
-			else {
-				int i;
-				for (i = 0; i < Math.min(lcp.size(), predictions.size()); i++) {
-					if (!lcp.get(i).equals(predictions.get(i))) break;
-				}
-				for (int j = i; j < lcp.size(); j++) {
-					lcp.remove(i);
-				}
-			}
+	private int commonPrediction() {
+		int prediction = -1;
+		for (Configuration configuration : configurations) {
+			int aPrediction = configuration.prediction;
+			if (prediction == -1) prediction = aPrediction;
+			else if (prediction != aPrediction) return -1;
 		}
-		return lcp == null || lcp.isEmpty() ? null : lcp;
+		return prediction;
 	}
 
 	public PredictionState transitionFor(Token token) {
@@ -174,17 +162,17 @@ public class PredictionState {
 		transitions.put(token.kind, state);
 	}
 
-	public HashMap<StateCallStackPair, Set<Configuration.Prediction>> getConflictSetsPerLoc() {
-		HashMap<StateCallStackPair, Set<Configuration.Prediction>> stateCallStackToAlts = new HashMap<StateCallStackPair, Set<Configuration.Prediction>>();
+	public HashMap<StateCallStackPair, Set<Integer>> getConflictSetsPerLoc() {
+		HashMap<StateCallStackPair, Set<Integer>> stateCallStackToAlts = new HashMap<StateCallStackPair, Set<Integer>>();
 		for (Configuration configuration : configurations) {
 			Grammar.GrammarState state = configuration.state;
 			CallStack callStack = configuration.callStack;
-			Configuration.Prediction prediction = configuration.prediction;
+			Integer prediction = configuration.prediction;
 
 			StateCallStackPair pair = new StateCallStackPair(state, callStack);
-			Set<Configuration.Prediction> alts = stateCallStackToAlts.get(pair);
+			Set<Integer> alts = stateCallStackToAlts.get(pair);
 			if (alts == null) {
-				alts = new HashSet<Configuration.Prediction>();
+				alts = new HashSet<Integer>();
 				stateCallStackToAlts.put(pair, alts);
 			}
 
@@ -193,15 +181,15 @@ public class PredictionState {
 		return stateCallStackToAlts;
 	}
 
-	public HashMap<Grammar.GrammarState, Set<Configuration.Prediction>> getProdSetsPerState() {
-		HashMap<Grammar.GrammarState, Set<Configuration.Prediction>> stateToAlts = new HashMap<Grammar.GrammarState, Set<Configuration.Prediction>>();
+	public HashMap<Grammar.GrammarState, Set<Integer>> getProdSetsPerState() {
+		HashMap<Grammar.GrammarState, Set<Integer>> stateToAlts = new HashMap<Grammar.GrammarState, Set<Integer>>();
 		for (Configuration configuration : configurations) {
 			Grammar.GrammarState state = configuration.state;
-			Configuration.Prediction prediction = configuration.prediction;
+			Integer prediction = configuration.prediction;
 
-			Set<Configuration.Prediction> alts = stateToAlts.get(state);
+			Set<Integer> alts = stateToAlts.get(state);
 			if (alts == null) {
-				alts = new HashSet<Configuration.Prediction>();
+				alts = new HashSet<Integer>();
 				stateToAlts.put(state, alts);
 			}
 

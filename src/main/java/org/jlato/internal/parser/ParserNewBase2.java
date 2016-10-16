@@ -19,18 +19,10 @@
 
 package org.jlato.internal.parser;
 
-import com.github.andrewoma.dexx.collection.*;
 import org.jlato.internal.parser.all.*;
 
 import java.io.Reader;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -70,19 +62,10 @@ public abstract class ParserNewBase2 extends ParserBase {
 	}
 
 	protected int predict(int choicePoint) {
-		if (currentPredictions.isEmpty()) {
-			currentPredictions.addAll(computeNextPredictions(choicePoint));
-		}
-		if (currentPredictions.isEmpty()) return -1;
-
-		return currentPredictions.remove(0);
-	}
-
-	private List<Integer> computeNextPredictions(int choicePoint) {
 		return sllPredict(choicePoint);
 	}
 
-	private List<Integer> sllPredict(int choicePoint) {
+	private int sllPredict(int choicePoint) {
 		PredictionState current;
 
 		CachedAutomaton automaton = automata.get(choicePoint);
@@ -111,17 +94,15 @@ public abstract class ParserNewBase2 extends ParserBase {
 				automaton.addState(next);
 			}
 
-			if (next.configurations.isEmpty()) return Collections.emptyList();
-			if (next.prediction != null) {
-				return next.prediction;
-			}
+			if (next.configurations.isEmpty()) return -1;
+			if (next.prediction != -1) return next.prediction;
 			if (next.stackSensitive) return llPredict(choicePoint);
 
 			current = next;
 		}
 	}
 
-	private List<Integer> llPredict(int choicePoint) {
+	private int llPredict(int choicePoint) {
 		PredictionState current = makeStartState(choicePoint, callStack);
 
 		int index = 0;
@@ -132,36 +113,34 @@ public abstract class ParserNewBase2 extends ParserBase {
 			configurations = closure(configurations);
 			PredictionState next = new PredictionState(configurations);
 
-			if (next.configurations.isEmpty()) return Collections.emptyList();
-			if (next.prediction != null) {
-				return next.prediction;
-			}
+			if (next.configurations.isEmpty()) return -1;
+			if (next.prediction != -1) return next.prediction;
 
-			HashMap<StateCallStackPair, Set<Configuration.Prediction>> conflictSetsPerLoc = next.getConflictSetsPerLoc();
+			HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc = next.getConflictSetsPerLoc();
 			if (ambiguousAlternatives(conflictSetsPerLoc)) {
 				reportAmbiguity(choicePoint, conflictSetsPerLoc);
-				return Collections.singletonList(firstAlternative(conflictSetsPerLoc));
+				return firstAlternative(conflictSetsPerLoc);
 			}
 
 			current = next;
 		}
 	}
 
-	private void reportAmbiguity(int choicePoint, HashMap<StateCallStackPair, Set<Configuration.Prediction>> conflictSetsPerLoc) {
+	private void reportAmbiguity(int choicePoint, HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc) {
 		StringBuilder buffer = new StringBuilder();
 
-		Map.Entry<StateCallStackPair, Set<Configuration.Prediction>> entry = firstConflict(conflictSetsPerLoc);
-		Set<Configuration.Prediction> alternatives = entry.getValue();
+		Map.Entry<StateCallStackPair, Set<Integer>> entry = firstConflict(conflictSetsPerLoc);
+		Set<Integer> alternatives = entry.getValue();
 
 		Token firstToken = getToken(0);
 		buffer.append("At choice point ");
 		buffer.append(choicePoint);
 		buffer.append(" ambiguous alternatives {");
 		boolean first = true;
-		for (Configuration.Prediction alternative : alternatives) {
+		for (Integer alternative : alternatives) {
 			if (first) first = false;
 			else buffer.append(", ");
-			buffer.append(alternative.rootPrediction());
+			buffer.append(alternative);
 		}
 
 		buffer.append("} at (" + firstToken.beginLine + ":" + firstToken.beginColumn + ")");
@@ -169,23 +148,23 @@ public abstract class ParserNewBase2 extends ParserBase {
 		System.out.println(buffer.toString());
 	}
 
-	private Map.Entry<StateCallStackPair, Set<Configuration.Prediction>> firstConflict(HashMap<StateCallStackPair, Set<Configuration.Prediction>> conflictSetsPerLoc) {
+	private Map.Entry<StateCallStackPair, Set<Integer>> firstConflict(HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc) {
 		return conflictSetsPerLoc.entrySet().iterator().next();
 	}
 
-	private int firstAlternative(HashMap<StateCallStackPair, Set<Configuration.Prediction>> conflictSetsPerLoc) {
-		Set<Configuration.Prediction> alternatives = firstConflict(conflictSetsPerLoc).getValue();
+	private int firstAlternative(HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc) {
+		Set<Integer> alternatives = firstConflict(conflictSetsPerLoc).getValue();
 		int min = Integer.MAX_VALUE;
-		for (Configuration.Prediction alternative : alternatives) {
-			min = Math.min(min, alternative.rootPrediction());
+		for (Integer alternative : alternatives) {
+			min = Math.min(min, alternative);
 		}
 		return min;
 	}
 
-	private boolean ambiguousAlternatives(HashMap<StateCallStackPair, Set<Configuration.Prediction>> conflictSetsPerLoc) {
-		Set<Configuration.Prediction> predictions = null;
-		for (Map.Entry<StateCallStackPair, Set<Configuration.Prediction>> entry : conflictSetsPerLoc.entrySet()) {
-			Set<Configuration.Prediction> otherPredictions = entry.getValue();
+	private boolean ambiguousAlternatives(HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc) {
+		Set<Integer> predictions = null;
+		for (Map.Entry<StateCallStackPair, Set<Integer>> entry : conflictSetsPerLoc.entrySet()) {
+			Set<Integer> otherPredictions = entry.getValue();
 			if (otherPredictions.size() == 1) return false;
 
 			if (predictions == null) predictions = otherPredictions;
@@ -197,7 +176,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 	private PredictionState makeStartState(int choicePoint, CallStack callStack) {
 		Grammar.GrammarState state = grammar.getStartState(choicePoint);
 
-		Configuration initialConfiguration = new Configuration(Configuration.Prediction.NIL, state, callStack);
+		Configuration initialConfiguration = new Configuration(-1, state, callStack);
 		Set<Configuration> configurations = Collections.singleton(initialConfiguration);
 		configurations = closure(configurations);
 
@@ -276,8 +255,8 @@ public abstract class ParserNewBase2 extends ParserBase {
 		} else {
 			// Handle choice transitions
 			for (Map.Entry<Integer, Grammar.GrammarState> entry : state.choiceTransitions.entrySet()) {
-				Configuration.Prediction newPredication = configuration.prediction.append(entry.getKey(), state);
-				Configuration newConfiguration = new Configuration(newPredication, entry.getValue(), callStack);
+				int prediction = configuration.prediction == -1 ? entry.getKey() : configuration.prediction;
+				Configuration newConfiguration = new Configuration(prediction, entry.getValue(), callStack);
 
 				closureOf(newConfiguration, newConfigurations, busy);
 			}

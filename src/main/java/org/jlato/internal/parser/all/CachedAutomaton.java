@@ -46,7 +46,7 @@ public class CachedAutomaton {
 
 	public static void printToString(StringBuilder builder, PredictionState state, int indent) {
 		indent(builder, indent);
-		builder.append("(" + state.hashCode() + (state.prediction == null ? "" : " - " + state.prediction) + ")");
+		builder.append("(" + state.hashCode() + (state.prediction == -1 ? "" : " - " + state.prediction) + ")");
 		if (!state.transitions.isEmpty()) {
 			builder.append(" \n");
 			for (Map.Entry<Integer, PredictionState> entry : state.transitions.entrySet()) {
