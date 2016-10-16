@@ -31,7 +31,18 @@ public abstract class CallStack {
 	public static final CallStack WILDCARD = new Root(Kind.WILDCARD);
 	public static final CallStack EMPTY = new Root(Kind.EMPTY);
 
+	private final int hashCode;
+
+	private CallStack(int hashCode) {
+		this.hashCode = hashCode;
+	}
+
 	protected abstract Kind kind();
+
+	@Override
+	public int hashCode() {
+		return hashCode;
+	}
 
 	public CallStack push(Grammar.GrammarState state) {
 		return new Push(state, this);
@@ -84,6 +95,7 @@ public abstract class CallStack {
 		public final Set<CallStack> stacks;
 
 		public Merge(Set<CallStack> stacks) {
+			super(computeHashCode(stacks));
 			this.stacks = stacks;
 		}
 
@@ -102,8 +114,7 @@ public abstract class CallStack {
 			return stacks.equals(other.stacks);
 		}
 
-		@Override
-		public int hashCode() {
+		private static int computeHashCode(Set<CallStack> stacks) {
 			return stacks.hashCode();
 		}
 
@@ -119,6 +130,7 @@ public abstract class CallStack {
 		public final CallStack parent;
 
 		public Push(Grammar.GrammarState state, CallStack parent) {
+			super(computeHashCode(state, parent));
 			this.state = state;
 			this.parent = parent;
 		}
@@ -135,15 +147,13 @@ public abstract class CallStack {
 
 			Push other = (Push) o;
 
-			if (state != null ? !state.equals(other.state) : other.state != null) return false;
-			return parent != null ? parent.equals(other.parent) : other.parent == null;
+			return state.equals(other.state) && parent.equals(other.parent);
 
 		}
 
-		@Override
-		public int hashCode() {
-			int result = state != null ? state.hashCode() : 0;
-			result = 31 * result + (parent != null ? parent.hashCode() : 0);
+		private static int computeHashCode(Grammar.GrammarState state, CallStack parent) {
+			int result = state.hashCode();
+			result = 31 * result + parent.hashCode();
 			return result;
 		}
 
@@ -158,6 +168,7 @@ public abstract class CallStack {
 		public final Kind kind;
 
 		public Root(Kind kind) {
+			super(computeHashCode(kind));
 			this.kind = kind;
 		}
 
@@ -171,8 +182,7 @@ public abstract class CallStack {
 			return o == this;
 		}
 
-		@Override
-		public int hashCode() {
+		private static int computeHashCode(Kind kind) {
 			return kind.hashCode();
 		}
 

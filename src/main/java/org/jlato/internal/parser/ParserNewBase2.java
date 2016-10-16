@@ -239,7 +239,8 @@ public abstract class ParserNewBase2 extends ParserBase {
 	protected int entryPoint;
 
 	private Set<Configuration> closure(Set<Configuration> configurations) {
-		return closure(configurations, new HashSet<Configuration>());
+		Set<Configuration> newConfigurations = closure(configurations, new HashSet<Configuration>());
+		return newConfigurations;
 	}
 
 	private Set<Configuration> closure(Set<Configuration> configurations, Set<Configuration> busy) {

@@ -49,17 +49,16 @@ public class Configuration {
 
 		Configuration that = (Configuration) o;
 
-		if (prediction != null ? !prediction.equals(that.prediction) : that.prediction != null) return false;
-		if (state != null ? !state.equals(that.state) : that.state != null) return false;
-		return callStack != null ? callStack.equals(that.callStack) : that.callStack == null;
-
+		if (!prediction.equals(that.prediction)) return false;
+		if (!state.equals(that.state)) return false;
+		return callStack.equals(that.callStack);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = prediction != null ? prediction.hashCode() : 0;
-		result = 31 * result + (state != null ? state.hashCode() : 0);
-		result = 31 * result + (callStack != null ? callStack.hashCode() : 0);
+		int result = prediction.hashCode();
+		result = 31 * result + state.hashCode();
+		result = 31 * result + callStack.hashCode();
 		return result;
 	}
 
