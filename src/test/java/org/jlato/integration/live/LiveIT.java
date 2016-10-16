@@ -50,6 +50,13 @@ public class LiveIT {
 	}
 
 	@Test
+	public void parseJavaParserTwoTimes() throws IOException, ParseException {
+		Parser parser = new Parser();
+		parse("com.github.javaparser", "javaparser-core", "2.5.1", parser, "UTF-8");
+		parse("com.github.javaparser", "javaparser-core", "2.5.1", parser, "UTF-8");
+	}
+
+	@Test
 	public void parsePreserveJavaParser() throws IOException, ParseException {
 		Parser parser = new Parser(ParserConfiguration.Default.preserveWhitespaces(true));
 		parse("com.github.javaparser", "javaparser-core", "2.5.1", parser, "UTF-8");

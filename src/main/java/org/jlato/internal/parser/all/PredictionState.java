@@ -36,9 +36,13 @@ public class PredictionState {
 	public final int prediction;
 
 	public final boolean stackSensitive;
+	private int hashCode;
 
 	public PredictionState(Set<Configuration> configurations) {
-		this.configurations = /*merge*/(configurations);
+		configurations = /*merge*/(configurations);
+
+		this.hashCode = computeHashCode(configurations);
+		this.configurations = configurations;
 		this.prediction = commonPrediction();
 
 		stackSensitive = checkStackSensitive();
@@ -124,26 +128,6 @@ public class PredictionState {
 		}
 	}
 
-	private boolean checkStackSensitive() {
-		HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc = getConflictSetsPerLoc();
-		HashMap<Grammar.GrammarState, Set<Integer>> prodSetsPerState = getProdSetsPerState();
-		return conflictingAlternatives(conflictSetsPerLoc) && !viableAlternative(prodSetsPerState);
-	}
-
-	private boolean conflictingAlternatives(HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc) {
-		for (Map.Entry<StateCallStackPair, Set<Integer>> entry : conflictSetsPerLoc.entrySet()) {
-			if (entry.getValue().size() > 1) return true;
-		}
-		return false;
-	}
-
-	private boolean viableAlternative(HashMap<Grammar.GrammarState, Set<Integer>> prodSetsPerState) {
-		for (Map.Entry<Grammar.GrammarState, Set<Integer>> entry : prodSetsPerState.entrySet()) {
-			if (entry.getValue().size() == 1) return true;
-		}
-		return false;
-	}
-
 	private int commonPrediction() {
 		int prediction = -1;
 		for (Configuration configuration : configurations) {
@@ -160,6 +144,26 @@ public class PredictionState {
 
 	public void setTransitionFor(Token token, PredictionState state) {
 		transitions.put(token.kind, state);
+	}
+
+	private boolean checkStackSensitive() {
+		return conflictingAlternatives() && !viableAlternative();
+	}
+
+	private boolean conflictingAlternatives() {
+		HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc = getConflictSetsPerLoc();
+		for (Map.Entry<StateCallStackPair, Set<Integer>> entry : conflictSetsPerLoc.entrySet()) {
+			if (entry.getValue().size() > 1) return true;
+		}
+		return false;
+	}
+
+	private boolean viableAlternative() {
+		HashMap<Grammar.GrammarState, Set<Integer>> prodSetsPerState = getProdSetsPerState();
+		for (Map.Entry<Grammar.GrammarState, Set<Integer>> entry : prodSetsPerState.entrySet()) {
+			if (entry.getValue().size() == 1) return true;
+		}
+		return false;
 	}
 
 	public HashMap<StateCallStackPair, Set<Integer>> getConflictSetsPerLoc() {
@@ -199,19 +203,23 @@ public class PredictionState {
 	}
 
 	@Override
+	public int hashCode() {
+		return hashCode;
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
 		PredictionState that = (PredictionState) o;
 
-		return configurations != null ? configurations.equals(that.configurations) : that.configurations == null;
+		return configurations.equals(that.configurations);
 
 	}
 
-	@Override
-	public int hashCode() {
-		return configurations != null ? configurations.hashCode() : 0;
+	private static int computeHashCode(Set<Configuration> configurations) {
+		return configurations.hashCode();
 	}
 
 	@Override

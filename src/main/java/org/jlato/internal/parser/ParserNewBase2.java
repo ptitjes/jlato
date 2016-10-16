@@ -90,8 +90,8 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 				// TODO Reuse a unique error state if closure of configurations is the empty set
 				// TODO Reuse a unique final state for prediction if prediction is done
+				next = automaton.addState(next);
 				current.setTransitionFor(token, next);
-				automaton.addState(next);
 			}
 
 			if (next.configurations.isEmpty()) return -1;
@@ -118,7 +118,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 			HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc = next.getConflictSetsPerLoc();
 			if (ambiguousAlternatives(conflictSetsPerLoc)) {
-				reportAmbiguity(choicePoint, conflictSetsPerLoc);
+//				reportAmbiguity(choicePoint, conflictSetsPerLoc);
 				return firstAlternative(conflictSetsPerLoc);
 			}
 

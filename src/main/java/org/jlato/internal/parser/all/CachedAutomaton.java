@@ -21,7 +21,6 @@ package org.jlato.internal.parser.all;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Didier Villevalois
@@ -29,17 +28,17 @@ import java.util.Set;
 public class CachedAutomaton {
 
 	public final PredictionState initialState;
-	private final Map<Set<Configuration>, PredictionState> states = new HashMap<Set<Configuration>, PredictionState>();
+	private final Map<PredictionState, PredictionState> states = new HashMap<PredictionState, PredictionState>();
 
 	public CachedAutomaton(PredictionState initialState) {
 		this.initialState = initialState;
 	}
 
 	public PredictionState addState(PredictionState newState) {
-		PredictionState state = this.states.get(newState.configurations);
+		PredictionState state = this.states.get(newState);
 		if (state == null) {
 			state = newState;
-			this.states.put(newState.configurations, state);
+			this.states.put(state, state);
 		}
 		return state;
 	}
