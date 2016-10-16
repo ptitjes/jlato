@@ -210,61 +210,37 @@ public abstract class ParserNewBase2 extends ParserBase {
 			Grammar.GrammarState target = configuration.state.match(token);
 			if (target == null) continue;
 
-			newConfigurations.add(new Configuration(configuration.prediction, target, configuration.callStack));
+			Configuration newConfiguration = new Configuration(configuration.prediction, target, configuration.callStack);
+			newConfigurations.add(newConfiguration);
 		}
 		return newConfigurations;
 	}
-
-//	private Set<Configuration> closure(Set<Configuration> configurations) {
-//		Set<Configuration> configurationsToClose = new HashSet<Configuration>(configurations);
-//		Set<Configuration> configurationsInClose = new HashSet<Configuration>(configurations);
-//		final Set<Configuration> newConfigurations = new HashSet<Configuration>();
-//		do {
-//			newConfigurations.clear();
-//			for (final Configuration configuration : configurationsToClose) {
-////				if (configuration.prediction.toList().size() > 20) {
-////					continue;
-////				}
-//
-//				closureOf(configuration, configurations, newConfigurations);
-//			}
-//			configurations.addAll(newConfigurations);
-//			if (newConfigurations.equals(configurationsToClose)) break;
-//			configurationsToClose = new HashSet<Configuration>(newConfigurations);
-//		} while (newConfigurations.size() > 0);
-//
-//		return configurations;
-//	}
 
 	protected int entryPoint;
 
 	private Set<Configuration> closure(Set<Configuration> configurations) {
-		Set<Configuration> newConfigurations = closure(configurations, new HashSet<Configuration>());
-		return newConfigurations;
-	}
-
-	private Set<Configuration> closure(Set<Configuration> configurations, Set<Configuration> busy) {
-		final Set<Configuration> newConfigurations = new HashSet<Configuration>();
-		for (final Configuration configuration : configurations) {
-			if (busy.contains(configuration)) continue;
-			else busy.add(configuration);
-
-			closureOf(configuration, newConfigurations);
+		HashSet<Configuration> newConfigurations = new HashSet<Configuration>();
+		HashSet<Configuration> busy = new HashSet<Configuration>();
+		for (Configuration configuration : configurations) {
+			closureOf(configuration, newConfigurations, busy);
 		}
-
-		if (newConfigurations.isEmpty()) return configurations;
-
-		newConfigurations.addAll(closure(newConfigurations, busy));
-		newConfigurations.addAll(configurations);
 		return newConfigurations;
 	}
 
-	private void closureOf(final Configuration configuration, final Set<Configuration> newConfigurations) {
+	private void closureOf(final Configuration configuration,
+	                       final Set<Configuration> newConfigurations,
+	                       final Set<Configuration> busy) {
+		if (busy.contains(configuration)) return;
+		else busy.add(configuration);
+
 		Grammar.GrammarState state = configuration.state;
 		CallStack callStack = configuration.callStack;
 
+		newConfigurations.add(configuration);
+
 		// Return from non-terminal call
 		if (state.end) {
+			// SLL wildcard call stack
 			if (callStack == CallStack.WILDCARD) {
 				int nonTerminal = state.nonTerminal;
 
@@ -272,7 +248,9 @@ public abstract class ParserNewBase2 extends ParserBase {
 				Set<Grammar.GrammarState> useEndStates = grammar.getUseEndStates(nonTerminal);
 				if (useEndStates != null) {
 					for (Grammar.GrammarState useEndState : useEndStates) {
-						newConfigurations.add(new Configuration(configuration.prediction, useEndState, CallStack.WILDCARD));
+						Configuration newConfiguration = new Configuration(configuration.prediction, useEndState, CallStack.WILDCARD);
+
+						closureOf(newConfiguration, newConfigurations, busy);
 					}
 				}
 
@@ -280,21 +258,28 @@ public abstract class ParserNewBase2 extends ParserBase {
 				useEndStates = grammar.getEntryPointUseEndStates(entryPoint, nonTerminal);
 				if (useEndStates != null) {
 					for (Grammar.GrammarState useEndState : useEndStates) {
-						newConfigurations.add(new Configuration(configuration.prediction, useEndState, CallStack.WILDCARD));
+						Configuration newConfiguration = new Configuration(configuration.prediction, useEndState, CallStack.WILDCARD);
+
+						closureOf(newConfiguration, newConfigurations, busy);
 					}
 				}
 			} else {
 				callStack.pop(new CallStack.CallStackReader() {
 					@Override
 					public void handleNext(Grammar.GrammarState head, CallStack tail) {
-						newConfigurations.add(new Configuration(configuration.prediction, head, tail));
+						Configuration newConfiguration = new Configuration(configuration.prediction, head, tail);
+
+						closureOf(newConfiguration, newConfigurations, busy);
 					}
 				});
 			}
 		} else {
 			// Handle choice transitions
 			for (Map.Entry<Integer, Grammar.GrammarState> entry : state.choiceTransitions.entrySet()) {
-				newConfigurations.add(new Configuration(configuration.prediction.append(entry.getKey(), state), entry.getValue(), callStack));
+				Configuration.Prediction newPredication = configuration.prediction.append(entry.getKey(), state);
+				Configuration newConfiguration = new Configuration(newPredication, entry.getValue(), callStack);
+
+				closureOf(newConfiguration, newConfigurations, busy);
 			}
 			// Handle non-terminal call
 			for (Map.Entry<Integer, Grammar.GrammarState> entry : state.nonTerminalTransitions.entrySet()) {
@@ -303,7 +288,9 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 				Integer symbol = entry.getKey();
 				Grammar.GrammarState start = grammar.getStartState(symbol);
-				newConfigurations.add(new Configuration(configuration.prediction, start, callStack.push(target)));
+				Configuration newConfiguration = new Configuration(configuration.prediction, start, callStack.push(target));
+
+				closureOf(newConfiguration, newConfigurations, busy);
 			}
 		}
 	}
