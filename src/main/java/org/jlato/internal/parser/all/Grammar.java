@@ -19,9 +19,6 @@
 
 package org.jlato.internal.parser.all;
 
-import org.jlato.internal.parser.Token;
-import org.jlato.internal.parser.TokenType;
-
 import java.util.*;
 
 /**
@@ -145,93 +142,6 @@ public abstract class Grammar {
 		}
 
 		public abstract GrammarState choice();
-	}
-
-	private static int lastLocationId = 0;
-
-	public static class GrammarState {
-
-		public final int id = lastLocationId++;
-		public final Expansion location;
-		public final boolean end;
-		public final int nonTerminal;
-		public final Map<Integer, GrammarState> choiceTransitions = new HashMap<Integer, GrammarState>();
-		public final Map<Integer, GrammarState> nonTerminalTransitions = new HashMap<Integer, GrammarState>();
-		public final Map<Integer, GrammarState> terminalTransitions = new HashMap<Integer, GrammarState>();
-
-		public GrammarState(Expansion location) {
-			this.location = location;
-			this.nonTerminal = -1;
-			this.end = false;
-		}
-
-		public GrammarState(Expansion location, int nonTerminal) {
-			this.location = location;
-			this.nonTerminal = nonTerminal;
-			this.end = true;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			GrammarState location = (GrammarState) o;
-
-			return id == location.id;
-		}
-
-		@Override
-		public int hashCode() {
-			return id;
-		}
-
-		void addChoice(int index, GrammarState target) {
-			choiceTransitions.put(index, target);
-		}
-
-		void setNonTerminal(int symbol, GrammarState target) {
-			if (nonTerminalTransitions.containsKey(symbol))
-				throw new IllegalStateException("Already defined non-terminal " + symbol + " transition for state " + location.name);
-			nonTerminalTransitions.put(symbol, target);
-		}
-
-		void setTerminal(int tokenType, GrammarState target) {
-			if (terminalTransitions.containsKey(tokenType))
-				throw new IllegalStateException("Already defined terminal " + tokenType + " transition for state " + location.name);
-			terminalTransitions.put(tokenType, target);
-		}
-
-		public GrammarState match(Token token) {
-			return terminalTransitions.get(token.kind);
-		}
-
-		@Override
-		public String toString() {
-			StringBuilder builder = new StringBuilder();
-
-			builder.append("(" + location.name + ")");
-			if (!choiceTransitions.isEmpty()) {
-				builder.append(" ");
-				for (Map.Entry<Integer, GrammarState> entry : choiceTransitions.entrySet()) {
-					builder.append("[c:" + entry.getKey() + "->" + entry.getValue().location.name + "]");
-				}
-			}
-			if (!terminalTransitions.isEmpty()) {
-				builder.append(" ");
-				for (Map.Entry<Integer, GrammarState> entry : terminalTransitions.entrySet()) {
-					builder.append("[tok:" + TokenType.tokenImage[entry.getKey()] + "->" + entry.getValue().location.name + "]");
-				}
-			}
-			if (!nonTerminalTransitions.isEmpty()) {
-				builder.append(" ");
-				for (Map.Entry<Integer, GrammarState> entry : nonTerminalTransitions.entrySet()) {
-					builder.append("[nt:" + entry.getKey() + "->" + entry.getValue().location.name + "]");
-				}
-			}
-
-			return builder.toString();
-		}
 	}
 
 	public static class Choice extends ChoicePoint {

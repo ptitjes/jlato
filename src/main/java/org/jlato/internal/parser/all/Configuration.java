@@ -19,8 +19,6 @@
 
 package org.jlato.internal.parser.all;
 
-import org.jlato.internal.parser.all.Grammar.GrammarState;
-
 /**
  * @author Didier Villevalois
  */

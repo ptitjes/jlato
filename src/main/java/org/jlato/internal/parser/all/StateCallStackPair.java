@@ -24,10 +24,10 @@ package org.jlato.internal.parser.all;
  */
 public class StateCallStackPair {
 
-	public final Grammar.GrammarState state;
+	public final GrammarState state;
 	public final CallStack callStack;
 
-	public StateCallStackPair(Grammar.GrammarState state, CallStack callStack) {
+	public StateCallStackPair(GrammarState state, CallStack callStack) {
 		this.state = state;
 		this.callStack = callStack;
 	}

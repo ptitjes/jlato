@@ -88,7 +88,7 @@ public class PredictionState {
 
 		for (Map.Entry<MergeKey, Set<CallStack>> entry : aggrHeadConfigurations.entrySet()) {
 			Configuration configuration = entry.getKey().configuration;
-			Grammar.GrammarState head = configuration.callStack.head;
+			GrammarState head = configuration.callStack.head;
 			Set<CallStack> oldTails = entry.getValue();
 
 			CallStack mergedStack = new CallStack(head,
@@ -159,8 +159,8 @@ public class PredictionState {
 	}
 
 	private boolean viableAlternative() {
-		HashMap<Grammar.GrammarState, Set<Integer>> prodSetsPerState = getProdSetsPerState();
-		for (Map.Entry<Grammar.GrammarState, Set<Integer>> entry : prodSetsPerState.entrySet()) {
+		HashMap<GrammarState, Set<Integer>> prodSetsPerState = getProdSetsPerState();
+		for (Map.Entry<GrammarState, Set<Integer>> entry : prodSetsPerState.entrySet()) {
 			if (entry.getValue().size() == 1) return true;
 		}
 		return false;
@@ -169,7 +169,7 @@ public class PredictionState {
 	public HashMap<StateCallStackPair, Set<Integer>> getConflictSetsPerLoc() {
 		HashMap<StateCallStackPair, Set<Integer>> stateCallStackToAlts = new HashMap<StateCallStackPair, Set<Integer>>();
 		for (Configuration configuration : configurations) {
-			Grammar.GrammarState state = configuration.state;
+			GrammarState state = configuration.state;
 			CallStack callStack = configuration.callStack;
 			Integer prediction = configuration.prediction;
 
@@ -185,10 +185,10 @@ public class PredictionState {
 		return stateCallStackToAlts;
 	}
 
-	public HashMap<Grammar.GrammarState, Set<Integer>> getProdSetsPerState() {
-		HashMap<Grammar.GrammarState, Set<Integer>> stateToAlts = new HashMap<Grammar.GrammarState, Set<Integer>>();
+	public HashMap<GrammarState, Set<Integer>> getProdSetsPerState() {
+		HashMap<GrammarState, Set<Integer>> stateToAlts = new HashMap<GrammarState, Set<Integer>>();
 		for (Configuration configuration : configurations) {
-			Grammar.GrammarState state = configuration.state;
+			GrammarState state = configuration.state;
 			Integer prediction = configuration.prediction;
 
 			Set<Integer> alts = stateToAlts.get(state);

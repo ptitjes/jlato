@@ -31,7 +31,7 @@ public class CallStack {
 	public static final CallStack EMPTY = new CallStack(1);
 
 	private final int hashCode;
-	public final Grammar.GrammarState head;
+	public final GrammarState head;
 	public final Set<CallStack> tails;
 
 	private CallStack(int hashCode) {
@@ -40,13 +40,13 @@ public class CallStack {
 		this.tails = null;
 	}
 
-	public CallStack(Grammar.GrammarState head, Set<CallStack> tails) {
+	public CallStack(GrammarState head, Set<CallStack> tails) {
 		this.hashCode = computeHashCode(head, tails);
 		this.head = head;
 		this.tails = tails;
 	}
 
-	public CallStack push(Grammar.GrammarState state) {
+	public CallStack push(GrammarState state) {
 		return new CallStack(state, emptyTails().add(this));
 	}
 
@@ -62,7 +62,7 @@ public class CallStack {
 	}
 
 	public interface CallStackReader {
-		public void handleNext(Grammar.GrammarState head, CallStack tail);
+		public void handleNext(GrammarState head, CallStack tail);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class CallStack {
 		return head.equals(other.head) && tails.equals(other.tails);
 	}
 
-	private static int computeHashCode(Grammar.GrammarState head, Set<CallStack> tails) {
+	private static int computeHashCode(GrammarState head, Set<CallStack> tails) {
 		int result = 3;
 		result = 31 * result + head.hashCode();
 		result = 31 * result + tails.hashCode();
