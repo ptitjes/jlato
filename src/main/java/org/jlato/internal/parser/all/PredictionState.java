@@ -19,7 +19,6 @@
 
 package org.jlato.internal.parser.all;
 
-import com.github.andrewoma.dexx.collection.Sets;
 import org.jlato.internal.parser.Token;
 
 import java.util.*;
@@ -36,96 +35,14 @@ public class PredictionState {
 	public final int prediction;
 
 	public final boolean stackSensitive;
-	private int hashCode;
+	private final int hashCode;
 
 	public PredictionState(Set<Configuration> configurations) {
-		configurations = /*merge*/(configurations);
-
 		this.hashCode = computeHashCode(configurations);
 		this.configurations = configurations;
 		this.prediction = commonPrediction();
 
 		stackSensitive = checkStackSensitive();
-	}
-
-	private static Set<Configuration> merge(Set<Configuration> configurations) {
-		if (configurations.isEmpty()) return configurations;
-
-		Set<Configuration> newConfigurations = new HashSet<Configuration>();
-
-		HashSet<Configuration> emptyOrWildcardConfigurations = new HashSet<Configuration>();
-		Map<MergeKey, Set<CallStack>> aggrHeadConfigurations = new HashMap<MergeKey, Set<CallStack>>();
-
-		for (Configuration configuration : configurations) {
-			CallStack callStack = configuration.callStack;
-
-			if (callStack == CallStack.WILDCARD || callStack == CallStack.EMPTY) {
-				emptyOrWildcardConfigurations.add(configuration);
-				continue;
-			}
-
-			MergeKey key = new MergeKey(configuration);
-			Set<CallStack> tails = aggrHeadConfigurations.get(key);
-			if (tails == null) {
-				tails = new HashSet<CallStack>();
-				aggrHeadConfigurations.put(key, tails);
-			}
-
-			Set<CallStack> otherTails = configuration.callStack.tails.asSet();
-			if (!tails.contains(CallStack.WILDCARD)) {
-				if (otherTails.contains(CallStack.WILDCARD)) {
-					tails.clear();
-					tails.add(CallStack.WILDCARD);
-				} else {
-					tails.addAll(otherTails);
-				}
-			}
-		}
-
-		for (Configuration configuration : emptyOrWildcardConfigurations) {
-			newConfigurations.add(configuration);
-		}
-
-		for (Map.Entry<MergeKey, Set<CallStack>> entry : aggrHeadConfigurations.entrySet()) {
-			Configuration configuration = entry.getKey().configuration;
-			GrammarState head = configuration.callStack.head;
-			Set<CallStack> oldTails = entry.getValue();
-
-			CallStack mergedStack = new CallStack(head,
-					oldTails.contains(CallStack.WILDCARD) ? Sets.of(CallStack.WILDCARD) : Sets.copyOf(oldTails)
-			);
-			newConfigurations.add(new Configuration(configuration.prediction, configuration.state, mergedStack));
-		}
-		return newConfigurations;
-	}
-
-	private static class MergeKey {
-		public final Configuration configuration;
-
-		public MergeKey(Configuration configuration) {
-			this.configuration = configuration;
-			assert configuration.callStack.head != null;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			Configuration that = ((MergeKey) o).configuration;
-
-			if (configuration.prediction != that.prediction) return false;
-			if (!configuration.state.equals(that.state)) return false;
-			return configuration.callStack.head.equals(that.callStack.head);
-		}
-
-		@Override
-		public int hashCode() {
-			int result = configuration.prediction;
-			result = 31 * result + configuration.state.hashCode();
-			result = 31 * result + (configuration.callStack.head != null ? configuration.callStack.head.hashCode() : 0);
-			return result;
-		}
 	}
 
 	private int commonPrediction() {

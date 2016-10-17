@@ -22,15 +22,15 @@ package org.jlato.internal.parser.all;
 /**
  * @author Didier Villevalois
  */
-public class Configuration {
-	public final int prediction;
-	public final GrammarState state;
-	public final CallStack callStack;
+public class StatePredictionPair {
 
-	public Configuration(GrammarState state, int prediction, CallStack callStack) {
-		this.prediction = prediction;
+	public final GrammarState state;
+	public final int prediction;
+
+	public StatePredictionPair(GrammarState state, int prediction) {
 		this.state = state;
-		this.callStack = callStack;
+		this.prediction = prediction;
+
 	}
 
 	@Override
@@ -38,27 +38,17 @@ public class Configuration {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		Configuration that = (Configuration) o;
+		StatePredictionPair that = (StatePredictionPair) o;
 
-		if (prediction != that.prediction) return false;
 		if (!state.equals(that.state)) return false;
-		return callStack.equals(that.callStack);
+		return prediction == that.prediction;
+
 	}
 
 	@Override
 	public int hashCode() {
-		int result = prediction;
-		result = 31 * result + state.hashCode();
-		result = 31 * result + callStack.hashCode();
+		int result = state.hashCode();
+		result = 31 * result + prediction;
 		return result;
-	}
-
-	@Override
-	public String toString() {
-		return "Configuration{" +
-				"prediction=" + prediction +
-				", state=" + state +
-				", callStack=" + callStack +
-				'}';
 	}
 }
