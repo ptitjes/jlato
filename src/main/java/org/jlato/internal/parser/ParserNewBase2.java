@@ -87,7 +87,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 			if (next == null) {
 				Set<Configuration> configurations = targetConfigurations(current, token);
-				next = new PredictionState(configurations);
+				next = new PredictionState(configurations, true);
 
 				// TODO Reuse a unique error state if closure of configurations is the empty set
 				// TODO Reuse a unique final state for prediction if prediction is done
@@ -112,66 +112,19 @@ public abstract class ParserNewBase2 extends ParserBase {
 			Token token = getToken(index++);
 
 			Set<Configuration> configurations = targetConfigurations(current, token);
-			PredictionState next = new PredictionState(configurations);
+			PredictionState next = new PredictionState(configurations, true);
 
 			if (next.configurations.isEmpty()) return -1;
 			if (next.prediction != -1) return next.prediction;
 
-			HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc = next.getConflictSetsPerLoc();
-			if (ambiguousAlternatives(conflictSetsPerLoc)) {
-//				reportAmbiguity(choicePoint, conflictSetsPerLoc);
-				return firstAlternative(conflictSetsPerLoc);
+			Collection<BitSet> conflictSets = next.getConflictSets();
+			if (ambiguousAlternatives(conflictSets)) {
+				reportAmbiguity(choicePoint, conflictSets);
+				return minimalAlternative(conflictSets);
 			}
 
 			current = next;
 		}
-	}
-
-	private void reportAmbiguity(int choicePoint, HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc) {
-		StringBuilder buffer = new StringBuilder();
-
-		Map.Entry<StateCallStackPair, Set<Integer>> entry = firstConflict(conflictSetsPerLoc);
-		Set<Integer> alternatives = entry.getValue();
-
-		Token firstToken = getToken(0);
-		buffer.append("At choice point ");
-		buffer.append(choicePoint);
-		buffer.append(" ambiguous alternatives {");
-		boolean first = true;
-		for (Integer alternative : alternatives) {
-			if (first) first = false;
-			else buffer.append(", ");
-			buffer.append(alternative);
-		}
-
-		buffer.append("} at (" + firstToken.beginLine + ":" + firstToken.beginColumn + ")");
-
-		System.out.println(buffer.toString());
-	}
-
-	private Map.Entry<StateCallStackPair, Set<Integer>> firstConflict(HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc) {
-		return conflictSetsPerLoc.entrySet().iterator().next();
-	}
-
-	private int firstAlternative(HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc) {
-		Set<Integer> alternatives = firstConflict(conflictSetsPerLoc).getValue();
-		int min = Integer.MAX_VALUE;
-		for (Integer alternative : alternatives) {
-			min = Math.min(min, alternative);
-		}
-		return min;
-	}
-
-	private boolean ambiguousAlternatives(HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc) {
-		Set<Integer> predictions = null;
-		for (Map.Entry<StateCallStackPair, Set<Integer>> entry : conflictSetsPerLoc.entrySet()) {
-			Set<Integer> otherPredictions = entry.getValue();
-			if (otherPredictions.size() == 1) return false;
-
-			if (predictions == null) predictions = otherPredictions;
-			else if (!predictions.equals(otherPredictions)) return false;
-		}
-		return true;
 	}
 
 	private PredictionState makeStartState(int choicePoint, CallStack callStack) {
@@ -181,7 +134,46 @@ public abstract class ParserNewBase2 extends ParserBase {
 		Set<Configuration> configurations = Collections.singleton(initialConfiguration);
 		configurations = closure(configurations);
 
-		return new PredictionState(configurations);
+		return new PredictionState(configurations, false);
+	}
+
+	private static final boolean REPORT = false;
+
+	private void reportAmbiguity(int choicePoint, Collection<BitSet> conflictSets) {
+		if (!REPORT) return;
+
+		StringBuilder buffer = new StringBuilder();
+
+		BitSet alternatives = firstConflict(conflictSets);
+
+		Token firstToken = getToken(0);
+		buffer.append("At choice point ");
+		buffer.append(choicePoint);
+		buffer.append(" ambiguous alternatives ");
+		buffer.append(alternatives);
+		buffer.append(" at (" + firstToken.beginLine + ":" + firstToken.beginColumn + ")");
+
+		System.out.println(buffer.toString());
+	}
+
+	private BitSet firstConflict(Collection<BitSet> conflictSets) {
+		return conflictSets.iterator().next();
+	}
+
+	private int minimalAlternative(Collection<BitSet> conflictSetsPerLoc) {
+		BitSet alternatives = firstConflict(conflictSetsPerLoc);
+		return alternatives.nextSetBit(0);
+	}
+
+	private boolean ambiguousAlternatives(Collection<BitSet> conflictSetsPerLoc) {
+		BitSet predictions = null;
+		for (BitSet otherPredictions : conflictSetsPerLoc) {
+			if (otherPredictions.size() == 1) return false;
+
+			if (predictions == null) predictions = otherPredictions;
+			else if (!predictions.equals(otherPredictions)) return false;
+		}
+		return true;
 	}
 
 	private Set<Configuration> targetConfigurations(PredictionState current, Token token) {

@@ -89,13 +89,24 @@ public class CallStack {
 			if (otherKind == Kind.PUSH) return new Merge(Sets.of(this, other));
 			if (otherKind == Kind.MERGE) return new Merge(((Merge) other).stacks.add(this));
 		}
-		if (thisKind == Kind.MERGE && otherKind == Kind.PUSH) {
-			return new Merge(((Merge) this).stacks.add(other));
+		if (thisKind == Kind.MERGE) {
+			if (otherKind == Kind.PUSH) return new Merge(((Merge) this).stacks.add(other));
+			if (otherKind == Kind.MERGE) {
+				Set<CallStack> stacks = ((Merge) this).stacks;
+				for (CallStack stack : ((Merge) other).stacks) {
+					stacks = stacks.add(stack);
+				}
+				return new Merge(stacks);
+			}
 		}
 
 		// The deep merge part
 		// THIS SEEMS TO NEVER BE REACHED !!!
 		// thisKind == Kind.MERGE && otherKind == Kind.MERGE
+
+		System.out.println("Yoooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+
+		// Implement MERGE-MERGE by set copy/addAll
 
 		Map<GrammarState, CallStack> perHeadTails = new HashMap<GrammarState, CallStack>();
 		merge(thisKind, this, perHeadTails);

@@ -134,7 +134,6 @@ public class Parser {
 			if ((basePath == null || name.contains(basePath)) && name.endsWith(".java")) {
 				InputStream inputStream = file.getInputStream(entry);
 				try {
-					System.out.println(name);
 					CompilationUnit cu = parse(inputStream, encoding);
 					set = set.put(name, cu);
 				} catch (ParseException e) {

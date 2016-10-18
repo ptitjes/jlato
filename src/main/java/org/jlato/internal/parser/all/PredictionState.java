@@ -21,10 +21,7 @@ package org.jlato.internal.parser.all;
 
 import org.jlato.internal.parser.Token;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Didier Villevalois
@@ -38,12 +35,17 @@ public class PredictionState {
 
 	public final Map<Integer, PredictionState> transitions = new HashMap<Integer, PredictionState>();
 
-	public PredictionState(Set<Configuration> configurations) {
+	public PredictionState(Set<Configuration> configurations, boolean computePredictionAndConflicts) {
 		this.hashCode = computeHashCode(configurations);
 		this.configurations = configurations;
-		this.prediction = commonPrediction();
 
-		stackSensitive = checkStackSensitive();
+		if (computePredictionAndConflicts) {
+			this.prediction = commonPrediction();
+			this.stackSensitive = checkStackSensitive();
+		} else {
+			this.prediction = -1;
+			this.stackSensitive = false;
+		}
 	}
 
 	private int commonPrediction() {
@@ -69,53 +71,55 @@ public class PredictionState {
 	}
 
 	private boolean conflictingAlternatives() {
-		HashMap<StateCallStackPair, Set<Integer>> conflictSetsPerLoc = getConflictSetsPerLoc();
-		for (Map.Entry<StateCallStackPair, Set<Integer>> entry : conflictSetsPerLoc.entrySet()) {
-			if (entry.getValue().size() > 1) return true;
+		Collection<BitSet> conflictSets = getConflictSets();
+		for (BitSet conflictSet : conflictSets) {
+			if (conflictSet.cardinality() > 1) return true;
 		}
 		return false;
 	}
 
 	private boolean viableAlternative() {
-		HashMap<GrammarState, Set<Integer>> prodSetsPerState = getProdSetsPerState();
-		for (Map.Entry<GrammarState, Set<Integer>> entry : prodSetsPerState.entrySet()) {
-			if (entry.getValue().size() == 1) return true;
+		HashMap<GrammarState, BitSet> prodSetsPerState = getProdSetsPerState();
+		for (Map.Entry<GrammarState, BitSet> entry : prodSetsPerState.entrySet()) {
+			if (entry.getValue().cardinality() == 1) return true;
 		}
 		return false;
 	}
 
-	public HashMap<StateCallStackPair, Set<Integer>> getConflictSetsPerLoc() {
-		HashMap<StateCallStackPair, Set<Integer>> stateCallStackToAlts = new HashMap<StateCallStackPair, Set<Integer>>();
+	public Collection<BitSet> getConflictSets() {
+		HashMap<StateCallStackPair, BitSet> stateCallStackToAlts = new HashMap<StateCallStackPair, BitSet>();
 		for (Configuration configuration : configurations) {
 			GrammarState state = configuration.state;
 			CallStack callStack = configuration.callStack;
 			Integer prediction = configuration.prediction;
+			if (prediction == -1) continue;
 
 			StateCallStackPair pair = new StateCallStackPair(state, callStack);
-			Set<Integer> alts = stateCallStackToAlts.get(pair);
+			BitSet alts = stateCallStackToAlts.get(pair);
 			if (alts == null) {
-				alts = new HashSet<Integer>();
+				alts = new BitSet();
 				stateCallStackToAlts.put(pair, alts);
 			}
 
-			alts.add(prediction);
+			alts.set(prediction);
 		}
-		return stateCallStackToAlts;
+		return stateCallStackToAlts.values();
 	}
 
-	public HashMap<GrammarState, Set<Integer>> getProdSetsPerState() {
-		HashMap<GrammarState, Set<Integer>> stateToAlts = new HashMap<GrammarState, Set<Integer>>();
+	public HashMap<GrammarState, BitSet> getProdSetsPerState() {
+		HashMap<GrammarState, BitSet> stateToAlts = new HashMap<GrammarState, BitSet>();
 		for (Configuration configuration : configurations) {
 			GrammarState state = configuration.state;
 			Integer prediction = configuration.prediction;
+			if (prediction == -1) continue;
 
-			Set<Integer> alts = stateToAlts.get(state);
+			BitSet alts = stateToAlts.get(state);
 			if (alts == null) {
-				alts = new HashSet<Integer>();
+				alts = new BitSet();
 				stateToAlts.put(state, alts);
 			}
 
-			alts.add(prediction);
+			alts.set(prediction);
 		}
 		return stateToAlts;
 	}
