@@ -30,6 +30,12 @@ import java.util.*;
  */
 public abstract class ParserNewBase2 extends ParserBase {
 
+	private static final boolean CACHE_STATS = true;
+	private static final boolean MERGE_STATS = false;
+	private static final boolean MERGE = true;
+	private static final boolean INCREMENTAL_MERGE = true;
+
+
 	protected abstract Grammar initializeGrammar();
 
 	private final Grammar grammar = initializeGrammar();
@@ -43,6 +49,18 @@ public abstract class ParserNewBase2 extends ParserBase {
 		super.reset(reader);
 		currentPredictions = new LinkedList<Integer>();
 		callStack = CallStack.EMPTY;
+	}
+
+	public void clearStats() {
+		cacheMiss = 0;
+		cacheHits = 0;
+		fullLL = 0;
+	}
+
+	public void printStats() {
+		if (CACHE_STATS) {
+			System.out.println("DFA Cache - Hits: " + cacheHits + ", Misses: " + cacheMiss + ", FullLL: " + fullLL);
+		}
 	}
 
 	private List<Integer> currentPredictions;
@@ -73,17 +91,25 @@ public abstract class ParserNewBase2 extends ParserBase {
 		CachedAutomaton automaton = automata.get(choicePoint);
 		if (automaton == null) {
 			current = makeStartState(choicePoint, CallStack.WILDCARD);
+			cacheMiss++;
 
 			automaton = new CachedAutomaton(current);
 			automata.put(choicePoint, automaton);
-		} else current = automaton.initialState;
+		} else {
+			current = automaton.initialState;
+			cacheHits++;
+		}
 
 		int index = 0;
 		while (true) {
 			Token token = getToken(index++);
 
 			PredictionState next = current.transitionFor(token);
-//			System.out.println(next != null ? "Hit" : "Miss");
+
+			if (CACHE_STATS) {
+				if (next == null) cacheMiss++;
+				else cacheHits++;
+			}
 
 			if (next == null) {
 				Set<Configuration> configurations = targetConfigurations(current, token);
@@ -104,8 +130,11 @@ public abstract class ParserNewBase2 extends ParserBase {
 		}
 	}
 
+	private int cacheHits, cacheMiss, fullLL;
+
 	private int llPredict(int choicePoint) {
 		PredictionState current = makeStartState(choicePoint, callStack);
+		fullLL++;
 
 		int index = 0;
 		while (true) {
@@ -113,6 +142,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 			Set<Configuration> configurations = targetConfigurations(current, token);
 			PredictionState next = new PredictionState(configurations, true);
+			fullLL++;
 
 			if (next.configurations.isEmpty()) return -1;
 			if (next.prediction != -1) return next.prediction;
@@ -216,10 +246,6 @@ public abstract class ParserNewBase2 extends ParserBase {
 		}
 		return newConfigurations.build();
 	}
-
-	private static final boolean STATS = false;
-	private static final boolean MERGE = true;
-	private static final boolean INCREMENTAL_MERGE = true;
 
 	private interface ConfigurationSetBuilder {
 
@@ -340,7 +366,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 				configurations.add(new Configuration(key.state, key.prediction, entry.getValue()));
 			}
 
-			if (STATS) {
+			if (MERGE_STATS) {
 				int newSize = configurations.size();
 				if (previousSize > newSize) {
 					System.out.println("Was: " + previousSize + " - Now is: " + newSize + " - Saved: " + (previousSize - newSize));
@@ -358,7 +384,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 			CallStack stack = perStatePredictionCallStack.get(key);
 
-			if (STATS) {
+			if (MERGE_STATS) {
 				added++;
 				if (stack != null) saved++;
 			}
@@ -377,7 +403,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 				configurations.add(new Configuration(key.state, key.prediction, entry.getValue()));
 			}
 
-			if (STATS) {
+			if (MERGE_STATS) {
 				if (saved > 0) {
 					System.out.println("Was: " + added + " - Now is: " + (added - saved) + " - Saved: " + saved);
 				}

@@ -516,6 +516,9 @@ public abstract class ParserBase {
 		callStats.put(productionNumber, calls == null ? 1 : calls + 1);
 	}
 
+	public void clearStats() {
+	}
+
 	public void printStats() {
 		if (STATISTICS) {
 			System.out.println("Total match count: " + totalMatchCount);

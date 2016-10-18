@@ -141,9 +141,11 @@ public class Parser {
 				}
 			}
 		}
-
-		printStats();
 		return set;
+	}
+
+	public void clearStats() {
+		if (parserInstance != null) parserInstance.clearStats();
 	}
 
 	public void printStats() {

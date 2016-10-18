@@ -38,6 +38,8 @@ import java.io.Reader;
  */
 public abstract class ParserInterface {
 
+	public abstract void clearStats();
+
 	public abstract void printStats();
 
 	public interface Factory {
