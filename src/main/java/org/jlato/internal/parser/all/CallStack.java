@@ -81,6 +81,22 @@ public class CallStack {
 			if (thisKind == Kind.MERGE) return new Merge(((Merge) this).stacks.add(EMPTY));
 		}
 
+		if (this.hashCode == other.hashCode && this.equals(other)) return this;
+
+		// The following is to avoid merging deeply for simple cases
+
+		if (thisKind == Kind.PUSH) {
+			if (otherKind == Kind.PUSH) return new Merge(Sets.of(this, other));
+			if (otherKind == Kind.MERGE) return new Merge(((Merge) other).stacks.add(this));
+		}
+		if (thisKind == Kind.MERGE && otherKind == Kind.PUSH) {
+			return new Merge(((Merge) this).stacks.add(other));
+		}
+
+		// The deep merge part
+		// THIS SEEMS TO NEVER BE REACHED !!!
+		// thisKind == Kind.MERGE && otherKind == Kind.MERGE
+
 		Map<GrammarState, CallStack> perHeadTails = new HashMap<GrammarState, CallStack>();
 		merge(thisKind, this, perHeadTails);
 		merge(otherKind, other, perHeadTails);

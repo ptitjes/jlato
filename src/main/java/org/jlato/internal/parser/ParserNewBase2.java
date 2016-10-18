@@ -68,6 +68,8 @@ public abstract class ParserNewBase2 extends ParserBase {
 	private int sllPredict(int choicePoint) {
 		PredictionState current;
 
+		// TODO Generate data for the number of choice points and number of alternative predictions
+		// TODO Pre-initialize automaton with there final states and the shared error state
 		CachedAutomaton automaton = automata.get(choicePoint);
 		if (automaton == null) {
 			current = makeStartState(choicePoint, CallStack.WILDCARD);
@@ -95,6 +97,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 			if (next.configurations.isEmpty()) return -1;
 			if (next.prediction != -1) return next.prediction;
+
 			if (next.stackSensitive) return llPredict(choicePoint);
 
 			current = next;
@@ -183,6 +186,8 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 	private Set<Configuration> targetConfigurations(PredictionState current, Token token) {
 		Set<Configuration> configurations = moveAlong(current.configurations, token);
+		if (configurations.size() == 1) return configurations;
+
 		configurations = closure(configurations);
 		return configurations;
 	}
@@ -191,12 +196,22 @@ public abstract class ParserNewBase2 extends ParserBase {
 		Set<Configuration> newConfigurations = new HashSet<Configuration>();
 		for (Configuration configuration : configurations) {
 			GrammarState target = configuration.state.match(token);
-			if (target == null) continue;
+			if (target == null || commonPrediction(configurations) != -1) continue;
 
 			Configuration newConfiguration = new Configuration(target, configuration.prediction, configuration.callStack);
 			newConfigurations.add(newConfiguration);
 		}
 		return newConfigurations;
+	}
+
+	private int commonPrediction(Set<Configuration> configurations) {
+		int prediction = -1;
+		for (Configuration configuration : configurations) {
+			int aPrediction = configuration.prediction;
+			if (prediction == -1) prediction = aPrediction;
+			else if (prediction != aPrediction) return -1;
+		}
+		return prediction;
 	}
 
 	protected int entryPoint;

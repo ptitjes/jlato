@@ -21,21 +21,22 @@ package org.jlato.internal.parser.all;
 
 import org.jlato.internal.parser.Token;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Didier Villevalois
  */
 public class PredictionState {
 
+	private final int hashCode;
 	public final Set<Configuration> configurations;
+	public final int prediction;
+	public final boolean stackSensitive;
 
 	public final Map<Integer, PredictionState> transitions = new HashMap<Integer, PredictionState>();
-
-	public final int prediction;
-
-	public final boolean stackSensitive;
-	private final int hashCode;
 
 	public PredictionState(Set<Configuration> configurations) {
 		this.hashCode = computeHashCode(configurations);
