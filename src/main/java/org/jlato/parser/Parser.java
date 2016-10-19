@@ -115,8 +115,6 @@ public class Parser {
 			final String path = file.getAbsolutePath().substring(rootPath.length());
 			set = set.put(path, cu);
 		}
-
-		printStats();
 		return set;
 	}
 

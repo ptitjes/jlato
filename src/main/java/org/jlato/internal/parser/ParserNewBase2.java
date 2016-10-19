@@ -32,7 +32,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 	private static final boolean CACHE_STATS = true;
 	private static final boolean MERGE_STATS = false;
-	private static final boolean MERGE = true;
+	private static final boolean MERGE = false;
 	private static final boolean INCREMENTAL_MERGE = true;
 
 
