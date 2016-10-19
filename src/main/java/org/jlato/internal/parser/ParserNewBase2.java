@@ -208,22 +208,10 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 	private Set<Configuration> targetConfigurations(PredictionState current, Token token) {
 		Set<Configuration> configurations = moveAlong(current.configurations, token);
-		if (configurations.size() == 1) return configurations;
+		if (configurations.size() == 1 || commonPrediction(configurations) != -1) return configurations;
 
 		configurations = closure(configurations);
 		return configurations;
-	}
-
-	private Set<Configuration> moveAlong(Set<Configuration> configurations, Token token) {
-		Set<Configuration> newConfigurations = new HashSet<Configuration>();
-		for (Configuration configuration : configurations) {
-			GrammarState target = configuration.state.match(token);
-			if (target == null || commonPrediction(configurations) != -1) continue;
-
-			Configuration newConfiguration = new Configuration(target, configuration.prediction, configuration.callStack);
-			newConfigurations.add(newConfiguration);
-		}
-		return newConfigurations;
 	}
 
 	private int commonPrediction(Set<Configuration> configurations) {
@@ -234,6 +222,18 @@ public abstract class ParserNewBase2 extends ParserBase {
 			else if (prediction != aPrediction) return -1;
 		}
 		return prediction;
+	}
+
+	private Set<Configuration> moveAlong(Set<Configuration> configurations, Token token) {
+		Set<Configuration> newConfigurations = new HashSet<Configuration>();
+		for (Configuration configuration : configurations) {
+			GrammarState target = configuration.state.match(token);
+			if (target == null) continue;
+
+			Configuration newConfiguration = new Configuration(target, configuration.prediction, configuration.callStack);
+			newConfigurations.add(newConfiguration);
+		}
+		return newConfigurations;
 	}
 
 	protected int entryPoint;
