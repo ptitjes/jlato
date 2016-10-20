@@ -24,7 +24,7 @@ package org.jlato.parser;
  */
 public class ParserConfiguration {
 
-	public static final ParserConfiguration Default = new ParserConfiguration(false, "2");
+	public static final ParserConfiguration Default = new ParserConfiguration(false, "");
 
 	public final boolean preserveWhitespaces;
 
