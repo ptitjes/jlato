@@ -1,0 +1,1 @@
+IntUnaryOperator fn = true ? null : i -> i * 2;

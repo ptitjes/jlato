@@ -1,0 +1,95 @@
+{
+  kind: ExpressionStmt,
+  expr: {
+    kind: VariableDeclarationExpr,
+    declaration: {
+      kind: LocalVariableDecl,
+      modifiers: [
+      ],
+      type: {
+        kind: QualifiedType,
+        annotations: [
+        ],
+        name: IntUnaryOperator,
+        scope: null,
+        typeArgs: null,
+      },
+      variables: [
+        {
+          kind: VariableDeclarator,
+          id: {
+            kind: VariableDeclaratorId,
+            dims: [
+            ],
+            name: fn4,
+          },
+          init: {
+            kind: ConditionalExpr,
+            condition: {
+              kind: LiteralExpr,
+              literalClass: java.lang.Boolean,
+              literalString: true,
+            },
+            elseExpr: {
+              kind: CastExpr,
+              expr: {
+                kind: ParenthesizedExpr,
+                inner: {
+                  kind: LambdaExpr,
+                  body: {
+                    kind: BinaryExpr,
+                    left: {
+                      kind: Name,
+                      id: i,
+                    },
+                    op: Times,
+                    right: {
+                      kind: LiteralExpr,
+                      literalClass: java.lang.Integer,
+                      literalString: 2,
+                    },
+                  },
+                  hasParens: false,
+                  params: [
+                    {
+                      kind: FormalParameter,
+                      ellipsisAnnotations: [
+                      ],
+                      id: {
+                        kind: VariableDeclaratorId,
+                        dims: [
+                        ],
+                        name: i,
+                      },
+                      isReceiver: false,
+                      isVarArgs: false,
+                      modifiers: [
+                      ],
+                      receiverTypeName: null,
+                      type: {
+                        kind: UnknownType,
+                      },
+                    },
+                  ],
+                },
+              },
+              type: {
+                kind: QualifiedType,
+                annotations: [
+                ],
+                name: IntUnaryOperator,
+                scope: null,
+                typeArgs: null,
+              },
+            },
+            thenExpr: {
+              kind: LiteralExpr,
+              literalClass: java.lang.Void,
+              literalString: null,
+            },
+          },
+        },
+      ],
+    },
+  },
+}
