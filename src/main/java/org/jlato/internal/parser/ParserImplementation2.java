@@ -232,6 +232,26 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int DO_STATEMENT = 278;
 
+		public static final int ELEMENT_VALUE = 95;
+
+		public static final int ELEMENT_VALUE_1 = 332;
+
+		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER = 333;
+
+		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER_2 = 334;
+
+		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER_3 = 336;
+
+		public static final int ELEMENT_VALUE_LIST = 335;
+
+		public static final int ELEMENT_VALUE_LIST_2 = 337;
+
+		public static final int ELEMENT_VALUE_PAIR = 330;
+
+		public static final int ELEMENT_VALUE_PAIR_LIST = 329;
+
+		public static final int ELEMENT_VALUE_PAIR_LIST_2 = 331;
+
 		public static final int EMPTY_STATEMENT = 273;
 
 		public static final int ENUM_CONSTANT_DECL = 25;
@@ -388,27 +408,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int LITERAL_1 = 238;
 
-		public static final int MARKER_ANNOTATION = 327;
+		public static final int MARKER_ANNOTATION = 326;
 
 		public static final int MEMBER_DECL_ENTRY = 10;
-
-		public static final int MEMBER_VALUE = 95;
-
-		public static final int MEMBER_VALUE_1 = 332;
-
-		public static final int MEMBER_VALUE_ARRAY_INITIALIZER = 333;
-
-		public static final int MEMBER_VALUE_ARRAY_INITIALIZER_2 = 334;
-
-		public static final int MEMBER_VALUE_ARRAY_INITIALIZER_2_2 = 335;
-
-		public static final int MEMBER_VALUE_ARRAY_INITIALIZER_3 = 336;
-
-		public static final int MEMBER_VALUE_PAIR = 330;
-
-		public static final int MEMBER_VALUE_PAIRS = 329;
-
-		public static final int MEMBER_VALUE_PAIRS_2 = 331;
 
 		public static final int METHOD_DECL = 19;
 
@@ -566,7 +568,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int SHIFT_EXPRESSION_2_1 = 210;
 
-		public static final int SINGLE_MEMBER_ANNOTATION = 326;
+		public static final int SINGLE_ELEMENT_ANNOTATION = 327;
 
 		public static final int STATEMENT = 269;
 
@@ -1054,7 +1056,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final NonTerminal AnnotationTypeMemberDecl_5 = nonTerminal("AnnotationTypeMemberDecl_5", ARRAY_DIMS);
 
-		static final NonTerminal AnnotationTypeMemberDecl_6_2 = nonTerminal("AnnotationTypeMemberDecl_6_2", MEMBER_VALUE);
+		static final NonTerminal AnnotationTypeMemberDecl_6_2 = nonTerminal("AnnotationTypeMemberDecl_6_2", ELEMENT_VALUE);
 
 		static final ZeroOrOne AnnotationTypeMemberDecl_6 = zeroOrOne("AnnotationTypeMemberDecl_6", sequence("AnnotationTypeMemberDecl_6", terminal("AnnotationTypeMemberDecl_6_1", TokenType.DEFAULT), AnnotationTypeMemberDecl_6_2));
 
@@ -2126,9 +2128,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final NonTerminal Annotation_1_1 = nonTerminal("Annotation_1_1", NORMAL_ANNOTATION);
 
-		static final NonTerminal Annotation_1_2 = nonTerminal("Annotation_1_2", SINGLE_MEMBER_ANNOTATION);
+		static final NonTerminal Annotation_1_2 = nonTerminal("Annotation_1_2", MARKER_ANNOTATION);
 
-		static final NonTerminal Annotation_1_3 = nonTerminal("Annotation_1_3", MARKER_ANNOTATION);
+		static final NonTerminal Annotation_1_3 = nonTerminal("Annotation_1_3", SINGLE_ELEMENT_ANNOTATION);
 
 		static final Choice Annotation_1 = choice("Annotation_1", Annotation_1_1, Annotation_1_2, Annotation_1_3);
 
@@ -2136,7 +2138,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final NonTerminal NormalAnnotation_2 = nonTerminal("NormalAnnotation_2", QUALIFIED_NAME);
 
-		static final NonTerminal NormalAnnotation_4_1 = nonTerminal("NormalAnnotation_4_1", MEMBER_VALUE_PAIRS);
+		static final NonTerminal NormalAnnotation_4_1 = nonTerminal("NormalAnnotation_4_1", ELEMENT_VALUE_PAIR_LIST);
 
 		static final ZeroOrOne NormalAnnotation_4 = zeroOrOne("NormalAnnotation_4", NormalAnnotation_4_1);
 
@@ -2146,47 +2148,51 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final Sequence MarkerAnnotation = sequence("MarkerAnnotation", terminal("MarkerAnnotation_1", TokenType.AT), MarkerAnnotation_2);
 
-		static final NonTerminal SingleMemberAnnotation_2 = nonTerminal("SingleMemberAnnotation_2", QUALIFIED_NAME);
+		static final NonTerminal SingleElementAnnotation_2 = nonTerminal("SingleElementAnnotation_2", QUALIFIED_NAME);
 
-		static final NonTerminal SingleMemberAnnotation_4 = nonTerminal("SingleMemberAnnotation_4", MEMBER_VALUE);
+		static final NonTerminal SingleElementAnnotation_4 = nonTerminal("SingleElementAnnotation_4", ELEMENT_VALUE);
 
-		static final Sequence SingleMemberAnnotation = sequence("SingleMemberAnnotation", terminal("SingleMemberAnnotation_1", TokenType.AT), SingleMemberAnnotation_2, terminal("SingleMemberAnnotation_3", TokenType.LPAREN), SingleMemberAnnotation_4, terminal("SingleMemberAnnotation_5", TokenType.RPAREN));
+		static final Sequence SingleElementAnnotation = sequence("SingleElementAnnotation", terminal("SingleElementAnnotation_1", TokenType.AT), SingleElementAnnotation_2, terminal("SingleElementAnnotation_3", TokenType.LPAREN), SingleElementAnnotation_4, terminal("SingleElementAnnotation_5", TokenType.RPAREN));
 
-		static final NonTerminal MemberValuePairs_1 = nonTerminal("MemberValuePairs_1", MEMBER_VALUE_PAIR);
+		static final NonTerminal ElementValuePairList_1 = nonTerminal("ElementValuePairList_1", ELEMENT_VALUE_PAIR);
 
-		static final NonTerminal MemberValuePairs_2_2 = nonTerminal("MemberValuePairs_2_2", MEMBER_VALUE_PAIR);
+		static final NonTerminal ElementValuePairList_2_2 = nonTerminal("ElementValuePairList_2_2", ELEMENT_VALUE_PAIR);
 
-		static final ZeroOrMore MemberValuePairs_2 = zeroOrMore("MemberValuePairs_2", sequence("MemberValuePairs_2", terminal("MemberValuePairs_2_1", TokenType.COMMA), MemberValuePairs_2_2));
+		static final ZeroOrMore ElementValuePairList_2 = zeroOrMore("ElementValuePairList_2", sequence("ElementValuePairList_2", terminal("ElementValuePairList_2_1", TokenType.COMMA), ElementValuePairList_2_2));
 
-		static final Sequence MemberValuePairs = sequence("MemberValuePairs", MemberValuePairs_1, MemberValuePairs_2);
+		static final Sequence ElementValuePairList = sequence("ElementValuePairList", ElementValuePairList_1, ElementValuePairList_2);
 
-		static final NonTerminal MemberValuePair_1 = nonTerminal("MemberValuePair_1", NAME);
+		static final NonTerminal ElementValuePair_1 = nonTerminal("ElementValuePair_1", NAME);
 
-		static final NonTerminal MemberValuePair_3 = nonTerminal("MemberValuePair_3", MEMBER_VALUE);
+		static final NonTerminal ElementValuePair_3 = nonTerminal("ElementValuePair_3", ELEMENT_VALUE);
 
-		static final Sequence MemberValuePair = sequence("MemberValuePair", MemberValuePair_1, terminal("MemberValuePair_2", TokenType.ASSIGN), MemberValuePair_3);
+		static final Sequence ElementValuePair = sequence("ElementValuePair", ElementValuePair_1, terminal("ElementValuePair_2", TokenType.ASSIGN), ElementValuePair_3);
 
-		static final NonTerminal MemberValue_1_1 = nonTerminal("MemberValue_1_1", ANNOTATION);
+		static final NonTerminal ElementValue_1_1 = nonTerminal("ElementValue_1_1", CONDITIONAL_EXPRESSION);
 
-		static final NonTerminal MemberValue_1_2 = nonTerminal("MemberValue_1_2", MEMBER_VALUE_ARRAY_INITIALIZER);
+		static final NonTerminal ElementValue_1_2 = nonTerminal("ElementValue_1_2", ELEMENT_VALUE_ARRAY_INITIALIZER);
 
-		static final NonTerminal MemberValue_1_3 = nonTerminal("MemberValue_1_3", CONDITIONAL_EXPRESSION);
+		static final NonTerminal ElementValue_1_3 = nonTerminal("ElementValue_1_3", ANNOTATION);
 
-		static final Choice MemberValue_1 = choice("MemberValue_1", MemberValue_1_1, MemberValue_1_2, MemberValue_1_3);
+		static final Choice ElementValue_1 = choice("ElementValue_1", ElementValue_1_1, ElementValue_1_2, ElementValue_1_3);
 
-		static final Sequence MemberValue = sequence("MemberValue", MemberValue_1);
+		static final Sequence ElementValue = sequence("ElementValue", ElementValue_1);
 
-		static final NonTerminal MemberValueArrayInitializer_2_1 = nonTerminal("MemberValueArrayInitializer_2_1", MEMBER_VALUE);
+		static final NonTerminal ElementValueArrayInitializer_2_1 = nonTerminal("ElementValueArrayInitializer_2_1", ELEMENT_VALUE_LIST);
 
-		static final NonTerminal MemberValueArrayInitializer_2_2_2 = nonTerminal("MemberValueArrayInitializer_2_2_2", MEMBER_VALUE);
+		static final ZeroOrOne ElementValueArrayInitializer_2 = zeroOrOne("ElementValueArrayInitializer_2", ElementValueArrayInitializer_2_1);
 
-		static final ZeroOrMore MemberValueArrayInitializer_2_2 = zeroOrMore("MemberValueArrayInitializer_2_2", sequence("MemberValueArrayInitializer_2_2", terminal("MemberValueArrayInitializer_2_2_1", TokenType.COMMA), MemberValueArrayInitializer_2_2_2));
+		static final ZeroOrOne ElementValueArrayInitializer_3 = zeroOrOne("ElementValueArrayInitializer_3", terminal("ElementValueArrayInitializer_3_1", TokenType.COMMA));
 
-		static final ZeroOrOne MemberValueArrayInitializer_2 = zeroOrOne("MemberValueArrayInitializer_2", sequence("MemberValueArrayInitializer_2", MemberValueArrayInitializer_2_1, MemberValueArrayInitializer_2_2));
+		static final Sequence ElementValueArrayInitializer = sequence("ElementValueArrayInitializer", terminal("ElementValueArrayInitializer_1", TokenType.LBRACE), ElementValueArrayInitializer_2, ElementValueArrayInitializer_3, terminal("ElementValueArrayInitializer_4", TokenType.RBRACE));
 
-		static final ZeroOrOne MemberValueArrayInitializer_3 = zeroOrOne("MemberValueArrayInitializer_3", terminal("MemberValueArrayInitializer_3_1", TokenType.COMMA));
+		static final NonTerminal ElementValueList_1 = nonTerminal("ElementValueList_1", ELEMENT_VALUE);
 
-		static final Sequence MemberValueArrayInitializer = sequence("MemberValueArrayInitializer", terminal("MemberValueArrayInitializer_1", TokenType.LBRACE), MemberValueArrayInitializer_2, MemberValueArrayInitializer_3, terminal("MemberValueArrayInitializer_4", TokenType.RBRACE));
+		static final NonTerminal ElementValueList_2_2 = nonTerminal("ElementValueList_2_2", ELEMENT_VALUE);
+
+		static final ZeroOrMore ElementValueList_2 = zeroOrMore("ElementValueList_2", sequence("ElementValueList_2", terminal("ElementValueList_2_1", TokenType.COMMA), ElementValueList_2_2));
+
+		static final Sequence ElementValueList = sequence("ElementValueList", ElementValueList_1, ElementValueList_2);
 
 		protected void initializeProductions() {
 			addProduction(COMPILATION_UNIT_ENTRY, CompilationUnitEntry, true);
@@ -2517,16 +2523,17 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			addProduction(NORMAL_ANNOTATION, NormalAnnotation, false);
 			addChoicePoint(NORMAL_ANNOTATION_4, NormalAnnotation_4);
 			addProduction(MARKER_ANNOTATION, MarkerAnnotation, false);
-			addProduction(SINGLE_MEMBER_ANNOTATION, SingleMemberAnnotation, false);
-			addProduction(MEMBER_VALUE_PAIRS, MemberValuePairs, false);
-			addChoicePoint(MEMBER_VALUE_PAIRS_2, MemberValuePairs_2);
-			addProduction(MEMBER_VALUE_PAIR, MemberValuePair, false);
-			addProduction(MEMBER_VALUE, MemberValue, false);
-			addChoicePoint(MEMBER_VALUE_1, MemberValue_1);
-			addProduction(MEMBER_VALUE_ARRAY_INITIALIZER, MemberValueArrayInitializer, false);
-			addChoicePoint(MEMBER_VALUE_ARRAY_INITIALIZER_2, MemberValueArrayInitializer_2);
-			addChoicePoint(MEMBER_VALUE_ARRAY_INITIALIZER_2_2, MemberValueArrayInitializer_2_2);
-			addChoicePoint(MEMBER_VALUE_ARRAY_INITIALIZER_3, MemberValueArrayInitializer_3);
+			addProduction(SINGLE_ELEMENT_ANNOTATION, SingleElementAnnotation, false);
+			addProduction(ELEMENT_VALUE_PAIR_LIST, ElementValuePairList, false);
+			addChoicePoint(ELEMENT_VALUE_PAIR_LIST_2, ElementValuePairList_2);
+			addProduction(ELEMENT_VALUE_PAIR, ElementValuePair, false);
+			addProduction(ELEMENT_VALUE, ElementValue, false);
+			addChoicePoint(ELEMENT_VALUE_1, ElementValue_1);
+			addProduction(ELEMENT_VALUE_ARRAY_INITIALIZER, ElementValueArrayInitializer, false);
+			addChoicePoint(ELEMENT_VALUE_ARRAY_INITIALIZER_2, ElementValueArrayInitializer_2);
+			addChoicePoint(ELEMENT_VALUE_ARRAY_INITIALIZER_3, ElementValueArrayInitializer_3);
+			addProduction(ELEMENT_VALUE_LIST, ElementValueList, false);
+			addChoicePoint(ELEMENT_VALUE_LIST_2, ElementValueList_2);
 		}
 	}
 
@@ -3840,18 +3847,18 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		nonTerminal(dims, ArrayDims)
 		zeroOrOne(
 			terminal(DEFAULT)
-			nonTerminal(val, MemberValue)
-			action({ defaultVal = optionOf(val); })
+			nonTerminal(value, ElementValue)
+			action({ defaultValue = optionOf(value); })
 		)
 		terminal(SEMICOLON)
-		action({ return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal)); })
+		action({ return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultValue)); })
 	) */
 	protected BUTree<SAnnotationMemberDecl> parseAnnotationTypeMemberDecl(BUTree<SNodeList> modifiers) throws ParseException {
 		BUTree<? extends SType> type;
 		BUTree<SName> name;
 		BUTree<SNodeList> dims;
-		BUTree<SNodeOption> defaultVal = none();
-		BUTree<? extends SExpr> val = null;
+		BUTree<SNodeOption> defaultValue = none();
+		BUTree<? extends SExpr> value = null;
 		pushCallStack(JavaGrammar.AnnotationTypeMemberDecl_1);
 		type = parseType(null);
 		popCallStack();
@@ -3866,12 +3873,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		if (predict(JavaGrammar.ANNOTATION_TYPE_MEMBER_DECL_6) == 1) {
 			parse(TokenType.DEFAULT);
 			pushCallStack(JavaGrammar.AnnotationTypeMemberDecl_6_2);
-			val = parseMemberValue();
+			value = parseElementValue();
 			popCallStack();
-			defaultVal = optionOf(val);
+			defaultValue = optionOf(value);
 		}
 		parse(TokenType.SEMICOLON);
-		return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultVal));
+		return dress(SAnnotationMemberDecl.make(modifiers, type, name, dims, defaultValue));
 	}
 
 	/* sequence(
@@ -8261,8 +8268,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	/* sequence(
 		choice(
 			nonTerminal(ret, NormalAnnotation)
-			nonTerminal(ret, SingleMemberAnnotation)
 			nonTerminal(ret, MarkerAnnotation)
+			nonTerminal(ret, SingleElementAnnotation)
 		)
 		action({ return ret; })
 	) */
@@ -8276,12 +8283,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				break;
 			case 2:
 				pushCallStack(JavaGrammar.Annotation_1_2);
-				ret = parseSingleMemberAnnotation();
+				ret = parseMarkerAnnotation();
 				popCallStack();
 				break;
 			case 3:
 				pushCallStack(JavaGrammar.Annotation_1_3);
-				ret = parseMarkerAnnotation();
+				ret = parseSingleElementAnnotation();
 				popCallStack();
 				break;
 			default:
@@ -8296,7 +8303,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		nonTerminal(name, QualifiedName)
 		terminal(LPAREN)
 		zeroOrOne(
-			nonTerminal(pairs, MemberValuePairs)
+			nonTerminal(pairs, ElementValuePairList)
 		)
 		terminal(RPAREN)
 		action({ return dress(SNormalAnnotationExpr.make(name, ensureNotNull(pairs))); })
@@ -8312,7 +8319,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		parse(TokenType.LPAREN);
 		if (predict(JavaGrammar.NORMAL_ANNOTATION_4) == 1) {
 			pushCallStack(JavaGrammar.NormalAnnotation_4_1);
-			pairs = parseMemberValuePairs();
+			pairs = parseElementValuePairList();
 			popCallStack();
 		}
 		parse(TokenType.RPAREN);
@@ -8340,47 +8347,47 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		terminal(AT)
 		nonTerminal(name, QualifiedName)
 		terminal(LPAREN)
-		nonTerminal(memberVal, MemberValue)
+		nonTerminal(value, ElementValue)
 		terminal(RPAREN)
-		action({ return dress(SSingleMemberAnnotationExpr.make(name, memberVal)); })
+		action({ return dress(SSingleMemberAnnotationExpr.make(name, value)); })
 	) */
-	protected BUTree<SSingleMemberAnnotationExpr> parseSingleMemberAnnotation() throws ParseException {
+	protected BUTree<SSingleMemberAnnotationExpr> parseSingleElementAnnotation() throws ParseException {
 		BUTree<SQualifiedName> name;
-		BUTree<? extends SExpr> memberVal;
+		BUTree<? extends SExpr> value;
 		run();
 		parse(TokenType.AT);
-		pushCallStack(JavaGrammar.SingleMemberAnnotation_2);
+		pushCallStack(JavaGrammar.SingleElementAnnotation_2);
 		name = parseQualifiedName();
 		popCallStack();
 		parse(TokenType.LPAREN);
-		pushCallStack(JavaGrammar.SingleMemberAnnotation_4);
-		memberVal = parseMemberValue();
+		pushCallStack(JavaGrammar.SingleElementAnnotation_4);
+		value = parseElementValue();
 		popCallStack();
 		parse(TokenType.RPAREN);
-		return dress(SSingleMemberAnnotationExpr.make(name, memberVal));
+		return dress(SSingleMemberAnnotationExpr.make(name, value));
 	}
 
 	/* sequence(
-		nonTerminal(pair, MemberValuePair)
+		nonTerminal(pair, ElementValuePair)
 		action({ ret = append(ret, pair); })
 		zeroOrMore(
 			terminal(COMMA)
-			nonTerminal(pair, MemberValuePair)
+			nonTerminal(pair, ElementValuePair)
 			action({ ret = append(ret, pair); })
 		)
 		action({ return ret; })
 	) */
-	protected BUTree<SNodeList> parseMemberValuePairs() throws ParseException {
+	protected BUTree<SNodeList> parseElementValuePairList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<SMemberValuePair> pair;
-		pushCallStack(JavaGrammar.MemberValuePairs_1);
-		pair = parseMemberValuePair();
+		pushCallStack(JavaGrammar.ElementValuePairList_1);
+		pair = parseElementValuePair();
 		popCallStack();
 		ret = append(ret, pair);
-		while (predict(JavaGrammar.MEMBER_VALUE_PAIRS_2) == 1) {
+		while (predict(JavaGrammar.ELEMENT_VALUE_PAIR_LIST_2) == 1) {
 			parse(TokenType.COMMA);
-			pushCallStack(JavaGrammar.MemberValuePairs_2_2);
-			pair = parseMemberValuePair();
+			pushCallStack(JavaGrammar.ElementValuePairList_2_2);
+			pair = parseElementValuePair();
 			popCallStack();
 			ret = append(ret, pair);
 		}
@@ -8391,51 +8398,51 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		action({ run(); })
 		nonTerminal(name, Name)
 		terminal(ASSIGN)
-		nonTerminal(value, MemberValue)
+		nonTerminal(value, ElementValue)
 		action({ return dress(SMemberValuePair.make(name, value)); })
 	) */
-	protected BUTree<SMemberValuePair> parseMemberValuePair() throws ParseException {
+	protected BUTree<SMemberValuePair> parseElementValuePair() throws ParseException {
 		BUTree<SName> name;
 		BUTree<? extends SExpr> value;
 		run();
-		pushCallStack(JavaGrammar.MemberValuePair_1);
+		pushCallStack(JavaGrammar.ElementValuePair_1);
 		name = parseName();
 		popCallStack();
 		parse(TokenType.ASSIGN);
-		pushCallStack(JavaGrammar.MemberValuePair_3);
-		value = parseMemberValue();
+		pushCallStack(JavaGrammar.ElementValuePair_3);
+		value = parseElementValue();
 		popCallStack();
 		return dress(SMemberValuePair.make(name, value));
 	}
 
 	/* sequence(
 		choice(
-			nonTerminal(ret, Annotation)
-			nonTerminal(ret, MemberValueArrayInitializer)
 			nonTerminal(ret, ConditionalExpression)
+			nonTerminal(ret, ElementValueArrayInitializer)
+			nonTerminal(ret, Annotation)
 		)
 		action({ return ret; })
 	) */
-	protected BUTree<? extends SExpr> parseMemberValue() throws ParseException {
+	protected BUTree<? extends SExpr> parseElementValue() throws ParseException {
 		BUTree<? extends SExpr> ret;
-		switch (predict(JavaGrammar.MEMBER_VALUE_1)) {
+		switch (predict(JavaGrammar.ELEMENT_VALUE_1)) {
 			case 1:
-				pushCallStack(JavaGrammar.MemberValue_1_1);
-				ret = parseAnnotation();
-				popCallStack();
-				break;
-			case 2:
-				pushCallStack(JavaGrammar.MemberValue_1_2);
-				ret = parseMemberValueArrayInitializer();
-				popCallStack();
-				break;
-			case 3:
-				pushCallStack(JavaGrammar.MemberValue_1_3);
+				pushCallStack(JavaGrammar.ElementValue_1_1);
 				ret = parseConditionalExpression();
 				popCallStack();
 				break;
+			case 2:
+				pushCallStack(JavaGrammar.ElementValue_1_2);
+				ret = parseElementValueArrayInitializer();
+				popCallStack();
+				break;
+			case 3:
+				pushCallStack(JavaGrammar.ElementValue_1_3);
+				ret = parseAnnotation();
+				popCallStack();
+				break;
 			default:
-				throw produceParseException(TokenType.PLUS, TokenType.MINUS, TokenType.BANG, TokenType.TILDE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.THIS, TokenType.FALSE, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LT, TokenType.VOID, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.NEW, TokenType.SUPER, TokenType.DECR, TokenType.INCR, TokenType.LBRACE, TokenType.AT);
+				throw produceParseException(TokenType.AT, TokenType.LBRACE, TokenType.MINUS, TokenType.PLUS, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.VOID, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.DOUBLE, TokenType.LT, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR);
 		}
 		return ret;
 	}
@@ -8444,45 +8451,57 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		action({ run(); })
 		terminal(LBRACE)
 		zeroOrOne(
-			nonTerminal(member, MemberValue)
-			action({ ret = append(ret, member); })
-			zeroOrMore(
-				terminal(COMMA)
-				nonTerminal(member, MemberValue)
-				action({ ret = append(ret, member); })
-			)
+			nonTerminal(values, ElementValueList)
 		)
 		zeroOrOne(
 			terminal(COMMA)
 			action({ trailingComma = true; })
 		)
 		terminal(RBRACE)
-		action({ return dress(SArrayInitializerExpr.make(ret, trailingComma)); })
+		action({ return dress(SArrayInitializerExpr.make(ensureNotNull(values), trailingComma)); })
 	) */
-	protected BUTree<? extends SExpr> parseMemberValueArrayInitializer() throws ParseException {
-		BUTree<SNodeList> ret = emptyList();
-		BUTree<? extends SExpr> member;
+	protected BUTree<? extends SExpr> parseElementValueArrayInitializer() throws ParseException {
+		BUTree<SNodeList> values = null;
 		boolean trailingComma = false;
 		run();
 		parse(TokenType.LBRACE);
-		if (predict(JavaGrammar.MEMBER_VALUE_ARRAY_INITIALIZER_2) == 1) {
-			pushCallStack(JavaGrammar.MemberValueArrayInitializer_2_1);
-			member = parseMemberValue();
+		if (predict(JavaGrammar.ELEMENT_VALUE_ARRAY_INITIALIZER_2) == 1) {
+			pushCallStack(JavaGrammar.ElementValueArrayInitializer_2_1);
+			values = parseElementValueList();
 			popCallStack();
-			ret = append(ret, member);
-			while (predict(JavaGrammar.MEMBER_VALUE_ARRAY_INITIALIZER_2_2) == 1) {
-				parse(TokenType.COMMA);
-				pushCallStack(JavaGrammar.MemberValueArrayInitializer_2_2_2);
-				member = parseMemberValue();
-				popCallStack();
-				ret = append(ret, member);
-			}
 		}
-		if (predict(JavaGrammar.MEMBER_VALUE_ARRAY_INITIALIZER_3) == 1) {
+		if (predict(JavaGrammar.ELEMENT_VALUE_ARRAY_INITIALIZER_3) == 1) {
 			parse(TokenType.COMMA);
 			trailingComma = true;
 		}
 		parse(TokenType.RBRACE);
-		return dress(SArrayInitializerExpr.make(ret, trailingComma));
+		return dress(SArrayInitializerExpr.make(ensureNotNull(values), trailingComma));
+	}
+
+	/* sequence(
+		nonTerminal(value, ElementValue)
+		action({ ret = append(ret, value); })
+		zeroOrMore(
+			terminal(COMMA)
+			nonTerminal(value, ElementValue)
+			action({ ret = append(ret, value); })
+		)
+		action({ return ret; })
+	) */
+	protected BUTree<SNodeList> parseElementValueList() throws ParseException {
+		BUTree<SNodeList> ret = emptyList();
+		BUTree<? extends SExpr> value;
+		pushCallStack(JavaGrammar.ElementValueList_1);
+		value = parseElementValue();
+		popCallStack();
+		ret = append(ret, value);
+		while (predict(JavaGrammar.ELEMENT_VALUE_LIST_2) == 1) {
+			parse(TokenType.COMMA);
+			pushCallStack(JavaGrammar.ElementValueList_2_2);
+			value = parseElementValue();
+			popCallStack();
+			ret = append(ret, value);
+		}
+		return ret;
 	}
 }
