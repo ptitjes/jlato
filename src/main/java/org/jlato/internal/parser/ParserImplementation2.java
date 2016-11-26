@@ -72,11 +72,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int ANNOTATIONS = 17;
 
-		public static final int ANNOTATIONS_1 = 322;
+		public static final int ANNOTATIONS_1 = 323;
 
 		public static final int ANNOTATIONS_ENTRY = 16;
 
-		public static final int ANNOTATION_1 = 323;
+		public static final int ANNOTATION_1 = 324;
 
 		public static final int ANNOTATION_ELEMENT_DECL_ENTRY = 22;
 
@@ -150,7 +150,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int BREAK_STATEMENT = 280;
 
-		public static final int BREAK_STATEMENT_2 = 305;
+		public static final int BREAK_STATEMENT_2 = 306;
 
 		public static final int CAST_EXPRESSION = 226;
 
@@ -160,17 +160,17 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int CAST_EXPRESSION_3_2_2 = 234;
 
-		public static final int CATCH_CLAUSE = 316;
+		public static final int CATCH_CLAUSE = 317;
 
-		public static final int CATCH_CLAUSES = 311;
+		public static final int CATCH_CLAUSES = 312;
 
-		public static final int CATCH_CLAUSES_1 = 315;
+		public static final int CATCH_CLAUSES_1 = 316;
 
-		public static final int CATCH_FORMAL_PARAMETER = 317;
+		public static final int CATCH_FORMAL_PARAMETER = 318;
 
-		public static final int CATCH_FORMAL_PARAMETER_3 = 318;
+		public static final int CATCH_FORMAL_PARAMETER_3 = 319;
 
-		public static final int CATCH_FORMAL_PARAMETER_3_1 = 319;
+		public static final int CATCH_FORMAL_PARAMETER_3_1 = 320;
 
 		public static final int CLASS_OR_INTERFACE_BODY = 72;
 
@@ -228,7 +228,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int CONTINUE_STATEMENT = 281;
 
-		public static final int CONTINUE_STATEMENT_2 = 306;
+		public static final int CONTINUE_STATEMENT_2 = 307;
 
 		public static final int DO_STATEMENT = 278;
 
@@ -286,9 +286,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int EXPRESSION_ENTRY = 34;
 
-		public static final int EXPRESSION_LIST = 303;
-
-		public static final int EXPRESSION_LIST_2 = 304;
+		public static final int EXPRESSION_STATEMENT = 274;
 
 		public static final int EXTENDS_LIST = 71;
 
@@ -322,25 +320,25 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int FORMAL_PARAMETER_LIST_1_2_2 = 132;
 
-		public static final int FOR_INIT = 298;
+		public static final int FOR_INIT = 299;
 
-		public static final int FOR_INIT_1 = 302;
+		public static final int FOR_INIT_1 = 303;
 
 		public static final int FOR_STATEMENT = 279;
 
-		public static final int FOR_STATEMENT_3 = 296;
+		public static final int FOR_STATEMENT_3 = 297;
 
-		public static final int FOR_STATEMENT_3_2_1 = 297;
+		public static final int FOR_STATEMENT_3_2_1 = 298;
 
-		public static final int FOR_STATEMENT_3_2_3 = 299;
+		public static final int FOR_STATEMENT_3_2_3 = 300;
 
-		public static final int FOR_STATEMENT_3_2_5 = 300;
+		public static final int FOR_STATEMENT_3_2_5 = 301;
 
-		public static final int FOR_UPDATE = 301;
+		public static final int FOR_UPDATE = 302;
 
 		public static final int IF_STATEMENT = 276;
 
-		public static final int IF_STATEMENT_6 = 295;
+		public static final int IF_STATEMENT_6 = 296;
 
 		public static final int IMPLEMENTS_LIST = 68;
 
@@ -390,27 +388,27 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int LITERAL_1 = 238;
 
-		public static final int MARKER_ANNOTATION = 326;
+		public static final int MARKER_ANNOTATION = 327;
 
 		public static final int MEMBER_DECL_ENTRY = 10;
 
 		public static final int MEMBER_VALUE = 95;
 
-		public static final int MEMBER_VALUE_1 = 331;
+		public static final int MEMBER_VALUE_1 = 332;
 
-		public static final int MEMBER_VALUE_ARRAY_INITIALIZER = 332;
+		public static final int MEMBER_VALUE_ARRAY_INITIALIZER = 333;
 
-		public static final int MEMBER_VALUE_ARRAY_INITIALIZER_2 = 333;
+		public static final int MEMBER_VALUE_ARRAY_INITIALIZER_2 = 334;
 
-		public static final int MEMBER_VALUE_ARRAY_INITIALIZER_2_2 = 334;
+		public static final int MEMBER_VALUE_ARRAY_INITIALIZER_2_2 = 335;
 
-		public static final int MEMBER_VALUE_ARRAY_INITIALIZER_3 = 335;
+		public static final int MEMBER_VALUE_ARRAY_INITIALIZER_3 = 336;
 
-		public static final int MEMBER_VALUE_PAIR = 329;
+		public static final int MEMBER_VALUE_PAIR = 330;
 
-		public static final int MEMBER_VALUE_PAIRS = 328;
+		public static final int MEMBER_VALUE_PAIRS = 329;
 
-		public static final int MEMBER_VALUE_PAIRS_2 = 330;
+		public static final int MEMBER_VALUE_PAIRS_2 = 331;
 
 		public static final int METHOD_DECL = 19;
 
@@ -462,9 +460,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int NODE_VAR = 43;
 
-		public static final int NORMAL_ANNOTATION = 324;
+		public static final int NORMAL_ANNOTATION = 325;
 
-		public static final int NORMAL_ANNOTATION_4 = 327;
+		public static final int NORMAL_ANNOTATION_4 = 328;
 
 		public static final int PACKAGE_DECL = 4;
 
@@ -544,11 +542,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int RELATIONAL_EXPRESSION_2_1 = 207;
 
-		public static final int RESOURCE_SPECIFICATION = 309;
+		public static final int RESOURCE_SPECIFICATION = 310;
 
-		public static final int RESOURCE_SPECIFICATION_3 = 320;
+		public static final int RESOURCE_SPECIFICATION_3 = 321;
 
-		public static final int RESOURCE_SPECIFICATION_4 = 321;
+		public static final int RESOURCE_SPECIFICATION_4 = 322;
 
 		public static final int RESULT_TYPE = 123;
 
@@ -556,7 +554,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int RETURN_STATEMENT = 282;
 
-		public static final int RETURN_STATEMENT_2 = 307;
+		public static final int RETURN_STATEMENT_2 = 308;
 
 		public static final int R_S_I_G_N_E_D_S_H_I_F_T = 212;
 
@@ -568,7 +566,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int SHIFT_EXPRESSION_2_1 = 210;
 
-		public static final int SINGLE_MEMBER_ANNOTATION = 325;
+		public static final int SINGLE_MEMBER_ANNOTATION = 326;
 
 		public static final int STATEMENT = 269;
 
@@ -586,21 +584,25 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int STATEMENT_1 = 270;
 
-		public static final int STATEMENT_EXPRESSION = 274;
+		public static final int STATEMENT_EXPRESSION = 289;
 
-		public static final int STATEMENT_EXPRESSION_1 = 289;
+		public static final int STATEMENT_EXPRESSION_1 = 290;
 
-		public static final int STATEMENT_EXPRESSION_1_2_2 = 290;
+		public static final int STATEMENT_EXPRESSION_1_2_2 = 291;
 
-		public static final int STATEMENT_EXPRESSION_1_2_2_1 = 291;
+		public static final int STATEMENT_EXPRESSION_1_2_2_1 = 292;
 
-		public static final int SWITCH_ENTRY = 293;
+		public static final int STATEMENT_EXPRESSION_LIST = 304;
 
-		public static final int SWITCH_ENTRY_1 = 294;
+		public static final int STATEMENT_EXPRESSION_LIST_2 = 305;
+
+		public static final int SWITCH_ENTRY = 294;
+
+		public static final int SWITCH_ENTRY_1 = 295;
 
 		public static final int SWITCH_STATEMENT = 275;
 
-		public static final int SWITCH_STATEMENT_6 = 292;
+		public static final int SWITCH_STATEMENT_6 = 293;
 
 		public static final int SYNCHRONIZED_STATEMENT = 284;
 
@@ -612,15 +614,15 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int TRY_STATEMENT = 285;
 
-		public static final int TRY_STATEMENT_2 = 308;
+		public static final int TRY_STATEMENT_2 = 309;
 
-		public static final int TRY_STATEMENT_2_1_3 = 310;
+		public static final int TRY_STATEMENT_2_1_3 = 311;
 
-		public static final int TRY_STATEMENT_2_1_4 = 312;
+		public static final int TRY_STATEMENT_2_1_4 = 313;
 
-		public static final int TRY_STATEMENT_2_2_2 = 313;
+		public static final int TRY_STATEMENT_2_2_2 = 314;
 
-		public static final int TRY_STATEMENT_2_2_2_1_2 = 314;
+		public static final int TRY_STATEMENT_2_2_2_1_2 = 315;
 
 		public static final int TYPE = 37;
 
@@ -1854,7 +1856,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final NonTerminal Statement_1_4 = nonTerminal("Statement_1_4", EMPTY_STATEMENT);
 
-		static final NonTerminal Statement_1_5 = nonTerminal("Statement_1_5", STATEMENT_EXPRESSION);
+		static final NonTerminal Statement_1_5 = nonTerminal("Statement_1_5", EXPRESSION_STATEMENT);
 
 		static final NonTerminal Statement_1_6 = nonTerminal("Statement_1_6", SWITCH_STATEMENT);
 
@@ -1920,6 +1922,10 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final Sequence EmptyStatement = sequence("EmptyStatement", terminal("EmptyStatement_1", TokenType.SEMICOLON));
 
+		static final NonTerminal ExpressionStatement_1 = nonTerminal("ExpressionStatement_1", STATEMENT_EXPRESSION);
+
+		static final Sequence ExpressionStatement = sequence("ExpressionStatement", ExpressionStatement_1, terminal("ExpressionStatement_2", TokenType.SEMICOLON));
+
 		static final NonTerminal StatementExpression_1_1 = nonTerminal("StatementExpression_1_1", PREFIX_EXPRESSION);
 
 		static final NonTerminal StatementExpression_1_2_1 = nonTerminal("StatementExpression_1_2_1", PRIMARY_EXPRESSION);
@@ -1934,7 +1940,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final Choice StatementExpression_1 = choice("StatementExpression_1", StatementExpression_1_1, sequence("StatementExpression_1_2", StatementExpression_1_2_1, StatementExpression_1_2_2));
 
-		static final Sequence StatementExpression = sequence("StatementExpression", StatementExpression_1, terminal("StatementExpression_2", TokenType.SEMICOLON));
+		static final Sequence StatementExpression = sequence("StatementExpression", StatementExpression_1);
 
 		static final NonTerminal SwitchStatement_3 = nonTerminal("SwitchStatement_3", EXPRESSION);
 
@@ -1998,21 +2004,21 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final NonTerminal ForInit_1_1_1 = nonTerminal("ForInit_1_1_1", VARIABLE_DECL_EXPRESSION);
 
-		static final NonTerminal ForInit_1_2 = nonTerminal("ForInit_1_2", EXPRESSION_LIST);
+		static final NonTerminal ForInit_1_2 = nonTerminal("ForInit_1_2", STATEMENT_EXPRESSION_LIST);
 
 		static final Choice ForInit_1 = choice("ForInit_1", sequence("ForInit_1_1", ForInit_1_1_1), ForInit_1_2);
 
 		static final Sequence ForInit = sequence("ForInit", ForInit_1);
 
-		static final NonTerminal ExpressionList_1 = nonTerminal("ExpressionList_1", EXPRESSION);
+		static final NonTerminal StatementExpressionList_1 = nonTerminal("StatementExpressionList_1", STATEMENT_EXPRESSION);
 
-		static final NonTerminal ExpressionList_2_2 = nonTerminal("ExpressionList_2_2", EXPRESSION);
+		static final NonTerminal StatementExpressionList_2_2 = nonTerminal("StatementExpressionList_2_2", STATEMENT_EXPRESSION);
 
-		static final ZeroOrMore ExpressionList_2 = zeroOrMore("ExpressionList_2", sequence("ExpressionList_2", terminal("ExpressionList_2_1", TokenType.COMMA), ExpressionList_2_2));
+		static final ZeroOrMore StatementExpressionList_2 = zeroOrMore("StatementExpressionList_2", sequence("StatementExpressionList_2", terminal("StatementExpressionList_2_1", TokenType.COMMA), StatementExpressionList_2_2));
 
-		static final Sequence ExpressionList = sequence("ExpressionList", ExpressionList_1, ExpressionList_2);
+		static final Sequence StatementExpressionList = sequence("StatementExpressionList", StatementExpressionList_1, StatementExpressionList_2);
 
-		static final NonTerminal ForUpdate_1 = nonTerminal("ForUpdate_1", EXPRESSION_LIST);
+		static final NonTerminal ForUpdate_1 = nonTerminal("ForUpdate_1", STATEMENT_EXPRESSION_LIST);
 
 		static final Sequence ForUpdate = sequence("ForUpdate", ForUpdate_1);
 
@@ -2456,6 +2462,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			addChoicePoint(BLOCK_STATEMENT_1, BlockStatement_1);
 			addProduction(VARIABLE_DECL_EXPRESSION, VariableDeclExpression, false);
 			addProduction(EMPTY_STATEMENT, EmptyStatement, false);
+			addProduction(EXPRESSION_STATEMENT, ExpressionStatement, false);
 			addProduction(STATEMENT_EXPRESSION, StatementExpression, false);
 			addChoicePoint(STATEMENT_EXPRESSION_1, StatementExpression_1);
 			addChoicePoint(STATEMENT_EXPRESSION_1_2_2, StatementExpression_1_2_2);
@@ -2475,8 +2482,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			addChoicePoint(FOR_STATEMENT_3_2_5, ForStatement_3_2_5);
 			addProduction(FOR_INIT, ForInit, false);
 			addChoicePoint(FOR_INIT_1, ForInit_1);
-			addProduction(EXPRESSION_LIST, ExpressionList, false);
-			addChoicePoint(EXPRESSION_LIST_2, ExpressionList_2);
+			addProduction(STATEMENT_EXPRESSION_LIST, StatementExpressionList, false);
+			addChoicePoint(STATEMENT_EXPRESSION_LIST_2, StatementExpressionList_2);
 			addProduction(FOR_UPDATE, ForUpdate, false);
 			addProduction(BREAK_STATEMENT, BreakStatement, false);
 			addChoicePoint(BREAK_STATEMENT_2, BreakStatement_2);
@@ -7367,7 +7374,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			nonTerminal(ret, AssertStatement)
 			nonTerminal(ret, Block)
 			nonTerminal(ret, EmptyStatement)
-			nonTerminal(ret, StatementExpression)
+			nonTerminal(ret, ExpressionStatement)
 			nonTerminal(ret, SwitchStatement)
 			nonTerminal(ret, IfStatement)
 			nonTerminal(ret, WhileStatement)
@@ -7407,7 +7414,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				break;
 			case 5:
 				pushCallStack(JavaGrammar.Statement_1_5);
-				ret = parseStatementExpression();
+				ret = parseExpressionStatement();
 				popCallStack();
 				break;
 			case 6:
@@ -7466,7 +7473,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.INTEGER_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.LT, TokenType.INCR, TokenType.DECR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT);
+				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.VOID, TokenType.LT, TokenType.INCR, TokenType.DECR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT);
 		}
 		return ret;
 	}
@@ -7606,7 +7613,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.THIS, TokenType.NULL, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.NEW, TokenType.SUPER, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.LT, TokenType.LPAREN, TokenType.INCR, TokenType.DECR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.AT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.ABSTRACT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.VOLATILE, TokenType.CLASS, TokenType.INTERFACE);
+				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.LT, TokenType.THIS, TokenType.FALSE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NEW, TokenType.SUPER, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.VOID, TokenType.DECR, TokenType.INCR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.AT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.ABSTRACT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.VOLATILE, TokenType.CLASS, TokenType.INTERFACE);
 		}
 		return ret;
 	}
@@ -7645,6 +7652,23 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 	/* sequence(
 		action({ run(); })
+		nonTerminal(expr, StatementExpression)
+		terminal(SEMICOLON)
+		action({ return dress(SExpressionStmt.make(expr)); })
+	) */
+	protected BUTree<SExpressionStmt> parseExpressionStatement() throws ParseException {
+		BUTree<? extends SExpr> expr;
+		AssignOp op;
+		BUTree<? extends SExpr> value;
+		run();
+		pushCallStack(JavaGrammar.ExpressionStatement_1);
+		expr = parseStatementExpression();
+		popCallStack();
+		parse(TokenType.SEMICOLON);
+		return dress(SExpressionStmt.make(expr));
+	}
+
+	/* sequence(
 		choice(
 			nonTerminal(expr, PrefixExpression)
 			sequence(
@@ -7671,14 +7695,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				)
 			)
 		)
-		terminal(SEMICOLON)
-		action({ return dress(SExpressionStmt.make(expr)); })
+		action({ return expr; })
 	) */
-	protected BUTree<SExpressionStmt> parseStatementExpression() throws ParseException {
+	protected BUTree<? extends SExpr> parseStatementExpression() throws ParseException {
 		BUTree<? extends SExpr> expr;
 		AssignOp op;
 		BUTree<? extends SExpr> value;
-		run();
 		switch (predict(JavaGrammar.STATEMENT_EXPRESSION_1)) {
 			case 1:
 				pushCallStack(JavaGrammar.StatementExpression_1_1);
@@ -7715,8 +7737,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			default:
 				throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.NEW, TokenType.LT, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.DECR, TokenType.INCR);
 		}
-		parse(TokenType.SEMICOLON);
-		return dress(SExpressionStmt.make(expr));
+		return expr;
 	}
 
 	/* sequence(
@@ -7961,7 +7982,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.DECR, TokenType.INCR, TokenType.MINUS, TokenType.PLUS, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.VOID, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.FALSE, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.BANG, TokenType.TILDE, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SEMICOLON);
+				throw produceParseException(TokenType.DECR, TokenType.INCR, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.LT, TokenType.NEW, TokenType.LPAREN, TokenType.THIS, TokenType.SUPER, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SEMICOLON);
 		}
 		parse(TokenType.RPAREN);
 		pushCallStack(JavaGrammar.ForStatement_5);
@@ -7988,7 +8009,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					ret = append(ret, expr);
 				})
 			)
-			nonTerminal(ret, ExpressionList)
+			nonTerminal(ret, StatementExpressionList)
 		)
 		action({ return ret; })
 	) */
@@ -8005,36 +8026,36 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				break;
 			case 2:
 				pushCallStack(JavaGrammar.ForInit_1_2);
-				ret = parseExpressionList();
+				ret = parseStatementExpressionList();
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.DECR, TokenType.INCR, TokenType.MINUS, TokenType.PLUS, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.VOID, TokenType.NEW, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.AT, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.STATIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.NATIVE, TokenType.STRICTFP);
+				throw produceParseException(TokenType.DECR, TokenType.INCR, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.THIS, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.AT, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.STATIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.NATIVE, TokenType.STRICTFP);
 		}
 		return ret;
 	}
 
 	/* sequence(
-		nonTerminal(expr, Expression)
+		nonTerminal(expr, StatementExpression)
 		action({ ret = append(ret, expr); })
 		zeroOrMore(
 			terminal(COMMA)
-			nonTerminal(expr, Expression)
+			nonTerminal(expr, StatementExpression)
 			action({ ret = append(ret, expr); })
 		)
 		action({ return ret; })
 	) */
-	protected BUTree<SNodeList> parseExpressionList() throws ParseException {
+	protected BUTree<SNodeList> parseStatementExpressionList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
-		pushCallStack(JavaGrammar.ExpressionList_1);
-		expr = parseExpression();
+		pushCallStack(JavaGrammar.StatementExpressionList_1);
+		expr = parseStatementExpression();
 		popCallStack();
 		ret = append(ret, expr);
-		while (predict(JavaGrammar.EXPRESSION_LIST_2) == 1) {
+		while (predict(JavaGrammar.STATEMENT_EXPRESSION_LIST_2) == 1) {
 			parse(TokenType.COMMA);
-			pushCallStack(JavaGrammar.ExpressionList_2_2);
-			expr = parseExpression();
+			pushCallStack(JavaGrammar.StatementExpressionList_2_2);
+			expr = parseStatementExpression();
 			popCallStack();
 			ret = append(ret, expr);
 		}
@@ -8042,13 +8063,13 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	}
 
 	/* sequence(
-		nonTerminal(ret, ExpressionList)
+		nonTerminal(ret, StatementExpressionList)
 		action({ return ret; })
 	) */
 	protected BUTree<SNodeList> parseForUpdate() throws ParseException {
 		BUTree<SNodeList> ret;
 		pushCallStack(JavaGrammar.ForUpdate_1);
-		ret = parseExpressionList();
+		ret = parseStatementExpressionList();
 		popCallStack();
 		return ret;
 	}
