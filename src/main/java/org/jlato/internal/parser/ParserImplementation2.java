@@ -1032,7 +1032,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final NonTerminal AnnotationTypeBodyDecl_1_2_1 = nonTerminal("AnnotationTypeBodyDecl_1_2_1", MODIFIERS);
 
-		static final NonTerminal AnnotationTypeBodyDecl_1_2_2_1_1 = nonTerminal("AnnotationTypeBodyDecl_1_2_2_1_1", ANNOTATION_TYPE_MEMBER_DECL);
+		static final NonTerminal AnnotationTypeBodyDecl_1_2_2_1 = nonTerminal("AnnotationTypeBodyDecl_1_2_2_1", ANNOTATION_TYPE_MEMBER_DECL);
 
 		static final NonTerminal AnnotationTypeBodyDecl_1_2_2_2 = nonTerminal("AnnotationTypeBodyDecl_1_2_2_2", CLASS_OR_INTERFACE_DECL);
 
@@ -1042,7 +1042,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final NonTerminal AnnotationTypeBodyDecl_1_2_2_5 = nonTerminal("AnnotationTypeBodyDecl_1_2_2_5", FIELD_DECL);
 
-		static final Choice AnnotationTypeBodyDecl_1_2_2 = choice("AnnotationTypeBodyDecl_1_2_2", sequence("AnnotationTypeBodyDecl_1_2_2_1", AnnotationTypeBodyDecl_1_2_2_1_1), AnnotationTypeBodyDecl_1_2_2_2, AnnotationTypeBodyDecl_1_2_2_3, AnnotationTypeBodyDecl_1_2_2_4, AnnotationTypeBodyDecl_1_2_2_5);
+		static final Choice AnnotationTypeBodyDecl_1_2_2 = choice("AnnotationTypeBodyDecl_1_2_2", AnnotationTypeBodyDecl_1_2_2_1, AnnotationTypeBodyDecl_1_2_2_2, AnnotationTypeBodyDecl_1_2_2_3, AnnotationTypeBodyDecl_1_2_2_4, AnnotationTypeBodyDecl_1_2_2_5);
 
 		static final Choice AnnotationTypeBodyDecl_1 = choice("AnnotationTypeBodyDecl_1", sequence("AnnotationTypeBodyDecl_1_1", terminal("AnnotationTypeBodyDecl_1_1_1", TokenType.SEMICOLON)), sequence("AnnotationTypeBodyDecl_1_2", AnnotationTypeBodyDecl_1_2_1, AnnotationTypeBodyDecl_1_2_2));
 
@@ -1630,11 +1630,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final NonTerminal UnaryExpressionNotPlusMinus_1_1_2 = nonTerminal("UnaryExpressionNotPlusMinus_1_1_2", UNARY_EXPRESSION);
 
-		static final NonTerminal UnaryExpressionNotPlusMinus_1_2_1 = nonTerminal("UnaryExpressionNotPlusMinus_1_2_1", CAST_EXPRESSION);
+		static final NonTerminal UnaryExpressionNotPlusMinus_1_2 = nonTerminal("UnaryExpressionNotPlusMinus_1_2", CAST_EXPRESSION);
 
 		static final NonTerminal UnaryExpressionNotPlusMinus_1_3 = nonTerminal("UnaryExpressionNotPlusMinus_1_3", POSTFIX_EXPRESSION);
 
-		static final Choice UnaryExpressionNotPlusMinus_1 = choice("UnaryExpressionNotPlusMinus_1", sequence("UnaryExpressionNotPlusMinus_1_1", UnaryExpressionNotPlusMinus_1_1_1, UnaryExpressionNotPlusMinus_1_1_2), sequence("UnaryExpressionNotPlusMinus_1_2", UnaryExpressionNotPlusMinus_1_2_1), UnaryExpressionNotPlusMinus_1_3);
+		static final Choice UnaryExpressionNotPlusMinus_1 = choice("UnaryExpressionNotPlusMinus_1", sequence("UnaryExpressionNotPlusMinus_1_1", UnaryExpressionNotPlusMinus_1_1_1, UnaryExpressionNotPlusMinus_1_1_2), UnaryExpressionNotPlusMinus_1_2, UnaryExpressionNotPlusMinus_1_3);
 
 		static final Sequence UnaryExpressionNotPlusMinus = sequence("UnaryExpressionNotPlusMinus", UnaryExpressionNotPlusMinus_1);
 
@@ -1710,11 +1710,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final NonTerminal PrimaryPrefix_1_1 = nonTerminal("PrimaryPrefix_1_1", LITERAL);
 
-		static final NonTerminal PrimaryPrefix_1_3_2_1_2_1_1 = nonTerminal("PrimaryPrefix_1_3_2_1_2_1_1", METHOD_INVOCATION);
+		static final NonTerminal PrimaryPrefix_1_3_2_1_2_1 = nonTerminal("PrimaryPrefix_1_3_2_1_2_1", METHOD_INVOCATION);
 
 		static final NonTerminal PrimaryPrefix_1_3_2_1_2_2 = nonTerminal("PrimaryPrefix_1_3_2_1_2_2", FIELD_ACCESS);
 
-		static final Choice PrimaryPrefix_1_3_2_1_2 = choice("PrimaryPrefix_1_3_2_1_2", sequence("PrimaryPrefix_1_3_2_1_2_1", PrimaryPrefix_1_3_2_1_2_1_1), PrimaryPrefix_1_3_2_1_2_2);
+		static final Choice PrimaryPrefix_1_3_2_1_2 = choice("PrimaryPrefix_1_3_2_1_2", PrimaryPrefix_1_3_2_1_2_1, PrimaryPrefix_1_3_2_1_2_2);
 
 		static final NonTerminal PrimaryPrefix_1_3_2_2_1 = nonTerminal("PrimaryPrefix_1_3_2_2_1", METHOD_REFERENCE_SUFFIX);
 
@@ -1748,11 +1748,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final NonTerminal PrimarySuffixWithoutSuper_1_1_2_2 = nonTerminal("PrimarySuffixWithoutSuper_1_1_2_2", ALLOCATION_EXPRESSION);
 
-		static final NonTerminal PrimarySuffixWithoutSuper_1_1_2_3_1 = nonTerminal("PrimarySuffixWithoutSuper_1_1_2_3_1", METHOD_INVOCATION);
+		static final NonTerminal PrimarySuffixWithoutSuper_1_1_2_3 = nonTerminal("PrimarySuffixWithoutSuper_1_1_2_3", METHOD_INVOCATION);
 
 		static final NonTerminal PrimarySuffixWithoutSuper_1_1_2_4 = nonTerminal("PrimarySuffixWithoutSuper_1_1_2_4", FIELD_ACCESS);
 
-		static final Choice PrimarySuffixWithoutSuper_1_1_2 = choice("PrimarySuffixWithoutSuper_1_1_2", sequence("PrimarySuffixWithoutSuper_1_1_2_1", terminal("PrimarySuffixWithoutSuper_1_1_2_1_1", TokenType.THIS)), PrimarySuffixWithoutSuper_1_1_2_2, sequence("PrimarySuffixWithoutSuper_1_1_2_3", PrimarySuffixWithoutSuper_1_1_2_3_1), PrimarySuffixWithoutSuper_1_1_2_4);
+		static final Choice PrimarySuffixWithoutSuper_1_1_2 = choice("PrimarySuffixWithoutSuper_1_1_2", sequence("PrimarySuffixWithoutSuper_1_1_2_1", terminal("PrimarySuffixWithoutSuper_1_1_2_1_1", TokenType.THIS)), PrimarySuffixWithoutSuper_1_1_2_2, PrimarySuffixWithoutSuper_1_1_2_3, PrimarySuffixWithoutSuper_1_1_2_4);
 
 		static final NonTerminal PrimarySuffixWithoutSuper_1_2_2 = nonTerminal("PrimarySuffixWithoutSuper_1_2_2", EXPRESSION);
 
@@ -1848,7 +1848,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final Sequence ArrayDimsMandatory = sequence("ArrayDimsMandatory", ArrayDimsMandatory_1);
 
-		static final NonTerminal Statement_1_1_1 = nonTerminal("Statement_1_1_1", LABELED_STATEMENT);
+		static final NonTerminal Statement_1_1 = nonTerminal("Statement_1_1", LABELED_STATEMENT);
 
 		static final NonTerminal Statement_1_2 = nonTerminal("Statement_1_2", ASSERT_STATEMENT);
 
@@ -1880,7 +1880,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final NonTerminal Statement_1_16 = nonTerminal("Statement_1_16", TRY_STATEMENT);
 
-		static final Choice Statement_1 = choice("Statement_1", sequence("Statement_1_1", Statement_1_1_1), Statement_1_2, Statement_1_3, Statement_1_4, Statement_1_5, Statement_1_6, Statement_1_7, Statement_1_8, Statement_1_9, Statement_1_10, Statement_1_11, Statement_1_12, Statement_1_13, Statement_1_14, Statement_1_15, Statement_1_16);
+		static final Choice Statement_1 = choice("Statement_1", Statement_1_1, Statement_1_2, Statement_1_3, Statement_1_4, Statement_1_5, Statement_1_6, Statement_1_7, Statement_1_8, Statement_1_9, Statement_1_10, Statement_1_11, Statement_1_12, Statement_1_13, Statement_1_14, Statement_1_15, Statement_1_16);
 
 		static final Sequence Statement = sequence("Statement", Statement_1);
 
@@ -2124,13 +2124,13 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final Sequence Annotations = sequence("Annotations", Annotations_1);
 
-		static final NonTerminal Annotation_1_1_1 = nonTerminal("Annotation_1_1_1", NORMAL_ANNOTATION);
+		static final NonTerminal Annotation_1_1 = nonTerminal("Annotation_1_1", NORMAL_ANNOTATION);
 
-		static final NonTerminal Annotation_1_2_1 = nonTerminal("Annotation_1_2_1", SINGLE_MEMBER_ANNOTATION);
+		static final NonTerminal Annotation_1_2 = nonTerminal("Annotation_1_2", SINGLE_MEMBER_ANNOTATION);
 
-		static final NonTerminal Annotation_1_3_1 = nonTerminal("Annotation_1_3_1", MARKER_ANNOTATION);
+		static final NonTerminal Annotation_1_3 = nonTerminal("Annotation_1_3", MARKER_ANNOTATION);
 
-		static final Choice Annotation_1 = choice("Annotation_1", sequence("Annotation_1_1", Annotation_1_1_1), sequence("Annotation_1_2", Annotation_1_2_1), sequence("Annotation_1_3", Annotation_1_3_1));
+		static final Choice Annotation_1 = choice("Annotation_1", Annotation_1_1, Annotation_1_2, Annotation_1_3);
 
 		static final Sequence Annotation = sequence("Annotation", Annotation_1);
 
@@ -2944,9 +2944,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	/* sequence(
 		action({ run(); })
 		zeroOrOne(
-			lookAhead(
-				nonTerminal(PackageDecl)
-			)
 			nonTerminal(packageDecl, PackageDecl)
 		)
 		nonTerminal(imports, ImportDecls)
@@ -3080,7 +3077,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 	/* sequence(
 		zeroOrMore(
-			lookAhead(2)
 			choice(
 				sequence(
 					terminal(PUBLIC)
@@ -3206,7 +3202,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 	/* sequence(
 		zeroOrMore(
-			lookAhead(2)
 			choice(
 				sequence(
 					terminal(PUBLIC)
@@ -3374,7 +3369,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.FINAL, TokenType.STATIC, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.SEMICOLON);
+				throw produceParseException(TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.SEMICOLON);
 		}
 		return ret;
 	}
@@ -3600,15 +3595,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					nonTerminal(entry, EnumConstantDecl)
 					action({ constants = append(constants, entry); })
 					zeroOrMore(
-						negativeLookAhead(
-							zeroOrOne(
-								terminal(COMMA)
-							)
-							choice(
-								terminal(SEMICOLON)
-								terminal(RBRACE)
-							)
-						)
 						terminal(COMMA)
 						nonTerminal(entry, EnumConstantDecl)
 						action({ constants = append(constants, entry); })
@@ -3787,14 +3773,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			sequence(
 				nonTerminal(modifiers, Modifiers)
 				choice(
-					sequence(
-						lookAhead(
-							nonTerminal(Type)
-							nonTerminal(Name)
-							terminal(LPAREN)
-						)
-						nonTerminal(ret, AnnotationTypeMemberDecl)
-					)
+					nonTerminal(ret, AnnotationTypeMemberDecl)
 					nonTerminal(ret, ClassOrInterfaceDecl)
 					nonTerminal(ret, EnumDecl)
 					nonTerminal(ret, AnnotationTypeDecl)
@@ -3819,7 +3798,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				switch (predict(JavaGrammar.ANNOTATION_TYPE_BODY_DECL_1_2_2)) {
 					case 1:
-						pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_1_1);
+						pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_2_1);
 						ret = parseAnnotationTypeMemberDecl(modifiers);
 						popCallStack();
 						break;
@@ -3848,7 +3827,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.FINAL, TokenType.STATIC, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.SEMICOLON);
+				throw produceParseException(TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.SEMICOLON);
 		}
 		return ret;
 	}
@@ -4098,32 +4077,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					nonTerminal(ret, EnumDecl)
 					nonTerminal(ret, AnnotationTypeDecl)
 					sequence(
-						lookAhead(
-							zeroOrOne(
-								nonTerminal(TypeParameters)
-							)
-							nonTerminal(Name)
-							terminal(LPAREN)
-						)
 						nonTerminal(ret, ConstructorDecl)
 						action({
 							if (typeKind == TypeKind.Interface) ret = ret.withProblem(new BUProblem(Severity.ERROR, "An interface cannot have constructors"));
 						})
 					)
 					sequence(
-						lookAhead(
-							nonTerminal(Type)
-							nonTerminal(Name)
-							zeroOrMore(
-								terminal(LBRACKET)
-								terminal(RBRACKET)
-							)
-							choice(
-								terminal(COMMA)
-								terminal(ASSIGN)
-								terminal(SEMICOLON)
-							)
-						)
 						nonTerminal(ret, FieldDecl)
 					)
 					nonTerminal(ret, MethodDecl)
@@ -4193,7 +4152,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.FINAL, TokenType.STATIC, TokenType.LT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.LBRACE, TokenType.SEMICOLON);
+				throw produceParseException(TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.LT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.LBRACE, TokenType.SEMICOLON);
 		}
 		return ret.withProblem(problem);
 	}
@@ -4311,11 +4270,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 	/* sequence(
 		zeroOrMore(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-				terminal(RBRACKET)
-			)
 			action({ run(); })
 			nonTerminal(annotations, Annotations)
 			terminal(LBRACKET)
@@ -4360,7 +4314,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.BANG, TokenType.TILDE, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.VOID, TokenType.LT, TokenType.NEW, TokenType.THIS, TokenType.SUPER, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.PLUS, TokenType.MINUS, TokenType.INCR, TokenType.DECR, TokenType.LBRACE);
+				throw produceParseException(TokenType.BANG, TokenType.TILDE, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LT, TokenType.NEW, TokenType.THIS, TokenType.SUPER, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.PLUS, TokenType.MINUS, TokenType.INCR, TokenType.DECR, TokenType.LBRACE);
 		}
 		return ret;
 	}
@@ -4372,12 +4326,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			nonTerminal(val, VariableInitializer)
 			action({ values = append(values, val); })
 			zeroOrMore(
-				negativeLookAhead(
-					zeroOrOne(
-						terminal(COMMA)
-					)
-					terminal(RBRACE)
-				)
 				terminal(COMMA)
 				nonTerminal(val, VariableInitializer)
 				action({ values = append(values, val); })
@@ -4570,13 +4518,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		)
 		choice(
 			sequence(
-				lookAhead(
-					zeroOrOne(
-						nonTerminal(Name)
-						terminal(DOT)
-					)
-					terminal(THIS)
-				)
 				zeroOrOne(
 					nonTerminal(receiverTypeName, Name)
 					terminal(DOT)
@@ -4716,13 +4657,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		action({ run(); })
 		choice(
 			sequence(
-				lookAhead(
-					zeroOrOne(
-						nonTerminal(TypeArguments)
-					)
-					terminal(THIS)
-					terminal(LPAREN)
-				)
 				zeroOrOne(
 					nonTerminal(typeArgs, TypeArguments)
 				)
@@ -4733,10 +4667,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			)
 			sequence(
 				zeroOrOne(
-					lookAhead(
-						nonTerminal(PrimaryExpressionWithoutSuperSuffix)
-						terminal(DOT)
-					)
 					nonTerminal(expr, PrimaryExpressionWithoutSuperSuffix)
 					terminal(DOT)
 				)
@@ -4789,7 +4719,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				parse(TokenType.SEMICOLON);
 				break;
 			default:
-				throw produceParseException(TokenType.SUPER, TokenType.THIS, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.VOID, TokenType.NEW);
+				throw produceParseException(TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.THIS, TokenType.LPAREN, TokenType.LT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.BOOLEAN, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SUPER, TokenType.NEW);
 		}
 		return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args));
 	}
@@ -4798,7 +4728,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		zeroOrOne(
 			choice(
 				sequence(
-					lookAhead({ quotesMode })
 					nonTerminal(ret, NodeListVar)
 				)
 				sequence(
@@ -4860,10 +4789,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			sequence(
 				nonTerminal(primitiveType, PrimitiveType)
 				zeroOrOne(
-					lookAhead(
-						nonTerminal(Annotations)
-						terminal(LBRACKET)
-					)
 					action({ lateRun(); })
 					nonTerminal(arrayDims, ArrayDimsMandatory)
 					action({ type = dress(SArrayType.make(primitiveType, arrayDims)); })
@@ -4872,10 +4797,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			sequence(
 				nonTerminal(type, QualifiedType)
 				zeroOrOne(
-					lookAhead(
-						nonTerminal(Annotations)
-						terminal(LBRACKET)
-					)
 					action({ lateRun(); })
 					nonTerminal(arrayDims, ArrayDimsMandatory)
 					action({ type = dress(SArrayType.make(type, arrayDims)); })
@@ -4930,10 +4851,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			sequence(
 				nonTerminal(type, QualifiedType)
 				zeroOrOne(
-					lookAhead(
-						nonTerminal(Annotations)
-						terminal(LBRACKET)
-					)
 					action({ lateRun(); })
 					nonTerminal(arrayDims, ArrayDimsMandatory)
 					action({ type = dress(SArrayType.make(type, arrayDims)); })
@@ -4984,19 +4901,16 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		})
 		nonTerminal(name, Name)
 		zeroOrOne(
-			lookAhead(2)
 			nonTerminal(typeArgs, TypeArgumentsOrDiamond)
 		)
 		action({ ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); })
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			terminal(DOT)
 			action({ scope = optionOf(ret); })
 			nonTerminal(annotations, Annotations)
 			nonTerminal(name, Name)
 			zeroOrOne(
-				lookAhead(2)
 				nonTerminal(typeArgs, TypeArgumentsOrDiamond)
 			)
 			action({ ret = dress(SQualifiedType.make(annotations, scope, name, optionOf(typeArgs))); })
@@ -5362,7 +5276,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		nonTerminal(name, Name)
 		action({ ret = dress(SQualifiedName.make(qualifier, name)); })
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			terminal(DOT)
 			action({ qualifier = optionOf(ret); })
@@ -5462,7 +5375,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.MINUS, TokenType.PLUS, TokenType.BANG, TokenType.TILDE, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.NEW, TokenType.SUPER, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.VOID, TokenType.THIS, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.LT, TokenType.DECR, TokenType.INCR);
+				throw produceParseException(TokenType.MINUS, TokenType.PLUS, TokenType.BANG, TokenType.TILDE, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.NEW, TokenType.SUPER, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.VOID, TokenType.THIS, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.LT, TokenType.DECR, TokenType.INCR);
 		}
 		return ret;
 	}
@@ -5580,7 +5493,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
 				break;
 			default:
-				throw produceParseException(TokenType.LBRACE, TokenType.MINUS, TokenType.PLUS, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.FALSE, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.VOID, TokenType.LT, TokenType.INCR, TokenType.DECR);
+				throw produceParseException(TokenType.LBRACE, TokenType.MINUS, TokenType.PLUS, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.FALSE, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.VOID, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.LT, TokenType.INCR, TokenType.DECR);
 		}
 		return ret;
 	}
@@ -6052,7 +5965,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	/* sequence(
 		nonTerminal(ret, AdditiveExpression)
 		zeroOrMore(
-			lookAhead(2)
 			action({ lateRun(); })
 			choice(
 				sequence(
@@ -6065,7 +5977,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					action({ op = BinaryOp.RightUnsignedShift; })
 				)
 				sequence(
-					lookAhead(2)
 					nonTerminal(RSIGNEDSHIFT)
 					action({ op = BinaryOp.RightSignedShift; })
 				)
@@ -6272,7 +6183,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.VOID, TokenType.LT, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR);
+				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.DOUBLE, TokenType.VOID, TokenType.LT, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR);
 		}
 		return ret;
 	}
@@ -6331,12 +6242,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				nonTerminal(ret, UnaryExpression)
 				action({ ret = dress(SUnaryExpr.make(op, ret)); })
 			)
-			sequence(
-				lookAhead(
-					nonTerminal(CastExpression)
-				)
-				nonTerminal(ret, CastExpression)
-			)
+			nonTerminal(ret, CastExpression)
 			nonTerminal(ret, PostfixExpression)
 		)
 		action({ return ret; })
@@ -6365,7 +6271,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ret = dress(SUnaryExpr.make(op, ret));
 				break;
 			case 2:
-				pushCallStack(JavaGrammar.UnaryExpressionNotPlusMinus_1_2_1);
+				pushCallStack(JavaGrammar.UnaryExpressionNotPlusMinus_1_2);
 				ret = parseCastExpression();
 				popCallStack();
 				break;
@@ -6375,7 +6281,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.THIS, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.BOOLEAN, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.BANG, TokenType.TILDE);
+				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.THIS, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.VOID, TokenType.BYTE, TokenType.SHORT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.FLOAT, TokenType.DOUBLE, TokenType.INT, TokenType.LONG, TokenType.NEW, TokenType.SUPER, TokenType.BANG, TokenType.TILDE);
 		}
 		return ret;
 	}
@@ -6383,7 +6289,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	/* sequence(
 		nonTerminal(ret, PrimaryExpression)
 		zeroOrOne(
-			lookAhead(2)
 			action({ lateRun(); })
 			choice(
 				sequence(
@@ -6452,10 +6357,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			sequence(
 				nonTerminal(type, QualifiedType)
 				zeroOrOne(
-					lookAhead(
-						nonTerminal(Annotations)
-						terminal(LBRACKET)
-					)
 					action({ lateRun(); })
 					nonTerminal(arrayDims, ArrayDimsMandatory)
 					action({ type = dress(SArrayType.make(type, arrayDims)); })
@@ -6540,9 +6441,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 	/* sequence(
 		zeroOrOne(
-			lookAhead(
-				terminal(BIT_AND)
-			)
 			action({ types = append(types, type); })
 			action({ lateRun(); })
 			oneOrMore(
@@ -6702,7 +6600,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SUPER, TokenType.NEW, TokenType.LPAREN, TokenType.LT, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.THIS);
+				throw produceParseException(TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.SUPER, TokenType.NEW, TokenType.LPAREN, TokenType.LT, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.THIS);
 		}
 		return ret;
 	}
@@ -6710,9 +6608,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	/* sequence(
 		nonTerminal(ret, PrimaryPrefix)
 		zeroOrMore(
-			lookAhead(
-				nonTerminal(PrimarySuffixWithoutSuper)
-			)
 			action({ lateRun(); })
 			nonTerminal(ret, PrimarySuffixWithoutSuper)
 		)
@@ -6749,16 +6644,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 						action({ lateRun(); })
 						terminal(DOT)
 						choice(
-							sequence(
-								lookAhead(
-									zeroOrOne(
-										nonTerminal(TypeArguments)
-									)
-									nonTerminal(Name)
-									terminal(LPAREN)
-								)
-								nonTerminal(ret, MethodInvocation)
-							)
+							nonTerminal(ret, MethodInvocation)
 							nonTerminal(ret, FieldAccess)
 						)
 					)
@@ -6770,11 +6656,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			)
 			nonTerminal(ret, AllocationExpression)
 			sequence(
-				lookAhead(
-					nonTerminal(ResultType)
-					terminal(DOT)
-					terminal(CLASS)
-				)
 				action({ run(); })
 				nonTerminal(type, ResultType)
 				terminal(DOT)
@@ -6782,23 +6663,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				action({ ret = dress(SClassExpr.make(type)); })
 			)
 			sequence(
-				lookAhead(
-					nonTerminal(ResultType)
-					terminal(DOUBLECOLON)
-				)
 				action({ run(); })
 				nonTerminal(type, ResultType)
 				action({ ret = STypeExpr.make(type); })
 				nonTerminal(ret, MethodReferenceSuffix)
 			)
 			sequence(
-				lookAhead(
-					zeroOrOne(
-						nonTerminal(TypeArguments)
-					)
-					nonTerminal(Name)
-					terminal(LPAREN)
-				)
 				action({ run(); })
 				nonTerminal(ret, MethodInvocation)
 			)
@@ -6841,7 +6711,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 						parse(TokenType.DOT);
 						switch (predict(JavaGrammar.PRIMARY_PREFIX_1_3_2_1_2)) {
 							case 1:
-								pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_1_2_1_1);
+								pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_1_2_1);
 								ret = parseMethodInvocation(ret);
 								popCallStack();
 								break;
@@ -6909,7 +6779,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ret = dress(SParenthesizedExpr.make(ret));
 				break;
 			default:
-				throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.VOID, TokenType.CHAR, TokenType.BOOLEAN, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.DOUBLE, TokenType.FLOAT, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL);
+				throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.BOOLEAN, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL);
 		}
 		return ret;
 	}
@@ -6917,7 +6787,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	/* sequence(
 		choice(
 			sequence(
-				lookAhead(2)
 				nonTerminal(ret, PrimarySuffixWithoutSuper)
 			)
 			sequence(
@@ -6963,16 +6832,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 						action({ ret = dress(SThisExpr.make(optionOf(scope))); })
 					)
 					nonTerminal(ret, AllocationExpression)
-					sequence(
-						lookAhead(
-							zeroOrOne(
-								nonTerminal(TypeArguments)
-							)
-							nonTerminal(Name)
-							terminal(LPAREN)
-						)
-						nonTerminal(ret, MethodInvocation)
-					)
+					nonTerminal(ret, MethodInvocation)
 					nonTerminal(ret, FieldAccess)
 				)
 			)
@@ -7002,7 +6862,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 						popCallStack();
 						break;
 					case 3:
-						pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_1_2_3_1);
+						pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_1_2_3);
 						ret = parseMethodInvocation(scope);
 						popCallStack();
 						break;
@@ -7182,9 +7042,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					sequence(
 						nonTerminal(args, Arguments)
 						zeroOrOne(
-							lookAhead(
-								terminal(LBRACE)
-							)
 							nonTerminal(anonymousBody, ClassOrInterfaceBody)
 						)
 						action({ ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody))); })
@@ -7255,12 +7112,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 	/* choice(
 		sequence(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-				nonTerminal(Expression)
-				terminal(RBRACKET)
-			)
 			nonTerminal(arrayDimExprs, ArrayDimExprsMandatory)
 			nonTerminal(arrayDims, ArrayDims)
 			action({ return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none())); })
@@ -7301,12 +7152,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 	/* sequence(
 		oneOrMore(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-				nonTerminal(Expression)
-				terminal(RBRACKET)
-			)
 			action({ run(); })
 			nonTerminal(annotations, Annotations)
 			terminal(LBRACKET)
@@ -7337,11 +7182,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 	/* sequence(
 		oneOrMore(
-			lookAhead(
-				nonTerminal(Annotations)
-				terminal(LBRACKET)
-				terminal(RBRACKET)
-			)
 			action({ run(); })
 			nonTerminal(annotations, Annotations)
 			terminal(LBRACKET)
@@ -7367,10 +7207,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 	/* sequence(
 		choice(
-			sequence(
-				lookAhead(2)
-				nonTerminal(ret, LabeledStatement)
-			)
+			nonTerminal(ret, LabeledStatement)
 			nonTerminal(ret, AssertStatement)
 			nonTerminal(ret, Block)
 			nonTerminal(ret, EmptyStatement)
@@ -7393,7 +7230,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SStmt> ret;
 		switch (predict(JavaGrammar.STATEMENT_1)) {
 			case 1:
-				pushCallStack(JavaGrammar.Statement_1_1_1);
+				pushCallStack(JavaGrammar.Statement_1_1);
 				ret = parseLabeledStatement();
 				popCallStack();
 				break;
@@ -7473,7 +7310,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.VOID, TokenType.LT, TokenType.INCR, TokenType.DECR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT);
+				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.LPAREN, TokenType.VOID, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.DOUBLE, TokenType.LT, TokenType.INCR, TokenType.DECR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT);
 		}
 		return ret;
 	}
@@ -7549,13 +7386,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	/* sequence(
 		choice(
 			sequence(
-				lookAhead(
-					nonTerminal(ModifiersNoDefault)
-					choice(
-						terminal(CLASS)
-						terminal(INTERFACE)
-					)
-				)
 				action({ run(); })
 				action({ run(); })
 				nonTerminal(modifiers, ModifiersNoDefault)
@@ -7563,16 +7393,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				action({ ret = dress(STypeDeclarationStmt.make(typeDecl)); })
 			)
 			sequence(
-				lookAhead(
-					nonTerminal(ModifiersNoDefault)
-					nonTerminal(Type)
-					nonTerminal(VariableDeclaratorId)
-					choice(
-						terminal(ASSIGN)
-						terminal(COMMA)
-						terminal(SEMICOLON)
-					)
-				)
 				action({ run(); })
 				nonTerminal(expr, VariableDeclExpression)
 				terminal(SEMICOLON)
@@ -7613,7 +7433,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.LT, TokenType.THIS, TokenType.FALSE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NEW, TokenType.SUPER, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.VOID, TokenType.DECR, TokenType.INCR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.AT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.ABSTRACT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.VOLATILE, TokenType.CLASS, TokenType.INTERFACE);
+				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.LT, TokenType.THIS, TokenType.FALSE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NEW, TokenType.SUPER, TokenType.VOID, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.DECR, TokenType.INCR, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.AT, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.STATIC, TokenType.ABSTRACT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.INTERFACE, TokenType.CLASS);
 		}
 		return ret;
 	}
@@ -7735,7 +7555,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.NEW, TokenType.LT, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.DECR, TokenType.INCR);
+				throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.BOOLEAN, TokenType.CHAR, TokenType.INT, TokenType.LONG, TokenType.BYTE, TokenType.SHORT, TokenType.FLOAT, TokenType.DOUBLE, TokenType.NEW, TokenType.LT, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.DECR, TokenType.INCR);
 		}
 		return expr;
 	}
@@ -7821,7 +7641,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		terminal(RPAREN)
 		nonTerminal(thenStmt, Statement)
 		zeroOrOne(
-			lookAhead(1)
 			terminal(ELSE)
 			nonTerminal(elseStmt, Statement)
 		)
@@ -7910,12 +7729,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		terminal(LPAREN)
 		choice(
 			sequence(
-				lookAhead(
-					nonTerminal(Modifiers)
-					nonTerminal(Type)
-					nonTerminal(VariableDeclaratorId)
-					terminal(COLON)
-				)
 				nonTerminal(varExpr, VariableDeclExpression)
 				terminal(COLON)
 				nonTerminal(expr, Expression)
@@ -7982,7 +7795,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.DECR, TokenType.INCR, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.LT, TokenType.NEW, TokenType.LPAREN, TokenType.THIS, TokenType.SUPER, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.SEMICOLON);
+				throw produceParseException(TokenType.DECR, TokenType.INCR, TokenType.VOID, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.NEW, TokenType.LPAREN, TokenType.THIS, TokenType.SUPER, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.STRICTFP, TokenType.FINAL, TokenType.STATIC, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.SEMICOLON);
 		}
 		parse(TokenType.RPAREN);
 		pushCallStack(JavaGrammar.ForStatement_5);
@@ -7998,11 +7811,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	/* sequence(
 		choice(
 			sequence(
-				lookAhead(
-					nonTerminal(Modifiers)
-					nonTerminal(Type)
-					nonTerminal(Name)
-				)
 				nonTerminal(expr, VariableDeclExpression)
 				action({
 					ret = emptyList();
@@ -8030,7 +7838,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.DECR, TokenType.INCR, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.THIS, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.AT, TokenType.PUBLIC, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.STATIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.VOLATILE, TokenType.SYNCHRONIZED, TokenType.NATIVE, TokenType.STRICTFP);
+				throw produceParseException(TokenType.DECR, TokenType.INCR, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.THIS, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.AT, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.PUBLIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.ABSTRACT, TokenType.STATIC, TokenType.NATIVE, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.SYNCHRONIZED);
 		}
 		return ret;
 	}
@@ -8188,7 +7996,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		terminal(TRY)
 		choice(
 			sequence(
-				lookAhead(1)
 				nonTerminal(resources, ResourceSpecification)
 				nonTerminal(tryBlock, Block)
 				zeroOrOne(
@@ -8200,7 +8007,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				)
 			)
 			sequence(
-				lookAhead(1)
 				nonTerminal(tryBlock, Block)
 				choice(
 					sequence(
@@ -8329,9 +8135,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		nonTerminal(exceptType, QualifiedType)
 		action({ exceptTypes = append(exceptTypes, exceptType); })
 		zeroOrOne(
-			lookAhead(
-				terminal(BIT_OR)
-			)
 			action({ lateRun(); })
 			oneOrMore(
 				terminal(BIT_OR)
@@ -8378,13 +8181,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		nonTerminal(var, VariableDeclExpression)
 		action({ vars = append(vars, var); })
 		zeroOrMore(
-			negativeLookAhead(
-				zeroOrOne(
-					terminal(SEMICOLON)
-				)
-				terminal(RPAREN)
-			)
-			lookAhead(2)
 			terminal(SEMICOLON)
 			nonTerminal(var, VariableDeclExpression)
 			action({ vars = append(vars, var); })
@@ -8464,36 +8260,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 	/* sequence(
 		choice(
-			sequence(
-				lookAhead(
-					terminal(AT)
-					nonTerminal(QualifiedName)
-					terminal(LPAREN)
-					choice(
-						sequence(
-							nonTerminal(Name)
-							terminal(ASSIGN)
-						)
-						terminal(RPAREN)
-					)
-				)
-				nonTerminal(ret, NormalAnnotation)
-			)
-			sequence(
-				lookAhead(
-					terminal(AT)
-					nonTerminal(QualifiedName)
-					terminal(LPAREN)
-				)
-				nonTerminal(ret, SingleMemberAnnotation)
-			)
-			sequence(
-				lookAhead(
-					terminal(AT)
-					nonTerminal(QualifiedName)
-				)
-				nonTerminal(ret, MarkerAnnotation)
-			)
+			nonTerminal(ret, NormalAnnotation)
+			nonTerminal(ret, SingleMemberAnnotation)
+			nonTerminal(ret, MarkerAnnotation)
 		)
 		action({ return ret; })
 	) */
@@ -8501,17 +8270,17 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SAnnotationExpr> ret;
 		switch (predict(JavaGrammar.ANNOTATION_1)) {
 			case 1:
-				pushCallStack(JavaGrammar.Annotation_1_1_1);
+				pushCallStack(JavaGrammar.Annotation_1_1);
 				ret = parseNormalAnnotation();
 				popCallStack();
 				break;
 			case 2:
-				pushCallStack(JavaGrammar.Annotation_1_2_1);
+				pushCallStack(JavaGrammar.Annotation_1_2);
 				ret = parseSingleMemberAnnotation();
 				popCallStack();
 				break;
 			case 3:
-				pushCallStack(JavaGrammar.Annotation_1_3_1);
+				pushCallStack(JavaGrammar.Annotation_1_3);
 				ret = parseMarkerAnnotation();
 				popCallStack();
 				break;
@@ -8666,7 +8435,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.PLUS, TokenType.MINUS, TokenType.BANG, TokenType.TILDE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.THIS, TokenType.FALSE, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LT, TokenType.VOID, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.NEW, TokenType.SUPER, TokenType.DECR, TokenType.INCR, TokenType.LBRACE, TokenType.AT);
+				throw produceParseException(TokenType.PLUS, TokenType.MINUS, TokenType.BANG, TokenType.TILDE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.THIS, TokenType.FALSE, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LT, TokenType.VOID, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.NEW, TokenType.SUPER, TokenType.DECR, TokenType.INCR, TokenType.LBRACE, TokenType.AT);
 		}
 		return ret;
 	}
@@ -8678,12 +8447,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			nonTerminal(member, MemberValue)
 			action({ ret = append(ret, member); })
 			zeroOrMore(
-				negativeLookAhead(
-					zeroOrOne(
-						terminal(COMMA)
-					)
-					terminal(RBRACE)
-				)
 				terminal(COMMA)
 				nonTerminal(member, MemberValue)
 				action({ ret = append(ret, member); })
