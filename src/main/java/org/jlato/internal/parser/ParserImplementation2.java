@@ -3214,7 +3214,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					modifiers = append(modifiers, ann);
 					break;
 				default:
-					throw produceParseException(TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC);
+					throw produceParseException(TokenType.FINAL, TokenType.PROTECTED, TokenType.SYNCHRONIZED, TokenType.STATIC, TokenType.PUBLIC, TokenType.DEFAULT, TokenType.NATIVE, TokenType.ABSTRACT, TokenType.STRICTFP, TokenType.AT, TokenType.TRANSIENT, TokenType.PRIVATE, TokenType.VOLATILE);
 			}
 		}
 		return modifiers;
@@ -3331,7 +3331,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					modifiers = append(modifiers, ann);
 					break;
 				default:
-					throw produceParseException(TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC);
+					throw produceParseException(TokenType.TRANSIENT, TokenType.PROTECTED, TokenType.NATIVE, TokenType.FINAL, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.ABSTRACT, TokenType.AT, TokenType.VOLATILE, TokenType.PRIVATE, TokenType.SYNCHRONIZED);
 			}
 		}
 		return modifiers;
@@ -3389,7 +3389,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.SEMICOLON);
+				throw produceParseException(TokenType.AT, TokenType.SYNCHRONIZED, TokenType.STATIC, TokenType.PROTECTED, TokenType.ABSTRACT, TokenType.VOLATILE, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.PRIVATE, TokenType.FINAL, TokenType.NATIVE, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.SEMICOLON);
 		}
 		return ret;
 	}
@@ -3483,7 +3483,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.INTERFACE, TokenType.CLASS);
+				throw produceParseException(TokenType.CLASS, TokenType.INTERFACE);
 		}
 		pushCallStack(JavaGrammar.ClassOrInterfaceDecl_2);
 		members = parseClassOrInterfaceBody(typeKind);
@@ -3539,7 +3539,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE);
+				throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.NODE_LIST_VARIABLE);
 		}
 		return ret;
 	}
@@ -3593,7 +3593,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 				break;
 			default:
-				throw produceParseException(TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE);
+				throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.NODE_LIST_VARIABLE);
 		}
 		return ret;
 	}
@@ -3843,11 +3843,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 						popCallStack();
 						break;
 					default:
-						throw produceParseException(TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.AT, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS);
+						throw produceParseException(TokenType.AT, TokenType.ENUM, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.FLOAT, TokenType.BYTE, TokenType.CHAR, TokenType.LONG, TokenType.INT, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.SHORT, TokenType.INTERFACE, TokenType.CLASS);
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.SEMICOLON);
+				throw produceParseException(TokenType.AT, TokenType.SYNCHRONIZED, TokenType.STATIC, TokenType.PROTECTED, TokenType.ABSTRACT, TokenType.VOLATILE, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.PRIVATE, TokenType.FINAL, TokenType.NATIVE, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.ENUM, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.FLOAT, TokenType.BYTE, TokenType.CHAR, TokenType.LONG, TokenType.INT, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.SHORT, TokenType.INTERFACE, TokenType.CLASS, TokenType.SEMICOLON);
 		}
 		return ret;
 	}
@@ -4016,7 +4016,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.NODE_LIST_VARIABLE);
+				throw produceParseException(TokenType.AT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.NODE_LIST_VARIABLE);
 		}
 		return ret;
 	}
@@ -4168,11 +4168,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 						popCallStack();
 						break;
 					default:
-						throw produceParseException(TokenType.LT, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.AT, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.LBRACE);
+						throw produceParseException(TokenType.LBRACE, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.AT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.LONG, TokenType.FLOAT, TokenType.CHAR, TokenType.BYTE, TokenType.INT, TokenType.SHORT, TokenType.VOID, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE);
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.TRANSIENT, TokenType.FINAL, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.AT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.STATIC, TokenType.DEFAULT, TokenType.LT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.ENUM, TokenType.INTERFACE, TokenType.CLASS, TokenType.LBRACE, TokenType.SEMICOLON);
+				throw produceParseException(TokenType.AT, TokenType.SYNCHRONIZED, TokenType.STATIC, TokenType.PROTECTED, TokenType.ABSTRACT, TokenType.VOLATILE, TokenType.DEFAULT, TokenType.TRANSIENT, TokenType.PRIVATE, TokenType.FINAL, TokenType.NATIVE, TokenType.STRICTFP, TokenType.PUBLIC, TokenType.LBRACE, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.LONG, TokenType.FLOAT, TokenType.CHAR, TokenType.BYTE, TokenType.INT, TokenType.SHORT, TokenType.VOID, TokenType.ENUM, TokenType.CLASS, TokenType.INTERFACE, TokenType.SEMICOLON);
 		}
 		return ret.withProblem(problem);
 	}
@@ -4334,7 +4334,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.INCR, TokenType.DECR, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.NEW, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.VOID, TokenType.SUPER, TokenType.THIS, TokenType.NULL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.MINUS, TokenType.PLUS, TokenType.LBRACE);
+				throw produceParseException(TokenType.LBRACE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.MINUS, TokenType.PLUS, TokenType.INCR, TokenType.DECR, TokenType.LT, TokenType.THIS, TokenType.BYTE, TokenType.BOOLEAN, TokenType.LONG, TokenType.CHAR, TokenType.FLOAT, TokenType.SHORT, TokenType.DOUBLE, TokenType.INT, TokenType.VOID, TokenType.SUPER, TokenType.NEW, TokenType.FLOAT_LITERAL, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.TILDE, TokenType.BANG);
 		}
 		return ret;
 	}
@@ -4455,7 +4455,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 				break;
 			default:
-				throw produceParseException(TokenType.SEMICOLON, TokenType.LBRACE);
+				throw produceParseException(TokenType.LBRACE, TokenType.SEMICOLON);
 		}
 		return dress(SMethodDecl.make(modifiers, ensureNotNull(typeParameters), ensureNotNull(additionalAnnotations), type, name, parameters, arrayDims, ensureNotNull(throwsClause), optionOf(block))).withProblem(problem);
 	}
@@ -4522,7 +4522,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.AT, TokenType.STRICTFP, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.FINAL, TokenType.STATIC, TokenType.DEFAULT, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.NODE_LIST_VARIABLE);
+				throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.TRANSIENT, TokenType.DEFAULT, TokenType.STRICTFP, TokenType.STATIC, TokenType.VOLATILE, TokenType.PROTECTED, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.PRIVATE, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.FINAL, TokenType.FLOAT, TokenType.SHORT, TokenType.BOOLEAN, TokenType.LONG, TokenType.CHAR, TokenType.INT, TokenType.DOUBLE, TokenType.BYTE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
@@ -4588,7 +4588,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.THIS);
+				throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.THIS);
 		}
 		return dress(SFormalParameter.make(modifiers, type, isVarArg, ensureNotNull(ellipsisAnnotations), optionOf(id), isReceiver, optionOf(receiverTypeName)));
 	}
@@ -4739,7 +4739,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				parse(TokenType.SEMICOLON);
 				break;
 			default:
-				throw produceParseException(TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.THIS, TokenType.LPAREN, TokenType.LT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.BOOLEAN, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SUPER, TokenType.NEW);
+				throw produceParseException(TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.STRING_LITERAL, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.CHAR, TokenType.LONG, TokenType.INT, TokenType.FLOAT, TokenType.DOUBLE, TokenType.SHORT, TokenType.BYTE, TokenType.BOOLEAN, TokenType.THIS, TokenType.LT, TokenType.SUPER, TokenType.NEW, TokenType.LPAREN);
 		}
 		return dress(SExplicitConstructorInvocationStmt.make(ensureNotNull(typeArgs), isThis, optionOf(expr), args));
 	}
@@ -4855,7 +4855,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN);
+				throw produceParseException(TokenType.BYTE, TokenType.INT, TokenType.CHAR, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.SHORT, TokenType.LONG, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
 		}
 		return type == null ? primitiveType : type;
 	}
@@ -4907,7 +4907,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN);
+				throw produceParseException(TokenType.BYTE, TokenType.INT, TokenType.CHAR, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.SHORT, TokenType.LONG, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
 		}
 		return type;
 	}
@@ -5057,7 +5057,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				return ret;
 			default:
-				throw produceParseException(TokenType.AT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.HOOK, TokenType.NODE_LIST_VARIABLE);
+				throw produceParseException(TokenType.NODE_LIST_VARIABLE, TokenType.AT, TokenType.HOOK, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DOUBLE, TokenType.BYTE, TokenType.FLOAT, TokenType.SHORT, TokenType.BOOLEAN, TokenType.INT, TokenType.CHAR, TokenType.LONG);
 		}
 	}
 
@@ -5089,7 +5089,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.HOOK, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT);
+				throw produceParseException(TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.INT, TokenType.BYTE, TokenType.SHORT, TokenType.LONG, TokenType.CHAR, TokenType.FLOAT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.HOOK);
 		}
 		return ret;
 	}
@@ -5237,7 +5237,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				primitive = Primitive.Double;
 				break;
 			default:
-				throw produceParseException(TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN);
+				throw produceParseException(TokenType.SHORT, TokenType.CHAR, TokenType.DOUBLE, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.BYTE, TokenType.LONG, TokenType.INT);
 		}
 		return dress(SPrimitiveType.make(annotations, primitive));
 	}
@@ -5267,7 +5267,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.VOID);
+				throw produceParseException(TokenType.VOID, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BYTE, TokenType.BOOLEAN, TokenType.LONG, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
 		}
 		return ret;
 	}
@@ -5354,7 +5354,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				name = dress(SName.make(id.image));
 				break;
 			default:
-				throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
+				throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return name;
 	}
@@ -5380,7 +5380,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.NEW, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.SUPER, TokenType.FALSE, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.THIS, TokenType.LPAREN, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR);
+				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.MINUS, TokenType.PLUS, TokenType.TILDE, TokenType.BANG, TokenType.VOID, TokenType.CHAR, TokenType.INT, TokenType.BOOLEAN, TokenType.SHORT, TokenType.LONG, TokenType.BYTE, TokenType.FLOAT, TokenType.DOUBLE, TokenType.LT, TokenType.THIS, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.TRUE, TokenType.LONG_LITERAL, TokenType.FALSE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.INTEGER_LITERAL, TokenType.SUPER, TokenType.NEW, TokenType.INCR, TokenType.DECR);
 		}
 		return ret;
 	}
@@ -5462,7 +5462,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+				throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
 		}
 		return ret;
 	}
@@ -5544,7 +5544,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
+				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		return ret;
 	}
@@ -5580,7 +5580,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
 				break;
 			default:
-				throw produceParseException(TokenType.LBRACE, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.NEW, TokenType.THIS, TokenType.FALSE, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.SUPER, TokenType.LPAREN, TokenType.VOID, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.TILDE, TokenType.BANG);
+				throw produceParseException(TokenType.INCR, TokenType.DECR, TokenType.LPAREN, TokenType.TILDE, TokenType.BANG, TokenType.NEW, TokenType.NULL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.DOUBLE_LITERAL, TokenType.VOID, TokenType.SHORT, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BYTE, TokenType.CHAR, TokenType.LONG, TokenType.INT, TokenType.BOOLEAN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.THIS, TokenType.SUPER, TokenType.LT, TokenType.MINUS, TokenType.PLUS, TokenType.LBRACE);
 		}
 		return ret;
 	}
@@ -5729,7 +5729,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ret = AssignOp.Or;
 				break;
 			default:
-				throw produceParseException(TokenType.ORASSIGN, TokenType.XORASSIGN, TokenType.ANDASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.LSHIFTASSIGN, TokenType.MINUSASSIGN, TokenType.PLUSASSIGN, TokenType.REMASSIGN, TokenType.SLASHASSIGN, TokenType.STARASSIGN, TokenType.ASSIGN);
+				throw produceParseException(TokenType.REMASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.SLASHASSIGN, TokenType.XORASSIGN, TokenType.ASSIGN, TokenType.LSHIFTASSIGN, TokenType.STARASSIGN, TokenType.ORASSIGN, TokenType.MINUSASSIGN, TokenType.ANDASSIGN, TokenType.PLUSASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN);
 		}
 		return ret;
 	}
@@ -5775,7 +5775,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					popCallStack();
 					break;
 				default:
-					throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.MINUS, TokenType.PLUS, TokenType.SUPER, TokenType.THIS, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.LT, TokenType.VOID, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.NEW, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR);
+					throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DECR, TokenType.INCR, TokenType.BANG, TokenType.TILDE, TokenType.NEW, TokenType.FALSE, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.THIS, TokenType.VOID, TokenType.SHORT, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.BYTE, TokenType.DOUBLE, TokenType.LONG, TokenType.CHAR, TokenType.INT, TokenType.SUPER, TokenType.LT, TokenType.PLUS, TokenType.MINUS);
 			}
 			ret = dress(SConditionalExpr.make(ret, left, right));
 		}
@@ -6271,7 +6271,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 						op = UnaryOp.Negative;
 						break;
 					default:
-						throw produceParseException(TokenType.MINUS, TokenType.PLUS);
+						throw produceParseException(TokenType.PLUS, TokenType.MINUS);
 				}
 				pushCallStack(JavaGrammar.UnaryExpression_1_2_2);
 				ret = parseUnaryExpression();
@@ -6284,7 +6284,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.NEW, TokenType.LT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.BOOLEAN, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LPAREN, TokenType.SUPER, TokenType.THIS, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR);
+				throw produceParseException(TokenType.TILDE, TokenType.BANG, TokenType.NEW, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.THIS, TokenType.SUPER, TokenType.LPAREN, TokenType.VOID, TokenType.LONG, TokenType.BYTE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.INT, TokenType.DOUBLE, TokenType.SHORT, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.FALSE, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DECR, TokenType.INCR, TokenType.PLUS, TokenType.MINUS);
 		}
 		return ret;
 	}
@@ -6382,7 +6382,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.NEW, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.VOID, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE);
+				throw produceParseException(TokenType.NEW, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.TRUE, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.THIS, TokenType.VOID, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SHORT, TokenType.BOOLEAN, TokenType.INT, TokenType.CHAR, TokenType.LONG, TokenType.BYTE, TokenType.SUPER, TokenType.LT, TokenType.BANG, TokenType.TILDE);
 		}
 		return ret;
 	}
@@ -6489,7 +6489,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ret = dress(SCastExpr.make(type, ret));
 				break;
 			default:
-				throw produceParseException(TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.DOUBLE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
+				throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.SHORT, TokenType.BOOLEAN, TokenType.INT, TokenType.CHAR, TokenType.DOUBLE, TokenType.BYTE, TokenType.FLOAT, TokenType.LONG);
 		}
 		return ret;
 	}
@@ -6615,7 +6615,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ret = SLiteralExpr.make(Void.class, literal.image);
 				break;
 			default:
-				throw produceParseException(TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL);
+				throw produceParseException(TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL);
 		}
 		return dress(ret);
 	}
@@ -6641,7 +6641,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.VOID, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.LPAREN, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL);
+				throw produceParseException(TokenType.NEW, TokenType.THIS, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.LT, TokenType.LPAREN, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.FLOAT, TokenType.INT, TokenType.BOOLEAN, TokenType.LONG, TokenType.CHAR, TokenType.VOID, TokenType.SUPER);
 		}
 		return ret;
 	}
@@ -6784,7 +6784,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 								popCallStack();
 								break;
 							default:
-								throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT);
+								throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT);
 						}
 						break;
 					case 2:
@@ -6842,7 +6842,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ret = dress(SParenthesizedExpr.make(ret));
 				break;
 			default:
-				throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.BOOLEAN, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL);
+				throw produceParseException(TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.SUPER, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.LT, TokenType.THIS, TokenType.VOID, TokenType.CHAR, TokenType.LONG, TokenType.BOOLEAN, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.BYTE, TokenType.DOUBLE, TokenType.LPAREN);
 		}
 		return ret;
 	}
@@ -6880,7 +6880,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.DOUBLECOLON, TokenType.DOT, TokenType.LBRACKET);
+				throw produceParseException(TokenType.DOUBLECOLON, TokenType.LBRACKET, TokenType.DOT);
 		}
 		return ret;
 	}
@@ -6935,7 +6935,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 						popCallStack();
 						break;
 					default:
-						throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.NEW, TokenType.THIS);
+						throw produceParseException(TokenType.NEW, TokenType.THIS, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT);
 				}
 				break;
 			case 2:
@@ -6947,7 +6947,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ret = dress(SArrayAccessExpr.make(scope, ret));
 				break;
 			default:
-				throw produceParseException(TokenType.LBRACKET, TokenType.DOT);
+				throw produceParseException(TokenType.DOT, TokenType.LBRACKET);
 		}
 		return ret;
 	}
@@ -7077,7 +7077,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				name = SName.make("new");
 				break;
 			default:
-				throw produceParseException(TokenType.NEW, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE);
+				throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.NEW);
 		}
 		ret = dress(SMethodReferenceExpr.make(scope, ensureNotNull(typeArgs), name));
 		return ret;
@@ -7181,7 +7181,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN);
+				throw produceParseException(TokenType.INT, TokenType.BOOLEAN, TokenType.SHORT, TokenType.DOUBLE, TokenType.BYTE, TokenType.FLOAT, TokenType.LONG, TokenType.CHAR, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER);
 		}
 		pushCallStack(JavaGrammar.ArrayCreationExpr_5);
 		ret = parseArrayCreationExprRest(type);
@@ -7389,7 +7389,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.BANG, TokenType.TILDE, TokenType.LPAREN, TokenType.FALSE, TokenType.TRUE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.VOID, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT);
+				throw produceParseException(TokenType.SYNCHRONIZED, TokenType.SEMICOLON, TokenType.WHILE, TokenType.LBRACE, TokenType.BREAK, TokenType.TRY, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.IF, TokenType.ASSERT, TokenType.CONTINUE, TokenType.SWITCH, TokenType.RETURN, TokenType.FOR, TokenType.LPAREN, TokenType.TILDE, TokenType.BANG, TokenType.NEW, TokenType.NULL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.DOUBLE_LITERAL, TokenType.TRUE, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LT, TokenType.SUPER, TokenType.VOID, TokenType.BOOLEAN, TokenType.INT, TokenType.CHAR, TokenType.LONG, TokenType.DOUBLE, TokenType.BYTE, TokenType.FLOAT, TokenType.SHORT, TokenType.THIS, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.THROW, TokenType.DO);
 		}
 		return ret;
 	}
@@ -7512,7 +7512,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.INCR, TokenType.DECR, TokenType.NEW, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.VOID, TokenType.BOOLEAN, TokenType.CHAR, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.PLUS, TokenType.MINUS, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.AT, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.STATIC, TokenType.ABSTRACT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.INTERFACE, TokenType.CLASS);
+				throw produceParseException(TokenType.TRY, TokenType.SEMICOLON, TokenType.WHILE, TokenType.CONTINUE, TokenType.SYNCHRONIZED, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.NEW, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.SHORT, TokenType.FLOAT, TokenType.INT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.LONG, TokenType.BYTE, TokenType.THIS, TokenType.LT, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.STRING_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.SUPER, TokenType.PLUS, TokenType.MINUS, TokenType.DECR, TokenType.INCR, TokenType.BREAK, TokenType.THROW, TokenType.FOR, TokenType.SWITCH, TokenType.RETURN, TokenType.LBRACE, TokenType.DO, TokenType.IF, TokenType.ASSERT, TokenType.STRICTFP, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.VOLATILE, TokenType.AT, TokenType.STATIC, TokenType.PUBLIC, TokenType.NATIVE, TokenType.FINAL, TokenType.ABSTRACT, TokenType.TRANSIENT, TokenType.CLASS, TokenType.INTERFACE);
 		}
 		return ret;
 	}
@@ -7814,7 +7814,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DECR, TokenType.INCR, TokenType.MINUS, TokenType.PLUS, TokenType.TILDE, TokenType.BANG, TokenType.NEW, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.VOID, TokenType.LT, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.STRICTFP, TokenType.FINAL, TokenType.STATIC, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.SEMICOLON);
+				throw produceParseException(TokenType.FINAL, TokenType.NATIVE, TokenType.PROTECTED, TokenType.TRANSIENT, TokenType.PRIVATE, TokenType.ABSTRACT, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.PUBLIC, TokenType.STRICTFP, TokenType.STATIC, TokenType.VOLATILE, TokenType.DOUBLE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.BYTE, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.BANG, TokenType.TILDE, TokenType.NEW, TokenType.LT, TokenType.VOID, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.TRUE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.STRING_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.PLUS, TokenType.MINUS, TokenType.INCR, TokenType.DECR, TokenType.SEMICOLON);
 		}
 		parse(TokenType.RPAREN);
 		pushCallStack(JavaGrammar.ForStatement_5);
@@ -7857,7 +7857,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.MINUS, TokenType.PLUS, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.NEW, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.VOID, TokenType.LT, TokenType.BANG, TokenType.TILDE, TokenType.INCR, TokenType.DECR, TokenType.AT, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.PUBLIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.ABSTRACT, TokenType.STATIC, TokenType.NATIVE, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.SYNCHRONIZED);
+				throw produceParseException(TokenType.AT, TokenType.VOLATILE, TokenType.ABSTRACT, TokenType.SYNCHRONIZED, TokenType.PROTECTED, TokenType.STATIC, TokenType.NATIVE, TokenType.PUBLIC, TokenType.FINAL, TokenType.STRICTFP, TokenType.TRANSIENT, TokenType.PRIVATE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.FLOAT, TokenType.BYTE, TokenType.SHORT, TokenType.DOUBLE, TokenType.INT, TokenType.BOOLEAN, TokenType.LONG, TokenType.CHAR, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.NEW, TokenType.SUPER, TokenType.LT, TokenType.VOID, TokenType.THIS, TokenType.LONG_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.TRUE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.PLUS, TokenType.MINUS, TokenType.DECR, TokenType.INCR);
 		}
 		return ret;
 	}
@@ -8099,7 +8099,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.LBRACE, TokenType.LPAREN);
+				throw produceParseException(TokenType.LPAREN, TokenType.LBRACE);
 		}
 		return dress(STryStmt.make(ensureNotNull(resources), trailingSemiColon.value, tryBlock, ensureNotNull(catchClauses), optionOf(finallyBlock)));
 	}
@@ -8454,7 +8454,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.AT, TokenType.LBRACE, TokenType.MINUS, TokenType.PLUS, TokenType.LPAREN, TokenType.SUPER, TokenType.THIS, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.NEW, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR);
+				throw produceParseException(TokenType.AT, TokenType.MINUS, TokenType.PLUS, TokenType.TILDE, TokenType.BANG, TokenType.INT, TokenType.LONG, TokenType.CHAR, TokenType.BYTE, TokenType.DOUBLE, TokenType.SHORT, TokenType.BOOLEAN, TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.THIS, TokenType.SUPER, TokenType.FLOAT_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.DOUBLE_LITERAL, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.LPAREN, TokenType.NEW, TokenType.LT, TokenType.INCR, TokenType.DECR, TokenType.LBRACE);
 		}
 		return ret;
 	}
