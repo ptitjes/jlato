@@ -19,6 +19,8 @@
 
 package org.jlato.internal.parser.all;
 
+import org.jlato.internal.parser.TokenType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +52,8 @@ public class CachedAutomaton {
 			builder.append(" \n");
 			for (Map.Entry<Integer, PredictionState> entry : state.transitions.entrySet()) {
 				indent(builder, indent + 1);
-				builder.append("[tok:" + entry.getKey() + "->\n");
+				int token = entry.getKey();
+				builder.append("[tok:" + TokenType.tokenImage[token] + "->\n");
 				printToString(builder, entry.getValue(), indent + 2);
 				builder.append("\n");
 				indent(builder, indent + 1);

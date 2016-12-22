@@ -60,6 +60,14 @@ public abstract class ParserNewBase2 extends ParserBase {
 	public void printStats() {
 		if (CACHE_STATS) {
 			System.out.println("DFA Cache - Hits: " + cacheHits + ", Misses: " + cacheMiss + ", FullLL: " + fullLL);
+			for (Map.Entry<Integer, PredictionState> entry : perChoicePointStackSensitiveStates.entrySet()) {
+				System.out.println(entry.getKey());
+				PredictionState state = entry.getValue();
+				System.out.println(state);
+				for (Configuration c : state.configurations) {
+					System.out.println("  " + c);
+				}
+			}
 		}
 	}
 
@@ -131,13 +139,19 @@ public abstract class ParserNewBase2 extends ParserBase {
 			if (next.configurations.isEmpty()) return -1;
 			if (next.prediction != -1) return next.prediction;
 
-			if (next.stackSensitive) return llPredict(choicePoint);
+			if (next.stackSensitive) {
+				if (CACHE_STATS) {
+					perChoicePointStackSensitiveStates.put(choicePoint, next);
+				}
+				return llPredict(choicePoint);
+			}
 
 			current = next;
 		}
 	}
 
 	private int cacheHits, cacheMiss, fullLL;
+	private Map<Integer, PredictionState> perChoicePointStackSensitiveStates = new HashMap<Integer, PredictionState>();
 
 	private int llPredict(int choicePoint) {
 		PredictionState current = makeStartState(choicePoint, callStack);
