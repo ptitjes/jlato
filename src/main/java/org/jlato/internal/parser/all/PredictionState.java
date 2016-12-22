@@ -35,11 +35,11 @@ public class PredictionState {
 
 	public final Map<Integer, PredictionState> transitions = new HashMap<Integer, PredictionState>();
 
-	public PredictionState(Set<Configuration> configurations, boolean computePredictionAndConflicts) {
+	public PredictionState(Set<Configuration> configurations, boolean computePrediction, boolean computeConflicts) {
 		this.hashCode = computeHashCode(configurations);
 		this.configurations = configurations;
 
-		if (computePredictionAndConflicts) {
+		if (computePrediction) {
 			this.prediction = commonPrediction();
 			this.stackSensitive = checkStackSensitive();
 		} else {

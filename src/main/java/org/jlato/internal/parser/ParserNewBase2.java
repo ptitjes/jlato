@@ -113,7 +113,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 			if (next == null) {
 				Set<Configuration> configurations = targetConfigurations(current, token);
-				next = new PredictionState(configurations, true);
+				next = new PredictionState(configurations, true, true);
 
 				// TODO Reuse a unique error state if closure of configurations is the empty set
 				// TODO Reuse a unique final state for prediction if prediction is done
@@ -141,7 +141,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 			Token token = getToken(index++);
 
 			Set<Configuration> configurations = targetConfigurations(current, token);
-			PredictionState next = new PredictionState(configurations, true);
+			PredictionState next = new PredictionState(configurations, true, false);
 			fullLL++;
 
 			if (next.configurations.isEmpty()) return -1;
@@ -164,7 +164,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 		Set<Configuration> configurations = Collections.singleton(initialConfiguration);
 		configurations = closure(configurations);
 
-		return new PredictionState(configurations, false);
+		return new PredictionState(configurations, false, false);
 	}
 
 	private static final boolean REPORT = false;
