@@ -62,11 +62,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int ANNOTATIONS = 17;
 
-		public static final int ANNOTATIONS_1 = 323;
+		public static final int ANNOTATIONS_1 = 324;
 
 		public static final int ANNOTATIONS_ENTRY = 16;
 
-		public static final int ANNOTATION_1 = 324;
+		public static final int ANNOTATION_1 = 325;
 
 		public static final int ANNOTATION_ELEMENT_DECL_ENTRY = 22;
 
@@ -94,19 +94,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int ARGUMENTS = 85;
 
-		public static final int ARGUMENTS_2 = 259;
+		public static final int ARGUMENTS_2 = 260;
 
-		public static final int ARGUMENTS_2_1 = 260;
+		public static final int ARGUMENTS_2_1 = 261;
 
-		public static final int ARGUMENTS_2_1_2_2 = 261;
+		public static final int ARGUMENTS_2_1_2_2 = 262;
 
-		public static final int ARRAY_CREATION_EXPR = 245;
+		public static final int ARRAY_CREATION_EXPR = 243;
 
-		public static final int ARRAY_CREATION_EXPR_2 = 266;
+		public static final int ARRAY_CREATION_EXPR_2 = 267;
 
-		public static final int ARRAY_CREATION_EXPR_4 = 267;
+		public static final int ARRAY_CREATION_EXPR_4 = 268;
 
-		public static final int ARRAY_CREATION_EXPR_REST = 268;
+		public static final int ARRAY_CREATION_EXPR_REST = 269;
 
 		public static final int ARRAY_DIMS = 93;
 
@@ -114,11 +114,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int ARRAY_DIMS_MANDATORY = 153;
 
-		public static final int ARRAY_DIMS_MANDATORY_1 = 271;
+		public static final int ARRAY_DIMS_MANDATORY_1 = 272;
 
-		public static final int ARRAY_DIM_EXPRS_MANDATORY = 269;
+		public static final int ARRAY_DIM_EXPRS_MANDATORY = 270;
 
-		public static final int ARRAY_DIM_EXPRS_MANDATORY_1 = 270;
+		public static final int ARRAY_DIM_EXPRS_MANDATORY_1 = 271;
 
 		public static final int ARRAY_INITIALIZER = 118;
 
@@ -128,9 +128,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int ARRAY_INITIALIZER_3 = 121;
 
-		public static final int ASSERT_STATEMENT = 275;
+		public static final int ASSERT_STATEMENT = 276;
 
-		public static final int ASSERT_STATEMENT_3 = 289;
+		public static final int ASSERT_STATEMENT_3 = 290;
 
 		public static final int ASSIGNMENT_EXPRESSION = 178;
 
@@ -144,35 +144,35 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int BLOCK_STATEMENT = 33;
 
-		public static final int BLOCK_STATEMENT_1 = 290;
+		public static final int BLOCK_STATEMENT_1 = 291;
 
 		public static final int BLOCK_STATEMENT_ENTRY = 32;
 
-		public static final int BREAK_STATEMENT = 283;
+		public static final int BREAK_STATEMENT = 284;
 
-		public static final int BREAK_STATEMENT_2 = 306;
+		public static final int BREAK_STATEMENT_2 = 307;
 
 		public static final int CAST_EXPRESSION = 231;
 
 		public static final int CAST_EXPRESSION_3 = 236;
 
-		public static final int CATCH_CLAUSE = 317;
+		public static final int CATCH_CLAUSE = 318;
 
-		public static final int CATCH_CLAUSES = 312;
+		public static final int CATCH_CLAUSES = 313;
 
-		public static final int CATCH_CLAUSES_1 = 316;
+		public static final int CATCH_CLAUSES_1 = 317;
 
-		public static final int CATCH_FORMAL_PARAMETER = 318;
+		public static final int CATCH_FORMAL_PARAMETER = 319;
 
-		public static final int CATCH_FORMAL_PARAMETER_3 = 319;
+		public static final int CATCH_FORMAL_PARAMETER_3 = 320;
 
-		public static final int CATCH_FORMAL_PARAMETER_3_1 = 320;
+		public static final int CATCH_FORMAL_PARAMETER_3_1 = 321;
 
-		public static final int CLASS_CREATION_EXPR = 254;
+		public static final int CLASS_CREATION_EXPR = 255;
 
-		public static final int CLASS_CREATION_EXPR_2 = 264;
+		public static final int CLASS_CREATION_EXPR_2 = 265;
 
-		public static final int CLASS_CREATION_EXPR_6 = 265;
+		public static final int CLASS_CREATION_EXPR_6 = 266;
 
 		public static final int CLASS_OR_INTERFACE_BODY = 72;
 
@@ -230,33 +230,33 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int CONSTRUCTOR_DECL_4 = 138;
 
-		public static final int CONTINUE_STATEMENT = 284;
+		public static final int CONTINUE_STATEMENT = 285;
 
-		public static final int CONTINUE_STATEMENT_2 = 307;
+		public static final int CONTINUE_STATEMENT_2 = 308;
 
-		public static final int DO_STATEMENT = 281;
+		public static final int DO_STATEMENT = 282;
 
 		public static final int ELEMENT_VALUE = 95;
 
-		public static final int ELEMENT_VALUE_1 = 332;
+		public static final int ELEMENT_VALUE_1 = 333;
 
-		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER = 333;
+		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER = 334;
 
-		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER_2 = 334;
+		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER_2 = 335;
 
-		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER_3 = 336;
+		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER_3 = 337;
 
-		public static final int ELEMENT_VALUE_LIST = 335;
+		public static final int ELEMENT_VALUE_LIST = 336;
 
-		public static final int ELEMENT_VALUE_LIST_2 = 337;
+		public static final int ELEMENT_VALUE_LIST_2 = 338;
 
-		public static final int ELEMENT_VALUE_PAIR = 330;
+		public static final int ELEMENT_VALUE_PAIR = 331;
 
-		public static final int ELEMENT_VALUE_PAIR_LIST = 329;
+		public static final int ELEMENT_VALUE_PAIR_LIST = 330;
 
-		public static final int ELEMENT_VALUE_PAIR_LIST_2 = 331;
+		public static final int ELEMENT_VALUE_PAIR_LIST_2 = 332;
 
-		public static final int EMPTY_STATEMENT = 276;
+		public static final int EMPTY_STATEMENT = 277;
 
 		public static final int ENUM_CONSTANT_DECL = 25;
 
@@ -308,7 +308,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int EXPRESSION_ENTRY = 34;
 
-		public static final int EXPRESSION_STATEMENT = 277;
+		public static final int EXPRESSION_STATEMENT = 278;
 
 		public static final int EXTENDS_LIST = 71;
 
@@ -316,7 +316,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int EXTENDS_LIST_2_2_2 = 74;
 
-		public static final int FIELD_ACCESS = 252;
+		public static final int FIELD_ACCESS = 253;
 
 		public static final int FIELD_DECL = 21;
 
@@ -342,25 +342,25 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int FORMAL_PARAMETER_LIST_1_2_2 = 132;
 
-		public static final int FOR_INIT = 299;
+		public static final int FOR_INIT = 300;
 
-		public static final int FOR_INIT_1 = 303;
+		public static final int FOR_INIT_1 = 304;
 
-		public static final int FOR_STATEMENT = 282;
+		public static final int FOR_STATEMENT = 283;
 
-		public static final int FOR_STATEMENT_3 = 297;
+		public static final int FOR_STATEMENT_3 = 298;
 
-		public static final int FOR_STATEMENT_3_2_1 = 298;
+		public static final int FOR_STATEMENT_3_2_1 = 299;
 
-		public static final int FOR_STATEMENT_3_2_3 = 300;
+		public static final int FOR_STATEMENT_3_2_3 = 301;
 
-		public static final int FOR_STATEMENT_3_2_5 = 301;
+		public static final int FOR_STATEMENT_3_2_5 = 302;
 
-		public static final int FOR_UPDATE = 302;
+		public static final int FOR_UPDATE = 303;
 
-		public static final int IF_STATEMENT = 279;
+		public static final int IF_STATEMENT = 280;
 
-		public static final int IF_STATEMENT_6 = 296;
+		public static final int IF_STATEMENT_6 = 297;
 
 		public static final int IMPLEMENTS_LIST = 68;
 
@@ -396,7 +396,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int INSTANCE_OF_EXPRESSION_2 = 209;
 
-		public static final int LABELED_STATEMENT = 274;
+		public static final int LABELED_STATEMENT = 275;
 
 		public static final int LAMBDA_BODY = 186;
 
@@ -414,7 +414,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int LITERAL_1 = 240;
 
-		public static final int MARKER_ANNOTATION = 326;
+		public static final int MARKER_ANNOTATION = 327;
 
 		public static final int MEMBER_DECL_ENTRY = 10;
 
@@ -428,15 +428,15 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int METHOD_DECL_ENTRY = 18;
 
-		public static final int METHOD_INVOCATION = 251;
+		public static final int METHOD_INVOCATION = 252;
 
-		public static final int METHOD_INVOCATION_1 = 258;
+		public static final int METHOD_INVOCATION_1 = 259;
 
-		public static final int METHOD_REFERENCE_SUFFIX = 253;
+		public static final int METHOD_REFERENCE_SUFFIX = 254;
 
-		public static final int METHOD_REFERENCE_SUFFIX_2 = 262;
+		public static final int METHOD_REFERENCE_SUFFIX_2 = 263;
 
-		public static final int METHOD_REFERENCE_SUFFIX_3 = 263;
+		public static final int METHOD_REFERENCE_SUFFIX_3 = 264;
 
 		public static final int MODIFIERS = 15;
 
@@ -468,9 +468,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int NODE_VAR = 43;
 
-		public static final int NORMAL_ANNOTATION = 325;
+		public static final int NORMAL_ANNOTATION = 326;
 
-		public static final int NORMAL_ANNOTATION_4 = 328;
+		public static final int NORMAL_ANNOTATION_4 = 329;
 
 		public static final int PACKAGE_DECL = 4;
 
@@ -490,29 +490,31 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int PRIMARY_EXPRESSION_1 = 241;
 
-		public static final int PRIMARY_EXPRESSION_1_1_2 = 243;
-
 		public static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX = 144;
 
-		public static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2 = 246;
+		public static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2 = 247;
 
-		public static final int PRIMARY_PREFIX = 242;
+		public static final int PRIMARY_NO_NEW_ARRAY = 242;
 
-		public static final int PRIMARY_PREFIX_1 = 248;
+		public static final int PRIMARY_NO_NEW_ARRAY_2 = 245;
 
-		public static final int PRIMARY_PREFIX_1_3_2 = 249;
+		public static final int PRIMARY_PREFIX = 244;
 
-		public static final int PRIMARY_PREFIX_1_3_2_1_2 = 250;
+		public static final int PRIMARY_PREFIX_1 = 249;
 
-		public static final int PRIMARY_SUFFIX = 244;
+		public static final int PRIMARY_PREFIX_1_3_2 = 250;
 
-		public static final int PRIMARY_SUFFIX_1 = 255;
+		public static final int PRIMARY_PREFIX_1_3_2_1_2 = 251;
 
-		public static final int PRIMARY_SUFFIX_WITHOUT_SUPER = 247;
+		public static final int PRIMARY_SUFFIX = 246;
 
-		public static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1 = 256;
+		public static final int PRIMARY_SUFFIX_1 = 256;
 
-		public static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2 = 257;
+		public static final int PRIMARY_SUFFIX_WITHOUT_SUPER = 248;
+
+		public static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1 = 257;
+
+		public static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2 = 258;
 
 		public static final int PRIMITIVE_TYPE = 151;
 
@@ -550,19 +552,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int RELATIONAL_EXPRESSION_2_1 = 212;
 
-		public static final int RESOURCE_SPECIFICATION = 310;
+		public static final int RESOURCE_SPECIFICATION = 311;
 
-		public static final int RESOURCE_SPECIFICATION_3 = 321;
+		public static final int RESOURCE_SPECIFICATION_3 = 322;
 
-		public static final int RESOURCE_SPECIFICATION_4 = 322;
+		public static final int RESOURCE_SPECIFICATION_4 = 323;
 
 		public static final int RESULT_TYPE = 123;
 
 		public static final int RESULT_TYPE_1 = 173;
 
-		public static final int RETURN_STATEMENT = 285;
+		public static final int RETURN_STATEMENT = 286;
 
-		public static final int RETURN_STATEMENT_2 = 308;
+		public static final int RETURN_STATEMENT_2 = 309;
 
 		public static final int R_S_I_G_N_E_D_S_H_I_F_T = 217;
 
@@ -574,9 +576,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int SHIFT_EXPRESSION_2_1 = 215;
 
-		public static final int SINGLE_ELEMENT_ANNOTATION = 327;
+		public static final int SINGLE_ELEMENT_ANNOTATION = 328;
 
-		public static final int STATEMENT = 272;
+		public static final int STATEMENT = 273;
 
 		public static final int STATEMENTS = 31;
 
@@ -590,41 +592,41 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int STATEMENTS_ENTRY = 30;
 
-		public static final int STATEMENT_1 = 273;
+		public static final int STATEMENT_1 = 274;
 
-		public static final int STATEMENT_EXPRESSION = 292;
+		public static final int STATEMENT_EXPRESSION = 293;
 
-		public static final int STATEMENT_EXPRESSION_LIST = 304;
+		public static final int STATEMENT_EXPRESSION_LIST = 305;
 
-		public static final int STATEMENT_EXPRESSION_LIST_2 = 305;
+		public static final int STATEMENT_EXPRESSION_LIST_2 = 306;
 
-		public static final int SWITCH_ENTRY = 294;
+		public static final int SWITCH_ENTRY = 295;
 
-		public static final int SWITCH_ENTRY_1 = 295;
+		public static final int SWITCH_ENTRY_1 = 296;
 
-		public static final int SWITCH_STATEMENT = 278;
+		public static final int SWITCH_STATEMENT = 279;
 
-		public static final int SWITCH_STATEMENT_6 = 293;
+		public static final int SWITCH_STATEMENT_6 = 294;
 
-		public static final int SYNCHRONIZED_STATEMENT = 287;
+		public static final int SYNCHRONIZED_STATEMENT = 288;
 
 		public static final int THROWS_CLAUSE = 126;
 
 		public static final int THROWS_CLAUSE_3 = 136;
 
-		public static final int THROW_STATEMENT = 286;
+		public static final int THROW_STATEMENT = 287;
 
-		public static final int TRY_STATEMENT = 288;
+		public static final int TRY_STATEMENT = 289;
 
-		public static final int TRY_STATEMENT_2 = 309;
+		public static final int TRY_STATEMENT_2 = 310;
 
-		public static final int TRY_STATEMENT_2_1_3 = 311;
+		public static final int TRY_STATEMENT_2_1_3 = 312;
 
-		public static final int TRY_STATEMENT_2_1_4 = 313;
+		public static final int TRY_STATEMENT_2_1_4 = 314;
 
-		public static final int TRY_STATEMENT_2_2_2 = 314;
+		public static final int TRY_STATEMENT_2_2_2 = 315;
 
-		public static final int TRY_STATEMENT_2_2_2_1_2 = 315;
+		public static final int TRY_STATEMENT_2_2_2_1_2 = 316;
 
 		public static final int TYPE = 37;
 
@@ -706,13 +708,13 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int VARIABLE_DECLARATOR_ID = 113;
 
-		public static final int VARIABLE_DECL_EXPRESSION = 291;
+		public static final int VARIABLE_DECL_EXPRESSION = 292;
 
 		public static final int VARIABLE_INITIALIZER = 115;
 
 		public static final int VARIABLE_INITIALIZER_1 = 117;
 
-		public static final int WHILE_STATEMENT = 280;
+		public static final int WHILE_STATEMENT = 281;
 
 		public static final int WILDCARD = 169;
 
@@ -1702,17 +1704,21 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final Sequence Literal = sequence("Literal", Literal_1);
 
-		static final NonTerminal PrimaryExpression_1_1_1 = nonTerminal("PrimaryExpression_1_1_1", PRIMARY_PREFIX);
-
-		static final NonTerminal PrimaryExpression_1_1_2_1 = nonTerminal("PrimaryExpression_1_1_2_1", PRIMARY_SUFFIX);
-
-		static final ZeroOrMore PrimaryExpression_1_1_2 = zeroOrMore("PrimaryExpression_1_1_2", PrimaryExpression_1_1_2_1);
+		static final NonTerminal PrimaryExpression_1_1 = nonTerminal("PrimaryExpression_1_1", PRIMARY_NO_NEW_ARRAY);
 
 		static final NonTerminal PrimaryExpression_1_2 = nonTerminal("PrimaryExpression_1_2", ARRAY_CREATION_EXPR);
 
-		static final Choice PrimaryExpression_1 = choice("PrimaryExpression_1", sequence("PrimaryExpression_1_1", PrimaryExpression_1_1_1, PrimaryExpression_1_1_2), PrimaryExpression_1_2);
+		static final Choice PrimaryExpression_1 = choice("PrimaryExpression_1", PrimaryExpression_1_1, PrimaryExpression_1_2);
 
 		static final Sequence PrimaryExpression = sequence("PrimaryExpression", PrimaryExpression_1);
+
+		static final NonTerminal PrimaryNoNewArray_1 = nonTerminal("PrimaryNoNewArray_1", PRIMARY_PREFIX);
+
+		static final NonTerminal PrimaryNoNewArray_2_1 = nonTerminal("PrimaryNoNewArray_2_1", PRIMARY_SUFFIX);
+
+		static final ZeroOrMore PrimaryNoNewArray_2 = zeroOrMore("PrimaryNoNewArray_2", PrimaryNoNewArray_2_1);
+
+		static final Sequence PrimaryNoNewArray = sequence("PrimaryNoNewArray", PrimaryNoNewArray_1, PrimaryNoNewArray_2);
 
 		static final NonTerminal PrimaryExpressionWithoutSuperSuffix_1 = nonTerminal("PrimaryExpressionWithoutSuperSuffix_1", PRIMARY_PREFIX);
 
@@ -2433,7 +2439,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			addChoicePoint(LITERAL_1, Literal_1);
 			addProduction(PRIMARY_EXPRESSION, PrimaryExpression, false);
 			addChoicePoint(PRIMARY_EXPRESSION_1, PrimaryExpression_1);
-			addChoicePoint(PRIMARY_EXPRESSION_1_1_2, PrimaryExpression_1_1_2);
+			addProduction(PRIMARY_NO_NEW_ARRAY, PrimaryNoNewArray, false);
+			addChoicePoint(PRIMARY_NO_NEW_ARRAY_2, PrimaryNoNewArray_2);
 			addProduction(PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX, PrimaryExpressionWithoutSuperSuffix, false);
 			addChoicePoint(PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2, PrimaryExpressionWithoutSuperSuffix_2);
 			addProduction(PRIMARY_PREFIX, PrimaryPrefix, false);
@@ -6615,13 +6622,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 	/* sequence(
 		choice(
-			sequence(
-				nonTerminal(ret, PrimaryPrefix)
-				zeroOrMore(
-					action({ lateRun(); })
-					nonTerminal(ret, PrimarySuffix)
-				)
-			)
+			nonTerminal(ret, PrimaryNoNewArray)
 			nonTerminal(ret, ArrayCreationExpr)
 		)
 		action({ return ret; })
@@ -6630,15 +6631,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> ret;
 		switch (predict(JavaGrammar.PRIMARY_EXPRESSION_1)) {
 			case 1:
-				pushCallStack(JavaGrammar.PrimaryExpression_1_1_1);
-				ret = parsePrimaryPrefix();
+				pushCallStack(JavaGrammar.PrimaryExpression_1_1);
+				ret = parsePrimaryNoNewArray();
 				popCallStack();
-				while (predict(JavaGrammar.PRIMARY_EXPRESSION_1_1_2) == 1) {
-					lateRun();
-					pushCallStack(JavaGrammar.PrimaryExpression_1_1_2_1);
-					ret = parsePrimarySuffix(ret);
-					popCallStack();
-				}
 				break;
 			case 2:
 				pushCallStack(JavaGrammar.PrimaryExpression_1_2);
@@ -6647,6 +6642,28 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				break;
 			default:
 				throw produceParseException(TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.VOID, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.LPAREN, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL);
+		}
+		return ret;
+	}
+
+	/* sequence(
+		nonTerminal(ret, PrimaryPrefix)
+		zeroOrMore(
+			action({ lateRun(); })
+			nonTerminal(ret, PrimarySuffix)
+		)
+		action({ return ret; })
+	) */
+	protected BUTree<? extends SExpr> parsePrimaryNoNewArray() throws ParseException {
+		BUTree<? extends SExpr> ret;
+		pushCallStack(JavaGrammar.PrimaryNoNewArray_1);
+		ret = parsePrimaryPrefix();
+		popCallStack();
+		while (predict(JavaGrammar.PRIMARY_NO_NEW_ARRAY_2) == 1) {
+			lateRun();
+			pushCallStack(JavaGrammar.PrimaryNoNewArray_2_1);
+			ret = parsePrimarySuffix(ret);
+			popCallStack();
 		}
 		return ret;
 	}
