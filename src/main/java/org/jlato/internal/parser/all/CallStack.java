@@ -194,7 +194,7 @@ public class CallStack {
 
 		@Override
 		public String toString() {
-			return head + ":" + tails.toString();
+			return "(" + head.location.name + "):" + tails.toString();
 		}
 	}
 

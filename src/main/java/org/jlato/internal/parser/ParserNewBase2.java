@@ -40,7 +40,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 	private final Grammar grammar = initializeGrammar();
 
-	private final Map<Integer, CachedAutomaton> automata = new HashMap<Integer, CachedAutomaton>();
+	private final Map<Integer, Map<Integer, CachedAutomaton>> automata = new HashMap<Integer, Map<Integer, CachedAutomaton>>();
 
 	private CallStack callStack = CallStack.EMPTY;
 
@@ -86,15 +86,22 @@ public abstract class ParserNewBase2 extends ParserBase {
 	private int sllPredict(int choicePoint) {
 		PredictionState current;
 
+		Map<Integer, CachedAutomaton> perChoicePointAutomata = automata.get(entryPoint);
+		if (perChoicePointAutomata == null) {
+			perChoicePointAutomata = new HashMap<Integer, CachedAutomaton>();
+			automata.put(entryPoint, perChoicePointAutomata);
+		}
+
 		// TODO Generate data for the number of choice points and number of alternative predictions
 		// TODO Pre-initialize automaton with there final states and the shared error state
-		CachedAutomaton automaton = automata.get(choicePoint);
+		CachedAutomaton automaton = perChoicePointAutomata.get(choicePoint);
+
 		if (automaton == null) {
 			current = makeStartState(choicePoint, CallStack.WILDCARD);
 			cacheMiss++;
 
 			automaton = new CachedAutomaton(current);
-			automata.put(choicePoint, automaton);
+			perChoicePointAutomata.put(choicePoint, automaton);
 		} else {
 			current = automaton.initialState;
 			cacheHits++;
@@ -210,8 +217,8 @@ public abstract class ParserNewBase2 extends ParserBase {
 		Set<Configuration> configurations = moveAlong(current.configurations, token);
 		if (configurations.size() == 1 || commonPrediction(configurations) != -1) return configurations;
 
-		configurations = closure(configurations);
-		return configurations;
+		Set<Configuration> closure = closure(configurations);
+		return closure;
 	}
 
 	private int commonPrediction(Set<Configuration> configurations) {
@@ -271,6 +278,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 		final CallStack callStack = configuration.callStack;
 		final int prediction = configuration.prediction;
 
+		// TODO Avoid this when return from non-terminal call ??
 		newConfigurations.add(configuration);
 
 		// Return from non-terminal call
