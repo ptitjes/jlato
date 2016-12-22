@@ -1,0 +1,38 @@
+{
+  kind: LambdaExpr,
+  body: {
+    kind: BinaryExpr,
+    left: {
+      kind: Name,
+      id: i,
+    },
+    op: Times,
+    right: {
+      kind: LiteralExpr,
+      literalClass: java.lang.Integer,
+      literalString: 5,
+    },
+  },
+  hasParens: false,
+  params: [
+    {
+      kind: FormalParameter,
+      ellipsisAnnotations: [
+      ],
+      id: {
+        kind: VariableDeclaratorId,
+        dims: [
+        ],
+        name: i,
+      },
+      isReceiver: false,
+      isVarArgs: false,
+      modifiers: [
+      ],
+      receiverTypeName: null,
+      type: {
+        kind: UnknownType,
+      },
+    },
+  ],
+}
