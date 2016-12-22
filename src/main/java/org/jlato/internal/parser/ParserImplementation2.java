@@ -52,16 +52,6 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int ADDITIVE_EXPRESSION_2_1 = 224;
 
-		public static final int ALLOCATION_EXPRESSION = 255;
-
-		public static final int ALLOCATION_EXPRESSION_2 = 265;
-
-		public static final int ALLOCATION_EXPRESSION_4 = 266;
-
-		public static final int ALLOCATION_EXPRESSION_4_2_2 = 268;
-
-		public static final int ALLOCATION_EXPRESSION_4_2_2_2_2 = 269;
-
 		public static final int AND_EXPRESSION = 205;
 
 		public static final int AND_EXPRESSION_2 = 208;
@@ -72,11 +62,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int ANNOTATIONS = 17;
 
-		public static final int ANNOTATIONS_1 = 324;
+		public static final int ANNOTATIONS_1 = 326;
 
 		public static final int ANNOTATIONS_ENTRY = 16;
 
-		public static final int ANNOTATION_1 = 325;
+		public static final int ANNOTATION_1 = 327;
 
 		public static final int ANNOTATION_ELEMENT_DECL_ENTRY = 22;
 
@@ -104,13 +94,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int ARGUMENTS = 85;
 
-		public static final int ARGUMENTS_2 = 260;
+		public static final int ARGUMENTS_2 = 262;
 
-		public static final int ARGUMENTS_2_1 = 261;
+		public static final int ARGUMENTS_2_1 = 263;
 
-		public static final int ARGUMENTS_2_1_2_2 = 262;
+		public static final int ARGUMENTS_2_1_2_2 = 264;
 
-		public static final int ARRAY_CREATION_EXPR = 267;
+		public static final int ARRAY_CREATION_EXPR = 248;
+
+		public static final int ARRAY_CREATION_EXPR_2 = 269;
+
+		public static final int ARRAY_CREATION_EXPR_4 = 270;
+
+		public static final int ARRAY_CREATION_EXPR_REST = 271;
 
 		public static final int ARRAY_DIMS = 93;
 
@@ -118,11 +114,11 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int ARRAY_DIMS_MANDATORY = 153;
 
-		public static final int ARRAY_DIMS_MANDATORY_1 = 272;
+		public static final int ARRAY_DIMS_MANDATORY_1 = 274;
 
-		public static final int ARRAY_DIM_EXPRS_MANDATORY = 270;
+		public static final int ARRAY_DIM_EXPRS_MANDATORY = 272;
 
-		public static final int ARRAY_DIM_EXPRS_MANDATORY_1 = 271;
+		public static final int ARRAY_DIM_EXPRS_MANDATORY_1 = 273;
 
 		public static final int ARRAY_INITIALIZER = 118;
 
@@ -132,9 +128,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int ARRAY_INITIALIZER_3 = 121;
 
-		public static final int ASSERT_STATEMENT = 276;
+		public static final int ASSERT_STATEMENT = 278;
 
-		public static final int ASSERT_STATEMENT_3 = 290;
+		public static final int ASSERT_STATEMENT_3 = 292;
 
 		public static final int ASSIGNMENT = 181;
 
@@ -150,29 +146,35 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int BLOCK_STATEMENT = 33;
 
-		public static final int BLOCK_STATEMENT_1 = 291;
+		public static final int BLOCK_STATEMENT_1 = 293;
 
 		public static final int BLOCK_STATEMENT_ENTRY = 32;
 
-		public static final int BREAK_STATEMENT = 284;
+		public static final int BREAK_STATEMENT = 286;
 
-		public static final int BREAK_STATEMENT_2 = 307;
+		public static final int BREAK_STATEMENT_2 = 309;
 
 		public static final int CAST_EXPRESSION = 235;
 
 		public static final int CAST_EXPRESSION_3 = 239;
 
-		public static final int CATCH_CLAUSE = 318;
+		public static final int CATCH_CLAUSE = 320;
 
-		public static final int CATCH_CLAUSES = 313;
+		public static final int CATCH_CLAUSES = 315;
 
-		public static final int CATCH_CLAUSES_1 = 317;
+		public static final int CATCH_CLAUSES_1 = 319;
 
-		public static final int CATCH_FORMAL_PARAMETER = 319;
+		public static final int CATCH_FORMAL_PARAMETER = 321;
 
-		public static final int CATCH_FORMAL_PARAMETER_3 = 320;
+		public static final int CATCH_FORMAL_PARAMETER_3 = 322;
 
-		public static final int CATCH_FORMAL_PARAMETER_3_1 = 321;
+		public static final int CATCH_FORMAL_PARAMETER_3_1 = 323;
+
+		public static final int CLASS_CREATION_EXPR = 257;
+
+		public static final int CLASS_CREATION_EXPR_2 = 267;
+
+		public static final int CLASS_CREATION_EXPR_6 = 268;
 
 		public static final int CLASS_OR_INTERFACE_BODY = 72;
 
@@ -230,33 +232,33 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int CONSTRUCTOR_DECL_4 = 138;
 
-		public static final int CONTINUE_STATEMENT = 285;
+		public static final int CONTINUE_STATEMENT = 287;
 
-		public static final int CONTINUE_STATEMENT_2 = 308;
+		public static final int CONTINUE_STATEMENT_2 = 310;
 
-		public static final int DO_STATEMENT = 282;
+		public static final int DO_STATEMENT = 284;
 
 		public static final int ELEMENT_VALUE = 95;
 
-		public static final int ELEMENT_VALUE_1 = 333;
+		public static final int ELEMENT_VALUE_1 = 335;
 
-		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER = 334;
+		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER = 336;
 
-		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER_2 = 335;
+		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER_2 = 337;
 
-		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER_3 = 337;
+		public static final int ELEMENT_VALUE_ARRAY_INITIALIZER_3 = 339;
 
-		public static final int ELEMENT_VALUE_LIST = 336;
+		public static final int ELEMENT_VALUE_LIST = 338;
 
-		public static final int ELEMENT_VALUE_LIST_2 = 338;
+		public static final int ELEMENT_VALUE_LIST_2 = 340;
 
-		public static final int ELEMENT_VALUE_PAIR = 331;
+		public static final int ELEMENT_VALUE_PAIR = 333;
 
-		public static final int ELEMENT_VALUE_PAIR_LIST = 330;
+		public static final int ELEMENT_VALUE_PAIR_LIST = 332;
 
-		public static final int ELEMENT_VALUE_PAIR_LIST_2 = 332;
+		public static final int ELEMENT_VALUE_PAIR_LIST_2 = 334;
 
-		public static final int EMPTY_STATEMENT = 277;
+		public static final int EMPTY_STATEMENT = 279;
 
 		public static final int ENUM_CONSTANT_DECL = 25;
 
@@ -308,7 +310,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int EXPRESSION_ENTRY = 34;
 
-		public static final int EXPRESSION_STATEMENT = 278;
+		public static final int EXPRESSION_STATEMENT = 280;
 
 		public static final int EXTENDS_LIST = 71;
 
@@ -316,7 +318,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int EXTENDS_LIST_2_2_2 = 74;
 
-		public static final int FIELD_ACCESS = 253;
+		public static final int FIELD_ACCESS = 255;
 
 		public static final int FIELD_DECL = 21;
 
@@ -342,25 +344,25 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int FORMAL_PARAMETER_LIST_1_2_2 = 132;
 
-		public static final int FOR_INIT = 300;
+		public static final int FOR_INIT = 302;
 
-		public static final int FOR_INIT_1 = 304;
+		public static final int FOR_INIT_1 = 306;
 
-		public static final int FOR_STATEMENT = 283;
+		public static final int FOR_STATEMENT = 285;
 
-		public static final int FOR_STATEMENT_3 = 298;
+		public static final int FOR_STATEMENT_3 = 300;
 
-		public static final int FOR_STATEMENT_3_2_1 = 299;
+		public static final int FOR_STATEMENT_3_2_1 = 301;
 
-		public static final int FOR_STATEMENT_3_2_3 = 301;
+		public static final int FOR_STATEMENT_3_2_3 = 303;
 
-		public static final int FOR_STATEMENT_3_2_5 = 302;
+		public static final int FOR_STATEMENT_3_2_5 = 304;
 
-		public static final int FOR_UPDATE = 303;
+		public static final int FOR_UPDATE = 305;
 
-		public static final int IF_STATEMENT = 280;
+		public static final int IF_STATEMENT = 282;
 
-		public static final int IF_STATEMENT_6 = 297;
+		public static final int IF_STATEMENT_6 = 299;
 
 		public static final int IMPLEMENTS_LIST = 68;
 
@@ -396,7 +398,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int INSTANCE_OF_EXPRESSION_2 = 213;
 
-		public static final int LABELED_STATEMENT = 275;
+		public static final int LABELED_STATEMENT = 277;
 
 		public static final int LAMBDA_BODY = 190;
 
@@ -418,7 +420,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int LITERAL_1 = 243;
 
-		public static final int MARKER_ANNOTATION = 327;
+		public static final int MARKER_ANNOTATION = 329;
 
 		public static final int MEMBER_DECL_ENTRY = 10;
 
@@ -432,15 +434,15 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int METHOD_DECL_ENTRY = 18;
 
-		public static final int METHOD_INVOCATION = 252;
+		public static final int METHOD_INVOCATION = 254;
 
-		public static final int METHOD_INVOCATION_1 = 259;
+		public static final int METHOD_INVOCATION_1 = 261;
 
-		public static final int METHOD_REFERENCE_SUFFIX = 254;
+		public static final int METHOD_REFERENCE_SUFFIX = 256;
 
-		public static final int METHOD_REFERENCE_SUFFIX_2 = 263;
+		public static final int METHOD_REFERENCE_SUFFIX_2 = 265;
 
-		public static final int METHOD_REFERENCE_SUFFIX_3 = 264;
+		public static final int METHOD_REFERENCE_SUFFIX_3 = 266;
 
 		public static final int MODIFIERS = 15;
 
@@ -472,9 +474,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int NODE_VAR = 43;
 
-		public static final int NORMAL_ANNOTATION = 326;
+		public static final int NORMAL_ANNOTATION = 328;
 
-		public static final int NORMAL_ANNOTATION_4 = 329;
+		public static final int NORMAL_ANNOTATION_4 = 331;
 
 		public static final int PACKAGE_DECL = 4;
 
@@ -492,29 +494,31 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int PRIMARY_EXPRESSION = 185;
 
-		public static final int PRIMARY_EXPRESSION_1_2 = 245;
+		public static final int PRIMARY_EXPRESSION_1 = 244;
+
+		public static final int PRIMARY_EXPRESSION_1_1_2 = 246;
 
 		public static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX = 144;
 
-		public static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2 = 247;
+		public static final int PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2 = 249;
 
-		public static final int PRIMARY_PREFIX = 244;
+		public static final int PRIMARY_PREFIX = 245;
 
-		public static final int PRIMARY_PREFIX_1 = 249;
+		public static final int PRIMARY_PREFIX_1 = 251;
 
-		public static final int PRIMARY_PREFIX_1_3_2 = 250;
+		public static final int PRIMARY_PREFIX_1_3_2 = 252;
 
-		public static final int PRIMARY_PREFIX_1_3_2_1_2 = 251;
+		public static final int PRIMARY_PREFIX_1_3_2_1_2 = 253;
 
-		public static final int PRIMARY_SUFFIX = 246;
+		public static final int PRIMARY_SUFFIX = 247;
 
-		public static final int PRIMARY_SUFFIX_1 = 256;
+		public static final int PRIMARY_SUFFIX_1 = 258;
 
-		public static final int PRIMARY_SUFFIX_WITHOUT_SUPER = 248;
+		public static final int PRIMARY_SUFFIX_WITHOUT_SUPER = 250;
 
-		public static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1 = 257;
+		public static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1 = 259;
 
-		public static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2 = 258;
+		public static final int PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2 = 260;
 
 		public static final int PRIMITIVE_TYPE = 151;
 
@@ -552,19 +556,19 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int RELATIONAL_EXPRESSION_2_1 = 216;
 
-		public static final int RESOURCE_SPECIFICATION = 311;
+		public static final int RESOURCE_SPECIFICATION = 313;
 
-		public static final int RESOURCE_SPECIFICATION_3 = 322;
+		public static final int RESOURCE_SPECIFICATION_3 = 324;
 
-		public static final int RESOURCE_SPECIFICATION_4 = 323;
+		public static final int RESOURCE_SPECIFICATION_4 = 325;
 
 		public static final int RESULT_TYPE = 123;
 
 		public static final int RESULT_TYPE_1 = 173;
 
-		public static final int RETURN_STATEMENT = 286;
+		public static final int RETURN_STATEMENT = 288;
 
-		public static final int RETURN_STATEMENT_2 = 309;
+		public static final int RETURN_STATEMENT_2 = 311;
 
 		public static final int R_S_I_G_N_E_D_S_H_I_F_T = 221;
 
@@ -576,9 +580,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int SHIFT_EXPRESSION_2_1 = 219;
 
-		public static final int SINGLE_ELEMENT_ANNOTATION = 328;
+		public static final int SINGLE_ELEMENT_ANNOTATION = 330;
 
-		public static final int STATEMENT = 273;
+		public static final int STATEMENT = 275;
 
 		public static final int STATEMENTS = 31;
 
@@ -592,41 +596,41 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int STATEMENTS_ENTRY = 30;
 
-		public static final int STATEMENT_1 = 274;
+		public static final int STATEMENT_1 = 276;
 
-		public static final int STATEMENT_EXPRESSION = 293;
+		public static final int STATEMENT_EXPRESSION = 295;
 
-		public static final int STATEMENT_EXPRESSION_LIST = 305;
+		public static final int STATEMENT_EXPRESSION_LIST = 307;
 
-		public static final int STATEMENT_EXPRESSION_LIST_2 = 306;
+		public static final int STATEMENT_EXPRESSION_LIST_2 = 308;
 
-		public static final int SWITCH_ENTRY = 295;
+		public static final int SWITCH_ENTRY = 297;
 
-		public static final int SWITCH_ENTRY_1 = 296;
+		public static final int SWITCH_ENTRY_1 = 298;
 
-		public static final int SWITCH_STATEMENT = 279;
+		public static final int SWITCH_STATEMENT = 281;
 
-		public static final int SWITCH_STATEMENT_6 = 294;
+		public static final int SWITCH_STATEMENT_6 = 296;
 
-		public static final int SYNCHRONIZED_STATEMENT = 288;
+		public static final int SYNCHRONIZED_STATEMENT = 290;
 
 		public static final int THROWS_CLAUSE = 126;
 
 		public static final int THROWS_CLAUSE_3 = 136;
 
-		public static final int THROW_STATEMENT = 287;
+		public static final int THROW_STATEMENT = 289;
 
-		public static final int TRY_STATEMENT = 289;
+		public static final int TRY_STATEMENT = 291;
 
-		public static final int TRY_STATEMENT_2 = 310;
+		public static final int TRY_STATEMENT_2 = 312;
 
-		public static final int TRY_STATEMENT_2_1_3 = 312;
+		public static final int TRY_STATEMENT_2_1_3 = 314;
 
-		public static final int TRY_STATEMENT_2_1_4 = 314;
+		public static final int TRY_STATEMENT_2_1_4 = 316;
 
-		public static final int TRY_STATEMENT_2_2_2 = 315;
+		public static final int TRY_STATEMENT_2_2_2 = 317;
 
-		public static final int TRY_STATEMENT_2_2_2_1_2 = 316;
+		public static final int TRY_STATEMENT_2_2_2_1_2 = 318;
 
 		public static final int TYPE = 37;
 
@@ -708,13 +712,13 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int VARIABLE_DECLARATOR_ID = 113;
 
-		public static final int VARIABLE_DECL_EXPRESSION = 292;
+		public static final int VARIABLE_DECL_EXPRESSION = 294;
 
 		public static final int VARIABLE_INITIALIZER = 115;
 
 		public static final int VARIABLE_INITIALIZER_1 = 117;
 
-		public static final int WHILE_STATEMENT = 281;
+		public static final int WHILE_STATEMENT = 283;
 
 		public static final int WILDCARD = 169;
 
@@ -1716,13 +1720,17 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final Sequence Literal = sequence("Literal", Literal_1);
 
-		static final NonTerminal PrimaryExpression_1_1 = nonTerminal("PrimaryExpression_1_1", PRIMARY_PREFIX);
+		static final NonTerminal PrimaryExpression_1_1_1 = nonTerminal("PrimaryExpression_1_1_1", PRIMARY_PREFIX);
 
-		static final NonTerminal PrimaryExpression_1_2_1 = nonTerminal("PrimaryExpression_1_2_1", PRIMARY_SUFFIX);
+		static final NonTerminal PrimaryExpression_1_1_2_1 = nonTerminal("PrimaryExpression_1_1_2_1", PRIMARY_SUFFIX);
 
-		static final ZeroOrMore PrimaryExpression_1_2 = zeroOrMore("PrimaryExpression_1_2", PrimaryExpression_1_2_1);
+		static final ZeroOrMore PrimaryExpression_1_1_2 = zeroOrMore("PrimaryExpression_1_1_2", PrimaryExpression_1_1_2_1);
 
-		static final Sequence PrimaryExpression = sequence("PrimaryExpression", sequence("PrimaryExpression_1", PrimaryExpression_1_1, PrimaryExpression_1_2));
+		static final NonTerminal PrimaryExpression_1_2 = nonTerminal("PrimaryExpression_1_2", ARRAY_CREATION_EXPR);
+
+		static final Choice PrimaryExpression_1 = choice("PrimaryExpression_1", sequence("PrimaryExpression_1_1", PrimaryExpression_1_1_1, PrimaryExpression_1_1_2), PrimaryExpression_1_2);
+
+		static final Sequence PrimaryExpression = sequence("PrimaryExpression", PrimaryExpression_1);
 
 		static final NonTerminal PrimaryExpressionWithoutSuperSuffix_1 = nonTerminal("PrimaryExpressionWithoutSuperSuffix_1", PRIMARY_PREFIX);
 
@@ -1744,7 +1752,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final Choice PrimaryPrefix_1_3_2 = choice("PrimaryPrefix_1_3_2", sequence("PrimaryPrefix_1_3_2_1", terminal("PrimaryPrefix_1_3_2_1_1", TokenType.DOT), PrimaryPrefix_1_3_2_1_2), sequence("PrimaryPrefix_1_3_2_2", PrimaryPrefix_1_3_2_2_1));
 
-		static final NonTerminal PrimaryPrefix_1_4 = nonTerminal("PrimaryPrefix_1_4", ALLOCATION_EXPRESSION);
+		static final NonTerminal PrimaryPrefix_1_4 = nonTerminal("PrimaryPrefix_1_4", CLASS_CREATION_EXPR);
 
 		static final NonTerminal PrimaryPrefix_1_5_1 = nonTerminal("PrimaryPrefix_1_5_1", RESULT_TYPE);
 
@@ -1770,7 +1778,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final Sequence PrimarySuffix = sequence("PrimarySuffix", PrimarySuffix_1);
 
-		static final NonTerminal PrimarySuffixWithoutSuper_1_1_2_2 = nonTerminal("PrimarySuffixWithoutSuper_1_1_2_2", ALLOCATION_EXPRESSION);
+		static final NonTerminal PrimarySuffixWithoutSuper_1_1_2_2 = nonTerminal("PrimarySuffixWithoutSuper_1_1_2_2", CLASS_CREATION_EXPR);
 
 		static final NonTerminal PrimarySuffixWithoutSuper_1_1_2_3 = nonTerminal("PrimarySuffixWithoutSuper_1_1_2_3", METHOD_INVOCATION);
 
@@ -1822,41 +1830,47 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final Sequence MethodReferenceSuffix = sequence("MethodReferenceSuffix", terminal("MethodReferenceSuffix_1", TokenType.DOUBLECOLON), MethodReferenceSuffix_2, MethodReferenceSuffix_3);
 
-		static final NonTerminal AllocationExpression_2_1 = nonTerminal("AllocationExpression_2_1", TYPE_ARGUMENTS);
+		static final NonTerminal ClassCreationExpr_2_1 = nonTerminal("ClassCreationExpr_2_1", TYPE_ARGUMENTS);
 
-		static final ZeroOrOne AllocationExpression_2 = zeroOrOne("AllocationExpression_2", AllocationExpression_2_1);
+		static final ZeroOrOne ClassCreationExpr_2 = zeroOrOne("ClassCreationExpr_2", ClassCreationExpr_2_1);
 
-		static final NonTerminal AllocationExpression_3 = nonTerminal("AllocationExpression_3", ANNOTATIONS);
+		static final NonTerminal ClassCreationExpr_3 = nonTerminal("ClassCreationExpr_3", ANNOTATIONS);
 
-		static final NonTerminal AllocationExpression_4_1_1 = nonTerminal("AllocationExpression_4_1_1", PRIMITIVE_TYPE);
+		static final NonTerminal ClassCreationExpr_4 = nonTerminal("ClassCreationExpr_4", QUALIFIED_TYPE);
 
-		static final NonTerminal AllocationExpression_4_1_2 = nonTerminal("AllocationExpression_4_1_2", ARRAY_CREATION_EXPR);
+		static final NonTerminal ClassCreationExpr_5 = nonTerminal("ClassCreationExpr_5", ARGUMENTS);
 
-		static final NonTerminal AllocationExpression_4_2_1 = nonTerminal("AllocationExpression_4_2_1", QUALIFIED_TYPE);
+		static final NonTerminal ClassCreationExpr_6_1 = nonTerminal("ClassCreationExpr_6_1", CLASS_OR_INTERFACE_BODY);
 
-		static final NonTerminal AllocationExpression_4_2_2_1 = nonTerminal("AllocationExpression_4_2_2_1", ARRAY_CREATION_EXPR);
+		static final ZeroOrOne ClassCreationExpr_6 = zeroOrOne("ClassCreationExpr_6", ClassCreationExpr_6_1);
 
-		static final NonTerminal AllocationExpression_4_2_2_2_1 = nonTerminal("AllocationExpression_4_2_2_2_1", ARGUMENTS);
+		static final Sequence ClassCreationExpr = sequence("ClassCreationExpr", terminal("ClassCreationExpr_1", TokenType.NEW), ClassCreationExpr_2, ClassCreationExpr_3, ClassCreationExpr_4, ClassCreationExpr_5, ClassCreationExpr_6);
 
-		static final NonTerminal AllocationExpression_4_2_2_2_2_1 = nonTerminal("AllocationExpression_4_2_2_2_2_1", CLASS_OR_INTERFACE_BODY);
+		static final NonTerminal ArrayCreationExpr_2_1 = nonTerminal("ArrayCreationExpr_2_1", TYPE_ARGUMENTS);
 
-		static final ZeroOrOne AllocationExpression_4_2_2_2_2 = zeroOrOne("AllocationExpression_4_2_2_2_2", AllocationExpression_4_2_2_2_2_1);
+		static final ZeroOrOne ArrayCreationExpr_2 = zeroOrOne("ArrayCreationExpr_2", ArrayCreationExpr_2_1);
 
-		static final Choice AllocationExpression_4_2_2 = choice("AllocationExpression_4_2_2", AllocationExpression_4_2_2_1, sequence("AllocationExpression_4_2_2_2", AllocationExpression_4_2_2_2_1, AllocationExpression_4_2_2_2_2));
+		static final NonTerminal ArrayCreationExpr_3 = nonTerminal("ArrayCreationExpr_3", ANNOTATIONS);
 
-		static final Choice AllocationExpression_4 = choice("AllocationExpression_4", sequence("AllocationExpression_4_1", AllocationExpression_4_1_1, AllocationExpression_4_1_2), sequence("AllocationExpression_4_2", AllocationExpression_4_2_1, AllocationExpression_4_2_2));
+		static final NonTerminal ArrayCreationExpr_4_1 = nonTerminal("ArrayCreationExpr_4_1", PRIMITIVE_TYPE);
 
-		static final Sequence AllocationExpression = sequence("AllocationExpression", terminal("AllocationExpression_1", TokenType.NEW), AllocationExpression_2, AllocationExpression_3, AllocationExpression_4);
+		static final NonTerminal ArrayCreationExpr_4_2 = nonTerminal("ArrayCreationExpr_4_2", QUALIFIED_TYPE);
 
-		static final NonTerminal ArrayCreationExpr_1_1 = nonTerminal("ArrayCreationExpr_1_1", ARRAY_DIM_EXPRS_MANDATORY);
+		static final Choice ArrayCreationExpr_4 = choice("ArrayCreationExpr_4", ArrayCreationExpr_4_1, ArrayCreationExpr_4_2);
 
-		static final NonTerminal ArrayCreationExpr_1_2 = nonTerminal("ArrayCreationExpr_1_2", ARRAY_DIMS);
+		static final NonTerminal ArrayCreationExpr_5 = nonTerminal("ArrayCreationExpr_5", ARRAY_CREATION_EXPR_REST);
 
-		static final NonTerminal ArrayCreationExpr_2_1 = nonTerminal("ArrayCreationExpr_2_1", ARRAY_DIMS_MANDATORY);
+		static final Sequence ArrayCreationExpr = sequence("ArrayCreationExpr", terminal("ArrayCreationExpr_1", TokenType.NEW), ArrayCreationExpr_2, ArrayCreationExpr_3, ArrayCreationExpr_4, ArrayCreationExpr_5);
 
-		static final NonTerminal ArrayCreationExpr_2_2 = nonTerminal("ArrayCreationExpr_2_2", ARRAY_INITIALIZER);
+		static final NonTerminal ArrayCreationExprRest_1_1 = nonTerminal("ArrayCreationExprRest_1_1", ARRAY_DIM_EXPRS_MANDATORY);
 
-		static final Choice ArrayCreationExpr = choice("ArrayCreationExpr", sequence("ArrayCreationExpr_1", ArrayCreationExpr_1_1, ArrayCreationExpr_1_2), sequence("ArrayCreationExpr_2", ArrayCreationExpr_2_1, ArrayCreationExpr_2_2));
+		static final NonTerminal ArrayCreationExprRest_1_2 = nonTerminal("ArrayCreationExprRest_1_2", ARRAY_DIMS);
+
+		static final NonTerminal ArrayCreationExprRest_2_1 = nonTerminal("ArrayCreationExprRest_2_1", ARRAY_DIMS_MANDATORY);
+
+		static final NonTerminal ArrayCreationExprRest_2_2 = nonTerminal("ArrayCreationExprRest_2_2", ARRAY_INITIALIZER);
+
+		static final Choice ArrayCreationExprRest = choice("ArrayCreationExprRest", sequence("ArrayCreationExprRest_1", ArrayCreationExprRest_1_1, ArrayCreationExprRest_1_2), sequence("ArrayCreationExprRest_2", ArrayCreationExprRest_2_1, ArrayCreationExprRest_2_2));
 
 		static final NonTerminal ArrayDimExprsMandatory_1_1 = nonTerminal("ArrayDimExprsMandatory_1_1", ANNOTATIONS);
 
@@ -2439,7 +2453,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			addProduction(LITERAL, Literal, false);
 			addChoicePoint(LITERAL_1, Literal_1);
 			addProduction(PRIMARY_EXPRESSION, PrimaryExpression, false);
-			addChoicePoint(PRIMARY_EXPRESSION_1_2, PrimaryExpression_1_2);
+			addChoicePoint(PRIMARY_EXPRESSION_1, PrimaryExpression_1);
+			addChoicePoint(PRIMARY_EXPRESSION_1_1_2, PrimaryExpression_1_1_2);
 			addProduction(PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX, PrimaryExpressionWithoutSuperSuffix, false);
 			addChoicePoint(PRIMARY_EXPRESSION_WITHOUT_SUPER_SUFFIX_2, PrimaryExpressionWithoutSuperSuffix_2);
 			addProduction(PRIMARY_PREFIX, PrimaryPrefix, false);
@@ -2461,13 +2476,14 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			addProduction(METHOD_REFERENCE_SUFFIX, MethodReferenceSuffix, false);
 			addChoicePoint(METHOD_REFERENCE_SUFFIX_2, MethodReferenceSuffix_2);
 			addChoicePoint(METHOD_REFERENCE_SUFFIX_3, MethodReferenceSuffix_3);
-			addProduction(ALLOCATION_EXPRESSION, AllocationExpression, false);
-			addChoicePoint(ALLOCATION_EXPRESSION_2, AllocationExpression_2);
-			addChoicePoint(ALLOCATION_EXPRESSION_4, AllocationExpression_4);
-			addChoicePoint(ALLOCATION_EXPRESSION_4_2_2, AllocationExpression_4_2_2);
-			addChoicePoint(ALLOCATION_EXPRESSION_4_2_2_2_2, AllocationExpression_4_2_2_2_2);
+			addProduction(CLASS_CREATION_EXPR, ClassCreationExpr, false);
+			addChoicePoint(CLASS_CREATION_EXPR_2, ClassCreationExpr_2);
+			addChoicePoint(CLASS_CREATION_EXPR_6, ClassCreationExpr_6);
 			addProduction(ARRAY_CREATION_EXPR, ArrayCreationExpr, false);
-			addChoicePoint(ARRAY_CREATION_EXPR, ArrayCreationExpr);
+			addChoicePoint(ARRAY_CREATION_EXPR_2, ArrayCreationExpr_2);
+			addChoicePoint(ARRAY_CREATION_EXPR_4, ArrayCreationExpr_4);
+			addProduction(ARRAY_CREATION_EXPR_REST, ArrayCreationExprRest, false);
+			addChoicePoint(ARRAY_CREATION_EXPR_REST, ArrayCreationExprRest);
 			addProduction(ARRAY_DIM_EXPRS_MANDATORY, ArrayDimExprsMandatory, false);
 			addChoicePoint(ARRAY_DIM_EXPRS_MANDATORY_1, ArrayDimExprsMandatory_1);
 			addProduction(ARRAY_DIMS_MANDATORY, ArrayDimsMandatory, false);
@@ -4332,7 +4348,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.DECR, TokenType.INCR, TokenType.MINUS, TokenType.PLUS, TokenType.BANG, TokenType.TILDE, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.INT, TokenType.LONG, TokenType.BYTE, TokenType.SHORT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.FLOAT, TokenType.DOUBLE, TokenType.NEW, TokenType.LT, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.NULL, TokenType.SUPER, TokenType.THIS, TokenType.LBRACE);
+				throw produceParseException(TokenType.DECR, TokenType.INCR, TokenType.MINUS, TokenType.PLUS, TokenType.BANG, TokenType.TILDE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.LPAREN, TokenType.SUPER, TokenType.THIS, TokenType.NEW, TokenType.LBRACE);
 		}
 		return ret;
 	}
@@ -5378,7 +5394,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.THIS, TokenType.LT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.SUPER, TokenType.NEW, TokenType.BOOLEAN, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.VOID, TokenType.BANG, TokenType.TILDE, TokenType.PLUS, TokenType.MINUS, TokenType.INCR, TokenType.DECR);
+				throw produceParseException(TokenType.NEW, TokenType.LT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LPAREN, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.THIS, TokenType.SUPER, TokenType.VOID, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.BOOLEAN, TokenType.BANG, TokenType.TILDE, TokenType.PLUS, TokenType.MINUS, TokenType.INCR, TokenType.DECR);
 		}
 		return ret;
 	}
@@ -5404,7 +5420,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.NEW, TokenType.VOID, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.THIS, TokenType.SUPER, TokenType.LPAREN, TokenType.LT, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL, TokenType.MINUS, TokenType.PLUS, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR);
+				throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LPAREN, TokenType.NEW, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.VOID, TokenType.LT, TokenType.NULL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.THIS, TokenType.SUPER, TokenType.MINUS, TokenType.PLUS, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR);
 		}
 		return ret;
 	}
@@ -5448,7 +5464,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.SUPER, TokenType.THIS, TokenType.NULL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.LT, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.BOOLEAN, TokenType.VOID, TokenType.NEW);
+				throw produceParseException(TokenType.NEW, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.SUPER, TokenType.THIS, TokenType.VOID, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.LPAREN);
 		}
 		return ret;
 	}
@@ -5618,7 +5634,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ret = dress(SLambdaExpr.make(parameters, parenthesis, right(block)));
 				break;
 			default:
-				throw produceParseException(TokenType.LBRACE, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.INTEGER_LITERAL, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.NULL, TokenType.FALSE, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.VOID, TokenType.LPAREN, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.TILDE, TokenType.BANG);
+				throw produceParseException(TokenType.LBRACE, TokenType.LPAREN, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.DOUBLE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SUPER, TokenType.NEW, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.THIS, TokenType.INCR, TokenType.DECR, TokenType.PLUS, TokenType.MINUS, TokenType.TILDE, TokenType.BANG);
 		}
 		return ret;
 	}
@@ -5813,7 +5829,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					popCallStack();
 					break;
 				default:
-					throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.MINUS, TokenType.PLUS, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.NEW, TokenType.VOID, TokenType.BYTE, TokenType.SHORT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.FLOAT, TokenType.DOUBLE, TokenType.INT, TokenType.LONG, TokenType.THIS, TokenType.SUPER, TokenType.LT, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR);
+					throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.MINUS, TokenType.PLUS, TokenType.SUPER, TokenType.THIS, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.LT, TokenType.VOID, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.NEW, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR);
 			}
 			ret = dress(SConditionalExpr.make(ret, left, right));
 		}
@@ -6322,7 +6338,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.VOID, TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR);
+				throw produceParseException(TokenType.NEW, TokenType.LT, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.VOID, TokenType.BOOLEAN, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.LPAREN, TokenType.SUPER, TokenType.THIS, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.DECR, TokenType.INCR);
 		}
 		return ret;
 	}
@@ -6420,7 +6436,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.BOOLEAN, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.INT, TokenType.VOID, TokenType.NEW, TokenType.LPAREN, TokenType.SUPER, TokenType.THIS, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.BANG, TokenType.TILDE);
+				throw produceParseException(TokenType.NEW, TokenType.LPAREN, TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.LT, TokenType.VOID, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.DOUBLE, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.BANG, TokenType.TILDE);
 		}
 		return ret;
 	}
@@ -6659,25 +6675,39 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	}
 
 	/* sequence(
-		sequence(
-			nonTerminal(ret, PrimaryPrefix)
-			zeroOrMore(
-				action({ lateRun(); })
-				nonTerminal(ret, PrimarySuffix)
+		choice(
+			sequence(
+				nonTerminal(ret, PrimaryPrefix)
+				zeroOrMore(
+					action({ lateRun(); })
+					nonTerminal(ret, PrimarySuffix)
+				)
 			)
+			nonTerminal(ret, ArrayCreationExpr)
 		)
 		action({ return ret; })
 	) */
 	protected BUTree<? extends SExpr> parsePrimaryExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
-		pushCallStack(JavaGrammar.PrimaryExpression_1_1);
-		ret = parsePrimaryPrefix();
-		popCallStack();
-		while (predict(JavaGrammar.PRIMARY_EXPRESSION_1_2) == 1) {
-			lateRun();
-			pushCallStack(JavaGrammar.PrimaryExpression_1_2_1);
-			ret = parsePrimarySuffix(ret);
-			popCallStack();
+		switch (predict(JavaGrammar.PRIMARY_EXPRESSION_1)) {
+			case 1:
+				pushCallStack(JavaGrammar.PrimaryExpression_1_1_1);
+				ret = parsePrimaryPrefix();
+				popCallStack();
+				while (predict(JavaGrammar.PRIMARY_EXPRESSION_1_1_2) == 1) {
+					lateRun();
+					pushCallStack(JavaGrammar.PrimaryExpression_1_1_2_1);
+					ret = parsePrimarySuffix(ret);
+					popCallStack();
+				}
+				break;
+			case 2:
+				pushCallStack(JavaGrammar.PrimaryExpression_1_2);
+				ret = parseArrayCreationExpr(null);
+				popCallStack();
+				break;
+			default:
+				throw produceParseException(TokenType.NEW, TokenType.SUPER, TokenType.THIS, TokenType.VOID, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.DOUBLE, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SHORT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.LPAREN, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.NULL);
 		}
 		return ret;
 	}
@@ -6731,7 +6761,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					)
 				)
 			)
-			nonTerminal(ret, AllocationExpression)
+			nonTerminal(ret, ClassCreationExpr)
 			sequence(
 				action({ run(); })
 				nonTerminal(type, ResultType)
@@ -6813,7 +6843,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				break;
 			case 4:
 				pushCallStack(JavaGrammar.PrimaryPrefix_1_4);
-				ret = parseAllocationExpression(null);
+				ret = parseClassCreationExpr(null);
 				popCallStack();
 				break;
 			case 5:
@@ -6908,7 +6938,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 						terminal(THIS)
 						action({ ret = dress(SThisExpr.make(optionOf(scope))); })
 					)
-					nonTerminal(ret, AllocationExpression)
+					nonTerminal(ret, ClassCreationExpr)
 					nonTerminal(ret, MethodInvocation)
 					nonTerminal(ret, FieldAccess)
 				)
@@ -6935,7 +6965,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 						break;
 					case 2:
 						pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_1_2_2);
-						ret = parseAllocationExpression(scope);
+						ret = parseClassCreationExpr(scope);
 						popCallStack();
 						break;
 					case 3:
@@ -7107,28 +7137,14 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		)
 		action({ run(); })
 		nonTerminal(annotations, Annotations)
-		choice(
-			sequence(
-				nonTerminal(type, PrimitiveType)
-				nonTerminal(ret, ArrayCreationExpr)
-			)
-			sequence(
-				nonTerminal(type, QualifiedType)
-				choice(
-					nonTerminal(ret, ArrayCreationExpr)
-					sequence(
-						nonTerminal(args, Arguments)
-						zeroOrOne(
-							nonTerminal(anonymousBody, ClassOrInterfaceBody)
-						)
-						action({ ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody))); })
-					)
-				)
-			)
+		nonTerminal(type, QualifiedType)
+		nonTerminal(args, Arguments)
+		zeroOrOne(
+			nonTerminal(anonymousBody, ClassOrInterfaceBody)
 		)
-		action({ return ret; })
+		action({ return dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody))); })
 	) */
-	protected BUTree<? extends SExpr> parseAllocationExpression(BUTree<? extends SExpr> scope) throws ParseException {
+	protected BUTree<? extends SExpr> parseClassCreationExpr(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<? extends SType> type;
 		BUTree<SNodeList> typeArgs = null;
@@ -7138,52 +7154,82 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		if (scope == null) run();
 
 		parse(TokenType.NEW);
-		if (predict(JavaGrammar.ALLOCATION_EXPRESSION_2) == 1) {
-			pushCallStack(JavaGrammar.AllocationExpression_2_1);
+		if (predict(JavaGrammar.CLASS_CREATION_EXPR_2) == 1) {
+			pushCallStack(JavaGrammar.ClassCreationExpr_2_1);
 			typeArgs = parseTypeArguments();
 			popCallStack();
 		}
 		run();
-		pushCallStack(JavaGrammar.AllocationExpression_3);
+		pushCallStack(JavaGrammar.ClassCreationExpr_3);
 		annotations = parseAnnotations();
 		popCallStack();
-		switch (predict(JavaGrammar.ALLOCATION_EXPRESSION_4)) {
+		pushCallStack(JavaGrammar.ClassCreationExpr_4);
+		type = parseQualifiedType(annotations);
+		popCallStack();
+		pushCallStack(JavaGrammar.ClassCreationExpr_5);
+		args = parseArguments();
+		popCallStack();
+		if (predict(JavaGrammar.CLASS_CREATION_EXPR_6) == 1) {
+			pushCallStack(JavaGrammar.ClassCreationExpr_6_1);
+			anonymousBody = parseClassOrInterfaceBody(TypeKind.Class);
+			popCallStack();
+		}
+		return dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody)));
+	}
+
+	/* sequence(
+		action({
+			if (scope == null) run();
+		})
+		terminal(NEW)
+		zeroOrOne(
+			nonTerminal(typeArgs, TypeArguments)
+		)
+		action({ run(); })
+		nonTerminal(annotations, Annotations)
+		choice(
+			nonTerminal(type, PrimitiveType)
+			nonTerminal(type, QualifiedType)
+		)
+		nonTerminal(ret, ArrayCreationExprRest)
+		action({ return ret; })
+	) */
+	protected BUTree<? extends SExpr> parseArrayCreationExpr(BUTree<? extends SExpr> scope) throws ParseException {
+		BUTree<? extends SExpr> ret;
+		BUTree<? extends SType> type;
+		BUTree<SNodeList> typeArgs = null;
+		BUTree<SNodeList> anonymousBody = null;
+		BUTree<SNodeList> args;
+		BUTree<SNodeList> annotations = null;
+		if (scope == null) run();
+
+		parse(TokenType.NEW);
+		if (predict(JavaGrammar.ARRAY_CREATION_EXPR_2) == 1) {
+			pushCallStack(JavaGrammar.ArrayCreationExpr_2_1);
+			typeArgs = parseTypeArguments();
+			popCallStack();
+		}
+		run();
+		pushCallStack(JavaGrammar.ArrayCreationExpr_3);
+		annotations = parseAnnotations();
+		popCallStack();
+		switch (predict(JavaGrammar.ARRAY_CREATION_EXPR_4)) {
 			case 1:
-				pushCallStack(JavaGrammar.AllocationExpression_4_1_1);
+				pushCallStack(JavaGrammar.ArrayCreationExpr_4_1);
 				type = parsePrimitiveType(annotations);
-				popCallStack();
-				pushCallStack(JavaGrammar.AllocationExpression_4_1_2);
-				ret = parseArrayCreationExpr(type);
 				popCallStack();
 				break;
 			case 2:
-				pushCallStack(JavaGrammar.AllocationExpression_4_2_1);
+				pushCallStack(JavaGrammar.ArrayCreationExpr_4_2);
 				type = parseQualifiedType(annotations);
 				popCallStack();
-				switch (predict(JavaGrammar.ALLOCATION_EXPRESSION_4_2_2)) {
-					case 1:
-						pushCallStack(JavaGrammar.AllocationExpression_4_2_2_1);
-						ret = parseArrayCreationExpr(type);
-						popCallStack();
-						break;
-					case 2:
-						pushCallStack(JavaGrammar.AllocationExpression_4_2_2_2_1);
-						args = parseArguments();
-						popCallStack();
-						if (predict(JavaGrammar.ALLOCATION_EXPRESSION_4_2_2_2_2) == 1) {
-							pushCallStack(JavaGrammar.AllocationExpression_4_2_2_2_2_1);
-							anonymousBody = parseClassOrInterfaceBody(TypeKind.Class);
-							popCallStack();
-						}
-						ret = dress(SObjectCreationExpr.make(optionOf(scope), ensureNotNull(typeArgs), (BUTree<SQualifiedType>) type, args, optionOf(anonymousBody)));
-						break;
-					default:
-						throw produceParseException(TokenType.LPAREN, TokenType.AT, TokenType.LBRACKET);
-				}
 				break;
 			default:
-				throw produceParseException(TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN);
+				throw produceParseException(TokenType.IDENTIFIER, TokenType.NODE_VARIABLE, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN);
 		}
+		pushCallStack(JavaGrammar.ArrayCreationExpr_5);
+		ret = parseArrayCreationExprRest(type);
+		popCallStack();
 		return ret;
 	}
 
@@ -7199,26 +7245,26 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			action({ return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer))); })
 		)
 	) */
-	protected BUTree<? extends SExpr> parseArrayCreationExpr(BUTree<? extends SType> componentType) throws ParseException {
+	protected BUTree<? extends SExpr> parseArrayCreationExprRest(BUTree<? extends SType> componentType) throws ParseException {
 		BUTree<? extends SExpr> expr;
 		BUTree<SNodeList> arrayDimExprs = emptyList();
 		BUTree<SNodeList> arrayDims = emptyList();
 		BUTree<SNodeList> annotations = null;
 		BUTree<SArrayInitializerExpr> initializer;
-		switch (predict(JavaGrammar.ARRAY_CREATION_EXPR)) {
+		switch (predict(JavaGrammar.ARRAY_CREATION_EXPR_REST)) {
 			case 1:
-				pushCallStack(JavaGrammar.ArrayCreationExpr_1_1);
+				pushCallStack(JavaGrammar.ArrayCreationExprRest_1_1);
 				arrayDimExprs = parseArrayDimExprsMandatory();
 				popCallStack();
-				pushCallStack(JavaGrammar.ArrayCreationExpr_1_2);
+				pushCallStack(JavaGrammar.ArrayCreationExprRest_1_2);
 				arrayDims = parseArrayDims();
 				popCallStack();
 				return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, none()));
 			case 2:
-				pushCallStack(JavaGrammar.ArrayCreationExpr_2_1);
+				pushCallStack(JavaGrammar.ArrayCreationExprRest_2_1);
 				arrayDims = parseArrayDimsMandatory();
 				popCallStack();
-				pushCallStack(JavaGrammar.ArrayCreationExpr_2_2);
+				pushCallStack(JavaGrammar.ArrayCreationExprRest_2_2);
 				initializer = parseArrayInitializer();
 				popCallStack();
 				return dress(SArrayCreationExpr.make(componentType, arrayDimExprs, arrayDims, optionOf(initializer)));
@@ -7387,7 +7433,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.INCR, TokenType.DECR, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.NEW, TokenType.VOID, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.THIS, TokenType.SUPER, TokenType.LT, TokenType.PLUS, TokenType.MINUS, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT);
+				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.INCR, TokenType.DECR, TokenType.TILDE, TokenType.BANG, TokenType.LPAREN, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.SUPER, TokenType.THIS, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.DOUBLE, TokenType.FLOAT, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.VOID, TokenType.NEW, TokenType.LT, TokenType.PLUS, TokenType.MINUS, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT);
 		}
 		return ret;
 	}
@@ -7510,7 +7556,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.NEW, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.VOID, TokenType.LT, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NULL, TokenType.THIS, TokenType.SUPER, TokenType.DECR, TokenType.INCR, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.AT, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.STATIC, TokenType.ABSTRACT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.INTERFACE, TokenType.CLASS);
+				throw produceParseException(TokenType.TRY, TokenType.SYNCHRONIZED, TokenType.THROW, TokenType.RETURN, TokenType.CONTINUE, TokenType.BREAK, TokenType.FOR, TokenType.DO, TokenType.WHILE, TokenType.IF, TokenType.SWITCH, TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.NEW, TokenType.FALSE, TokenType.TRUE, TokenType.NULL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LT, TokenType.DOUBLE, TokenType.INT, TokenType.SHORT, TokenType.FLOAT, TokenType.LONG, TokenType.BOOLEAN, TokenType.BYTE, TokenType.CHAR, TokenType.VOID, TokenType.SUPER, TokenType.THIS, TokenType.DECR, TokenType.INCR, TokenType.BANG, TokenType.TILDE, TokenType.MINUS, TokenType.PLUS, TokenType.SEMICOLON, TokenType.LBRACE, TokenType.ASSERT, TokenType.PUBLIC, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.AT, TokenType.VOLATILE, TokenType.STRICTFP, TokenType.NATIVE, TokenType.STATIC, TokenType.ABSTRACT, TokenType.TRANSIENT, TokenType.FINAL, TokenType.INTERFACE, TokenType.CLASS);
 		}
 		return ret;
 	}
@@ -7812,7 +7858,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				}
 				break;
 			default:
-				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LT, TokenType.VOID, TokenType.DOUBLE, TokenType.SHORT, TokenType.INT, TokenType.LONG, TokenType.FLOAT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.BYTE, TokenType.SUPER, TokenType.NEW, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.FALSE, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.THIS, TokenType.PLUS, TokenType.MINUS, TokenType.DECR, TokenType.INCR, TokenType.TILDE, TokenType.BANG, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.STRICTFP, TokenType.FINAL, TokenType.STATIC, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.SEMICOLON);
+				throw produceParseException(TokenType.LPAREN, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.NEW, TokenType.LT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.BOOLEAN, TokenType.VOID, TokenType.SUPER, TokenType.FALSE, TokenType.NULL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.INTEGER_LITERAL, TokenType.THIS, TokenType.PLUS, TokenType.MINUS, TokenType.DECR, TokenType.INCR, TokenType.TILDE, TokenType.BANG, TokenType.NATIVE, TokenType.SYNCHRONIZED, TokenType.AT, TokenType.STRICTFP, TokenType.FINAL, TokenType.STATIC, TokenType.VOLATILE, TokenType.TRANSIENT, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.ABSTRACT, TokenType.PRIVATE, TokenType.SEMICOLON);
 		}
 		parse(TokenType.RPAREN);
 		pushCallStack(JavaGrammar.ForStatement_5);
@@ -7855,7 +7901,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.FLOAT, TokenType.LONG, TokenType.INT, TokenType.SHORT, TokenType.BYTE, TokenType.CHAR, TokenType.NEW, TokenType.LPAREN, TokenType.SUPER, TokenType.THIS, TokenType.NULL, TokenType.FALSE, TokenType.TRUE, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.TILDE, TokenType.BANG, TokenType.PLUS, TokenType.MINUS, TokenType.INCR, TokenType.DECR, TokenType.AT, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.PUBLIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.ABSTRACT, TokenType.STATIC, TokenType.NATIVE, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.SYNCHRONIZED);
+				throw produceParseException(TokenType.NEW, TokenType.FALSE, TokenType.TRUE, TokenType.NULL, TokenType.LONG_LITERAL, TokenType.INTEGER_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.FLOAT_LITERAL, TokenType.STRING_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.LONG, TokenType.INT, TokenType.DOUBLE, TokenType.FLOAT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.SHORT, TokenType.BYTE, TokenType.VOID, TokenType.SUPER, TokenType.THIS, TokenType.LPAREN, TokenType.LT, TokenType.TILDE, TokenType.BANG, TokenType.PLUS, TokenType.MINUS, TokenType.INCR, TokenType.DECR, TokenType.AT, TokenType.PROTECTED, TokenType.PRIVATE, TokenType.PUBLIC, TokenType.FINAL, TokenType.TRANSIENT, TokenType.ABSTRACT, TokenType.STATIC, TokenType.NATIVE, TokenType.STRICTFP, TokenType.VOLATILE, TokenType.SYNCHRONIZED);
 		}
 		return ret;
 	}
@@ -8452,7 +8498,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				break;
 			default:
-				throw produceParseException(TokenType.AT, TokenType.LBRACE, TokenType.MINUS, TokenType.PLUS, TokenType.LPAREN, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.NEW, TokenType.VOID, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.BYTE, TokenType.SHORT, TokenType.BOOLEAN, TokenType.CHAR, TokenType.FLOAT, TokenType.DOUBLE, TokenType.INT, TokenType.LONG, TokenType.THIS, TokenType.SUPER, TokenType.LT, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR);
+				throw produceParseException(TokenType.AT, TokenType.LBRACE, TokenType.MINUS, TokenType.PLUS, TokenType.LPAREN, TokenType.SUPER, TokenType.THIS, TokenType.CHARACTER_LITERAL, TokenType.STRING_LITERAL, TokenType.TRUE, TokenType.FALSE, TokenType.NULL, TokenType.INTEGER_LITERAL, TokenType.LONG_LITERAL, TokenType.FLOAT_LITERAL, TokenType.DOUBLE_LITERAL, TokenType.LT, TokenType.NODE_VARIABLE, TokenType.IDENTIFIER, TokenType.VOID, TokenType.BOOLEAN, TokenType.DOUBLE, TokenType.LONG, TokenType.FLOAT, TokenType.SHORT, TokenType.INT, TokenType.CHAR, TokenType.BYTE, TokenType.NEW, TokenType.TILDE, TokenType.BANG, TokenType.INCR, TokenType.DECR);
 		}
 		return ret;
 	}
