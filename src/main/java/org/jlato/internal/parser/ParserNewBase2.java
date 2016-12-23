@@ -75,11 +75,15 @@ public abstract class ParserNewBase2 extends ParserBase {
 	private List<Integer> currentPredictions;
 
 	protected void pushCallStack(Grammar.NonTerminal ntCall) {
+		if (forceLL) return;
+
 		GrammarState state = ntCall.end();
 		callStack = callStack.push(state);
 	}
 
 	protected void popCallStack() {
+		if (forceLL) return;
+
 		callStack.pop(new CallStackReader() {
 			@Override
 			public void handleNext(GrammarState head, CallStack tail) {
@@ -141,6 +145,8 @@ public abstract class ParserNewBase2 extends ParserBase {
 			if (next.prediction != -1) return next.prediction;
 
 			if (next.stackSensitive) {
+				if (forceLL) throw new IllegalStateException();
+
 				if (CACHE_STATS) {
 					perChoicePointStackSensitiveStates.put(choicePoint, next);
 				}
