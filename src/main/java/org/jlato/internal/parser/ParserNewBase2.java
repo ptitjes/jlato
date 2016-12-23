@@ -91,6 +91,8 @@ public abstract class ParserNewBase2 extends ParserBase {
 		return sllPredict(choicePoint);
 	}
 
+	private boolean forceLL = true;
+
 	private int sllPredict(int choicePoint) {
 		PredictionState current;
 
@@ -128,7 +130,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 			if (next == null) {
 				Set<Configuration> configurations = targetConfigurations(current, token);
-				next = new PredictionState(configurations, true, true);
+				next = new PredictionState(configurations, true, true, forceLL);
 
 				// TODO Reuse a unique error state if closure of configurations is the empty set
 				// TODO Reuse a unique final state for prediction if prediction is done
@@ -162,7 +164,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 			Token token = getToken(index++);
 
 			Set<Configuration> configurations = targetConfigurations(current, token);
-			PredictionState next = new PredictionState(configurations, true, false);
+			PredictionState next = new PredictionState(configurations, true, false, forceLL);
 			fullLL++;
 
 			if (next.configurations.isEmpty()) return -1;
@@ -185,10 +187,10 @@ public abstract class ParserNewBase2 extends ParserBase {
 		Set<Configuration> configurations = Collections.singleton(initialConfiguration);
 		configurations = closure(configurations);
 
-		return new PredictionState(configurations, false, false);
+		return new PredictionState(configurations, false, false, forceLL);
 	}
 
-	private static final boolean REPORT = false;
+	private static final boolean REPORT = true;
 
 	private void reportAmbiguity(int choicePoint, Collection<BitSet> conflictSets) {
 		if (!REPORT) return;
@@ -204,14 +206,14 @@ public abstract class ParserNewBase2 extends ParserBase {
 		buffer.append(alternatives);
 		buffer.append(" at (" + firstToken.beginLine + ":" + firstToken.beginColumn + ")");
 
-		System.out.println(buffer.toString());
+		System.err.println(buffer.toString());
 	}
 
-	private BitSet firstConflict(Collection<BitSet> conflictSets) {
+	private static BitSet firstConflict(Collection<BitSet> conflictSets) {
 		return conflictSets.iterator().next();
 	}
 
-	private int minimalAlternative(Collection<BitSet> conflictSetsPerLoc) {
+	public static int minimalAlternative(Collection<BitSet> conflictSetsPerLoc) {
 		BitSet alternatives = firstConflict(conflictSetsPerLoc);
 		return alternatives.nextSetBit(0);
 	}

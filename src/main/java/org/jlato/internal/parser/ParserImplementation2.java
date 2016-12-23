@@ -132,7 +132,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int ASSERT_STATEMENT_3 = 290;
 
-		public static final int ASSIGNMENT_EXPRESSION = 178;
+		public static final int ASSIGNMENT_EXPRESSION = 177;
 
 		public static final int ASSIGNMENT_EXPRESSION_2 = 180;
 
@@ -402,7 +402,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		public static final int LAMBDA_BODY_1 = 188;
 
-		public static final int LAMBDA_EXPRESSION = 177;
+		public static final int LAMBDA_EXPRESSION = 178;
 
 		public static final int LAMBDA_EXPRESSION_1 = 182;
 
@@ -1444,9 +1444,9 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 		static final Sequence Name = sequence("Name", Name_1);
 
-		static final NonTerminal Expression_1_1 = nonTerminal("Expression_1_1", LAMBDA_EXPRESSION);
+		static final NonTerminal Expression_1_1 = nonTerminal("Expression_1_1", ASSIGNMENT_EXPRESSION);
 
-		static final NonTerminal Expression_1_2 = nonTerminal("Expression_1_2", ASSIGNMENT_EXPRESSION);
+		static final NonTerminal Expression_1_2 = nonTerminal("Expression_1_2", LAMBDA_EXPRESSION);
 
 		static final Choice Expression_1 = choice("Expression_1", Expression_1_1, Expression_1_2);
 
@@ -5361,8 +5361,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 
 	/* sequence(
 		choice(
-			nonTerminal(ret, LambdaExpression)
 			nonTerminal(ret, AssignmentExpression)
+			nonTerminal(ret, LambdaExpression)
 		)
 		action({ return ret; })
 	) */
@@ -5371,12 +5371,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		switch (predict(JavaGrammar.EXPRESSION_1)) {
 			case 1:
 				pushCallStack(JavaGrammar.Expression_1_1);
-				ret = parseLambdaExpression();
+				ret = parseAssignmentExpression();
 				popCallStack();
 				break;
 			case 2:
 				pushCallStack(JavaGrammar.Expression_1_2);
-				ret = parseAssignmentExpression();
+				ret = parseLambdaExpression();
 				popCallStack();
 				break;
 			default:
@@ -5402,7 +5402,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.AssignmentExpression_1);
 		ret = parseConditionalExpression();
 		popCallStack();
-		if (predict(JavaGrammar.ASSIGNMENT_EXPRESSION_2) == 1) {
+		if (match(0, TokenType.ANDASSIGN, TokenType.ASSIGN, TokenType.LSHIFTASSIGN, TokenType.MINUSASSIGN, TokenType.ORASSIGN, TokenType.PLUSASSIGN, TokenType.REMASSIGN, TokenType.RSIGNEDSHIFTASSIGN, TokenType.RUNSIGNEDSHIFTASSIGN, TokenType.SLASHASSIGN, TokenType.STARASSIGN, TokenType.XORASSIGN) != -1) {
 			lateRun();
 			pushCallStack(JavaGrammar.AssignmentExpression_2_1);
 			op = parseAssignmentOperator();
@@ -5756,7 +5756,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.ConditionalExpression_1);
 		ret = parseConditionalOrExpression();
 		popCallStack();
-		if (predict(JavaGrammar.CONDITIONAL_EXPRESSION_2) == 1) {
+		if (match(0, TokenType.HOOK) != -1) {
 			lateRun();
 			parse(TokenType.HOOK);
 			pushCallStack(JavaGrammar.ConditionalExpression_2_2);
@@ -5798,7 +5798,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.ConditionalOrExpression_1);
 		ret = parseConditionalAndExpression();
 		popCallStack();
-		while (predict(JavaGrammar.CONDITIONAL_OR_EXPRESSION_2) == 1) {
+		while (match(0, TokenType.SC_OR) != -1) {
 			lateRun();
 			parse(TokenType.SC_OR);
 			pushCallStack(JavaGrammar.ConditionalOrExpression_2_2);
@@ -5825,7 +5825,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.ConditionalAndExpression_1);
 		ret = parseInclusiveOrExpression();
 		popCallStack();
-		while (predict(JavaGrammar.CONDITIONAL_AND_EXPRESSION_2) == 1) {
+		while (match(0, TokenType.SC_AND) != -1) {
 			lateRun();
 			parse(TokenType.SC_AND);
 			pushCallStack(JavaGrammar.ConditionalAndExpression_2_2);
@@ -5852,7 +5852,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.InclusiveOrExpression_1);
 		ret = parseExclusiveOrExpression();
 		popCallStack();
-		while (predict(JavaGrammar.INCLUSIVE_OR_EXPRESSION_2) == 1) {
+		while (match(0, TokenType.BIT_OR) != -1) {
 			lateRun();
 			parse(TokenType.BIT_OR);
 			pushCallStack(JavaGrammar.InclusiveOrExpression_2_2);
@@ -5879,7 +5879,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.ExclusiveOrExpression_1);
 		ret = parseAndExpression();
 		popCallStack();
-		while (predict(JavaGrammar.EXCLUSIVE_OR_EXPRESSION_2) == 1) {
+		while (match(0, TokenType.XOR) != -1) {
 			lateRun();
 			parse(TokenType.XOR);
 			pushCallStack(JavaGrammar.ExclusiveOrExpression_2_2);
@@ -5906,7 +5906,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.AndExpression_1);
 		ret = parseEqualityExpression();
 		popCallStack();
-		while (predict(JavaGrammar.AND_EXPRESSION_2) == 1) {
+		while (match(0, TokenType.BIT_AND) != -1) {
 			lateRun();
 			parse(TokenType.BIT_AND);
 			pushCallStack(JavaGrammar.AndExpression_2_2);
@@ -5943,7 +5943,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.EqualityExpression_1);
 		ret = parseInstanceOfExpression();
 		popCallStack();
-		while (predict(JavaGrammar.EQUALITY_EXPRESSION_2) == 1) {
+		while (match(0, TokenType.EQ, TokenType.NE) != -1) {
 			lateRun();
 			switch (predict(JavaGrammar.EQUALITY_EXPRESSION_2_1)) {
 				case 1:
@@ -5984,7 +5984,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.InstanceOfExpression_1);
 		ret = parseRelationalExpression();
 		popCallStack();
-		if (predict(JavaGrammar.INSTANCE_OF_EXPRESSION_2) == 1) {
+		if (match(0, TokenType.INSTANCEOF) != -1) {
 			lateRun();
 			parse(TokenType.INSTANCEOF);
 			run();
@@ -6033,7 +6033,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.RelationalExpression_1);
 		ret = parseShiftExpression();
 		popCallStack();
-		while (predict(JavaGrammar.RELATIONAL_EXPRESSION_2) == 1) {
+		while (match(0, TokenType.GE, TokenType.GT, TokenType.LE, TokenType.LT) != -1) {
 			lateRun();
 			switch (predict(JavaGrammar.RELATIONAL_EXPRESSION_2_1)) {
 				case 1:
@@ -6150,7 +6150,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.AdditiveExpression_1);
 		ret = parseMultiplicativeExpression();
 		popCallStack();
-		while (predict(JavaGrammar.ADDITIVE_EXPRESSION_2) == 1) {
+		while (match(0, TokenType.MINUS, TokenType.PLUS) != -1) {
 			lateRun();
 			switch (predict(JavaGrammar.ADDITIVE_EXPRESSION_2_1)) {
 				case 1:
@@ -6202,7 +6202,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.MultiplicativeExpression_1);
 		ret = parseUnaryExpression();
 		popCallStack();
-		while (predict(JavaGrammar.MULTIPLICATIVE_EXPRESSION_2) == 1) {
+		while (match(0, TokenType.REM, TokenType.SLASH, TokenType.STAR) != -1) {
 			lateRun();
 			switch (predict(JavaGrammar.MULTIPLICATIVE_EXPRESSION_2_1)) {
 				case 1:
@@ -6411,7 +6411,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.PostfixExpression_1);
 		ret = parsePrimaryExpression();
 		popCallStack();
-		if (predict(JavaGrammar.POSTFIX_EXPRESSION_2) == 1) {
+		if (match(0, TokenType.DECR, TokenType.INCR) != -1) {
 			lateRun();
 			switch (predict(JavaGrammar.POSTFIX_EXPRESSION_2_1)) {
 				case 1:

@@ -19,6 +19,7 @@
 
 package org.jlato.internal.parser.all;
 
+import org.jlato.internal.parser.ParserNewBase2;
 import org.jlato.internal.parser.Token;
 
 import java.util.*;
@@ -35,17 +36,13 @@ public class PredictionState {
 
 	public final Map<Integer, PredictionState> transitions = new HashMap<Integer, PredictionState>();
 
-	public PredictionState(Set<Configuration> configurations, boolean computePrediction, boolean computeConflicts) {
+	public PredictionState(Set<Configuration> configurations, boolean computePrediction, boolean computeConflicts, boolean forceLL) {
 		this.hashCode = computeHashCode(configurations);
 		this.configurations = configurations;
 
-		if (computePrediction) {
-			this.prediction = commonPrediction();
-			this.stackSensitive = checkStackSensitive();
-		} else {
-			this.prediction = -1;
-			this.stackSensitive = false;
-		}
+		this.stackSensitive = computeConflicts && checkStackSensitive();
+		this.prediction = (stackSensitive && forceLL) ? ParserNewBase2.minimalAlternative(getConflictSets()) :
+				computePrediction ? commonPrediction() : -1;
 	}
 
 	private int commonPrediction() {
