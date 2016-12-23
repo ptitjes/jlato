@@ -367,6 +367,8 @@ public abstract class ParserBase {
 		return lookaheadCells.get(index).whitespace;
 	}
 
+	// TODO Assume choice has been made and do not check token (again!)
+	// TODO Rename to 'consume()'
 	protected Token parse(int tokenType) throws ParseException {
 		if (preserveWhitespaces) {
 			pushWhitespace(0);

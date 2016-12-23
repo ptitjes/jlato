@@ -36,7 +36,7 @@ import org.jlato.tree.expr.UnaryOp;
 import org.jlato.tree.type.Primitive;
 
 /**
- * Internal implementation of the Java parser as a recursive descent parser.
+ * Internal implementation of the Java parser as a recursive descent parser using ALL(*) predictions.
  */
 public class ParserImplementation2 extends ParserNewBase2 {
 
@@ -3158,56 +3158,56 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
 		while (predict(JavaGrammar.MODIFIERS_1) == 1) {
-			switch (predict(JavaGrammar.MODIFIERS_1_1)) {
-				case 1:
+			switch (getToken(0).kind) {
+				case TokenType.PUBLIC:
 					parse(TokenType.PUBLIC);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
 					break;
-				case 2:
+				case TokenType.PROTECTED:
 					parse(TokenType.PROTECTED);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
 					break;
-				case 3:
+				case TokenType.PRIVATE:
 					parse(TokenType.PRIVATE);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
 					break;
-				case 4:
+				case TokenType.ABSTRACT:
 					parse(TokenType.ABSTRACT);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
 					break;
-				case 5:
+				case TokenType.DEFAULT:
 					parse(TokenType.DEFAULT);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Default));
 					break;
-				case 6:
+				case TokenType.STATIC:
 					parse(TokenType.STATIC);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
 					break;
-				case 7:
+				case TokenType.FINAL:
 					parse(TokenType.FINAL);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
 					break;
-				case 8:
+				case TokenType.TRANSIENT:
 					parse(TokenType.TRANSIENT);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
 					break;
-				case 9:
+				case TokenType.VOLATILE:
 					parse(TokenType.VOLATILE);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
 					break;
-				case 10:
+				case TokenType.SYNCHRONIZED:
 					parse(TokenType.SYNCHRONIZED);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
 					break;
-				case 11:
+				case TokenType.NATIVE:
 					parse(TokenType.NATIVE);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
 					break;
-				case 12:
+				case TokenType.STRICTFP:
 					parse(TokenType.STRICTFP);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
 					break;
-				case 13:
+				case TokenType.AT:
 					pushCallStack(JavaGrammar.Modifiers_1_1_13_1);
 					ann = parseAnnotation();
 					popCallStack();
@@ -3279,52 +3279,52 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> modifiers = emptyList();
 		BUTree<? extends SAnnotationExpr> ann;
 		while (match(0, TokenType.ABSTRACT, TokenType.AT, TokenType.FINAL, TokenType.NATIVE, TokenType.PRIVATE, TokenType.PROTECTED, TokenType.PUBLIC, TokenType.STATIC, TokenType.STRICTFP, TokenType.SYNCHRONIZED, TokenType.TRANSIENT, TokenType.VOLATILE) != -1) {
-			switch (predict(JavaGrammar.MODIFIERS_NO_DEFAULT_1_1)) {
-				case 1:
+			switch (getToken(0).kind) {
+				case TokenType.PUBLIC:
 					parse(TokenType.PUBLIC);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Public));
 					break;
-				case 2:
+				case TokenType.PROTECTED:
 					parse(TokenType.PROTECTED);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Protected));
 					break;
-				case 3:
+				case TokenType.PRIVATE:
 					parse(TokenType.PRIVATE);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Private));
 					break;
-				case 4:
+				case TokenType.ABSTRACT:
 					parse(TokenType.ABSTRACT);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Abstract));
 					break;
-				case 5:
+				case TokenType.STATIC:
 					parse(TokenType.STATIC);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Static));
 					break;
-				case 6:
+				case TokenType.FINAL:
 					parse(TokenType.FINAL);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Final));
 					break;
-				case 7:
+				case TokenType.TRANSIENT:
 					parse(TokenType.TRANSIENT);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Transient));
 					break;
-				case 8:
+				case TokenType.VOLATILE:
 					parse(TokenType.VOLATILE);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Volatile));
 					break;
-				case 9:
+				case TokenType.SYNCHRONIZED:
 					parse(TokenType.SYNCHRONIZED);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Synchronized));
 					break;
-				case 10:
+				case TokenType.NATIVE:
 					parse(TokenType.NATIVE);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.Native));
 					break;
-				case 11:
+				case TokenType.STRICTFP:
 					parse(TokenType.STRICTFP);
 					modifiers = append(modifiers, SModifier.make(ModifierKeyword.StrictFP));
 					break;
-				case 12:
+				case TokenType.AT:
 					pushCallStack(JavaGrammar.ModifiersNoDefault_1_1_12_1);
 					ann = parseAnnotation();
 					popCallStack();
@@ -3359,27 +3359,43 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends STypeDecl> ret;
 		run();
-		switch (predict(JavaGrammar.TYPE_DECL_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.SEMICOLON:
 				parse(TokenType.SEMICOLON);
 				ret = dress(SEmptyTypeDecl.make());
 				break;
-			case 2:
+			case TokenType.ABSTRACT:
+			case TokenType.AT:
+			case TokenType.CLASS:
+			case TokenType.DEFAULT:
+			case TokenType.ENUM:
+			case TokenType.FINAL:
+			case TokenType.INTERFACE:
+			case TokenType.NATIVE:
+			case TokenType.PRIVATE:
+			case TokenType.PROTECTED:
+			case TokenType.PUBLIC:
+			case TokenType.STATIC:
+			case TokenType.STRICTFP:
+			case TokenType.SYNCHRONIZED:
+			case TokenType.TRANSIENT:
+			case TokenType.VOLATILE:
 				pushCallStack(JavaGrammar.TypeDecl_1_2_1);
 				modifiers = parseModifiers();
 				popCallStack();
-				switch (predict(JavaGrammar.TYPE_DECL_1_2_2)) {
-					case 1:
+				switch (getToken(0).kind) {
+					case TokenType.CLASS:
+					case TokenType.INTERFACE:
 						pushCallStack(JavaGrammar.TypeDecl_1_2_2_1);
 						ret = parseClassOrInterfaceDecl(modifiers);
 						popCallStack();
 						break;
-					case 2:
+					case TokenType.ENUM:
 						pushCallStack(JavaGrammar.TypeDecl_1_2_2_2);
 						ret = parseEnumDecl(modifiers);
 						popCallStack();
 						break;
-					case 3:
+					case TokenType.AT:
 						pushCallStack(JavaGrammar.TypeDecl_1_2_2_3);
 						ret = parseAnnotationTypeDecl(modifiers);
 						popCallStack();
@@ -3441,8 +3457,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> implementsClause = null;
 		BUTree<SNodeList> members;
 		ByRef<BUProblem> problem = new ByRef<BUProblem>(null);
-		switch (predict(JavaGrammar.CLASS_OR_INTERFACE_DECL_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.CLASS:
 				parse(TokenType.CLASS);
 				typeKind = TypeKind.Class;
 				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_1_2);
@@ -3465,7 +3481,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					popCallStack();
 				}
 				break;
-			case 2:
+			case TokenType.INTERFACE:
 				parse(TokenType.INTERFACE);
 				typeKind = TypeKind.Interface;
 				pushCallStack(JavaGrammar.ClassOrInterfaceDecl_1_2_2);
@@ -3519,13 +3535,15 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
 		parse(TokenType.EXTENDS);
-		switch (predict(JavaGrammar.EXTENDS_LIST_2)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.NODE_LIST_VARIABLE:
 				pushCallStack(JavaGrammar.ExtendsList_2_1_1);
 				ret = parseNodeListVar();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.AT:
+			case TokenType.IDENTIFIER:
+			case TokenType.NODE_VARIABLE:
 				pushCallStack(JavaGrammar.ExtendsList_2_2_1);
 				cit = parseAnnotatedQualifiedType();
 				popCallStack();
@@ -3571,13 +3589,15 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
 		parse(TokenType.IMPLEMENTS);
-		switch (predict(JavaGrammar.IMPLEMENTS_LIST_2)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.NODE_LIST_VARIABLE:
 				pushCallStack(JavaGrammar.ImplementsList_2_1_1);
 				ret = parseNodeListVar();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.AT:
+			case TokenType.IDENTIFIER:
+			case TokenType.NODE_VARIABLE:
 				pushCallStack(JavaGrammar.ImplementsList_2_2_1);
 				cit = parseAnnotatedQualifiedType();
 				popCallStack();
@@ -3651,13 +3671,27 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			popCallStack();
 		}
 		parse(TokenType.LBRACE);
-		switch (predict(JavaGrammar.ENUM_DECL_5_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.NODE_LIST_VARIABLE:
 				pushCallStack(JavaGrammar.EnumDecl_5_1_1_1);
 				constants = parseNodeListVar();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.ABSTRACT:
+			case TokenType.AT:
+			case TokenType.DEFAULT:
+			case TokenType.FINAL:
+			case TokenType.IDENTIFIER:
+			case TokenType.NATIVE:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.PRIVATE:
+			case TokenType.PROTECTED:
+			case TokenType.PUBLIC:
+			case TokenType.STATIC:
+			case TokenType.STRICTFP:
+			case TokenType.SYNCHRONIZED:
+			case TokenType.TRANSIENT:
+			case TokenType.VOLATILE:
 				pushCallStack(JavaGrammar.EnumDecl_5_1_2_1);
 				entry = parseEnumConstantDecl();
 				popCallStack();
@@ -3764,13 +3798,39 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SMemberDecl> member;
 		parse(TokenType.LBRACE);
-		switch (predict(JavaGrammar.ANNOTATION_TYPE_BODY_2_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.NODE_LIST_VARIABLE:
 				pushCallStack(JavaGrammar.AnnotationTypeBody_2_1_1_1);
 				ret = parseNodeListVar();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.ABSTRACT:
+			case TokenType.AT:
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.CLASS:
+			case TokenType.DEFAULT:
+			case TokenType.DOUBLE:
+			case TokenType.ENUM:
+			case TokenType.FINAL:
+			case TokenType.FLOAT:
+			case TokenType.IDENTIFIER:
+			case TokenType.INT:
+			case TokenType.INTERFACE:
+			case TokenType.LONG:
+			case TokenType.NATIVE:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.PRIVATE:
+			case TokenType.PROTECTED:
+			case TokenType.PUBLIC:
+			case TokenType.SEMICOLON:
+			case TokenType.SHORT:
+			case TokenType.STATIC:
+			case TokenType.STRICTFP:
+			case TokenType.SYNCHRONIZED:
+			case TokenType.TRANSIENT:
+			case TokenType.VOLATILE:
 				do {
 					pushCallStack(JavaGrammar.AnnotationTypeBody_2_1_2_1);
 					member = parseAnnotationTypeBodyDecl();
@@ -3807,12 +3867,37 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> modifiers;
 		BUTree<? extends SMemberDecl> ret;
 		run();
-		switch (predict(JavaGrammar.ANNOTATION_TYPE_BODY_DECL_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.SEMICOLON:
 				parse(TokenType.SEMICOLON);
 				ret = dress(SEmptyTypeDecl.make());
 				break;
-			case 2:
+			case TokenType.ABSTRACT:
+			case TokenType.AT:
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.CLASS:
+			case TokenType.DEFAULT:
+			case TokenType.DOUBLE:
+			case TokenType.ENUM:
+			case TokenType.FINAL:
+			case TokenType.FLOAT:
+			case TokenType.IDENTIFIER:
+			case TokenType.INT:
+			case TokenType.INTERFACE:
+			case TokenType.LONG:
+			case TokenType.NATIVE:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.PRIVATE:
+			case TokenType.PROTECTED:
+			case TokenType.PUBLIC:
+			case TokenType.SHORT:
+			case TokenType.STATIC:
+			case TokenType.STRICTFP:
+			case TokenType.SYNCHRONIZED:
+			case TokenType.TRANSIENT:
+			case TokenType.VOLATILE:
 				pushCallStack(JavaGrammar.AnnotationTypeBodyDecl_1_2_1);
 				modifiers = parseModifiers();
 				popCallStack();
@@ -3918,13 +4003,15 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<STypeParameter> tp;
 		parse(TokenType.LT);
-		switch (predict(JavaGrammar.TYPE_PARAMETERS_2)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.NODE_LIST_VARIABLE:
 				pushCallStack(JavaGrammar.TypeParameters_2_1_1);
 				ret = parseNodeListVar();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.AT:
+			case TokenType.IDENTIFIER:
+			case TokenType.NODE_VARIABLE:
 				pushCallStack(JavaGrammar.TypeParameters_2_2_1);
 				tp = parseTypeParameter();
 				popCallStack();
@@ -3996,13 +4083,15 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SQualifiedType> cit;
 		BUTree<SNodeList> annotations = null;
 		parse(TokenType.EXTENDS);
-		switch (predict(JavaGrammar.TYPE_BOUNDS_2)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.NODE_LIST_VARIABLE:
 				pushCallStack(JavaGrammar.TypeBounds_2_1_1);
 				ret = parseNodeListVar();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.AT:
+			case TokenType.IDENTIFIER:
+			case TokenType.NODE_VARIABLE:
 				pushCallStack(JavaGrammar.TypeBounds_2_2_1);
 				cit = parseAnnotatedQualifiedType();
 				popCallStack();
@@ -4056,13 +4145,42 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseClassOrInterfaceBodyDecls(TypeKind typeKind) throws ParseException {
 		BUTree<? extends SMemberDecl> member;
 		BUTree<SNodeList> ret = emptyList();
-		switch (predict(JavaGrammar.CLASS_OR_INTERFACE_BODY_DECLS_1_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.NODE_LIST_VARIABLE:
 				pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecls_1_1_1_1);
 				ret = parseNodeListVar();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.ABSTRACT:
+			case TokenType.AT:
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.CLASS:
+			case TokenType.DEFAULT:
+			case TokenType.DOUBLE:
+			case TokenType.ENUM:
+			case TokenType.FINAL:
+			case TokenType.FLOAT:
+			case TokenType.IDENTIFIER:
+			case TokenType.INT:
+			case TokenType.INTERFACE:
+			case TokenType.LBRACE:
+			case TokenType.LONG:
+			case TokenType.LT:
+			case TokenType.NATIVE:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.PRIVATE:
+			case TokenType.PROTECTED:
+			case TokenType.PUBLIC:
+			case TokenType.SEMICOLON:
+			case TokenType.SHORT:
+			case TokenType.STATIC:
+			case TokenType.STRICTFP:
+			case TokenType.SYNCHRONIZED:
+			case TokenType.TRANSIENT:
+			case TokenType.VOID:
+			case TokenType.VOLATILE:
 				do {
 					pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecls_1_1_2_1);
 					member = parseClassOrInterfaceBodyDecl(typeKind);
@@ -4116,12 +4234,40 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SMemberDecl> ret;
 		BUProblem problem = null;
 		run();
-		switch (predict(JavaGrammar.CLASS_OR_INTERFACE_BODY_DECL_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.SEMICOLON:
 				parse(TokenType.SEMICOLON);
 				ret = dress(SEmptyMemberDecl.make());
 				break;
-			case 2:
+			case TokenType.ABSTRACT:
+			case TokenType.AT:
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.CLASS:
+			case TokenType.DEFAULT:
+			case TokenType.DOUBLE:
+			case TokenType.ENUM:
+			case TokenType.FINAL:
+			case TokenType.FLOAT:
+			case TokenType.IDENTIFIER:
+			case TokenType.INT:
+			case TokenType.INTERFACE:
+			case TokenType.LBRACE:
+			case TokenType.LONG:
+			case TokenType.LT:
+			case TokenType.NATIVE:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.PRIVATE:
+			case TokenType.PROTECTED:
+			case TokenType.PUBLIC:
+			case TokenType.SHORT:
+			case TokenType.STATIC:
+			case TokenType.STRICTFP:
+			case TokenType.SYNCHRONIZED:
+			case TokenType.TRANSIENT:
+			case TokenType.VOID:
+			case TokenType.VOLATILE:
 				pushCallStack(JavaGrammar.ClassOrInterfaceBodyDecl_1_2_1);
 				modifiers = parseModifiers();
 				popCallStack();
@@ -4322,13 +4468,43 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SExpr> parseVariableInitializer() throws ParseException {
 		BUTree<? extends SExpr> ret;
-		switch (predict(JavaGrammar.VARIABLE_INITIALIZER_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.LBRACE:
 				pushCallStack(JavaGrammar.VariableInitializer_1_1);
 				ret = parseArrayInitializer();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.BANG:
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.CHARACTER_LITERAL:
+			case TokenType.DECR:
+			case TokenType.DOUBLE:
+			case TokenType.DOUBLE_LITERAL:
+			case TokenType.FALSE:
+			case TokenType.FLOAT:
+			case TokenType.FLOAT_LITERAL:
+			case TokenType.IDENTIFIER:
+			case TokenType.INCR:
+			case TokenType.INT:
+			case TokenType.INTEGER_LITERAL:
+			case TokenType.LONG:
+			case TokenType.LONG_LITERAL:
+			case TokenType.LPAREN:
+			case TokenType.LT:
+			case TokenType.MINUS:
+			case TokenType.NEW:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.NULL:
+			case TokenType.PLUS:
+			case TokenType.SHORT:
+			case TokenType.STRING_LITERAL:
+			case TokenType.SUPER:
+			case TokenType.THIS:
+			case TokenType.TILDE:
+			case TokenType.TRUE:
+			case TokenType.VOID:
 				pushCallStack(JavaGrammar.VariableInitializer_1_2);
 				ret = parseExpression();
 				popCallStack();
@@ -4443,13 +4619,13 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			throwsClause = parseThrowsClause();
 			popCallStack();
 		}
-		switch (predict(JavaGrammar.METHOD_DECL_7)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.LBRACE:
 				pushCallStack(JavaGrammar.MethodDecl_7_1);
 				block = parseBlock();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.SEMICOLON:
 				parse(TokenType.SEMICOLON);
 				if (modifiers != null && contains(modifiers, SModifier.make(ModifierKeyword.Default))) problem = new BUProblem(Severity.ERROR, "Default methods must have a body");
 
@@ -4502,13 +4678,35 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseFormalParameterList() throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<SFormalParameter> par;
-		switch (predict(JavaGrammar.FORMAL_PARAMETER_LIST_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.NODE_LIST_VARIABLE:
 				pushCallStack(JavaGrammar.FormalParameterList_1_1_1);
 				ret = parseNodeListVar();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.ABSTRACT:
+			case TokenType.AT:
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.DEFAULT:
+			case TokenType.DOUBLE:
+			case TokenType.FINAL:
+			case TokenType.FLOAT:
+			case TokenType.IDENTIFIER:
+			case TokenType.INT:
+			case TokenType.LONG:
+			case TokenType.NATIVE:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.PRIVATE:
+			case TokenType.PROTECTED:
+			case TokenType.PUBLIC:
+			case TokenType.SHORT:
+			case TokenType.STATIC:
+			case TokenType.STRICTFP:
+			case TokenType.SYNCHRONIZED:
+			case TokenType.TRANSIENT:
+			case TokenType.VOLATILE:
 				pushCallStack(JavaGrammar.FormalParameterList_1_2_1);
 				par = parseFormalParameter();
 				popCallStack();
@@ -4768,13 +4966,72 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseStatements(boolean inConstructor) throws ParseException {
 		BUTree<SNodeList> ret = null;
 		BUTree<? extends SStmt> stmt;
-		switch (predict(JavaGrammar.STATEMENTS_1_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.NODE_LIST_VARIABLE:
 				pushCallStack(JavaGrammar.Statements_1_1_1_1);
 				ret = parseNodeListVar();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.ABSTRACT:
+			case TokenType.ASSERT:
+			case TokenType.AT:
+			case TokenType.BANG:
+			case TokenType.BOOLEAN:
+			case TokenType.BREAK:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.CHARACTER_LITERAL:
+			case TokenType.CLASS:
+			case TokenType.CONTINUE:
+			case TokenType.DECR:
+			case TokenType.DO:
+			case TokenType.DOUBLE:
+			case TokenType.DOUBLE_LITERAL:
+			case TokenType.EOF:
+			case TokenType.FALSE:
+			case TokenType.FINAL:
+			case TokenType.FLOAT:
+			case TokenType.FLOAT_LITERAL:
+			case TokenType.FOR:
+			case TokenType.IDENTIFIER:
+			case TokenType.IF:
+			case TokenType.INCR:
+			case TokenType.INT:
+			case TokenType.INTEGER_LITERAL:
+			case TokenType.INTERFACE:
+			case TokenType.LBRACE:
+			case TokenType.LONG:
+			case TokenType.LONG_LITERAL:
+			case TokenType.LPAREN:
+			case TokenType.LT:
+			case TokenType.MINUS:
+			case TokenType.NATIVE:
+			case TokenType.NEW:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.NULL:
+			case TokenType.PLUS:
+			case TokenType.PRIVATE:
+			case TokenType.PROTECTED:
+			case TokenType.PUBLIC:
+			case TokenType.RBRACE:
+			case TokenType.RETURN:
+			case TokenType.SEMICOLON:
+			case TokenType.SHORT:
+			case TokenType.STATIC:
+			case TokenType.STRICTFP:
+			case TokenType.STRING_LITERAL:
+			case TokenType.SUPER:
+			case TokenType.SWITCH:
+			case TokenType.SYNCHRONIZED:
+			case TokenType.THIS:
+			case TokenType.THROW:
+			case TokenType.TILDE:
+			case TokenType.TRANSIENT:
+			case TokenType.TRUE:
+			case TokenType.TRY:
+			case TokenType.VOID:
+			case TokenType.VOLATILE:
+			case TokenType.WHILE:
 				if (predict(JavaGrammar.STATEMENTS_1_1_2_1) == 1) {
 					pushCallStack(JavaGrammar.Statements_1_1_2_1_1);
 					stmt = parseExplicitConstructorInvocation();
@@ -4829,8 +5086,15 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SType> primitiveType = null;
 		BUTree<? extends SReferenceType> type = null;
 		BUTree<SNodeList> arrayDims;
-		switch (predict(JavaGrammar.TYPE_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.DOUBLE:
+			case TokenType.FLOAT:
+			case TokenType.INT:
+			case TokenType.LONG:
+			case TokenType.SHORT:
 				pushCallStack(JavaGrammar.Type_1_1_1);
 				primitiveType = parsePrimitiveType(annotations);
 				popCallStack();
@@ -4842,7 +5106,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					type = dress(SArrayType.make(primitiveType, arrayDims));
 				}
 				break;
-			case 2:
+			case TokenType.IDENTIFIER:
+			case TokenType.NODE_VARIABLE:
 				pushCallStack(JavaGrammar.Type_1_2_1);
 				type = parseQualifiedType(annotations);
 				popCallStack();
@@ -4883,8 +5148,15 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SType> primitiveType;
 		BUTree<? extends SReferenceType> type;
 		BUTree<SNodeList> arrayDims;
-		switch (predict(JavaGrammar.REFERENCE_TYPE_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.DOUBLE:
+			case TokenType.FLOAT:
+			case TokenType.INT:
+			case TokenType.LONG:
+			case TokenType.SHORT:
 				pushCallStack(JavaGrammar.ReferenceType_1_1_1);
 				primitiveType = parsePrimitiveType(annotations);
 				popCallStack();
@@ -4894,7 +5166,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				type = dress(SArrayType.make(primitiveType, arrayDims));
 				break;
-			case 2:
+			case TokenType.IDENTIFIER:
+			case TokenType.NODE_VARIABLE:
 				pushCallStack(JavaGrammar.ReferenceType_1_2_1);
 				type = parseQualifiedType(annotations);
 				popCallStack();
@@ -5037,13 +5310,24 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SNodeList> parseTypeArgumentList() throws ParseException {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SType> type;
-		switch (predict(JavaGrammar.TYPE_ARGUMENT_LIST)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.NODE_LIST_VARIABLE:
 				pushCallStack(JavaGrammar.TypeArgumentList_1_1);
 				ret = parseNodeListVar();
 				popCallStack();
 				return ret;
-			case 2:
+			case TokenType.AT:
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.DOUBLE:
+			case TokenType.FLOAT:
+			case TokenType.HOOK:
+			case TokenType.IDENTIFIER:
+			case TokenType.INT:
+			case TokenType.LONG:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.SHORT:
 				pushCallStack(JavaGrammar.TypeArgumentList_2_1);
 				type = parseTypeArgument();
 				popCallStack();
@@ -5077,13 +5361,22 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.TypeArgument_1);
 		annotations = parseAnnotations();
 		popCallStack();
-		switch (predict(JavaGrammar.TYPE_ARGUMENT_2)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.DOUBLE:
+			case TokenType.FLOAT:
+			case TokenType.IDENTIFIER:
+			case TokenType.INT:
+			case TokenType.LONG:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.SHORT:
 				pushCallStack(JavaGrammar.TypeArgument_2_1);
 				ret = parseReferenceType(annotations);
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.HOOK:
 				pushCallStack(JavaGrammar.TypeArgument_2_2);
 				ret = parseWildcard(annotations);
 				popCallStack();
@@ -5129,8 +5422,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			annotations = emptyList();
 		}
 		parse(TokenType.HOOK);
-		switch (predict(JavaGrammar.WILDCARD_2_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.EXTENDS:
 				parse(TokenType.EXTENDS);
 				run();
 				pushCallStack(JavaGrammar.Wildcard_2_1_1_2);
@@ -5140,7 +5433,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				ext = parseReferenceType(boundAnnotations);
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.SUPER:
 				parse(TokenType.SUPER);
 				run();
 				pushCallStack(JavaGrammar.Wildcard_2_1_2_2);
@@ -5203,36 +5496,36 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			run();
 			annotations = emptyList();
 		}
-		switch (predict(JavaGrammar.PRIMITIVE_TYPE_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.BOOLEAN:
 				parse(TokenType.BOOLEAN);
 				primitive = Primitive.Boolean;
 				break;
-			case 2:
+			case TokenType.CHAR:
 				parse(TokenType.CHAR);
 				primitive = Primitive.Char;
 				break;
-			case 3:
+			case TokenType.BYTE:
 				parse(TokenType.BYTE);
 				primitive = Primitive.Byte;
 				break;
-			case 4:
+			case TokenType.SHORT:
 				parse(TokenType.SHORT);
 				primitive = Primitive.Short;
 				break;
-			case 5:
+			case TokenType.INT:
 				parse(TokenType.INT);
 				primitive = Primitive.Int;
 				break;
-			case 6:
+			case TokenType.LONG:
 				parse(TokenType.LONG);
 				primitive = Primitive.Long;
 				break;
-			case 7:
+			case TokenType.FLOAT:
 				parse(TokenType.FLOAT);
 				primitive = Primitive.Float;
 				break;
-			case 8:
+			case TokenType.DOUBLE:
 				parse(TokenType.DOUBLE);
 				primitive = Primitive.Double;
 				break;
@@ -5255,13 +5548,22 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SType> parseResultType() throws ParseException {
 		BUTree<? extends SType> ret;
-		switch (predict(JavaGrammar.RESULT_TYPE_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.VOID:
 				run();
 				parse(TokenType.VOID);
 				ret = dress(SVoidType.make());
 				break;
-			case 2:
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.DOUBLE:
+			case TokenType.FLOAT:
+			case TokenType.IDENTIFIER:
+			case TokenType.INT:
+			case TokenType.LONG:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.SHORT:
 				pushCallStack(JavaGrammar.ResultType_1_2);
 				ret = parseType(null);
 				popCallStack();
@@ -5342,13 +5644,13 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<SName> parseName() throws ParseException {
 		Token id;
 		BUTree<SName> name;
-		switch (predict(JavaGrammar.NAME_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.NODE_VARIABLE:
 				pushCallStack(JavaGrammar.Name_1_1_1);
 				name = parseNodeVar();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.IDENTIFIER:
 				run();
 				id = parse(TokenType.IDENTIFIER);
 				name = dress(SName.make(id.image));
@@ -5566,14 +5868,44 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SBlockStmt> block;
 		BUTree<? extends SExpr> expr;
 		BUTree<SLambdaExpr> ret;
-		switch (predict(JavaGrammar.LAMBDA_BODY_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.BANG:
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.CHARACTER_LITERAL:
+			case TokenType.DECR:
+			case TokenType.DOUBLE:
+			case TokenType.DOUBLE_LITERAL:
+			case TokenType.FALSE:
+			case TokenType.FLOAT:
+			case TokenType.FLOAT_LITERAL:
+			case TokenType.IDENTIFIER:
+			case TokenType.INCR:
+			case TokenType.INT:
+			case TokenType.INTEGER_LITERAL:
+			case TokenType.LONG:
+			case TokenType.LONG_LITERAL:
+			case TokenType.LPAREN:
+			case TokenType.LT:
+			case TokenType.MINUS:
+			case TokenType.NEW:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.NULL:
+			case TokenType.PLUS:
+			case TokenType.SHORT:
+			case TokenType.STRING_LITERAL:
+			case TokenType.SUPER:
+			case TokenType.THIS:
+			case TokenType.TILDE:
+			case TokenType.TRUE:
+			case TokenType.VOID:
 				pushCallStack(JavaGrammar.LambdaBody_1_1_1);
 				expr = parseExpression();
 				popCallStack();
 				ret = dress(SLambdaExpr.make(parameters, parenthesis, left(expr)));
 				break;
-			case 2:
+			case TokenType.LBRACE:
 				pushCallStack(JavaGrammar.LambdaBody_1_2_1);
 				block = parseBlock();
 				popCallStack();
@@ -5679,52 +6011,52 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected AssignOp parseAssignmentOperator() throws ParseException {
 		AssignOp ret;
-		switch (predict(JavaGrammar.ASSIGNMENT_OPERATOR_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.ASSIGN:
 				parse(TokenType.ASSIGN);
 				ret = AssignOp.Normal;
 				break;
-			case 2:
+			case TokenType.STARASSIGN:
 				parse(TokenType.STARASSIGN);
 				ret = AssignOp.Times;
 				break;
-			case 3:
+			case TokenType.SLASHASSIGN:
 				parse(TokenType.SLASHASSIGN);
 				ret = AssignOp.Divide;
 				break;
-			case 4:
+			case TokenType.REMASSIGN:
 				parse(TokenType.REMASSIGN);
 				ret = AssignOp.Remainder;
 				break;
-			case 5:
+			case TokenType.PLUSASSIGN:
 				parse(TokenType.PLUSASSIGN);
 				ret = AssignOp.Plus;
 				break;
-			case 6:
+			case TokenType.MINUSASSIGN:
 				parse(TokenType.MINUSASSIGN);
 				ret = AssignOp.Minus;
 				break;
-			case 7:
+			case TokenType.LSHIFTASSIGN:
 				parse(TokenType.LSHIFTASSIGN);
 				ret = AssignOp.LeftShift;
 				break;
-			case 8:
+			case TokenType.RSIGNEDSHIFTASSIGN:
 				parse(TokenType.RSIGNEDSHIFTASSIGN);
 				ret = AssignOp.RightSignedShift;
 				break;
-			case 9:
+			case TokenType.RUNSIGNEDSHIFTASSIGN:
 				parse(TokenType.RUNSIGNEDSHIFTASSIGN);
 				ret = AssignOp.RightUnsignedShift;
 				break;
-			case 10:
+			case TokenType.ANDASSIGN:
 				parse(TokenType.ANDASSIGN);
 				ret = AssignOp.And;
 				break;
-			case 11:
+			case TokenType.XORASSIGN:
 				parse(TokenType.XORASSIGN);
 				ret = AssignOp.XOr;
 				break;
-			case 12:
+			case TokenType.ORASSIGN:
 				parse(TokenType.ORASSIGN);
 				ret = AssignOp.Or;
 				break;
@@ -5945,12 +6277,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		popCallStack();
 		while (match(0, TokenType.EQ, TokenType.NE) != -1) {
 			lateRun();
-			switch (predict(JavaGrammar.EQUALITY_EXPRESSION_2_1)) {
-				case 1:
+			switch (getToken(0).kind) {
+				case TokenType.EQ:
 					parse(TokenType.EQ);
 					op = BinaryOp.Equal;
 					break;
-				case 2:
+				case TokenType.NE:
 					parse(TokenType.NE);
 					op = BinaryOp.NotEqual;
 					break;
@@ -6035,20 +6367,20 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		popCallStack();
 		while (match(0, TokenType.GE, TokenType.GT, TokenType.LE, TokenType.LT) != -1) {
 			lateRun();
-			switch (predict(JavaGrammar.RELATIONAL_EXPRESSION_2_1)) {
-				case 1:
+			switch (getToken(0).kind) {
+				case TokenType.LT:
 					parse(TokenType.LT);
 					op = BinaryOp.Less;
 					break;
-				case 2:
+				case TokenType.GT:
 					parse(TokenType.GT);
 					op = BinaryOp.Greater;
 					break;
-				case 3:
+				case TokenType.LE:
 					parse(TokenType.LE);
 					op = BinaryOp.LessOrEqual;
 					break;
-				case 4:
+				case TokenType.GE:
 					parse(TokenType.GE);
 					op = BinaryOp.GreaterOrEqual;
 					break;
@@ -6152,12 +6484,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		popCallStack();
 		while (match(0, TokenType.MINUS, TokenType.PLUS) != -1) {
 			lateRun();
-			switch (predict(JavaGrammar.ADDITIVE_EXPRESSION_2_1)) {
-				case 1:
+			switch (getToken(0).kind) {
+				case TokenType.PLUS:
 					parse(TokenType.PLUS);
 					op = BinaryOp.Plus;
 					break;
-				case 2:
+				case TokenType.MINUS:
 					parse(TokenType.MINUS);
 					op = BinaryOp.Minus;
 					break;
@@ -6204,16 +6536,16 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		popCallStack();
 		while (match(0, TokenType.REM, TokenType.SLASH, TokenType.STAR) != -1) {
 			lateRun();
-			switch (predict(JavaGrammar.MULTIPLICATIVE_EXPRESSION_2_1)) {
-				case 1:
+			switch (getToken(0).kind) {
+				case TokenType.STAR:
 					parse(TokenType.STAR);
 					op = BinaryOp.Times;
 					break;
-				case 2:
+				case TokenType.SLASH:
 					parse(TokenType.SLASH);
 					op = BinaryOp.Divide;
 					break;
-				case 3:
+				case TokenType.REM:
 					parse(TokenType.REM);
 					op = BinaryOp.Remainder;
 					break;
@@ -6253,20 +6585,22 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parseUnaryExpression() throws ParseException {
 		BUTree<? extends SExpr> ret;
 		UnaryOp op;
-		switch (predict(JavaGrammar.UNARY_EXPRESSION_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.DECR:
+			case TokenType.INCR:
 				pushCallStack(JavaGrammar.UnaryExpression_1_1);
 				ret = parsePrefixExpression();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.MINUS:
+			case TokenType.PLUS:
 				run();
-				switch (predict(JavaGrammar.UNARY_EXPRESSION_1_2_1)) {
-					case 1:
+				switch (getToken(0).kind) {
+					case TokenType.PLUS:
 						parse(TokenType.PLUS);
 						op = UnaryOp.Positive;
 						break;
-					case 2:
+					case TokenType.MINUS:
 						parse(TokenType.MINUS);
 						op = UnaryOp.Negative;
 						break;
@@ -6278,7 +6612,33 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				popCallStack();
 				ret = dress(SUnaryExpr.make(op, ret));
 				break;
-			case 3:
+			case TokenType.BANG:
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.CHARACTER_LITERAL:
+			case TokenType.DOUBLE:
+			case TokenType.DOUBLE_LITERAL:
+			case TokenType.FALSE:
+			case TokenType.FLOAT:
+			case TokenType.FLOAT_LITERAL:
+			case TokenType.IDENTIFIER:
+			case TokenType.INT:
+			case TokenType.INTEGER_LITERAL:
+			case TokenType.LONG:
+			case TokenType.LONG_LITERAL:
+			case TokenType.LPAREN:
+			case TokenType.LT:
+			case TokenType.NEW:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.NULL:
+			case TokenType.SHORT:
+			case TokenType.STRING_LITERAL:
+			case TokenType.SUPER:
+			case TokenType.THIS:
+			case TokenType.TILDE:
+			case TokenType.TRUE:
+			case TokenType.VOID:
 				pushCallStack(JavaGrammar.UnaryExpression_1_3);
 				ret = parseUnaryExpressionNotPlusMinus();
 				popCallStack();
@@ -6308,12 +6668,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		UnaryOp op;
 		BUTree<? extends SExpr> ret;
 		run();
-		switch (predict(JavaGrammar.PREFIX_EXPRESSION_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.INCR:
 				parse(TokenType.INCR);
 				op = UnaryOp.PreIncrement;
 				break;
-			case 2:
+			case TokenType.DECR:
 				parse(TokenType.DECR);
 				op = UnaryOp.PreDecrement;
 				break;
@@ -6354,12 +6714,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		switch (predict(JavaGrammar.UNARY_EXPRESSION_NOT_PLUS_MINUS_1)) {
 			case 1:
 				run();
-				switch (predict(JavaGrammar.UNARY_EXPRESSION_NOT_PLUS_MINUS_1_1_1)) {
-					case 1:
+				switch (getToken(0).kind) {
+					case TokenType.TILDE:
 						parse(TokenType.TILDE);
 						op = UnaryOp.Inverse;
 						break;
-					case 2:
+					case TokenType.BANG:
 						parse(TokenType.BANG);
 						op = UnaryOp.Not;
 						break;
@@ -6413,12 +6773,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		popCallStack();
 		if (match(0, TokenType.DECR, TokenType.INCR) != -1) {
 			lateRun();
-			switch (predict(JavaGrammar.POSTFIX_EXPRESSION_2_1)) {
-				case 1:
+			switch (getToken(0).kind) {
+				case TokenType.INCR:
 					parse(TokenType.INCR);
 					op = UnaryOp.PostIncrement;
 					break;
-				case 2:
+				case TokenType.DECR:
 					parse(TokenType.DECR);
 					op = UnaryOp.PostDecrement;
 					break;
@@ -6577,40 +6937,40 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		Token literal;
 		BUTree<? extends SExpr> ret;
 		run();
-		switch (predict(JavaGrammar.LITERAL_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.INTEGER_LITERAL:
 				literal = parse(TokenType.INTEGER_LITERAL);
 				ret = SLiteralExpr.make(Integer.class, literal.image);
 				break;
-			case 2:
+			case TokenType.LONG_LITERAL:
 				literal = parse(TokenType.LONG_LITERAL);
 				ret = SLiteralExpr.make(Long.class, literal.image);
 				break;
-			case 3:
+			case TokenType.FLOAT_LITERAL:
 				literal = parse(TokenType.FLOAT_LITERAL);
 				ret = SLiteralExpr.make(Float.class, literal.image);
 				break;
-			case 4:
+			case TokenType.DOUBLE_LITERAL:
 				literal = parse(TokenType.DOUBLE_LITERAL);
 				ret = SLiteralExpr.make(Double.class, literal.image);
 				break;
-			case 5:
+			case TokenType.CHARACTER_LITERAL:
 				literal = parse(TokenType.CHARACTER_LITERAL);
 				ret = SLiteralExpr.make(Character.class, literal.image);
 				break;
-			case 6:
+			case TokenType.STRING_LITERAL:
 				literal = parse(TokenType.STRING_LITERAL);
 				ret = SLiteralExpr.make(String.class, literal.image);
 				break;
-			case 7:
+			case TokenType.TRUE:
 				literal = parse(TokenType.TRUE);
 				ret = SLiteralExpr.make(Boolean.class, literal.image);
 				break;
-			case 8:
+			case TokenType.FALSE:
 				literal = parse(TokenType.FALSE);
 				ret = SLiteralExpr.make(Boolean.class, literal.image);
 				break;
-			case 9:
+			case TokenType.NULL:
 				literal = parse(TokenType.NULL);
 				ret = SLiteralExpr.make(Void.class, literal.image);
 				break;
@@ -6768,8 +7128,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 				run();
 				parse(TokenType.SUPER);
 				ret = dress(SSuperExpr.make(none()));
-				switch (predict(JavaGrammar.PRIMARY_PREFIX_1_3_2)) {
-					case 1:
+				switch (getToken(0).kind) {
+					case TokenType.DOT:
 						lateRun();
 						parse(TokenType.DOT);
 						switch (predict(JavaGrammar.PRIMARY_PREFIX_1_3_2_1_2)) {
@@ -6787,7 +7147,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 								throw produceParseException(TokenType.IDENTIFIER, TokenType.LT, TokenType.NODE_VARIABLE);
 						}
 						break;
-					case 2:
+					case TokenType.DOUBLECOLON:
 						lateRun();
 						pushCallStack(JavaGrammar.PrimaryPrefix_1_3_2_2_1);
 						ret = parseMethodReferenceSuffix(ret);
@@ -6911,8 +7271,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	protected BUTree<? extends SExpr> parsePrimarySuffixWithoutSuper(BUTree<? extends SExpr> scope) throws ParseException {
 		BUTree<? extends SExpr> ret;
 		BUTree<SName> name;
-		switch (predict(JavaGrammar.PRIMARY_SUFFIX_WITHOUT_SUPER_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.DOT:
 				parse(TokenType.DOT);
 				switch (predict(JavaGrammar.PRIMARY_SUFFIX_WITHOUT_SUPER_1_1_2)) {
 					case 1:
@@ -6938,7 +7298,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 						throw produceParseException(TokenType.IDENTIFIER, TokenType.LT, TokenType.NEW, TokenType.NODE_VARIABLE, TokenType.THIS);
 				}
 				break;
-			case 2:
+			case TokenType.LBRACKET:
 				parse(TokenType.LBRACKET);
 				pushCallStack(JavaGrammar.PrimarySuffixWithoutSuper_1_2_2);
 				ret = parseExpression();
@@ -7017,13 +7377,43 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> ret = emptyList();
 		BUTree<? extends SExpr> expr;
 		parse(TokenType.LPAREN);
-		switch (predict(JavaGrammar.ARGUMENTS_2_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.NODE_LIST_VARIABLE:
 				pushCallStack(JavaGrammar.Arguments_2_1_1_1);
 				ret = parseNodeListVar();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.BANG:
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.CHARACTER_LITERAL:
+			case TokenType.DECR:
+			case TokenType.DOUBLE:
+			case TokenType.DOUBLE_LITERAL:
+			case TokenType.FALSE:
+			case TokenType.FLOAT:
+			case TokenType.FLOAT_LITERAL:
+			case TokenType.IDENTIFIER:
+			case TokenType.INCR:
+			case TokenType.INT:
+			case TokenType.INTEGER_LITERAL:
+			case TokenType.LONG:
+			case TokenType.LONG_LITERAL:
+			case TokenType.LPAREN:
+			case TokenType.LT:
+			case TokenType.MINUS:
+			case TokenType.NEW:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.NULL:
+			case TokenType.PLUS:
+			case TokenType.SHORT:
+			case TokenType.STRING_LITERAL:
+			case TokenType.SUPER:
+			case TokenType.THIS:
+			case TokenType.TILDE:
+			case TokenType.TRUE:
+			case TokenType.VOID:
 				pushCallStack(JavaGrammar.Arguments_2_1_2_1);
 				expr = parseExpression();
 				popCallStack();
@@ -7066,13 +7456,14 @@ public class ParserImplementation2 extends ParserNewBase2 {
 			typeArgs = parseTypeArguments();
 			popCallStack();
 		}
-		switch (predict(JavaGrammar.METHOD_REFERENCE_SUFFIX_3)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.IDENTIFIER:
+			case TokenType.NODE_VARIABLE:
 				pushCallStack(JavaGrammar.MethodReferenceSuffix_3_1);
 				name = parseName();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.NEW:
 				parse(TokenType.NEW);
 				name = SName.make("new");
 				break;
@@ -7169,13 +7560,21 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		pushCallStack(JavaGrammar.ArrayCreationExpr_3);
 		annotations = parseAnnotations();
 		popCallStack();
-		switch (predict(JavaGrammar.ARRAY_CREATION_EXPR_4)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.DOUBLE:
+			case TokenType.FLOAT:
+			case TokenType.INT:
+			case TokenType.LONG:
+			case TokenType.SHORT:
 				pushCallStack(JavaGrammar.ArrayCreationExpr_4_1);
 				type = parsePrimitiveType(annotations);
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.IDENTIFIER:
+			case TokenType.NODE_VARIABLE:
 				pushCallStack(JavaGrammar.ArrayCreationExpr_4_2);
 				type = parseQualifiedType(annotations);
 				popCallStack();
@@ -7632,14 +8031,14 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<? extends SExpr> label = null;
 		BUTree<SNodeList> stmts;
 		run();
-		switch (predict(JavaGrammar.SWITCH_ENTRY_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.CASE:
 				parse(TokenType.CASE);
 				pushCallStack(JavaGrammar.SwitchEntry_1_1_2);
 				label = parseExpression();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.DEFAULT:
 				parse(TokenType.DEFAULT);
 				break;
 			default:
@@ -8052,8 +8451,8 @@ public class ParserImplementation2 extends ParserNewBase2 {
 		BUTree<SNodeList> catchClauses = null;
 		run();
 		parse(TokenType.TRY);
-		switch (predict(JavaGrammar.TRY_STATEMENT_2)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.LPAREN:
 				pushCallStack(JavaGrammar.TryStatement_2_1_1);
 				resources = parseResourceSpecification(trailingSemiColon);
 				popCallStack();
@@ -8072,12 +8471,12 @@ public class ParserImplementation2 extends ParserNewBase2 {
 					popCallStack();
 				}
 				break;
-			case 2:
+			case TokenType.LBRACE:
 				pushCallStack(JavaGrammar.TryStatement_2_2_1);
 				tryBlock = parseBlock();
 				popCallStack();
-				switch (predict(JavaGrammar.TRY_STATEMENT_2_2_2)) {
-					case 1:
+				switch (getToken(0).kind) {
+					case TokenType.CATCH:
 						pushCallStack(JavaGrammar.TryStatement_2_2_2_1_1);
 						catchClauses = parseCatchClauses();
 						popCallStack();
@@ -8088,7 +8487,7 @@ public class ParserImplementation2 extends ParserNewBase2 {
 							popCallStack();
 						}
 						break;
-					case 2:
+					case TokenType.FINALLY:
 						parse(TokenType.FINALLY);
 						pushCallStack(JavaGrammar.TryStatement_2_2_2_2_2);
 						finallyBlock = parseBlock();
@@ -8437,18 +8836,48 @@ public class ParserImplementation2 extends ParserNewBase2 {
 	) */
 	protected BUTree<? extends SExpr> parseElementValue() throws ParseException {
 		BUTree<? extends SExpr> ret;
-		switch (predict(JavaGrammar.ELEMENT_VALUE_1)) {
-			case 1:
+		switch (getToken(0).kind) {
+			case TokenType.BANG:
+			case TokenType.BOOLEAN:
+			case TokenType.BYTE:
+			case TokenType.CHAR:
+			case TokenType.CHARACTER_LITERAL:
+			case TokenType.DECR:
+			case TokenType.DOUBLE:
+			case TokenType.DOUBLE_LITERAL:
+			case TokenType.FALSE:
+			case TokenType.FLOAT:
+			case TokenType.FLOAT_LITERAL:
+			case TokenType.IDENTIFIER:
+			case TokenType.INCR:
+			case TokenType.INT:
+			case TokenType.INTEGER_LITERAL:
+			case TokenType.LONG:
+			case TokenType.LONG_LITERAL:
+			case TokenType.LPAREN:
+			case TokenType.LT:
+			case TokenType.MINUS:
+			case TokenType.NEW:
+			case TokenType.NODE_VARIABLE:
+			case TokenType.NULL:
+			case TokenType.PLUS:
+			case TokenType.SHORT:
+			case TokenType.STRING_LITERAL:
+			case TokenType.SUPER:
+			case TokenType.THIS:
+			case TokenType.TILDE:
+			case TokenType.TRUE:
+			case TokenType.VOID:
 				pushCallStack(JavaGrammar.ElementValue_1_1);
 				ret = parseConditionalExpression();
 				popCallStack();
 				break;
-			case 2:
+			case TokenType.LBRACE:
 				pushCallStack(JavaGrammar.ElementValue_1_2);
 				ret = parseElementValueArrayInitializer();
 				popCallStack();
 				break;
-			case 3:
+			case TokenType.AT:
 				pushCallStack(JavaGrammar.ElementValue_1_3);
 				ret = parseAnnotation();
 				popCallStack();
