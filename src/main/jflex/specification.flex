@@ -19,8 +19,6 @@
 
 package org.jlato.internal.parser;
 
-import org.jlato.internal.parser.TokenType;
-
 /**
  * A Java 1.8 lexer.
  *

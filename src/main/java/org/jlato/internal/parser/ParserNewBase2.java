@@ -35,6 +35,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 	private static final boolean MERGE = true;
 	private static final boolean INCREMENTAL_MERGE = true;
 
+	private boolean forceLL = true;
 
 	protected abstract Grammar initializeGrammar();
 
@@ -90,8 +91,6 @@ public abstract class ParserNewBase2 extends ParserBase {
 	protected int predict(int choicePoint) {
 		return sllPredict(choicePoint);
 	}
-
-	private boolean forceLL = true;
 
 	private int sllPredict(int choicePoint) {
 		PredictionState current;
@@ -263,7 +262,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 
 	private Set<Configuration> closure(Set<Configuration> configurations) {
 		ConfigurationSetBuilder newConfigurations = newConfigurationSetBuilder();
-		HashSet<Configuration> busy = new HashSet<Configuration>();
+		HashSet<Configuration> busy = new HashSet<Configuration>(configurations.size() * 4 / 3 + 1, 3f / 4);
 		for (Configuration configuration : configurations) {
 			closureOf(configuration, newConfigurations, busy);
 		}
@@ -441,7 +440,7 @@ public abstract class ParserNewBase2 extends ParserBase {
 		private int saved = 0;
 
 		public Set<Configuration> build() {
-			HashSet<Configuration> configurations = new HashSet<Configuration>();
+			HashSet<Configuration> configurations = new HashSet<Configuration>(perStatePredictionCallStack.size() * 4 / 3 + 1, 3f / 4);
 			for (Map.Entry<StatePredictionPair, CallStack> entry : perStatePredictionCallStack.entrySet()) {
 				StatePredictionPair key = entry.getKey();
 				configurations.add(new Configuration(key.state, key.prediction, entry.getValue()));
