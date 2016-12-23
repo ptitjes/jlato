@@ -39,7 +39,7 @@ public class CallStack {
 		WILDCARD, EMPTY, MERGE, PUSH
 	}
 
-	private final Kind kind;
+	public final Kind kind;
 	private final int hashCode;
 
 	private CallStack(Kind kind, int hashCode) {
@@ -164,10 +164,10 @@ public class CallStack {
 		}
 	}
 
-	private static class Push extends CallStack {
+	public static class Push extends CallStack {
 
-		private final GrammarState head;
-		private final CallStack tails;
+		public final GrammarState head;
+		public final CallStack tails;
 
 		private Push(GrammarState head, CallStack tails) {
 			super(Kind.PUSH, computeHashCode(head, tails));
@@ -198,9 +198,9 @@ public class CallStack {
 		}
 	}
 
-	private static class Merge extends CallStack {
+	public static class Merge extends CallStack {
 
-		private final Set<CallStack> stacks;
+		public final Set<CallStack> stacks;
 
 		private Merge(Set<CallStack> stacks) {
 			super(Kind.MERGE, computeHashCode(stacks));

@@ -30,9 +30,9 @@ import java.util.*;
  */
 public abstract class ParserNewBase2 extends ParserBase {
 
-	private static final boolean CACHE_STATS = true;
+	private static final boolean CACHE_STATS = false;
 	private static final boolean MERGE_STATS = false;
-	private static final boolean MERGE = false;
+	private static final boolean MERGE = true;
 	private static final boolean INCREMENTAL_MERGE = true;
 
 
@@ -321,13 +321,33 @@ public abstract class ParserNewBase2 extends ParserBase {
 					}
 				}
 			} else {
-				callStack.pop(new CallStackReader() {
-					@Override
-					public void handleNext(GrammarState head, CallStack tail) {
-						Configuration newConfiguration = new Configuration(head, prediction, tail);
+
+				// Using inner class closure
+//				callStack.pop(new CallStackReader() {
+//					@Override
+//					public void handleNext(GrammarState head, CallStack tail) {
+//						Configuration newConfiguration = new Configuration(head, prediction, tail);
+//						closureOf(newConfiguration, newConfigurations, busy);
+//					}
+//				});
+
+				// Unrolled code without inner class closure
+				if (callStack.kind == CallStack.Kind.WILDCARD || callStack.kind == CallStack.Kind.EMPTY) return;
+				if (callStack.kind == CallStack.Kind.PUSH) {
+					CallStack.Push push = (CallStack.Push) callStack;
+
+					Configuration newConfiguration = new Configuration(push.head, prediction, push.tails);
+					closureOf(newConfiguration, newConfigurations, busy);
+				} else {
+					CallStack.Merge merge = (CallStack.Merge) callStack;
+					// Stacks in a merge are Push stacks by construction
+					for (CallStack pushStack : merge.stacks) {
+						CallStack.Push push = (CallStack.Push) pushStack;
+
+						Configuration newConfiguration = new Configuration(push.head, prediction, push.tails);
 						closureOf(newConfiguration, newConfigurations, busy);
 					}
-				});
+				}
 			}
 		} else {
 			// Handle choice transitions
