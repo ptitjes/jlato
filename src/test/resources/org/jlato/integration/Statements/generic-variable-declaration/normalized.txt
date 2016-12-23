@@ -1,0 +1,50 @@
+{
+  kind: ExpressionStmt,
+  expr: {
+    kind: VariableDeclarationExpr,
+    declaration: {
+      kind: LocalVariableDecl,
+      modifiers: [
+      ],
+      type: {
+        kind: QualifiedType,
+        annotations: [
+        ],
+        name: List,
+        scope: null,
+        typeArgs: [
+          {
+            kind: QualifiedType,
+            annotations: [
+            ],
+            name: File,
+            scope: null,
+            typeArgs: null,
+          },
+        ],
+      },
+      variables: [
+        {
+          kind: VariableDeclarator,
+          id: {
+            kind: VariableDeclaratorId,
+            dims: [
+            ],
+            name: files,
+          },
+          init: {
+            kind: MethodInvocationExpr,
+            args: [
+              directory,
+              new ArrayList<File>(),
+            ],
+            name: collectAllJavaFiles,
+            scope: null,
+            typeArgs: [
+            ],
+          },
+        },
+      ],
+    },
+  },
+}

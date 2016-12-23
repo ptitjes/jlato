@@ -1,0 +1,1 @@
+List<File> files = collectAllJavaFiles(directory, new ArrayList<File>());
