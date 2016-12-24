@@ -25,12 +25,9 @@ import org.jlato.internal.bu.*;
 import org.jlato.internal.bu.coll.SNodeEither;
 import org.jlato.internal.bu.coll.SNodeList;
 import org.jlato.internal.bu.coll.SNodeOption;
-import org.jlato.internal.bu.decl.*;
-import org.jlato.internal.bu.expr.SExpr;
+import org.jlato.internal.bu.decl.SFormalParameter;
+import org.jlato.internal.bu.decl.SVariableDeclaratorId;
 import org.jlato.internal.bu.name.SName;
-import org.jlato.internal.bu.name.SQualifiedName;
-import org.jlato.internal.bu.stmt.SStmt;
-import org.jlato.internal.bu.type.SType;
 import org.jlato.internal.bu.type.SUnknownType;
 import org.jlato.internal.shapes.DressingBuilder;
 import org.jlato.internal.shapes.LexicalShape;
@@ -38,9 +35,10 @@ import org.jlato.parser.ParseException;
 import org.jlato.parser.ParserConfiguration;
 
 import java.io.*;
-import java.util.*;
-
-import static org.jlato.internal.parser.TokenType.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Stack;
 
 /**
  * @author Didier Villevalois
@@ -48,14 +46,15 @@ import static org.jlato.internal.parser.TokenType.*;
 public abstract class ParserBase implements ParserInterface {
 
 	private final Lexer lexer;
-	protected ParserConfiguration configuration;
-	protected boolean quotesMode = false;
-	private boolean preserveWhitespaces;
 
 	public ParserBase() {
 		lexer = new Lexer();
 		lexer.setParser(this);
 	}
+
+	protected ParserConfiguration configuration;
+	protected boolean quotesMode = false;
+	private boolean preserveWhitespaces;
 
 	protected final void configure(ParserConfiguration configuration, boolean quotesMode) {
 		this.configuration = configuration;
@@ -80,13 +79,126 @@ public abstract class ParserBase implements ParserInterface {
 
 	protected void reset() {
 		lookaheadCells.clear();
-		matchLookahead = 0;
 
 		if (preserveWhitespaces) {
 			lastProcessedToken = -1;
 			runStack.clear();
 			runStack.push(Vector.<WTokenRun>empty());
 		}
+	}
+
+	public void clearStats() {
+	}
+
+	public void printStats() {
+	}
+
+	// Base parse methods
+
+	private CircularBuffer<LookaheadCell> lookaheadCells = new CircularBuffer<LookaheadCell>(20, 10) {
+		@Override
+		protected LookaheadCell createCell() {
+			return new LookaheadCell();
+		}
+
+		@Override
+		protected void clearCell(LookaheadCell cell) {
+			cell.token = null;
+			cell.whitespace = null;
+		}
+	};
+
+	static class LookaheadCell {
+		public Token token;
+		public WTokenRun whitespace;
+	}
+
+	private void advance(int index) {
+		try {
+			for (int i = lookaheadCells.size(); i <= index; i++) {
+				pushNextToken();
+			}
+		} catch (IOException e) {
+			// TODO Fix error management
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	private void pushNextToken() throws IOException {
+		if (preserveWhitespaces) {
+			Token token;
+			WTokenRun.Builder builder = new WTokenRun.Builder();
+			do {
+				token = lexer.yylex();
+
+				switch (token.kind) {
+					case TokenType.MULTI_LINE_COMMENT:
+					case TokenType.SINGLE_LINE_COMMENT:
+					case TokenType.JAVA_DOC_COMMENT:
+					case TokenType.WHITESPACE:
+					case TokenType.NEWLINE:
+						builder.add(new WToken(token.kind, token.image));
+						break;
+					default:
+						LookaheadCell cell = lookaheadCells.add();
+						cell.token = token;
+						cell.whitespace = builder.build();
+						return;
+				}
+			} while (true);
+		} else {
+			Token token;
+			do {
+				token = lexer.yylex();
+
+				switch (token.kind) {
+					case TokenType.MULTI_LINE_COMMENT:
+					case TokenType.SINGLE_LINE_COMMENT:
+					case TokenType.JAVA_DOC_COMMENT:
+					case TokenType.WHITESPACE:
+					case TokenType.NEWLINE:
+						break;
+					default:
+						LookaheadCell cell = lookaheadCells.add();
+						cell.token = token;
+						return;
+				}
+			} while (true);
+		}
+	}
+
+	protected Token getToken(int index) {
+		advance(index);
+		return lookaheadCells.get(index).token;
+	}
+
+	protected WTokenRun getWhitespace(int index) {
+		advance(index);
+		return lookaheadCells.get(index).whitespace;
+	}
+
+	protected Token consume(int expectedKind) throws ParseException {
+		if (preserveWhitespaces) {
+			pushWhitespace(0);
+			lastProcessedToken--;
+		}
+
+		Token token = getToken(0);
+
+		// The consumed token should never be different from what is expected
+		// If that is the case then the parser is badly implemented
+		if (token.kind != expectedKind) {
+			String foundToken = token.kind == TokenType.EOF ? "<EOF>" : token.image;
+			String expectedToken = TokenType.tokenImage[expectedKind];
+
+			// TODO Add parse location (file, ...)
+			throw new ParseException("Found token '" + foundToken + "', expected token " + expectedToken +
+					" at (" + token.beginLine + ":" + token.beginColumn + ")");
+		}
+
+		lookaheadCells.dropHead();
+
+		return token;
 	}
 
 	// Lexical preservation mechanism
@@ -226,160 +338,7 @@ public abstract class ParserBase implements ParserInterface {
 //		return tree;
 	}
 
-	// Base parse methods
-
-	static class LookaheadCell {
-		public Token token;
-		public WTokenRun whitespace;
-	}
-
-	private CircularBuffer<LookaheadCell> lookaheadCells = new CircularBuffer<LookaheadCell>(20, 10) {
-		@Override
-		protected LookaheadCell createCell() {
-			return new LookaheadCell();
-		}
-
-		@Override
-		protected void clearCell(LookaheadCell cell) {
-			cell.token = null;
-			cell.whitespace = null;
-		}
-	};
-	protected int matchLookahead;
-
-	private void advance(int index) {
-		try {
-			for (int i = lookaheadCells.size(); i <= index; i++) {
-				pushNextToken();
-			}
-		} catch (IOException e) {
-			// TODO Fix error management
-			throw new IllegalArgumentException(e);
-		}
-	}
-
-	private void pushNextToken() throws IOException {
-		if (preserveWhitespaces) {
-			Token token;
-			WTokenRun.Builder builder = new WTokenRun.Builder();
-			do {
-				token = lexer.yylex();
-
-				switch (token.kind) {
-					case TokenType.MULTI_LINE_COMMENT:
-					case TokenType.SINGLE_LINE_COMMENT:
-					case TokenType.JAVA_DOC_COMMENT:
-					case TokenType.WHITESPACE:
-					case TokenType.NEWLINE:
-						builder.add(new WToken(token.kind, token.image));
-						break;
-					default:
-						LookaheadCell cell = lookaheadCells.add();
-						cell.token = token;
-						cell.whitespace = builder.build();
-						return;
-				}
-			} while (true);
-		} else {
-			Token token;
-			do {
-				token = lexer.yylex();
-
-				switch (token.kind) {
-					case TokenType.MULTI_LINE_COMMENT:
-					case TokenType.SINGLE_LINE_COMMENT:
-					case TokenType.JAVA_DOC_COMMENT:
-					case TokenType.WHITESPACE:
-					case TokenType.NEWLINE:
-						break;
-					default:
-						LookaheadCell cell = lookaheadCells.add();
-						cell.token = token;
-						return;
-				}
-			} while (true);
-		}
-	}
-
-	protected Token getToken(int index) {
-		advance(index);
-		return lookaheadCells.get(index).token;
-	}
-
-	protected WTokenRun getWhitespace(int index) {
-		advance(index);
-		return lookaheadCells.get(index).whitespace;
-	}
-
-	// TODO Assume choice has been made and do not check token (again!)
-	// TODO Rename to 'consume()'
-	protected Token parse(int tokenType) throws ParseException {
-		if (preserveWhitespaces) {
-			pushWhitespace(0);
-			lastProcessedToken--;
-		}
-
-		Token token = getToken(0);
-		if (token.kind != tokenType) {
-			String found = token.kind == TokenType.EOF ? "<EOF>" : token.image;
-			String expected = TokenType.tokenImage[tokenType];
-			throw new ParseException("Found " + found + " – Expected " + expected +
-					" (" + token.beginLine + ":" + token.beginColumn + ")");
-		}
-		lookaheadCells.dropHead();
-
-		return token;
-	}
-
-	protected int match(int lookahead, int tokenType) {
-		return getToken(lookahead).kind == tokenType ? lookahead + 1 : -1;
-	}
-
-	protected int match(int lookahead, int... tokenTypes) {
-		for (int tokenType : tokenTypes) {
-			if (getToken(lookahead).kind == tokenType) return lookahead + 1;
-		}
-		return -1;
-	}
-
-	public void clearStats() {
-	}
-
-	public void printStats() {
-	}
-
-	protected ParseException produceParseException(int... expectedTokenTypes) {
-		String eol = System.getProperty("line.separator", "\n");
-		StringBuffer expected = new StringBuffer();
-		for (int i = 0; i < expectedTokenTypes.length; i++) {
-			expected.append("\"").append(TokenType.tokenImage[expectedTokenTypes[i]]).append("\" ");
-			expected.append("...");
-			expected.append(eol).append("    ");
-		}
-
-		String retval = "Encountered \"";
-		Token tok = getToken(0);
-
-		if (tok.kind == 0) {
-			retval += TokenType.tokenImage[0];
-		} else {
-			retval += " " + TokenType.tokenImage[tok.kind];
-			retval += " \"";
-			retval += add_escapes(tok.image);
-			retval += " \"";
-		}
-
-		retval += "\" at line " + tok.beginLine + ", column " + tok.beginColumn;
-		retval += "." + eol;
-		if (expectedTokenTypes.length == 1) {
-			retval += "Was expecting:" + eol + "    ";
-		} else {
-			retval += "Was expecting one of:" + eol + "    ";
-		}
-
-		retval += expected.toString();
-		return new ParseException(retval);
-	}
+	// Convenience methods to build some AST nodes
 
 	BUTree<SFormalParameter> makeFormalParameter(BUTree<SName> name) {
 		return SFormalParameter.make(emptyList(), SUnknownType.make(), false, emptyList(),
@@ -394,17 +353,7 @@ public abstract class ParserBase implements ParserInterface {
 		return BUTreeVar.var(name);
 	}
 
-	// Convenience class to get more data from a called production
-
-	protected static class ByRef<T> {
-		public T value;
-
-		public ByRef(T value) {
-			this.value = value;
-		}
-	}
-
-	// Convenience methods for lists
+	// Convenience methods for containers (list, option and either)
 
 	protected BUTree<SNodeList> emptyList() {
 		return new BUTree<SNodeList>(new SNodeList());
@@ -441,6 +390,41 @@ public abstract class ParserBase implements ParserInterface {
 
 	protected BUTree<SNodeEither> right(BUTree<?> element) {
 		return new BUTree<SNodeEither>(new SNodeEither(element, SNodeEither.EitherSide.Right));
+	}
+
+	// Methods to produce parse exceptions
+
+	protected ParseException produceParseException(int... expectedTokenTypes) {
+		String eol = System.getProperty("line.separator", "\n");
+		StringBuffer expected = new StringBuffer();
+		for (int i = 0; i < expectedTokenTypes.length; i++) {
+			expected.append("\"").append(TokenType.tokenImage[expectedTokenTypes[i]]).append("\" ");
+			expected.append("...");
+			expected.append(eol).append("    ");
+		}
+
+		String retval = "Encountered \"";
+		Token tok = getToken(0);
+
+		if (tok.kind == 0) {
+			retval += TokenType.tokenImage[0];
+		} else {
+			retval += " " + TokenType.tokenImage[tok.kind];
+			retval += " \"";
+			retval += add_escapes(tok.image);
+			retval += " \"";
+		}
+
+		retval += "\" at line " + tok.beginLine + ", column " + tok.beginColumn;
+		retval += "." + eol;
+		if (expectedTokenTypes.length == 1) {
+			retval += "Was expecting:" + eol + "    ";
+		} else {
+			retval += "Was expecting one of:" + eol + "    ";
+		}
+
+		retval += expected.toString();
+		return new ParseException(retval);
 	}
 
 	static String add_escapes(String str) {
@@ -486,6 +470,18 @@ public abstract class ParserBase implements ParserInterface {
 		}
 		return retval.toString();
 	}
+
+	// Convenience class to get more data from a called production
+
+	protected static class ByRef<T> {
+		public T value;
+
+		public ByRef(T value) {
+			this.value = value;
+		}
+	}
+
+	// Circular buffer to hold lookahead tokens
 
 	static abstract class CircularBuffer<E> {
 		private Object[] elementData;
